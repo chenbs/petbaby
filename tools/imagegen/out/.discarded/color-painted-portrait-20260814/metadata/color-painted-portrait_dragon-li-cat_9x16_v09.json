@@ -1,0 +1,66 @@
+{
+  "templateId": "color-painted-portrait",
+  "title": "彩色绘画肖像",
+  "entryId": "art",
+  "status": "master-candidate-pending-user-approval",
+  "subject": "dragon-li-cat",
+  "breed": "狸花猫",
+  "revision": {
+    "version": "v09",
+    "supersedes": "color-painted-portrait_dragon-li-cat_9x16_v08.png",
+    "reviewFinding": "v08 的宽笔触方向成立但推得过重：橙黄与青绿色饱和度过高，色块互撞使画面发脏；眼球、鼻口和脸部体积仍偏真实，未与场景统一为手绘水彩画笔。",
+    "scope": "restrained-palette-broad-watercolor-face-medium-unification-full-regeneration"
+  },
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-soft-impressionist-effect-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/4f109cb7-2809-459a-93ef-5e7775e16280.jpg",
+      "sha256": "620aa0a865818f88025ed9345f86e0f38a113520a91627a1dfd1535136b0035a"
+    },
+    {
+      "role": "pet-identity-only-reference",
+      "path": "apps/website/public/assets/avatar-dragonli.jpg",
+      "sha256": "0f403599969b57f32aa314cf474ce4d57d28f48683e16ae9a032d73b94079732"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: style-transfer with pet identity preservation. Create a vertical 9:16 hand-painted watercolor-impressionist pet portrait at exactly 720x1280 pixels from exactly two input images. Image 1 is the authoritative effect, composition, facial softness and style reference. Preserve its half-body three-quarter portrait, saturated orange field, teal and coral accents, broad loose background colour blocks, light splashes, airy negative space, soft fluffy subject edges and youthful gallery-poster energy. Remove only its platform watermark and account ID. Use one consistent hand-painted watercolor medium across the cat, face and background: broad visible watercolor brush marks, translucent overlapping washes, dry-brush skips, uneven pigment edges and subtle paper texture. The pet must not look like a realistic portrait placed on a watercolor background. Define the fur with a limited number of medium-to-broad gestural watercolor strokes rather than fine detail. Simplify the brown-grey tabby coat into clear directional washes and broken wide marks across the forehead, cheeks, neck and torso. Keep strokes confident but lighter and more absorbent than v08, with no thick physical paint buildup. Use moderate local contrast inside selected brush strokes, softened by watercolor bleed and paper absorption. Preserve some clearly defined dry-brush edges, but avoid digital sharpness, hard black outlines and heavily sculpted volume. Match Image 1's colour intensity instead of exceeding it. Use a clean, restrained medium-saturation palette: warm golden-orange and ochre as the main field, with limited muted teal and coral accents. Use fewer, larger colour groups with visible negative space; avoid neon orange, excessive yellow glow, dense teal collisions and scattered multicolour dirt. Give the Dragon Li cat a cute, simplified hand-painted watercolor face. Make the cheeks round, the muzzle short and plush, and the nose a small flat pink-brown watercolor mark with no shine, pores, nostril depth or realistic three-dimensional modelling. Suggest a subtle sweet smile with two loose brush curves. Paint the large yellow-green eyes as simplified flat watercolor shapes with soft uneven edges, dark ink-wash pupils and one restrained paper-white highlight each. Remove glass-sphere depth, wet reflections, detailed irises, eyelid anatomy and photographic catchlights. The gaze remains gentle and slightly upward. Translate the forehead M, cheek stripes and body bands into loose broad dark-brown watercolor strokes with softened starts and broken ends. Keep them recognisable but simplified. Paint the cream muzzle, cheeks and ear highlights as translucent light washes and paper-white gaps. Use only a few loose, low-contrast whisker strokes. Image 2 is identity-only. Preserve its breed, coat colour blocks, distinctive markings, eye colour and recognisable proportions, but do not copy its photographic lighting, realistic hair strands, lens detail, surface texture or anatomical hardness. Reinterpret every identity feature through Image 1's hand-painted watercolor brush language. Keep one healthy, youthful, rounded and instantly lovable pet with correct limbs and no fused anatomy. Preserve from Image 2 the brown-grey mackerel tabby colour, bold forehead M, dark cheek stripes, yellow-green eyes, pink-brown nose, upright ears and rounded face. Let selected body edges merge into the orange, teal and coral field through broad gestural strokes. Avoid neon colours, excessive saturation, dense competing colour blocks, dirty scattered speckles, glossy spherical eyes, detailed irises, realistic nose and mouth, photographic facial anatomy, fine realistic fur, individual hairs, smooth digital gradients, airbrushing, hard outlines, digital sharpening, thick impasto, palette-knife relief, text, logo, platform mark, watermark or signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "prechecked-pending-user-approval",
+    "checks": {
+      "petIdentity": "pass",
+      "cuteness": "pass",
+      "effectComposition": "pass",
+      "broadGesturalBrushwork": "pass",
+      "restrainedCleanPalette": "pass",
+      "watercolorFaceConsistency": "pass",
+      "reducedFacialRealism": "pass",
+      "simplifiedPainterlyFur": "pass",
+      "anatomy": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [
+      "狸花猫身份稳定，额头 M 纹、面颊条纹、黄绿色眼睛、粉棕鼻、立耳与圆脸可辨识。",
+      "橙黄主场改为较克制的金橙和赭黄，青绿与珊瑚只保留少量大色组；杂色碰撞和脏乱感较 v08 明显降低。",
+      "脸部、毛发和背景统一使用宽水彩笔触、半透明叠色、干刷断边与纸张纹理，媒介一致性成立。",
+      "眼睛改为扁平水彩形状和墨洗瞳孔，玻璃球体积、复杂虹膜与湿亮反光明显降低；鼻口也改为低细节水彩块面。",
+      "狸花纹路由方向明确但边缘吸色的宽笔触概括，脸部圆润、轻度卡通且保持温和仰视；无异常解剖、文字、水印或平台标识。"
+    ],
+    "finalApproval": "pending-user"
+  },
+  "generatedAt": "2026-08-13T15:48:40.717Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/color-painted-portrait_dragon-li-cat_9x16_v09.png",
+    "sha256": "1ffe5a354d006b181d641a286e7997eb301991d13ef3af55309b1870f27f6c02"
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "templateId": "animal-gold-ink-fox",
+  "entryId": "character",
+  "title": "金箔岩彩幻想",
+  "sourceEffectFile": "apps/website/public/assets/example/animal/jimeng-2026-06-07-5160-手绘插画，金箔岩彩，古风，写意，水墨油画，流体笔触，大面积淡彩晕染，精美九尾狐，....png",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-06-07-5160-手绘插画，金箔岩彩，古风，写意，水墨油画，流体笔触，大面积淡彩晕染，精美九尾狐，....png",
+      "sha256": "90387aa1f30ac268ae212a65e3641fb65a3abfcbc02a7938d1faaa47593b9283"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "shiba-dog",
+      "species": "dog",
+      "breed": "adult red Shiba Inu",
+      "path": "tools/imagegen/out/source/dog-shiba.jpg",
+      "sha256": "fbe7fcef9561979da3d66090d3e9f0bd693c1e1dbfa92820e7942d93a92d29a6"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a one-time third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every designated original animal, human-like creature or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult red Shiba Inu with red-and-cream coat, cream cheeks and chest, dark almond eyes, triangular ears, curled tail and compact adult body. Render the face, fur and anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration or turn a stylized scene into a realistic photo. Keep the pet appealing and healthy, never skinny, gaunt, uncanny, aggressive or puppy-like. Keep the gold-leaf mineral-painting field, ancient-style flowing brushwork, warm fox-like silhouette and centered portrait composition; convert the creature to a natural pet anatomy. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character or artist names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a final vertical 9:16 composition at 720x1280 pixels by using Image 1 as the exact composition/style reference and Image 2 as the sole identity reference for the subject. Preserve Image 1's framing, crop, camera angle, centered portrait placement, overall brushwork, gold-leaf mineral-painting aesthetic, warm pink/peach/ivory palette, swirling abstract background, and flowing ancient-style painted texture. Replace the fox-like subject from Image 1 with one coherent adult red Shiba Inu identity matching Image 2: adult red Shiba Inu, red-and-cream coat, cream cheeks and chest, dark almond eyes, triangular ears, curled tail, compact healthy adult body, natural pet proportions. Keep the same expressive, elegant, warm, fox-like silhouette but with correct Shiba Inu anatomy and no juvenile proportions. Render the face, fur, and body in the same painterly visual language as Image 1; do NOT make it photorealistic and do not paste in a photographic dog face. Preserve the subject's pose, gaze direction, lighting, and close-up portrait feel from Image 1, while converting the creature to the Shiba Inu identity. Keep the gold flecks, soft swirling brush arcs, mineral-paint texture, and luminous highlights. Remove all source watermarks, platform marks, logos, and any unreadable third-party text; replace with subtle blank painterly texture only. No extra ears, no extra eyes, no extra limbs, no human hands, no duplicated pets, no floating heads, no broken anatomy, no aggressive expression. Finished image only, no frame, no caption, no border.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-gold-ink-fox_shiba-dog_9x16_v01.png",
+    "sha256": "6b87522ef6618ad90ab331d36d647b63e791823e66fdb090a6e5c19019296723"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-18T01:00:00+08:00"
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-17T16:37:56.138Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/animal/candidates/animal-gold-ink-fox_shiba-dog_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/animal-gold-ink-fox_shiba-dog_9x16_v01.png",
+  "masterSha256": "6b87522ef6618ad90ab331d36d647b63e791823e66fdb090a6e5c19019296723",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-18T01:00:00+08:00",
+    "note": "用户确认本批次除七个待重做模板外，其余动物效果候选均通过并保存为母版。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-gold-ink-fox_shiba-dog_9x16_v01.png",
+      "sha256": "6b87522ef6618ad90ab331d36d647b63e791823e66fdb090a6e5c19019296723"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "unapproved-candidate"
+    ]
+  }
+}

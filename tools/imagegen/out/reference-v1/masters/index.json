@@ -1,0 +1,841 @@
+{
+  "status": "approved-frozen-master-set",
+  "approvedAt": "2026-08-20T06:57:35.480Z",
+  "runtimeInputs": [
+    "self-owned-frozen-master",
+    "authorized-user-owner-identity-reference-when-required",
+    "user-pet-identity-reference"
+  ],
+  "excludesAtRuntime": [
+    "third-party-effect-reference"
+  ],
+  "templates": [
+    {
+      "templateId": "travel-selfie",
+      "title": "旅行自拍",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/travel-selfie_devon-kitten_9x16_v05.webp",
+      "sha256": "7cddcdca2c12a8c89b95720bb1876a3bb5302ca85a410171a8e1f667d975b723",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/travel-selfie_devon-kitten_9x16_v05.json",
+      "approvedAt": "2026-08-13T00:00:00.000+08:00"
+    },
+    {
+      "templateId": "pet-barista",
+      "title": "咖啡主理人",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/pet-barista_shiba_9x16_v05.webp",
+      "sha256": "c35b8c8b79e3290bee3a377aba4e438aa4cbb23e3e4c2abd8455a17ef23deecd",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/pet-barista_shiba_9x16_v05.json",
+      "approvedAt": "2026-08-13T00:00:00.000+08:00"
+    },
+    {
+      "templateId": "roller-coaster",
+      "title": "过山车",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/roller-coaster_corgi_9x16_v01.webp",
+      "sha256": "5b7a3eababd7da3e8cededad8f6e4beba4f254b0d5e2d43b323cf6bfdd392a48",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/roller-coaster_corgi_9x16_v01.json",
+      "approvedAt": "2026-08-13T00:00:00.000+08:00"
+    },
+    {
+      "templateId": "pet-wanted-poster",
+      "title": "萌宠通缉令",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/pet-wanted-poster_golden-retriever_9x16_v01.webp",
+      "sha256": "0171c933caae51a451bdf9fb43f5721f3935f73daa5bca91469e84ef2088beee",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/pet-wanted-poster_golden-retriever_9x16_v01.json",
+      "approvedAt": "2026-08-13T00:00:00.000+08:00"
+    },
+    {
+      "templateId": "pet-encyclopedia",
+      "title": "本宠百科图鉴",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/pet-encyclopedia_british-shorthair_9x16_v02.webp",
+      "sha256": "4c9d456a080dd208433afeaf5715eb740d3377d556c1999bc9e338a77b16eaa9",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/pet-encyclopedia_british-shorthair_9x16_v02.json",
+      "approvedAt": "2026-08-13T00:00:00.000+08:00"
+    },
+    {
+      "templateId": "pet-character-sheet",
+      "title": "宠物角色设定集",
+      "orientation": "landscape",
+      "size": "1280x720",
+      "path": "tools/imagegen/out/reference-v1/masters/pet-character-sheet_tuxedo-cat_16x9_v01.webp",
+      "sha256": "d10172f389dc86daead937b7de0e42d9317c44518ed24086c89d59351f31530b",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/pet-character-sheet_tuxedo-cat_16x9_v01.json",
+      "approvedAt": "2026-08-13T00:00:00.000+08:00"
+    },
+    {
+      "templateId": "pet-expression-grid",
+      "title": "今日表情九宫格",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/pet-expression-grid_cream-cat_9x16_v01.webp",
+      "sha256": "30c2d334126279b15ca7c74c29ebfd52f92769e19904514d25b59e7d09031b78",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/pet-expression-grid_cream-cat_9x16_v01.json",
+      "approvedAt": "2026-08-13T00:00:00.000+08:00"
+    },
+    {
+      "templateId": "pet-runway",
+      "title": "宠物时装周",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/pet-runway_maine-coon-cat_9x16_v04.webp",
+      "sha256": "77a15753d65df05d52393d8e42a23cea3bf6f3448481217eb0e1645b49cdbfa5",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/pet-runway_maine-coon-cat_9x16_v04.json",
+      "approvedAt": "2026-08-14T13:44:21+08:00"
+    },
+    {
+      "templateId": "landmark-adventure",
+      "title": "环球地标与户外探险",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/landmark-adventure_abyssinian-cat_9x16_v01.webp",
+      "sha256": "61ebb97fa9a7b755c04526e247d161ec2a2e1e3ba19a41f0dea519bc1eaed1f9",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/landmark-adventure_abyssinian-cat_9x16_v01.json",
+      "approvedAt": "2026-08-14T15:00:00+08:00"
+    },
+    {
+      "templateId": "dessert-shopkeeper",
+      "title": "甜品饮品主理人",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "version": "public-v02-master-v01",
+      "path": "tools/imagegen/out/reference-v1/masters/dessert-shopkeeper_public-v02-master-v01.webp",
+      "sha256": "d72ec372bf8d06f12a0578ede90ecf3176011d6f0e0a55961035164108cd0c95",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/dessert-shopkeeper_public-v02-master-v01.json",
+      "approvedAt": "2026-08-20T06:57:35.480Z"
+    },
+    {
+      "templateId": "decorative-art-portrait",
+      "title": "装饰艺术肖像",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/decorative-art-portrait_ragdoll-cat_9x16_v05.webp",
+      "sha256": "7113eeca312feb28ffec548830943be74aab8512db99316686b7700d1cc7a976",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/decorative-art-portrait_ragdoll-cat_9x16_v05.json",
+      "approvedAt": "2026-08-14T22:30:06+08:00"
+    },
+    {
+      "templateId": "mini-companion",
+      "title": "同宠大小分身",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/mini-companion_maine-coon-cat_9x16_v13.webp",
+      "sha256": "52fb067810d44d3011b7e79303c43c01e6ec46524408f0316c50fb44574c2581",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/mini-companion_maine-coon-cat_9x16_v13.json",
+      "approvedAt": "2026-08-19T18:34:40+08:00",
+      "version": "v13"
+    },
+    {
+      "templateId": "adventure-rules",
+      "title": "冒险生存法则",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/adventure-rules_corgi-dog_9x16_v04.webp",
+      "sha256": "c5b79e112180dfd00e806b0dcf8f0378a25bf90cf37f7eab7a6764b824dd2ca8",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/adventure-rules_corgi-dog_9x16_v04.json",
+      "approvedAt": "2026-08-15T00:17:44+08:00"
+    },
+    {
+      "templateId": "ink-portrait",
+      "title": "黑白水墨肖像",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/ink-portrait_black-labrador-dog_9x16_reset-v03-reference-gaze-rerun-v01.webp",
+      "sha256": "050b7f7f346b6a26cd3725872cea643ce1bb0d4430a4dac9f7bddbb20d574893",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/ink-portrait_black-labrador-dog_9x16_reset-v03-reference-gaze-rerun-v01.json",
+      "approvedAt": "2026-08-16T00:38:00+08:00"
+    },
+    {
+      "templateId": "original-magic-academy",
+      "title": "原创魔法学院",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "version": "public-v02-master-v01",
+      "path": "tools/imagegen/out/reference-v1/masters/original-magic-academy_public-v02-master-v01.webp",
+      "sha256": "32b3092734f299d11c082c64b45f0bdd0cf3ebf5cad07c49ff6d08f3a2d83e8e",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/original-magic-academy_public-v02-master-v01.json",
+      "approvedAt": "2026-08-20T06:57:35.480Z"
+    },
+    {
+      "templateId": "epic-ruins",
+      "title": "史诗遗迹探险",
+      "orientation": "landscape",
+      "size": "1280x720",
+      "path": "tools/imagegen/out/reference-v1/masters/epic-ruins_german-shepherd-dog_16x9_v02.webp",
+      "sha256": "7a47743b445d4bd2ee0374b2b63741a9fe509c223ab5264f7038089ff68bc541",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/epic-ruins_german-shepherd-dog_16x9_v02.json",
+      "approvedAt": "2026-08-19T14:10:00+08:00"
+    },
+    {
+      "templateId": "pet-life-journal",
+      "title": "本宠生涯日记",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/pet-life-journal_toy-poodle-dog_9x16_v01.webp",
+      "sha256": "d7a87fba5d3d2fe7af7724770c52690265b3aad1d849de88cfdbd53270544a6e",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/pet-life-journal_toy-poodle-dog_9x16_v01.json",
+      "approvedAt": "2026-08-17T09:47:48+08:00"
+    },
+    {
+      "templateId": "fish-chase",
+      "title": "偷鱼大作战",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "owner-pet",
+      "path": "tools/imagegen/out/reference-v1/masters/fish-chase_owner-f01_tuxedo-cat_9x16_v04.webp",
+      "sha256": "e1afae3de41319c73e488ce4034cea84f7c6c5e2326ed0df9de72e8b937bd10c",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/fish-chase_owner-f01_tuxedo-cat_9x16_v04.json",
+      "approvedAt": "2026-08-19T16:05:00+08:00",
+      "version": "v04"
+    },
+    {
+      "templateId": "garden-together",
+      "title": "和你在花园",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "owner-pet",
+      "path": "tools/imagegen/out/reference-v1/masters/garden-together_owner-f02_cream-cat_9x16_v01.webp",
+      "sha256": "005ea7abd8bbce4310f23992eb6d829e464be4c92a6945579da4277ba2214ef1",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/garden-together_owner-f02_cream-cat_9x16_v01.json",
+      "approvedAt": "2026-08-17T00:00:00.000+08:00"
+    },
+    {
+      "templateId": "street-comic-together",
+      "title": "潮流漫画合照",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "owner-pet",
+      "path": "tools/imagegen/out/reference-v1/masters/street-comic-together_owner-m01_shiba-dog_9x16_v01.webp",
+      "sha256": "f3df172173bd51c5ed824788f53127a630267fcee210ca5319338b6caca8e057",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/street-comic-together_owner-m01_shiba-dog_9x16_v01.json",
+      "approvedAt": "2026-08-17T00:00:00.000+08:00"
+    },
+    {
+      "templateId": "night-together",
+      "title": "夜间宠物合影",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "owner-pet",
+      "path": "tools/imagegen/out/reference-v1/masters/night-together_owner-m02_husky-dog_9x16_v01.webp",
+      "sha256": "424aeb7d8e1aad7e4aa5e5e5d115419e9924f1eff515646c7c035ea6aff1d7c3",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/night-together_owner-m02_husky-dog_9x16_v01.json",
+      "approvedAt": "2026-08-17T00:00:00.000+08:00"
+    },
+    {
+      "templateId": "animal-desert-pilot",
+      "title": "沙漠飞行员",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-desert-pilot_shepherd-dog_9x16_v01.webp",
+      "sha256": "fc04632d29a1d08108f29a75a9c403b873d0fc471dc48b7e95e57b1c4bc81d2a",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-desert-pilot_shepherd-dog_9x16_v01.json",
+      "approvedAt": "2026-08-18T01:00:00+08:00"
+    },
+    {
+      "templateId": "animal-headphone-streetwear",
+      "title": "耳麦潮流宠物",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-headphone-streetwear_blue-british-cat_9x16_v02.webp",
+      "sha256": "911c9bf3cc468c6ff53f1ca4da7fc76b9b4b3baec6d6fa20d076a8fb38df69f0",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-headphone-streetwear_blue-british-cat_9x16_v02.json",
+      "approvedAt": "2026-08-19T14:10:00+08:00"
+    },
+    {
+      "templateId": "animal-sunglasses-rabbit",
+      "title": "草丛墨镜萌宠",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-sunglasses-rabbit_cream-cat_9x16_v02.webp",
+      "sha256": "163c1dc99645fba89997c466c12a955f5fa3c2f2385bf96aa7fc076e4cf8816f",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-sunglasses-rabbit_cream-cat_9x16_v02.json",
+      "approvedAt": "2026-08-19T14:10:00+08:00"
+    },
+    {
+      "templateId": "animal-capybara-snapshot",
+      "title": "日常快照萌宠",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-capybara-snapshot_golden-dog_9x16_v02.webp",
+      "sha256": "18aeb7bcc0d2e88a44d0a291cf8af1341b1364f76b21f2886c922fdb54732807",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-capybara-snapshot_golden-dog_9x16_v02.json",
+      "approvedAt": "2026-08-19T14:10:00+08:00"
+    },
+    {
+      "templateId": "animal-giant-city-companion",
+      "title": "巨型城市伙伴",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "version": "public-v02-master-v01",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-giant-city-companion_public-v02-master-v01.webp",
+      "sha256": "41bbb8ca30f7ec488c0da33c2ddebeca291fc8a68e24a6bb286c8f1835a200fe",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-giant-city-companion_public-v02-master-v01.json",
+      "approvedAt": "2026-08-20T06:57:35.480Z"
+    },
+    {
+      "templateId": "animal-doodle-fisheye-chicken",
+      "title": "鱼眼涂鸦表情",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "version": "public-v02-master-v01",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-doodle-fisheye-chicken_public-v02-master-v01.webp",
+      "sha256": "43759e12d722b2f6380087e324ca6c10097e561d83eaeac214a9ecb0ef8bb22f",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-doodle-fisheye-chicken_public-v02-master-v01.json",
+      "approvedAt": "2026-08-20T06:57:35.480Z"
+    },
+    {
+      "templateId": "animal-car-window-westie",
+      "title": "车窗风中写真",
+      "orientation": "landscape",
+      "size": "1280x720",
+      "subjectMode": "pet",
+      "version": "public-v02-master-v01",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-car-window-westie_public-v02-master-v01.webp",
+      "sha256": "ce10c248c6befe6e6e262f8247828453d73d4503bbffb33a1c0ccdc400a78955",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-car-window-westie_public-v02-master-v01.json",
+      "approvedAt": "2026-08-20T06:57:35.480Z"
+    },
+    {
+      "templateId": "animal-enamel-cat-beast",
+      "title": "流体珐琅猫神兽",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-enamel-cat-beast_ragdoll-cat_9x16_v03.webp",
+      "sha256": "a29ec8b6d047d0458ef7d5b5a093cd708087e028a8ece72ad3f704f152e76e11",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-enamel-cat-beast_ragdoll-cat_9x16_v03.json",
+      "approvedAt": "2026-08-20T09:18:36+08:00",
+      "version": "v03"
+    },
+    {
+      "templateId": "animal-glass-paw-portrait",
+      "title": "玻璃爪印特写",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-glass-paw-portrait_toy-poodle-dog_9x16_v03.webp",
+      "sha256": "c1fb2e4903c7d33ee4d4eced1b39a363f14f225a48df40956e10d12e5a630b9e",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-glass-paw-portrait_toy-poodle-dog_9x16_v03.json",
+      "approvedAt": "2026-08-20T09:18:36+08:00",
+      "version": "v03"
+    },
+    {
+      "templateId": "animal-urban-takeover-poster",
+      "title": "城市潮流活动海报",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-urban-takeover-poster_tuxedo-cat_9x16_v01.webp",
+      "sha256": "aab05fb3a5f53062ea526f450b9e00ac4710fefc52873a5fa15c4a1927be098c",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-urban-takeover-poster_tuxedo-cat_9x16_v01.json",
+      "approvedAt": "2026-08-18T01:00:00+08:00"
+    },
+    {
+      "templateId": "animal-warrior-cat",
+      "title": "古风剑客宠物",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-warrior-cat_abyssinian-cat_9x16_v02.webp",
+      "sha256": "75e8984bfb4b3c2853367362ce5fc7648c39a008df04ee07c7e184e291e6d446",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-warrior-cat_abyssinian-cat_9x16_v02.json",
+      "approvedAt": "2026-08-19T14:10:00+08:00"
+    },
+    {
+      "templateId": "animal-sunglasses-rabbit-alt",
+      "title": "草丛墨镜萌宠二",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-sunglasses-rabbit-alt_golden-dog_9x16_v02.webp",
+      "sha256": "8812cad9e9094dd65c4abd3565e0ce6b0489d801962fceef145038c152c756d2",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-sunglasses-rabbit-alt_golden-dog_9x16_v02.json",
+      "approvedAt": "2026-08-19T14:10:00+08:00"
+    },
+    {
+      "templateId": "animal-pink-scooter",
+      "title": "粉色摩托夜行",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-pink-scooter_corgi-dog_9x16_v01.webp",
+      "sha256": "1f0caec0e1df626638a74dfe431e1d13d87a2fc1f636fdbb5823894dd4715221",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-pink-scooter_corgi-dog_9x16_v01.json",
+      "approvedAt": "2026-08-18T01:00:00+08:00"
+    },
+    {
+      "templateId": "animal-haunted-cctv-panels",
+      "title": "鬼屋监控四格",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-haunted-cctv-panels_shiba-dog_9x16_v01.webp",
+      "sha256": "dd6e1a01e2eeafe3faed6250daf89fddb3eb875076e5dac7c114fd99000d1e49",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-haunted-cctv-panels_shiba-dog_9x16_v01.json",
+      "approvedAt": "2026-08-18T01:00:00+08:00"
+    },
+    {
+      "templateId": "animal-sword-cat-alt",
+      "title": "古风剑客宠物二",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-sword-cat-alt_silver-abyssinian-cat_9x16_v03.webp",
+      "sha256": "08ff8046f31d27dcbde14c441976c0fa1b1713b4df5f761a030414c659c64bdb",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-sword-cat-alt_silver-abyssinian-cat_9x16_v03.json",
+      "approvedAt": "2026-08-20T09:18:36+08:00",
+      "version": "v03"
+    },
+    {
+      "templateId": "animal-enamel-dragon",
+      "title": "珐琅彩龙宠",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-enamel-dragon_husky-dog_9x16_stylebridge-v02.webp",
+      "sha256": "ae44bbbcdb96acc6a18e24e200019d61e455a853224ea58744a3b10f2d8bd022",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-enamel-dragon_husky-dog_9x16_stylebridge-v02.json",
+      "approvedAt": "2026-08-18T10:30:00+08:00"
+    },
+    {
+      "templateId": "animal-giant-law-poster",
+      "title": "巨物法相海报",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-giant-law-poster_shepherd-dog_9x16_stylebridge-v04.webp",
+      "sha256": "8350536372ede043478046c1148281023f1b8927f6cef2dd6f4fa4db9012d298",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-giant-law-poster_shepherd-dog_9x16_stylebridge-v04.json",
+      "approvedAt": "2026-08-19T15:30:00+08:00",
+      "version": "v04"
+    },
+    {
+      "templateId": "animal-tiger-storm",
+      "title": "风暴巨兽概念",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-tiger-storm_golden-dog_9x16_stylebridge-v02.webp",
+      "sha256": "6b9dc5cd3c136a242ea383a71075d2bdd961fc7aee5ce6c663bcbd33efe8de90",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-tiger-storm_golden-dog_9x16_stylebridge-v02.json",
+      "approvedAt": "2026-08-18T10:30:00+08:00"
+    },
+    {
+      "templateId": "animal-rabbit-yokai",
+      "title": "古风妖灵宠物",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-rabbit-yokai_cream-cat_9x16_stylebridge-v03.webp",
+      "sha256": "c0a115de22a50cd3bccd49815e98b8d5d26032bba31e48dcea09fbc302d8e6a1",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-rabbit-yokai_cream-cat_9x16_stylebridge-v03.json",
+      "approvedAt": "2026-08-19T14:10:00+08:00"
+    },
+    {
+      "templateId": "animal-watercolor-cat-closeup",
+      "title": "金箔水彩猫咪",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-watercolor-cat-closeup_ragdoll-cat_9x16_stylebridge-v03.webp",
+      "sha256": "e1e6abeba4d4bc3ff8976b9b6ef9bc7e392dd3af3a22fa4ad5cfbdbf373f0174",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-watercolor-cat-closeup_ragdoll-cat_9x16_stylebridge-v03.json",
+      "approvedAt": "2026-08-18T11:48:29+08:00"
+    },
+    {
+      "templateId": "animal-fantasy-double-exposure",
+      "title": "奇幻双重曝光",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-fantasy-double-exposure_black-lab-dog_9x16_eastern-myth-v02.webp",
+      "sha256": "243baf5783f3f27f3366d6648ebd7f9543674cce3ce73c08a376c7a27c8b3def",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-fantasy-double-exposure_black-lab-dog_9x16_eastern-myth-v02.json",
+      "approvedAt": "2026-08-18T12:11:17+08:00"
+    },
+    {
+      "templateId": "fun-breed-expression-grid",
+      "title": "品种表情九宫格",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/fun-breed-expression-grid_corgi-dog_9x16_v01.webp",
+      "sha256": "d1c4152bc5fcbb8d9f022a41992af5a601ed3eb6b2e17edb47ddfc8b9ab94c40",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/fun-breed-expression-grid_corgi-dog_9x16_v01.json",
+      "approvedAt": "2026-08-20T12:00:00+08:00"
+    },
+    {
+      "templateId": "fun-bubble-cat",
+      "title": "气泡萌语",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/fun-bubble-cat_cream-cat_9x16_v01.webp",
+      "sha256": "69710dea4cf2ab848a2eb93c6da50f87c9d5ee6ac93859f1fd45b946f064efa2",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/fun-bubble-cat_cream-cat_9x16_v01.json",
+      "approvedAt": "2026-08-20T12:00:00+08:00"
+    },
+    {
+      "templateId": "fun-heart-comic",
+      "title": "四格爱心漫画",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/fun-heart-comic_cream-cat_9x16_v01.webp",
+      "sha256": "5f9f66be529f6ba1f66bb6648950859683e4441fdf9273a6215b25b630d380aa",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/fun-heart-comic_cream-cat_9x16_v01.json",
+      "approvedAt": "2026-08-20T12:00:00+08:00"
+    },
+    {
+      "templateId": "fun-handwritten-greeting",
+      "title": "手写问候头像",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/fun-handwritten-greeting_corgi-dog_9x16_v01.webp",
+      "sha256": "5595565a16c16d45edb07fa9c4f3c6c422eb3450beef28738efa61ee4df4b806",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/fun-handwritten-greeting_corgi-dog_9x16_v01.json",
+      "approvedAt": "2026-08-20T12:00:00+08:00"
+    },
+    {
+      "templateId": "travel-rome-dog-selfie",
+      "title": "罗马地标自拍",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/travel-rome-dog-selfie_corgi-dog_9x16_v01.webp",
+      "sha256": "f6c0eb880908a6f015283afa59e485b0e7feec26d55bb4e1a5988e2163420217",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/travel-rome-dog-selfie_corgi-dog_9x16_v01.json",
+      "approvedAt": "2026-08-20T12:00:00+08:00"
+    },
+    {
+      "templateId": "travel-great-wall-drink",
+      "title": "长城举杯自拍",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/travel-great-wall-drink_husky-dog_9x16_v01.webp",
+      "sha256": "c4342bfb0cc9cad1bd6336a5135c396e19ab1ba858db12eff8146c5f7bab890c",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/travel-great-wall-drink_husky-dog_9x16_v01.json",
+      "approvedAt": "2026-08-20T12:00:00+08:00"
+    },
+    {
+      "templateId": "travel-alpine-expedition",
+      "title": "雪山探险大片",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/travel-alpine-expedition_golden-dog_9x16_v01.webp",
+      "sha256": "4892416eb16c65832b367d8908db5d6b5d5ced8d2fc17858186173379714dc91",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/travel-alpine-expedition_golden-dog_9x16_v01.json",
+      "approvedAt": "2026-08-20T12:00:00+08:00"
+    },
+    {
+      "templateId": "travel-glass-summer",
+      "title": "透明杯夏日视角",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/travel-glass-summer_tuxedo-cat_9x16_v01.webp",
+      "sha256": "a6f5669deade10ee71ab1d43b505f647c4d290cfba45743569f69f5cbd2e5017",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/travel-glass-summer_tuxedo-cat_9x16_v01.json",
+      "approvedAt": "2026-08-20T12:00:00+08:00"
+    },
+    {
+      "templateId": "pet-milk-tea-shopkeeper",
+      "title": "奶茶店主理人",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "version": "public-v01-master-v01",
+      "path": "tools/imagegen/out/reference-v1/masters/pet-milk-tea-shopkeeper_public-v01-master-v01.webp",
+      "sha256": "c88f2aafc907b1772f7c909f71835e1f6c15eba5913478ba89bdf305881cbeaf",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/pet-milk-tea-shopkeeper_public-v01-master-v01.json",
+      "approvedAt": "2026-08-20T06:57:35.480Z"
+    },
+    {
+      "templateId": "pet-streetwear-editorial",
+      "title": "潮流街拍主理人",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/pet-streetwear-editorial_blue-british-cat_9x16_v01.webp",
+      "sha256": "7b2f1e589489a1636cb33e1cd2ba832c560107147d2d9d13452aeff27c97e639",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/pet-streetwear-editorial_blue-british-cat_9x16_v01.json",
+      "approvedAt": "2026-08-20T12:00:00+08:00"
+    },
+    {
+      "templateId": "pet-autumn-festival",
+      "title": "秋日节庆写真",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/pet-autumn-festival_shiba-dog_9x16_v01.webp",
+      "sha256": "b692c737ce20914eb95169e5aff7db0a3c25022f8184254802e90584f4a43230",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/pet-autumn-festival_shiba-dog_9x16_v01.json",
+      "approvedAt": "2026-08-20T12:00:00+08:00"
+    },
+    {
+      "templateId": "pet-forest-editorial",
+      "title": "森林棚拍主理人",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/pet-forest-editorial_poodle-dog_9x16_v01.webp",
+      "sha256": "4a90eb0e6cf9fc28d30c1d0770aa2db549b54ec04040240aaf6415f77afb9bab",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/pet-forest-editorial_poodle-dog_9x16_v01.json",
+      "approvedAt": "2026-08-20T12:00:00+08:00"
+    },
+    {
+      "templateId": "pet-monocle-editorial",
+      "title": "单片眼镜绅士",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/pet-monocle-editorial_golden-dog_9x16_v01.webp",
+      "sha256": "9d40c04b09353c8bd80367543c204b379df093bcaf9c8891150ee8924eaca5a1",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/pet-monocle-editorial_golden-dog_9x16_v01.json",
+      "approvedAt": "2026-08-20T12:00:00+08:00"
+    },
+    {
+      "templateId": "action-giant-companion",
+      "title": "巨型伙伴幻想",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/action-giant-companion_ragdoll-cat_9x16_v01.webp",
+      "sha256": "ee03411029a99ef8809e5f65b713fa5c96a68f6acc8fa9fe5a76ab2fc3f026ab",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/action-giant-companion_ragdoll-cat_9x16_v01.json",
+      "approvedAt": "2026-08-20T12:00:00+08:00"
+    },
+    {
+      "templateId": "action-original-sci-fi-poster",
+      "title": "原创科幻海报",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/action-original-sci-fi-poster_shepherd-dog_9x16_v01.webp",
+      "sha256": "9c0f2b1f8cd493df22fd0eacbb7c5ec6053a8eb28198a42c0df6fc39cc2540e1",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/action-original-sci-fi-poster_shepherd-dog_9x16_v01.json",
+      "approvedAt": "2026-08-20T12:00:00+08:00"
+    },
+    {
+      "templateId": "character-outfit-grid",
+      "title": "穿搭动作设定九宫格",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/character-outfit-grid_husky-dog_9x16_v03.webp",
+      "sha256": "6dd9f9f41a8d451ba061e00015c32f77160f315b08654c0e374dbd80538caac4",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/character-outfit-grid_husky-dog_9x16_v03.json",
+      "approvedAt": "2026-08-20T12:00:00+08:00"
+    },
+    {
+      "templateId": "character-product-blueprint",
+      "title": "宠物产品设定蓝图",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/character-product-blueprint_corgi-dog_9x16_v04.webp",
+      "sha256": "bb078b77ea8a0411e77cb61f754cd24506edd02b5405659c578e32d855994889",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/character-product-blueprint_corgi-dog_9x16_v04.json",
+      "approvedAt": "2026-08-20T12:00:00+08:00"
+    },
+    {
+      "templateId": "character-snow-leopard",
+      "title": "雪豹幻想角色设定",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/character-snow-leopard_tuxedo-cat_9x16_v05.webp",
+      "sha256": "f399ef35aaa10c4507c4d6478087919a86ccf94b23db16aff448820b696af0a2",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/character-snow-leopard_tuxedo-cat_9x16_v05.json",
+      "approvedAt": "2026-08-20T12:00:00+08:00"
+    },
+    {
+      "templateId": "character-white-tiger",
+      "title": "白虎多姿态设定",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/character-white-tiger_blue-british-cat_9x16_v04.webp",
+      "sha256": "1223945670fee696dce29c615ffc64beeeab1eaa64bf23c82d068c3c8dc6b4a9",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/character-white-tiger_blue-british-cat_9x16_v04.json",
+      "approvedAt": "2026-08-20T12:00:00+08:00"
+    },
+    {
+      "templateId": "character-mini-display",
+      "title": "迷你搭档装备展示",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/character-mini-display_shiba-dog_9x16_v04.webp",
+      "sha256": "fd16dadc6131ff08c461e658cdcf8f61e0a1e0c064576527642aba319a24d3ce",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/character-mini-display_shiba-dog_9x16_v04.json",
+      "approvedAt": "2026-08-20T12:00:00+08:00"
+    },
+    {
+      "templateId": "archive-career-poster",
+      "title": "本宠高光生涯海报",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/archive-career-poster_black-lab-dog_9x16_v01.webp",
+      "sha256": "29c191ad266ffbf81edb12d673e1fa075ab35287c138bc1f6bd6ea504c59f4d5",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/archive-career-poster_black-lab-dog_9x16_v01.json",
+      "approvedAt": "2026-08-20T12:00:00+08:00"
+    },
+    {
+      "templateId": "archive-memory-double-exposure",
+      "title": "本宠记忆双曝",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/archive-memory-double-exposure_cream-cat_9x16_v01.webp",
+      "sha256": "190b34cc6fb7b56a071d34be4bd5a495903176fc2ab2b0207b3679fb6127eb7e",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/archive-memory-double-exposure_cream-cat_9x16_v01.json",
+      "approvedAt": "2026-08-20T12:00:00+08:00"
+    },
+    {
+      "templateId": "archive-dragon-atlas",
+      "title": "本宠龙纹图鉴",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/archive-dragon-atlas_dragon-li-cat_9x16_v01.webp",
+      "sha256": "fbbbc6fbc8ccccb3cf5a87e4fb6d335b6c4053c6f9dbac88d7430d04fd1fae43",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/archive-dragon-atlas_dragon-li-cat_9x16_v01.json",
+      "approvedAt": "2026-08-20T12:00:00+08:00"
+    },
+    {
+      "templateId": "ink-silhouette",
+      "title": "直立情绪角色",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/ink-silhouette_black-lab-dog_9x16_v02.webp",
+      "sha256": "ed16c5c7eda48d5898302e1a64b8795acc220523de6589b2b299082388860f8e",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/ink-silhouette_black-lab-dog_9x16_v02.json",
+      "approvedAt": "2026-08-20T12:00:00+08:00"
+    },
+    {
+      "templateId": "ink-fullbody-flight",
+      "title": "立体情绪头像",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/ink-fullbody-flight_tuxedo-cat_9x16_v02.webp",
+      "sha256": "8800ea7f50c0e4132e17e17b8a7a8697d39c9a84003af071530ab059f7a69338",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/ink-fullbody-flight_tuxedo-cat_9x16_v02.json",
+      "approvedAt": "2026-08-20T12:00:00+08:00"
+    },
+    {
+      "templateId": "ink-brush-avatar",
+      "title": "飞羽水墨全身像",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/ink-brush-avatar_golden-dog_9x16_v01.webp",
+      "sha256": "8df38948469b4107603a514af7e50e86783a4ec53376c8d526f1855e3ae077fa",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/ink-brush-avatar_golden-dog_9x16_v01.json",
+      "approvedAt": "2026-08-20T12:00:00+08:00"
+    },
+    {
+      "templateId": "fun-chef-expression-grid",
+      "title": "厨师表情九宫格",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/fun-chef-expression-grid_siberian-longhair-cat_9x16_v02.webp",
+      "sha256": "d9c9d2584cdea948178a8d73b3150fd00b126b28cb2273b291db73e7443876ca",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/fun-chef-expression-grid_siberian-longhair-cat_9x16_v02.json",
+      "approvedAt": "2026-08-20T14:00:00+08:00"
+    },
+    {
+      "templateId": "fun-scream-reaction",
+      "title": "尖叫瞬间",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/fun-scream-reaction_husky-dog_9x16_v02.webp",
+      "sha256": "c3b2acd53a290a6e076bdb1649c4515a4530bd1c7518479ff9632177c612535e",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/fun-scream-reaction_husky-dog_9x16_v02.json",
+      "approvedAt": "2026-08-20T14:00:00+08:00"
+    },
+    {
+      "templateId": "fun-comic-panels",
+      "title": "城堡巨型伙伴",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/fun-comic-panels_tuxedo-cat_9x16_v03.webp",
+      "sha256": "72dca582f7eb2d8607a37a2fa16ec048732652b4653f767c96f7dcf31298d73d",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/fun-comic-panels_tuxedo-cat_9x16_v03.json",
+      "approvedAt": "2026-08-20T14:00:00+08:00"
+    },
+    {
+      "templateId": "fun-beach-caption",
+      "title": "海边三格字幕",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/fun-beach-caption_shiba-dog_9x16_v02.webp",
+      "sha256": "c2518f34eb4169842e7a0c0c83d1aede610c5f06e55f5f789c12c22f05d2df7b",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/fun-beach-caption_shiba-dog_9x16_v02.json",
+      "approvedAt": "2026-08-20T14:00:00+08:00"
+    },
+    {
+      "templateId": "fun-bunny-reaction",
+      "title": "情绪角色头像",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/fun-bunny-reaction_longhair-chihuahua-dog_9x16_v02.webp",
+      "sha256": "90c37c30465402eae8a80e0fa9c0c90950495103a120b91d67614cbafa3f133c",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/fun-bunny-reaction_longhair-chihuahua-dog_9x16_v02.json",
+      "approvedAt": "2026-08-20T14:00:00+08:00"
+    },
+    {
+      "templateId": "fun-fisheye-closeup",
+      "title": "鱼眼近脸",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/fun-fisheye-closeup_black-cat_9x16_v03.webp",
+      "sha256": "446494747c6390ec84d7f2814044a4ab1e6a097c320ba89684cba85a93ea7fad",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/fun-fisheye-closeup_black-cat_9x16_v03.json",
+      "approvedAt": "2026-08-20T14:00:00+08:00"
+    },
+    {
+      "templateId": "travel-paris-dog-selfie",
+      "title": "巴黎街景自拍",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/travel-paris-dog-selfie_black-lab-dog_9x16_v03.webp",
+      "sha256": "52e868ef3f8a48ff9c25867fe0cde91731671f065f23fb856424346d205c0231",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/travel-paris-dog-selfie_black-lab-dog_9x16_v03.json",
+      "approvedAt": "2026-08-20T14:00:00+08:00"
+    },
+    {
+      "templateId": "archive-fish-anatomy",
+      "title": "本宠结构图谱",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "subjectMode": "pet",
+      "path": "tools/imagegen/out/reference-v1/masters/archive-fish-anatomy_blue-british-cat_9x16_v02.webp",
+      "sha256": "cf9676c5dfdb50420dd9c836f4b31a57421cf986ac35ec27eff9893857c0580f",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/archive-fish-anatomy_blue-british-cat_9x16_v02.json",
+      "approvedAt": "2026-08-20T14:00:00+08:00"
+    }
+  ],
+  "updatedAt": "2026-08-22T15:02:20.036Z",
+  "runtimeInputOrderBySubjectMode": {
+    "pet": [
+      "self-owned-frozen-master",
+      "user-pet-identity-reference"
+    ],
+    "owner-pet": [
+      "self-owned-frozen-master",
+      "authorized-user-owner-identity-reference",
+      "user-pet-identity-reference"
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+<!--
+  N 段细线 + 只显当前步名（UI 重构方案 3.5）。
+  原「数字圆圈 + 全部文字标签」把四步标签同时铺开，视觉噪音大且挤占横向空间；
+  细线只表达进度位置，步骤名单独一行，读起来更快。
+-->
+<view class="steps">
+  <view class="step-track">
+    <view
+      wx:for="{{steps}}"
+      wx:key="*this"
+      class="step-seg {{index <= current ? 'step-seg-on' : ''}}"
+    ></view>
+  </view>
+  <view class="step-meta">
+    <text class="step-name">{{steps[current]}}</text>
+    <text class="step-count">{{current + 1}}/{{steps.length}}</text>
+  </view>
+</view>

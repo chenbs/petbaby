@@ -1,0 +1,81 @@
+.block-gap {
+  display: block;
+  margin-top: var(--space-4);
+}
+
+.flush {
+  margin: 0;
+}
+
+.scenes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+}
+
+.scene {
+  padding: var(--space-3);
+  border: 2rpx solid var(--border);
+  border-radius: var(--card-radius);
+  background: var(--surface);
+  text-align: center;
+  transition: border-color var(--transition-duration) var(--transition-easing), transform var(--transition-duration) var(--transition-easing);
+}
+
+.scene-hover {
+  transform: scale(.97);
+}
+
+.scene-on {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4rpx var(--ai-glow);
+}
+
+/* 场景色块用内联 style 上色，属于内容预览而非 UI 主题 */
+.scene-chip {
+  display: flex;
+  height: 88rpx;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-2);
+  border-radius: var(--radius-sm);
+}
+
+.scene-dot {
+  width: 24rpx;
+  height: 24rpx;
+  border-radius: 50%;
+}
+
+.scene-name {
+  color: var(--text-primary);
+  font-size: var(--small-size);
+  font-weight: 700;
+}
+
+.preview {
+  padding: var(--space-6) var(--space-5);
+  border-radius: var(--card-radius);
+  background: var(--scene-sky);
+  color: var(--scene-ink);
+  text-align: center;
+}
+
+.preview-stars {
+  color: var(--scene-dust);
+  font-size: var(--small-size);
+  letter-spacing: var(--eyebrow-tracking);
+}
+
+.preview-title {
+  margin: var(--space-4) 0 var(--space-2);
+  color: var(--scene-ink);
+  font-size: var(--font-h2);
+  font-weight: 900;
+}
+
+.preview-copy {
+  color: var(--scene-ink);
+  font-size: var(--small-size);
+  opacity: .82;
+}

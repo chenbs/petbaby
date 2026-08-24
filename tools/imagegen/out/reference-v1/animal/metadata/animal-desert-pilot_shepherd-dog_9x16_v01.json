@@ -1,0 +1,81 @@
+{
+  "templateId": "animal-desert-pilot",
+  "entryId": "career",
+  "title": "沙漠飞行员",
+  "sourceEffectFile": "apps/website/public/assets/example/animal/jimeng-2026-05-04-7134-迷你鸭嘴獸首角色，頭戴舊化飛行帽或防護頭盔，配有多層鏡片護目鏡，點綴隨即色或銅色....png",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-05-04-7134-迷你鸭嘴獸首角色，頭戴舊化飛行帽或防護頭盔，配有多層鏡片護目鏡，點綴隨即色或銅色....png",
+      "sha256": "744e212412e63c0bbeb753819efcbc4c63ce387d43e6482bb4a727b076edccf8"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "shepherd-dog",
+      "species": "dog",
+      "breed": "adult German Shepherd",
+      "path": "apps/website/public/assets/hero-shepherd.jpg",
+      "sha256": "f6c37419e96b12425034d2bdcb54cbde952709f37352f3748d67d3db71e937b4"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a one-time third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every designated original animal, human-like creature or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult German Shepherd with tan coat with defined black saddle and mask, brown eyes, tall upright ears, black muzzle and athletic adult build. Render the face, fur and anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration or turn a stylized scene into a realistic photo. Keep the pet appealing and healthy, never skinny, gaunt, uncanny, aggressive or puppy-like. Keep the weathered flight helmet, layered goggles, scarf, rugged clothing, desert ground and full-body stance; replace only the platypus identity with a natural adult pet. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character or artist names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a vertical 9:16 image at 720x1280 pixels, matching the provided reference composition exactly as a frozen-master identity-preserving edit. Scene: a full-body, front-facing adult German Shepherd standing in the same stance, pose, and camera perspective as the reference figure, in a rugged desert landscape under a pale sky. Preserve the original composition, crop, lighting, palette, background mountains, desert ground, props, clothing, and all visual language from the reference scene. The subject must remain a stylized illustration/render that fits the original visual language, not a realistic photo pasted in.\n\nSubject replacement: replace the original platypus-like character identity with one coherent adult German Shepherd only. The dog must have a tan coat with a defined black saddle and black facial mask, brown eyes, tall upright ears, black muzzle, healthy athletic adult build, natural proportions, appealing and calm expression. Keep the face, fur texture, and anatomy rendered in the same stylized medium as the reference. Correct anatomy only: no extra limbs, no duplicate pets, no human hands, no floating head, no residual source subject features.\n\nPreserve clothing and gear exactly in placement and overall look: weathered flight helmet with layered goggles, scarf, rugged torn clothing, straps, belt, knee pads, gloves, arm bracers, hanging bottles, and all desert-adventurer accessories. Preserve the full-body stance and contact relationships with the clothing and props. Keep the long rifle-like prop in the left hand and the same overall prop arrangement, but ensure it is integrated naturally with the German Shepherd anatomy.\n\nDo not redesign, beautify, simplify, juvenilize, or recolor the scene. Preserve weathering, grime, worn textures, and the same contact-boundary details. Preserve the same atmospheric desert lighting and background depth. Maintain a single coherent adult German Shepherd identity throughout. Keep any original text blocks, hierarchy, and layout only if they are part of the scene, but remove or replace any visible platform watermarks, brand marks, or copyrighted names with small original pet-safe wording that does not introduce new logos or signatures. The final output must feel like the original artwork with only the subject identity changed from the original animal to the adult German Shepherd.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-desert-pilot_shepherd-dog_9x16_v01.png",
+    "sha256": "9f401c5b4d025d92da27454026ad1ac07e3601d1fb7185d3374fd23567af19e1"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-18T01:00:00+08:00"
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-17T16:37:25.295Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/animal/candidates/animal-desert-pilot_shepherd-dog_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/animal-desert-pilot_shepherd-dog_9x16_v01.webp",
+  "masterSha256": "fc04632d29a1d08108f29a75a9c403b873d0fc471dc48b7e95e57b1c4bc81d2a",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-18T01:00:00+08:00",
+    "note": "用户确认本批次除七个待重做模板外，其余动物效果候选均通过并保存为母版。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-desert-pilot_shepherd-dog_9x16_v01.webp",
+      "sha256": "fc04632d29a1d08108f29a75a9c403b873d0fc471dc48b7e95e57b1c4bc81d2a"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "unapproved-candidate"
+    ]
+  }
+}

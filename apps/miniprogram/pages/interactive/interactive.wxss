@@ -1,0 +1,108 @@
+.block-gap {
+  display: block;
+  margin-top: var(--space-4);
+}
+
+.flush {
+  margin: 0;
+}
+
+/* 场景配色来自内容属性（scene-presets），不随 UI 主题切换 */
+.scene {
+  margin: var(--space-4) 0;
+  padding: var(--space-6) var(--space-5);
+  border-radius: var(--card-radius);
+  background: var(--scene-sky);
+  color: var(--scene-ink);
+  text-align: center;
+  box-shadow: var(--card-shadow);
+}
+
+.scene-stars {
+  color: var(--scene-dust);
+  font-size: var(--small-size);
+  letter-spacing: var(--eyebrow-tracking);
+}
+
+.scene-title {
+  margin: var(--space-5) 0 var(--space-3);
+  color: var(--scene-ink);
+  font-size: var(--title-size);
+  font-weight: 900;
+}
+
+.scene-copy {
+  color: var(--scene-ink);
+  font-size: var(--body-size);
+  opacity: .85;
+}
+
+.scene-count {
+  margin-top: var(--space-6);
+  color: var(--scene-glow);
+  font-size: var(--font-h3);
+  font-weight: 800;
+}
+
+.scene-hint {
+  display: block;
+  margin-top: var(--space-2);
+  color: var(--scene-ink);
+  font-size: var(--small-size);
+  opacity: .6;
+}
+
+.scenes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.scene-option {
+  padding: var(--space-3);
+  border: 2rpx solid var(--border);
+  border-radius: var(--card-radius);
+  background: var(--surface);
+  text-align: center;
+  transition: border-color var(--transition-duration) var(--transition-easing), transform var(--transition-duration) var(--transition-easing);
+}
+
+.scene-option-hover {
+  transform: scale(.97);
+}
+
+.scene-option-on {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4rpx var(--ai-glow);
+}
+
+.scene-chip {
+  display: flex;
+  height: 80rpx;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-2);
+  border-radius: var(--radius-sm);
+}
+
+.scene-dot {
+  width: 24rpx;
+  height: 24rpx;
+  border-radius: 50%;
+}
+
+.scene-name {
+  color: var(--text-primary);
+  font-size: var(--small-size);
+  font-weight: 700;
+}
+
+.actions {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.export-line {
+  padding: var(--space-2) 0;
+}

@@ -1,0 +1,59 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+
+<view class="page page-flat">
+  <text class="eyebrow">PL-10 · TEMPLATE SHELF</text>
+  <view class="title">先选玩法，再替换成你们</view>
+  <text class="muted">普通玩法生成四张候选；宠物人化生成两张候选，选中一张再解锁高清。</text>
+
+  <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
+
+  <view class="section">
+    <view class="section-title">玩法入口</view>
+    <scroll-view class="chooser" scroll-x enable-flex>
+      <view wx:for="{{entries}}" wx:key="id" class="option {{entryId === item.id ? 'option-on' : ''}}" data-id="{{item.id}}" hover-class="option-hover" bindtap="chooseEntry">
+        <view class="option-name">{{item.title}}</view>
+        <text class="small">{{item.templates.length}} 个模板</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <view class="section">
+    <view class="section-title">模板</view>
+    <scroll-view class="chooser" scroll-x enable-flex>
+      <view wx:for="{{templates}}" wx:key="templateId" class="option {{templateId === item.templateId ? 'option-on' : ''}}" data-id="{{item.templateId}}" hover-class="option-hover" bindtap="chooseTemplate">
+        <image class="style-thumb" src="{{item.sampleUrl}}" mode="aspectFill" lazy-load />
+        <view class="option-name">{{item.title}}</view>
+        <text class="small">{{item.subjectMode === 'owner-pet' ? '主人 + 宠物' : item.subjectMode === 'pet-human' ? '宠物人化' : '宠物主体'}}</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <view class="section">
+    <picker range="{{pets}}" range-key="name" bindchange="choosePet">
+      <t-field label="宠物" control="select" value="{{petText}}" placeholder="请选择宠物"></t-field>
+    </picker>
+  </view>
+
+  <view class="section">
+    <view class="row"><view class="section-title flush">宠物身份照</view><text class="small">选择 1 张</text></view>
+    <t-skeleton wx:if="{{loading}}" type="grid" count="6"></t-skeleton>
+    <t-empty wx:elif="{{!photos.length}}" icon="photo" title="这只宠物还没有照片" description="先去照片库上传一张，再回来生成。" action-text="去上传照片" anim="{{animType}}" decor="{{decor}}" bindaction="openPhotos"></t-empty>
+    <t-photo-grid wx:else photos="{{photos}}" selected-ids="{{photoIds}}" max="1" previewable="{{false}}" anim="{{animType}}" bindtoggle="togglePhoto"></t-photo-grid>
+  </view>
+
+  <block wx:if="{{activeTemplate && activeTemplate.subjectMode === 'owner-pet'}}">
+    <view class="section">
+      <view class="section-title">主人照片授权</view>
+      <checkbox-group bindchange="toggleAuthorization">
+        <label><checkbox value="confirmed" checked="{{authorizationConfirmed}}" />照片中的本人已同意用于本次 AI 生图</label>
+      </checkbox-group>
+    </view>
+    <view class="section">
+      <view class="row"><view class="section-title flush">主人身份照</view><text class="small">选择 1 张</text></view>
+      <t-button type="secondary" block anim="{{animType}}" disabled="{{!authorizationConfirmed || busy}}" bindtap="uploadOwnerPhoto">上传主人照片</t-button>
+      <t-photo-grid wx:if="{{ownerPhotos.length}}" class="block-gap" photos="{{ownerPhotos}}" selected-ids="{{ownerPhotoIds}}" max="1" previewable="{{false}}" removable anim="{{animType}}" bindtoggle="toggleOwnerPhoto" bindremove="removeOwnerPhoto"></t-photo-grid>
+    </view>
+  </block>
+
+  <t-button type="ai" block anim="{{animType}}" loading="{{busy}}" disabled="{{!activeTemplate || !photoIds.length || (activeTemplate.subjectMode === 'owner-pet' && (!ownerPhotoIds.length || !authorizationConfirmed))}}" class="block-gap" bindtap="create">生成 {{activeTemplate && activeTemplate.candidateCount ? activeTemplate.candidateCount : 4}} 张候选</t-button>
+</view>

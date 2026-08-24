@@ -1,0 +1,64 @@
+{
+  "jobId": "adventure-rules_dog_golden-retriever-dog",
+  "templateId": "adventure-rules",
+  "title": "冒险生存法则",
+  "status": "rejected-runtime-validation",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/adventure-rules_corgi-dog_9x16_v04.webp",
+      "sha256": "c5b79e112180dfd00e806b0dcf8f0378a25bf90cf37f7eab7a6764b824dd2ca8"
+    },
+    {
+      "role": "new-pet-identity-reference",
+      "identityId": "golden-retriever-dog",
+      "species": "dog",
+      "breed": "adult Golden Retriever",
+      "path": "tools/imagegen/out/source/dog-golden.jpg",
+      "sha256": "1b6348ce4f6cd1d12f4c93d5f2a8a5c21847e0ce9bc43e4326c1ee89f7a89eef"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 1,
+    "localWorkerConcurrency": 1,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Edit Image 1 into one exact 720x1280 vertical image using exactly two inputs. Image 1 is our frozen self-owned master and controls the whole parchment page. No third-party effect reference is included. Scene-change budget is 0%. Replace every pet in Image 1, central and small, with the same adult adult Golden Retriever from Image 2, preserving its warm golden coat, floppy feathered ears, dark friendly eyes, broad soft muzzle and full healthy adult retriever build. Image 2 supplies identity only. Keep every other Image 1 detail unchanged: crop, layout, all existing text, maps, diagrams, repeated illustrations, sepia hand-inked style, paper texture, woven hat, clothes, scarf, backpack, straps, pouches and flashlight. Copy Image 1's exact complete upright biped pose, head angle, focused downward gaze and expression. Keep the head, neck, shoulders, chest and spine naturally aligned; show two separate grounded hind legs and two complete forepaws without fingers. No crouch, pasted head, twisted neck, hidden or fused limbs, human body, photography, logo, watermark or signature.",
+  "revisedPrompt": "Create a single exact 720x1280 vertical edited image using the two provided reference images. Use Image 1 as the frozen master composition and preserve the entire parchment-page layout, all existing Chinese text, maps, diagrams, repeated illustrations, sepia hand-inked style, paper texture, and every object except the pets. Replace every pet in Image 1, both the central large character and the small dog illustrations, with the same adult Golden Retriever from Image 2 as identity reference only. Preserve the Golden Retriever’s warm golden coat, floppy feathered ears, dark friendly eyes, broad soft muzzle, and full healthy adult retriever build. Keep Image 1’s exact pose, upright biped stance, head angle, focused downward gaze, expression, and overall placement. Maintain natural anatomy: head, neck, shoulders, chest, and spine aligned; two separate grounded hind legs; two complete forepaws without fingers. Do not add a crouch, pasted head, twisted neck, hidden limbs, fused limbs, or human body. Keep the woven hat, clothes, scarf, backpack, straps, pouches, flashlight, and all other details unchanged. No photography look, no logo, no watermark, no signature.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation-third-batch/adventure-rules_dog_golden-retriever-dog_9x16_v01.png",
+    "sha256": "1160a065144428f84e9b55e8bb5e53ada736ff0c6c41c3ad1f615231efc001c7"
+  },
+  "review": {
+    "state": "rejected-internal-review",
+    "checks": {
+      "petIdentity": null,
+      "adultAgeAndProportions": null,
+      "masterPoseExpressionAndGaze": null,
+      "masterStyleAndBrushwork": null,
+      "sceneAndComposition": null,
+      "anatomyAndContacts": null,
+      "repeatedIdentityAndText": null,
+      "dimensions": "pass"
+    },
+    "findings": [
+      "v01 张嘴微笑并露舌，与冻结母版的闭嘴沉静表情不一致；闭嘴修正版因上游 524 尚未生成。"
+    ],
+    "finalApproval": "rejected",
+    "reviewedAt": "2026-08-17T13:33:28+08:00"
+  },
+  "generatedAt": "2026-08-17T04:46:59.542Z"
+}

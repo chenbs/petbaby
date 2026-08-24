@@ -1,0 +1,71 @@
+{
+  "templateId": "leaping-cover",
+  "title": "腾空跳跃封面",
+  "entryId": "action",
+  "status": "master-candidate-pending-user-approval",
+  "subject": "border-collie",
+  "breed": "边境牧羊犬",
+  "revision": {
+    "version": "v10",
+    "supersedes": "leaping-cover_border-collie_9x16_v09.png",
+    "reviewFinding": "v09 的颜色深度和水彩媒介已合适，但画面笔触仍略粗，且成年边牧被幼化为大头、大耳、短口鼻和紧凑躯干。",
+    "scope": "refined-watercolor-adult-life-stage-correction"
+  },
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-composition-and-colour-authoritative-edit-target",
+      "path": "tools/imagegen/out/reference-v1/candidates/leaping-cover_border-collie_9x16_v09.png",
+      "sha256": "178554fa5613658b7f4dbb1f6e4b14a25207e2eac160bfdfa22fee0de6083dde"
+    },
+    {
+      "role": "third-party-watercolor-effect-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/223c5d78-2ba2-49ff-b35e-8c247fd53b20.jpg",
+      "sha256": "ee04f9b8c5a48fe8ad768ec5d51fc5463093f437bf697899d1ee7821e6151a51"
+    },
+    {
+      "role": "pet-identity-life-stage-and-anatomy-authoritative-reference",
+      "path": "apps/website/public/assets/work-border.jpg",
+      "sha256": "8862d1dc48584f73309eac0890afb3367759dd131c681de970976b52a561fc50"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: refined watercolor edit with authoritative adult pet identity. Create a vertical 9:16 output at exactly 720x1280 pixels from exactly three input images. Image 1 is the authoritative self-owned composition and colour target. Preserve its joyful front-facing leap, closed crescent-eye smile, two foreground paws, turquoise upper field, ochre-coral lower field, purple-magenta accents, framing and clean colour grouping. Refine the hand-painted watercolor craft across the whole image without making it photographic. Keep the large composition loose and expressive, but replace coarse blocky areas with finer layered watercolor work: smaller controlled dry-brush marks within the fur, nuanced translucent glaze layers, cleaner pigment boundaries, subtle midtone variation, carefully broken edges and visible fine paper grain. The face needs the highest refinement: use several thin watercolor layers and small intentional brush marks to describe coat pattern, cheeks and expression. Keep every eye, nose and mouth shape visibly hand-painted and simplified. Do not add individual photographic hairs, pores, wet shine, lens detail, airbrushed gradients, digital sharpening, thick impasto or realistic three-dimensional facial modelling. Preserve Image 1's current pigment depth, saturation, hue balance and clean colour grouping exactly. Do not make the image paler, brighter, darker, more saturated or more colourful. Image 2 is only the hand-painted watercolor-impressionist effect reference. Use it to refine loose layered paint marks and airy energy, but do not copy its white dog's age, breed, body proportions, face, watermark or account text. Image 3 is the highest-priority authority for identity, life stage and anatomy. It shows a full-grown adult Border Collie, not a puppy. Preserve its mature medium-sized athletic build, adult head-to-body ratio, appropriately sized semi-upright ears, longer and more defined adult muzzle, narrower mature facial proportions, developed chest, adult limb length and black-and-white coat distribution. Correct Image 1's juvenile proportions while preserving the leap: make the head moderately smaller relative to the torso, the ears less oversized, the muzzle visibly longer and less round, the neck and chest more developed, and the airborne torso slightly longer and more athletic. The two foreground paws may remain enlarged by perspective, but their underlying form must be adult canine paws rather than soft round puppy paws. Keep the dog friendly, joyful and instantly likeable through the closed-eye expression, gentle smile, fluffy watercolor coat and energetic pose, not through baby anatomy. The adult dog must look healthy and mature but never old, stern, skinny or aggressive. Keep the face fully watercolor-painted: closed eyes as refined dark brush crescents, the nose as a small matte charcoal watercolor shape, the mouth as a simplified dark wash and the tongue as a restrained coral glaze. Preserve recognisable adult muzzle length without realistic nose shine, teeth detail or mouth depth. Avoid puppy, juvenile dog, baby face, oversized head, oversized eyes, oversized ears, tiny compact body, very short round muzzle, chubby puppy paws, toy-like proportions, elderly dog, grey ageing muzzle, photorealism, coarse chunky paint, neon colours, extra splashes, text, logo, watermark or signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "prechecked-pending-user-approval",
+    "checks": {
+      "petIdentity": "pass",
+      "adultLifeStage": "pass",
+      "matureProportions": "pass",
+      "cutenessWithoutJuvenilization": "pass",
+      "effectComposition": "pass",
+      "refinedWatercolorCraft": "pass",
+      "watercolorFaceConsistency": "pass",
+      "colourDepthPreservation": "pass",
+      "anatomy": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [
+      "成年边牧身份与黑白花色稳定；头部相对躯干缩小，耳朵不再过度放大，口鼻明显加长，胸颈和腾空躯干更加完整、运动化。",
+      "前景双爪仍保留透视放大，但形态更接近成年犬掌，不再呈现幼犬式圆软玩具比例。",
+      "可爱度来自闭眼笑、轻快动作和蓬松水彩毛发，而非大头、大耳、短口鼻或紧凑幼犬身体。",
+      "毛发、脸颊和背景由更多、更小、更有层次的干刷水彩笔触与透明叠色构成，粗块面减少但未变成照片式细毛。",
+      "v09 的颜色深度、色相关系和干净色组保持稳定；无异常解剖、文字、水印或平台标识。"
+    ],
+    "finalApproval": "pending-user"
+  },
+  "generatedAt": "2026-08-13T16:06:41.009Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/leaping-cover_border-collie_9x16_v10.png",
+    "sha256": "a54bf58baba966964f5c2cb0ab00634297ddf6317d386903a000ae91cb8464ef"
+  }
+}

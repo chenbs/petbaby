@@ -1,0 +1,48 @@
+{
+  "task": "user-feedback-frozen-master-refinement-2026-08-19-round11",
+  "templateId": "animal-glass-paw-portrait",
+  "title": "玻璃爪印特写",
+  "kind": "master",
+  "version": "v03",
+  "status": "generated-pending-visual-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputFidelity": "high",
+  "inputPolicy": {
+    "sequential": true,
+    "imageCount": 2,
+    "maxImages": 2,
+    "longestEdge": 1200,
+    "jpegQuality": 82,
+    "maxCombinedBytes": 1000000
+  },
+  "inputs": [
+    {
+      "role": "original-effect-reference-composition-glass-water-caustics-and-lighting-only",
+      "originalPath": "apps/website/public/assets/example/animal/jimeng-2026-06-30-9004-帮我生成图片：保持脸不变，水后时尚宠物写真，泰迪头部特写，极近距离拍摄，比熊神态....png",
+      "preparedPath": ".tmp/master-remediation-20260819-round11-inputs/animal-glass-paw-portrait-1.jpg",
+      "bytes": 99688,
+      "sha256": "bd3077a47232a13d36f9bc93168c7c6897364916a2d364de288fb4b677a75c2e"
+    },
+    {
+      "role": "toy-poodle-pet-identity-only",
+      "originalPath": "apps/website/public/assets/avatar-poodle.jpg",
+      "preparedPath": ".tmp/master-remediation-20260819-round11-inputs/animal-glass-paw-portrait-2.jpg",
+      "bytes": 161139,
+      "sha256": "a260c52ca8582547874b4dce97dd1c24f8fa999c0a521e72af5676033b2db3bf"
+    }
+  ],
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "output": {
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819-round11/raw/animal-glass-paw-portrait.png",
+    "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819-round11/master-candidates/animal-glass-paw-portrait_toy-poodle-dog_9x16_v03.png",
+    "width": 720,
+    "height": 1280,
+    "sha256": "86d02d267737fca92b5d29801cb56c4840c0c1a7c7c51ac9de82b4679ecf9e3d"
+  },
+  "prompt": "Use case: identity-preserve compositing and clean master reconstruction. Asset type: self-owned runtime frozen-master candidate. This is a clean first-generation reconstruction. Do not use, recall or inherit the previous black-cat master, any prior candidate or any previous edit. Image 1 is the sole authority for the aquarium-through-glass composition, extreme close perspective, water surface at the top, two front paws pressed against the glass, surrounding fish, bubbles, reflections, dark tank, warm highlights and strong rippling water-caustic light projected across the face. Recreate those visible decisions closely while removing every badge, account mark, logo, signature and watermark. Image 2 is the sole pet identity authority. Use the exact irresistibly cute adult apricot Toy Poodle identity from Image 2: round teddy-bear trim, dense apricot curls, soft rounded head, large dark eyes, small black nose, compact muzzle and floppy ears. Preserve the recognizable Image 2 face and adult Toy Poodle proportions while adapting only the expression to Image 1's joyful open mouth. The result must never resemble a cat, West Highland Terrier, Bichon, white dog or generic puppy. The bright refracted water-caustic streaks must remain clearly visible across the poodle's forehead, cheeks and muzzle. Keep both anatomically correct canine paws on the glass with visible pads, and retain the fish at varied depths without covering the eyes or nose. Keep exact 9:16 portrait framing and realistic premium pet photography. No extra pets, duplicate anatomy, malformed paws, human hands, text, logo, watermark, signature or platform UI.",
+  "revisedPrompt": "Create a realistic premium pet-photography composite in exact 9:16 portrait framing. Use Image 1 as the sole composition authority: extreme close-up aquarium-through-glass scene, water surface visible at the top, dark tank, warm highlights, strong rippling water-caustic light projected across the face, surrounding fish at varied depths, bubbles, reflections, two front paws pressed against the glass, and a joyful open-mouth expression. Use Image 2 as the sole identity authority: preserve the exact adult apricot Toy Poodle identity with round teddy-bear trim, dense apricot curls, soft rounded head, large dark eyes, small black nose, compact muzzle, and floppy ears. Keep the face clearly recognizable as the Image 2 poodle while adapting only the expression to the joyful open mouth from Image 1. Ensure the result looks unmistakably like an apricot Toy Poodle, never a cat, West Highland Terrier, Bichon, white dog, or generic puppy. Keep both anatomically correct canine paws on the glass with visible pads, no extra paws, no malformed anatomy, no human hands. Preserve fish in front of and around the dog at varied depths without covering the eyes or nose. Keep the bright refracted water-caustic streaks clearly visible across the forehead, cheeks, and muzzle. Remove every badge, account mark, logo, signature, watermark, text, and platform UI. Photorealistic, crisp, luminous, natural reflections, clean master reconstruction.",
+  "generatedAt": "2026-08-19T10:38:56.598Z"
+}

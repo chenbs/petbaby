@@ -1,0 +1,88 @@
+---
+/*
+ * 文章列表与分页。一个路由管两件事（方案第 4 章）：
+ *   /blog/     → 第 1 页
+ *   /blog/2/   → 第 2 页 …
+ *
+ * `[...page]` 的 rest 参数在第一页是 undefined，Astro 的 paginate() 会把
+ * 首页产出在 /blog/。不另建 index.astro —— 两个文件都能匹配 /blog/ 时会撞路由。
+ */
+import type { GetStaticPaths, Page } from "astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostCard from "../../components/PostCard.astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
+import Cta from "../../components/home/Cta.astro";
+import { listPosts, listTags, PAGE_SIZE, tagPath, type Post } from "../../lib/posts";
+import { breadcrumbLd } from "../../lib/jsonld";
+
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+  const posts = await listPosts();
+  return paginate(posts, { pageSize: PAGE_SIZE });
+};
+
+interface Props {
+  page: Page<Post>;
+}
+
+const { page } = Astro.props;
+const tags = await listTags();
+
+const isFirst = page.currentPage === 1;
+const title = isFirst ? "文章" : `文章 · 第 ${page.currentPage} 页`;
+const description = isFirst
+  ? "玩法教程、宠物拍照技巧，以及我们做这些功能时的取舍。全部基于真实生成结果，不写通用凑数内容。"
+  : `文章列表第 ${page.currentPage} 页，共 ${page.lastPage} 页。玩法教程、拍照技巧与产品设计取舍。`;
+
+const crumbs = [{ label: "首页", href: "/" }, { label: "文章" }];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={[breadcrumbLd(crumbs)]}
+>
+  <section class="section">
+    <div class="container">
+      <div class="page-head">
+        <Breadcrumb items={crumbs} />
+        <h1 class="h2 h2-sm">文章</h1>
+        <p class="page-lead">{description}</p>
+      </div>
+
+      {
+        tags.length > 0 && (
+          <div class="tag-list" style="margin-top:24px">
+            {tags.map(({ tag, count }) => (
+              <a class="tag" href={tagPath(tag)}>{tag} · {count}</a>
+            ))}
+          </div>
+        )
+      }
+
+      <div class="post-grid" style="margin-top:40px">
+        {page.data.map((post, index) => <PostCard post={post} eager={index < 3} />)}
+      </div>
+
+      {
+        page.data.length === 0 && (
+          <div class="empty-state" style="margin-top:40px">
+            还没有已发布的文章。
+          </div>
+        )
+      }
+
+      {
+        page.lastPage > 1 && (
+          <nav class="pagination" aria-label="分页">
+            {page.url.prev ? <a class="btn btn-secondary" href={page.url.prev}>上一页</a> : null}
+            <span>第 {page.currentPage} / {page.lastPage} 页</span>
+            {page.url.next ? <a class="btn btn-secondary" href={page.url.next}>下一页</a> : null}
+          </nav>
+        )
+      }
+    </div>
+  </section>
+
+  {/* 搜索流量的唯一变现路径：从列表直接接到扫码（方案 7.6 第 2 条）*/}
+  <Cta />
+</BaseLayout>

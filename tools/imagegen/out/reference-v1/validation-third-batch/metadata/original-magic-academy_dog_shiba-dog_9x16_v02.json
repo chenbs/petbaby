@@ -1,0 +1,62 @@
+{
+  "jobId": "original-magic-academy_dog_shiba-dog",
+  "templateId": "original-magic-academy",
+  "title": "原创魔法学院",
+  "status": "approved-runtime-validation",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/original-magic-academy_dragon-li-cat_9x16_v01.png",
+      "sha256": "6dfd8f50981e537748f18bd5b4ccdfaa8dfceff03338ab54055b8cc1ab117d4e"
+    },
+    {
+      "role": "new-pet-identity-reference",
+      "identityId": "shiba-dog",
+      "species": "dog",
+      "breed": "adult red Shiba Inu",
+      "path": "tools/imagegen/out/source/dog-shiba.jpg",
+      "sha256": "fbe7fcef9561979da3d66090d3e9f0bd693c1e1dbfa92820e7942d93a92d29a6"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 1,
+    "localWorkerConcurrency": 1,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Edit Image 1 into one exact 720x1280 vertical image using exactly two inputs. Image 1 is our frozen self-owned master. No third-party effect reference is included. Scene-change budget is 0%. Replace only the master pet with the exact adult adult red Shiba Inu from Image 2, preserving its red-and-cream coat, cream cheeks and chest, dark almond eyes, triangular upright ears, curled tail and compact sturdy adult body. Image 2 supplies identity only, not pose, expression, background, light or rendering. Keep Image 1's exact stone classroom, arched window, potion counter, bottles, steaming cauldron, camera, crop, warm light, black robe, green striped scarf, silver trim, original paw-and-star crest, tail placement, calm gaze and facial expression unchanged. Posture correction only: retain the same seated position and front-paw placement, but make the pet sit naturally taller and more alert with a gently upright spine, open chest, relaxed shoulders set back rather than rounded forward, comfortably extended neck and head balanced above the torso. No hunched, slumped, stiff or human-like posture. Keep mature natural breed proportions and correct connected anatomy. No new object, text, logo, known IP, watermark or signature.",
+  "revisedPrompt": "Edit the first reference image into a single exact 720x1280 vertical composition. Use exactly two inputs only: Image 1 as the frozen master scene/background/clothing/composition, and Image 2 as identity reference for the pet only. Replace only the master pet with the exact adult red Shiba Inu from Image 2, preserving its red-and-cream coat, cream cheeks and chest, dark almond eyes, triangular upright ears, curled tail, and compact sturdy adult body. Keep Image 1’s exact stone classroom, arched window, potion counter, bottles, steaming cauldron, camera framing/crop, warm light, black robe, green striped scarf, silver trim, original paw-and-star crest, tail placement, calm gaze, and facial expression unchanged. Posture correction only: keep the same seated position and front-paw placement, but make the pet sit naturally taller and more alert with a gently upright spine, open chest, relaxed shoulders set back rather than rounded forward, comfortably extended neck, and head balanced above the torso. No hunched, slumped, stiff, or human-like posture. Keep mature natural breed proportions and correct connected anatomy. No new objects, text, logos, known IP, watermark, or signature.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation-third-batch/original-magic-academy_dog_shiba-dog_9x16_v02.png",
+    "sha256": "8fc8e8a5373d57387d186873b0f2e467d636f20c5477841439c499cec29231c0"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "checks": {
+      "petIdentity": "pass",
+      "adultAgeAndProportions": "pass",
+      "masterPoseExpressionAndGaze": "pass",
+      "masterStyleAndBrushwork": "pass",
+      "sceneAndComposition": "pass",
+      "anatomyAndContacts": "pass",
+      "repeatedIdentityAndText": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [],
+    "finalApproval": "approved",
+    "approvedAt": "2026-08-17T13:33:28+08:00"
+  },
+  "generatedAt": "2026-08-17T04:38:08.732Z"
+}

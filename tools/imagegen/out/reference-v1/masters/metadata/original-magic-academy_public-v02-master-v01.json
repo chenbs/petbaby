@@ -1,0 +1,86 @@
+{
+  "kind": "frozen-master",
+  "templateId": "original-magic-academy",
+  "title": "原创魔法学院",
+  "status": "approved-frozen-master",
+  "subjectMode": "pet",
+  "version": "public-v02-master-v01",
+  "orientation": "portrait",
+  "size": "720x1280",
+  "sourcePublicPreview": {
+    "path": "tools/imagegen/out/reference-v1/masters/original-magic-academy_public-v02-master-v01.webp",
+    "sha256": "32b3092734f299d11c082c64b45f0bdd0cf3ebf5cad07c49ff6d08f3a2d83e8e",
+    "publicVersion": "public-v02",
+    "metadata": "tools/imagegen/out/reference-v1/public-previews/metadata/original-magic-academy_public-v02.json",
+    "byteIdentical": true,
+    "generatedFromOriginalEffectReference": true,
+    "generatedFromPreviousFrozenMaster": false
+  },
+  "derivedEffectReference": {
+    "role": "original-effect-reference-internal-audit-only",
+    "source": "apps/website/public/assets/example/c228839a-db36-4deb-a485-40e0a0161715.jpg",
+    "excludedAtRuntime": true,
+    "publicUseAllowed": false
+  },
+  "previousFrozenMaster": {
+    "path": "tools/imagegen/out/reference-v1/masters/original-magic-academy_public-v02-master-v01.webp",
+    "sha256": "32b3092734f299d11c082c64b45f0bdd0cf3ebf5cad07c49ff6d08f3a2d83e8e",
+    "metadata": "tools/imagegen/out/reference-v1/masters/metadata/original-magic-academy_public-v02-master-v01.json",
+    "retainedForRollback": true
+  },
+  "masterPath": "tools/imagegen/out/reference-v1/masters/original-magic-academy_public-v02-master-v01.webp",
+  "masterSha256": "32b3092734f299d11c082c64b45f0bdd0cf3ebf5cad07c49ff6d08f3a2d83e8e",
+  "provider": "lingsuan",
+  "endpoint": "/v1/images/edits",
+  "runtimeReferenceContract": {
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/original-magic-academy_public-v02-master-v01.webp",
+      "sha256": "32b3092734f299d11c082c64b45f0bdd0cf3ebf5cad07c49ff6d08f3a2d83e8e"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "public-preview-storage-key",
+      "rejected-promotion-candidate"
+    ]
+  },
+  "runtimePromptExtension": "Keep the dark green magic-academy robe and scarf, stone classroom, potion props, warm cinematic light and the same seated full-body composition.",
+  "stabilityReview": {
+    "state": "approved-by-user",
+    "identities": [
+      {
+        "identityId": "british-shorthair-cat",
+        "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/original-magic-academy/original-magic-academy_british-shorthair-cat_stability-v01.png",
+        "outputSha256": "34347ba201b131a092f8d269cc81665a5610eb53d93ca54c463a875fbcb612ff",
+        "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/original-magic-academy/metadata/original-magic-academy_british-shorthair-cat_stability-v01.json"
+      },
+      {
+        "identityId": "german-shepherd-dog",
+        "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/original-magic-academy/original-magic-academy_german-shepherd-dog_stability-v01.png",
+        "outputSha256": "fa396e4d707215ab3dd3d16022c0a8a391cfc82fb089236c99e44e16aaba42de",
+        "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/original-magic-academy/metadata/original-magic-academy_german-shepherd-dog_stability-v01.json"
+      },
+      {
+        "identityId": "cream-longhair-cat",
+        "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/original-magic-academy/original-magic-academy_cream-longhair-cat_stability-v01.png",
+        "outputSha256": "d59bd5613f8dc606fbf1a3fa076191a31d1180e0fc050b13591646233ce507ec",
+        "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/original-magic-academy/metadata/original-magic-academy_cream-longhair-cat_stability-v01.json"
+      }
+    ],
+    "approvedAt": "2026-08-20T06:57:35.480Z"
+  },
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-20T06:57:35.480Z",
+    "note": "用户审核公开展示图升母版稳定性总览后明确批准。"
+  },
+  "publicUseAllowed": false,
+  "runtimeMasterUseAllowed": true,
+  "runtimeThirdPartyEffectReferenceIncluded": false
+}

@@ -1,0 +1,117 @@
+.block-gap {
+  display: block;
+  margin-top: var(--space-4);
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.filter {
+  display: grid;
+  min-height: 88rpx;
+  align-content: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  border: 2rpx solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.filter-label {
+  color: var(--text-secondary);
+  font-size: var(--eyebrow-size);
+}
+
+.filter-value {
+  overflow: hidden;
+  color: var(--text-primary);
+  font-size: var(--small-size);
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.list {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.task-progress {
+  margin-top: var(--space-4);
+}
+
+/* 作品用双列图片网格，让画面本身成为主视觉 */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--gap-item);
+}
+
+/*
+ * 比例由 aspect-ratio 锁定，不再写死 height。
+ * 固定像素高在不同机型宽度下会得到不同比例，网格随之参差 —— 这正是方案 2.5
+ * 要求「比例严格固定」的原因。
+ */
+.cover-wrap {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: var(--ratio-card);
+  border-radius: inherit;
+}
+
+.cover {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--skeleton-base);
+}
+
+/* 压图文字必读性靠遮罩保证；基色是暖褐而非纯黑，见方案 A 落地要点 */
+.veil {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 62%;
+  background: var(--veil-image);
+  pointer-events: none;
+}
+
+.cover-tag {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+}
+
+.cover-meta {
+  position: absolute;
+  right: var(--space-3);
+  bottom: var(--space-3);
+  left: var(--space-3);
+  display: grid;
+  gap: var(--space-0);
+}
+
+/*
+ * 压在图上的文字固定用玻璃态亮色，不跟随 --text-primary：
+ * 遮罩之下永远是暗底，浅色主题若沿用深色正文会彻底看不见。
+ */
+.work-title {
+  overflow: hidden;
+  color: var(--glass-text-primary);
+  font-size: var(--body-size);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-h3);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cover-sub {
+  color: var(--glass-text-secondary);
+  font-size: var(--eyebrow-size);
+  letter-spacing: var(--eyebrow-tracking);
+}

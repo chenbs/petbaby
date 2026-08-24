@@ -1,0 +1,79 @@
+{
+  "templateId": "fish-chase",
+  "title": "偷鱼大作战",
+  "entryId": "together",
+  "version": "v01",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "requestOrder": [
+    "effect-reference",
+    "owner-identity",
+    "pet-identity"
+  ],
+  "inputs": [
+    {
+      "role": "third-party-effect-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/1.png",
+      "sha256": "bbc27f969888259f7ba3528256dc09986ef60cf066ba57f90a5d5df2549f9827"
+    },
+    {
+      "role": "authorized-owner-identity-reference-internal-only",
+      "path": "tools/imagegen/out/source/girl-sample.png",
+      "sha256": "e4d5e0223a232231c63690baf31fd56846fbd1bcfbd1635e2a4ca21fdeeed17c"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "path": "tools/imagegen/out/source/cat-tuxedo.jpg",
+      "sha256": "c4b2ebaac7dd5d59fffd83a827d94fdc03e1befd3e1108f337de8ba5488a7d39"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "ownerPublicSampleAllowed": false,
+  "sceneChangeBudget": "0%",
+  "inputFidelity": "high",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "elapsedMs": 78853,
+  "prompt": "Use case: compositing and identity-preserve. Create a vertical 9:16 self-owned master candidate from exactly three input images. The final delivered asset will be exactly 720x1280 pixels. Image 1 is the effect reference and has highest priority for every non-identity visual decision. Keep a strict 0% scene-change budget: preserve its background, environment, camera position, lens, crop, composition, subject placement, action timing, expression, gaze, hand and paw placement, lighting, colour balance, medium, brushwork or photographic texture, clothing, landmarks, unique props and text layout. Change only the two subject identities and the minimum physical fit around their different bodies. Image 2 is the only owner identity reference. Preserve that exact adult person's face, facial proportions, hair, gender presentation and adult age. It contributes no pose, hand gesture, clothing, camera, scene, light or style. Image 3 is the only pet identity reference. Preserve that exact pet's species, breed, coat colours, markings, face, eye colour, ear shape, muzzle, fur length and healthy adult proportions. It contributes no pose, camera, scene, light or style. Never reuse either original subject identity from Image 1. Transfer Image 1's complete pose, gaze, facial expression, action, body direction, contact points, scale and visual treatment onto the two new identities from Images 2 and 3. Keep both new subjects recognisable, attractive and immediately likeable in a contemporary young aesthetic, without obvious age regression. Do not turn an adult owner into a child or an adult pet into a puppy or kitten. Do not make either subject gaunt, oddly thin, aged, uncanny or physically distorted. Exactly one owner and one pet. Never swap, merge, duplicate or blend their identities. No extra person, face, pet, head, hand, finger, paw, limb or tail. Keep all anatomy, contacts and occlusions physically coherent. Scene lock: the exact bustling outdoor market street, stalls, awnings, daylight, flying papers and small debris, deep background perspective and lively accidental-chaos atmosphere. Composition and action lock: the exact low ultra-wide fisheye chase composition: the pet fills the extreme lower-right foreground while running toward the lens, holding one complete small fish naturally in its mouth; the owner runs in the middle background reaching toward the pet with the same alarmed playful expression and body action. Visual treatment lock: the exact energetic cinematic photographic treatment, strong wide-angle distortion, crisp faces, subtle motion blur away from both faces, natural colour balance and physical lighting. Preserve the reference owner's complete street outfit, footwear and accessories. Only make the minimum tailoring adjustment needed to fit the new owner's adult body; do not redesign or remove the clothes. Preserve any native environmental text placement when it remains readable and scene-appropriate. Do not add platform UI, logos, watermarks or signatures.",
+  "revisedPrompt": "Create a vertical 9:16 photorealistic composite at exactly 720x1280 pixels using the three provided reference images. Use Image 1 as the effect/composition/style reference with highest priority for all non-identity decisions; preserve its exact bustling outdoor market street, stalls, awnings, daylight, flying papers and debris, deep background perspective, lively accidental-chaos atmosphere, low ultra-wide fisheye chase camera, strong wide-angle distortion, cinematic photographic treatment, crisp faces, subtle motion blur away from faces, natural color balance, and physical lighting. Keep the same scene framing and action timing: the pet fills the extreme lower-right foreground running toward the lens, holding one complete small fish naturally in its mouth; the owner runs in the middle background reaching toward the pet with the same alarmed playful expression and body action. Preserve the owner’s complete street outfit, footwear, accessories, and overall styling from Image 1 with only minimal tailoring to fit the new adult body. Preserve the exact text/layout/landmarks/props of the scene where readable and scene-appropriate. Use Image 2 as the only owner identity reference: preserve that exact adult person’s face, facial proportions, hair, adult age, and gender presentation. Use Image 3 as the only pet identity reference: preserve that exact cat’s species, breed, coat colors, markings, face, eye color, ear shape, muzzle, fur length, and healthy adult proportions. Never reuse either original subject identity from Image 1. Do not change the pose, gaze, facial expression, action, body direction, contact points, scale, or visual treatment from Image 1. Exactly one owner and one pet, physically coherent anatomy, no extra limbs/heads/tails, no identity blending. The final image should be immediately likeable and contemporary, with realistic adult proportions and no age regression, uncanny features, or distortion beyond the intended fisheye lens effect.",
+  "automatedChecks": {
+    "dimensions": "pass",
+    "visualContent": "pass",
+    "inputCount": 3,
+    "inputRoleOrder": "pass"
+  },
+  "visualReview": {
+    "state": "approved-by-user",
+    "failureChecks": [
+      "owner-behind-pet",
+      "one-complete-fish",
+      "mouth-fish-boundary",
+      "extreme-fisheye-action",
+      "one-owner-one-pet"
+    ],
+    "approvedAt": "2026-08-17T00:00:00.000+08:00"
+  },
+  "generatedAt": "2026-08-17T08:06:35.891Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/dual-subject/candidates/fish-chase_owner-f01_tuxedo-cat_9x16_v01.png",
+    "rawPath": "tools/imagegen/out/reference-v1/dual-subject/candidates/raw/fish-chase_owner-f01_tuxedo-cat_9x16_v01.png",
+    "sha256": "2db3e677818b776228e3df0edcd74e0652cfc7946c529c7d1e595ac14fe64fd9"
+  },
+  "promotedFromTechnicalProbe": "tools/imagegen/out/reference-v1/dual-subject/probe/fish-chase_owner-f01_tuxedo-cat_9x16_v01-probe.png",
+  "promotedWithoutModelCall": true,
+  "promotedAt": "2026-08-17T08:07:51.951Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/dual-subject/candidates/fish-chase_owner-f01_tuxedo-cat_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/retired-masters/fish-chase_owner-f01_tuxedo-cat_9x16_v01.png",
+  "masterSha256": "2db3e677818b776228e3df0edcd74e0652cfc7946c529c7d1e595ac14fe64fd9",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-17T00:00:00.000+08:00",
+    "note": "四张双主体母版已由用户逐组查看并明确审批通过。"
+  },
+  "ownerSourcePhotoPublicSampleAllowed": false,
+  "approvedDerivedMasterPublicSampleAllowed": true
+}

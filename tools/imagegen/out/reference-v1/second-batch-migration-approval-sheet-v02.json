@@ -1,0 +1,117 @@
+{
+  "purpose": "second-batch-runtime-migration-user-approval",
+  "generatedBy": "local-sharp-composite",
+  "modelCall": false,
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/second-batch-migration-approval-sheet-v02.png",
+    "width": 1860,
+    "height": 4065,
+    "sha256": "a3a7c0aedd7f5f294ec39bc039c14f4ba5551ef66b62e44832af0a649d79726b"
+  },
+  "items": [
+    {
+      "templateId": "exaggerated-expression",
+      "files": [
+        {
+          "role": "FROZEN MASTER",
+          "path": "tools/imagegen/out/reference-v1/masters/exaggerated-expression_ragdoll-cat_9x16_v02.png",
+          "sha256": "c8b1e59406f6fc88e7976cad20f24024c4eb939a73fc4169152ef342e072512b"
+        },
+        {
+          "role": "CAT / BRITISH-SHORTHAIR-CAT",
+          "path": "tools/imagegen/out/reference-v1/validation-second-batch/exaggerated-expression_cat_british-shorthair-cat_9x16_v01.png",
+          "sha256": "83281cbd054d9f5ac235d4f1ca25ee6aae361bb34d06ae0f0073d0605d7f91f3"
+        },
+        {
+          "role": "DOG / CORGI-DOG",
+          "path": "tools/imagegen/out/reference-v1/validation-second-batch/exaggerated-expression_dog_corgi-dog_9x16_v01.png",
+          "sha256": "bdd8e24c3f09aaafaeecfc0b84b924a13769200f9bcac71617bdb777b4c2988e"
+        }
+      ]
+    },
+    {
+      "templateId": "landmark-adventure",
+      "files": [
+        {
+          "role": "FROZEN MASTER",
+          "path": "tools/imagegen/out/reference-v1/masters/landmark-adventure_abyssinian-cat_9x16_v01.webp",
+          "sha256": "61ebb97fa9a7b755c04526e247d161ec2a2e1e3ba19a41f0dea519bc1eaed1f9"
+        },
+        {
+          "role": "CAT / CREAM-LONGHAIR-CAT",
+          "path": "tools/imagegen/out/reference-v1/validation-second-batch/landmark-adventure_cat_cream-longhair-cat_9x16_v02.png",
+          "sha256": "6bb5bce75d7d63a88808192ee00349350b34afbf499624f27bbc0b85c78a8811"
+        },
+        {
+          "role": "DOG / HUSKY-DOG",
+          "path": "tools/imagegen/out/reference-v1/validation-second-batch/landmark-adventure_dog_husky-dog_9x16_v02.png",
+          "sha256": "19fbba533a2e2d343f84b8dab61ac8cd84d62fea35b93eb510232500edabcc5c"
+        }
+      ]
+    },
+    {
+      "templateId": "dessert-shopkeeper",
+      "files": [
+        {
+          "role": "FROZEN MASTER",
+          "path": "tools/imagegen/out/reference-v1/retired-masters/dessert-shopkeeper_toy-poodle_9x16_v02.png",
+          "sha256": "d2efd6d0153a3f383aa87ecfff46bc29c628759cd64d0bec9f4fd22f7596d7c5"
+        },
+        {
+          "role": "CAT / BLACK-CAT",
+          "path": "tools/imagegen/out/reference-v1/validation-second-batch/dessert-shopkeeper_cat_black-cat_9x16_v01.png",
+          "sha256": "e46b1d7f86bd054a7dd4adf851f27a71170d83e8bf6c23228899375aa5e3f43b"
+        },
+        {
+          "role": "DOG / GOLDEN-RETRIEVER-DOG",
+          "path": "tools/imagegen/out/reference-v1/validation-second-batch/dessert-shopkeeper_dog_golden-retriever-dog_9x16_v01.png",
+          "sha256": "5d1f6d2ab2683b54b20ff406a6212f3780dd621fac6bdd2c50286acdcdcacc90"
+        }
+      ]
+    },
+    {
+      "templateId": "pet-runway",
+      "files": [
+        {
+          "role": "FROZEN MASTER",
+          "path": "tools/imagegen/out/reference-v1/masters/pet-runway_maine-coon-cat_9x16_v04.webp",
+          "sha256": "77a15753d65df05d52393d8e42a23cea3bf6f3448481217eb0e1645b49cdbfa5"
+        },
+        {
+          "role": "CAT / TUXEDO-CAT",
+          "path": "tools/imagegen/out/reference-v1/validation-second-batch/pet-runway_cat_tuxedo-cat_9x16_v01.png",
+          "sha256": "8bd1610b4c100ce38dfe652e48cc2ab6a266ad4ff76307f0c95712e32aec2724"
+        },
+        {
+          "role": "DOG / GERMAN-SHEPHERD-DOG",
+          "path": "tools/imagegen/out/reference-v1/validation-second-batch/pet-runway_dog_german-shepherd-dog_9x16_v01.png",
+          "sha256": "612e82c7b722004741037251db4658592d1add6cf78955f05e2ebc7a8290d9db"
+        }
+      ]
+    },
+    {
+      "templateId": "leaping-cover",
+      "files": [
+        {
+          "role": "FROZEN MASTER",
+          "path": "tools/imagegen/out/reference-v1/masters/leaping-cover_border-collie_9x16_reset-v02.png",
+          "sha256": "79150ee5c11c29962c19d93bd101708d5f417ee1514b3bffe8f8efd4bff90935"
+        },
+        {
+          "role": "CAT / RAGDOLL-CAT",
+          "path": "tools/imagegen/out/reference-v1/validation-second-batch/leaping-cover_cat_ragdoll-cat_9x16_v01.png",
+          "sha256": "7f67c7df70ed928a76d6a83227469079f0b906f9acc1280cd8e4fbb55afc5d6c"
+        },
+        {
+          "role": "DOG / SHIBA-DOG",
+          "path": "tools/imagegen/out/reference-v1/validation-second-batch/leaping-cover_dog_shiba-dog_9x16_v01.png",
+          "sha256": "b6a542ec161c541ed022c4a3753b36f1ac80d942ddc4491e464323ea089b0e93"
+        }
+      ]
+    }
+  ],
+  "status": "approved-by-user",
+  "approvedAt": "2026-08-14T17:57:02+08:00",
+  "review": "10/10 active runtime migrations approved; landmark-adventure uses dark-sunglasses v02; template 06 removed."
+}

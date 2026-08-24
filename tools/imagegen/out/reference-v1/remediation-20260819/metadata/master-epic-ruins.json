@@ -1,0 +1,42 @@
+{
+  "task": "user-requested-frozen-master-remediation-2026-08-19",
+  "templateId": "epic-ruins",
+  "kind": "master",
+  "version": "v02",
+  "status": "generated-pending-visual-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputFidelity": "high",
+  "inputPolicy": {
+    "sequential": true,
+    "maxImages": 2,
+    "maxCombinedBytes": 1000000
+  },
+  "inputs": [
+    {
+      "role": "current-self-owned-master",
+      "path": ".tmp/master-remediation-20260819-inputs/epic-ruins-master.jpg",
+      "bytes": 169412,
+      "sha256": "ce418fb419b1f2c55e4667f1de8e8bf4afed2ff46e41edb9447302b29172e751"
+    },
+    {
+      "role": "effect-reference-composition-guide",
+      "path": ".tmp/master-remediation-20260819-inputs/epic-ruins-effect.jpg",
+      "bytes": 196032,
+      "sha256": "e6b94ed9f2aeb372cc419eb9fe1f07a4735109be5ebb0323f3784a07f5af66da"
+    }
+  ],
+  "orientation": "landscape",
+  "requestedSize": "1280x720",
+  "output": {
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/master-epic-ruins.png",
+    "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819/master-candidates/epic-ruins_german-shepherd-dog_16x9_v02.png",
+    "width": 1280,
+    "height": 720,
+    "sha256": "6f435dba46e4f1ce675f9c7ba1d62ae8afd2b44f6664a15c1a4d26dc00ba910e"
+  },
+  "prompt": "Use case: identity-preserve precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the current self-owned master and controls the replacement pet or owner identity unless the request explicitly changes the breed. Image 2 is the composition and effect reference. Use it only to correct the requested composition, pose, expression, gaze or visual treatment. Preserve every aspect that is not explicitly changed below, including the scene, camera, crop, palette, lighting, costume, props, spatial relationships and visual medium. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature. No extra subjects, duplicate anatomy, human hands on animals, malformed paws, text, logo, watermark or signature. Recompose as a true cinematic horizontal scene matching Image 2: the armored adult German Shepherd occupies the left third in a heroic low-angle full-body stance, while enormous ruined arches and suspended towers open across the middle and right. Keep the dark metallic armor, rain, mist, backlight, tiny scale figures and monumental science-fantasy ruin detail. Return a 16:9 landscape composition.",
+  "revisedPrompt": "Edit using the first image as the identity/master reference: preserve the same armored adult German Shepherd as the main subject, with the same dark metallic armor, realistic dog anatomy, and mature heroic presence. Use the second image only as the composition and atmosphere reference. Recompose into a true cinematic 16:9 landscape scene: place the armored German Shepherd in the left third of the frame in a heroic low-angle full-body stance on a platform, facing toward the right/middle distance. Expand the environment across the middle and right with enormous ruined arches, suspended towers, monumental science-fantasy structures, tiny scale figures far below, rain, mist, dramatic backlight, and stormy sky. Keep the dark metallic armor, wet surfaces, atmospheric haze, lens flare/backlight feel, and grand scale. Preserve the scene’s visual medium as a highly detailed cinematic sci-fi fantasy render. Remove all platform badges, AI labels, account names, account numbers, watermarks, logos, and signatures. No extra subjects, no duplicate anatomy, no human hands on animals, no malformed paws, no text, no logo, no watermark, no signature.",
+  "generatedAt": "2026-08-19T05:49:05.947Z"
+}

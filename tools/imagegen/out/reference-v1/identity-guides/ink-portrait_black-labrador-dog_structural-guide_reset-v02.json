@@ -1,0 +1,28 @@
+{
+  "purpose": "coordinate-free-derived-pet-structure-guide",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "effect-pose-and-composition-reference",
+      "path": "apps/website/public/assets/example/b983ec71-2f88-4c23-97f2-c0f0cb75bac1.jpg",
+      "sha256": "47d1f1377a40e3201d4c65a48fa55185118291de7564bda787ded2959c36df3d"
+    },
+    {
+      "role": "original-pet-identity-reference",
+      "path": "tools/imagegen/out/source/dog-black-lab.jpg",
+      "sha256": "20960d2ace805e68b41a7934e37ebdf24b7007f8f3fa85527d9beb22d2df6022"
+    }
+  ],
+  "hardcodedSemanticCoordinates": false,
+  "mask": null,
+  "prompt": "Use case: identity-preserving structural guide generation through image editing, not final artwork. Use exactly two input images. Image 1 controls the exact subject placement, three-quarter left-facing head angle, bust scale, gaze direction, neck taper, outer silhouette, diagonal lower stroke and portrait composition. Image 2 controls only adult black Labrador breed identity: naturally dropped ears, broad strong muzzle, adult skull proportions, solid black coat and healthy build. Replace the pointed-ear dog structure from Image 1 with the adult black Labrador structure from Image 2 while preserving Image 1's pose and perspective. Do not copy Image 2's front-facing pose, direct gaze, background, lighting, photographic eyes, wet nose, fur strands or realistic surface detail. Render the result as a deliberately simplified three-value structural guide using only solid near-black, flat mid-grey and off-white paper shapes. Keep the complete head, dropped ears, muzzle, neck and bust readable, but remove all photographic texture, gradients, highlights, individual hairs, detailed irises and background scenery. Preserve Image 1's visible-eye placement and openness as a simple off-white eye shape with one compact dark inner mark. Do not narrow it into a slit, enlarge the pupil or create a separate grey disc. Keep the far eye suppressed by the three-quarter profile. No watermark, account ID, text, logo, signature, decorative frame or added object. Exact final canvas 720x1280.",
+  "revisedPrompt": "Edit using exactly the two provided input images. Use Image 1 as the structural composition guide: preserve the exact subject placement, three-quarter left-facing head angle, bust scale, gaze direction, neck taper, outer silhouette, diagonal lower stroke, and portrait composition. Use Image 2 only for adult black Labrador breed identity: naturally dropped ears, broad strong muzzle, adult skull proportions, solid black coat, and healthy build.\n\nReplace the pointed-ear dog structure from Image 1 with the adult black Labrador structure from Image 2 while preserving Image 1's pose and perspective. Do NOT copy Image 2's front-facing pose, direct gaze, background, lighting, photographic eyes, wet nose, fur strands, or realistic surface detail.\n\nRender as a deliberately simplified three-value structural guide: only solid near-black, flat mid-grey, and off-white paper shapes. Keep the complete head, dropped ears, muzzle, neck, and bust readable. Remove all photographic texture, gradients, highlights, individual hairs, detailed irises, and background scenery.\n\nPreserve Image 1's visible-eye placement and openness as a simple off-white eye shape with one compact dark inner mark. Do not narrow it into a slit, enlarge the pupil, or create a separate grey disc. Keep the far eye suppressed by the three-quarter profile.\n\nNo watermark, account ID, text, logo, signature, decorative frame, or added object. Exact final canvas 720x1280.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/identity-guides/ink-portrait_black-labrador-dog_structural-guide_reset-v02.png",
+    "size": "720x1280",
+    "sha256": "f3d1caa11b13cecbab2aa2bafdeb9d79fbf102a1b1fb9dbbb5e4e1ec9618726d"
+  },
+  "generatedAt": "2026-08-14T16:57:44.559Z"
+}

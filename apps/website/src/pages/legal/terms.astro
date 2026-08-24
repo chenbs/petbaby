@@ -1,0 +1,32 @@
+---
+/*
+ * 用户协议（草案骨架，方案 11.1）。
+ *
+ * 第 3、5 节标了要点，因为这两条与产品设计直接绑定 —— 原型信任条已经对外说了
+ * 「照片仅用于生成，可随时删除」，正式条款必须与之一致，否则是虚假宣传。
+ */
+import LegalLayout from "../../layouts/LegalLayout.astro";
+
+const SECTIONS = [
+  { heading: "服务说明" },
+  { heading: "账号与使用规范" },
+  {
+    heading: "内容与知识产权",
+    note: "本节要点：用户上传照片的授权范围、生成内容的权属。",
+  },
+  { heading: "付费与退款" },
+  {
+    heading: "照片与数据处理",
+    note: "本节要点：与隐私政策呼应 —— 照片仅用于生成、可随时删除。官网信任条已对外这样表述，条款必须与之一致。",
+  },
+  { heading: "免责声明" },
+  { heading: "争议解决" },
+];
+---
+
+<LegalLayout
+  title="用户协议"
+  description="用户协议的章节骨架。正文尚未定稿，不构成任何承诺或法律文件；本页列出待法务补充的条款范围与两处与产品设计绑定的要点。"
+  placeholder="legal-terms"
+  sections={SECTIONS}
+/>

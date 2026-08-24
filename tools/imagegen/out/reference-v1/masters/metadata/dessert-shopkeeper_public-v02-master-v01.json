@@ -1,0 +1,86 @@
+{
+  "kind": "frozen-master",
+  "templateId": "dessert-shopkeeper",
+  "title": "甜品饮品主理人",
+  "status": "approved-frozen-master",
+  "subjectMode": "pet",
+  "version": "public-v02-master-v01",
+  "orientation": "portrait",
+  "size": "720x1280",
+  "sourcePublicPreview": {
+    "path": "tools/imagegen/out/reference-v1/masters/dessert-shopkeeper_public-v02-master-v01.webp",
+    "sha256": "d72ec372bf8d06f12a0578ede90ecf3176011d6f0e0a55961035164108cd0c95",
+    "publicVersion": "public-v02",
+    "metadata": "tools/imagegen/out/reference-v1/public-previews/metadata/dessert-shopkeeper_public-v02.json",
+    "byteIdentical": true,
+    "generatedFromOriginalEffectReference": true,
+    "generatedFromPreviousFrozenMaster": false
+  },
+  "derivedEffectReference": {
+    "role": "original-effect-reference-internal-audit-only",
+    "source": "apps/website/public/assets/example/1786367409484.png",
+    "excludedAtRuntime": true,
+    "publicUseAllowed": false
+  },
+  "previousFrozenMaster": {
+    "path": "tools/imagegen/out/reference-v1/masters/dessert-shopkeeper_public-v02-master-v01.webp",
+    "sha256": "d72ec372bf8d06f12a0578ede90ecf3176011d6f0e0a55961035164108cd0c95",
+    "metadata": "tools/imagegen/out/reference-v1/masters/metadata/dessert-shopkeeper_public-v02-master-v01.json",
+    "retainedForRollback": true
+  },
+  "masterPath": "tools/imagegen/out/reference-v1/masters/dessert-shopkeeper_public-v02-master-v01.webp",
+  "masterSha256": "d72ec372bf8d06f12a0578ede90ecf3176011d6f0e0a55961035164108cd0c95",
+  "provider": "lingsuan",
+  "endpoint": "/v1/images/edits",
+  "runtimeReferenceContract": {
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/dessert-shopkeeper_public-v02-master-v01.webp",
+      "sha256": "d72ec372bf8d06f12a0578ede90ecf3176011d6f0e0a55961035164108cd0c95"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "public-preview-storage-key",
+      "rejected-promotion-candidate"
+    ]
+  },
+  "runtimePromptExtension": "Keep the pet behind the strawberry cake, the pink shopkeeper outfit and bow, all surrounding strawberries, warm dessert-shop light and centered portrait framing.",
+  "stabilityReview": {
+    "state": "approved-by-user",
+    "identities": [
+      {
+        "identityId": "british-shorthair-cat",
+        "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/dessert-shopkeeper/dessert-shopkeeper_british-shorthair-cat_stability-v01.png",
+        "outputSha256": "46c5e9f4d4ed9e730ee5eeb02962d5fff3405291f3197a9c362ebc03c7e4d60b",
+        "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/dessert-shopkeeper/metadata/dessert-shopkeeper_british-shorthair-cat_stability-v01.json"
+      },
+      {
+        "identityId": "german-shepherd-dog",
+        "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/dessert-shopkeeper/dessert-shopkeeper_german-shepherd-dog_stability-v01.png",
+        "outputSha256": "719e594cdc37c60574dfdd2b290a27c0b4591586646802c5bfb648924ca55e37",
+        "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/dessert-shopkeeper/metadata/dessert-shopkeeper_german-shepherd-dog_stability-v01.json"
+      },
+      {
+        "identityId": "cream-longhair-cat",
+        "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/dessert-shopkeeper/dessert-shopkeeper_cream-longhair-cat_stability-v01.png",
+        "outputSha256": "b96e390f4242f25034ce6a83920e9c7f2e9d0b9b4ef140851b483d8ff1c23c45",
+        "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/dessert-shopkeeper/metadata/dessert-shopkeeper_cream-longhair-cat_stability-v01.json"
+      }
+    ],
+    "approvedAt": "2026-08-20T06:57:35.480Z"
+  },
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-20T06:57:35.480Z",
+    "note": "用户审核公开展示图升母版稳定性总览后明确批准。"
+  },
+  "publicUseAllowed": false,
+  "runtimeMasterUseAllowed": true,
+  "runtimeThirdPartyEffectReferenceIncluded": false
+}

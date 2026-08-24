@@ -1,0 +1,2 @@
+import Link from "next/link";
+export default function TermsPage(){return <main className="screen"><div className="page-heading"><Link className="back-link" href="/me">返回我的</Link><span className="eyebrow">TERMS</span><h1>用户协议</h1></div><section className="panel"><p>用户应确保上传照片拥有合法使用权，不得上传违法、侵权或危害他人的内容。生成结果仅供个人合理使用；涉及商业使用时应自行确认肖像、字体、音乐和素材授权。</p><p>平台会对异常请求、重复支付、恶意分享和成本滥用采取限频或暂停服务措施。</p></section></main>}

@@ -1,0 +1,67 @@
+{
+  "id": "original-magic-academy_british-shorthair-cat_stability-v01",
+  "templateId": "original-magic-academy",
+  "title": "原创魔法学院",
+  "sequence": 17,
+  "identityId": "british-shorthair-cat",
+  "identityLabel": "短毛猫",
+  "species": "cat",
+  "breed": "blue British Shorthair cat",
+  "status": "generated-pending-human-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "requestPolicy": {
+    "concurrency": 1,
+    "outputsPerRequest": 1,
+    "inputCount": 2,
+    "combinedInputBytes": 232565,
+    "maxCombinedInputBytesExclusive": 1000000,
+    "maxInputEdge": 1200,
+    "comparisonSheetIncluded": false
+  },
+  "inputs": [
+    {
+      "role": "compressed-public-preview-master-candidate",
+      "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/api-inputs/original-magic-academy_public-v02_master-candidate.jpg",
+      "sha256": "533853e76a7edb471decc06dc0b06ef20ce3b8d11cb192beabacafaffcc7d62c",
+      "bytes": 83288,
+      "sourceCandidatePath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/candidates/original-magic-academy_public-v02_master-candidate.png",
+      "sourceCandidateSha256": "afb161ac9bb1ea33d4c927561dedf2e3def8c66ec77fa8f72d8584b9299d57f4"
+    },
+    {
+      "role": "compressed-pet-identity-reference",
+      "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/api-inputs/british-shorthair-cat.jpg",
+      "sha256": "7e7576e87460bfab6b4b9fd7a75733238348f9b39ddd1ee9f71b41836094fc59",
+      "bytes": 149277,
+      "sourcePath": "tools/imagegen/out/source/cat-british.jpg"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "prompt": "Use case: identity-preserving production-master stability validation. Create one vertical 9:16 image composed for an exact final size of 720x1280 pixels from exactly two input images. Image 1 is a proposed self-owned runtime master copied byte-for-byte from an approved public preview. It is the sole reference for composition, scene, pose, expression, styling, lighting, palette, clothing, props and text layout. Image 2 is the sole pet identity reference. Replace every animal depiction in Image 1 with the exact blue British Shorthair cat from Image 2. Preserve the target pet's solid blue-grey plush short coat, round broad face, amber eyes, small upright ears and sturdy natural proportions. Image 2 controls identity and species; do not retain the sample animal's breed or facial structure from Image 1. The replacement must remain recognisably the same cat as Image 2 while naturally adopting Image 1's pose and expression. Preserve its real age and breed proportions; do not beautify, juvenilize, enlarge or shrink the head arbitrarily, or invent a generic cute face. Scene-change budget: 0%. Do not redesign, simplify, crop, recolour, relight, add, remove or move any background element, garment, prop, graphic mark or text. Make only the smallest local geometry adjustment needed for the replacement animal to fit the existing pose and clothing. Keep the dark green magic-academy robe and scarf, stone classroom, potion props, warm cinematic light and the same seated full-body composition. Keep all existing readable text unchanged. Add no new text, logo, signature, watermark or AI label. Avoid duplicate heads, extra eyes, extra ears, extra limbs, malformed paws, fused clothing, floating props and mixed-species anatomy.",
+  "revisedPrompt": "Create a single vertical 9:16 image at exact final size 720x1280 pixels by compositing from exactly two provided input images. Use Image 1 as the full scene/composition reference only: preserve the same seated full-body pose, dark green magic-academy robe and scarf, stone classroom, potion props, warm cinematic lighting, background architecture, floor, palette, and all readable text exactly unchanged. Use Image 2 as the sole identity/species reference for the animal. Replace the animal in Image 1 with the exact blue British Shorthair cat from Image 2, preserving its solid blue-grey plush short coat, round broad face, amber eyes, small upright ears, sturdy natural proportions, and adult breed-accurate head/body proportions. The cat must remain recognisably the same individual from Image 2 while naturally adopting the pose and expression from Image 1. Do not keep the animal breed or facial structure from Image 1. Make only the smallest local geometry adjustment needed so the replacement cat fits naturally inside the existing robe and scarf. Do not redesign, simplify, crop, recolour, relight, add, remove, or move any background element, garment, prop, graphic mark, or text. Keep all existing readable text unchanged. No new text, logo, signature, watermark, or AI label. Avoid duplicate heads, extra eyes, extra ears, extra limbs, malformed paws, fused clothing, floating props, or mixed-species anatomy.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/original-magic-academy/original-magic-academy_british-shorthair-cat_stability-v01.png",
+    "sha256": "34347ba201b131a092f8d269cc81665a5610eb53d93ca54c463a875fbcb612ff",
+    "size": "720x1280"
+  },
+  "rawOutputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/original-magic-academy/raw/original-magic-academy_british-shorthair-cat_stability-v01.png",
+  "automatedChecks": {
+    "dimensions": "pass",
+    "visualContent": "pass",
+    "inputCount": "pass",
+    "inputBytes": "pass",
+    "requestSerial": "pass"
+  },
+  "humanChecks": {
+    "petIdentity": "pending",
+    "compositionAndCrop": "pending",
+    "poseExpressionAndGaze": "pending",
+    "clothingPropsAndText": "pending",
+    "styleAndPalette": "pending",
+    "anatomy": "pending"
+  },
+  "finalApproval": "pending-user",
+  "elapsedMs": 28009,
+  "generatedAt": "2026-08-20T06:16:56.500Z"
+}

@@ -1,0 +1,154 @@
+{
+  "templateId": "animal-enamel-cat-beast",
+  "entryId": "character",
+  "title": "流体珐琅猫神兽",
+  "sourceEffectFile": "apps/website/public/assets/example/animal/jimeng-2026-06-23-1938-cg插画，珐琅彩猫神兽，无尾。浓密绵长的彩绘线条环绕神兽，向后飘舞、流动，拉出残....png",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-06-23-1938-cg插画，珐琅彩猫神兽，无尾。浓密绵长的彩绘线条环绕神兽，向后飘舞、流动，拉出残....png",
+      "sha256": "4f90c0b567b7ed32653c5b19fecd70300c132f6dd63497f487cacf5453aed60f"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "ragdoll-cat",
+      "species": "cat",
+      "breed": "adult seal-point Ragdoll cat",
+      "path": "apps/website/public/assets/work-ragdoll.jpg",
+      "sha256": "cadd89cfd6150cb0c9560bffec9b7c5a7e80d7126032eb7ecab4933cb836ed9e"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: identity-preserve compositing and clean master reconstruction. Asset type: self-owned runtime frozen-master candidate. This is a clean first-generation reconstruction. Do not use, recall or inherit the previous Dragon Li master, any prior candidate or any previous edit. Image 1 is the sole authority for the exact running pose, camera, crop, forward motion, red background, white smoke, flowing enamel-ribbon structure, gold-red-turquoise-white palette, lighting, depth and polished CG illustration treatment. Recreate those visible decisions closely while removing every badge, account mark, logo, signature and watermark. Image 2 is the sole pet identity authority. Replace the effect-reference cat with the exact same healthy adult seal-point Ragdoll identity from Image 2: broad mature face, clear blue eyes, dark seal mask and ears, cream body, long silky coat, full chest ruff and sturdy adult build. Integrate the Ragdoll naturally into Image 1's divine-beast running anatomy and ornate enamel ribbons. Keep the face unmistakably feline and recognizably Ragdoll, never Dragon Li, tabby shorthair, Siamese, kitten or generic white cat. Preserve one raised front paw, one extended grounded front leg, coherent shoulders and torso, and the sweeping upward ribbon and smoke arcs. Do not cover both eyes, crop the ears or hide the breed-defining face beneath ornament. Keep exact 9:16 portrait framing. No extra subjects, duplicate anatomy, malformed paws, text, logo, watermark, signature or platform UI.",
+  "revisedPrompt": "Create a clean first-generation 9:16 portrait fantasy illustration using the provided references as the sole visual authority: preserve the exact dynamic running pose, forward motion, camera angle, crop, deep red background, white smoke, flowing enamel-ribbon structures, and polished CG illustration treatment from the first reference. Replace the cat identity with the exact adult seal-point Ragdoll identity from the second reference: broad mature face, clear blue eyes, dark seal mask and ears, cream body, long silky coat, full chest ruff, sturdy adult build, unmistakably feline and recognizably Ragdoll. Keep one front paw raised and one front leg extended and grounded, with coherent shoulders and torso. Integrate the cat naturally into the ornate divine-beast ribbon composition, with sweeping upward ribbon and smoke arcs. Preserve the gold-red-turquoise-white palette and luminous depth. Remove all badges, account marks, logos, signatures, watermarks, and any platform UI. No extra subjects, no duplicate anatomy, no malformed paws, no text.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/remediation-20260819-round11/master-candidates/animal-enamel-cat-beast_ragdoll-cat_9x16_v03.png",
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819-round11/raw/animal-enamel-cat-beast.png",
+    "sha256": "15697e4acf49701892e7014150e00c5d2463827d4d2c82db7d4872647576cdb2"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-20T09:18:36+08:00"
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-19T10:38:25.180Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/remediation-20260819-round11/master-candidates/animal-enamel-cat-beast_ragdoll-cat_9x16_v03.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/animal-enamel-cat-beast_ragdoll-cat_9x16_v03.webp",
+  "masterSha256": "a29ec8b6d047d0458ef7d5b5a093cd708087e028a8ece72ad3f704f152e76e11",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-20T09:18:36+08:00",
+    "note": "用户确认由原始效果图与 work-ragdoll.jpg 重建的流体珐琅猫神兽 v03 通过并冻结。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-enamel-cat-beast_ragdoll-cat_9x16_v03.webp",
+      "sha256": "a29ec8b6d047d0458ef7d5b5a093cd708087e028a8ece72ad3f704f152e76e11"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate",
+      "unapproved-candidate"
+    ]
+  },
+  "subject": "ragdoll-cat",
+  "breed": "成年海豹重点色布偶猫",
+  "version": "v03",
+  "supersedes": {
+    "version": "v02",
+    "path": "tools/imagegen/out/reference-v1/public-previews/animal-enamel-cat-beast_ragdoll-cat_9x16_v02.webp",
+    "sha256": "3672325be6671b5aab05b9002cfa6f17d3e3ffd87470e39f14205861dccd18c0",
+    "metadata": "tools/imagegen/out/reference-v1/public-previews/metadata/animal-enamel-cat-beast_ragdoll-cat_9x16_v02.json"
+  },
+  "remediationRequest": {
+    "task": "user-feedback-frozen-master-refinement-2026-08-19-round11",
+    "templateId": "animal-enamel-cat-beast",
+    "title": "流体珐琅猫神兽",
+    "kind": "master",
+    "version": "v03",
+    "status": "approved-and-promoted",
+    "provider": "lingsuan",
+    "model": "gpt-image-2",
+    "endpoint": "/v1/images/edits",
+    "inputFidelity": "high",
+    "inputPolicy": {
+      "sequential": true,
+      "imageCount": 2,
+      "maxImages": 2,
+      "longestEdge": 1200,
+      "jpegQuality": 82,
+      "maxCombinedBytes": 1000000
+    },
+    "inputs": [
+      {
+        "role": "original-effect-reference-composition-style-pose-and-lighting-only",
+        "originalPath": "apps/website/public/assets/example/animal/jimeng-2026-06-23-1938-cg插画，珐琅彩猫神兽，无尾。浓密绵长的彩绘线条环绕神兽，向后飘舞、流动，拉出残....png",
+        "preparedPath": ".tmp/master-remediation-20260819-round11-inputs/animal-enamel-cat-beast-1.jpg",
+        "bytes": 136632,
+        "sha256": "bb40064d54aaf4d40dfeb0f79ac4c80dea6cd3e1377e261c0e1f8e007fbfa59c"
+      },
+      {
+        "role": "ragdoll-cat-pet-identity-only",
+        "originalPath": "apps/website/public/assets/work-ragdoll.jpg",
+        "preparedPath": ".tmp/master-remediation-20260819-round11-inputs/animal-enamel-cat-beast-2.jpg",
+        "bytes": 118252,
+        "sha256": "dfde0ff93212516c05969c1086016cd2288d0d77abe79d7cb86dacf51c9ec2b7"
+      }
+    ],
+    "orientation": "portrait",
+    "requestedSize": "720x1280",
+    "output": {
+      "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819-round11/raw/animal-enamel-cat-beast.png",
+      "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819-round11/master-candidates/animal-enamel-cat-beast_ragdoll-cat_9x16_v03.png",
+      "width": 720,
+      "height": 1280,
+      "sha256": "15697e4acf49701892e7014150e00c5d2463827d4d2c82db7d4872647576cdb2"
+    },
+    "prompt": "Use case: identity-preserve compositing and clean master reconstruction. Asset type: self-owned runtime frozen-master candidate. This is a clean first-generation reconstruction. Do not use, recall or inherit the previous Dragon Li master, any prior candidate or any previous edit. Image 1 is the sole authority for the exact running pose, camera, crop, forward motion, red background, white smoke, flowing enamel-ribbon structure, gold-red-turquoise-white palette, lighting, depth and polished CG illustration treatment. Recreate those visible decisions closely while removing every badge, account mark, logo, signature and watermark. Image 2 is the sole pet identity authority. Replace the effect-reference cat with the exact same healthy adult seal-point Ragdoll identity from Image 2: broad mature face, clear blue eyes, dark seal mask and ears, cream body, long silky coat, full chest ruff and sturdy adult build. Integrate the Ragdoll naturally into Image 1's divine-beast running anatomy and ornate enamel ribbons. Keep the face unmistakably feline and recognizably Ragdoll, never Dragon Li, tabby shorthair, Siamese, kitten or generic white cat. Preserve one raised front paw, one extended grounded front leg, coherent shoulders and torso, and the sweeping upward ribbon and smoke arcs. Do not cover both eyes, crop the ears or hide the breed-defining face beneath ornament. Keep exact 9:16 portrait framing. No extra subjects, duplicate anatomy, malformed paws, text, logo, watermark, signature or platform UI.",
+    "revisedPrompt": "Create a clean first-generation 9:16 portrait fantasy illustration using the provided references as the sole visual authority: preserve the exact dynamic running pose, forward motion, camera angle, crop, deep red background, white smoke, flowing enamel-ribbon structures, and polished CG illustration treatment from the first reference. Replace the cat identity with the exact adult seal-point Ragdoll identity from the second reference: broad mature face, clear blue eyes, dark seal mask and ears, cream body, long silky coat, full chest ruff, sturdy adult build, unmistakably feline and recognizably Ragdoll. Keep one front paw raised and one front leg extended and grounded, with coherent shoulders and torso. Integrate the cat naturally into the ornate divine-beast ribbon composition, with sweeping upward ribbon and smoke arcs. Preserve the gold-red-turquoise-white palette and luminous depth. Remove all badges, account marks, logos, signatures, watermarks, and any platform UI. No extra subjects, no duplicate anatomy, no malformed paws, no text.",
+    "generatedAt": "2026-08-19T10:38:25.180Z",
+    "approvedAt": "2026-08-20T09:18:36+08:00"
+  },
+  "qualityBaseline": {
+    "required": [
+      "unmistakable mature seal-point Ragdoll identity from work-ragdoll.jpg",
+      "the original running pose, red field, white smoke and flowing gold-red-turquoise enamel ribbons",
+      "coherent feline anatomy with one raised front paw and one extended grounded front leg",
+      "exact 720x1280 portrait output without text, logo, watermark or signature"
+    ],
+    "reject": [
+      "Dragon Li, tabby shorthair, Siamese, kitten or generic white-cat identity",
+      "changed composition, hidden breed-defining face, malformed paws or broken ribbon anatomy",
+      "logo, watermark or signature"
+    ]
+  }
+}

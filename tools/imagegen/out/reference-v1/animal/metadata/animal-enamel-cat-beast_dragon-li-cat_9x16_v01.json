@@ -1,0 +1,81 @@
+{
+  "templateId": "animal-enamel-cat-beast",
+  "entryId": "character",
+  "title": "流体珐琅猫神兽",
+  "sourceEffectFile": "apps/website/public/assets/example/animal/jimeng-2026-06-23-1938-cg插画，珐琅彩猫神兽，无尾。浓密绵长的彩绘线条环绕神兽，向后飘舞、流动，拉出残....png",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-06-23-1938-cg插画，珐琅彩猫神兽，无尾。浓密绵长的彩绘线条环绕神兽，向后飘舞、流动，拉出残....png",
+      "sha256": "4f90c0b567b7ed32653c5b19fecd70300c132f6dd63497f487cacf5453aed60f"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "dragon-li-cat",
+      "species": "cat",
+      "breed": "adult Chinese Dragon Li tabby cat",
+      "path": "apps/website/public/assets/avatar-dragonli.jpg",
+      "sha256": "0f403599969b57f32aa314cf474ce4d57d28f48683e16ae9a032d73b94079732"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a one-time third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every designated original animal, human-like creature or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult Chinese Dragon Li tabby cat with brown tabby coat, clear forehead stripes, warm eyes, upright ears, broad muzzle and healthy adult proportions. Render the face, fur and anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration or turn a stylized scene into a realistic photo. Keep the pet appealing and healthy, never skinny, gaunt, uncanny, aggressive or puppy-like. Keep the no-tail fantasy silhouette, dense flowing painted lines, luminous enamel palette, red field and centered action; preserve the pet's natural face and adult proportions. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character or artist names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a vertical 9:16 final composition at 720x1280 pixels, using Image 1 as the exact visual template and preserving its composition, camera, crop, perspective, centered action, red background, luminous enamel palette, dense flowing painted ribbons, smoke, soft ground plane, and overall stylized illustrative medium. Replace the original subject only with the adult Chinese Dragon Li tabby cat identity from Image 2: brown tabby coat, clear forehead stripes, warm eyes, upright ears, broad muzzle, healthy adult proportions, appealing and natural adult feline anatomy, no tail. Keep the cat in the same dynamic forward-running pose and contact relationships as Image 1, with the same flowing ornamental painted lines wrapping around the body and head, same dramatic smoke and ribbon energy, and the same overall fantasy silhouette. Render the cat fully in Image 1’s visual language rather than as a realistic photo; preserve stylized painted fur, ornamental facial markings, and illustrative texture. Make only the smallest anatomy corrections needed for a coherent adult cat: no extra limbs, no duplicate pets, no human hands, no broken joints, no juvenile features, no gauntness, no uncanny features. Preserve the text block placement and hierarchy, but replace any brand/watermark-like markings with short original pet-safe wording only if needed. Do not add new logos or signatures. Keep the scene-change budget at 0% and do not redesign the background or props.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-enamel-cat-beast_dragon-li-cat_9x16_v01.png",
+    "sha256": "ee4399b7d29912940e84902d4abed24332dff6a34aca820bfa63c8d2a93ba93f"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-18T01:00:00+08:00"
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-17T16:37:12.737Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/animal/candidates/animal-enamel-cat-beast_dragon-li-cat_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/retired-masters/animal-enamel-cat-beast_dragon-li-cat_9x16_v01.png",
+  "masterSha256": "ee4399b7d29912940e84902d4abed24332dff6a34aca820bfa63c8d2a93ba93f",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-18T01:00:00+08:00",
+    "note": "用户确认本批次除七个待重做模板外，其余动物效果候选均通过并保存为母版。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/animal-enamel-cat-beast_dragon-li-cat_9x16_v01.png",
+      "sha256": "ee4399b7d29912940e84902d4abed24332dff6a34aca820bfa63c8d2a93ba93f"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "unapproved-candidate"
+    ]
+  }
+}

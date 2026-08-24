@@ -1,0 +1,59 @@
+{
+  "templateId": "ink-portrait",
+  "title": "黑白水墨肖像",
+  "entryId": "art",
+  "status": "superseded-by-current-candidate",
+  "version": "v02",
+  "subject": "black-labrador-dog",
+  "breed": "成年黑色拉布拉多寻回犬",
+  "selectionRationale": "实际画面为黑白动态笔刷犬头像；用黑色拉布拉多验证深色毛发在水墨负空间中仍保留五官与轮廓。",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-effect-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/b983ec71-2f88-4c23-97f2-c0f0cb75bac1.jpg",
+      "sha256": "47d1f1377a40e3201d4c65a48fa55185118291de7564bda787ded2959c36df3d"
+    },
+    {
+      "role": "pet-identity-reference",
+      "path": "tools/imagegen/out/source/dog-black-lab.jpg",
+      "sha256": "20960d2ace805e68b41a7934e37ebdf24b7007f8f3fa85527d9beb22d2df6022"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving effect replication. Asset type: internal self-owned pet template master, exact final canvas 720x1280 (9x16). Use exactly two input images. Image 1 is the third-party effect reference used only for this internal master-production pass. Image 2 is the sole pet identity reference. Replace only the principal animal or person subject in Image 1 with the exact pet from Image 2. Remove every residual face, hair, skin, hand, paw, limb, coat marking or silhouette from the original subject. Image 2 controls only pet identity: species, breed, coat, markings, ear shape, eye colour, actual age and natural healthy proportions. Image 1 controls every transferred visual detail: composition, crop, camera, perspective, subject position, pose, action, expression, gaze, lighting, palette, rendering medium, brushwork, line quality, texture, clothing, props, text layout and subject-to-scene contacts. Scene-change budget is 0%. Do not redesign, reinterpret, recolour, simplify, clean up or add background content. Translate the original pose, action and expression to correct animal anatomy with only the smallest contact-boundary adjustment required by the new species. Never create a human face, human skin, human hands or fingers. Keep paws anatomically natural and keep clothing and props physically attached. The replacement pet must be rendered completely in Image 1's medium and detail language, including its face, eyes, muzzle, ears and fur. Never paste a photographic pet face into an illustration or leave realistic photographic facial texture inside a painted scene. Do not copy Image 2's pose, expression, background, lighting or photographic rendering. Preserve the pet's adult age and natural breed proportions. Do not turn it into a puppy or kitten, enlarge the head or eyes, shorten the muzzle or body, or force a generic baby face. Keep it healthy, friendly and immediately appealing through the transferred expression and art direction, never skinny, gaunt, old, stern, aggressive, uncanny or strange. Keep the complete meaningful text, clothing, landmarks and distinctive props from Image 1 except for the explicit rights-safe text or emblem replacements stated below. Remove third-party platform watermarks, account IDs, signatures and unrelated brand marks. No new logo or watermark. The replacement identity is the exact adult black Labrador Retriever from Image 2. Preserve the solid glossy black coat, warm brown eyes, broad black nose, soft dropped ears, broad gentle muzzle and strong healthy adult Labrador build. Preserve Image 1's exact minimalist black-and-white ink portrait: three-quarter left-facing canine bust, off-white paper field, large dynamic black brush masses, dry-brush splatter, sharp broken silhouette, white negative-space muzzle and chest, one bright eye, tapered diagonal lower stroke and sparse floating ink flecks. Replace only the original pointed-ear dog with the exact adult black Labrador from Image 2. Preserve the same strong three-quarter profile, leftward gaze, closed gentle mouth, subtly lifted alert brow, calm self-possessed expression and bust scale. Keep only the near eye clearly readable; the far eye must be almost hidden by the profile angle, as in Image 1. Do not turn the expression into sad, pleading or gloomy. Translate the Labrador's dropped ears, broad muzzle, warm brown near eye and strong adult head entirely into the same ink-wash and broken-brush language. Because the coat is black, use restrained off-white paper gaps and soft grey dry-brush highlights inside the face, ear edges, muzzle, brow and chest so the Labrador identity remains readable without turning the coat grey. Keep the bold black mass dominant. No colour, no photographic fur, no extra frame, no text. The face itself must be simplified painted ink, not a realistic dog portrait with ink effects behind it: construct the brow, muzzle, nose, cheeks and ear using flat black washes, angular broken strokes, dry-brush gaps and a few decisive grey marks. Match Image 1's abstraction level. No individual hair rendering, glossy photographic nose, smooth volumetric skin shading, realistic studio catchlights or high-resolution photographic facial texture. Keep exactly the requested pet identity throughout. Correct animal anatomy only: no duplicate or fused limbs, extra ears, warped eyes, malformed mouth, floating tail, broken garment boundaries or residual original subject.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "superseded-before-user-approval",
+    "checks": {
+      "petIdentity": "pass",
+      "adultAgeAndCuteness": "pass",
+      "poseExpressionAndAction": "pass",
+      "sceneComposition": "pass",
+      "faceAndMediumConsistency": "pass",
+      "anatomyAndContacts": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [
+      "面部仍保留摄影眼球、鼻面和毛发体积，已由全脸水墨块面候选替代。"
+    ],
+    "finalApproval": "not-applicable",
+    "precheckedAt": "2026-08-14T10:32:33.920Z"
+  },
+  "generatedAt": "2026-08-14T10:22:59.102Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/ink-portrait_black-labrador-dog_9x16_v02.png",
+    "rawPath": "tools/imagegen/out/reference-v1/candidates/raw/ink-portrait_black-labrador-dog_9x16_v02.png",
+    "sha256": "cd394ee0dc5cfcd6f1a6f122277c16d3df8ade196731b3e28f3b324137011666"
+  },
+  "replacedBy": "ink-portrait_black-labrador-dog_9x16_v03"
+}

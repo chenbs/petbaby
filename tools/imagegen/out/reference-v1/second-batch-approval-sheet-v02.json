@@ -1,0 +1,76 @@
+{
+  "purpose": "second-batch-user-approval-sheet",
+  "generatedBy": "local-sharp-composite",
+  "modelCall": false,
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/second-batch-approval-sheet-v02.png",
+    "width": 1860,
+    "height": 2520,
+    "sha256": "75118d941084babe98247ea36e5615d906369202c78dc73acb8ca9ed6a706778"
+  },
+  "items": [
+    {
+      "id": "landmark-adventure",
+      "version": "v01",
+      "files": [
+        {
+          "role": "EFFECT REFERENCE",
+          "path": "apps/website/public/assets/example/1786368804360.png",
+          "sha256": "672e7b94c1d37ec8902fbd7cc9e263cf308ebcfb17a958edc41d028af23404f3"
+        },
+        {
+          "role": "PET IDENTITY",
+          "path": "apps/website/public/assets/avatar-abyssinian.jpg",
+          "sha256": "8714ff092ab9b9e58a3c440eb16756b1149cd02c4050a8fb4f5f63b902184268"
+        },
+        {
+          "role": "CANDIDATE v01",
+          "path": "tools/imagegen/out/reference-v1/candidates/landmark-adventure_abyssinian-cat_9x16_v01.png",
+          "sha256": "a229b43854819d7d9457c7fca062792cb1f099c197a387f1b8ccbc8aba8e4ba9"
+        }
+      ]
+    },
+    {
+      "id": "dessert-shopkeeper",
+      "version": "v02",
+      "files": [
+        {
+          "role": "EFFECT REFERENCE",
+          "path": "apps/website/public/assets/example/1786367409484.png",
+          "sha256": "9831ea4cba433e7936949314142c54cb645a36636bf81e01adbfdb070eb03eb3"
+        },
+        {
+          "role": "PET IDENTITY",
+          "path": "apps/website/public/assets/avatar-poodle.jpg",
+          "sha256": "e15fca17074b5c58cd5d477051ecc00c2d27116ad3f364211f3c350e1e69de2d"
+        },
+        {
+          "role": "CANDIDATE v02",
+          "path": "tools/imagegen/out/reference-v1/candidates/dessert-shopkeeper_toy-poodle_9x16_v02.png",
+          "sha256": "d2efd6d0153a3f383aa87ecfff46bc29c628759cd64d0bec9f4fd22f7596d7c5"
+        }
+      ]
+    },
+    {
+      "id": "pet-runway",
+      "version": "v04",
+      "files": [
+        {
+          "role": "EFFECT REFERENCE",
+          "path": "apps/website/public/assets/example/1786368555480.png",
+          "sha256": "63e95e99f17cd26f37ba4639b284091d067bdfc8084a0a17741178520bc31862"
+        },
+        {
+          "role": "PET IDENTITY",
+          "path": "apps/website/public/assets/work-maine.jpg",
+          "sha256": "1886adfade169bfb7a678ccad1b36555e0cebbd9d78310ee0f23c42d1bcae8cf"
+        },
+        {
+          "role": "CANDIDATE v04",
+          "path": "tools/imagegen/out/reference-v1/candidates/pet-runway_maine-coon-cat_9x16_v04.png",
+          "sha256": "aa47c99a8941aa6175d394fe516358ff440fc376f3e8e076547589a1fea57241"
+        }
+      ]
+    }
+  ]
+}

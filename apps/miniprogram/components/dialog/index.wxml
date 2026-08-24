@@ -1,0 +1,11 @@
+<view wx:if="{{visible}}" class="mask" catchtouchmove="noop" bindtap="handleCancel">
+  <view class="dialog" catchtap="noop">
+    <view wx:if="{{title}}" class="dialog-title">{{title}}</view>
+    <text wx:if="{{content}}" class="muted">{{content}}</text>
+    <slot></slot>
+    <view class="dialog-actions">
+      <t-button type="ghost" anim="{{anim}}" block bindtap="handleCancel">{{cancelText}}</t-button>
+      <t-button type="{{danger ? 'danger' : 'primary'}}" anim="{{anim}}" block bindtap="handleConfirm">{{confirmText}}</t-button>
+    </view>
+  </view>
+</view>

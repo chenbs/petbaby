@@ -1,0 +1,54 @@
+{
+  "jobId": "pet-runway_dog_german-shepherd-dog",
+  "templateId": "pet-runway",
+  "title": "宠物时装周",
+  "status": "approved-runtime-validation",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/pet-runway_maine-coon-cat_9x16_v04.webp",
+      "sha256": "77a15753d65df05d52393d8e42a23cea3bf6f3448481217eb0e1645b49cdbfa5"
+    },
+    {
+      "role": "new-pet-identity-reference",
+      "identityId": "german-shepherd-dog",
+      "species": "dog",
+      "breed": "adult German Shepherd",
+      "path": "apps/website/public/assets/hero-shepherd.jpg",
+      "sha256": "f6c37419e96b12425034d2bdcb54cbde952709f37352f3748d67d3db71e937b4"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Create one exact 720x1280 vertical runtime validation image from exactly two inputs. Image 1 is our frozen self-owned master and controls every non-identity detail: scene, crop, camera, pose, action, expression, gaze, lighting, palette, medium, brushwork, clothing, text and props. Image 2 controls only the new pet's breed, coat, markings, ears, eye colour, adult age and natural proportions. No third-party effect reference is included. Replace only the master pet with the exact adult German Shepherd from Image 2, preserving its tan coat with a defined black saddle and mask, brown eyes, tall upright ears, black muzzle and athletic healthy adult build. Remove the old pet completely. Do not copy Image 2's pose, expression, background, lighting or photographic rendering. Keep the centred grey runway, soft spotlight, blurred seated audience, full-body upright fashion walk, grey oversized coat, cream cable-knit vest, charcoal patterned scarf and pale sage wide trousers. Replicate the master's exact upright two-legged runway stride, vertical torso, crossed step, forward-facing head, calm friendly expression, paws placed inside the coat openings and visible attached tail. Do not turn the pet quadrupedal or seated. Preserve Image 1's high-end editorial photographic treatment, restrained neutral palette, cloth texture, spotlight and depth of field. Image 2 supplies animal identity only. Keep every garment, layer, colour family and silhouette. Adapt them to natural animal anatomy without human hands, fingers, skin, arms, torso or a pasted animal head. Keep the image free of text, logos, watermarks and signatures. Scene-change budget 0%. Keep one adult pet. No juvenization, generic cute redesign, residual old-pet parts, extra limbs or ears, malformed face, human hands, broken contacts, logo, watermark or signature.",
+  "revisedPrompt": "Create one exact 720x1280 vertical runtime validation image from exactly two inputs. Image 1 is our frozen self-owned master and controls every non-identity detail: scene, crop, camera, pose, action, expression, gaze, lighting, palette, medium, brushwork, clothing, text and props. Image 2 controls only the new pet's breed, coat, markings, ears, eye colour, adult age and natural proportions. No third-party effect reference is included. Replace only the master pet with the exact adult German Shepherd from Image 2, preserving its tan coat with a defined black saddle and mask, brown eyes, tall upright ears, black muzzle and athletic healthy adult build. Remove the old pet completely. Do not copy Image 2's pose, expression, background, lighting or photographic rendering. Keep the centred grey runway, soft spotlight, blurred seated audience, full-body upright fashion walk, grey oversized coat, cream cable-knit vest, charcoal patterned scarf and pale sage wide trousers. Replicate the master's exact upright two-legged runway stride, vertical torso, crossed step, forward-facing head, calm friendly expression, paws placed inside the coat openings and visible attached tail. Do not turn the pet quadrupedal or seated. Preserve Image 1's high-end editorial photographic treatment, restrained neutral palette, cloth texture, spotlight and depth of field. Image 2 supplies animal identity only. Keep every garment, layer, colour family and silhouette. Adapt them to natural animal anatomy without human hands, fingers, skin, arms, torso or a pasted animal head. Keep the image free of text, logos, watermarks and signatures. Scene-change budget 0%. Keep one adult pet. No juvenization, generic cute redesign, residual old-pet parts, extra limbs or ears, malformed face, human hands, broken contacts, logo, watermark or signature.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation-second-batch/pet-runway_dog_german-shepherd-dog_9x16_v01.png",
+    "sha256": "612e82c7b722004741037251db4658592d1add6cf78955f05e2ebc7a8290d9db"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "checks": {
+      "petIdentity": "pass",
+      "adultAgeAndProportions": "pass",
+      "masterPoseAndExpression": "pass",
+      "masterStyleAndBrushwork": "pass",
+      "sceneAndComposition": "pass",
+      "anatomyAndContacts": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [],
+    "finalApproval": "approved",
+    "approvedAt": "2026-08-14T17:57:02+08:00"
+  },
+  "generatedAt": "2026-08-14T08:05:44.857Z"
+}

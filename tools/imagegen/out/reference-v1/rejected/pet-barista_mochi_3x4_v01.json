@@ -1,0 +1,16 @@
+{
+  "templateId": "pet-barista",
+  "status": "direction-preview",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "input": "tools/imagegen/out/model/front.jpg",
+  "inputSha256": "5fc9c875074bed7ccd734bf155c6cbc05aad07a1056f5fab5e876032d45f34da",
+  "inputFidelity": "high",
+  "requestedSize": "1200x1600",
+  "outputSize": "1200x1600",
+  "quality": "high",
+  "prompt": "Use the supplied photograph as the only pet identity reference. Preserve this exact orange-and-white short-haired cat: amber eyes, a narrow white blaze down the nose, white muzzle and chest bib, orange forehead stripes, upright triangular ears, pink nose and white front paws. The result must still be recognisable as this same individual cat, not a generic orange cat. Create an original vertical 3:4 environmental portrait of the cat as the working owner of a tiny independent botanical coffee counter. The cat stands naturally behind a low walnut counter, actively pressing one white paw on the wooden handle of a small manual coffee grinder while the other paw steadies the base. Dress the cat in a simple moss-green cross-back apron that leaves the face, ears, white chest and front-paw markings visible. Build a coherent unbranded setting with handmade ceramic cups, a glass jar of coffee beans, green herbs, a compact copper kettle and a sunlit plaster wall. The action, tool and workplace must read immediately; this is not a seated costume portrait. Use warm window light, tactile wood and ceramic textures, realistic fur, restrained forest-green and copper accents and high-end editorial pet photography. Leave a clean section of plaster wall in the upper-right for later programmatic copy. Exactly one cat and no other animal. Anatomically plausible face, body, tail and four limbs; no duplicate paws or fused objects. No human, no human hands, no brand, no famous landmark, no platform UI, no text, no letters, no numbers, no logo, no watermark and no signature.",
+  "revisedPrompt": null,
+  "generatedAt": "2026-08-12T06:51:05.144Z"
+}

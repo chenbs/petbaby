@@ -1,0 +1,112 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+
+<t-navbar transparent tone="inverse" title="作品详情"></t-navbar>
+
+<t-glass-sheet
+  id="sheet"
+  background-video="{{work.assetKind === 'video' ? work.outputUrl : ''}}"
+  background-image="{{work.assetKind === 'video' ? '' : (work.outputUrl || work.photo.url)}}"
+  poster="{{work.photo.url}}"
+  title="{{work.title}}"
+  state="half"
+  blur="{{blurOk}}"
+  anim="{{animType}}"
+  gesture-disabled="{{loading || !work}}"
+  bindstatechange="handleStateChange"
+>
+  <!-- 未解锁水印提示：自带实底容器，不把文字直接压在图片上 -->
+  <view slot="overlay" wx:if="{{work && work.locked}}">
+    <t-tag tone="warning" size="mini" text="预览版带水印"></t-tag>
+  </view>
+
+  <view slot="header" wx:if="{{work}}">
+    <view class="row">
+      <text class="glass-eyebrow">WORK · V{{work.version}}</text>
+      <t-tag tone="{{work.locked ? 'warning' : 'success'}}" size="mini" text="{{work.locked ? '待解锁' : '已解锁'}}"></t-tag>
+    </view>
+    <view class="glass-title work-title">{{work.title}}</view>
+    <text class="glass-muted">{{work.subtitle}}</text>
+  </view>
+
+  <!-- 默认插槽：滚动区。half 档露出首屏信息，expanded 档可滚到底 -->
+  <t-skeleton wx:if="{{loading}}" type="card" count="2"></t-skeleton>
+
+  <block wx:elif="{{work}}">
+    <view class="facts">
+      <view class="fact">
+        <text class="glass-small">宠物</text>
+        <text class="glass-strong">{{work.pet.name}}</text>
+      </view>
+      <view class="fact">
+        <text class="glass-small">玩法</text>
+        <text class="glass-strong">{{work.plugin.name}}</text>
+      </view>
+      <view class="fact">
+        <text class="glass-small">创建时间</text>
+        <text class="glass-strong">{{createdText}}</text>
+      </view>
+      <view class="fact">
+        <text class="glass-small">编号</text>
+        <text class="glass-strong">{{work.serialNumber}}</text>
+      </view>
+    </view>
+
+    <view wx:if="{{work.authority}}" class="section-block">
+      <view class="glass-sub-title">权威声明</view>
+      <text class="glass-muted">{{work.authority}}</text>
+    </view>
+
+    <view class="section-block">
+      <view class="glass-sub-title">分享</view>
+      <text class="glass-muted">{{work.public ? (shareExpiresText ? '分享中，' + shareExpiresText + ' 到期' : '分享中') : '尚未开启分享'}}</text>
+      <view class="share-actions">
+        <t-button wx:if="{{!work.public}}" type="secondary" block anim="{{animType}}" bindtap="share">开启 7 天分享</t-button>
+        <block wx:else>
+          <t-button type="secondary" block anim="{{animType}}" bindtap="resetShare">重置分享链接</t-button>
+          <t-button type="ghost" block anim="{{animType}}" bindtap="askRevoke">停止分享</t-button>
+        </block>
+      </view>
+    </view>
+
+    <view wx:if="{{versions.length > 1}}" class="section-block">
+      <view class="glass-sub-title">历史版本</view>
+      <view class="versions">
+        <view wx:for="{{versions}}" wx:key="id" class="version">
+          <view class="version-info">
+            <text class="glass-small glass-strong">v{{item.version}}</text>
+            <text class="glass-small">{{item.title}}</text>
+          </view>
+          <t-tag wx:if="{{item.version === work.version}}" tone="success" size="mini" text="当前"></t-tag>
+          <t-button wx:else type="ghost" size="mini" anim="{{animType}}" data-id="{{item.id}}" bindtap="restore">恢复</t-button>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <t-notice wx:else type="error" message="{{error || '作品不存在或已被删除'}}"></t-notice>
+
+  <!-- actions 常驻，主 CTA 在三个档位下都可见可点 -->
+  <view slot="actions" wx:if="{{work}}">
+    <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
+    <!--
+      档位说明放在 CTA 上方（L3）：价格与「再攒多少进下一档」必须在
+      点支付之前看得见。文案由 work.js 从 /api/pets/{id}/pricing 取，
+      与下单走同一个计价函数。
+    -->
+    <text wx:if="{{work.locked && priceHint}}" class="glass-small">{{priceHint}}</text>
+    <t-button wx:if="{{work.locked}}" type="ai" block anim="{{animType}}" loading="{{busy}}" bindtap="unlock">{{priceText}}</t-button>
+    <t-button wx:elif="{{work.assetKind === 'video'}}" type="primary" block anim="{{animType}}" loading="{{busy}}" bindtap="downloadVideo">下载 MP4 到相册</t-button>
+    <t-button wx:else type="primary" block anim="{{animType}}" loading="{{busy}}" bindtap="saveImage">保存到相册</t-button>
+  </view>
+</t-glass-sheet>
+
+<t-dialog
+  visible="{{confirmRevoke}}"
+  title="停止分享？"
+  content="已经拿到链接的人将无法再打开这件作品。你可以随时重新开启。"
+  confirm-text="停止分享"
+  danger
+  anim="{{animType}}"
+  bindconfirm="revoke"
+  bindcancel="cancelRevoke"
+></t-dialog>

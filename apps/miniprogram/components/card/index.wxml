@@ -1,0 +1,8 @@
+<view
+  class="card card-{{variant}} {{padded ? 'card-pad' : ''}} {{blur ? 'card-blur' : ''}} {{clickable ? 'card-tap anim-' + anim : ''}}"
+  hover-class="{{clickable ? 'card-hover' : 'none'}}"
+  hover-stay-time="80"
+  bindtap="handleTap"
+>
+  <slot></slot>
+</view>

@@ -1,0 +1,126 @@
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) 0;
+}
+
+.loading-label {
+  color: var(--text-secondary);
+  font-size: var(--small-size);
+}
+
+/* bounce：爪印 */
+.paws {
+  display: flex;
+  gap: var(--space-2);
+  font-size: var(--font-h3);
+}
+
+.paw {
+  opacity: .25;
+  animation: paw-step 1.2s infinite;
+}
+
+.paw-2 { animation-delay: .2s; }
+.paw-3 { animation-delay: .4s; }
+
+@keyframes paw-step {
+  0%, 60%, 100% { opacity: .25; transform: translateY(0) scale(1); }
+  30% { opacity: 1; transform: translateY(-8rpx) scale(1.15); }
+}
+
+/* glow：光环 */
+.ring {
+  position: relative;
+  display: flex;
+  width: 112rpx;
+  height: 112rpx;
+  align-items: center;
+  justify-content: center;
+}
+
+.ring-arc {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 6rpx solid var(--divider);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  box-shadow: 0 0 30rpx var(--ai-glow);
+  animation: ring-spin 900ms linear infinite;
+}
+
+@keyframes ring-spin {
+  to { transform: rotate(360deg); }
+}
+
+.ring-value {
+  color: var(--text-primary);
+  font-size: var(--small-size);
+  font-weight: var(--fw-bold);
+}
+
+/* neon：脉冲 */
+.pulse {
+  position: relative;
+  display: flex;
+  width: 112rpx;
+  height: 112rpx;
+  align-items: center;
+  justify-content: center;
+}
+
+.pulse-core {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 3rpx solid var(--primary);
+  border-radius: 50%;
+  animation: pulse-out 1.4s ease-out infinite;
+}
+
+@keyframes pulse-out {
+  0% { opacity: 1; transform: scale(.55); }
+  100% { opacity: 0; transform: scale(1); }
+}
+
+/* fade：细线 */
+.line {
+  position: relative;
+  width: 100%;
+  height: 6rpx;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--divider);
+}
+
+.line-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--primary);
+  transition: width var(--transition-duration) var(--transition-easing);
+}
+
+.line-sweep {
+  width: 40%;
+  animation: line-slide 1.3s ease-in-out infinite;
+}
+
+@keyframes line-slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(250%); }
+}
+
+.loading-mini {
+  padding: 0;
+}
+
+.loading-mini .ring,
+.loading-mini .pulse {
+  width: 56rpx;
+  height: 56rpx;
+}

@@ -1,0 +1,26 @@
+{
+  "templateId": "travel-selfie",
+  "status": "direction-preview",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-effect-reference-internal-only",
+      "path": "apps/website/public/assets/example/1786368752371.png",
+      "sha256": "390c02e6931842e65c3b63c66c276ce3d6baf69a3057cf72396d46c6bf440725"
+    },
+    {
+      "role": "pet-identity-reference",
+      "path": "tools/imagegen/out/reference-v1/characters/devon-black-white-kitten.png",
+      "sha256": "878ddb4913e395434cd4f35041c9f607288eca462e1eafb9b7098c6cafcbd96e"
+    }
+  ],
+  "inputFidelity": "high",
+  "requestedSize": "1200x1600",
+  "outputSize": "1200x1600",
+  "quality": "high",
+  "prompt": "Use case: compositing. Create a vertical 3:4 high-fidelity pet replacement based on both input images. Image 1 is the primary effect reference and scene base. Preserve its tropical island travel-selfie composition, blue sky, distant volcano, temple-like landmark, turquoise water, palm trees, straw hat, flowers, colourful floral shirt, cheerful holiday mood, close ultra-wide camera perspective and two foreground selfie paws as closely as possible. Do not redesign or replace Image 1's environment, clothing, landmark, flowers or distinctive props. Only make small changes needed to fit the new pet naturally; clothing colour and minor details may stay the same or be adjusted slightly. Remove the original grey cat from Image 1 completely and replace it with the exact black-and-white Devon Rex kitten from Image 2. Image 2 is the identity and cuteness reference: preserve the black crown and ears, broad white blaze down the face, white muzzle, pink nose, white chest and white paws, very large round blue eyes, oversized upright ears and short curly coat. The replacement must look like the same young kitten in Image 2: irresistibly cute at first glance, round baby face, soft full cheeks, short compact plump body, bright gentle curious eyes and a warm happy expression. Keep the kitten healthy and cuddly, not skinny, not elongated, not angular, not gaunt, not gloomy, not uncanny and not elderly-looking. Keep exactly one kitten and no other animal. Preserve the readable selfie action and plausible paw contact. Correct anatomy only: no duplicate paws, fused limbs, extra ears, warped eyes or broken clothing boundaries. Photorealistic polished social-media travel portrait with soft natural daylight and detailed soft fur. No platform UI, watermark or signature. If any incidental text exists, keep it short, legible and semantically appropriate rather than deleting it or generating gibberish.",
+  "revisedPrompt": null,
+  "generatedAt": "2026-08-12T09:40:31.408Z"
+}

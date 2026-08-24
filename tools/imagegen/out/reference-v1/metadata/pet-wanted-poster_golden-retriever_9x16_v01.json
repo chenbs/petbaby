@@ -1,0 +1,45 @@
+{
+  "templateId": "pet-wanted-poster",
+  "status": "approved-frozen-master",
+  "category": "萌宠通缉令",
+  "subject": "golden-retriever",
+  "breed": "金毛犬",
+  "selectionRationale": "验证服装保留、手持道具、中文内容适配与大型犬可爱度",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-effect-reference-internal-only",
+      "path": "apps/website/public/assets/example/1786369065023.png",
+      "sha256": "3b757c645718c48b5b1fbe8f8f10420106b7bdcb0f10e16387446f5cd1c68ec5"
+    },
+    {
+      "role": "pet-identity-reference",
+      "path": "tools/imagegen/out/source/dog-golden.jpg",
+      "sha256": "1b6348ce4f6cd1d12f4c93d5f2a8a5c21847e0ce9bc43e4326c1ee89f7a89eef"
+    }
+  ],
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and text localization. Create a vertical 9:16 high-fidelity pet replacement based on both input images. Compose for an exact final size of 720x1280 pixels. Image 1 is the primary effect reference and scene base. Preserve its front-facing humorous mugshot composition, white height-chart background, navy measurement lines and numbers, orange prison shirt, two paws holding a dark rectangular placard, direct eye contact and deadpan comedy. Use an optional scene-change budget of approximately 5% to 20%. You may naturally adjust the shirt tailoring and colour tone, line spacing, placard material or small studio details to fit the new dog. All changes must remain native to a clean playful mugshot studio and match its frontal perspective and even light. Do not remove the shirt, placard or height chart. If no replacement is clearly better, keep the original content unchanged. Remove the original tabby cat from Image 1 completely and replace it with the exact Golden Retriever from Image 2. Preserve the warm golden coat, floppy feathered ears, dark friendly eyes, broad soft muzzle and recognisable Golden Retriever identity. Make the Golden Retriever youthful, rounded, fluffy and immediately lovable, with a gently mischievous but friendly expression. Never make it old, stern, aggressive, skinny, gaunt, long-faced or uncanny. Replace the placard text with the exact four Chinese characters '偷吃零食'. Keep the height-chart numbers readable and plausible. Do not delete the existing text structure. All visible text must be correctly formed; omit optional tiny text rather than generating gibberish. Exactly one dog and no other animal. Both front paws must grip the two sides of the placard naturally. No duplicate paws, human hands, fused clothing, platform UI, institutional emblem, watermark or signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "approved-by-user",
+    "score": null,
+    "findings": []
+  },
+  "generatedAt": "2026-08-12T11:11:40.237Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/candidates/pet-wanted-poster_golden-retriever_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/pet-wanted-poster_golden-retriever_9x16_v01.webp",
+  "masterSha256": "0171c933caae51a451bdf9fb43f5721f3935f73daa5bca91469e84ef2088beee",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-13T00:00:00.000+08:00",
+    "note": "用户已审批通过；此后运行时仅使用自有母版和用户宠物身份图。"
+  }
+}

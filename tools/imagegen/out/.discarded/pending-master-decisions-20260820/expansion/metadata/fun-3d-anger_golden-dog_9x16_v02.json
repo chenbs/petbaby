@@ -1,0 +1,52 @@
+{
+  "templateId": "fun-3d-anger",
+  "entryId": "fun",
+  "title": "蓝金花绘肖像",
+  "sourceEffectFile": "apps/website/public/assets/example/cdf5c822-1ac5-4a02-a4ad-b29066cd401a.jpg",
+  "status": "generated-pending-user-approval",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/cdf5c822-1ac5-4a02-a4ad-b29066cd401a.jpg",
+      "sha256": "6116c5239a49ef3d09dd5ff7efc1cb90a6522ead7fe90a73f5e596d798e75e04"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "golden-dog",
+      "species": "dog",
+      "breed": "adult Golden Retriever",
+      "path": "tools/imagegen/out/source/dog-golden.jpg",
+      "sha256": "1b6348ce4f6cd1d12f4c93d5f2a8a5c21847e0ce9bc43e4326c1ee89f7a89eef"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be adult Golden Retriever with warm golden coat, floppy feathered ears, dark friendly eyes, broad soft muzzle and strong healthy adult build. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the deep royal-blue floral field, gold ornamental flowers, luminous upward-looking portrait and soft painterly framing. The Golden Retriever face and fur must be fully hand-painted with the same soft brushwork and decorative texture as the scene, never a photographic dog pasted into painted flowers. Remove every watermark and account mark. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create an exact 9:16 vertical final composition at 720x1280, based on the first reference image as the full scene/layout and the second reference image as the sole identity reference for the subject. Replace the original white kitten with one coherent adult Golden Retriever identity: warm golden coat, floppy feathered ears, dark friendly eyes, broad soft muzzle, strong healthy adult build. Preserve the first image’s composition exactly: same camera angle, crop, perspective, upward-looking pose, centered subject placement, blue floral field, gold ornamental flowers, luminous painterly framing, soft brushwork, sparkle-like highlights, and overall decorative fantasy style. The dog must be fully hand-painted in the same soft painterly language as the scene, not photographic. Preserve the original expression and gentle upward gaze, adapting it naturally to a friendly adult retriever. Do not change the background design, palette, props, or text layout except remove the visible watermark/account mark and replace any such mark with nothing. Maintain anatomy correctly with one head, two ears, four legs/paws, no extra limbs, no human features, no duplicate pets, no uncanny puppy traits. Keep the rich royal-blue floral composition and gold floral accents exactly intact while integrating the retriever seamlessly into the painted scene.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/expansion/candidates/fun-3d-anger_golden-dog_9x16_v02.png",
+    "sha256": "179f2f3614f7afe0c345df40cbaf6b4e08e98d6836c8efaf18701fc68a0d1d38"
+  },
+  "review": {
+    "state": "pending-human-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generatedAt": "2026-08-18T07:12:15.434Z"
+}

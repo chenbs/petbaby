@@ -1,0 +1,182 @@
+{
+  "status": "discarded-recoverable-audit",
+  "publicUseAllowed": false,
+  "runtimeUseAllowed": false,
+  "updatedAt": "2026-08-20T12:00:00+08:00",
+  "templates": [
+    {
+      "templateId": "fun-nose-closeup",
+      "entryId": "fun",
+      "title": "墨刷半身头像"
+    },
+    {
+      "templateId": "fun-3d-anger",
+      "entryId": "fun",
+      "title": "蓝金花绘肖像"
+    },
+    {
+      "templateId": "travel-beach-selfie",
+      "entryId": "travel",
+      "title": "海滩广角自拍"
+    },
+    {
+      "templateId": "floral-painterly-portrait",
+      "entryId": "art",
+      "title": "粉彩萌系肖像"
+    }
+  ],
+  "archived": [
+    {
+      "templateId": "fun-nose-closeup",
+      "kind": "candidates",
+      "path": "tools/imagegen/out/.discarded/pending-master-decisions-20260820/expansion/candidates/fun-nose-closeup_tuxedo-cat_9x16_v01.png"
+    },
+    {
+      "templateId": "fun-nose-closeup",
+      "kind": "candidates",
+      "path": "tools/imagegen/out/.discarded/pending-master-decisions-20260820/expansion/candidates/fun-nose-closeup_tuxedo-cat_9x16_v02.png"
+    },
+    {
+      "templateId": "fun-nose-closeup",
+      "kind": "raw",
+      "path": "tools/imagegen/out/.discarded/pending-master-decisions-20260820/expansion/raw/fun-nose-closeup_tuxedo-cat_9x16_v01.png"
+    },
+    {
+      "templateId": "fun-nose-closeup",
+      "kind": "raw",
+      "path": "tools/imagegen/out/.discarded/pending-master-decisions-20260820/expansion/raw/fun-nose-closeup_tuxedo-cat_9x16_v02.png"
+    },
+    {
+      "templateId": "fun-nose-closeup",
+      "kind": "metadata",
+      "path": "tools/imagegen/out/.discarded/pending-master-decisions-20260820/expansion/metadata/fun-nose-closeup_tuxedo-cat_9x16_v01.json"
+    },
+    {
+      "templateId": "fun-nose-closeup",
+      "kind": "metadata",
+      "path": "tools/imagegen/out/.discarded/pending-master-decisions-20260820/expansion/metadata/fun-nose-closeup_tuxedo-cat_9x16_v02.json"
+    },
+    {
+      "templateId": "fun-nose-closeup",
+      "entryId": "fun",
+      "title": "墨刷半身头像",
+      "removedAt": "2026-08-20T12:00:00+08:00",
+      "removedBy": "user",
+      "reason": "用户明确判定效果不佳并要求直接删除；文件移入不可发布的可恢复审计归档。"
+    },
+    {
+      "templateId": "fun-3d-anger",
+      "kind": "candidates",
+      "path": "tools/imagegen/out/.discarded/pending-master-decisions-20260820/expansion/candidates/fun-3d-anger_golden-dog_9x16_v01.png"
+    },
+    {
+      "templateId": "fun-3d-anger",
+      "kind": "candidates",
+      "path": "tools/imagegen/out/.discarded/pending-master-decisions-20260820/expansion/candidates/fun-3d-anger_golden-dog_9x16_v02.png"
+    },
+    {
+      "templateId": "fun-3d-anger",
+      "kind": "raw",
+      "path": "tools/imagegen/out/.discarded/pending-master-decisions-20260820/expansion/raw/fun-3d-anger_golden-dog_9x16_v01.png"
+    },
+    {
+      "templateId": "fun-3d-anger",
+      "kind": "raw",
+      "path": "tools/imagegen/out/.discarded/pending-master-decisions-20260820/expansion/raw/fun-3d-anger_golden-dog_9x16_v02.png"
+    },
+    {
+      "templateId": "fun-3d-anger",
+      "kind": "metadata",
+      "path": "tools/imagegen/out/.discarded/pending-master-decisions-20260820/expansion/metadata/fun-3d-anger_golden-dog_9x16_v01.json"
+    },
+    {
+      "templateId": "fun-3d-anger",
+      "kind": "metadata",
+      "path": "tools/imagegen/out/.discarded/pending-master-decisions-20260820/expansion/metadata/fun-3d-anger_golden-dog_9x16_v02.json"
+    },
+    {
+      "templateId": "fun-3d-anger",
+      "entryId": "fun",
+      "title": "蓝金花绘肖像",
+      "removedAt": "2026-08-20T12:00:00+08:00",
+      "removedBy": "user",
+      "reason": "用户明确判定效果不佳并要求直接删除；文件移入不可发布的可恢复审计归档。"
+    },
+    {
+      "templateId": "travel-beach-selfie",
+      "kind": "candidates",
+      "path": "tools/imagegen/out/.discarded/pending-master-decisions-20260820/expansion/candidates/travel-beach-selfie_cream-cat_9x16_v01.png"
+    },
+    {
+      "templateId": "travel-beach-selfie",
+      "kind": "raw",
+      "path": "tools/imagegen/out/.discarded/pending-master-decisions-20260820/expansion/raw/travel-beach-selfie_cream-cat_9x16_v01.png"
+    },
+    {
+      "templateId": "travel-beach-selfie",
+      "kind": "metadata",
+      "path": "tools/imagegen/out/.discarded/pending-master-decisions-20260820/expansion/metadata/travel-beach-selfie_cream-cat_9x16_v01.json"
+    },
+    {
+      "templateId": "travel-beach-selfie",
+      "entryId": "travel",
+      "title": "海滩广角自拍",
+      "removedAt": "2026-08-20T12:00:00+08:00",
+      "removedBy": "user",
+      "reason": "用户明确判定效果不佳并要求直接删除；文件移入不可发布的可恢复审计归档。"
+    },
+    {
+      "templateId": "floral-painterly-portrait",
+      "kind": "candidates",
+      "path": "tools/imagegen/out/.discarded/pending-master-decisions-20260820/expansion/candidates/floral-painterly-portrait_ragdoll-cat_9x16_v01.png"
+    },
+    {
+      "templateId": "floral-painterly-portrait",
+      "kind": "candidates",
+      "path": "tools/imagegen/out/.discarded/pending-master-decisions-20260820/expansion/candidates/floral-painterly-portrait_ragdoll-cat_9x16_v02.png"
+    },
+    {
+      "templateId": "floral-painterly-portrait",
+      "kind": "candidates",
+      "path": "tools/imagegen/out/.discarded/pending-master-decisions-20260820/expansion/candidates/floral-painterly-portrait_ragdoll-cat_9x16_v03.png"
+    },
+    {
+      "templateId": "floral-painterly-portrait",
+      "kind": "raw",
+      "path": "tools/imagegen/out/.discarded/pending-master-decisions-20260820/expansion/raw/floral-painterly-portrait_ragdoll-cat_9x16_v01.png"
+    },
+    {
+      "templateId": "floral-painterly-portrait",
+      "kind": "raw",
+      "path": "tools/imagegen/out/.discarded/pending-master-decisions-20260820/expansion/raw/floral-painterly-portrait_ragdoll-cat_9x16_v02.png"
+    },
+    {
+      "templateId": "floral-painterly-portrait",
+      "kind": "raw",
+      "path": "tools/imagegen/out/.discarded/pending-master-decisions-20260820/expansion/raw/floral-painterly-portrait_ragdoll-cat_9x16_v03.png"
+    },
+    {
+      "templateId": "floral-painterly-portrait",
+      "kind": "metadata",
+      "path": "tools/imagegen/out/.discarded/pending-master-decisions-20260820/expansion/metadata/floral-painterly-portrait_ragdoll-cat_9x16_v01.json"
+    },
+    {
+      "templateId": "floral-painterly-portrait",
+      "kind": "metadata",
+      "path": "tools/imagegen/out/.discarded/pending-master-decisions-20260820/expansion/metadata/floral-painterly-portrait_ragdoll-cat_9x16_v02.json"
+    },
+    {
+      "templateId": "floral-painterly-portrait",
+      "kind": "metadata",
+      "path": "tools/imagegen/out/.discarded/pending-master-decisions-20260820/expansion/metadata/floral-painterly-portrait_ragdoll-cat_9x16_v03.json"
+    },
+    {
+      "templateId": "floral-painterly-portrait",
+      "entryId": "art",
+      "title": "粉彩萌系肖像",
+      "removedAt": "2026-08-20T12:00:00+08:00",
+      "removedBy": "user",
+      "reason": "用户明确判定效果不佳并要求直接删除；文件移入不可发布的可恢复审计归档。"
+    }
+  ]
+}

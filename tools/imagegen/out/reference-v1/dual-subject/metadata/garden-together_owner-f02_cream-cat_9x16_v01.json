@@ -1,0 +1,82 @@
+{
+  "templateId": "garden-together",
+  "title": "和你在花园",
+  "entryId": "together",
+  "version": "v01",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "requestOrder": [
+    "effect-reference",
+    "owner-identity",
+    "pet-identity"
+  ],
+  "inputs": [
+    {
+      "role": "third-party-effect-reference-internal-master-production-only",
+      "path": "tools/imagegen/out/reference-v1/dual-subject/guides/garden-together-effect-9x16.png",
+      "sha256": "333f88d011d386524f8f3e97196e23e19828cad048ae6529a35374b706ff8320"
+    },
+    {
+      "role": "authorized-owner-identity-reference-internal-only",
+      "path": "tools/imagegen/out/source/girl-sample2.png",
+      "sha256": "85a5258518962d0eca3a38b7850b0207d8d9ed34cf1ba9df136dd0926256d885"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "path": "tools/imagegen/out/source/cat-cream.jpg",
+      "sha256": "db5fc390f9cbf4f5ee0eee38850e28012a0953a98c148e7df5b354a539dab7e9"
+    }
+  ],
+  "derivedEffectReference": {
+    "source": "apps/website/public/assets/example/2.png",
+    "sourceSha256": "15c2532d536370f509d0b24d38cca668ca0868cda40eea5c8de21ecfca1e2baa",
+    "normalizedGuide": "tools/imagegen/out/reference-v1/dual-subject/guides/garden-together-effect-9x16.png",
+    "method": "local-aspect-normalization-only-no-model-call"
+  },
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "ownerPublicSampleAllowed": false,
+  "sceneChangeBudget": "0%",
+  "inputFidelity": "high",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "elapsedMs": 42922,
+  "prompt": "Use case: compositing and identity-preserve. Create a vertical 9:16 self-owned master candidate from exactly three input images. The final delivered asset will be exactly 720x1280 pixels. Image 1 is the effect reference and has highest priority for every non-identity visual decision. Keep a strict 0% scene-change budget: preserve its background, environment, camera position, lens, crop, composition, subject placement, action timing, expression, gaze, hand and paw placement, lighting, colour balance, medium, brushwork or photographic texture, clothing, landmarks, unique props and text layout. Change only the two subject identities and the minimum physical fit around their different bodies. Image 2 is the only owner identity reference. Preserve that exact adult person's face, facial proportions, hair, gender presentation and adult age. It contributes no pose, hand gesture, clothing, camera, scene, light or style. Image 3 is the only pet identity reference. Preserve that exact pet's species, breed, coat colours, markings, face, eye colour, ear shape, muzzle, fur length and healthy adult proportions. It contributes no pose, camera, scene, light or style. Never reuse either original subject identity from Image 1. Transfer Image 1's complete pose, gaze, facial expression, action, body direction, contact points, scale and visual treatment onto the two new identities from Images 2 and 3. Keep both new subjects recognisable, attractive and immediately likeable in a contemporary young aesthetic, without obvious age regression. Do not turn an adult owner into a child or an adult pet into a puppy or kitten. Do not make either subject gaunt, oddly thin, aged, uncanny or physically distorted. Exactly one owner and one pet. Never swap, merge, duplicate or blend their identities. No extra person, face, pet, head, hand, finger, paw, limb or tail. Keep all anatomy, contacts and occlusions physically coherent. Scene lock: the exact lush rain-fresh garden floor, mossy stone path, dense green leaves, warm sun shafts, floating moisture and softly glowing natural foliage. Composition and action lock: the exact intimate high-angle overhead composition: the owner kneels and looks naturally up toward the camera while one hand gently touches the pet's head or chin; the relaxed pet stands close against the owner in the same location, direction and scale. Visual treatment lock: the exact dreamy but photographic garden portrait, soft dappled light, restrained natural greens, warm skin and fur tones, shallow atmospheric depth and fine believable texture. Preserve the reference owner's light garden outfit and its silhouette. Only make the minimum fit or colour adjustment needed for the new owner; do not remove the clothing or invent a new costume. Do not add captions, platform UI, logos, watermarks or signatures.",
+  "revisedPrompt": "Create a vertical 9:16 photorealistic composite, delivered as a 720x1280 portrait image. Use Image 1 as the strict composition, pose, scene, lighting, camera, crop, and style reference with highest priority for all non-identity decisions. Preserve the exact lush rain-fresh garden floor, mossy stone path, dense green leaves, warm sun shafts, floating moisture, softly glowing natural foliage, high-angle overhead viewpoint, intimate composition, shallow atmospheric depth, and dreamy but photographic garden portrait look. Preserve the exact owner outfit silhouette from Image 1: a light garden dress with minimal fit/color adjustment only as needed; do not invent a new costume. Preserve the exact action timing and body language: one adult owner kneels, looks naturally up toward the camera, and gently touches the pet’s head or chin with one hand. The pet stands close against the owner in the same location, direction, and scale. Keep the overall lighting, color balance, texture, and brush/photographic treatment matching Image 1 exactly.\n\nIdentity rules: Replace the owner in Image 1 with the exact adult identity from Image 2. Preserve that person’s face, facial proportions, hair, gender presentation, and adult age; keep them recognizably the same person, attractive, contemporary, and natural, without making them younger or uncanny. Replace the pet in Image 1 with the exact pet identity from Image 3. Preserve that pet’s species, breed, coat colors, markings, face, eye color, ear shape, muzzle, fur length, and healthy adult proportions; keep it immediately likeable and natural, not kittenish or distorted. Never reuse either original subject identity from Image 1. Do not swap, merge, duplicate, or blend identities. Exactly one owner and one pet, no extra limbs, hands, paws, faces, tails, or bodies.\n\nMaintain physically coherent contact points and occlusions. The owner’s hand should gently touch the pet’s head or chin with correct anatomy. The pet should remain relaxed and close to the owner, matching the intimate overhead composition. Preserve believable skin, fur, fabric, and garden texture, with soft dappled sunlight and warm natural tones. No captions, logos, UI, watermarks, or signatures.",
+  "automatedChecks": {
+    "dimensions": "pass",
+    "visualContent": "pass",
+    "inputCount": 3,
+    "inputRoleOrder": "pass"
+  },
+  "visualReview": {
+    "state": "approved-by-user",
+    "failureChecks": [
+      "natural-hand-pet-contact",
+      "overhead-gaze",
+      "credible-owner-pet-scale",
+      "garden-scene-lock",
+      "one-owner-one-pet"
+    ],
+    "approvedAt": "2026-08-17T00:00:00.000+08:00"
+  },
+  "generatedAt": "2026-08-17T08:33:43.518Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/dual-subject/candidates/garden-together_owner-f02_cream-cat_9x16_v01.png",
+    "rawPath": "tools/imagegen/out/reference-v1/dual-subject/candidates/raw/garden-together_owner-f02_cream-cat_9x16_v01.png",
+    "sha256": "ce7981b39256292018beff81f6dee5d036c06a6911ec105e3bbe73a3f8f7b8cd"
+  },
+  "candidatePath": "tools/imagegen/out/reference-v1/dual-subject/candidates/garden-together_owner-f02_cream-cat_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/garden-together_owner-f02_cream-cat_9x16_v01.webp",
+  "masterSha256": "005ea7abd8bbce4310f23992eb6d829e464be4c92a6945579da4277ba2214ef1",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-17T00:00:00.000+08:00",
+    "note": "四张双主体母版已由用户逐组查看并明确审批通过。"
+  },
+  "ownerSourcePhotoPublicSampleAllowed": false,
+  "approvedDerivedMasterPublicSampleAllowed": true
+}

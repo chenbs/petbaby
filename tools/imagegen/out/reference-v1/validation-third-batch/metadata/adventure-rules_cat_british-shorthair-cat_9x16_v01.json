@@ -1,0 +1,65 @@
+{
+  "jobId": "adventure-rules_cat_british-shorthair-cat",
+  "templateId": "adventure-rules",
+  "title": "冒险生存法则",
+  "status": "superseded-by-pending-revision",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/adventure-rules_corgi-dog_9x16_v04.webp",
+      "sha256": "c5b79e112180dfd00e806b0dcf8f0378a25bf90cf37f7eab7a6764b824dd2ca8"
+    },
+    {
+      "role": "new-pet-identity-reference",
+      "identityId": "british-shorthair-cat",
+      "species": "cat",
+      "breed": "adult blue British Shorthair cat",
+      "path": "tools/imagegen/out/source/cat-british.jpg",
+      "sha256": "ddbdfb39b6cb3c6dddbfdd01555cd2fea299cfa927f76a1e7248d581152e0364"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 1,
+    "localWorkerConcurrency": 1,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Edit Image 1 into one exact 720x1280 vertical image using exactly two inputs. Image 1 is our frozen self-owned master and controls the whole parchment page. No third-party effect reference is included. Scene-change budget is 0%. Replace every pet in Image 1, central and small, with the same adult adult blue British Shorthair cat from Image 2, preserving its solid blue-grey coat, broad round adult face, amber eyes, small upright ears, plush dense fur, thick tail and sturdy natural body. Image 2 supplies identity only. Keep every other Image 1 detail unchanged: crop, layout, all existing text, maps, diagrams, repeated illustrations, sepia hand-inked style, paper texture, woven hat, clothes, scarf, backpack, straps, pouches and flashlight. Copy Image 1's exact complete upright biped pose, head angle, focused downward gaze and expression. Keep the head, neck, shoulders, chest and spine naturally aligned; show two separate grounded hind legs and two complete forepaws without fingers. No crouch, pasted head, twisted neck, hidden or fused limbs, human body, photography, logo, watermark or signature.",
+  "revisedPrompt": "Edit the provided Image 1 into a single exact 720x1280 vertical image. Use exactly the two provided inputs only: Image 1 as the frozen master background/page, and Image 2 as identity reference for the cat only. Keep Image 1 completely unchanged except for replacing every pet shown anywhere in Image 1, including the central character and all smaller repeated pet illustrations, with the same adult blue British Shorthair cat from Image 2. Preserve the cat’s solid blue-grey coat, broad round adult face, amber eyes, small upright ears, plush dense fur, thick tail, and sturdy natural body. Keep Image 1’s exact complete upright biped pose, head angle, focused downward gaze, and expression for the central character, but render it as a cat with a natural feline head/neck/shoulders/chest/spine alignment, with two separate grounded hind legs and two complete forepaws without fingers. No crouch, no pasted head, no twisted neck, no hidden or fused limbs, no human body. Preserve every other Image 1 detail exactly: crop, layout, all existing text, maps, diagrams, repeated illustrations, sepia hand-inked style, paper texture, woven hat, clothes, scarf, backpack, straps, pouches, flashlight, and all other elements. No third-party style reference, no scene change, no logo, watermark, or signature.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation-third-batch/adventure-rules_cat_british-shorthair-cat_9x16_v01.png",
+    "sha256": "67b5a484515aae6b4e07474575107f7575db35e8d87406331881346941294011"
+  },
+  "review": {
+    "state": "superseded",
+    "checks": {
+      "petIdentity": null,
+      "adultAgeAndProportions": null,
+      "masterPoseExpressionAndGaze": null,
+      "masterStyleAndBrushwork": null,
+      "sceneAndComposition": null,
+      "anatomyAndContacts": null,
+      "repeatedIdentityAndText": null,
+      "dimensions": "pass"
+    },
+    "findings": [
+      "v01 视线偏正，已生成采用母版视线与闭嘴表情的 v02 待审批。"
+    ],
+    "finalApproval": "superseded",
+    "reviewedAt": "2026-08-17T13:33:28+08:00"
+  },
+  "generatedAt": "2026-08-17T04:45:47.643Z",
+  "supersededBy": "tools/imagegen/out/reference-v1/validation-third-batch/adventure-rules_cat_british-shorthair-cat_9x16_v02.png"
+}

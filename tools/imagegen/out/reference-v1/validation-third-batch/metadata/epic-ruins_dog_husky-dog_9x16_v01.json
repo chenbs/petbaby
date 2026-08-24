@@ -1,0 +1,62 @@
+{
+  "jobId": "epic-ruins_dog_husky-dog",
+  "templateId": "epic-ruins",
+  "title": "史诗遗迹探险",
+  "status": "approved-runtime-validation",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/epic-ruins_german-shepherd-dog_9x16_v01.png",
+      "sha256": "6d450ed41c8876b08b651a5e2c7f1e78566d0c3682fc62fb2ab9ba4c8b3615ee"
+    },
+    {
+      "role": "new-pet-identity-reference",
+      "identityId": "husky-dog",
+      "species": "dog",
+      "breed": "adult grey-and-white Siberian Husky",
+      "path": "tools/imagegen/out/source/dog-husky.jpg",
+      "sha256": "41280a50599eb23fa200e8851d1c6a12762398d62f868fe29e18c315eff87a8d"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving template transfer. Produce one exact 720x1280 vertical 9:16 runtime validation image from exactly two input images. Image 1 is our frozen self-owned production master. It is the sole authority for every non-identity detail: scene, composition, crop, camera, pose, action, expression, gaze, lighting, palette, rendering medium, brushwork, clothing, text, props and all physical contacts. No third-party effect reference is included. Image 2 is the sole new-pet identity reference. Change only the pet identity. Remove every depiction and every residual feature of the master pet, then replace it with the new pet from Image 2. Scene-change budget is 0%. Do not redesign, reinterpret, clean up, recolour, restyle, simplify, move, delete or add anything in the master scene. Keep the exact low-angle ruined megastructure, towering suspended gothic fragments, luminous circular arch at right, stormy blue-grey sky, rain, drifting debris, wet platform edge, cold steel-blue palette, sharp rim light, subject scale and massive rectangular mechanical back rig. Replicate the master's lower-left four-legged forward-ready stance, body direction toward the right-side ruins, alert determined gaze, head angle, expression and equipment contacts. Keep a mature, strong natural animal body with four complete connected limbs. The mechanical equipment remains a believable back-and-shoulder rig; no human face, hair, skin, hands, fingers, arms or torso may appear. The replacement must be the exact adult grey-and-white Siberian Husky from Image 2. Preserve its symmetrical grey cap, broad white facial blaze, white muzzle and chest, ice-blue eyes, upright triangular ears and athletic adult double-coated body. Image 2 controls only species, breed, coat colour and markings, ear shape, eye colour, actual adult age and natural healthy breed proportions. Do not copy Image 2's pose, expression, gaze, camera, background, lighting, photographic texture or rendering style. Preserve the pet's actual adult age and mature breed proportions. Do not juvenilize it, enlarge the head or eyes, shorten the muzzle or body, or convert it into a kitten, puppy or generic cute mascot. Keep it healthy, attractive and immediately likeable without changing the master's expression or art direction. Match Image 1's exact cinematic realism, rain, cold backlight, depth, material rendering and restrained palette. Image 2 contributes identity only. No new text, logos, known IP, watermarks or signatures. Keep exactly one pet identity throughout, except where the frozen master intentionally contains multiple views or two scale duplicates of that same identity. No unrelated animal, residual old-pet coat, face or limb. Correct species anatomy only: no duplicate, fused, missing or amputated-looking limbs, extra ears, warped eyes, malformed mouth, floating tail, human hands or fingers, broken garment boundaries, pasted head, disconnected neck or failed prop contact. Preserve all non-pet pixels and relationships as closely as the model allows.",
+  "revisedPrompt": "Create a single vertical 9:16 cinematic photorealistic composite that preserves the first reference image exactly in scene, composition, camera angle, lighting, palette, rain, ruined megastructure environment, luminous arch at right, wet platform edge, scale, and the massive rectangular mechanical back rig. Replace only the pet identity from the first image with the exact adult grey-and-white Siberian Husky from the second image: symmetrical grey cap, broad white facial blaze, white muzzle and chest, ice-blue eyes, upright triangular ears, mature athletic double-coated body. Keep the same lower-left four-legged forward-ready stance, body direction toward the right-side ruins, alert determined gaze, head angle, expression, and equipment contact points. Remove all traces of the original pet identity. No redesign, no cleanup, no recolor, no style change, no added text or logos. Ensure correct adult dog anatomy with four complete connected limbs, natural proportions, and believable contact with the gear and platform. Maintain exact cinematic realism, stormy blue-grey sky, drifting debris, cold backlight, and restrained palette.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation-third-batch/epic-ruins_dog_husky-dog_9x16_v01.png",
+    "sha256": "be77792d66883fc6abdb08e162989ed1e1c0fbe92b386fef9d87c7568d74d22e"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "checks": {
+      "petIdentity": "pass",
+      "adultAgeAndProportions": "pass",
+      "masterPoseExpressionAndGaze": "pass",
+      "masterStyleAndBrushwork": "pass",
+      "sceneAndComposition": "pass",
+      "anatomyAndContacts": "pass",
+      "repeatedIdentityAndText": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [],
+    "finalApproval": "approved",
+    "approvedAt": "2026-08-17T12:22:43+08:00"
+  },
+  "generatedAt": "2026-08-17T02:02:32.649Z"
+}

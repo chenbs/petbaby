@@ -1,0 +1,67 @@
+{
+  "id": "pet-milk-tea-shopkeeper_cream-longhair-cat_stability-v01",
+  "templateId": "pet-milk-tea-shopkeeper",
+  "title": "奶茶店主理人",
+  "sequence": 54,
+  "identityId": "cream-longhair-cat",
+  "identityLabel": "长毛猫",
+  "species": "cat",
+  "breed": "cream long-haired cat",
+  "status": "generated-pending-human-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "requestPolicy": {
+    "concurrency": 1,
+    "outputsPerRequest": 1,
+    "inputCount": 2,
+    "combinedInputBytes": 206188,
+    "maxCombinedInputBytesExclusive": 1000000,
+    "maxInputEdge": 1200,
+    "comparisonSheetIncluded": false
+  },
+  "inputs": [
+    {
+      "role": "compressed-public-preview-master-candidate",
+      "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/api-inputs/pet-milk-tea-shopkeeper_public-v01_master-candidate.jpg",
+      "sha256": "34393386da250f3821462a477b6d4a534623a5931a99446e2b21142235b31653",
+      "bytes": 100776,
+      "sourceCandidatePath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/candidates/pet-milk-tea-shopkeeper_public-v01_master-candidate.png",
+      "sourceCandidateSha256": "39b95473a40b28d1b0767fa82f5637c57135df0603f73d14cc2a13bb54ab8dbd"
+    },
+    {
+      "role": "compressed-pet-identity-reference",
+      "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/api-inputs/cream-longhair-cat.jpg",
+      "sha256": "5efb20f77e222564fc3d51c99c596895625f61b60e1bdfb8225fb820eaec9d1b",
+      "bytes": 105412,
+      "sourcePath": "tools/imagegen/out/source/cat-cream.jpg"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "prompt": "Use case: identity-preserving production-master stability validation. Create one vertical 9:16 image composed for an exact final size of 720x1280 pixels from exactly two input images. Image 1 is a proposed self-owned runtime master copied byte-for-byte from an approved public preview. It is the sole reference for composition, scene, pose, expression, styling, lighting, palette, clothing, props and text layout. Image 2 is the sole pet identity reference. Replace every animal depiction in Image 1 with the exact cream long-haired cat from Image 2. Preserve the target pet's pale cream long coat, soft cream points, blue eyes, pink nose, triangular ears, fluffy tail and full natural proportions. Image 2 controls identity and species; do not retain the sample animal's breed or facial structure from Image 1. The replacement must remain recognisably the same cat as Image 2 while naturally adopting Image 1's pose and expression. Preserve its real age and breed proportions; do not beautify, juvenilize, enlarge or shrink the head arbitrarily, or invent a generic cute face. Scene-change budget: 0%. Do not redesign, simplify, crop, recolour, relight, add, remove or move any background element, garment, prop, graphic mark or text. Make only the smallest local geometry adjustment needed for the replacement animal to fit the existing pose and clothing. Keep the pet behind the milk-tea counter, paper shop hat, beige apron, cups and tapioca props, warm cream shop interior and all existing sign layout. Keep all existing readable text unchanged. Add no new text, logo, signature, watermark or AI label. Avoid duplicate heads, extra eyes, extra ears, extra limbs, malformed paws, fused clothing, floating props and mixed-species anatomy.",
+  "revisedPrompt": "Create a single vertical 9:16 image at exact final size 720x1280 pixels using the first provided image as the full composition reference and the second provided image as the sole pet identity reference. Preserve the first image exactly in scene, pose, expression, styling, lighting, palette, clothing, props, text layout, background elements, and all readable text. Replace every animal depiction in the first image with the exact same cream long-haired cat from the second image, preserving its identity, species, pale cream long coat, soft cream points, blue eyes, pink nose, triangular ears, fluffy tail, and natural proportions. Keep the cat positioned behind the milk-tea counter in the same pose and expression as the original subject, with only minimal local geometry changes needed for fit. Do not beautify, juvenilize, cartoonize, enlarge or shrink the head arbitrarily, or alter breed/facial structure away from the identity reference. Keep the paper shop hat, beige apron, cups, tapioca props, warm cream shop interior, wall sign, menu board, and all existing text exactly unchanged. No new text, logo, watermark, or AI label. Avoid duplicate heads, extra eyes, extra ears, extra limbs, malformed paws, fused clothing, floating props, or mixed-species anatomy.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/pet-milk-tea-shopkeeper/pet-milk-tea-shopkeeper_cream-longhair-cat_stability-v01.png",
+    "sha256": "586b3aec6b16a2bd1cd5edcfb6fac1c0108c32641281318996c83cb1f5dea438",
+    "size": "720x1280"
+  },
+  "rawOutputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/pet-milk-tea-shopkeeper/raw/pet-milk-tea-shopkeeper_cream-longhair-cat_stability-v01.png",
+  "automatedChecks": {
+    "dimensions": "pass",
+    "visualContent": "pass",
+    "inputCount": "pass",
+    "inputBytes": "pass",
+    "requestSerial": "pass"
+  },
+  "humanChecks": {
+    "petIdentity": "pending",
+    "compositionAndCrop": "pending",
+    "poseExpressionAndGaze": "pending",
+    "clothingPropsAndText": "pending",
+    "styleAndPalette": "pending",
+    "anatomy": "pending"
+  },
+  "finalApproval": "pending-user",
+  "elapsedMs": 48034,
+  "generatedAt": "2026-08-20T06:27:29.754Z"
+}

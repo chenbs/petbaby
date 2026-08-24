@@ -1,0 +1,64 @@
+{
+  "templateId": "color-painted-portrait",
+  "title": "彩色绘画肖像",
+  "entryId": "art",
+  "status": "master-candidate-pending-user-approval",
+  "subject": "dragon-li-cat",
+  "breed": "狸花猫",
+  "revision": {
+    "version": "v07",
+    "supersedes": "color-painted-portrait_dragon-li-cat_9x16_v06.png",
+    "reviewFinding": "v05 偏粗颗粒厚涂，v06 又过度转向线稿水彩；两者都未达到原参考的蓬松虚边、柔和五官和软萌数字印象派效果。",
+    "scope": "soft-airy-kawaii-digital-impressionist-full-regeneration"
+  },
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-soft-impressionist-effect-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/4f109cb7-2809-459a-93ef-5e7775e16280.jpg",
+      "sha256": "620aa0a865818f88025ed9345f86e0f38a113520a91627a1dfd1535136b0035a"
+    },
+    {
+      "role": "pet-identity-only-reference",
+      "path": "apps/website/public/assets/avatar-dragonli.jpg",
+      "sha256": "0f403599969b57f32aa314cf474ce4d57d28f48683e16ae9a032d73b94079732"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: style-transfer with pet identity preservation. Create a vertical 9:16 soft impressionistic digital-painting pet portrait at exactly 720x1280 pixels from exactly two input images. Image 1 is the authoritative effect, composition, facial softness and style reference. Preserve its half-body three-quarter portrait, saturated orange field, teal and coral accents, broad loose background colour blocks, light splashes, airy negative space, soft fluffy subject edges and youthful gallery-poster energy. Remove only its platform watermark and account ID. The target medium is soft impressionistic digital painting with a light expressive illustration finish: loose, airy and lively, with natural colour overlap, broad abstract colour fields and a few energetic paint splashes. The pet must feel fluffy, weightless and cotton-soft. Build all fur from many short, small, broken, feather-light brush dabs with low visual weight, soft blurred edges and abundant soft highlights. Let the outer fur dissolve gently into the coloured background. Hard anatomy and bony landmarks should be covered by soft fluffy fur. Use a cute, slightly exaggerated contemporary cartoon face: rounded cheeks, short soft muzzle, small rounded nose, gentle mouth curve and youthful appealing proportions. Reduce realistic structure and volume; prioritise sweetness, mood and softness. Facial brushwork must remain finer, lighter and softer than body brushwork. Use subtle layered digital colour, delicate broken marks and soft transitions rather than outlines or physical paint relief. Do not use thick impasto, heavy oil-paint texture, palette-knife ridges, canvas cracks, gritty pigment chunks, long strongly directional fur strokes, hard edges, sharp contour lines, strong sculptural volume, realistic anatomy emphasis, dramatic realistic lighting, photorealism, traditional oil painting, 3D rendering or physical-world material realism. Give the Dragon Li cat a very soft, lovable, slightly cartooned face. Make the cheeks round and cloud-like, the muzzle short and plush, and the nose small, softly rounded and warm pink-brown. Add a subtle sweet closed-mouth smile with naturally lifted corners. Reduce the hard cheekbone, jaw and nose-bridge structure found in realistic cat portraits. Use large, soft, gently rounded yellow-green eyes with dark pupils and two restrained soft highlights per eye. The gaze should be calm, tender and slightly upward, with no intense stare. Keep the eye edges softly painted and partially surrounded by fluffy short fur marks; avoid glossy spherical realism. Translate the forehead M and cheek stripes into loose clusters of short broken dark-brown brush dabs. Keep them recognisable but soft, irregular and partially diffused by fluffy fur. Use abundant fine cream and warm-grey highlights around cheeks, ears and muzzle. Whiskers should be few, soft, slightly broken and low-contrast. Image 2 is identity-only. Preserve its breed, coat colour blocks, distinctive markings, eye colour and recognisable proportions, but do not copy its photographic lighting, realistic hair strands, lens detail, surface texture or anatomical hardness. Reinterpret every identity feature through Image 1's soft impressionistic digital-painting language. Keep one healthy, youthful, rounded and instantly lovable pet with correct limbs and no fused anatomy. Preserve from Image 2 the brown-grey mackerel tabby colour, bold forehead M, dark cheek stripes, yellow-green eyes, pink-brown nose, upright ears and rounded face. Let body edges dissolve softly into the orange, teal and coral field. No text, logo, platform mark, watermark or signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "prechecked-pending-user-approval",
+    "checks": {
+      "petIdentity": "pass",
+      "cuteness": "pass",
+      "effectComposition": "pass",
+      "airyShortBrushwork": "pass",
+      "fluffySoftEdges": "pass",
+      "reducedAnatomicalStructure": "pass",
+      "digitalImpressionistStyle": "pass",
+      "anatomy": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [
+      "狸花猫身份稳定，额头 M 纹、面颊条纹、黄绿色眼睛和粉棕鼻可辨识。",
+      "脸颊与口鼻更圆润，眼神柔和略向上，表情安静亲和，可爱度较上一版提升。",
+      "面部和身体统一为短碎轻笔触、柔和过渡和蓬松虚边，粗颗粒物理颜料感及写实骨骼结构已降低。",
+      "橙色主场、青绿色与珊瑚色块、半身构图和松散背景节奏保留，未出现文字、水印或平台标识。"
+    ],
+    "finalApproval": "pending-user"
+  },
+  "generatedAt": "2026-08-13T10:37:28.719Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/color-painted-portrait_dragon-li-cat_9x16_v07.png",
+    "sha256": "69c0f2c2f12b6875d1cf7cdb08b03637583489b38a864b493440c755386f9a57"
+  }
+}

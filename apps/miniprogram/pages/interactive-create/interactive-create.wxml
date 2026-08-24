@@ -1,0 +1,87 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+
+<view class="page page-flat">
+  <text class="eyebrow">PL-15 · INTERACTIVE H5</text>
+  <view class="title">编辑一页会回应的回忆</view>
+  <text class="muted">收到的人点一下屏幕，星光会亮起来。</text>
+
+  <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
+
+  <view class="section">
+    <picker range="{{pets}}" range-key="name" bindchange="choosePet">
+      <t-field label="宠物" control="select" value="{{petText}}" placeholder="请选择宠物"></t-field>
+    </picker>
+  </view>
+
+  <view class="section">
+    <view class="row">
+      <view class="section-title flush">场景照片</view>
+      <text class="small">已选 {{photoIds.length}}/6</text>
+    </view>
+
+    <t-skeleton wx:if="{{loading}}" type="grid" count="6"></t-skeleton>
+
+    <t-empty
+      wx:elif="{{!photos.length}}"
+      icon="photo"
+      title="还没有照片"
+      description="先去照片库上传，再回来编辑这一页。"
+      action-text="去上传照片"
+      anim="{{animType}}"
+      decor="{{decor}}"
+      bindaction="openPhotos"
+    ></t-empty>
+
+    <t-photo-grid
+      wx:else
+      photos="{{photos}}"
+      selected-ids="{{photoIds}}"
+      max="6"
+      ordered
+      anim="{{animType}}"
+      bindtoggle="togglePhoto"
+    ></t-photo-grid>
+  </view>
+
+  <view class="section">
+    <view class="section-title">文字</view>
+    <t-card blur="{{blurOk}}" anim="{{animType}}">
+      <view class="stack">
+        <t-field label="标题" value="{{title}}" placeholder="给这一页起个名字" maxlength="60" show-count bindchange="inputTitle"></t-field>
+        <t-field label="页面文案" control="textarea" value="{{copy}}" placeholder="想对它说的话" maxlength="180" show-count bindchange="inputCopy"></t-field>
+      </view>
+    </t-card>
+  </view>
+
+  <view class="section">
+    <view class="section-title">场景氛围</view>
+    <view class="scenes">
+      <view
+        wx:for="{{scenePresets}}"
+        wx:key="id"
+        class="scene {{theme === item.id ? 'scene-on' : ''}}"
+        data-id="{{item.id}}"
+        hover-class="scene-hover"
+        bindtap="chooseScene"
+      >
+        <view class="scene-chip" style="background:{{item.sky}}">
+          <view class="scene-dot" style="background:{{item.glow}}"></view>
+        </view>
+        <view class="scene-name">{{item.name}}</view>
+        <text class="small">{{item.hint}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-title">预览</view>
+    <!-- 场景配色来自内容属性 sceneStyle，不随 UI 主题变化 -->
+    <view class="preview" style="{{sceneStyle}}">
+      <view class="preview-stars">✦ · ✧ · ✦ · ✧</view>
+      <view class="preview-title">{{title}}</view>
+      <text class="preview-copy">{{copy}}</text>
+    </view>
+  </view>
+
+  <t-button type="primary" block anim="{{animType}}" loading="{{busy}}" disabled="{{!photoIds.length}}" class="block-gap" bindtap="create">创建互动页</t-button>
+</view>

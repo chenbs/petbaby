@@ -1,0 +1,15 @@
+{
+  "appid": "touristappid",
+  "projectname": "petbaby-miniprogram",
+  "compileType": "miniprogram",
+  "miniprogramRoot": "./",
+  "libVersion": "2.9.0",
+  "setting": {
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "urlCheck": true,
+    "minifyWXML": true
+  }
+}

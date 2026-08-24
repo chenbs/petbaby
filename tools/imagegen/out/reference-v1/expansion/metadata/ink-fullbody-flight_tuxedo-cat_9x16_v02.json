@@ -1,0 +1,94 @@
+{
+  "templateId": "ink-fullbody-flight",
+  "entryId": "art",
+  "title": "立体情绪头像",
+  "sourceEffectFile": "apps/website/public/assets/example/e4cbfb45-aeb8-48d7-bed1-7a6400ebd4f1.jpg",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/e4cbfb45-aeb8-48d7-bed1-7a6400ebd4f1.jpg",
+      "sha256": "57c834d94e981b9645e8fc7397fe81cab8bf57c7b1575cdae776c49cf3991cfd"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "tuxedo-cat",
+      "species": "cat",
+      "breed": "adult black-and-white tuxedo cat",
+      "path": "tools/imagegen/out/source/cat-tuxedo.jpg",
+      "sha256": "c4b2ebaac7dd5d59fffd83a827d94fdc03e1befd3e1108f337de8ba5488a7d39"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be adult black-and-white tuxedo cat with black crown and ears, narrow white facial blaze, white muzzle and chest, pale green eyes, pink nose, black back and white front legs. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the warm tan minimal studio, tiny centered full-body stance, soft floor shadow, simplified 3D forms and exact annoyed expression with lowered rounded brows and forward gaze. Translate that same cute assertive expression to one adult tuxedo cat without making it realistic, neutral, aggressive or kitten-like. Remove every watermark, platform badge and account number. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a final vertical 9:16 composition at 720x1280 pixels based on the first reference image’s exact composition, camera angle, crop, perspective, pose, lighting, palette, minimalist warm tan studio background, soft floor shadow, simplified 3D forms, and exact annoyed/ assertive expression with lowered rounded brows and forward gaze. Replace the original dog subject with the exact adult tuxedo cat identity from the second reference image: black-and-white coat, black crown and ears, narrow white facial blaze, white muzzle and chest, pale green eyes, pink nose, black back, white front legs. Keep the pet full-body, tiny and centered, standing in the same stance and with the same expression translated into a cute but assertive adult cat face. Preserve the first image’s visual language and proportions; do not make it realistic, generic, kitten-like, aggressive, or redesigned. Preserve the background exactly as a warm tan minimal studio with no scene changes. Remove all watermarks, badges, account numbers, and any platform text. No new logos or signatures. Ensure correct cat anatomy with no extra limbs, paws, ears, eyes, or duplicated subjects.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/expansion/candidates/ink-fullbody-flight_tuxedo-cat_9x16_v02.png",
+    "sha256": "cff258652331a93f2c525a9e3917a186cce2e9ea49adaa8f80d6ee4a3692b2bc"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-20T12:00:00+08:00"
+  },
+  "generatedAt": "2026-08-18T07:12:12.199Z",
+  "version": "v02",
+  "candidatePath": "tools/imagegen/out/reference-v1/expansion/candidates/ink-fullbody-flight_tuxedo-cat_9x16_v02.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/ink-fullbody-flight_tuxedo-cat_9x16_v02.webp",
+  "masterSha256": "8800ea7f50c0e4132e17e17b8a7a8697d39c9a84003af071530ab059f7a69338",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-20T12:00:00+08:00",
+    "note": "用户审阅 pending-masters-comparison 后明确表示除指定重做和删除项外，其余模板可以冻结。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/ink-fullbody-flight_tuxedo-cat_9x16_v02.webp",
+      "sha256": "8800ea7f50c0e4132e17e17b8a7a8697d39c9a84003af071530ab059f7a69338"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate",
+      "unapproved-candidate"
+    ]
+  },
+  "qualityBaseline": {
+    "required": [
+      "Keep the warm tan minimal studio, tiny centered full-body stance, soft floor shadow, simplified 3D forms and exact annoyed expression with lowered rounded brows and forward gaze. Translate that same cute assertive expression to one adult tuxedo cat without making it realistic, neutral, aggressive or kitten-like. Remove every watermark, platform badge and account number.",
+      "exact 720x1280 portrait output",
+      "same approved composition, action, expression, lighting, palette, medium and text hierarchy"
+    ],
+    "reject": [
+      "scene redesign or missing distinctive layout details",
+      "juvenilized, malformed, duplicated or inconsistent pet anatomy",
+      "logo, platform UI, account ID, watermark or signature"
+    ]
+  }
+}

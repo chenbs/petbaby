@@ -1,0 +1,56 @@
+{
+  "templateId": "archive-fish-anatomy",
+  "entryId": "archive",
+  "title": "本宠结构图谱",
+  "sourceEffectFile": "apps/website/public/assets/example/7.png",
+  "status": "revision-required-by-user",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/7.png",
+      "sha256": "554e62d70dde411bf168aad5479fa4ed0b96585963c8a6af657d6c5424c21cf2"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "blue-british-cat",
+      "species": "cat",
+      "breed": "adult blue British Shorthair cat",
+      "path": "tools/imagegen/out/source/cat-british.jpg",
+      "sha256": "ddbdfb39b6cb3c6dddbfdd01555cd2fea299cfa927f76a1e7248d581152e0364"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 1,
+    "localWorkerConcurrency": 1,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult blue British Shorthair cat with solid blue-grey coat, round broad face, amber eyes, small upright ears, plush dense fur, thick tail and sturdy adult body. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the central diagram, leader lines, data blocks and modular information hierarchy, but label it as playful fictional pet information, never medical fact. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a 9:16 vertical final composition at exactly 720x1280 pixels by using Image 1 as the strict layout/composition/style reference and Image 2 as the sole identity reference for the subject. Preserve Image 1's parchment steampunk infographic exactly: same crop, perspective, border, central diagram structure, leader lines, module placement, text hierarchy, decorative gears, palette, lighting, textures, brushwork, and overall visual language. Keep the full infographic design intact and do not redesign or clean the background.\n\nReplace the Pisces fish subjects in Image 1 with one coherent adult blue British Shorthair cat identity derived from Image 2. The replacement must be an adult cat with a solid blue-grey coat, round broad face, amber eyes, small upright ears, plush dense fur, thick tail, and sturdy natural adult proportions. Render the cat in the same ornate steampunk illustrative language as Image 1, not as a pasted photo. Preserve the exact pose/action/composition relationships from Image 1 while adapting anatomy correctly for a cat. Maintain friendly, appealing expression transferred from the source composition, but keep anatomy natural and adult.\n\nKeep the central diagram, leader lines, data blocks, and modular information hierarchy. Replace all meaningful human/brand/copyrighted text with short original pet-safe wording while preserving the same text block positions and visual hierarchy. The overall page should read as a playful fictional pet information chart, not medical fact. Do not add logos or signatures.\n\nCorrect anatomy only: no extra ears, eyes, limbs, paws, floating heads, fused joints, duplicate pets, or residual source fish bodies. Keep one coherent cat identity throughout. Preserve Image 1 exactly aside from the subject identity replacement and minimal contact-boundary adjustments required for cat anatomy.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/expansion/candidates/archive-fish-anatomy_blue-british-cat_9x16_v01.png",
+    "sha256": "dd0efb872a73b200a93356e1a292b46318f453564bb0c2692306ebf7a8d18388"
+  },
+  "review": {
+    "state": "revision-required-by-user",
+    "finalApproval": "revision-required",
+    "findings": [
+      "用户要求按 pending-masters-comparison 逐项修正，并以 archive-fish-anatomy_blue-british-cat_9x16_v02 作为下一版待审候选。"
+    ],
+    "reviewedAt": "2026-08-20T00:00:00+08:00"
+  },
+  "generatedAt": "2026-08-17T16:25:10.718Z",
+  "replacedBy": "archive-fish-anatomy_blue-british-cat_9x16_v02"
+}

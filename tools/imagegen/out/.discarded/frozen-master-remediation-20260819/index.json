@@ -1,0 +1,36 @@
+{
+  "status": "discarded-recoverable-audit",
+  "updatedAt": "2026-08-19T14:10:00+08:00",
+  "templates": [
+    {
+      "templateId": "animal-gold-ink-fox",
+      "title": "金箔岩彩幻想",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-gold-ink-fox_shiba-dog_9x16_v01.png",
+      "sha256": "6b87522ef6618ad90ab331d36d647b63e791823e66fdb090a6e5c19019296723",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-gold-ink-fox_shiba-dog_9x16_v01.json",
+      "approvedAt": "2026-08-18T01:00:00+08:00",
+      "removedAt": "2026-08-19T14:10:00+08:00",
+      "removedBy": "user",
+      "reason": "用户明确判定效果不佳并要求直接下架",
+      "archivedMasterPath": "tools/imagegen/out/.discarded/frozen-master-remediation-20260819/masters/animal-gold-ink-fox_shiba-dog_9x16_v01.png",
+      "archivedMetadataPath": "tools/imagegen/out/.discarded/frozen-master-remediation-20260819/metadata/animal-gold-ink-fox_shiba-dog_9x16_v01.json"
+    },
+    {
+      "templateId": "animal-robot-poster",
+      "title": "机器宠物活动海报",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-robot-poster_blue-british-cat_9x16_v01.png",
+      "sha256": "7846af050bfdd093ef243c713906f1409b0ab9b9afa6b8ac48c3c8b7a597c344",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-robot-poster_blue-british-cat_9x16_v01.json",
+      "approvedAt": "2026-08-18T01:00:00+08:00",
+      "removedAt": "2026-08-19T14:10:00+08:00",
+      "removedBy": "user",
+      "reason": "用户明确判定效果不佳并要求直接下架",
+      "archivedMasterPath": "tools/imagegen/out/.discarded/frozen-master-remediation-20260819/masters/animal-robot-poster_blue-british-cat_9x16_v01.png",
+      "archivedMetadataPath": "tools/imagegen/out/.discarded/frozen-master-remediation-20260819/metadata/animal-robot-poster_blue-british-cat_9x16_v01.json"
+    }
+  ]
+}

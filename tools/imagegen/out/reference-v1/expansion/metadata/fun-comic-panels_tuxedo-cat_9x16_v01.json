@@ -1,0 +1,52 @@
+{
+  "templateId": "fun-comic-panels",
+  "entryId": "fun",
+  "title": "漫画表情分格",
+  "sourceEffectFile": "apps/website/public/assets/example/1786369082391.png",
+  "status": "generated-pending-user-approval",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/1786369082391.png",
+      "sha256": "cdbd055226e301eb2f1cdd18a9247a7466667205ef4a788e16f1591c59de86cc"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "tuxedo-cat",
+      "species": "cat",
+      "breed": "adult black-and-white tuxedo cat",
+      "path": "tools/imagegen/out/source/cat-tuxedo.jpg",
+      "sha256": "c4b2ebaac7dd5d59fffd83a827d94fdc03e1befd3e1108f337de8ba5488a7d39"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult black-and-white tuxedo cat with black crown and ears, narrow white facial blaze, white muzzle and chest, pale green eyes, pink nose, black back and white front legs. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the comic cell rhythm, speech marks and changing expressions; use one identical adult pet in every cell. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a vertical 9:16 image at exactly 720x1280 pixels using the first provided image as the composition/layout reference and the second provided image as the sole identity reference for the main subject. Preserve the first image's scene, camera angle, crop, perspective, lighting, palette, background, landmarks, reflections, props, speech/text placement, and overall comic/illustrated visual language as closely as possible. Replace the original subject in the first image with one single adult black-and-white tuxedo cat matching the second image's identity: black crown and ears, narrow white facial blaze, white muzzle and chest, pale green eyes, pink nose, black back, white front legs, friendly appealing expression. Render the cat fully in the first image's visual language rather than photorealistic cut-and-paste. Keep anatomy correct and natural, with no extra limbs or duplicated subjects. Do not redesign or beautify the background. Preserve all meaningful text blocks and hierarchy; if any brand/platform/watermark text is present, replace it with short original pet-safe wording while keeping the same placement and size. Maintain a single coherent adult cat identity throughout the composition.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/expansion/candidates/fun-comic-panels_tuxedo-cat_9x16_v01.png",
+    "sha256": "f6496a6a4957552de6c87dfbede5d0b888048dcfa86713fb8d74ab80e42593bd"
+  },
+  "review": {
+    "state": "pending-human-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generatedAt": "2026-08-17T16:11:39.043Z"
+}

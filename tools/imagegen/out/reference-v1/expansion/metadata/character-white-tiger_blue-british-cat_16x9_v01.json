@@ -1,0 +1,52 @@
+{
+  "templateId": "character-white-tiger",
+  "entryId": "character",
+  "title": "白虎多姿态设定",
+  "sourceEffectFile": "apps/website/public/assets/example/9f8ebfc6-fb68-4b47-a7bb-625d105d4f12.jpg",
+  "status": "generated-pending-user-approval",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/9f8ebfc6-fb68-4b47-a7bb-625d105d4f12.jpg",
+      "sha256": "6a3a0d6bf9b9ce45c5baaa2b282e12b20374e8a869abfc4ffddfb0e254ca31c6"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "blue-british-cat",
+      "species": "cat",
+      "breed": "adult blue British Shorthair cat",
+      "path": "tools/imagegen/out/source/cat-british.jpg",
+      "sha256": "ddbdfb39b6cb3c6dddbfdd01555cd2fea299cfa927f76a1e7248d581152e0364"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "landscape",
+  "requestedSize": "1280x720",
+  "outputSize": "1280x720",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 16x9 composition at 1280x720 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult blue British Shorthair cat with solid blue-grey coat, round broad face, amber eyes, small upright ears, plush dense fur, thick tail and sturdy adult body. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the multi-view character sheet and palette blocks, but turn the subject into a natural adult pet rather than an animal-person. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a clean 16:9 character-sheet composition at 1280x720, faithfully preserving the reference layout, crop, camera angle, perspective, lighting, palette, and overall illustration style of the first image. Replace every character subject with ONE consistent adult blue British Shorthair cat identity from the second image: solid blue-grey coat, round broad face, amber eyes, small upright ears, plush dense fur, thick tail, sturdy adult body, natural adult proportions. Keep the exact multi-view sheet structure, pose set, expressions, and hand/gesture equivalents translated into correct cat anatomy and contact points. Render the cat in the same stylized visual language as the first image, not photorealistic, with coherent linework and brushwork matching the source. Preserve the original background color and sheet composition; do not redesign the scene. Keep the same visual hierarchy, character-sheet feel, and any palette blocks/text blocks in roughly the same locations, but replace any brand names, platform UI, watermarks, or copyrighted character-name text with short original pet-safe wording. Ensure there is only one coherent adult cat identity across all views, with no extra limbs, no human hands, no duplicated heads, no residual original subject features. Maintain friendly, appealing expression, natural adult feline anatomy, and the same general costume/accessory layout translated safely for a cat character if present in the source. Do not beautify, juvenile-ize, thin, elongate, recolor, or clean up the background. Preserve the original composition exactly as much as possible while swapping the subject identity to the adult blue British Shorthair cat.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/expansion/candidates/character-white-tiger_blue-british-cat_16x9_v01.png",
+    "sha256": "6bc50441df2ec311129066b38101d4fffa11f475f8cf4da176d6fa4757ef9d5f"
+  },
+  "review": {
+    "state": "pending-human-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generatedAt": "2026-08-17T16:15:08.306Z"
+}

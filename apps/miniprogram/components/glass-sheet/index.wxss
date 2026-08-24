@@ -1,0 +1,146 @@
+/**
+ * 沉浸式玻璃面板。材质、圆角、模糊、文字色全部来自 Theme System 的 token，本文件零硬编码。
+ * 四层结构自下而上：背景层 0 → 遮罩层 1 → 内容层 2 → 面板层 3（需求 theme-2.md 4.2）。
+ */
+.sheet-root {
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+}
+
+/* ---------- 背景层 ---------- */
+.sheet-media {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* 无背景资源时退回主题底色，此时遮罩恒为 0 */
+.sheet-media-blank {
+  background: var(--background);
+}
+
+/* ---------- 遮罩层 ---------- */
+/* 亮度联动的唯一实现：opacity 等价于 1 - brightness，只触发合成不触发重绘 */
+.sheet-scrim {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: var(--glass-scrim);
+  transition: opacity var(--glass-duration) var(--glass-easing);
+}
+
+.sheet-hit {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+/* ---------- 内容层 ---------- */
+.sheet-overlay {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  right: 0;
+  left: 0;
+  padding: var(--space-4) var(--page-padding);
+}
+
+/* ---------- 面板层 ---------- */
+/* 高度固定为展开档，靠 translateY 呈现三档，收起时下移部分被裁到屏幕外，不逐帧改 height */
+.sheet-panel {
+  position: absolute;
+  z-index: 3;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  overflow: hidden;
+  box-sizing: border-box;
+  flex-direction: column;
+  border-top: var(--glass-border);
+  border-radius: var(--glass-radius);
+  background: var(--glass-background);
+  box-shadow: var(--glass-shadow);
+  color: var(--glass-text-primary);
+  transition: transform var(--glass-duration) var(--glass-easing), opacity var(--glass-duration) var(--glass-easing);
+}
+
+/* backdrop-filter 不可用时页面不传 blur，退回 degrade 的 0.94 不透明底（需求 9.2） */
+.sheet-blur {
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+}
+
+.sheet-grip {
+  flex-shrink: 0;
+  padding: 0 var(--page-padding);
+}
+
+.sheet-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.sheet-handle-bar {
+  width: var(--glass-handle-width);
+  height: 8rpx;
+  border-radius: var(--radius-pill);
+  background: var(--glass-handle);
+}
+
+.sheet-handle-placeholder {
+  height: var(--space-4);
+}
+
+/* 收起档的单行标题：只留一行，超出省略 */
+.sheet-lead {
+  overflow: hidden;
+  padding-bottom: var(--space-3);
+  color: var(--glass-text-primary);
+  font-size: var(--font-h3);
+  font-weight: var(--fw-bold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sheet-header {
+  padding-bottom: var(--space-3);
+}
+
+.sheet-scroll {
+  min-height: 0;
+  flex: 1;
+}
+
+.sheet-scroll-inner {
+  padding: 0 var(--page-padding) var(--space-6);
+}
+
+/*
+ * actions 反向平移，使主 CTA 在任意档位都贴在屏幕底部（需求 6.1 / 12.7）。
+ * 它会叠在滚动区上方，故自带一层面板底色与顶部分隔线：既挡住下方滚动内容的透出，
+ * 也让这条操作栏读起来是有意为之的固定栏，而不是材质接缝。
+ */
+.sheet-actions {
+  flex-shrink: 0;
+  padding: var(--space-3) var(--page-padding) calc(var(--space-4) + env(safe-area-inset-bottom));
+  border-top: var(--glass-border);
+  background: var(--glass-background);
+  transition: transform var(--glass-duration) var(--glass-easing);
+}

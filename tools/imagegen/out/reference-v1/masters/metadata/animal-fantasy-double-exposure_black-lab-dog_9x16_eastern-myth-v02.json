@@ -1,0 +1,106 @@
+{
+  "templateId": "animal-fantasy-double-exposure",
+  "entryId": "action",
+  "title": "奇幻双重曝光",
+  "version": "eastern-myth-v02",
+  "status": "approved-frozen-master",
+  "remediation": "double-exposure-face-background-transition-refinement",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-eastern-myth-v01-edit-target",
+      "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-fantasy-double-exposure_black-lab-dog_9x16_eastern-myth-v01.png",
+      "sha256": "2d4edeea50e3e22de20939480e062613398053c7f87e9d0b389dbc2fe552f1ed"
+    },
+    {
+      "role": "one-time-third-party-double-exposure-blending-method-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-07-21-2568-Frank Frazetta绘画风格，奇幻插画大师，奇幻诡异风格双重曝光风格的高....png",
+      "sha256": "b9c15001cb44728fe3985727e1d985991801876b9e8029176c5db38c84d269d9"
+    }
+  ],
+  "sourceCandidateVersion": "eastern-myth-v01",
+  "rawPetIdentityIncluded": false,
+  "userBackgroundInheritedFromSource": true,
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%-transition-only",
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "prompt": "Use case: transition-only refinement of an existing Eastern dark-mythology double-exposure artwork. Return the exact same 9x16 composition at 720x1280 pixels. Image 1 is the edit target and absolute authority for all finished content: keep the exact adult black Labrador identity, side-profile direction, head and body silhouette, eye, nose, mouth, muzzle proportions, Chinese mountain-temple city, bridges, river, many-armed black-stone guardian, people, storm clouds, charcoal palette, crop, scale, lighting and visual hierarchy unchanged. Image 2 is only a blending-method reference. Borrow only its gradual painterly interpenetration between the profile face, fur, smoke and the internal landscape. Do not borrow its animal, characters, story, warm palette, text, watermark or Journey to the West content. Change only Image 1's internal transition between the Labrador face and the embedded mythology scene. Remove the current hard cutout-like boundary across the forehead, eye region, cheek, jaw and neck. There must be no clean mask edge, no straight or continuous dividing contour, and no separate photographic face pasted over the scene. Create a broad irregular transition zone: mountain mist, charcoal smoke, sparse temple silhouettes and dark painterly textures should softly pass through the fur and facial planes, then gradually fade across the crown, temple, eye surround, cheek and muzzle. At the same time, short black fur strokes and soft facial shadows should dissolve back into clouds and mountain ridges. Use feathered opacity, broken brush edges, smoky veils, lost-and-found contours and tonal overlap rather than blur or a visible seam. Keep the Labrador face recognizable, mature, handsome and anatomically unchanged. Preserve the existing eye shape and gaze, nose, mouth and broad muzzle; do not hide the face, close the eye, create extra eyes, distort anatomy, change expression or turn the dog into a statue. The eye and muzzle may remain the clearest anchors, but their surrounding values must belong to the same painterly atmospheric field as the background. Do not redesign or regenerate the scene. Do not move, add or remove buildings, bridges, deity, figures or mountains. Do not change the external silhouette or crop. No text, logo, caption, watermark, Western architecture, Western occult symbols, lava, gore or new subject. Return only the finished seamless double-exposure edit.",
+  "revisedPrompt": "Create a seamless transition-only refinement of an existing Eastern dark-mythology double-exposure artwork in a strict 9:16 vertical composition, 720x1280 pixels. Preserve the exact existing adult black Labrador identity, side-profile direction, head and body silhouette, eye, nose, mouth, muzzle proportions, crop, scale, lighting, visual hierarchy, and the full embedded Chinese mountain-temple city with bridges, river, many-armed black-stone guardian, people, storm clouds, and charcoal palette exactly as-is. Do not move, add, remove, redesign, or regenerate any external scene elements. Use Image 2 only as a blending reference for the transition style: gradual painterly interpenetration between the profile face, fur, smoke, and internal landscape. Replace the current hard cutout-like boundary across the forehead, eye region, cheek, jaw, and neck with a broad irregular transition zone. There must be no clean mask edge, no straight or continuous dividing contour, and no pasted photographic face. Blend mountain mist, charcoal smoke, sparse temple silhouettes, broken brush edges, smoky veils, lost-and-found contours, tonal overlap, and painterly textures softly through the fur and facial planes, fading across the crown, temple, eye surround, cheek, and muzzle. Dissolve short black fur strokes and soft facial shadows back into clouds and mountain ridges. Keep the Labrador face recognizable, mature, handsome, anatomically unchanged, and expression unchanged; preserve the existing eye shape and gaze, nose, mouth, and broad muzzle as the clearest anchors. Do not hide the face, close the eye, create extra eyes, distort anatomy, change expression, or turn the dog into a statue. No text, logo, caption, watermark, warm palette, Journey to the West elements, Western architecture, Western occult symbols, lava, gore, or new subject. Maintain the same external silhouette and crop. Finished result should look like one unified seamless double-exposure artwork with atmospheric, painterly integration only.",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "queue": {
+    "configuredConcurrency": 1,
+    "localWorkerConcurrency": 1,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "allowedChange": "internal-face-to-scene-transition-only",
+  "blendContract": {
+    "preserve": [
+      "pet-identity",
+      "pose",
+      "expression",
+      "external-silhouette",
+      "eastern-myth-scene",
+      "composition",
+      "palette"
+    ],
+    "remove": [
+      "hard-internal-mask-edge",
+      "cutout-face-appearance",
+      "continuous-dividing-contour"
+    ],
+    "method": [
+      "mist-interpenetration",
+      "broken-brush-edges",
+      "lost-and-found-contours",
+      "tonal-overlap"
+    ]
+  },
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-fantasy-double-exposure_black-lab-dog_9x16_eastern-myth-v02.png",
+    "sha256": "3116bcbc756b44434d009026ee09603e2dd458d0e601c4738cd2f555fa07a72a"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-18T12:11:17+08:00"
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-18T03:53:07.055Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/animal/candidates/animal-fantasy-double-exposure_black-lab-dog_9x16_eastern-myth-v02.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/animal-fantasy-double-exposure_black-lab-dog_9x16_eastern-myth-v02.webp",
+  "masterSha256": "243baf5783f3f27f3366d6648ebd7f9543674cce3ce73c08a376c7a27c8b3def",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-18T12:11:17+08:00",
+    "note": "用户比较后明确选择奇幻双重曝光 eastern-myth-v02，并保存为母版。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-fantasy-double-exposure_black-lab-dog_9x16_eastern-myth-v02.webp",
+      "sha256": "243baf5783f3f27f3366d6648ebd7f9543674cce3ce73c08a376c7a27c8b3def"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "user-supplied-background-reference",
+      "previous-candidate",
+      "unapproved-candidate"
+    ]
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "templateId": "pet-runway",
+  "title": "宠物时装周",
+  "entryId": "career",
+  "status": "approved-frozen-master",
+  "subject": "maine-coon-cat",
+  "breed": "缅因猫",
+  "revision": {
+    "version": "v04",
+    "sourceVersion": "v03",
+    "reviewFinding": "用户要求恢复原效果图中的直立走秀姿态；v03 的四足化方向不再采用。",
+    "scope": "upright-full-body-posture-rebuild"
+  },
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-effect-reference-upright-pose-and-scene-authority",
+      "path": "apps/website/public/assets/example/1786368555480.png",
+      "sha256": "63e95e99f17cd26f37ba4639b284091d067bdfc8084a0a17741178520bc31862"
+    },
+    {
+      "role": "v03-accepted-face-and-maine-coon-rendering-reference",
+      "path": "tools/imagegen/out/reference-v1/candidates/pet-runway_maine-coon-cat_9x16_v03.png",
+      "sha256": "e2283084a06f74eb3b967eaac3fde8dd175947fd03d7fa33d4b3c7c2252bef8c"
+    },
+    {
+      "role": "pet-identity-reference",
+      "path": "apps/website/public/assets/work-maine.jpg",
+      "sha256": "1886adfade169bfb7a678ccad1b36555e0cebbd9d78310ee0f23c42d1bcae8cf"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving full-body posture transfer. Create a vertical 9:16 premium pet runway master candidate at exactly 720x1280 pixels from exactly three input images. Image 1 is the immutable authority for scene, composition, upright posture and outfit. Preserve its centred runway, dark blurred audience on both sides, grey spotlight backdrop, frontal full-body fashion framing, camera height, lighting, walking momentum and restrained premium fashion-photography finish. Preserve the recognisable layered outfit: oversized light-grey wool coat, cream cable-knit layer, charcoal patterned neck scarf and pale sage wide-leg draped lower garment. Keep the same vertical silhouette, garment lengths, materials, palette and runway placement. Replace only the dog in Image 1 with the exact adult Maine Coon established by Images 2 and 3. The new Maine Coon must stand fully upright on its two hind legs in a confident forward runway step, with a clearly vertical torso and head above the shoulders, matching Image 1's upright anthropomorphic walk. Do not make the cat quadrupedal, crouched, seated or horizontally bodied. Image 2 is the authority for the accepted appealing Maine Coon face and finished cat rendering. Preserve its friendly golden eyes, relaxed confident expression, soft square muzzle, brown-black classic tabby markings, tall lynx-tipped ears, full neck ruff and large fluffy tail. Keep this face recognisably the same and immediately likeable. Image 3 is identity-only confirmation. Preserve the same adult Maine Coon breed, sturdy mature build, coat pattern, ear tufts, facial proportions and full tail. Do not import Image 3's plain studio background or alter the runway lighting. Adapt the outfit naturally to feline anatomy while keeping Image 1's exact fashion silhouette. The upper coat may cover the forelegs or allow two short fur-covered feline forepaws to emerge naturally; never create human hands, fingers or bare human arms. The pale sage lower garment must drape around two separate upright hind legs, ending above two visible feline hind paws in a believable runway step. Keep the full tail attached naturally and visible behind the coat without fusion. The result should be anthropomorphic in posture but unmistakably an adult Maine Coon, not a human body with a pasted cat head. Keep a sturdy, elegant, healthy build and natural adult head-to-body ratio. Do not make the cat skinny, elongated, elderly, stern, chibi, kitten-like, oversized-headed or uncanny. Change no background, audience, runway, spotlight, crop, colour palette, garment materials or fashion mood. Exactly one pet. No extra limbs, duplicate paws, fused tail, malformed clothing boundary, human face, human hand, logo, readable brand, platform UI, watermark or signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "approvedAt": "2026-08-14T13:44:21+08:00",
+    "findings": []
+  },
+  "generatedAt": "2026-08-14T05:40:37.252Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/pet-runway_maine-coon-cat_9x16_v04.png",
+    "sha256": "aa47c99a8941aa6175d394fe516358ff440fc376f3e8e076547589a1fea57241"
+  },
+  "rawOutput": {
+    "path": "tools/imagegen/out/reference-v1/candidates/raw/pet-runway_maine-coon-cat_9x16_v04.png",
+    "sha256": "61d422b7213687effcd3b22c846e03b3406cbad4246c4c73c508957b5f4566ec"
+  },
+  "candidatePath": "tools/imagegen/out/reference-v1/candidates/pet-runway_maine-coon-cat_9x16_v04.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/pet-runway_maine-coon-cat_9x16_v04.webp",
+  "masterSha256": "77a15753d65df05d52393d8e42a23cea3bf6f3448481217eb0e1645b49cdbfa5",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-14T13:44:21+08:00",
+    "note": "用户确认 v04 直立走秀效果通过并保存为宠物时装周母版。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/pet-runway_maine-coon-cat_9x16_v04.webp",
+      "sha256": "77a15753d65df05d52393d8e42a23cea3bf6f3448481217eb0e1645b49cdbfa5"
+    },
+    "image2": {
+      "role": "master-face-and-outfit-detail",
+      "path": "tools/imagegen/out/reference-v1/masters/details/pet-runway_face-and-outfit_v04.png",
+      "sha256": "59347536db679f84bb398740c22db542535a6807fbd47165d5b182be16a59d4e"
+    },
+    "image3": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "pet-runway-v03",
+      "previous-failed-candidate"
+    ]
+  },
+  "qualityBaseline": {
+    "level": "approved-reference-standard",
+    "required": [
+      "upright anthropomorphic runway stride with a vertical torso and two separate hind paws",
+      "adult Maine Coon identity, lynx-tipped ears, full ruff, classic tabby coat and attached tail",
+      "friendly mature face with contemporary cute appeal, never kittenized or gaunt",
+      "grey coat, cream knit, charcoal scarf and pale sage lower garment preserved",
+      "centred runway, blurred audience, grey spotlight and exact 720x1280 portrait framing"
+    ],
+    "reject": [
+      "quadrupedal, seated or horizontally bodied pose when upright runway is requested",
+      "human torso, human face, human hands, fingers, exposed human arms or costume-like pasted head",
+      "duplicate limbs, fused paws, fused tail, malformed clothing boundary or broken anatomy",
+      "skinny, elderly, stern, aggressive, chibi or oversized-headed cat",
+      "changed runway, audience, spotlight, crop, garment palette, logo, watermark or signature"
+    ]
+  }
+}

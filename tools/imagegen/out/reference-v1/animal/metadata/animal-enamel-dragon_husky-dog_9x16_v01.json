@@ -1,0 +1,53 @@
+{
+  "templateId": "animal-enamel-dragon",
+  "entryId": "character",
+  "title": "珐琅彩龙宠",
+  "sourceEffectFile": "apps/website/public/assets/example/animal/jimeng-2026-06-20-2057-图片风格为CG 厚涂,CG 厚涂，游戏CG ，丰富的色彩层次，质感细腻，真实光影....png",
+  "status": "generated-pending-user-approval",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-06-20-2057-图片风格为CG 厚涂,CG 厚涂，游戏CG ，丰富的色彩层次，质感细腻，真实光影....png",
+      "sha256": "93c62325edce2e2080f92f7866da2d7e38375dfcedbfbafc31fa01d55a86e1ab"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "husky-dog",
+      "species": "dog",
+      "breed": "adult grey-and-white Siberian Husky",
+      "path": "tools/imagegen/out/source/dog-husky.jpg",
+      "sha256": "41280a50599eb23fa200e8851d1c6a12762398d62f868fe29e18c315eff87a8d"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a one-time third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every designated original animal, human-like creature or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult grey-and-white Siberian Husky with symmetrical grey cap, broad white blaze, white muzzle and chest, ice-blue eyes, upright ears and dense adult coat. Render the face, fur and anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration or turn a stylized scene into a realistic photo. Keep the pet appealing and healthy, never skinny, gaunt, uncanny, aggressive or puppy-like. Keep the rich CG paint layers, luminous enamel-like dragon body, dramatic red background and central fantasy presentation; replace the fantasy creature identity while preserving the visual language. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character or artist names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a vertical 9:16 finished illustration at 720x1280 pixels, preserving the exact composition, camera angle, crop, perspective, pose, lighting, palette, background mood, and rich CG paint language of Image 1: a luminous fantasy creature standing centered on a rocky surface with dramatic warm-cool lighting, deep dark background, glowing bokeh, sparkles, and a large soft light bloom in the upper right. Replace only the main subject identity with an adult grey-and-white Siberian Husky based on Image 2: symmetrical grey cap, broad white blaze, white muzzle and chest, ice-blue eyes, upright ears, dense healthy adult coat, natural adult proportions, appealing and calm expression. The husky should be rendered in the same stylized fantasy visual language as Image 1, not photorealistic; integrate the face, fur, and anatomy into the same painterly enamel-like treatment, with the same luminous blue-violet magical accents and flowing decorative swirl motifs mapped to the dog’s coat. Preserve the exact subject placement, gaze direction, body orientation, pose, and contact with the ground. Keep the dramatic red background feel replaced with the same high-contrast fantasy atmosphere if needed, but do not redesign the scene. Preserve all meaningful text blocks and visual hierarchy as original, but replace any third-party/watermark-like marks with short original pet-safe wording and do not add new logos or signatures. Ensure clean correct canine anatomy only: one head, two ears, four legs, four paws, one tail, no extra limbs or duplicate subjects, no puppy traits, no human hands, no residual fantasy creature identity. Final image should feel like a frozen-master fantasy pet portrait with the same rich CG layers and glowing presentation as the source composition.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-enamel-dragon_husky-dog_9x16_v01.png",
+    "sha256": "6544a8170425d88e10286c0089311721421c1cd94733183e715e7cbead2e7313"
+  },
+  "review": {
+    "state": "pending-human-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-17T16:37:06.801Z"
+}

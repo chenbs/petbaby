@@ -1,0 +1,54 @@
+{
+  "jobId": "dessert-shopkeeper_cat_black-cat",
+  "templateId": "dessert-shopkeeper",
+  "title": "甜品饮品主理人",
+  "status": "approved-runtime-validation",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/dessert-shopkeeper_toy-poodle_9x16_v02.png",
+      "sha256": "d2efd6d0153a3f383aa87ecfff46bc29c628759cd64d0bec9f4fd22f7596d7c5"
+    },
+    {
+      "role": "new-pet-identity-reference",
+      "identityId": "black-cat",
+      "species": "cat",
+      "breed": "adult black domestic shorthair cat",
+      "path": "tools/imagegen/out/source/cat-black.jpg",
+      "sha256": "e9d04dac4cee2a7753bcdbcedce7961cf819ab40fc08e39331977ff15df0df17"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving template transfer. Produce one exact 720x1280 vertical 9:16 runtime validation image from exactly two input images. Image 1 is a frozen self-owned production master and is the sole authority for composition, scene, camera, crop, pose, action, expression, gaze, lighting, palette, rendering medium, brushwork, text layout, clothing, landmarks, props and all contacts. No third-party effect reference is included. Image 2 is the sole pet identity reference. Change only the pet identity. Remove the sample pet in Image 1 completely and replace it with the pet from Image 2. Scene-change budget is 0%. Do not redesign, reinterpret, clean up, recolour, restyle, simplify or add anything in the master scene. Preserve Image 1's the pink strawberry patisserie, warm light, shallow depth of field, central counter portrait, cake hat, lace bow, flowers, strawberries, cakes, glass cloche, basket, cake server and exact prop placement. Replicate the master's front-facing gentle gaze, closed mouth, calm shopkeeper pose and paw placement beside the cake server. Keep every dessert and foreground object in place. The replacement must be the exact adult black domestic shorthair cat from Image 2. Preserve its solid glossy black coat without white patches, vivid green eyes, black nose, upright ears and compact healthy adult body. Image 2 controls only species, breed, coat colour and markings, ear shape, eye colour, actual age and natural healthy body proportions. Do not copy its pose, expression, camera, background, lighting, photographic texture or rendering style. Preserve the pet's actual adult age and natural breed proportions. Do not juvenilize it, enlarge the head or eyes, shorten the muzzle or body, or force a generic cute face. Appeal must come from the master's expression and art direction while the new pet remains recognisable, healthy and immediately likeable. Preserve the detailed polished photographic treatment, warm pink palette, soft depth and material realism of Image 1. Image 2 supplies identity only. Keep the strawberry cake hat and pink lace bow, adapting only their contact boundaries to the new ears, neck and coat. Keep the upper-left framed sign visibly and accurately reading the exact uppercase word 'STRAWBERRY', spelled S-T-R-A-W-B-E-R-R-Y. Do not add other prominent text, logos, watermarks or signatures. Keep exactly one pet and one identity. No residual coat, face or limb from the master pet. Correct species anatomy only: no duplicate or fused limbs, extra ears, warped eyes, malformed mouth, floating tail, human hands, fingers or broken garment and prop boundaries. Preserve all non-pet pixels and scene relationships as closely as the model allows.",
+  "revisedPrompt": "Use case: compositing and identity-preserving template transfer. Produce one exact 720x1280 vertical 9:16 runtime validation image from exactly two input images. Image 1 is a frozen self-owned production master and is the sole authority for composition, scene, camera, crop, pose, action, expression, gaze, lighting, palette, rendering medium, brushwork, text layout, clothing, landmarks, props and all contacts. No third-party effect reference is included. Image 2 is the sole pet identity reference. Change only the pet identity. Remove the sample pet in Image 1 completely and replace it with the pet from Image 2. Scene-change budget is 0%. Do not redesign, reinterpret, clean up, recolour, restyle, simplify or add anything in the master scene. Preserve Image 1's the pink strawberry patisserie, warm light, shallow depth of field, central counter portrait, cake hat, lace bow, flowers, strawberries, cakes, glass cloche, basket, cake server and exact prop placement. Replicate the master's front-facing gentle gaze, closed mouth, calm shopkeeper pose and paw placement beside the cake server. Keep every dessert and foreground object in place. The replacement must be the exact adult black domestic shorthair cat from Image 2. Preserve its solid glossy black coat without white patches, vivid green eyes, black nose, upright ears and compact healthy adult body. Image 2 controls only species, breed, coat colour and markings, ear shape, eye colour, actual age and natural healthy body proportions. Do not copy its pose, expression, camera, background, lighting, photographic texture or rendering style. Preserve the pet's actual adult age and natural breed proportions. Do not juvenilize it, enlarge the head or eyes, shorten the muzzle or body, or force a generic cute face. Appeal must come from the master's expression and art direction while the new pet remains recognisable, healthy and immediately likeable. Preserve the detailed polished photographic treatment, warm pink palette, soft depth and material realism of Image 1. Image 2 supplies identity only. Keep the strawberry cake hat and pink lace bow, adapting only their contact boundaries to the new ears, neck and coat. Keep the upper-left framed sign visibly and accurately reading the exact uppercase word 'STRAWBERRY', spelled S-T-R-A-W-B-E-R-R-Y. Do not add other prominent text, logos, watermarks or signatures. Keep exactly one pet and one identity. No residual coat, face or limb from the master pet. Correct species anatomy only: no duplicate or fused limbs, extra ears, warped eyes, malformed mouth, floating tail, human hands, fingers or broken garment and prop boundaries. Preserve all non-pet pixels and scene relationships as closely as the model allows.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation-second-batch/dessert-shopkeeper_cat_black-cat_9x16_v01.png",
+    "sha256": "e46b1d7f86bd054a7dd4adf851f27a71170d83e8bf6c23228899375aa5e3f43b"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "checks": {
+      "petIdentity": "pass",
+      "adultAgeAndProportions": "pass",
+      "masterPoseAndExpression": "pass",
+      "masterStyleAndBrushwork": "pass",
+      "sceneAndComposition": "pass",
+      "anatomyAndContacts": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [],
+    "finalApproval": "approved",
+    "approvedAt": "2026-08-14T17:57:02+08:00"
+  },
+  "generatedAt": "2026-08-14T07:11:50.787Z"
+}

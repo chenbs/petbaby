@@ -1,0 +1,16 @@
+{
+  "templateId": "travel-selfie",
+  "status": "direction-preview",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "input": "tools/imagegen/out/model/front.jpg",
+  "inputSha256": "5fc9c875074bed7ccd734bf155c6cbc05aad07a1056f5fab5e876032d45f34da",
+  "inputFidelity": "high",
+  "requestedSize": "1200x1600",
+  "outputSize": "1200x1600",
+  "quality": "high",
+  "prompt": "Use the supplied photograph as the only pet identity reference. Preserve this exact orange-and-white short-haired cat: amber eyes, a narrow white blaze down the nose, white muzzle and chest bib, orange forehead stripes, upright triangular ears, pink nose and white front paws. The result must still be recognisable as this same individual cat, not a generic orange cat. Create an original vertical 3:4 travel-selfie photograph on an invented windswept island road above a turquoise sea. The cat leans joyfully toward a very close action camera, with one white front paw extended toward the lower foreground as if operating the camera. Use playful but believable ultra-wide perspective: the face is large, sharp and expressive while the body and curving road recede naturally. Add dark volcanic rocks, low silver-green grass, distant layered sea cliffs and a small unbranded canvas travel pack beside the cat. Use fresh golden morning light, clear air, realistic fur, natural camera optics and polished whimsical editorial pet photography. Leave calm open sky near the upper-left for later programmatic copy. Do not imitate any existing travel advertisement or specific landmark. Exactly one cat and no other animal. Anatomically plausible face, body, tail and four limbs; no duplicate paws or fused objects. No human, no human hands, no brand, no famous landmark, no platform UI, no text, no letters, no numbers, no logo, no watermark and no signature.",
+  "revisedPrompt": null,
+  "generatedAt": "2026-08-12T06:50:01.842Z"
+}

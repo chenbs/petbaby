@@ -1,0 +1,52 @@
+{
+  "templateId": "character-product-blueprint",
+  "entryId": "character",
+  "title": "宠物产品设定蓝图",
+  "sourceEffectFile": "apps/website/public/assets/example/3.png",
+  "status": "generated-pending-user-approval",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/3.png",
+      "sha256": "94943beb431e0bcbd009da87dd9fecac57dda390ac61beefcebd2d03d724c783"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "corgi-dog",
+      "species": "dog",
+      "breed": "adult Pembroke Welsh Corgi",
+      "path": "tools/imagegen/out/source/dog-corgi.jpg",
+      "sha256": "750c43038e21f8601be8b903889100c6b165d2b35cea3b7c0b55c0edce7ca9c2"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "landscape",
+  "requestedSize": "1280x720",
+  "outputSize": "1280x720",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 16x9 composition at 1280x720 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be adult Pembroke Welsh Corgi with tan-and-white coat, broad white blaze, white muzzle and chest, dark round eyes, upright ears, short legs and sturdy adult body. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the complete landscape blueprint with the central prototype, front-side-top construction views, seam diagrams, material swatches, packaging and callouts. Show one complete natural adult Corgi wearing an original penguin-inspired pet hood and garment, with ears, hood tip, paws and garment hem all visible inside a generous 8% canvas margin. No cropped head, human face, human hands, human torso or simplified single mascot; every diagram must describe the same wearable pet garment. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a final exact 16:9 composition, 1280x720 pixels, based on the provided Image 1 as the full layout reference and Image 2 as the sole identity reference. Preserve Image 1’s entire poster/blueprint composition, camera framing, crop, perspective, pose, lighting, palette, line quality, brushwork, texture, prop layout, label hierarchy, callout placement, diagram arrangement, seam diagrams, material swatches, packaging strip, and overall visual language. Replace every original human/character subject with one coherent adult Pembroke Welsh Corgi identity matched to Image 2: tan-and-white coat, broad white blaze, white muzzle and chest, dark round eyes, upright ears, short legs, sturdy adult body, friendly appealing expression. Render the pet entirely in the same stylized illustration language as Image 1, not photographic. Keep the penguin-inspired hood and garment design, with the ears, hood tip, paws, and garment hem fully visible inside a generous 8% canvas margin. The central hero subject should be a complete standing adult Corgi wearing the hooded penguin outfit, matching the exact pose and expression of the original hero figure. Also preserve the surrounding technical blueprint views: front view, side view, top-down, bottom-up, frame structure, flat position, seam details, material swatches, and all diagram callouts in the same positions and scale relationships. Maintain the same background white presentation surface and do not redesign or beautify the scene. Correct anatomy only: no extra limbs, no extra ears, no human hands, no duplicate pets, no cropped head, no floating head, no broken garment boundaries. Replace any people/brand/watermark/copyrighted names or UI text with short original pet-safe wording while preserving the same text block placement and hierarchy. Keep the same visual balance and leave the landscape blueprint intact. The final image should read as an identity-preserving pet-version master template of the original poster, with the adult Corgi as the only subject identity throughout.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/expansion/candidates/character-product-blueprint_corgi-dog_16x9_v03.png",
+    "sha256": "c34761ae38fafd50cbb0c76cff631a23155e7f0e6e0c30e27c5e90d07794a0ae"
+  },
+  "review": {
+    "state": "pending-human-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generatedAt": "2026-08-18T07:16:50.837Z"
+}

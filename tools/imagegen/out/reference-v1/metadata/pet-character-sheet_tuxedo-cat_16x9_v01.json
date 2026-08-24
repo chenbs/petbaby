@@ -1,0 +1,45 @@
+{
+  "templateId": "pet-character-sheet",
+  "status": "approved-frozen-master",
+  "category": "宠物角色设定集",
+  "subject": "tuxedo-cat",
+  "breed": "黑白家猫",
+  "selectionRationale": "验证横版输出、同宠多视图、服装拆解和表情一致性",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-effect-reference-internal-only",
+      "path": "apps/website/public/assets/example/15.png",
+      "sha256": "9d35991dd9bdc7863b440f902bb5b59135d7caaf1b15bc0ae2bc60dfc1e36693"
+    },
+    {
+      "role": "pet-identity-reference",
+      "path": "tools/imagegen/out/source/cat-tuxedo.jpg",
+      "sha256": "c4b2ebaac7dd5d59fffd83a827d94fdc03e1befd3e1108f337de8ba5488a7d39"
+    }
+  ],
+  "inputFidelity": "high",
+  "orientation": "landscape",
+  "requestedSize": "1280x720",
+  "outputSize": "1280x720",
+  "quality": "high",
+  "prompt": "Use case: compositing and character-sheet design. Create a horizontal 16:9 high-fidelity pet character sheet based on both input images. Compose for an exact final size of 1280x720 pixels. Image 1 is the primary effect and layout reference. Preserve its clean white professional character-sheet structure: title and profile block on the left, front-side-back turnaround across the upper middle, six facial-expression portraits at the upper right, clothing and accessory breakdown along the bottom, compact colour palette and one small world vignette. Use an optional scene-change budget of approximately 5% to 20%. You may naturally adjust the muted green, teal and ochre palette, garment materials, small accessory shapes, panel spacing or world vignette details to better suit the cat. Every change must remain native to a polished explorer character sheet. Do not discard the turnaround, expression grid, outfit breakdown or palette. If no replacement is clearly better, keep the original content unchanged. Remove the original human character from every panel and replace every view with the exact same black-and-white tuxedo cat from Image 2. Preserve the black ears and crown, narrow white facial blaze, white muzzle and chest, pale green eyes, pink nose, black back and white front legs. Design the cat as a cute youthful forest explorer. Keep a round friendly feline face, healthy compact body and soft proportions. Adapt the original padded jacket, scarf, goggles, boots and waist pouch naturally for a quadruped cat; clothing may change colour or receive minor tailoring but must not hide the facial markings. Never make it humanoid, skinny, elderly, fierce or uncanny. The turnaround must show front, side and back views of the same cat; the six portraits must show clearly different friendly expressions while preserving identical markings. Use exact readable English headings: 'CHARACTER SHEET', 'PROFILE', 'TURNAROUND', 'FACIAL EXPRESSIONS', 'ITEM & COSTUME', 'COLOR PALETTE', 'WORLD'. Omit tiny body copy rather than generating gibberish. This is one character shown repeatedly, not multiple pets. No identity drift, changed markings, extra limbs, human hands, brand, known IP, watermark or signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "approved-by-user",
+    "score": null,
+    "findings": []
+  },
+  "generatedAt": "2026-08-12T11:14:19.221Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/candidates/pet-character-sheet_tuxedo-cat_16x9_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/pet-character-sheet_tuxedo-cat_16x9_v01.webp",
+  "masterSha256": "d10172f389dc86daead937b7de0e42d9317c44518ed24086c89d59351f31530b",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-13T00:00:00.000+08:00",
+    "note": "用户已审批通过；此后运行时仅使用自有母版和用户宠物身份图。"
+  }
+}

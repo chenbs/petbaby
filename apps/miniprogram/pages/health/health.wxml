@@ -1,0 +1,190 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+
+<view class="page page-flat">
+  <text class="eyebrow">HEALTH</text>
+  <view class="title">健康助手</view>
+  <!--
+    定位说明必须在最前面。「分诊」不是「问诊」——
+    这句话同时是产品定位和合规声明，不能省也不能挪到底部。
+  -->
+  <text class="small">描述症状，帮你判断要不要去医院、去之前该准备什么。不替代兽医面诊。</text>
+
+  <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
+
+  <t-skeleton wx:if="{{loading}}" type="list" count="2" class="block-gap"></t-skeleton>
+
+  <t-empty
+    wx:elif="{{!pets.length}}"
+    icon="pet"
+    title="还没有可用的档案"
+    description="先建一个宠物档案，健康记录会跟着档案走。"
+    action-text="去建档案"
+    anim="{{animType}}"
+    decor="{{decor}}"
+    bindaction="goWeights"
+  ></t-empty>
+
+  <block wx:else>
+    <t-card blur="{{blurOk}}" anim="{{animType}}">
+      <view class="section-block">
+        <text class="sub-title">哪一只</text>
+        <view class="chips">
+          <view wx:for="{{pets}}" wx:key="id" class="chip tappable anim-{{animType}} {{petIndex === index ? 'chip-on' : ''}}" hover-class="chip-hover" data-index="{{index}}" bindtap="choosePet">{{item.name}}</view>
+        </view>
+      </view>
+
+      <view class="section-block">
+        <text class="sub-title">发生了什么</text>
+        <t-field
+          control="textarea"
+          value="{{description}}"
+          placeholder="例如：从昨天开始不太吃东西，今天吐了两次，精神比平时差"
+          maxlength="600"
+          bindchange="inputDescription"
+        ></t-field>
+      </view>
+
+      <t-button type="primary" block anim="{{animType}}" loading="{{busy}}" bindtap="submit">看看要不要去医院</t-button>
+    </t-card>
+
+    <!-- 结论区。免责声明与结论同屏且在结论之前，不折叠。 -->
+    <t-card wx:if="{{result}}" blur="{{blurOk}}" anim="{{animType}}" class="block-gap">
+      <text class="small">{{result.advisory.disclaimer}}</text>
+
+      <view class="row block-gap">
+        <t-tag tone="{{result.levelTone}}" size="mini" text="{{result.levelText}}"></t-tag>
+        <text class="small">AI 生成</text>
+      </view>
+      <view class="sub-title">{{result.advisory.summary}}</view>
+
+      <view wx:if="{{result.advisory.relatedAreas.length}}" class="section-block">
+        <text class="sub-title">可能相关</text>
+        <view class="chips">
+          <view wx:for="{{result.advisory.relatedAreas}}" wx:key="*this" class="chip">{{item}}</view>
+        </view>
+      </view>
+
+      <view class="section-block">
+        <text class="sub-title">出现这些情况请立即就医</text>
+        <text wx:for="{{result.advisory.watchFor}}" wx:key="*this" class="small">· {{item}}</text>
+      </view>
+
+      <view wx:if="{{result.advisory.visitPreparation.length}}" class="section-block">
+        <text class="sub-title">去医院前准备</text>
+        <text wx:for="{{result.advisory.visitPreparation}}" wx:key="*this" class="small">· {{item}}</text>
+      </view>
+    </t-card>
+
+    <!--
+      体重记录与趋势（改造项 L6）。A4 只存不看等于相册 —— 价值全在趋势里。
+
+      **只陈述事实，不做评价**：文案给「较上次 +6.2%」这类可核对的数字，
+      不给「偏胖」「超重」「正常」。BMI 与肥胖评级是评价性结论、接近诊断，
+      且体况评分本身是执业兽医的触诊项目，靠体重数字算不出来。
+      趋势句与提示语全部由服务端下发，端上不拼。
+    -->
+    <t-card blur="{{blurOk}}" anim="{{animType}}" class="block-gap">
+      <text class="sub-title">体重</text>
+      <text wx:if="{{weightTrend}}" class="small">{{weightTrend.statement}}</text>
+      <text wx:else class="small">记一次体重，之后就能看到变化。</text>
+      <!-- 幅度较大时给提示。措辞只说变化了多少并建议就医时提一下，不说「异常」 -->
+      <text wx:if="{{weightNote}}" class="hint">{{weightNote}}</text>
+
+      <view class="section-block">
+        <t-field
+          label="体重（公斤）"
+          type="digit"
+          value="{{weightInput}}"
+          placeholder="例如 4.2"
+          bindchange="inputWeight"
+        ></t-field>
+        <picker mode="date" value="{{weightDate}}" bindchange="chooseWeightDate">
+          <t-field label="称重日期" control="select" value="{{weightDate}}"></t-field>
+        </picker>
+        <t-button type="ghost" block anim="{{animType}}" loading="{{weightBusy}}" class="block-gap" bindtap="saveWeight">记下这次体重</t-button>
+      </view>
+
+      <!-- 只列最近几条，截断在 JS 侧做（wx:for 与 wx:if 同元素的求值顺序容易读错） -->
+      <view wx:if="{{recentWeights.length > 1}}" class="section-block">
+        <text class="small">最近几次</text>
+        <view wx:for="{{recentWeights}}" wx:key="id" class="row">
+          <text class="small">{{item.measuredOn}}</text>
+          <text class="small">{{item.weightText}}</text>
+        </view>
+      </view>
+    </t-card>
+
+    <!--
+      免疫与驱虫（改造项 L5 的数据来源）。到期前一周 Worker 会推一条站内通知。
+
+      **只记事实不给建议**：项目名由用户自己填，产品不给候选清单 ——
+      给清单就等于在推荐具体疫苗或驱虫药（红线 2）。
+      列表上也只标「下次 X 月 X 日」「已过期」，不写「该打了」。
+    -->
+    <t-card blur="{{blurOk}}" anim="{{animType}}" class="block-gap">
+      <text class="sub-title">免疫与驱虫</text>
+      <text class="small">记下日子，到期前会提醒你。打什么、打不打由兽医决定。</text>
+
+      <view wx:if="{{careRecords.length}}" class="section-block">
+        <view wx:for="{{careRecords}}" wx:key="id" class="row">
+          <view class="care-main">
+            <text class="small strong">{{item.kindText}} · {{item.label}}</text>
+            <text class="small">{{item.performedOn}}</text>
+          </view>
+          <t-tag wx:if="{{item.dueText}}" tone="{{item.overdue ? 'warning' : 'neutral'}}" size="mini" text="{{item.dueText}}"></t-tag>
+          <t-button type="ghost" size="mini" anim="{{animType}}" data-id="{{item.id}}" bindtap="deleteCare">删</t-button>
+        </view>
+      </view>
+
+      <view class="section-block">
+        <picker range="{{careKindLabels}}" bindchange="chooseCareKind">
+          <t-field label="类型" control="select" value="{{careKindLabels[careKindIndex]}}"></t-field>
+        </picker>
+        <t-field label="项目" value="{{careLabel}}" placeholder="例如「猫三联」「体内驱虫」" maxlength="40" bindchange="inputCareLabel"></t-field>
+        <picker mode="date" value="{{careDate}}" bindchange="chooseCareDate">
+          <t-field label="这次日期" control="select" value="{{careDate}}"></t-field>
+        </picker>
+        <picker mode="date" value="{{careDueDate}}" bindchange="chooseCareDueDate">
+          <t-field label="下次到期" control="select" value="{{careDueDate || '不提醒'}}"></t-field>
+        </picker>
+        <t-button type="ghost" block anim="{{animType}}" loading="{{careBusy}}" class="block-gap" bindtap="saveCare">记下这一次</t-button>
+      </view>
+    </t-card>
+
+    <!--
+      健康档案（改造项 L1）。**是就医准备材料不是体检报告**：
+      内容全部来自上面这些用户自己录入的记录，不含任何结论性判断。
+      免责声明印在 PDF 第一页顶部、与内容同屏（红线 5）。
+
+      不可分享 —— 健康线的产出是私密记录，只能本人下载。
+    -->
+    <t-card blur="{{blurOk}}" anim="{{animType}}" class="block-gap">
+      <text class="sub-title">带去医院的材料</text>
+      <text class="small">把体重、免疫与分诊记录导成一份 PDF，就医时给兽医看。不是体检报告，也不含诊断结论。</text>
+
+      <view wx:if="{{documents.length}}" class="section-block">
+        <view wx:for="{{documents}}" wx:key="id" class="row">
+          <view class="care-main">
+            <text class="small strong">{{item.kindText}}</text>
+            <text class="small">{{item.dateText}}</text>
+          </view>
+          <t-button type="ghost" size="mini" anim="{{animType}}" data-id="{{item.id}}" bindtap="downloadDocument">下载</t-button>
+        </view>
+      </view>
+
+      <t-button type="ghost" block anim="{{animType}}" loading="{{documentBusy}}" class="block-gap" bindtap="exportDocument">导出健康档案</t-button>
+      <text wx:if="{{documentHint}}" class="hint">{{documentHint}}</text>
+    </t-card>
+
+    <view wx:if="{{sessions.length}}" class="list block-gap">
+      <text class="sub-title">之前的记录</text>
+      <t-card wx:for="{{sessions}}" wx:key="id" blur="{{blurOk}}" anim="{{animType}}">
+        <view class="row">
+          <t-tag tone="{{item.levelTone}}" size="mini" text="{{item.levelText}}"></t-tag>
+          <text class="small">{{item.dateText}}</text>
+        </view>
+        <text class="small">{{item.description}}</text>
+      </t-card>
+    </view>
+  </block>
+</view>

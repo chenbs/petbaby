@@ -1,0 +1,53 @@
+{
+  "jobId": "color-painted-portrait_dog_toy-poodle-dog",
+  "templateId": "color-painted-portrait",
+  "title": "彩色绘画肖像",
+  "status": "generated-pending-user-approval",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/color-painted-portrait_dragon-li-cat_9x16_reset-v06.png",
+      "sha256": "d2025879057a7a8a7c6ba76692b7c78130de887cd6e9dd28017e0706c8b194a2"
+    },
+    {
+      "role": "new-pet-identity-reference",
+      "identityId": "toy-poodle-dog",
+      "species": "dog",
+      "breed": "adult apricot Toy Poodle",
+      "path": "apps/website/public/assets/avatar-poodle.jpg",
+      "sha256": "e15fca17074b5c58cd5d477051ecc00c2d27116ad3f364211f3c350e1e69de2d"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving template transfer. Produce one exact 720x1280 vertical 9:16 runtime validation image from exactly two input images. Image 1 is a frozen self-owned production master and is the sole authority for composition, scene, camera, crop, pose, action, expression, gaze, lighting, palette, rendering medium, brushwork, text layout, clothing, landmarks, props and all contacts. No third-party effect reference is included. Image 2 is the sole pet identity reference. Change only the pet identity. Remove the sample pet in Image 1 completely and replace it with the pet from Image 2. Scene-change budget is 0%. Do not redesign, reinterpret, clean up, recolour, restyle, simplify or add anything in the master scene. Preserve Image 1's the seated three-quarter adult pet portrait, slight upward gaze, small gentle smile, rich orange field and restrained teal, coral, yellow and cream gestural paint marks around the silhouette. Replicate the master's exact seated adult posture, head angle, upward gaze, ear orientation, closed mouth, soft smile and full healthy body scale. Do not turn the subject into a juvenile, chibi figure or enlarged head. The replacement must be the exact adult apricot Toy Poodle from Image 2. Preserve its warm apricot tight curls, round dark eyes, small dark nose, rounded teddy-bear muzzle, floppy curly ears and compact healthy adult body. Image 2 controls only species, breed, coat colour and markings, ear shape, eye colour, actual age and natural healthy body proportions. Do not copy its pose, expression, camera, background, lighting, photographic texture or rendering style. Preserve the pet's actual adult age and natural breed proportions. Do not juvenilize it, enlarge the head or eyes, shorten the muzzle or body, or force a generic cute face. Appeal must come from the master's expression and art direction while the new pet remains recognisable, healthy and immediately likeable. Image 1 is the absolute authority for the entire painting, including the face. Render the replacement pet in the same expressive digital painted style: broad decisive directional brush strokes, simplified painterly fur, small dry broken marks only where the master uses them, crisp but not harsh stroke edges and a delicate illustrated face. Translate the new coat markings through the same painted language. Do not import photographic fur, realistic iris reflections, volumetric nose or muzzle modelling, smooth photo shading, fine whiskers, thick impasto or a pasted photo face from Image 2. No clothing or added prop. Keep the image free of text, logos, watermarks and signatures. Targeted correction from v01: the face must be visibly illustrated at the same abstraction level as the frozen master, not a realistic Toy Poodle photo placed over a painted body. Simplify both eyes into softly painted dark shapes with only the master's restrained painted highlights; render the nose as a small flat painterly form without wet photographic specular detail; build the muzzle and cheeks from broad directional brush shapes; merge the curls into confident painted masses and broken marks instead of individually realistic strands. Keep the exact adult Toy Poodle identity, seated pose, head angle, expression, body size, orange background and surrounding paint marks unchanged. Keep exactly one pet and one identity. No residual coat, face or limb from the master pet. Correct species anatomy only: no duplicate or fused limbs, extra ears, warped eyes, malformed mouth, floating tail, human hands, fingers or broken garment and prop boundaries. Preserve all non-pet pixels and scene relationships as closely as the model allows.",
+  "revisedPrompt": "Use case: compositing and identity-preserving template transfer. Produce one exact 720x1280 vertical 9:16 runtime validation image from exactly two input images. Image 1 is a frozen self-owned production master and is the sole authority for composition, scene, camera, crop, pose, action, expression, gaze, lighting, palette, rendering medium, brushwork, text layout, clothing, landmarks, props and all contacts. No third-party effect reference is included. Image 2 is the sole pet identity reference. Change only the pet identity. Remove the sample pet in Image 1 completely and replace it with the pet from Image 2. Scene-change budget is 0%. Do not redesign, reinterpret, clean up, recolour, restyle, simplify or add anything in the master scene. Preserve Image 1's the seated three-quarter adult pet portrait, slight upward gaze, small gentle smile, rich orange field and restrained teal, coral, yellow and cream gestural paint marks around the silhouette. Replicate the master's exact seated adult posture, head angle, upward gaze, ear orientation, closed mouth, soft smile and full healthy body scale. Do not turn the subject into a juvenile, chibi figure or enlarged head. The replacement must be the exact adult apricot Toy Poodle from Image 2. Preserve its warm apricot tight curls, round dark eyes, small dark nose, rounded teddy-bear muzzle, floppy curly ears and compact healthy adult body. Image 2 controls only species, breed, coat colour and markings, ear shape, eye colour, actual age and natural healthy body proportions. Do not copy its pose, expression, camera, background, lighting, photographic texture or rendering style. Preserve the pet's actual adult age and natural breed proportions. Do not juvenilize it, enlarge the head or eyes, shorten the muzzle or body, or force a generic cute face. Appeal must come from the master's expression and art direction while the new pet remains recognisable, healthy and immediately likeable. Image 1 is the absolute authority for the entire painting, including the face. Render the replacement pet in the same expressive digital painted style: broad decisive directional brush strokes, simplified painterly fur, small dry broken marks only where the master uses them, crisp but not harsh stroke edges and a delicate illustrated face. Translate the new coat markings through the same painted language. Do not import photographic fur, realistic iris reflections, volumetric nose or muzzle modelling, smooth photo shading, fine whiskers, thick impasto or a pasted photo face from Image 2. No clothing or added prop. Keep the image free of text, logos, watermarks and signatures. Targeted correction from v01: the face must be visibly illustrated at the same abstraction level as the frozen master, not a realistic Toy Poodle photo placed over a painted body. Simplify both eyes into softly painted dark shapes with only the master's restrained painted highlights; render the nose as a small flat painterly form without wet photographic specular detail; build the muzzle and cheeks from broad directional brush shapes; merge the curls into confident painted masses and broken marks instead of individually realistic strands. Keep the exact adult Toy Poodle identity, seated pose, head angle, expression, body size, orange background and surrounding paint marks unchanged. Keep exactly one pet and one identity. No residual coat, face or limb from the master pet. Correct species anatomy only: no duplicate or fused limbs, extra ears, warped eyes, malformed mouth, floating tail, human hands, fingers or broken garment and prop boundaries. Preserve all non-pet pixels and scene relationships as closely as the model allows.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation-second-batch/color-painted-portrait_dog_toy-poodle-dog_9x16_v02.png",
+    "sha256": "c15c3657c1af0f0666cc41cb94aadf9df921fb79221593d4388781d791eb0181"
+  },
+  "review": {
+    "state": "pending-human-review",
+    "checks": {
+      "petIdentity": null,
+      "adultAgeAndProportions": null,
+      "masterPoseAndExpression": null,
+      "masterStyleAndBrushwork": null,
+      "sceneAndComposition": null,
+      "anatomyAndContacts": null,
+      "textAndRights": null,
+      "dimensions": "pass"
+    },
+    "findings": [],
+    "finalApproval": "pending-user"
+  },
+  "generatedAt": "2026-08-14T07:48:04.599Z"
+}

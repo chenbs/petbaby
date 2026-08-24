@@ -1,0 +1,71 @@
+{
+  "templateId": "color-painted-portrait",
+  "title": "彩色绘画肖像",
+  "entryId": "art",
+  "status": "master-candidate-pending-user-approval",
+  "subject": "dragon-li-cat",
+  "breed": "狸花猫",
+  "revision": {
+    "version": "v11",
+    "supersedes": "color-painted-portrait_dragon-li-cat_9x16_v10.png",
+    "reviewFinding": "v10 的颜色深度和水彩媒介已合适，但画面笔触仍略粗，眼睛和圆脸比例使成年狸花猫出现轻度幼猫化。",
+    "scope": "refined-watercolor-adult-life-stage-correction"
+  },
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-composition-and-colour-authoritative-edit-target",
+      "path": "tools/imagegen/out/reference-v1/candidates/color-painted-portrait_dragon-li-cat_9x16_v10.png",
+      "sha256": "e996ad2a2f001480cdb53bce36e4481873956192fe9dbe2b14e0d82539535379"
+    },
+    {
+      "role": "third-party-watercolor-effect-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/4f109cb7-2809-459a-93ef-5e7775e16280.jpg",
+      "sha256": "620aa0a865818f88025ed9345f86e0f38a113520a91627a1dfd1535136b0035a"
+    },
+    {
+      "role": "pet-identity-life-stage-and-anatomy-authoritative-reference",
+      "path": "apps/website/public/assets/avatar-dragonli.jpg",
+      "sha256": "0f403599969b57f32aa314cf474ce4d57d28f48683e16ae9a032d73b94079732"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: refined watercolor edit with authoritative adult pet identity. Create a vertical 9:16 output at exactly 720x1280 pixels from exactly three input images. Image 1 is the authoritative self-owned composition and colour target. Preserve its half-body three-quarter portrait, gentle slightly upward gaze, golden-orange and ochre field, limited teal and coral accents, framing and clean colour grouping. Refine the hand-painted watercolor craft across the whole image without making it photographic. Keep the large composition loose and expressive, but replace coarse blocky areas with finer layered watercolor work: smaller controlled dry-brush marks within the fur, nuanced translucent glaze layers, cleaner pigment boundaries, subtle midtone variation, carefully broken edges and visible fine paper grain. The face needs the highest refinement: use several thin watercolor layers and small intentional brush marks to describe coat pattern, cheeks and expression. Keep every eye, nose and mouth shape visibly hand-painted and simplified. Do not add individual photographic hairs, pores, wet shine, lens detail, airbrushed gradients, digital sharpening, thick impasto or realistic three-dimensional facial modelling. Preserve Image 1's current pigment depth, saturation, hue balance and clean colour grouping exactly. Do not make the image paler, brighter, darker, more saturated or more colourful. Image 2 is only the hand-painted watercolor-impressionist effect reference. Use it to refine confident layered paint marks and expressive negative space, but do not copy its white dog's species, age, face, watermark or account text. Image 3 is the highest-priority authority for identity, life stage and anatomy. It shows a full-grown adult Dragon Li cat, not a kitten. Preserve its mature head proportions, normal adult eye-to-face ratio, appropriately sized upright ears, adult-length muzzle and nose bridge, developed neck and chest, brown-grey mackerel tabby coat, forehead M, cheek stripes, yellow-green eyes and pink-brown nose. Correct Image 1's mild juvenile exaggeration while keeping it attractive: make the eyes slightly smaller and more naturally spaced, make the face a little less circular, preserve a modest adult muzzle and nose bridge, and give the neck and chest the stable proportions of a healthy adult cat. Do not make the face old, gaunt, angular or stern. Keep the cat appealing through its calm upward gaze, balanced adult features, refined watercolor brushwork and warm expression, not through kitten anatomy. Paint the eyes as refined flat watercolor shapes with layered yellow-green washes, ink-wash pupils and one restrained paper-white highlight each; no glass-sphere volume or photographic iris detail. Render the forehead M, cheek stripes, body bands, cream muzzle and chest with more numerous, finer and better-layered watercolor marks than v10 while retaining broad directional rhythm. Use controlled broken ends and subtle tonal overlap rather than coarse blocky stripes or realistic individual hairs. Avoid kitten, juvenile cat, baby face, giant round eyes, oversized ears, tiny nose, extremely short muzzle, round kitten skull, tiny compact body, elderly cat, gaunt face, photorealism, coarse chunky paint, neon colours, extra colour blocks, text, logo, watermark or signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "prechecked-pending-user-approval",
+    "checks": {
+      "petIdentity": "pass",
+      "adultLifeStage": "pass",
+      "matureProportions": "pass",
+      "cutenessWithoutJuvenilization": "pass",
+      "effectComposition": "pass",
+      "refinedWatercolorCraft": "pass",
+      "watercolorFaceConsistency": "pass",
+      "colourDepthPreservation": "pass",
+      "anatomy": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [
+      "成年狸花猫身份、额头 M 纹、面颊条纹、黄绿色眼睛与粉棕鼻稳定；眼睛比例收小，脸型略拉开，成年口鼻和颈胸比例更自然。",
+      "保留温和仰视和亲和感，但未使用巨眼、圆幼猫头、过小鼻子或紧凑幼猫身体来制造可爱。",
+      "面部、狸花纹路和身体增加了更细小、更有层次的水彩笔触、透明罩染与中间调变化，粗糙块面明显减少。",
+      "眼鼻仍为简化水彩形状，未出现玻璃球眼、照片式虹膜、真实毛发或立体鼻口塑形。",
+      "v10 的金橙、赭黄、青绿和珊瑚色深度保持稳定；无异常解剖、文字、水印或平台标识。"
+    ],
+    "finalApproval": "pending-user"
+  },
+  "generatedAt": "2026-08-13T16:07:57.918Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/color-painted-portrait_dragon-li-cat_9x16_v11.png",
+    "sha256": "d1fac22e570d1cd1b496cded54b35b5471dc7062cda31f71009d3b68fc809c05"
+  }
+}

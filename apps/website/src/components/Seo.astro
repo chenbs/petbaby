@@ -1,0 +1,83 @@
+---
+/*
+ * 每页的元信息、OG / Twitter Card 与 JSON-LD（方案 7.1 / 7.2）。
+ *
+ * 两条硬要求：
+ *   · canonical 必须与 sitemap 里的 URL 逐字一致（协议、www、末尾斜杠）。
+ *     两边都由 Astro 的 `site` + trailingSlash: 'always' 推导，所以同源。
+ *   · <title> ≤60 字、description 50–160 字。文章由 content schema 挡住，
+ *     其余页面在这里按取值长度断言不了（构建期没有校验点），靠人写短。
+ *
+ * JSON-LD 只给常规搜索的富结果用。Google 明确说生成式 AI 不需要特殊 schema，
+ * 所以这里不为 AI 另加任何标记；也**不加 Product / Offer** —— 官网不直接售卖，
+ * 价格在小程序内，虚标结构化数据是搜索作弊。
+ */
+import { BRAND_NAME, OG_IMAGE, SITE_URL } from "../config/site";
+
+interface Props {
+  /** 页面标题正文，不含品牌名后缀。首页传 undefined 走单独写法。 */
+  title?: string;
+  /** 完整覆盖 <title>，首页用。 */
+  titleOverride?: string;
+  description: string;
+  /** og:type，首页 website、文章 article。 */
+  ogType?: "website" | "article";
+  /** 文章封面等页面级社交图（站内绝对路径或完整 URL）。 */
+  image?: string;
+  /** 结构化数据。BaseLayout 已给 Organization，这里追加页面级的。 */
+  jsonLd?: Array<Record<string, unknown>>;
+  /** 不希望被索引的页面（404）。 */
+  noindex?: boolean;
+}
+
+const {
+  title,
+  titleOverride,
+  description,
+  ogType = "website",
+  image,
+  jsonLd = [],
+  noindex = false,
+} = Astro.props;
+
+const pageTitle = titleOverride ?? (title ? `${title} · ${BRAND_NAME}` : BRAND_NAME);
+
+/*
+ * canonical 用 Astro.url 拼，而不是自己接字符串 —— Astro.url 已经带上了
+ * trailingSlash 的处理结果，手拼容易在 /blog 与 /blog/ 之间出分叉。
+ *
+ * noindex 的页面不给 canonical：404 会以任意错误路径被访问到，指向
+ * `/404/`（一个 Nginx 上并不存在的地址）比不给更糟 —— canonical 指向死链
+ * 是明确的错误信号。og:url 同理。
+ */
+const canonical = noindex ? null : new URL(Astro.url.pathname, SITE_URL).href;
+
+const socialImage = image ?? (OG_IMAGE.available ? OG_IMAGE.src : null);
+const socialImageUrl = socialImage ? new URL(socialImage, SITE_URL).href : null;
+---
+
+<title>{pageTitle}</title>
+<meta name="description" content={description} />
+{canonical && <link rel="canonical" href={canonical} />}
+{noindex && <meta name="robots" content="noindex, follow" />}
+
+<meta property="og:type" content={ogType} />
+<meta property="og:title" content={pageTitle} />
+<meta property="og:description" content={description} />
+{canonical && <meta property="og:url" content={canonical} />}
+<meta property="og:site_name" content={BRAND_NAME} />
+<meta property="og:locale" content="zh_CN" />
+{socialImageUrl && <meta property="og:image" content={socialImageUrl} />}
+
+{/* 有图才用大图卡：summary_large_image 配不上图会退化成空白框 */}
+<meta name="twitter:card" content={socialImageUrl ? "summary_large_image" : "summary"} />
+<meta name="twitter:title" content={pageTitle} />
+<meta name="twitter:description" content={description} />
+{socialImageUrl && <meta name="twitter:image" content={socialImageUrl} />}
+
+{
+  /* is:inline 是必需的：JSON-LD 不是 JS，不能进 Astro 的脚本打包管线 */
+  jsonLd.map((entry) => (
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(entry)} />
+  ))
+}

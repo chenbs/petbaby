@@ -1,0 +1,81 @@
+{
+  "templateId": "animal-capybara-snapshot",
+  "entryId": "fun",
+  "title": "日常快照萌宠",
+  "sourceEffectFile": "apps/website/public/assets/example/animal/jimeng-2026-06-01-2422-一只拟人化的水豚，以日常快照的视觉风格展现，照片中没有明确的主体或构图感，还带有....png",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-06-01-2422-一只拟人化的水豚，以日常快照的视觉风格展现，照片中没有明确的主体或构图感，还带有....png",
+      "sha256": "94762a995a222764f42d2e5f2bc82f98b57e2b9426e4b29bc6400ec3473a3f85"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "golden-dog",
+      "species": "dog",
+      "breed": "adult Golden Retriever",
+      "path": "tools/imagegen/out/source/dog-golden.jpg",
+      "sha256": "1b6348ce4f6cd1d12f4c93d5f2a8a5c21847e0ce9bc43e4326c1ee89f7a89eef"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a one-time third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every designated original animal, human-like creature or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult Golden Retriever with warm golden coat, floppy feathered ears, dark friendly eyes, broad soft muzzle and strong healthy adult build. Render the face, fur and anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration or turn a stylized scene into a realistic photo. Keep the pet appealing and healthy, never skinny, gaunt, uncanny, aggressive or puppy-like. Keep the candid office snapshot, collar tag, monitor background, casual framing and natural imperfect composition; do not turn the adult pet into a posed studio portrait. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character or artist names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create an exact vertical 9:16 composition at 720x1280 pixels by editing the first attached image as the base scene. Preserve the office snapshot composition, close-up camera angle, casual framing, shallow depth of field, monitor background, desk, keyboard, lanyard, badge placement, lighting, palette, and all background details as closely as possible. Replace the capybara subject with ONE coherent adult Golden Retriever identity only, using the second attached image as the sole identity reference for species and anatomy: warm golden coat, floppy feathered ears, dark friendly eyes, broad soft muzzle, healthy strong adult build, natural proportions, appealing but not puppy-like. Keep the same close selfie-like perspective, face filling the frame, muzzle near camera, and the candid imperfect office snapshot feel. Render the retriever in the same photographic visual language as the original scene, matching texture, focus, lens perspective, and lighting. Preserve the black lanyard and ID badge; update the badge image so it shows the same adult Golden Retriever identity in a small printed portrait, maintaining the badge layout and proportions. Keep the monitor, desk, and other props in place. Remove any residual capybara anatomy, extra limbs, duplicated pets, human features, or uncanny artifacts. Do not beautify, redesign, or change the scene beyond the subject identity replacement and the minimal anatomy corrections required for a realistic adult Golden Retriever. Keep all text blocks and visual hierarchy; replace any potentially copyrighted or branded text with short original pet-safe wording while preserving placement. No studio portrait look, no cartoon style, no extra logos or signatures.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-capybara-snapshot_golden-dog_9x16_v01.png",
+    "sha256": "ca2e9a4c59939272d09d9a7fb89f7032cf58b5bdbd63d6f6399f891fbd6ffce8"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-18T01:00:00+08:00"
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-17T16:37:22.250Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/animal/candidates/animal-capybara-snapshot_golden-dog_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/retired-masters/animal-capybara-snapshot_golden-dog_9x16_v01.png",
+  "masterSha256": "ca2e9a4c59939272d09d9a7fb89f7032cf58b5bdbd63d6f6399f891fbd6ffce8",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-18T01:00:00+08:00",
+    "note": "用户确认本批次除七个待重做模板外，其余动物效果候选均通过并保存为母版。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/animal-capybara-snapshot_golden-dog_9x16_v01.png",
+      "sha256": "ca2e9a4c59939272d09d9a7fb89f7032cf58b5bdbd63d6f6399f891fbd6ffce8"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "unapproved-candidate"
+    ]
+  }
+}

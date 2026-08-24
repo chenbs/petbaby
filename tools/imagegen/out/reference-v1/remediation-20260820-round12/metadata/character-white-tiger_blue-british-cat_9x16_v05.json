@@ -1,0 +1,58 @@
+{
+  "templateId": "character-white-tiger",
+  "entryId": "character",
+  "title": "白虎多姿态设定",
+  "version": "v05",
+  "status": "replacement-master-candidate-pending-user-approval",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "sourceEffectFile": "apps/website/public/assets/example/9f8ebfc6-fb68-4b47-a7bb-625d105d4f12.jpg",
+  "inputs": [
+    {
+      "role": "one-time-original-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/9f8ebfc6-fb68-4b47-a7bb-625d105d4f12.jpg",
+      "sha256": "6a3a0d6bf9b9ce45c5baaa2b282e12b20374e8a869abfc4ffddfb0e254ca31c6",
+      "requestPath": ".tmp/remediation-20260820-round12-inputs/character-white-tiger-original-effect.jpg",
+      "requestBytes": 153841
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "blue-british-cat",
+      "path": "tools/imagegen/out/source/cat-british.jpg",
+      "sha256": "ddbdfb39b6cb3c6dddbfdd01555cd2fea299cfa927f76a1e7248d581152e0364",
+      "requestPath": ".tmp/remediation-20260820-round12-inputs/character-white-tiger-identity.jpg",
+      "requestBytes": 149277
+    }
+  ],
+  "forbiddenInputsVerifiedAbsent": [
+    "frozen-master",
+    "public-preview",
+    "previous-candidate",
+    "comparison-sheet",
+    "contact-sheet"
+  ],
+  "inputPolicy": {
+    "serial": true,
+    "maxImages": 2,
+    "maxLongestEdge": 1200,
+    "jpegQuality": 82,
+    "combinedBytesBelow": 1048576
+  },
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be adult blue British Shorthair cat with solid blue-grey coat, round broad face, amber eyes, small upright ears, plush dense fur, thick tail and sturdy adult body. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Use only the original effect reference for composition and character design. Keep the complete portrait multi-view sheet with the full-body view at left and both large expression studies at right. Preserve the character's distinctive thick swept-back pale hairstyle in every view, including the central fringe, layered side spikes and high rear tufts; the hair must remain visible and structurally consistent above and between the cat ears. Rebuild the facial features from the effect reference: preserve its exact sharp almond eyes, heavy angled upper eyelids, brow line, small triangular nose, compact muzzle, smiling and winking mouth shapes, cheek-fur silhouette and playful confident expressions, translated into one consistent adult blue British Shorthair with a blue-grey coat, amber eyes and round sturdy face. Preserve every pose, peace-sign gesture, outfit layer, headband, armour and spacing while converting hands into clean fur-covered paws. Do not fall back to a generic photographic cat face, bald round cat head, ordinary pet portrait, frozen master or previous candidate. Fit every view fully inside the canvas; no cropped feet, missing view, watermark or source character identity. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image. Input audit: Image 1 is the untouched original effect reference and Image 2 is the self-owned pet identity reference. No frozen master, public preview, generated candidate, contact sheet or comparison sheet is present in this request.",
+  "revisedPrompt": "Create a vertical 9:16 character sheet illustration at 720x1280, inspired by the composition of a provided reference sheet and using a separate provided pet identity reference. Preserve the exact overall layout: a full-body character view on the left, two large expression close-ups on the right, clean off-white background, consistent spacing, and the same general pose relationships.\n\nTransform every human/character subject into one coherent adult blue British Shorthair cat identity: solid blue-grey plush coat, round broad adult face, amber eyes, small upright ears, dense fur, thick tail, sturdy proportions. Keep the same stylized illustration language and brushwork from the effect reference, not a photographic cat. The cat should be friendly, playful, confident, and appealing.\n\nPreserve the key design features translated into cat form: thick swept-back pale hairstyle-like fur mass, central fringe, layered side spikes, and high rear tufts visible above and between the ears in every view. Keep the sharp almond eye shape, heavy angled upper eyelids, brow line, compact muzzle, small triangular nose, smiling and winking mouth shapes, cheek-fur silhouette, and playful expressions, all adapted into the blue British Shorthair identity.\n\nKeep the same outfit layers and accessories: red headband, dark turtleneck sweater, shoulder armor pieces, leather strap, belt, shorts, gloves converted into clean fur-covered paws, boots/leg wraps converted into cat hind-leg armor details. Preserve the peace-sign gesture in the full-body and lower-right view, but render the hand as a cat paw with two raised fur-tipped digits only if anatomically appropriate to the style; otherwise make it a playful paw gesture. Preserve the pose, crop, perspective, and character-sheet arrangement exactly as much as possible.\n\nDo not add extra limbs, extra ears, extra eyes, human hands, or a duplicate character. Keep one adult pet identity throughout. Maintain all views fully inside the canvas. Remove any watermarks, source character names, or brand marks; if any text is included, replace it with short original pet-safe wording in the same hierarchy and placement. Background should remain plain and unchanged. Keep the portrait sheet polished, readable, and compositionally faithful to the reference.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/remediation-20260820-round12/master-candidates/character-white-tiger_blue-british-cat_9x16_v05.png",
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260820-round12/raw/character-white-tiger_blue-british-cat_9x16_v05.png",
+    "sha256": "6ccc564d7b0b381a8d2ee08145eee539b6b972e0b8be40f75605836f99c244c8"
+  },
+  "review": {
+    "state": "pending-user-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generatedAt": "2026-08-20T03:03:38.963Z"
+}

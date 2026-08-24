@@ -1,0 +1,137 @@
+{
+  "templateId": "animal-warrior-cat",
+  "entryId": "character",
+  "title": "古风剑客宠物",
+  "sourceEffectFile": "apps/website/public/assets/example/animal/jimeng-2026-07-22-6567-插画风格特效，古风，动漫风，3D，大师作品，超高清，动态，一只超萌的剑客猫耳娘作....png",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-07-22-6567-插画风格特效，古风，动漫风，3D，大师作品，超高清，动态，一只超萌的剑客猫耳娘作....png",
+      "sha256": "470bb8bdfc16ebe5296ecb9b91834e60d54791f311dafd178d31569c4ccdfcd1"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "abyssinian-cat",
+      "species": "cat",
+      "breed": "adult Abyssinian cat",
+      "path": "apps/website/public/assets/avatar-abyssinian.jpg",
+      "sha256": "8714ff092ab9b9e58a3c440eb16756b1149cd02c4050a8fb4f5f63b902184268"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: identity-preserve precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the current self-owned master and controls the replacement pet or owner identity unless the request explicitly changes the breed. Image 2 is the composition and effect reference. Use it only to correct the requested composition, pose, expression, gaze or visual treatment. Preserve every aspect that is not explicitly changed below, including the scene, camera, crop, palette, lighting, costume, props, spatial relationships and visual medium. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature. No extra subjects, duplicate anatomy, human hands on animals, malformed paws, text, logo, watermark or signature. Brighten the current master moderately: lift the cat's face, eyes, mask engravings, blue robe and foreground sleeve by about one stop while retaining highlights, shadows, contrast and cinematic depth. Do not change the Abyssinian identity, pose, sword, mask, costume, crop, background or warm-cool color relationship. Return a 9:16 portrait composition.",
+  "revisedPrompt": "Edit the provided image of the Abyssinian cat warrior, preserving identity and everything not explicitly changed. Keep the same pose, sword, mask, costume, crop, background, camera angle, cinematic lighting, and warm-cool color relationship. Make only a moderate exposure lift of about one stop on the cat’s face, eyes, mask engravings, blue robe, and foreground sleeve while retaining highlights, shadows, contrast, and depth. Remove any platform badges, AI labels, account names/numbers, watermarks, logos, and signatures. No extra subjects, no duplicate anatomy, no human hands on the animal, no malformed paws, no text. Maintain a realistic, high-detail portrait in a 9:16 composition.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/remediation-20260819/master-candidates/animal-warrior-cat_abyssinian-cat_9x16_v02.png",
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/master-animal-warrior-cat.png",
+    "sha256": "7da5e503d3a031d77ec2ea61410f9ef48e9825c34facbad1db9950c4433e78b8"
+  },
+  "review": {
+    "state": "approved-by-user-request",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-19T14:10:00+08:00"
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-19T05:52:56.804Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/remediation-20260819/master-candidates/animal-warrior-cat_abyssinian-cat_9x16_v02.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/animal-warrior-cat_abyssinian-cat_9x16_v02.webp",
+  "masterSha256": "75e8984bfb4b3c2853367362ce5fc7648c39a008df04ee07c7e184e291e6d446",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-19T14:10:00+08:00",
+    "note": "用户于 2026-08-19 明确要求按逐项意见返工并完成；候选已逐张目视复核后冻结为新版本。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-warrior-cat_abyssinian-cat_9x16_v02.webp",
+      "sha256": "75e8984bfb4b3c2853367362ce5fc7648c39a008df04ee07c7e184e291e6d446"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate",
+      "unapproved-candidate"
+    ]
+  },
+  "version": "v02",
+  "supersedes": {
+    "path": "tools/imagegen/out/reference-v1/retired-masters/animal-warrior-cat_abyssinian-cat_9x16_v01.png",
+    "sha256": "687bd17d0b416553c4edca3b6250e6de02598c6d9246ea6fc8840dd0b9dda72b",
+    "metadata": "tools/imagegen/out/reference-v1/retired-masters/metadata/animal-warrior-cat_abyssinian-cat_9x16_v01.json"
+  },
+  "remediationRequest": {
+    "task": "user-requested-frozen-master-remediation-2026-08-19",
+    "templateId": "animal-warrior-cat",
+    "kind": "master",
+    "version": "v02",
+    "status": "approved-and-promoted",
+    "provider": "lingsuan",
+    "model": "gpt-image-2",
+    "endpoint": "/v1/images/edits",
+    "inputFidelity": "high",
+    "inputPolicy": {
+      "sequential": true,
+      "maxImages": 2,
+      "maxCombinedBytes": 1000000
+    },
+    "inputs": [
+      {
+        "role": "current-self-owned-master",
+        "path": ".tmp/master-remediation-20260819-inputs/animal-warrior-cat-master.jpg",
+        "bytes": 126856,
+        "sha256": "62ab09eae0ba519d200a2aeeb1a2653c965be40e68748f9ababbf4001a78a3dc"
+      }
+    ],
+    "orientation": "portrait",
+    "requestedSize": "720x1280",
+    "output": {
+      "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/master-animal-warrior-cat.png",
+      "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819/master-candidates/animal-warrior-cat_abyssinian-cat_9x16_v02.png",
+      "width": 720,
+      "height": 1280,
+      "sha256": "7da5e503d3a031d77ec2ea61410f9ef48e9825c34facbad1db9950c4433e78b8"
+    },
+    "prompt": "Use case: identity-preserve precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the current self-owned master and controls the replacement pet or owner identity unless the request explicitly changes the breed. Image 2 is the composition and effect reference. Use it only to correct the requested composition, pose, expression, gaze or visual treatment. Preserve every aspect that is not explicitly changed below, including the scene, camera, crop, palette, lighting, costume, props, spatial relationships and visual medium. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature. No extra subjects, duplicate anatomy, human hands on animals, malformed paws, text, logo, watermark or signature. Brighten the current master moderately: lift the cat's face, eyes, mask engravings, blue robe and foreground sleeve by about one stop while retaining highlights, shadows, contrast and cinematic depth. Do not change the Abyssinian identity, pose, sword, mask, costume, crop, background or warm-cool color relationship. Return a 9:16 portrait composition.",
+    "revisedPrompt": "Edit the provided image of the Abyssinian cat warrior, preserving identity and everything not explicitly changed. Keep the same pose, sword, mask, costume, crop, background, camera angle, cinematic lighting, and warm-cool color relationship. Make only a moderate exposure lift of about one stop on the cat’s face, eyes, mask engravings, blue robe, and foreground sleeve while retaining highlights, shadows, contrast, and depth. Remove any platform badges, AI labels, account names/numbers, watermarks, logos, and signatures. No extra subjects, no duplicate anatomy, no human hands on the animal, no malformed paws, no text. Maintain a realistic, high-detail portrait in a 9:16 composition.",
+    "generatedAt": "2026-08-19T05:52:56.804Z",
+    "approvedAt": "2026-08-19T14:10:00+08:00"
+  },
+  "qualityBaseline": {
+    "required": [
+      "brighter readable ancient-warrior scene without changing the subject, pose or costume",
+      "exact 720x1280 portrait output",
+      "clean finished image without platform UI, account IDs, logos, watermarks or signatures"
+    ],
+    "reject": [
+      "regression of the composition, expression, gaze, identity, texture or anatomy corrected by this remediation",
+      "extra subjects, duplicate or malformed anatomy, broken costume contacts, logo, watermark or signature"
+    ]
+  }
+}

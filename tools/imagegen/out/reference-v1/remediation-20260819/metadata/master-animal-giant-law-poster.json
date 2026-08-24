@@ -1,0 +1,42 @@
+{
+  "task": "user-requested-frozen-master-remediation-2026-08-19",
+  "templateId": "animal-giant-law-poster",
+  "kind": "master",
+  "version": "stylebridge-v03",
+  "status": "generated-pending-visual-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputFidelity": "high",
+  "inputPolicy": {
+    "sequential": true,
+    "maxImages": 2,
+    "maxCombinedBytes": 1000000
+  },
+  "inputs": [
+    {
+      "role": "current-self-owned-master",
+      "path": ".tmp/master-remediation-20260819-inputs/animal-giant-law-poster-master.jpg",
+      "bytes": 160994,
+      "sha256": "fed6745e6f1e6d639feed4f50d3ca6ac1c76c55bb3e73c19d1401aa7146747ec"
+    },
+    {
+      "role": "effect-reference-composition-guide",
+      "path": ".tmp/master-remediation-20260819-inputs/animal-giant-law-poster-effect.jpg",
+      "bytes": 160823,
+      "sha256": "611c0451d0d4c79fdb2e343a050079fa65a88926690be81c00ffb8a9012b2ad7"
+    }
+  ],
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "output": {
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/master-animal-giant-law-poster.png",
+    "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819/master-candidates/animal-giant-law-poster_shepherd-dog_9x16_stylebridge-v03.png",
+    "width": 720,
+    "height": 1280,
+    "sha256": "be3820242d4d4184d515da3f35ce7e01e47c445e268961563d501e472f7c8940"
+  },
+  "prompt": "Use case: identity-preserve precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the current self-owned master and controls the replacement pet or owner identity unless the request explicitly changes the breed. Image 2 is the composition and effect reference. Use it only to correct the requested composition, pose, expression, gaze or visual treatment. Preserve every aspect that is not explicitly changed below, including the scene, camera, crop, palette, lighting, costume, props, spatial relationships and visual medium. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature. No extra subjects, duplicate anatomy, human hands on animals, malformed paws, text, logo, watermark or signature. Reduce the German Shepherd head and face substantially so the head occupies no more than about 12 percent of the image height. Reveal a far more monumental upright humanoid canine-deity body: very broad armored shoulders and chest, long powerful torso, two clear arms, narrow waist and vast robe, towering through the storm like Image 2. Preserve the recognizable German Shepherd face without turning the whole figure into a normal dog; body scale and human-like heroic silhouette must dominate. Keep the reaching foreground arm, cloud vortexes, lightning, golden backlight, tiny mountains and epic ant-scale camera. Return a 9:16 portrait composition.",
+  "revisedPrompt": "Create a 9:16 portrait, identity-preserving precise-object-edit of the first reference image, using the second reference only for overall composition and visual treatment. Preserve the same stormy cosmic-cloud scene, golden backlight, lightning, vortexing clouds, tiny mountain silhouettes, epic ant-scale camera perspective, and the reaching foreground arm. Transform the subject into a far more monumental upright humanoid canine-deity: a towering heroic silhouette with very broad armored shoulders and chest, a long powerful torso, narrow waist, two clear human-like arms, and a vast flowing robe. The German Shepherd face must remain recognizable, but greatly reduced in scale so the head occupies no more than about 12% of the image height; keep the erect ears and shepherd facial structure while ensuring the body scale dominates and the figure does NOT become a normal dog. Keep the front hand/arm reaching toward the viewer, with large expressive paws/claws, no malformed anatomy, no duplicate limbs. Preserve dramatic lighting, storm vortexes, radiating golden halo, and the same dark-gold palette and painterly cinematic style. Remove all platform badges, AI labels, account names, account numbers, logos, watermarks, and signatures. No extra subjects, no text, no logo, no watermark, no signature, no human hands on animals, no cropped duplicate anatomy.",
+  "generatedAt": "2026-08-19T05:54:27.353Z"
+}

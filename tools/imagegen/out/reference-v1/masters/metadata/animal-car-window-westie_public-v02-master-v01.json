@@ -1,0 +1,86 @@
+{
+  "kind": "frozen-master",
+  "templateId": "animal-car-window-westie",
+  "title": "车窗风中写真",
+  "status": "approved-frozen-master",
+  "subjectMode": "pet",
+  "version": "public-v02-master-v01",
+  "orientation": "landscape",
+  "size": "1280x720",
+  "sourcePublicPreview": {
+    "path": "tools/imagegen/out/reference-v1/masters/animal-car-window-westie_public-v02-master-v01.webp",
+    "sha256": "ce10c248c6befe6e6e262f8247828453d73d4503bbffb33a1c0ccdc400a78955",
+    "publicVersion": "public-v02",
+    "metadata": "tools/imagegen/out/reference-v1/public-previews/metadata/animal-car-window-westie_public-v02.json",
+    "byteIdentical": true,
+    "generatedFromOriginalEffectReference": true,
+    "generatedFromPreviousFrozenMaster": false
+  },
+  "derivedEffectReference": {
+    "role": "original-effect-reference-internal-audit-only",
+    "source": "apps/website/public/assets/example/animal/jimeng-2026-06-13-2042-主体：西高地白梗犬，白色蓬松被毛，全部毛发被风吹起，半眯眼的慵懒神态，拟人化穿着....png",
+    "excludedAtRuntime": true,
+    "publicUseAllowed": false
+  },
+  "previousFrozenMaster": {
+    "path": "tools/imagegen/out/reference-v1/masters/animal-car-window-westie_public-v02-master-v01.webp",
+    "sha256": "ce10c248c6befe6e6e262f8247828453d73d4503bbffb33a1c0ccdc400a78955",
+    "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-car-window-westie_public-v02-master-v01.json",
+    "retainedForRollback": true
+  },
+  "masterPath": "tools/imagegen/out/reference-v1/masters/animal-car-window-westie_public-v02-master-v01.webp",
+  "masterSha256": "ce10c248c6befe6e6e262f8247828453d73d4503bbffb33a1c0ccdc400a78955",
+  "provider": "lingsuan",
+  "endpoint": "/v1/images/edits",
+  "runtimeReferenceContract": {
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-car-window-westie_public-v02-master-v01.webp",
+      "sha256": "ce10c248c6befe6e6e262f8247828453d73d4503bbffb33a1c0ccdc400a78955"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "public-preview-storage-key",
+      "rejected-promotion-candidate"
+    ]
+  },
+  "runtimePromptExtension": "Keep the pet leaning from the yellow car window, light green shirt, windblown fur, blue sky, green roadside landscape and the same horizontal travel-photo framing.",
+  "stabilityReview": {
+    "state": "approved-by-user",
+    "identities": [
+      {
+        "identityId": "british-shorthair-cat",
+        "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-car-window-westie/animal-car-window-westie_british-shorthair-cat_stability-v01.png",
+        "outputSha256": "2f58bc76bf34e3df0992153a9e81077214de0cfd3f2dce78c615f2823487d375",
+        "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-car-window-westie/metadata/animal-car-window-westie_british-shorthair-cat_stability-v01.json"
+      },
+      {
+        "identityId": "german-shepherd-dog",
+        "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-car-window-westie/animal-car-window-westie_german-shepherd-dog_stability-v01.png",
+        "outputSha256": "c40415267b4f76193bebc7c7926b7ee31bb4b95b134fe60e9dc317a7fb9aeb9c",
+        "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-car-window-westie/metadata/animal-car-window-westie_german-shepherd-dog_stability-v01.json"
+      },
+      {
+        "identityId": "cream-longhair-cat",
+        "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-car-window-westie/animal-car-window-westie_cream-longhair-cat_stability-v01.png",
+        "outputSha256": "117007f1b79914b0ace831ebccde23aa3ef46c4150c60f609101ce6abd6ffd55",
+        "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-car-window-westie/metadata/animal-car-window-westie_cream-longhair-cat_stability-v01.json"
+      }
+    ],
+    "approvedAt": "2026-08-20T06:57:35.480Z"
+  },
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-20T06:57:35.480Z",
+    "note": "用户审核公开展示图升母版稳定性总览后明确批准。"
+  },
+  "publicUseAllowed": false,
+  "runtimeMasterUseAllowed": true,
+  "runtimeThirdPartyEffectReferenceIncluded": false
+}

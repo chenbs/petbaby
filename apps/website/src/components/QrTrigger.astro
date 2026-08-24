@@ -1,0 +1,36 @@
+---
+/*
+ * 顶栏的小程序码触发按钮（方案 6.3）。
+ *
+ * 放在「菜单」按钮左侧 —— 菜单是原型里最右的元素，保持它在最右。
+ * 与菜单按钮同高（38/46/52px 三档）、同圆角（--radius-pill）。
+ * 内容是爪印图标 + 「扫码」二字：只放图标辨识度不够，用户不知道点了会出什么。
+ *
+ * 移动端（<768px）由 CSS 隐藏，靠右下角悬浮按钮兜住，功能不缺。
+ *
+ * 是 <button> 而非 <div>：Tab 能聚焦、Enter/Space 能开、Esc 能关且焦点还回按钮。
+ * 这套与原型的菜单按钮同构。
+ *
+ * 两套配色不靠 props 分支，走 CSS 的 `.topbar-solid .qr-trigger` —— 顶栏变体
+ * 已经在父元素上标出来了，再传一遍 variant 就有两个真源，改一处忘一处。
+ */
+import QrPopover from "./QrPopover.astro";
+
+const POP_ID = "qr-pop-topbar";
+---
+
+<div class="qr-anchor" data-qr-anchor>
+  <button
+    type="button"
+    class="qr-trigger"
+    data-qr-trigger
+    aria-expanded="false"
+    aria-describedby={POP_ID}
+  >
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2v2h-2zM16 16h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2z" />
+    </svg>
+    <span>扫码</span>
+  </button>
+  <QrPopover id={POP_ID} />
+</div>

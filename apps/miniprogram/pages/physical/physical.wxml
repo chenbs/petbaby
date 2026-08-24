@@ -1,0 +1,105 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+
+<view class="page page-flat">
+  <text class="eyebrow">KEEPSAKE</text>
+  <view class="title">实体纪念品</view>
+  <text class="muted">把它的作品印出来，寄到你手上。</text>
+
+  <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
+  <t-notice wx:if="{{message}}" type="success" message="{{message}}" class="block-gap"></t-notice>
+
+  <t-skeleton wx:if="{{loading}}" type="card" count="2" class="block-gap"></t-skeleton>
+
+  <block wx:else>
+    <!-- 作品选择：缩略图横向滚动，替代文字 picker（需求 5.20-2） -->
+    <view class="section">
+      <view class="section-title">选择作品</view>
+
+      <t-empty
+        wx:if="{{!works.length}}"
+        icon="work"
+        title="还没有已解锁的作品"
+        description="解锁一件作品后就能印成实体纪念品。"
+        action-text="去看看作品柜"
+        anim="{{animType}}"
+        decor="{{decor}}"
+        bindaction="goWorks"
+      ></t-empty>
+
+      <scroll-view wx:else class="work-rail" scroll-x enable-flex>
+        <view
+          wx:for="{{works}}"
+          wx:key="id"
+          class="work-item tappable anim-{{animType}} {{item.id === workId ? 'work-item-on' : ''}}"
+          data-id="{{item.id}}"
+          bindtap="chooseWork"
+        >
+          <image class="work-cover" src="{{item.coverUrl}}" mode="aspectFill"></image>
+          <text class="small work-title">{{item.title}}</text>
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- 收货信息：五个字段显式化 + 中文 label（需求 5.20-1） -->
+    <view wx:if="{{works.length}}" class="section">
+      <view class="section-title">收货信息</view>
+      <t-card blur="{{blurOk}}">
+        <view class="stack">
+          <t-field label="收货人" value="{{address.name}}" placeholder="请填写收货人姓名" maxlength="20" required data-key="name" bindchange="onField"></t-field>
+          <t-field label="手机号" value="{{address.phone}}" placeholder="请填写 11 位手机号" input-type="number" maxlength="11" required data-key="phone" bindchange="onField"></t-field>
+          <t-field label="省份" value="{{address.province}}" placeholder="例如：浙江省" maxlength="20" required data-key="province" bindchange="onField"></t-field>
+          <t-field label="城市" value="{{address.city}}" placeholder="例如：杭州市" maxlength="20" required data-key="city" bindchange="onField"></t-field>
+          <t-field label="详细地址" control="textarea" value="{{address.detail}}" placeholder="街道、门牌号、楼层" maxlength="80" show-count required data-key="detail" bindchange="onField"></t-field>
+        </view>
+      </t-card>
+
+      <t-button
+        type="primary"
+        block
+        anim="{{animType}}"
+        loading="{{submitting}}"
+        disabled="{{!canSubmit}}"
+        class="block-gap"
+        bindtap="askConfirm"
+      >支付 ¥39.90 下单</t-button>
+      <text wx:if="{{!canSubmit}}" class="small">请先选择作品并填写完整的收货信息。</text>
+    </view>
+
+    <!-- 订单列表 -->
+    <view class="section">
+      <view class="section-title">我的实体订单</view>
+
+      <t-empty
+        wx:if="{{!orders.length}}"
+        icon="order"
+        title="还没有实体订单"
+        description="下单后可以在这里查看履约进度。"
+        anim="{{animType}}"
+        decor="{{decor}}"
+      ></t-empty>
+
+      <view wx:else class="list">
+        <t-card wx:for="{{orders}}" wx:key="id" blur="{{blurOk}}" anim="{{animType}}">
+          <view class="row">
+            <view class="order-main">
+              <view class="sub-title">{{item.skuText}}</view>
+              <text class="small">{{item.trackingText}}</text>
+            </view>
+            <t-tag tone="{{item.statusTone}}" text="{{item.statusText}}"></t-tag>
+          </view>
+        </t-card>
+      </view>
+    </view>
+  </block>
+</view>
+
+<t-dialog
+  visible="{{confirming}}"
+  title="确认下单信息"
+  content="{{confirmText}}"
+  confirm-text="确认支付 ¥39.90"
+  cancel-text="再改改"
+  anim="{{animType}}"
+  bindconfirm="create"
+  bindcancel="cancelConfirm"
+></t-dialog>

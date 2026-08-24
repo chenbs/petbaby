@@ -1,0 +1,63 @@
+{
+  "templateId": "animal-giant-law-poster",
+  "entryId": "action",
+  "title": "巨物法相海报",
+  "version": "stylebridge-v01",
+  "status": "generated-pending-user-approval",
+  "remediation": "shared-two-stage-style-bridge",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-07-11-4451-电影级，8K超高清，超广角仰拍，巨物恐惧，法天象地，至尊法相，人形巨神，身高万丈....png",
+      "sha256": "4027959ff35c4775359da43e729eab36e6775b2c95f28b060ffd491ef59eee01"
+    },
+    {
+      "role": "self-owned-pet-identity-reference-for-guide-only",
+      "path": "apps/website/public/assets/hero-shepherd.jpg",
+      "sha256": "f6c37419e96b12425034d2bdcb54cbde952709f37352f3748d67d3db71e937b4"
+    },
+    {
+      "role": "pre-stylized-identity-guide-for-final-edit",
+      "path": "tools/imagegen/out/reference-v1/animal/style-guides/animal-giant-law-poster_shepherd-dog_guide-v01.png",
+      "sha256": "ed4019d03bf6a9990c6548459c88201e2fbc9b1e895e93745d7518781f2a9294"
+    }
+  ],
+  "finalEditInputOrder": [
+    "one-time-third-party-effect-reference",
+    "pre-stylized-identity-guide"
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "guide": {
+    "prompt": "Use case: style-transfer identity preprocessing for a reusable pet template pipeline. Image 1 is the sole authority for visual medium and stylization only: copy its brushwork, line language, pigment behavior, edge treatment, texture scale, shape simplification, facial abstraction, anatomical stylization, local contrast and degree of realism. Image 2 is the sole authority for pet identity only: preserve its adult breed, coat pattern, markings, ear shape, eye color, muzzle proportions and healthy mature body type. Create one clean centered subject study of the pet from Image 2, fully redrawn through Image 1's non-photographic visual language. Use a plain unobtrusive background and do not copy Image 1's scene, pose, costume, props, text or layout. The pet must look drawn, painted or sculpted by the same visual system as Image 1 before it enters the final scene. Replace literal fur strands with the reference's marks and shapes; replace photographic eyes, wet nose highlights, lens lighting and realistic facial volume with the reference's stylized equivalents. Keep the pet recognizable, appealing, adult and healthy. No puppy or kitten proportions, no photorealistic face, no studio-photo lighting, no shallow depth of field, no realistic fur microtexture, no text, no logo and no watermark. Identity: adult adult German Shepherd; tan coat with defined black saddle and mask, brown eyes, tall upright ears, black muzzle and athletic adult build. Return only the finished pre-stylized identity guide.",
+    "revisedPrompt": "Create a single clean centered subject study of an adult German Shepherd dog, fully redrawn in the same non-photographic visual language as the first reference image: dramatic painterly brushwork, flowing sculpted line language, glowing pigment behavior, textured edges, stylized fur replaced by expressive marks and shapes, abstracted facial planes, heroic but restrained realism, rich warm gold-brown and charcoal palette with subtle iridescent highlights. Identity must match the second reference image only: adult German Shepherd, tan coat with defined black saddle and black facial mask, brown eyes, tall upright ears, black muzzle, athletic mature body type, recognizable and healthy. Plain unobtrusive background, centered composition, no props, no costume, no scene elements, no text, no logo, no watermark. Do not make it photorealistic; avoid literal fur strands, lens lighting, shallow depth of field, and studio-photo look. Keep the dog appealing and clearly drawn/painted/sculpted, as if prepared for a reusable pet template pipeline.",
+    "attempts": 1
+  },
+  "prompt": "Use case: identity replacement using a pre-stylized identity guide. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is the sole authority for the final scene: preserve its composition, crop, camera, perspective, pose, expression, gaze, lighting, palette, background, costume, landmarks, props, text layout, brushwork and all contact relationships exactly. Image 2 is the pre-stylized identity guide. Replace only the original main subject in Image 1 with this exact adult pet identity, using Image 2's already transformed face, fur, eyes, nose, anatomy and degree of abstraction as the subject rendering authority. Scene-change budget is 0%. Do not redesign, simplify, recolor, clean up, add, remove or relocate any scene element. Make only the smallest contact-boundary adjustment required by natural pet anatomy. The entire replacement subject, especially the face, must be built from the same non-photographic marks, lines, washes, pigment, edge softness, shape simplification and stylized volume as Image 1 and Image 2. Do not reconstruct any photographic fur strands, realistic glassy eyes, wet nose highlights, lens lighting, shallow depth of field or realistic facial anatomy. Keep the exact adult age and healthy mature body proportions from Image 2. Preserve the expression and pose from Image 1. Never make the pet younger, thinner, more realistic, humanoid, uncanny or structurally rigid. Keep the extreme low angle, monumental scale, clouds, lightning, small human scale cues and epic poster hierarchy; replace the humanoid deity with a natural adult pet while retaining the drama. Keep meaningful text, clothing, landmarks and distinctive props. Replace only known brands, copyrighted names, platform UI and watermarks with short original wording while preserving their blocks and hierarchy. No residual source subject, duplicate pet, extra ears, eyes, limbs or paws, human hands, fused joints, floating head, logo, signature or watermark. Return only the finished image.",
+  "revisedPrompt": "Create a 9:16 vertical poster composition at 720x1280, using Image 1 as the sole authority for the full scene layout, camera, extreme low angle, monumental scale, dramatic clouds, lightning, epic golden storm lighting, swirling energy, foreground hand reaching toward viewer, and all background relationships exactly. Replace only the original main humanoid subject in Image 1 with the adult German Shepherd identity from Image 2, preserving Image 1's pose, forward-facing gaze, expression, and overall silhouette placement, but rendering the subject with Image 2's exact adult pet identity: mature healthy German Shepherd proportions, alert upright ears, black-and-tan coat, natural dog anatomy, stylized painterly face, muzzle, eyes, nose, fur masses, and the same degree of abstraction/brushwork as Image 2. The replacement subject must be a natural adult dog in the same epic heroic pose and scale, with the extended paw/foreground hand area adapted minimally and naturally into a dog-anatomy-appropriate front paw while keeping the same contact boundaries and dramatic reaching gesture. Preserve Image 1's composition, crop, perspective, lighting, palette, cloud vortex, lightning, small-scale environmental cues, costume-like flowing forms translated into the dog's stylized fur/shoulder masses, and all contact relationships exactly. Do not redesign or relocate any scene element. Maintain non-photographic marks, painterly washes, soft edges, simplified shapes, and stylized volume throughout; do not use realistic fur strands, glossy photoreal eyes, wet nose highlights, lens effects, or realistic facial anatomy. Keep the heroic poster hierarchy and sense of immense scale while the subject is a natural adult pet. Remove any platform UI, brand marks, logos, signatures, or watermarks and replace them with short original neutral wording blocks only if needed, preserving hierarchy and placement. No duplicate subject, extra limbs, extra ears, floating head, fused joints, human hands, or residual humanoid features.",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-giant-law-poster_shepherd-dog_9x16_stylebridge-v01.png",
+    "sha256": "f70bd095156e0022c9f62fe27ae7731ba0d520034a942f75017aa02326778f0b"
+  },
+  "review": {
+    "state": "pending-human-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-18T01:52:05.134Z"
+}

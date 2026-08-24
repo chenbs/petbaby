@@ -1,0 +1,63 @@
+{
+  "templateId": "animal-watercolor-cat-closeup",
+  "entryId": "art",
+  "title": "金箔水彩猫咪",
+  "version": "stylebridge-v02",
+  "status": "generated-pending-user-approval",
+  "remediation": "shared-two-stage-style-bridge",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-06-23-4902-手绘插画，金箔岩彩，古风写意，水墨油画交融流体笔触，大面积淡彩晕染，猫咪局部特写....png",
+      "sha256": "63688681892e1bd2d18f9bdf47b10b0fa5a7ee21423a66c8fc411b5ea782008f"
+    },
+    {
+      "role": "self-owned-pet-identity-reference-for-guide-only",
+      "path": "apps/website/public/assets/work-ragdoll.jpg",
+      "sha256": "cadd89cfd6150cb0c9560bffec9b7c5a7e80d7126032eb7ecab4933cb836ed9e"
+    },
+    {
+      "role": "pre-stylized-identity-guide-for-final-edit",
+      "path": "tools/imagegen/out/reference-v1/animal/style-guides/animal-watercolor-cat-closeup_ragdoll-cat_guide-v02.png",
+      "sha256": "d747dc83d707937bc08663686f705f3b92d88518c79f35115c9456647875d850"
+    }
+  ],
+  "finalEditInputOrder": [
+    "one-time-third-party-effect-reference",
+    "pre-stylized-identity-guide"
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "guide": {
+    "prompt": "Use case: source-subject design transfer for a reusable pet identity replacement pipeline. Image 1 is the sole authority for the replacement subject design. Copy the designated source subject's pose, action, expression, gaze, crop, silhouette rhythm, head-to-body proportion, facial abstraction, eye/nose/muzzle design, anatomical simplification, fur construction, ornament integration, line language, brushwork, pigment behavior, edge treatment, texture scale, local contrast and degree of realism. Image 2 supplies identity markers only: adult species and breed, coat colors, stable markings, ear type and eye color. Image 2 must not supply pose, expression, photographic facial construction, realistic muzzle volume, literal fur strands, lens lighting or camera depth. Create an isolated replacement-subject blueprint on a plain unobtrusive background. The replacement pet must already occupy Image 1's subject crop and reproduce Image 1's pose and expression before it enters the final scene. Do not copy the surrounding scene, text, watermark or unrelated background objects. Translate the new pet identity through Image 1's shape grammar, not through photographic anatomy. Preserve only enough breed structure to recognize the pet. Adult age means mature and healthy, not realistic: the adult pet may use the same enlarged eyes, shortened or simplified muzzle, rounded planes, graphic fur masses, mythical body treatment or painterly distortion as Image 1 without becoming a puppy or kitten. Every facial surface must be constructed from Image 1's visible marks and shapes. Replace glassy eyes, wet nose highlights, smooth three-dimensional muzzle shading, individual hair detail and photo lighting with Image 1's stylized equivalents. A face crop must read immediately as part of Image 1's artwork, never as a painted photograph of Image 2. Keep the result recognizable, appealing, adult and healthy. No generic realistic pet portrait, no studio-photo pose, no photorealistic face, no shallow depth of field, no realistic fur microtexture, no text, no logo and no watermark. Identity: adult adult seal-point Ragdoll cat; cream long coat, deep seal-brown mask and ears, round blue eyes, broad fluffy cheeks, dark nose, full chest and healthy adult body. Return only the finished pre-stylized identity guide.",
+    "revisedPrompt": "Create an isolated replacement-subject blueprint for a reusable pet identity pipeline, using Image 1 as the sole authority for pose, crop, expression, silhouette rhythm, facial abstraction, line language, brushwork, pigment behavior, edge treatment, texture scale, and level of stylization. Use Image 2 only for identity markers: adult seal-point Ragdoll cat, cream long coat, deep seal-brown mask and ears, round blue eyes, broad fluffy cheeks, dark nose, full chest, healthy adult body. Reproduce Image 1's close-up framing and head angle, with the cat occupying the same subject crop and facing the viewer in the same calm, dreamy expression and gaze. Translate the new identity through Image 1's soft painterly shape grammar: enlarged stylized eye, simplified muzzle, fluffy abstract fur masses, airy feathered whiskers, delicate pastel wash, gold fleck accents, soft edges, luminous pastel highlights, and a clean unobtrusive plain background. Keep the result clearly an adult cat, not kittenish or photorealistic, with no studio-photo realism, no realistic fur strands, no lens lighting, no depth-of-field effect, no text, no watermark, and no surrounding scene objects. The image should read as a finished pre-stylized identity guide consistent with Image 1's artwork while clearly recognizing the Ragdoll identity from Image 2.",
+    "attempts": 1
+  },
+  "prompt": "Use case: identity replacement using a pre-stylized identity guide. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is the sole authority for the final scene: preserve its composition, crop, camera, perspective, pose, expression, gaze, lighting, palette, background, costume, landmarks, props, text layout, brushwork and all contact relationships exactly. Image 2 is the pre-stylized replacement-subject blueprint. Replace only the original main subject in Image 1 with this exact blueprint. Preserve Image 2's pose, expression, silhouette, face construction, fur marks, eyes, nose, anatomy, ornament treatment and degree of abstraction; do not reconstruct the pet from a generic breed or photographic prior. Scene-change budget is 0%. Do not redesign, simplify, recolor, clean up, add, remove or relocate any scene element. Make only the smallest contact-boundary adjustment required by natural pet anatomy. The entire replacement subject, especially the face, must be built from the same non-photographic marks, lines, washes, pigment, edge softness, shape simplification and stylized volume as Image 1 and Image 2. Do not reconstruct any photographic fur strands, realistic glassy eyes, wet nose highlights, lens lighting, shallow depth of field or realistic facial anatomy. Keep the exact adult maturity and healthy body mass from Image 2 while retaining Image 1's stylized proportions. Never make the pet younger, thinner, more realistic, humanoid, uncanny or structurally rigid. Keep the close crop, pale aqua and gold wash, antique illustrative brushwork, soft highlights and fine facial details; make the pet face painterly rather than photographic. Keep meaningful text, clothing, landmarks and distinctive props. Replace only known brands, copyrighted names, platform UI and watermarks with short original wording while preserving their blocks and hierarchy. No residual source subject, duplicate pet, extra ears, eyes, limbs or paws, human hands, fused joints, floating head, logo, signature or watermark. Return only the finished image.",
+  "revisedPrompt": "Create a final vertical 9:16 illustration at 720x1280. Use Image 1 as the sole authority for composition, crop, camera, perspective, pose, expression, gaze, lighting, palette, background, brushwork, texture, and all contact relationships. Use Image 2 as the exact replacement-subject blueprint. Replace only the main cat subject from Image 1 with the cat from Image 2, preserving Image 2’s pose, expression, silhouette, face construction, eye shape/color, nose, anatomy, ornament treatment, stylized fur markings, and degree of abstraction, while fitting it into Image 1’s exact scene. Keep the same antique illustrative watercolor / gouache look with pale aqua, white, soft pink, and gold wash, soft highlights, fine facial detail, and painterly non-photographic marks. Do not add, remove, relocate, redesign, recolor, clean up, or simplify any scene element. Maintain the close crop and the exact overall layout. Avoid photographic realism: no realistic fur strands, no glassy eyes, no wet nose highlights, no lens effects, no depth-of-field blur, no rigid anatomy. Preserve all text blocks, landmark-like props, and watermark placement only if present in the source image; if any brand or watermark-like text must be replaced, use short original wording while keeping block hierarchy. Ensure there is only one cat, no duplicates, no extra limbs, ears, eyes, paws, floating head, fused joints, or human hands. The result should be a seamless identity replacement where the entire cat is rendered in the same stylized painterly language as the source.",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-watercolor-cat-closeup_ragdoll-cat_9x16_stylebridge-v02.png",
+    "sha256": "2c7414909dc3d3d47ccf042f7562015515e377c1dfac1026ff53323e4b49bbd9"
+  },
+  "review": {
+    "state": "pending-human-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-18T01:57:58.209Z"
+}

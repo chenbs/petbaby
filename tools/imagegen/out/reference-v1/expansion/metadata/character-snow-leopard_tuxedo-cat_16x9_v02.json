@@ -1,0 +1,52 @@
+{
+  "templateId": "character-snow-leopard",
+  "entryId": "character",
+  "title": "雪豹幻想角色设定",
+  "sourceEffectFile": "apps/website/public/assets/example/9a19d816-2ff7-48cd-8fb4-e7808ca8d590.jpg",
+  "status": "generated-pending-user-approval",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/9a19d816-2ff7-48cd-8fb4-e7808ca8d590.jpg",
+      "sha256": "d65b0a77956aa0d89d4c202a93d4a67244c7e4e48c9a62fdb020565055ba872f"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "tuxedo-cat",
+      "species": "cat",
+      "breed": "adult black-and-white tuxedo cat",
+      "path": "tools/imagegen/out/source/cat-tuxedo.jpg",
+      "sha256": "c4b2ebaac7dd5d59fffd83a827d94fdc03e1befd3e1108f337de8ba5488a7d39"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "landscape",
+  "requestedSize": "1280x720",
+  "outputSize": "1280x720",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 16x9 composition at 1280x720 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be adult black-and-white tuxedo cat with black crown and ears, narrow white facial blaze, white muzzle and chest, pale green eyes, pink nose, black back and white front legs. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the full landscape character-sheet density: one complete full-body fantasy outfit view plus the same surrounding head and expression studies in their original positions. Every view must be the same adult tuxedo cat with consistent black-white markings and natural feline anatomy, translated into an original pet-safe fantasy costume. Remove the source humanoid identity, known-character cues, watermark and account marks without deleting the outfit or simplifying the layout. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a final exact 16:9 composition at 1280x720 pixels by performing an identity-preserving edit using the two provided reference images. Use Image 1 as the full composition/style/layout reference and Image 2 as the sole identity reference. Preserve Image 1 exactly: same crop, perspective, pose arrangement, character-sheet layout, spacing, pose/gesture, outfit silhouette, brushwork, line quality, palette, proportions of the sheet, and the same three-view/head-study arrangement. Replace every human/character subject from Image 1 with one coherent adult black-and-white tuxedo cat identity based on Image 2, keeping the cat adult, friendly, natural, and anatomically correct. The cat must have black crown and ears, a narrow white facial blaze, white muzzle and chest, pale green eyes, pink nose, black back, and white front legs, with natural feline anatomy and healthy proportions. Render the cat and costume in Image 1’s original illustrative fantasy language rather than as a pasted photograph. Keep the fantasy outfit translated to cat-safe anatomy and maintain the same costume details, landmarks, props, and decorative layout as much as possible without introducing new elements. Keep the same expression studies and full-body view positions, all showing the same adult tuxedo cat with consistent markings. Remove source humanoid identity cues, watermarks, account marks, and copyrighted character cues; replace any text/watermark areas with short original pet-safe wording that preserves the same visual block placement and hierarchy, but do not add logos or signatures. Do not redesign, simplify, beautify, juvenilize, thin, elongate, recolor, or clean up the background. No scene change. No extra limbs, ears, eyes, paws, hands, duplicate pets, floating heads, broken clothing, or residual source subject. Preserve the overall image as a frozen-master template candidate with the smallest possible anatomy corrections only.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/expansion/candidates/character-snow-leopard_tuxedo-cat_16x9_v02.png",
+    "sha256": "9e79d3cfad2441a19a76714b21658d4beb5dd3eff788c34236c17edd502a9805"
+  },
+  "review": {
+    "state": "pending-human-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generatedAt": "2026-08-18T07:12:23.163Z"
+}

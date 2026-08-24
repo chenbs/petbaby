@@ -1,0 +1,84 @@
+{
+  "templateId": "ink-portrait",
+  "title": "黑白水墨肖像",
+  "entryId": "art",
+  "status": "superseded-by-current-candidate",
+  "version": "v08",
+  "subject": "black-labrador-dog",
+  "breed": "成年黑色拉布拉多寻回犬",
+  "selectionRationale": "实际画面为黑白动态笔刷犬头像；用黑色拉布拉多验证深色毛发在水墨负空间中仍保留五官与轮廓。",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-candidate-edit-target",
+      "path": "tools/imagegen/out/reference-v1/candidates/ink-portrait_black-labrador-dog_9x16_v07.png",
+      "sha256": "26374a16110702847e36c796921033a90ead7e14a4ae0873aad890cc149c4d35"
+    },
+    {
+      "role": "third-party-effect-reference-style-only",
+      "path": "apps/website/public/assets/example/b983ec71-2f88-4c23-97f2-c0f0cb75bac1.jpg",
+      "sha256": "47d1f1377a40e3201d4c65a48fa55185118291de7564bda787ded2959c36df3d"
+    },
+    {
+      "role": "derived-pet-identity-reference-from-prior-candidate",
+      "path": "tools/imagegen/out/reference-v1/identity-guides/ink-portrait_black-labrador-dog_flat-guide_v02.png",
+      "sha256": "2090a704f0535a4f2445c3876f1d7d8696a0f5e963a3ea96b439d298edc60b85"
+    }
+  ],
+  "mask": {
+    "role": "transparent-eye-and-brow-edit-mask",
+    "path": "tools/imagegen/out/reference-v1/masks/ink-portrait_black-labrador-dog_eye-brow_v08.png",
+    "sha256": "ac8a8030adf1f3b8d359865904a49ea323b489c4309930c6854eb193c59da6ec"
+  },
+  "identityProvenance": {
+    "originalPetIdentityPath": "tools/imagegen/out/source/dog-black-lab.jpg",
+    "derivedIdentityReference": "tools/imagegen/out/reference-v1/identity-guides/ink-portrait_black-labrador-dog_flat-guide_v02.png"
+  },
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "inputFidelity": "not-sent",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: precise-object-edit with a transparent regional mask. Asset type: internal self-owned pet template master, exact final canvas 720x1280 (9x16). Use exactly three input images. Image 1 is the current self-owned candidate and the edit target. Image 2 is the third-party effect reference used only to confirm flat black-and-white ink language. Image 3 is a flattened pet identity guide used only for adult Labrador silhouette and breed structure. The transparent part of the mask is the only editable region. Change only the eye and brow construction inside the transparent mask. Keep every pixel-level visual decision outside the mask stable: head silhouette, dropped ears, muzzle, nose, mouth, neck, chest, black brush masses, grey dry-brush marks, off-white paper, splatter, diagonal lower stroke, crop, scale and negative space. Inside the mask, completely hide the far eye beneath one uninterrupted matte-black ink mass. Keep exactly one near eye. Draw it as a narrow horizontal almond or acute triangular paper-white slit, about four times wider than tall, with a firm straight upper black edge slanting slightly down toward the nose, a subtly lifted outer corner, very little visible white and one small solid black wedge pupil aimed left. Add one angular brow stroke for calm penetrating confidence. The gaze must feel sharp, handsome, athletic and self-possessed, never round, wide-open, drooping, sad, pleading, worried, timid, puppy-like, snarling or aggressive. The edited eye and brow must remain flat hand-painted ink shapes with abrupt broken edges. No iris ring, glass highlight, wet eye surface, eyelid fold, tear line, orbital shading, spherical eyeball, realistic fur or smooth volume. Do not change any other facial feature or create a second readable eye. No new text, logo, watermark, signature, colour, object or background change.",
+  "revisedPrompt": "Create a precise object edit on the provided base dog portrait using the three supplied reference images: Image 1 is the base and must remain unchanged everywhere except inside the transparent masked region; Image 2 is only a style reference for flat black-and-white ink language; Image 3 is only for adult Labrador silhouette/breed structure. Final canvas exactly 720x1280 (9:16). Edit only the eye-and-brow construction inside the transparent mask. Preserve pixel-level stability outside the mask: head silhouette, dropped ears, muzzle, nose, mouth, neck, chest, black brush masses, grey dry-brush marks, off-white paper, splatter, diagonal lower stroke, crop, scale, and negative space must remain exactly as in the base.\n\nInside the mask, completely hide the far eye beneath one uninterrupted matte-black ink mass. Keep exactly one near eye. Make it a narrow horizontal almond or acute triangular paper-white slit, about four times wider than tall, with a firm straight upper black edge slanting slightly down toward the nose, a subtly lifted outer corner, very little visible white, and one small solid black wedge pupil aimed left. Add one angular brow stroke for calm, penetrating confidence. The expression must feel sharp, handsome, athletic, and self-possessed; never round, wide-open, drooping, sad, pleading, worried, timid, puppy-like, snarling, or aggressive.\n\nThe edited eye and brow must remain flat hand-painted ink shapes with abrupt broken edges. No iris ring, glass highlight, wet eye surface, eyelid fold, tear line, orbital shading, spherical eyeball, realistic fur, or smooth volume. Do not change any other facial feature or create a second readable eye. No new text, logo, watermark, signature, color, object, or background change.",
+  "review": {
+    "state": "superseded-before-user-approval",
+    "checks": {
+      "petIdentity": "pass",
+      "adultAgeAndCuteness": "pass",
+      "poseExpressionAndAction": "pass",
+      "sceneComposition": "pass",
+      "faceAndMediumConsistency": "pass",
+      "anatomyAndContacts": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [
+      "单一主眼的瞳孔为纯黑实心墨块、反差过硬，已由只降低瞳孔墨黑程度并保留锐利眼形的微型遮罩版替代。"
+    ],
+    "finalApproval": "not-applicable",
+    "precheckedAt": "2026-08-14T14:55:20.511Z"
+  },
+  "generatedAt": "2026-08-14T14:41:41.591Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/ink-portrait_black-labrador-dog_9x16_v08.png",
+    "rawPath": "tools/imagegen/out/reference-v1/candidates/raw/ink-portrait_black-labrador-dog_9x16_v08.png",
+    "sha256": "3d8ef9a4d7f798554b96dd5aba253698966fe5f66247d5c4ea4ca3dfe497c552"
+  },
+  "maskedComposite": {
+    "outsideMaskLockedToEditTarget": true,
+    "editTarget": "tools/imagegen/out/reference-v1/candidates/ink-portrait_black-labrador-dog_9x16_v07.png",
+    "method": "local-rgba-composite-after-lingsuan-edit",
+    "pixelAudit": {
+      "outsideChanged": 0,
+      "outsidePixels": 880119,
+      "insideChanged": 40941,
+      "insidePixels": 41481
+    }
+  },
+  "replacedBy": "ink-portrait_black-labrador-dog_9x16_v09"
+}

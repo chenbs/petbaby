@@ -1,0 +1,62 @@
+{
+  "jobId": "mini-companion_cat_ragdoll-cat",
+  "templateId": "mini-companion",
+  "title": "同宠大小分身",
+  "status": "approved-runtime-validation",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/mini-companion_abyssinian-cat_9x16_v03.png",
+      "sha256": "540845541503d1e126a5a47133e2a0f9279b376f8add19e0fdffff2c5becf52c"
+    },
+    {
+      "role": "new-pet-identity-reference",
+      "identityId": "ragdoll-cat",
+      "species": "cat",
+      "breed": "adult seal-point Ragdoll cat",
+      "path": "apps/website/public/assets/work-ragdoll.jpg",
+      "sha256": "cadd89cfd6150cb0c9560bffec9b7c5a7e80d7126032eb7ecab4933cb836ed9e"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving template transfer. Produce one exact 720x1280 vertical 9:16 runtime validation image from exactly two input images. Image 1 is our frozen self-owned production master. It is the sole authority for every non-identity detail: scene, composition, crop, camera, pose, action, expression, gaze, lighting, palette, rendering medium, brushwork, clothing, text, props and all physical contacts. No third-party effect reference is included. Image 2 is the sole new-pet identity reference. Change only the pet identity. Remove every depiction and every residual feature of the master pet, then replace it with the new pet from Image 2. Scene-change budget is 0%. Do not redesign, reinterpret, clean up, recolour, restyle, simplify, move, delete or add anything in the master scene. Keep the exact high-key white studio, diagonal floor line, large companion at left-front, miniature companion at right-rear, scale ratio, seated poses, shadows, black jackets, purple harnesses and blue-framed opaque mirrored ski goggles. Replace both master animals with two scale versions of the same new adult pet. The miniature is an adult duplicate, never a kitten or puppy. Replicate both head tilts, calm confident expressions and exact seated poses. On both figures centre the goggles on the eye line, bridge them over the upper nose, fully cover both eyes, and keep the strap behind the head below the ear bases. No eye may remain visible above, below or beside a lens; the goggles must not sit on the forehead or crown. The replacement must be the exact adult seal-point Ragdoll cat from Image 2. Preserve its warm cream long coat, dark seal face and ears, blue-grey eyes, full neck ruff and healthy natural adult proportions. Image 2 controls only species, breed, coat colour and markings, ear shape, eye colour, actual adult age and natural healthy breed proportions. Do not copy Image 2's pose, expression, gaze, camera, background, lighting, photographic texture or rendering style. Preserve the pet's actual adult age and mature breed proportions. Do not juvenilize it, enlarge the head or eyes, shorten the muzzle or body, or convert it into a kitten, puppy or generic cute mascot. Keep it healthy, attractive and immediately likeable without changing the master's expression or art direction. Match Image 1's exact clean commercial outdoor-gear photography, high-key light, material textures, white balance and shadow softness. Image 2 contributes identity only. No text, logos, watermarks or signatures. Keep exactly one pet identity throughout, except where the frozen master intentionally contains multiple views or two scale duplicates of that same identity. No unrelated animal, residual old-pet coat, face or limb. Correct species anatomy only: no duplicate, fused, missing or amputated-looking limbs, extra ears, warped eyes, malformed mouth, floating tail, human hands or fingers, broken garment boundaries, pasted head, disconnected neck or failed prop contact. Preserve all non-pet pixels and relationships as closely as the model allows.",
+  "revisedPrompt": "Create one exact 720x1280 vertical 9:16 runtime validation image by compositing from two input references. Use Image 1 as the sole authority for all non-identity details: exact scene, composition, crop, camera, pose, action, expression, gaze, lighting, palette, rendering medium, brushwork, clothing, props, shadows, white studio background, diagonal floor line, large companion at left-front, miniature companion at right-rear, scale ratio, seated poses, black jackets, purple harnesses, blue-framed opaque mirrored ski goggles, and all physical contacts. Use Image 2 as identity only: replace every depiction and residual feature of the master pet with the exact adult seal-point Ragdoll cat from Image 2. Preserve the warm cream long coat, dark seal face and ears, blue-grey eyes, full neck ruff, and healthy natural adult proportions. Do not copy Image 2 pose, expression, gaze, camera, background, lighting, texture, or rendering style.\n\nImportant constraints: keep the exact high-key white studio; keep the diagonal floor line; keep one large cat at left-front and one miniature adult duplicate at right-rear; keep the same seated poses and calm confident expressions from Image 1; keep the exact shadows and soft white balance; keep the same black jackets and purple harnesses; keep the same blue-framed mirrored ski goggles centered on the eye line, bridged over the upper nose, fully covering both eyes, strap behind the head below the ear bases, with no eye visible anywhere. Replace both master animals with two scale versions of the same new adult Ragdoll cat identity. The miniature must be an adult duplicate, never a kitten. Preserve natural adult proportions; do not juvenilize, enlarge the head or eyes, shorten the muzzle or body, or make it mascot-like.\n\nAnatomy and integrity: correct cat anatomy only; no duplicate, fused, missing, or amputated limbs, no extra ears, warped eyes, malformed mouth, floating tail, human hands, broken garment boundaries, pasted head, disconnected neck, or failed prop contact. Preserve all non-pet pixels and spatial relationships as closely as possible. No text, logos, watermarks, or signatures.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation-third-batch/mini-companion_cat_ragdoll-cat_9x16_v01.png",
+    "sha256": "bdfc59dd89fa709dc964da899a46ebd620f4cc2240097592ee88f5a3c2bf2f7e"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "checks": {
+      "petIdentity": "pass",
+      "adultAgeAndProportions": "pass",
+      "masterPoseExpressionAndGaze": "pass",
+      "masterStyleAndBrushwork": "pass",
+      "sceneAndComposition": "pass",
+      "anatomyAndContacts": "pass",
+      "repeatedIdentityAndText": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [],
+    "finalApproval": "approved",
+    "approvedAt": "2026-08-17T12:22:43+08:00"
+  },
+  "generatedAt": "2026-08-17T02:02:14.296Z"
+}

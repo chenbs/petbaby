@@ -1,0 +1,41 @@
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  border: 2rpx solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-size: var(--small-size);
+  font-weight: var(--fw-bold);
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.tag-mini {
+  padding: 0 var(--space-2);
+  font-size: var(--eyebrow-size);
+}
+
+.tag-success {
+  border-color: var(--success);
+  background: var(--success-surface);
+  color: var(--success);
+}
+
+.tag-warning {
+  border-color: var(--warning);
+  color: var(--warning);
+}
+
+.tag-error {
+  border-color: var(--error);
+  background: var(--error-surface);
+  color: var(--error);
+}
+
+.tag-accent {
+  border-color: var(--primary);
+  color: var(--primary);
+}

@@ -1,0 +1,58 @@
+{
+  "templateId": "character-snow-leopard",
+  "entryId": "character",
+  "title": "雪豹幻想角色设定",
+  "version": "v06",
+  "status": "replacement-master-candidate-pending-user-approval",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "sourceEffectFile": "apps/website/public/assets/example/9a19d816-2ff7-48cd-8fb4-e7808ca8d590.jpg",
+  "inputs": [
+    {
+      "role": "one-time-original-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/9a19d816-2ff7-48cd-8fb4-e7808ca8d590.jpg",
+      "sha256": "d65b0a77956aa0d89d4c202a93d4a67244c7e4e48c9a62fdb020565055ba872f",
+      "requestPath": ".tmp/remediation-20260820-round12-inputs/character-snow-leopard-original-effect.jpg",
+      "requestBytes": 145143
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "tuxedo-cat",
+      "path": "tools/imagegen/out/source/cat-tuxedo.jpg",
+      "sha256": "c4b2ebaac7dd5d59fffd83a827d94fdc03e1befd3e1108f337de8ba5488a7d39",
+      "requestPath": ".tmp/remediation-20260820-round12-inputs/character-snow-leopard-identity.jpg",
+      "requestBytes": 98644
+    }
+  ],
+  "forbiddenInputsVerifiedAbsent": [
+    "frozen-master",
+    "public-preview",
+    "previous-candidate",
+    "comparison-sheet",
+    "contact-sheet"
+  ],
+  "inputPolicy": {
+    "serial": true,
+    "maxImages": 2,
+    "maxLongestEdge": 1200,
+    "jpegQuality": 82,
+    "combinedBytesBelow": 1048576
+  },
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be adult black-and-white tuxedo cat with black crown and ears, narrow white facial blaze, white muzzle and chest, pale green eyes, pink nose, black back and white front legs. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Use only the original effect reference for composition and character design. Keep its exact dense portrait sheet: one complete upright full-body view at left and the same three head studies at right. Preserve the character's long layered pale hairstyle in every view, including the sweeping fringe, side locks, cheek tufts and long back hair; the hair must remain visibly separate from the cat fur and fit the tuxedo-cat identity. Rebuild the facial features from the effect reference: preserve its exact large almond eye shape, upper-eyelid angle, brow rhythm, compact nose-and-muzzle construction, cheek silhouette, mouth curve and confident friendly expressions, translated into one consistent adult tuxedo cat with black crown, white blaze, white muzzle and green eyes. Preserve the layered outfit, jewellery, hand pose, proportions and spacing while converting hands into clean fur-covered paws. Do not fall back to a generic photographic cat face, bald cat head, ordinary pet portrait, frozen master or previous candidate. No cropped feet, missing view, watermark or source character identity. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image. Input audit: Image 1 is the untouched original effect reference and Image 2 is the self-owned pet identity reference. No frozen master, public preview, generated candidate, contact sheet or comparison sheet is present in this request.",
+  "revisedPrompt": "Create a single finished vertical composition at exact 9:16, 720x1280 px, using the provided Image 1 as the composition/style reference and the provided Image 2 as the sole identity reference. Preserve Image 1 exactly: the same dense character sheet layout on a clean white background, with one complete upright full-body view on the left and three separate head studies on the right, same spacing, crop, perspective, pose, expression rhythm, lighting, palette, line quality, brushwork, texture, clothing design, jewellery, props, and overall illustrated fantasy-anime rendering. Replace the original humanoid/fantasy subject everywhere with one coherent adult black-and-white tuxedo cat identity based on Image 2: black crown and ears, narrow white facial blaze, white muzzle and chest, pale green eyes, pink nose, black back, white front legs, healthy natural adult proportions. Keep the original character’s long layered pale hairstyle translated into the cat design in every view: sweeping fringe, side locks, cheek tufts, and long back hair remain visibly separate from the cat fur, integrated as stylized pale layered hair within the same illustrated language. Rebuild the face from Image 1’s expression and facial structure: large almond eyes, upper-eyelid angle, brow rhythm, compact nose-and-muzzle construction, cheek silhouette, mouth curve, and confident friendly expression, but as an adult tuxedo cat. Preserve the original layered outfit, jewellery, and hand pose, converting hands into clean fur-covered paws with correct cat anatomy. Keep the same exact full-body outfit silhouette, accessories, and head-study expressions from Image 1, but adapt them naturally to the cat identity. Do not make the cat photographic, generic, bald, juvenile, skinny, stern, aggressive, uncanny, or simplified. Do not change the background, composition, or add new props. No extra ears, eyes, limbs, paws, fingers, floating heads, cropped feet, broken clothing boundaries, or duplicate subjects. Keep all meaningful text blocks in the same positions, but replace any brand/platform/watermark-like text with short original pet-safe wording while preserving hierarchy; do not add new logos or signatures. The final result should look like an exact fantasy character sheet of an adult tuxedo cat in the same visual language as Image 1, with only the subject identity changed to the tuxedo cat from Image 2.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/remediation-20260820-round12/master-candidates/character-snow-leopard_tuxedo-cat_9x16_v06.png",
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260820-round12/raw/character-snow-leopard_tuxedo-cat_9x16_v06.png",
+    "sha256": "a7e6469b8ab6b5707b1d36cf47a4a21233cb3693863e04441112c04263f2d09a"
+  },
+  "review": {
+    "state": "pending-user-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generatedAt": "2026-08-20T03:02:28.869Z"
+}

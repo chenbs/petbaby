@@ -1,0 +1,146 @@
+{
+  "templateId": "mini-companion",
+  "title": "同宠大小分身",
+  "entryId": "character",
+  "status": "approved-frozen-master",
+  "version": "v13",
+  "subject": "maine-coon-cat",
+  "breed": "成年棕黑虎斑缅因猫",
+  "selectionRationale": "用阿比西尼亚猫验证同一身份的大小分身、护目镜反射和成套户外服装在横版中保持一致。",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-effect-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/1786369135481.png",
+      "sha256": "d7a6c5fc1bf7fbb460d9bd384512f4095d011e2063d9f3be0855f5fad7fd047b"
+    },
+    {
+      "role": "pet-identity-reference",
+      "identityId": "maine-coon-cat",
+      "species": "cat",
+      "breed": "adult brown-and-black tabby Maine Coon cat",
+      "path": "apps/website/public/assets/work-maine.jpg",
+      "sha256": "1886adfade169bfb7a678ccad1b36555e0cebbd9d78310ee0f23c42d1bcae8cf"
+    }
+  ],
+  "identityProvenance": null,
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: identity-preserve compositing and clean master reconstruction. Asset type: self-owned runtime frozen-master candidate. This is a clean first-generation reconstruction. Do not use, recall or inherit any Bengal cat, Abyssinian cat, German Shepherd, previous master, previous candidate or prior edit. Image 1 is the sole authority for composition, camera, pose, scale relationship, outfits, white studio, sloping floor, continuous black diagonal floor seam, lighting, exposure, contrast, depth of field and photographic treatment. Recreate those visible decisions closely while removing all text, logos, account marks and watermarks. Image 2 is the sole pet identity authority and controls breed, age, face, muzzle, ears, coat, markings, fur length, neck ruff, body type and tail. Use the exact same mature brown-and-black tabby Maine Coon identity for both subjects. Both subjects are the same adult Maine Coon at two different scales. The smaller right subject is a perfectly miniaturized adult duplicate, never a kitten; preserve mature facial structure, square muzzle, strong whisker pads, tall lynx-tipped ears, long layered coat, shaggy neck ruff, large healthy frame and full bushy tail from Image 2. Follow Image 1's strong oblique low-angle camera looking diagonally upward, slight Dutch tilt, large-left and small-right placement, wide grounded stance and clearly sloping white floor. Keep the complete continuous black diagonal floor seam visible behind both cats; do not remove, fade, shorten or replace it. Independently from the upward-looking low camera, both cats hold their heads naturally and direct their gaze level toward the viewer. No raised chin, no upward-looking eyes and no top-down camera. Dress both cats in Image 1's black jackets, purple chest harnesses and oversized mirrored blue-yellow goggles. Fit every garment naturally over long fur. Both goggles stay centred over and fully cover both eyes, while both complete ears and their lynx tips remain visible above the straps. Use Image 1's clean bright white studio treatment with natural readable shadows and moderate contrast. Do not import Image 2's grey backdrop, do not underexpose, do not crush black fabric or dark tabby fur, and do not make the image harsh, flat, washed out or overexposed. Keep complete fur-covered paws, coherent seated feline anatomy, naturally attached full tails and exact 9:16 portrait framing with polished commercial photographic realism. No extra subjects, duplicate anatomy, malformed paws, human hands, text, logo, watermark, signature or platform UI.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-19T18:34:40+08:00"
+  },
+  "generatedAt": "2026-08-19T10:26:03.529Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/remediation-20260819-round10/master-candidates/mini-companion_maine-coon-cat_9x16_v13.png",
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819-round10/raw/mini-companion.png",
+    "sha256": "ba1d60f0d882264ad8fe56dff673870b843dd6fba668d6ab201f965c663e287e"
+  },
+  "candidatePath": "tools/imagegen/out/reference-v1/remediation-20260819-round10/master-candidates/mini-companion_maine-coon-cat_9x16_v13.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/mini-companion_maine-coon-cat_9x16_v13.webp",
+  "masterSha256": "52fb067810d44d3011b7e79303c43c01e6ec46524408f0316c50fb44574c2581",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-19T18:34:40+08:00",
+    "note": "用户确认仅由原始效果图与 work-maine.jpg 重建的 mini-companion v13 通过，并要求冻结。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/mini-companion_maine-coon-cat_9x16_v13.webp",
+      "sha256": "52fb067810d44d3011b7e79303c43c01e6ec46524408f0316c50fb44574c2581"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate",
+      "unapproved-candidate"
+    ]
+  },
+  "qualityBaseline": {
+    "required": [
+      "the exact same adult brown-and-black tabby Maine Coon identity at two different scales, with the smaller cat retaining adult proportions",
+      "strong oblique low-angle camera with level forward feline gaze, large-left and small-right placement, and a wide grounded stance",
+      "black jackets, purple harnesses, mirrored goggles, sloping white floor and the complete continuous black diagonal floor seam",
+      "exact 720x1280 portrait output without text, logo, watermark or signature"
+    ],
+    "reject": [
+      "Bengal, Abyssinian, German Shepherd, kitten proportions or mixed identity inherited from an earlier candidate",
+      "top-down camera, raised chin, upward-looking eyes, missing floor seam, changed outfit, malformed paws or duplicate anatomy",
+      "logo, watermark or signature"
+    ]
+  },
+  "supersedes": {
+    "version": "v04",
+    "path": "tools/imagegen/out/reference-v1/public-previews/mini-companion_abyssinian-cat_9x16_v04.webp",
+    "sha256": "347ec995843315237e8dda6e601bbf016d1f35fc7d900b12299e5204f5da9526",
+    "metadata": "tools/imagegen/out/reference-v1/public-previews/metadata/mini-companion_abyssinian-cat_9x16_v04.json"
+  },
+  "remediationRequest": {
+    "task": "user-feedback-frozen-master-refinement-2026-08-19-round10",
+    "templateId": "mini-companion",
+    "title": "同宠大小分身",
+    "kind": "master",
+    "version": "v13",
+    "status": "approved-and-promoted",
+    "provider": "lingsuan",
+    "model": "gpt-image-2",
+    "endpoint": "/v1/images/edits",
+    "inputFidelity": "high",
+    "inputPolicy": {
+      "sequential": true,
+      "imageCount": 2,
+      "maxImages": 2,
+      "longestEdge": 1200,
+      "jpegQuality": 82,
+      "maxCombinedBytes": 1000000
+    },
+    "inputs": [
+      {
+        "role": "original-effect-reference-composition-camera-pose-outfit-and-lighting-only",
+        "originalPath": "apps/website/public/assets/example/1786369135481.png",
+        "preparedPath": ".tmp/master-remediation-20260819-round10-inputs/mini-companion-1.jpg",
+        "bytes": 47347,
+        "sha256": "67246dbb98fdd87d124d5f49bff25dba1e61e8bc547e16d3d34db0a3532c2d06"
+      },
+      {
+        "role": "maine-coon-pet-identity-only",
+        "originalPath": "apps/website/public/assets/work-maine.jpg",
+        "preparedPath": ".tmp/master-remediation-20260819-round10-inputs/mini-companion-2.jpg",
+        "bytes": 113923,
+        "sha256": "9fa0a667c02acfce309a71549daecb54e3532563fbc77f4cf0c54e4af378df0b"
+      }
+    ],
+    "orientation": "portrait",
+    "requestedSize": "720x1280",
+    "output": {
+      "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819-round10/raw/mini-companion.png",
+      "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819-round10/master-candidates/mini-companion_maine-coon-cat_9x16_v13.png",
+      "width": 720,
+      "height": 1280,
+      "sha256": "ba1d60f0d882264ad8fe56dff673870b843dd6fba668d6ab201f965c663e287e"
+    },
+    "prompt": "Use case: identity-preserve compositing and clean master reconstruction. Asset type: self-owned runtime frozen-master candidate. This is a clean first-generation reconstruction. Do not use, recall or inherit any Bengal cat, Abyssinian cat, German Shepherd, previous master, previous candidate or prior edit. Image 1 is the sole authority for composition, camera, pose, scale relationship, outfits, white studio, sloping floor, continuous black diagonal floor seam, lighting, exposure, contrast, depth of field and photographic treatment. Recreate those visible decisions closely while removing all text, logos, account marks and watermarks. Image 2 is the sole pet identity authority and controls breed, age, face, muzzle, ears, coat, markings, fur length, neck ruff, body type and tail. Use the exact same mature brown-and-black tabby Maine Coon identity for both subjects. Both subjects are the same adult Maine Coon at two different scales. The smaller right subject is a perfectly miniaturized adult duplicate, never a kitten; preserve mature facial structure, square muzzle, strong whisker pads, tall lynx-tipped ears, long layered coat, shaggy neck ruff, large healthy frame and full bushy tail from Image 2. Follow Image 1's strong oblique low-angle camera looking diagonally upward, slight Dutch tilt, large-left and small-right placement, wide grounded stance and clearly sloping white floor. Keep the complete continuous black diagonal floor seam visible behind both cats; do not remove, fade, shorten or replace it. Independently from the upward-looking low camera, both cats hold their heads naturally and direct their gaze level toward the viewer. No raised chin, no upward-looking eyes and no top-down camera. Dress both cats in Image 1's black jackets, purple chest harnesses and oversized mirrored blue-yellow goggles. Fit every garment naturally over long fur. Both goggles stay centred over and fully cover both eyes, while both complete ears and their lynx tips remain visible above the straps. Use Image 1's clean bright white studio treatment with natural readable shadows and moderate contrast. Do not import Image 2's grey backdrop, do not underexpose, do not crush black fabric or dark tabby fur, and do not make the image harsh, flat, washed out or overexposed. Keep complete fur-covered paws, coherent seated feline anatomy, naturally attached full tails and exact 9:16 portrait framing with polished commercial photographic realism. No extra subjects, duplicate anatomy, malformed paws, human hands, text, logo, watermark, signature or platform UI.",
+    "revisedPrompt": null,
+    "generatedAt": "2026-08-19T10:26:03.529Z",
+    "approvedAt": "2026-08-19T18:34:40+08:00"
+  }
+}

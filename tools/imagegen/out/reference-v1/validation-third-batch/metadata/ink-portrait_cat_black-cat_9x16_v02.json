@@ -1,0 +1,65 @@
+{
+  "jobId": "ink-portrait_cat_black-cat",
+  "templateId": "ink-portrait",
+  "title": "黑白水墨肖像",
+  "status": "superseded-by-approved-revision",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/ink-portrait_black-labrador-dog_9x16_reset-v03-reference-gaze-rerun-v01.webp",
+      "sha256": "050b7f7f346b6a26cd3725872cea643ce1bb0d4430a4dac9f7bddbb20d574893"
+    },
+    {
+      "role": "new-pet-identity-reference",
+      "identityId": "black-cat",
+      "species": "cat",
+      "breed": "adult black domestic shorthair cat",
+      "path": "tools/imagegen/out/source/cat-black.jpg",
+      "sha256": "e9d04dac4cee2a7753bcdbcedce7961cf819ab40fc08e39331977ff15df0df17"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 6,
+    "localWorkerConcurrency": 6,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving template transfer. Produce one exact 720x1280 vertical 9:16 runtime validation image from exactly two input images. Image 1 is our frozen self-owned production master. It is the sole authority for every non-identity detail: scene, composition, crop, camera, pose, action, expression, gaze, lighting, palette, rendering medium, brushwork, clothing, text, props and all physical contacts. No third-party effect reference is included. Image 2 is the sole new-pet identity reference. Change only the pet identity. Remove every depiction and every residual feature of the master pet, then replace it with the new pet from Image 2. Scene-change budget is 0%. Do not redesign, reinterpret, clean up, recolour, restyle, simplify, move, delete or add anything in the master scene. Keep the exact right-facing bust crop, head turn, paper-white negative space, large black ink masses, broken contour, dry-brush gaps, splatters and long diagonal downward strokes. Use the gaze from Image 1 exactly. Replicate Image 1's eye direction, eyelid shape, brow energy, expression, muzzle angle, ear attitude, head proportion and adult silhouette. Image 2 controls only the replacement breed identity; it must never redesign the gaze, expression or pose. The replacement must be the exact adult black domestic shorthair cat from Image 2. Preserve its solid glossy black coat without white patches, vivid green eyes, black nose, upright ears and compact healthy adult body. Image 2 controls only species, breed, coat colour and markings, ear shape, eye colour, actual adult age and natural healthy breed proportions. Do not copy Image 2's pose, expression, gaze, camera, background, lighting, photographic texture or rendering style. Preserve the pet's actual adult age and mature breed proportions. Do not juvenilize it, enlarge the head or eyes, shorten the muzzle or body, or convert it into a kitten, puppy or generic cute mascot. Keep it healthy, attractive and immediately likeable without changing the master's expression or art direction. Image 1 is the absolute authority for the whole face and body treatment. Convert every replacement feature, including eyes, eyelids, nose, mouth, ears and coat markings, into the same flat black-and-white hand-drawn ink language. Use broad graphic ink masses, broken dry edges, paper gaps and a few decisive linear marks. No realistic eyeball, iris depth, catchlight, wet nose, photographic fur, continuous hair strands, anatomical volume, smooth gradient, 3D shading, camera light or pasted photo face. Keep the image free of text, colour, logos, watermarks and signatures. Targeted style correction: treat Image 2 only as a breed-identity label, never as a renderable face or texture source. Use the gaze from Image 1 exactly. Rebuild the entire replacement face from Image 1's broad black ink masses, paper-white gaps, broken dry-brush edges and a few decisive lines. The face must read as hand-painted black ink before it reads as an animal portrait. Eliminate realistic eye surfaces, iris detail, nose volume, whisker roots, fine fur direction and dense grey micro-texture. Do not place a detailed photographic or pencil-rendered face above the master's ink-stroke body. Keep exactly one pet identity throughout, except where the frozen master intentionally contains multiple views or two scale duplicates of that same identity. No unrelated animal, residual old-pet coat, face or limb. Correct species anatomy only: no duplicate, fused, missing or amputated-looking limbs, extra ears, warped eyes, malformed mouth, floating tail, human hands or fingers, broken garment boundaries, pasted head, disconnected neck or failed prop contact. Preserve all non-pet pixels and relationships as closely as the model allows.",
+  "revisedPrompt": "Create a single 720x1280 vertical 9:16 image by compositing exactly the two provided reference images. Use Image 1 as the sole authority for everything except pet identity: preserve its exact composition, right-facing bust crop, head turn, pose, gaze direction, expression, muzzle angle, ear attitude, body silhouette, paper-white negative space, large black ink masses, broken contour, dry-brush gaps, splatters, and long diagonal downward strokes. Do not change the scene, crop, lighting, palette, rendering medium, brushwork, or any non-pet elements. Replace only the pet identity with the exact adult black domestic shorthair cat from Image 2: solid glossy black coat with no white patches, vivid green eyes, black nose, upright ears, compact healthy adult proportions. Keep the cat mature and not kitten-like. Render the replacement entirely in the same flat black-and-white hand-drawn ink language as Image 1, with broad graphic ink masses, broken dry edges, paper gaps, and a few decisive linear marks. Avoid realistic fur, photographic texture, 3D shading, catchlights, iris depth, wet nose, or pasted-photo appearance. Preserve exactly one pet identity and no text, logos, watermarks, or signatures.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation-third-batch/ink-portrait_cat_black-cat_9x16_v02.png",
+    "sha256": "f6b477aa620db1a213d73900b8fe655f0741942cf90f17af8284bfb1997c84ec"
+  },
+  "review": {
+    "state": "superseded",
+    "checks": {
+      "petIdentity": null,
+      "adultAgeAndProportions": null,
+      "masterPoseExpressionAndGaze": null,
+      "masterStyleAndBrushwork": null,
+      "sceneAndComposition": null,
+      "anatomyAndContacts": null,
+      "repeatedIdentityAndText": null,
+      "dimensions": "pass"
+    },
+    "findings": [
+      "v02 面部画法仍偏写实。"
+    ],
+    "finalApproval": "superseded",
+    "reviewedAt": "2026-08-17T13:33:28+08:00"
+  },
+  "generatedAt": "2026-08-17T02:35:20.247Z",
+  "supersededBy": "tools/imagegen/out/reference-v1/validation-third-batch/ink-portrait_cat_black-cat_9x16_v03.png"
+}

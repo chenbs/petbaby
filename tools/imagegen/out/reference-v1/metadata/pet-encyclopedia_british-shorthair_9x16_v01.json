@@ -1,0 +1,36 @@
+{
+  "templateId": "pet-encyclopedia",
+  "status": "master-candidate-pending-user-approval",
+  "category": "本宠百科图鉴",
+  "subject": "british-shorthair",
+  "breed": "英国短毛猫",
+  "selectionRationale": "验证高信息密度版式、同宠细节小窗、标题文字与猫型身份一致性",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-effect-reference-internal-only",
+      "path": "apps/website/public/assets/example/9.png",
+      "sha256": "72a5fe9036569d682aef1cfdd7897ad27a125238b832950ed59ac2a8cd5b10e1"
+    },
+    {
+      "role": "pet-identity-reference",
+      "path": "tools/imagegen/out/source/cat-british.jpg",
+      "sha256": "ddbdfb39b6cb3c6dddbfdd01555cd2fea299cfa927f76a1e7248d581152e0364"
+    }
+  ],
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: infographic-diagram compositing and text localization. Create a vertical 9:16 high-fidelity pet encyclopedia poster based on both input images. Compose for an exact final size of 720x1280 pixels. Image 1 is the primary effect and layout reference. Preserve its cream editorial atlas design, large title area, central full-body pet portrait, circular ear-eye-fur-paw detail insets with leader lines, countryside backdrop, modular information panels, green accents, icon rhythm and dense but orderly hierarchy. Use an optional scene-change budget of approximately 5% to 20%. You may naturally adjust panel proportions, green tones, small icons, paper texture, inset placement or pastoral details to suit a cat. Every change must remain native to a premium pet encyclopedia page and preserve clear information hierarchy. Do not replace the layout with a generic poster. If no replacement is clearly better, keep the original content unchanged. Remove every Border Collie depiction from Image 1 and replace all main, inset and action depictions with the exact same blue British Shorthair cat from Image 2. Preserve the solid blue-grey coat, round broad face, amber eyes, small upright ears, plush dense fur, thick tail and sturdy rounded body. Every depiction must clearly be the same individual. Make the cat youthful, round, plush and appealing, never skinny, long-faced, stern, old or uncanny. Keep realistic cat anatomy in the full-body view and accurate close-up details. Change the main Chinese title to exactly '英国短毛猫' and the English subtitle to exactly 'BRITISH SHORTHAIR'. Use these exact readable Chinese section headings: '基础档案', '外观特征', '性格行为', '饲养护理', '互动建议'. Keep body copy short and factual-looking; omit unreadable tiny sentences rather than generating gibberish or false medical claims. No extra breed, duplicated main pet, malformed eyes or paws, platform UI, brand logo, watermark or signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "pending-human-review",
+    "score": null,
+    "findings": []
+  },
+  "generatedAt": "2026-08-12T11:13:03.966Z"
+}

@@ -1,0 +1,31 @@
+{
+  "purpose": "coordinate-free-cartoonized-pet-identity-prototype",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "effect-style-and-pose-reference",
+      "path": "apps/website/public/assets/example/b983ec71-2f88-4c23-97f2-c0f0cb75bac1.jpg",
+      "sha256": "47d1f1377a40e3201d4c65a48fa55185118291de7564bda787ded2959c36df3d"
+    },
+    {
+      "role": "pose-aligned-pet-identity-photo",
+      "path": "tools/imagegen/out/reference-v1/identity-guides/ink-portrait_black-labrador-dog_profile-identity_reset-v02.png",
+      "sha256": "d54bb3bdc3179e687c1449bb5d2bced840ca7f082e0047b92f2b3124f6298f0c"
+    }
+  ],
+  "identityProvenance": {
+    "originalPetIdentityPath": "tools/imagegen/out/source/dog-black-lab.jpg"
+  },
+  "hardcodedSemanticCoordinates": false,
+  "mask": null,
+  "prompt": "Use case: identity-preserving cartoon style transfer for an intermediate pet identity prototype, not the final master artwork. Use exactly two input images. Image 1 is the sole authority for the target hand-painted cartoon language, left-facing three-quarter head pose, single visible near eye, proud neck, calm resolute expression and black-ink-on-paper abstraction. Image 2 is a pose-aligned identity photograph derived from the original adult black Labrador and controls only naturally dropped ears, broad mature muzzle, solid black coat and healthy adult proportions. Redraw the exact adult black Labrador from Image 2 from scratch in Image 1's illustrated character design. This is a complete medium conversion, not a filter, not a painted photograph and not a realistic dog with watercolour texture laid over it. Treat every photographic feature in Image 2 as invalid rendering information: discard its eye construction, wet nose, realistic skull volume, continuous fur direction, coat gloss, studio lighting and camera texture before designing the new cartoon face. Design a coherent, handsome and immediately likeable adult cartoon Labrador face. Keep the broad muzzle and dropped ears, simplify the forehead, cheek, muzzle and nose into a few expressive hand-painted watercolour forms, and use soft broken ink edges rather than hard vector shapes. Preserve adult proportions; no puppy, chibi head, oversized eye, shortened muzzle, sad face or elderly appearance. Give the single visible near eye a clear resolute leftward gaze: a compact horizontal almond shape at least twice as wide as tall, upper eyelid and bold painted brow gently lowered toward the muzzle, narrow off-white crescent and one controlled dark inner mark. The dog looks calm, courageous and self-possessed, never pleading, surprised, frightened, angry or aggressive. Keep the far eye completely hidden by the three-quarter profile. No round eye, upward gaze or large white eye area. Render the whole head, eye, muzzle, nose, ears, neck and chest in one consistent expressive ink-watercolour cartoon medium: broad black brush masses, restrained charcoal-grey washes, warm paper-white negative space, dry-brush breaks and sparse splatter. Keep enough soft painterly variation to feel hand-made, but no photographic detail, realistic eyeball, glossy wet nose, individual hairs, airbrushed gradients, charcoal realism, crude stencil, cut-paper collage or flat vector icon. Use a plain warm off-white paper field with generous empty space. No diagonal finishing stroke, scenery, clothing, prop, text, logo, watermark, account ID, signature or frame. Exact final canvas 720x1280.",
+  "revisedPrompt": "Create a vertical 720x1280 identity-preserving cartoon-style portrait of an adult black Labrador using exactly the two provided input images. Use Image 1 as the sole authority for the artistic language: hand-painted ink-and-watercolor abstraction, black brush masses, restrained charcoal-grey washes, warm paper-white negative space, soft broken edges, dry-brush breaks, sparse splatter, calm resolute expression, left-facing three-quarter head pose, single visible near eye, proud neck, and a plain warm off-white paper field with generous empty space. Use Image 2 only for identity and anatomy cues: naturally dropped ears, broad mature muzzle, solid black coat, healthy adult proportions. Redraw the dog from scratch as a coherent, handsome, immediately likeable adult cartoon Labrador; this is a complete medium conversion, not a filter and not a realistic photo. Discard photographic detail from Image 2: no realistic eyeball, no glossy wet nose, no continuous fur texture, no studio lighting, no camera texture, no realistic skull volume, no airbrushed gradients. Build the face from expressive painted forms with a broad muzzle, simplified forehead, cheek, muzzle, and nose. Keep the far eye completely hidden by the three-quarter profile. Give the single visible near eye a clear resolute leftward gaze: compact horizontal almond shape at least twice as wide as tall, upper eyelid and bold painted brow gently lowered toward the muzzle, narrow off-white crescent, and one controlled dark inner mark. The expression must be calm, courageous, self-possessed, never pleading, surprised, frightened, angry, or aggressive. Preserve adult proportions: no puppy, chibi head, oversized eye, shortened muzzle, sad face, or elderly appearance. Render the whole head, eye, muzzle, nose, ears, neck, and chest in one consistent expressive ink-watercolor cartoon medium with soft painterly variation, but no photographic detail, individual hairs, realistic eyeball, glossy wet nose, cut-paper collage, crude stencil, flat vector icon, or diagonal finishing stroke. No scenery, clothing, prop, text, logo, watermark, account ID, signature, or frame.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/identity-guides/ink-portrait_black-labrador-dog_cartoon-identity_reset-v08.png",
+    "size": "720x1280",
+    "sha256": "8149c9ce81bf87188d5ddab4e19fbb8a9056f9d1e8776bedc18f5b43d93b53ba"
+  },
+  "generatedAt": "2026-08-15T14:30:42.388Z"
+}

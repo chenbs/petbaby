@@ -1,0 +1,50 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/create/create",
+    "pages/works/works",
+    "pages/work/work",
+    "pages/orders/orders",
+    "pages/me/me",
+    "pages/pets/pets",
+    "pages/photos/photos",
+    "pages/account/account",
+    "pages/timeline/timeline",
+    "pages/health/health",
+    "pages/ai-create/ai-create",
+    "pages/ai-run/ai-run",
+    "pages/interactive-create/interactive-create",
+    "pages/interactive/interactive",
+    "pages/video-create/video-create",
+    "pages/video/video",
+    "pages/memorials/memorials",
+    "pages/memorial-share/memorial-share",
+    "pages/commerce/commerce",
+    "pages/physical/physical",
+    "pages/login/login",
+    "pages/theme/theme"
+  ],
+  "subPackages": [
+    {
+      "root": "island",
+      "pages": ["index/index", "avatar/avatar", "diary/diary"]
+    }
+  ],
+  "lazyCodeLoading": "requiredComponents",
+  "window": {
+    "navigationBarTitleText": "宠物造物局",
+    "navigationBarBackgroundColor": "#fff8f2",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#fff8f2"
+  },
+  "tabBar": {
+    "custom": true,
+    "list": [
+      { "pagePath": "pages/index/index", "text": "玩法" },
+      { "pagePath": "pages/works/works", "text": "作品" },
+      { "pagePath": "pages/me/me", "text": "我的" }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

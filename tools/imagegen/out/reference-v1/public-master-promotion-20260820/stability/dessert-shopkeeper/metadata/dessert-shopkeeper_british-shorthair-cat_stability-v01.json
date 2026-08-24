@@ -1,0 +1,67 @@
+{
+  "id": "dessert-shopkeeper_british-shorthair-cat_stability-v01",
+  "templateId": "dessert-shopkeeper",
+  "title": "甜品饮品主理人",
+  "sequence": 12,
+  "identityId": "british-shorthair-cat",
+  "identityLabel": "短毛猫",
+  "species": "cat",
+  "breed": "blue British Shorthair cat",
+  "status": "generated-pending-human-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "requestPolicy": {
+    "concurrency": 1,
+    "outputsPerRequest": 1,
+    "inputCount": 2,
+    "combinedInputBytes": 254839,
+    "maxCombinedInputBytesExclusive": 1000000,
+    "maxInputEdge": 1200,
+    "comparisonSheetIncluded": false
+  },
+  "inputs": [
+    {
+      "role": "compressed-public-preview-master-candidate",
+      "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/api-inputs/dessert-shopkeeper_public-v02_master-candidate.jpg",
+      "sha256": "7b1a92227a3db84e35a01f30d873c2762924845e30cf6e77142b5cffc2fd28b0",
+      "bytes": 105562,
+      "sourceCandidatePath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/candidates/dessert-shopkeeper_public-v02_master-candidate.png",
+      "sourceCandidateSha256": "2116a4cd9edc9d446ec4c019edb8b212d6ddcb53eafe7a8bd73bc84e3331c1b9"
+    },
+    {
+      "role": "compressed-pet-identity-reference",
+      "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/api-inputs/british-shorthair-cat.jpg",
+      "sha256": "7e7576e87460bfab6b4b9fd7a75733238348f9b39ddd1ee9f71b41836094fc59",
+      "bytes": 149277,
+      "sourcePath": "tools/imagegen/out/source/cat-british.jpg"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "prompt": "Use case: identity-preserving production-master stability validation. Create one vertical 9:16 image composed for an exact final size of 720x1280 pixels from exactly two input images. Image 1 is a proposed self-owned runtime master copied byte-for-byte from an approved public preview. It is the sole reference for composition, scene, pose, expression, styling, lighting, palette, clothing, props and text layout. Image 2 is the sole pet identity reference. Replace every animal depiction in Image 1 with the exact blue British Shorthair cat from Image 2. Preserve the target pet's solid blue-grey plush short coat, round broad face, amber eyes, small upright ears and sturdy natural proportions. Image 2 controls identity and species; do not retain the sample animal's breed or facial structure from Image 1. The replacement must remain recognisably the same cat as Image 2 while naturally adopting Image 1's pose and expression. Preserve its real age and breed proportions; do not beautify, juvenilize, enlarge or shrink the head arbitrarily, or invent a generic cute face. Scene-change budget: 0%. Do not redesign, simplify, crop, recolour, relight, add, remove or move any background element, garment, prop, graphic mark or text. Make only the smallest local geometry adjustment needed for the replacement animal to fit the existing pose and clothing. Keep the pet behind the strawberry cake, the pink shopkeeper outfit and bow, all surrounding strawberries, warm dessert-shop light and centered portrait framing. Keep all existing readable text unchanged. Add no new text, logo, signature, watermark or AI label. Avoid duplicate heads, extra eyes, extra ears, extra limbs, malformed paws, fused clothing, floating props and mixed-species anatomy.",
+  "revisedPrompt": "Create a single vertical 9:16 photorealistic image, composition matching Image 1 exactly as the scene reference, at final framing 720x1280. Use Image 1 for everything except the cat: preserve the dessert-shop setting, warm pink lighting, centered portrait framing, strawberry cakes and cupcakes, glass cloche, flowers, shop background, all props, all garment elements, and all readable text exactly unchanged. Replace the white fluffy cat in Image 1 with the exact cat identity from Image 2: a solid blue-grey British Shorthair with plush short coat, round broad face, amber eyes, small upright ears, sturdy natural proportions, and the same calm frontal pose and expression adapted to the scene. The cat must remain clearly the same cat as Image 2, not a generic cute cat, not juvenileized, not enlarged or shrunk, and not altered into another breed. Keep the cat behind the strawberry cake and within the pink shopkeeper outfit and bow context from Image 1, making only minimal local geometry adjustments needed for fit. Do not change any background element, garment, prop, graphic mark, or text. Do not add or remove anything. Avoid duplicate heads, extra eyes, extra ears, extra limbs, malformed paws, fused clothing, floating props, mixed-species anatomy, or any scene redesign.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/dessert-shopkeeper/dessert-shopkeeper_british-shorthair-cat_stability-v01.png",
+    "sha256": "46c5e9f4d4ed9e730ee5eeb02962d5fff3405291f3197a9c362ebc03c7e4d60b",
+    "size": "720x1280"
+  },
+  "rawOutputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/dessert-shopkeeper/raw/dessert-shopkeeper_british-shorthair-cat_stability-v01.png",
+  "automatedChecks": {
+    "dimensions": "pass",
+    "visualContent": "pass",
+    "inputCount": "pass",
+    "inputBytes": "pass",
+    "requestSerial": "pass"
+  },
+  "humanChecks": {
+    "petIdentity": "pending",
+    "compositionAndCrop": "pending",
+    "poseExpressionAndGaze": "pending",
+    "clothingPropsAndText": "pending",
+    "styleAndPalette": "pending",
+    "anatomy": "pending"
+  },
+  "finalApproval": "pending-user",
+  "elapsedMs": 56906,
+  "generatedAt": "2026-08-20T06:14:30.077Z"
+}

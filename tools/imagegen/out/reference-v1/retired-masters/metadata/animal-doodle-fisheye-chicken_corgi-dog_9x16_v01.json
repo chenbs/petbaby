@@ -1,0 +1,81 @@
+{
+  "templateId": "animal-doodle-fisheye-chicken",
+  "entryId": "fun",
+  "title": "鱼眼涂鸦表情",
+  "sourceEffectFile": "apps/website/public/assets/example/animal/jimeng-2026-06-11-3822-涂鸦，粗略，极简画的是一只呆头鸡，大眼睛，鱼眼镜头，插图是手绘的，杂乱的艺术线条....png",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-06-11-3822-涂鸦，粗略，极简画的是一只呆头鸡，大眼睛，鱼眼镜头，插图是手绘的，杂乱的艺术线条....png",
+      "sha256": "47b03169e98134e63406c79d3d9bdfd029085952c831981dcca666da1d8a350e"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "corgi-dog",
+      "species": "dog",
+      "breed": "adult Pembroke Welsh Corgi",
+      "path": "tools/imagegen/out/source/dog-corgi.jpg",
+      "sha256": "750c43038e21f8601be8b903889100c6b165d2b35cea3b7c0b55c0edce7ca9c2"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a one-time third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every designated original animal, human-like creature or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult Pembroke Welsh Corgi with tan-and-white coat, broad white blaze, white muzzle and chest, dark round eyes, upright ears, short legs and sturdy adult body. Render the face, fur and anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration or turn a stylized scene into a realistic photo. Keep the pet appealing and healthy, never skinny, gaunt, uncanny, aggressive or puppy-like. Keep the rough hand-drawn chicken doodle, oversized eyes, fish-eye distortion, loose black lines and white background; translate the same expression to one cute adult pet. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character or artist names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a final vertical 9:16 illustration at 720x1280 pixels, using the provided Image 1 as the exact composition/style template and Image 2 as the sole identity reference for the pet. Preserve Image 1's rough hand-drawn, childlike doodle language: thick loose black outlines, oversized eyes, fish-eye distortion, scribbly red strokes, white background, simple marker/crayon texture, and the same centered full-body framing. Replace the chicken subject from Image 1 with a single adult Pembroke Welsh Corgi identity from Image 2, while keeping Image 1's pose, camera angle, crop, expression, gaze direction, and overall visual rhythm. The corgi must be adult, healthy, and natural: tan-and-white coat, broad white blaze, white muzzle and chest, dark round eyes, upright ears, sturdy adult body, short legs, no puppy features. Translate the same cute, funny, startled expression into the corgi face in the same stylized drawing language; do not make it photographic. Maintain the same contact relationships and body placement as the original: one full-body pet standing on the ground line, centered, facing mostly forward with slight turn, with the same oversized head/body proportion and the same simple black ground marks beneath the paws. Preserve the white background and the rough hand-drawn aesthetic exactly; do not clean up, redesign, or beautify the scene. Keep the red accent areas and scribbly red fill language from Image 1 as part of the illustration style, but adapt them naturally into the corgi character where needed so the overall image still reads as one coherent stylized pet illustration. Replace any watermark/platform text with small original pet-safe wording only if needed, keeping the same faint placement and hierarchy, but do not add new logos or signatures. No extra limbs, paws, eyes, ears, duplicate pets, human hands, floating heads, or anatomical errors. Render the face, fur, and anatomy completely in the same hand-drawn visual language as Image 1, not as a pasted photo.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-doodle-fisheye-chicken_corgi-dog_9x16_v01.png",
+    "sha256": "a791ad52cb0c41b391c8c7a2c85c4f4bb66d8cbc89c5889ddacfa14ccdd93c13"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-18T01:00:00+08:00"
+  },
+  "generationAttempts": 2,
+  "generatedAt": "2026-08-17T16:39:32.443Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/animal/candidates/animal-doodle-fisheye-chicken_corgi-dog_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/retired-masters/animal-doodle-fisheye-chicken_corgi-dog_9x16_v01.png",
+  "masterSha256": "a791ad52cb0c41b391c8c7a2c85c4f4bb66d8cbc89c5889ddacfa14ccdd93c13",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-18T01:00:00+08:00",
+    "note": "用户确认本批次除七个待重做模板外，其余动物效果候选均通过并保存为母版。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/animal-doodle-fisheye-chicken_corgi-dog_9x16_v01.png",
+      "sha256": "a791ad52cb0c41b391c8c7a2c85c4f4bb66d8cbc89c5889ddacfa14ccdd93c13"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "unapproved-candidate"
+    ]
+  }
+}

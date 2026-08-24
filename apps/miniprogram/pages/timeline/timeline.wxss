@@ -1,0 +1,48 @@
+.block-gap {
+  display: block;
+  margin-top: var(--space-4);
+}
+
+/*
+ * `.stones` / `.stone` / `.stone-label` 已于 2026-08-06 提到 `app.wxss`
+ * （岛日记页的「已经走过」也用它们），这里不再重复声明。
+ */
+
+/*
+ * 时间线的竖轴。用左边框而不是绝对定位的线条：
+ * 条目高度不定，绝对定位的线要么短一截要么溢出到下一组。
+ */
+.line {
+  padding-left: var(--space-5);
+  border-left: 2rpx solid var(--divider);
+}
+
+.node {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+  padding: var(--space-3) 0;
+}
+
+.node-photo {
+  flex: none;
+  width: 160rpx;
+  height: 200rpx;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-image);
+  background: var(--disabled);
+}
+
+.node-copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.node-day {
+  color: var(--text-primary);
+  font-size: var(--body-size);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-tight);
+}

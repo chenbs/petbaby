@@ -1,0 +1,38 @@
+---
+/*
+ * 右下角悬浮的小程序码按钮（方案 6.4）。固定位置，滚到哪都在。
+ *
+ * 两条显示规则由 qr.js 用 IntersectionObserver 实现（原型的 main.js 已经在用 IO
+ * 做视频离屏暂停，同一个模式）：
+ *   1. hero 内不显示 —— 首屏已有主 CTA「开始创作」，悬浮按钮在那里是重复且遮挡
+ *   2. 滚到第 9 区块（CTA 面板）时淡出 —— 那里已有一个更大的小程序码
+ * 无 hero 的页面（文章、法务、404）不观察，直接显示。
+ *
+ * 是 position:fixed 元素，不参与文档流，不会引入 CLS。
+ */
+import QrPopover from "./QrPopover.astro";
+
+interface Props {
+  /** 首页传 true：先隐藏，滚过 hero 才淡入。 */
+  observeHero?: boolean;
+}
+
+const { observeHero = false } = Astro.props;
+const POP_ID = "qr-pop-fab";
+---
+
+<div class="qr-fab" data-qr-anchor data-qr-fab data-observe-hero={observeHero ? "" : null}>
+  <button
+    type="button"
+    class="qr-fab-btn"
+    data-qr-trigger
+    aria-expanded="false"
+    aria-describedby={POP_ID}
+  >
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2v2h-2zM16 16h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2z" />
+    </svg>
+    <span>扫码创作</span>
+  </button>
+  <QrPopover id={POP_ID} />
+</div>

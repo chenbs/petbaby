@@ -1,0 +1,67 @@
+{
+  "id": "animal-car-window-westie_british-shorthair-cat_stability-v01",
+  "templateId": "animal-car-window-westie",
+  "title": "车窗风中写真",
+  "sequence": 30,
+  "identityId": "british-shorthair-cat",
+  "identityLabel": "短毛猫",
+  "species": "cat",
+  "breed": "blue British Shorthair cat",
+  "status": "generated-pending-human-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "requestPolicy": {
+    "concurrency": 1,
+    "outputsPerRequest": 1,
+    "inputCount": 2,
+    "combinedInputBytes": 226617,
+    "maxCombinedInputBytesExclusive": 1000000,
+    "maxInputEdge": 1200,
+    "comparisonSheetIncluded": false
+  },
+  "inputs": [
+    {
+      "role": "compressed-public-preview-master-candidate",
+      "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/api-inputs/animal-car-window-westie_public-v02_master-candidate.jpg",
+      "sha256": "9eed162f218489f1d03e4d6b9a3c1baec8d47f2bb407b6e11f965e9732f1ce25",
+      "bytes": 77340,
+      "sourceCandidatePath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/candidates/animal-car-window-westie_public-v02_master-candidate.png",
+      "sourceCandidateSha256": "f8a53f1ba1fb9f701c3d11c45eb07d0625edc116ff57335bf1b281b484ef48c0"
+    },
+    {
+      "role": "compressed-pet-identity-reference",
+      "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/api-inputs/british-shorthair-cat.jpg",
+      "sha256": "7e7576e87460bfab6b4b9fd7a75733238348f9b39ddd1ee9f71b41836094fc59",
+      "bytes": 149277,
+      "sourcePath": "tools/imagegen/out/source/cat-british.jpg"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "prompt": "Use case: identity-preserving production-master stability validation. Create one horizontal 16:9 image composed for an exact final size of 1280x720 pixels from exactly two input images. Image 1 is a proposed self-owned runtime master copied byte-for-byte from an approved public preview. It is the sole reference for composition, scene, pose, expression, styling, lighting, palette, clothing, props and text layout. Image 2 is the sole pet identity reference. Replace every animal depiction in Image 1 with the exact blue British Shorthair cat from Image 2. Preserve the target pet's solid blue-grey plush short coat, round broad face, amber eyes, small upright ears and sturdy natural proportions. Image 2 controls identity and species; do not retain the sample animal's breed or facial structure from Image 1. The replacement must remain recognisably the same cat as Image 2 while naturally adopting Image 1's pose and expression. Preserve its real age and breed proportions; do not beautify, juvenilize, enlarge or shrink the head arbitrarily, or invent a generic cute face. Scene-change budget: 0%. Do not redesign, simplify, crop, recolour, relight, add, remove or move any background element, garment, prop, graphic mark or text. Make only the smallest local geometry adjustment needed for the replacement animal to fit the existing pose and clothing. Keep the pet leaning from the yellow car window, light green shirt, windblown fur, blue sky, green roadside landscape and the same horizontal travel-photo framing. Keep all existing readable text unchanged. Add no new text, logo, signature, watermark or AI label. Avoid duplicate heads, extra eyes, extra ears, extra limbs, malformed paws, fused clothing, floating props and mixed-species anatomy.",
+  "revisedPrompt": "Create a single horizontal 16:9 image exactly 1280x720 pixels, using exactly two input images as references. Use Image 1 as the sole reference for composition, scene, pose, expression, styling, lighting, palette, clothing, props, background, and text layout. Use Image 2 as the sole identity reference for the animal. Replace the dog in Image 1 with the exact blue British Shorthair cat from Image 2, preserving the cat's solid blue-grey plush short coat, round broad face, amber eyes, small upright ears, sturdy natural proportions, and adult breed-accurate proportions. The cat must remain recognizably the same cat as Image 2 while naturally adopting the pose from Image 1: leaning out of the yellow car window, wearing the same light green shirt, with windblown fur, same travel-photo framing. Do not keep the dog's breed or facial structure. Preserve the exact background and all existing elements: yellow car, blue sky, green roadside landscape, roadside guardrail, car window, shirt, lighting, perspective, and any readable text if present. Do not redesign, recolor, relight, add, remove, move, crop, or simplify anything else. Make only the smallest local geometry adjustment needed for the cat to fit the existing pose and clothing. Avoid duplicate heads, extra eyes, extra ears, extra limbs, malformed paws, fused clothing, floating props, and mixed-species anatomy. No new text, logo, signature, watermark, or AI label.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-car-window-westie/animal-car-window-westie_british-shorthair-cat_stability-v01.png",
+    "sha256": "2f58bc76bf34e3df0992153a9e81077214de0cfd3f2dce78c615f2823487d375",
+    "size": "1280x720"
+  },
+  "rawOutputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-car-window-westie/raw/animal-car-window-westie_british-shorthair-cat_stability-v01.png",
+  "automatedChecks": {
+    "dimensions": "pass",
+    "visualContent": "pass",
+    "inputCount": "pass",
+    "inputBytes": "pass",
+    "requestSerial": "pass"
+  },
+  "humanChecks": {
+    "petIdentity": "pending",
+    "compositionAndCrop": "pending",
+    "poseExpressionAndGaze": "pending",
+    "clothingPropsAndText": "pending",
+    "styleAndPalette": "pending",
+    "anatomy": "pending"
+  },
+  "finalApproval": "pending-user",
+  "elapsedMs": 35430,
+  "generatedAt": "2026-08-20T06:22:23.177Z"
+}

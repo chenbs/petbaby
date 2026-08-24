@@ -1,0 +1,42 @@
+{
+  "task": "user-requested-frozen-master-remediation-2026-08-19",
+  "templateId": "fish-chase",
+  "kind": "master",
+  "version": "v02",
+  "status": "generated-pending-visual-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputFidelity": "high",
+  "inputPolicy": {
+    "sequential": true,
+    "maxImages": 2,
+    "maxCombinedBytes": 1000000
+  },
+  "inputs": [
+    {
+      "role": "current-self-owned-master",
+      "path": ".tmp/master-remediation-20260819-inputs/fish-chase-master.jpg",
+      "bytes": 148842,
+      "sha256": "47b90004f3eba77d795c50dbeadb8caa7c572f8a21f168fbe80dc6e373b60860"
+    },
+    {
+      "role": "effect-reference-composition-guide",
+      "path": ".tmp/master-remediation-20260819-inputs/fish-chase-effect.jpg",
+      "bytes": 147950,
+      "sha256": "caff223eaff1f9ae3091123be4eb8fc10cd13243cb9ff52871dbf2006fea65e7"
+    }
+  ],
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "output": {
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/master-fish-chase.png",
+    "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819/master-candidates/fish-chase_owner-f01_tuxedo-cat_9x16_v02.png",
+    "width": 720,
+    "height": 1280,
+    "sha256": "9823b0a6f146b98c3930c5a62d835dbdefc582ecde01ff2c20618d5aa19497ae"
+  },
+  "prompt": "Use case: identity-preserve precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the current self-owned master and controls the replacement pet or owner identity unless the request explicitly changes the breed. Image 2 is the composition and effect reference. Use it only to correct the requested composition, pose, expression, gaze or visual treatment. Preserve every aspect that is not explicitly changed below, including the scene, camera, crop, palette, lighting, costume, props, spatial relationships and visual medium. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature. No extra subjects, duplicate anatomy, human hands on animals, malformed paws, text, logo, watermark or signature. Increase the fisheye wide-angle distortion around the foreground tuxedo cat so its face reads extremely close and comically stretched like Image 2. Make both cat eyes much larger, rounder and more startled, with a frantic guilty expression while still gripping the fish. Make the woman behind visibly urgent and angry: brows tightened, eyes focused on the cat, mouth opened slightly wider in an alarmed shout, and reaching hand more desperate. Preserve the current woman and tuxedo-cat identities, market street, flying paper and fish. Return a 9:16 portrait composition.",
+  "revisedPrompt": "Edit the provided image using Image 1 as the identity/master reference and Image 2 only as a composition/pose/expression reference. Preserve the same woman and the same tuxedo cat identities, the same market street setting, flying paper and fish, same camera feel, same palette, lighting, costume, props, spatial relationships, and visual medium. Keep the shot as a 9:16 portrait. Increase the fisheye wide-angle distortion around the foreground tuxedo cat so its face reads extremely close to camera, comically stretched, with a more exaggerated wide-angle perspective like Image 2. Make the cat’s eyes much larger, rounder, and more startled, with a frantic guilty expression, while still gripping the fish in its mouth. Make the woman behind visibly urgent and angry: brows tightened, eyes locked on the cat, mouth opened slightly wider in an alarmed shout, and her reaching hand more desperate. Remove any platform badges, AI labels, account names, account numbers, watermarks, logos, and signatures. No extra subjects, duplicate anatomy, human hands on animals, malformed paws, text, logo, watermark, or signature.",
+  "generatedAt": "2026-08-19T05:49:47.410Z"
+}

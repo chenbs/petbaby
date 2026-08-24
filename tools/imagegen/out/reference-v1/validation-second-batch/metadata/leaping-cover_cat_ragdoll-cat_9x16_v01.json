@@ -1,0 +1,54 @@
+{
+  "jobId": "leaping-cover_cat_ragdoll-cat",
+  "templateId": "leaping-cover",
+  "title": "腾空跳跃封面",
+  "status": "approved-runtime-validation",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/leaping-cover_border-collie_9x16_reset-v02.png",
+      "sha256": "79150ee5c11c29962c19d93bd101708d5f417ee1514b3bffe8f8efd4bff90935"
+    },
+    {
+      "role": "new-pet-identity-reference",
+      "identityId": "ragdoll-cat",
+      "species": "cat",
+      "breed": "adult seal-point Ragdoll cat",
+      "path": "apps/website/public/assets/work-ragdoll.jpg",
+      "sha256": "cadd89cfd6150cb0c9560bffec9b7c5a7e80d7126032eb7ecab4933cb836ed9e"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Create one exact 720x1280 vertical runtime validation image from exactly two inputs. Image 1 is our frozen self-owned master and controls every non-identity detail: scene, crop, camera, pose, action, expression, gaze, lighting, palette, medium, brushwork, clothing, text and props. Image 2 controls only the new pet's breed, coat, markings, ears, eye colour, adult age and natural proportions. No third-party effect reference is included. Replace only the master pet with the exact adult seal-point Ragdoll cat from Image 2, preserving its warm cream long coat, dark seal face and ears, blue-grey eyes, full neck ruff and healthy natural adult proportions. Remove the old pet completely. Do not copy Image 2's pose, expression, background, lighting or photographic rendering. Keep the full-frame airborne leap toward the viewer, two foreshortened front paws at the bottom, closed happy crescent eyes, open smiling mouth with tongue out and explosive cyan-orange-magenta-yellow abstract paint field. Replicate the exact airborne body angle, foreshortening, paw placement, closed-eye smile, mouth opening and tongue shape. Preserve an adult body and believable attached limbs; do not shorten it into a puppy or oversized head. Image 1 is the absolute authority for the entire painting, including the face. Render the replacement pet in the same soft digital impressionist painting with dense short broken fur strokes, fragmented lively marks, crisp local stroke edges, controlled micro-contrast and airy painted transitions. Translate the new coat colours through those strokes. Do not copy photographic fur, realistic eyeballs, realistic nose volume, smooth blended fur, heavy impasto or a pasted photo face from Image 2. No clothing or added prop. Keep the image free of text, logos, watermarks and signatures. Scene-change budget 0%. Keep one adult pet. No juvenization, generic cute redesign, residual old-pet parts, extra limbs or ears, malformed face, human hands, broken contacts, logo, watermark or signature.",
+  "revisedPrompt": "Create one exact 720x1280 vertical runtime validation image from exactly two inputs. Image 1 is our frozen self-owned master and controls every non-identity detail: scene, crop, camera, pose, action, expression, gaze, lighting, palette, medium, brushwork, clothing, text and props. Image 2 controls only the new pet's breed, coat, markings, ears, eye colour, adult age and natural proportions. No third-party effect reference is included. Replace only the master pet with the exact adult seal-point Ragdoll cat from Image 2, preserving its warm cream long coat, dark seal face and ears, blue-grey eyes, full neck ruff and healthy natural adult proportions. Remove the old pet completely. Do not copy Image 2's pose, expression, background, lighting or photographic rendering. Keep the full-frame airborne leap toward the viewer, two foreshortened front paws at the bottom, closed happy crescent eyes, open smiling mouth with tongue out and explosive cyan-orange-magenta-yellow abstract paint field. Replicate the exact airborne body angle, foreshortening, paw placement, closed-eye smile, mouth opening and tongue shape. Preserve an adult body and believable attached limbs; do not shorten it into a puppy or oversized head. Image 1 is the absolute authority for the entire painting, including the face. Render the replacement pet in the same soft digital impressionist painting with dense short broken fur strokes, fragmented lively marks, crisp local stroke edges, controlled micro-contrast and airy painted transitions. Translate the new coat colours through those strokes. Do not copy photographic fur, realistic eyeballs, realistic nose volume, smooth blended fur, heavy impasto or a pasted photo face from Image 2. No clothing or added prop. Keep the image free of text, logos, watermarks and signatures. Scene-change budget 0%. Keep one adult pet. No juvenization, generic cute redesign, residual old-pet parts, extra limbs or ears, malformed face, human hands, broken contacts, logo, watermark or signature.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation-second-batch/leaping-cover_cat_ragdoll-cat_9x16_v01.png",
+    "sha256": "7f67c7df70ed928a76d6a83227469079f0b906f9acc1280cd8e4fbb55afc5d6c"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "checks": {
+      "petIdentity": "pass",
+      "adultAgeAndProportions": "pass",
+      "masterPoseAndExpression": "pass",
+      "masterStyleAndBrushwork": "pass",
+      "sceneAndComposition": "pass",
+      "anatomyAndContacts": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [],
+    "finalApproval": "approved",
+    "approvedAt": "2026-08-14T17:57:02+08:00"
+  },
+  "generatedAt": "2026-08-14T08:26:22.061Z"
+}

@@ -1,0 +1,55 @@
+{
+  "kind": "master-candidate",
+  "templateId": "animal-doodle-fisheye-chicken",
+  "title": "鱼眼涂鸦表情",
+  "status": "candidate-pending-stability-review",
+  "runtimeMasterUseAllowed": false,
+  "source": {
+    "role": "approved-dedicated-public-preview",
+    "path": "tools/imagegen/out/reference-v1/masters/animal-doodle-fisheye-chicken_public-v02-master-v01.webp",
+    "sha256": "43759e12d722b2f6380087e324ca6c10097e561d83eaeac214a9ecb0ef8bb22f",
+    "publicVersion": "public-v02",
+    "metadataPath": "tools/imagegen/out/reference-v1/public-previews/metadata/animal-doodle-fisheye-chicken_public-v02.json",
+    "generationInputRole": "effect-reference-edit-target"
+  },
+  "currentFrozenMaster": {
+    "path": "tools/imagegen/out/reference-v1/retired-masters/animal-doodle-fisheye-chicken_corgi-dog_9x16_v01.png",
+    "sha256": "a791ad52cb0c41b391c8c7a2c85c4f4bb66d8cbc89c5889ddacfa14ccdd93c13",
+    "approvedAt": "2026-08-18T01:00:00+08:00"
+  },
+  "candidate": {
+    "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/candidates/animal-doodle-fisheye-chicken_public-v02_master-candidate.png",
+    "sha256": "793b90dd35fa1fc86d230d0fe80899d5fcc61a0013d6306abf304f0b6aff6682",
+    "byteIdenticalToPublicPreview": true,
+    "orientation": "portrait",
+    "size": "720x1280"
+  },
+  "apiInputDerivative": {
+    "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/api-inputs/animal-doodle-fisheye-chicken_public-v02_master-candidate.jpg",
+    "sha256": "a3aacc69e4cf9c6721f692e3e7f748f69763efdbc8fe18faedb8cdf7b25522b5",
+    "format": "jpeg",
+    "quality": 82,
+    "width": 675,
+    "height": 1200,
+    "bytes": 87129,
+    "maxEdgeLimit": 1200,
+    "perFileByteLimit": 460000
+  },
+  "provenance": {
+    "originalEffectReferenceUsedForPublicPreview": true,
+    "frozenMasterUsedToGeneratePublicPreview": false,
+    "thirdPartyEffectReferenceAllowedAtRuntime": false
+  },
+  "productionPromptExtensionOnPromotion": "Replace the chicken completely with the target pet while keeping exactly the public master's playful doodle language: a round fisheye body, huge slightly asymmetric comic eyes and a very thick irregular black hand-drawn contour. The red/orange crayon marks are fixed decorative graphics and must not follow the target pet's natural coat colour: retain two obvious pink-red cheek circles with small red freckles plus at least three broad, saturated red/orange zigzag or cross-hatched patches across the lower torso and sides, with roughly the same visual coverage and intensity as Image 1. These marks must be immediately visible at thumbnail size on every cat or dog. Preserve the clean off-white background. Translate identity only through ears, muzzle, eye colour, head silhouette and a few simplified coat-mark cues inside this crayon language. Use flat wax-crayon fills and broken strokes throughout. Do not render realistic fur, fine grey pencil texture, photographic volume, soft graphite shading or a conventional cute-pet illustration. Leave no beak, comb, wattle, wings, feathers, bird feet or other chicken anatomy.",
+  "review": {
+    "stabilityIdentities": [
+      "british-shorthair-cat",
+      "german-shepherd-dog",
+      "cream-longhair-cat"
+    ],
+    "expectedOutputs": 3,
+    "state": "pending-generation",
+    "finalApproval": "pending-user"
+  },
+  "preparedAt": "2026-08-20T06:36:59.119Z"
+}

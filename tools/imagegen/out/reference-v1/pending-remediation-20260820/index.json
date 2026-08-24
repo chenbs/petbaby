@@ -1,0 +1,22 @@
+{
+  "status": "pending-user-review",
+  "generatedAt": "2026-08-20T02:06:26.461Z",
+  "provider": "lingsuan",
+  "inputPolicy": {
+    "serial": true,
+    "maxImagesPerRequest": 2,
+    "maxLongestEdge": 1200,
+    "jpegQuality": 82,
+    "combinedBytesBelow": 1048576
+  },
+  "revisionTemplateIds": [
+    "travel-paris-dog-selfie"
+  ],
+  "publicPreviewTemplateIds": [
+    "pet-milk-tea-shopkeeper"
+  ],
+  "identityIds": [
+    "siberian-longhair-cat",
+    "longhair-chihuahua-dog"
+  ]
+}

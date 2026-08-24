@@ -1,0 +1,64 @@
+{
+  "purpose": "preview-only-second-stage-pet-humanization",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "modelCall": true,
+  "useCase": "identity-preserve",
+  "status": "preview-pending-user-review",
+  "title": "跃彩笔触 x 鹦鹉",
+  "generatedAt": "2026-08-19T06:27:56.786Z",
+  "humanizationChain": [
+    "original-pet-photo",
+    "private-derived-human-identity-card",
+    "final-human-output"
+  ],
+  "currentCallStage": 2,
+  "firstStageIdentityCardReused": true,
+  "originalPetPhotoIncluded": false,
+  "requestOrder": [
+    "self-owned-human-master",
+    "private-derived-human-identity-card"
+  ],
+  "inputs": {
+    "image1": {
+      "role": "self-owned-human-master",
+      "path": "tools/imagegen/out/humanization-v1/masters/candidates/human-color-splash_9x16_v01.png",
+      "sha256": "927212c9e7896b06852f9e7dd0ee2de2bad188c4fb6dfc7c091a38763c73bee3",
+      "dimensions": {
+        "width": 941,
+        "height": 1672
+      }
+    },
+    "image2": {
+      "role": "private-derived-human-identity-card",
+      "path": "tools/imagegen/out/humanization-v1/identity-cards/parrot_v01.png",
+      "sha256": "6a112bce51f775a1447c5a84afc073e98f00e13bfcbc7535e236dbd37c33b7bc",
+      "dimensions": {
+        "width": 1122,
+        "height": 1402
+      }
+    }
+  },
+  "request": {
+    "size": "720x1280",
+    "quality": "high",
+    "outputFormat": "png",
+    "inputFidelity": "high",
+    "prompt": "Use case: identity-preserve\nAsset type: preview-only second-stage pet humanization result\nPrimary request: This is an identity replacement image edit, not a new scene design.\nInput images: Image 1 is the self-owned human master and the only authority for the complete image. Image 2 is a private human identity card derived from one pet and is the sole authority for replacement facial identity.\nChange only: Replace only the adult human facial identity in Image 1 with the human facial identity in Image 2, including eye spacing, face width, eye-color relationship, nose-to-mouth proportions and distinctive expression.\nMaster invariants: Preserve Image 1 exactly outside the minimum facial identity replacement. Scene-change budget is 0%. Preserve its composition, camera, crop, complete adult human body, pose, gaze, expression intensity, hairstyle silhouette, clothing, accessories, scene, lighting, color, rendering medium, brushwork and texture.\nTemplate-specific invariants: Preserve the illustrated brushwork, colored splashes, earrings and upward side-profile head pose.\nIdentity constraints: Keep Image 2's distinctive human facial proportions. Do not transfer Image 2's hairstyle, clothing, body, background, lighting or rendering style. Do not beautify away its identity.\nHuman anatomy constraints: Keep exactly one complete, natural, credible adult human. Do not introduce the original pet or any animal anatomy. No animal ears, animal nose, muzzle, fur face, whiskers, feathers, tail, paws, claws or hybrid anatomy.\nAvoid: extra subjects, changed body or pose, changed clothing, changed hairstyle silhouette, changed background, changed lighting, changed style, text, logo, watermark or malformed anatomy."
+  },
+  "providerOutput": {
+    "dimensions": {
+      "width": 941,
+      "height": 1672
+    },
+    "revisedPrompt": "Edit the first provided image only by replacing the adult human facial identity with the facial identity from the second provided image. Preserve the exact original composition, crop, camera angle, upward side-profile pose, gaze direction, expression intensity, hairstyle silhouette, clothing, earrings, background, lighting, color palette, illustrated brushwork, colored splashes, and rendering style from image 1. Keep one complete natural credible adult human only. Replace only the facial identity and facial proportions to match image 2: eye spacing, face width, eye-color relationship, nose-to-mouth proportions, and distinctive expression. Do not transfer hairstyle, clothing, body, background, lighting, or style from image 2. Do not add any animal or hybrid anatomy. No text, logo, watermark, or extra subjects."
+  },
+  "output": {
+    "path": "tools/imagegen/out/humanization-v1/probes/lingsuan-round-02/human-color-splash_parrot_9x16_v02.png",
+    "sha256": "ffdcf599b224930abc24eb7dd4357c3a21dc104de989f79785a381694db46f56",
+    "dimensions": {
+      "width": 720,
+      "height": 1280
+    }
+  }
+}

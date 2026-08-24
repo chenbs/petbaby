@@ -1,0 +1,10 @@
+samples/image-template-previews/animal-gold-ink-fox-6b87522ef661.png
+samples/image-template-previews/animal-robot-poster-7846af050bfd.png
+samples/image-templates/animal-gold-ink-fox-6b87522ef661.png
+samples/image-templates/animal-robot-poster-7846af050bfd.png
+samples/image-template-previews/leaping-cover-5d1b6cd7255f.png
+samples/image-template-previews/exaggerated-expression-0067b4a0d00b.png
+samples/image-template-previews/animal-ink-scratch-portrait-ee2dc079943b.png
+samples/image-templates/leaping-cover-79150ee5c11c.png
+samples/image-templates/exaggerated-expression-c8b1e59406f6.png
+samples/image-templates/animal-ink-scratch-portrait-b2ebe1c6a067.png

@@ -1,0 +1,56 @@
+---
+/*
+ * 8. 口碑区：3 条引语卡。
+ *
+ * 待提供：真实用户评价。规格 6 章明确「没有真实评价就不要编造 —— 合规风险」，
+ * 因此这里的三条是**结构占位**，文案取自产品自身的设计取舍（不是虚构的用户口吻），
+ * 署名一律写「示意」。正式上线前必须替换成真实评价，或整块删掉。
+ */
+const QUOTES = [
+  {
+    text: "纪念空间的陪伴天数停在告别那天，用过去式说「陪伴了 N 天」。天数继续往上跳，对这些用户是冒犯。",
+    avatar: "/assets/avatar-dragonli.jpg",
+    name: "产品设计取舍",
+  },
+  {
+    text: "风格对比图必须是同一只样板宠物。换了宠物，用户比较的就是宠物而不是风格 —— 这条比省一次生成更重要。",
+    avatar: "/assets/avatar-poodle.jpg",
+    name: "素材口径",
+  },
+  {
+    text: "缺样例图时只留文字，不画占位色块。抽象色块挂在展示位上，比留空更糟。",
+    avatar: "/assets/avatar-abyssinian.jpg",
+    name: "展示原则",
+  },
+];
+---
+
+<section class="section" id="voices">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">我们在意的事</p>
+      <h2 class="h2 h2-sm">三个不肯将就的决定</h2>
+      <p class="section-note wide" data-placeholder="testimonials">
+        此处结构对应用户评价区。目前没有可公开引用的真实评价，先放我们自己的三条设计取舍
+        —— 不编造用户口吻。拿到真实评价后原位替换。
+      </p>
+    </div>
+
+    <div class="grid-3 quote-grid">
+      {
+        QUOTES.map((quote, index) => (
+          <blockquote class="quote-card reveal" data-delay={index > 0 ? String(index) : null}>
+            <p class="quote-text">{quote.text}</p>
+            <figcaption class="quote-foot">
+              <img src={quote.avatar} alt="" width="1200" height="1200" loading="lazy" decoding="async" />
+              <span>
+                <span class="quote-name" data-placeholder="testimonial-name">{quote.name}</span>
+                <span class="quote-meta">示意 · 非用户评价</span>
+              </span>
+            </figcaption>
+          </blockquote>
+        ))
+      }
+    </div>
+  </div>
+</section>

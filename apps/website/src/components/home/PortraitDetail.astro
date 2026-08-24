@@ -1,0 +1,41 @@
+---
+/*
+ * 5. 服务详情 A：AI 肖像，图在左。
+ * 与第 6 区块的图文左右互换必须保留（规格 1 章：避免连续分栏呆板的关键）。
+ */
+const STYLES = [
+  { name: "暖调胶片", desc: "：颗粒与琥珀色偏，像九十年代的傻瓜机" },
+  { name: "纸艺拼贴", desc: "：撕边卡纸层叠，平面形状带软投影" },
+  { name: "克制影棚", desc: "：中性灰背景，单只柔光箱，不放道具" },
+  { name: "轻幻想", desc: "：浮动光点与柔光，暮色调不刺眼" },
+];
+---
+
+<section class="section" id="portrait">
+  <div class="container split-media">
+    {/* order 反转在 CSS 里：md 以上图在左，移动端图在上 */}
+    <div class="media-frame reveal media-first">
+      <img src="/assets/detail-portrait.jpg" alt="AI 宠物肖像成品：装裱挂在墙上的绘画肖像" width="1600" height="1200" loading="lazy" decoding="async" />
+      <span class="badge badge-float">AI 肖像</span>
+    </div>
+    <div class="reveal" data-delay="1">
+      <p class="eyebrow">AI 宠物肖像</p>
+      <h2 class="h2 h2-mid">四张候选<br />只留下最像它的一张</h2>
+      <p class="body-text lead">
+        一次生成四张，不是一张。风格从四个预设里选，不用写提示词 ——
+        挑中意的那张再放大，其余直接丢掉。
+      </p>
+      <ul class="feature-list">
+        {
+          STYLES.map((style) => (
+            <li><span class="dot" aria-hidden="true"></span><strong>{style.name}</strong>{style.desc}</li>
+          ))
+        }
+      </ul>
+      <a class="btn btn-primary" href="#works">
+        看四种风格的实拍对比
+        <svg class="arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
+      </a>
+    </div>
+  </div>
+</section>

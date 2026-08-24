@@ -1,0 +1,65 @@
+{
+  "templateId": "leaping-cover",
+  "title": "腾空跳跃封面",
+  "entryId": "action",
+  "status": "master-candidate-pending-user-approval",
+  "subject": "border-collie",
+  "breed": "边境牧羊犬",
+  "revision": {
+    "version": "v07",
+    "supersedes": "leaping-cover_border-collie_9x16_v06.png",
+    "reviewFinding": "v06 的软萌方向成立，但毛发笔触仍不够碎密凌乱，单笔微边缘和局部反差偏软，背景色块没有像原效果图一样紧贴主体爆发。",
+    "scope": "dense-fragmented-fur-local-contrast-explosive-background-full-regeneration"
+  },
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-soft-impressionist-effect-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/223c5d78-2ba2-49ff-b35e-8c247fd53b20.jpg",
+      "sha256": "ee04f9b8c5a48fe8ad768ec5d51fc5463093f437bf697899d1ee7821e6151a51"
+    },
+    {
+      "role": "pet-identity-only-reference",
+      "path": "apps/website/public/assets/work-border.jpg",
+      "sha256": "8862d1dc48584f73309eac0890afb3367759dd131c681de970976b52a561fc50"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: style-transfer with pet identity preservation. Create a vertical 9:16 soft impressionistic digital-painting pet action cover at exactly 720x1280 pixels from exactly two input images. Image 1 is the authoritative effect, composition, expression and style reference. Preserve its front-facing joyful leap, two large soft foreground paws, compact airborne body, completely closed happy crescent eyes, gentle open smile, small rounded nose, turquoise atmosphere, magenta-purple lower field, orange-yellow accents, loose colour blocks, light splashes and airy visual rhythm. Remove only its platform watermark and account ID. Keep the overall medium soft, fluffy impressionistic digital painting, but make the individual paint marks much more visible and energetic. Preserve strong fluffy volume; do not turn the pet into hard-edged graphic art. Render the fur with dense short broken brush strokes, chaotic fragmented fur strokes, highly textured tiny irregular marks and energetic short multi-directional paint dabs. Pack these varied fragments densely across the face, ears, cheeks, chest, legs and paws. The marks must be much shorter, denser, less uniform and less orderly than smooth groomed fur. Keep the overall furry silhouette soft and broken while each small interior stroke remains readable. Increase local micro-contrast inside the fur painting: high local contrast on brush strokes, crisp edge definition on individual fur strokes, sharp micro-details in the paint marks and defined stroke edges. Apply this crispness only to the tiny paint marks and nearby colour transitions, never as a hard continuous outer contour or rigid anatomical structure. Make the abstract background far more explosive and tightly wrapped around the dog. Bold pure cyan, turquoise, orange, magenta, purple and yellow strokes must collide immediately around the ears, cheeks, torso and paws, with energetic splashes radiating from the airborne body. Increase warm-cool colour conflict and saturation while keeping the dog clearly readable. Keep a cute slightly exaggerated contemporary face with rounded cheeks, a short plush muzzle, youthful proportions and reduced realistic anatomy. Retain soft transitions at the large-form level, but avoid soft low-contrast treatment of the individual paint marks. Give the Border Collie an exceptionally soft lovable face. Both eyes are fully closed into round, soft upward smile curves buried slightly in fluffy facial fur; no eyeballs are visible. Keep the brow relaxed. Make the muzzle shorter, fuller and rounder than a realistic Border Collie. Make the nose small, softly painted and low-contrast. Keep the mouth open in a gentle happy smile with a bright coral tongue, tiny simplified teeth and naturally lifted mouth corners, never a realistic canine gape. Make the black-and-white facial coat feel like airy cotton built from dense, chaotic, broken dark navy, charcoal, cream and warm-grey dabs. The white blaze, cheeks and chest should carry plentiful bright broken highlights without becoming smooth, solid or heavy. Image 2 is identity-only. Preserve its breed, coat colour blocks, distinctive markings, eye colour and recognisable proportions, but do not copy its photographic lighting, realistic hair strands, lens detail, surface texture or anatomical hardness. Reinterpret every identity feature through Image 1's soft impressionistic digital-painting language. Keep one healthy, youthful, rounded and instantly lovable pet with correct limbs and no fused anatomy. Preserve from Image 2 the narrow white facial blaze, white muzzle and chest, black coat blocks, warm-brown eye identity even though the eyes are closed, black nose and semi-upright ears. Keep all four limbs readable but soften their structural definition beneath fluffy fur. Avoid smooth blended fur, long flowing strokes, soft low-contrast brushwork, uniform fur texture, sparse orderly marks, muted background colours, soft indistinct edges on every paint mark, hard outer outlines, flat hard brushes, rigid structured fur, thick impasto, palette-knife ridges, photorealistic anatomy, 3D rendering, text, logo, platform mark, watermark or signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "prechecked-pending-user-approval",
+    "checks": {
+      "petIdentity": "pass",
+      "cuteness": "pass",
+      "effectComposition": "pass",
+      "denseFragmentedFur": "pass",
+      "strokeLocalContrast": "pass",
+      "explosiveBackground": "pass",
+      "softFluffySilhouette": "pass",
+      "anatomy": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [
+      "黑白边牧身份、窄白鼻梁、白口鼻和半立耳保持稳定；闭眼甜笑与短圆口鼻维持年轻可爱。",
+      "面部、耳朵、胸口和四肢均由更碎、更密、方向多变的短笔触构成，毛发不再顺滑或均匀。",
+      "单笔边缘与相邻色块的微反差明显提高，但没有形成连续硬轮廓，整体毛量和蓬松体积仍然成立。",
+      "青蓝、橙黄、洋红和紫色笔触紧贴耳朵、身体与前爪爆发，背景色彩冲突和动势较 v06 明显增强。",
+      "腾空动作、前景双爪与闭眼笑脸完整，无异常肢体、文字、水印或平台标识。"
+    ],
+    "finalApproval": "pending-user"
+  },
+  "generatedAt": "2026-08-13T15:26:14.121Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/leaping-cover_border-collie_9x16_v07.png",
+    "sha256": "a767411bd2c9a92f4486004383e56a010d4d4c23d870232698379929104636da"
+  }
+}

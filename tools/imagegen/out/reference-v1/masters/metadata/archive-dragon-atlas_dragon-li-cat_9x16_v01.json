@@ -1,0 +1,94 @@
+{
+  "templateId": "archive-dragon-atlas",
+  "entryId": "archive",
+  "title": "本宠龙纹图鉴",
+  "sourceEffectFile": "apps/website/public/assets/example/12.png",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/12.png",
+      "sha256": "38b35bc7bf796bc00831174ec992fcc65b74c4abcd556f5fdc4023718bc5238a"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "dragon-li-cat",
+      "species": "cat",
+      "breed": "adult Chinese Dragon Li tabby cat",
+      "path": "apps/website/public/assets/avatar-dragonli.jpg",
+      "sha256": "0f403599969b57f32aa314cf474ce4d57d28f48683e16ae9a032d73b94079732"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult Chinese Dragon Li tabby cat with brown tabby coat, clear forehead stripes, warm eyes, upright ears, broad muzzle and healthy adult proportions. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the parchment atlas, central species portrait, ability bars and bone/scale inset structure, but rewrite all facts as clearly fictional owner-entered traits. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Edit the first attached image using the second attached image as the sole identity reference for the main subject. Create an exact vertical 9:16 poster composition at 720x1280 pixels, preserving the first image’s layout, parchment atlas style, framing, crop, perspective, central subject placement, surrounding diagram blocks, ornamental borders, aged paper texture, inked labels, bar charts, inset panels, and overall visual hierarchy. Replace the original dragon/creature subject with one coherent adult Chinese Dragon Li tabby cat identity from the second reference: brown tabby coat, clear forehead stripes, warm eyes, upright ears, broad muzzle, healthy adult proportions, friendly and appealing expression, rendered fully in the poster’s illustrated visual language (not photographic). Keep the same pose, pose energy, gaze direction, lighting mood, composition, and dramatic action feel from the first image, but with correct cat anatomy and no extra limbs, paws, ears, eyes, or duplicate subjects.\n\nPreserve the parchment atlas page structure, central species portrait area, ability bars, skull/bone-style inset structure, scale-pattern boxes, and other diagram blocks, but rewrite all factual text as clearly fictional owner-entered traits for a cat. Replace any known people, teams, brands, platform UI, watermarks, or copyrighted names with short original pet-safe wording while preserving the same text block sizes and visual hierarchy. Keep all other distinctive props, landmarks, text placement, labels, and decorative elements unless a rights-safe replacement is required. Do not redesign the page, do not beautify or clean the background, do not change the scene beyond the subject identity and the minimal anatomy/contact-boundary corrections needed for a cat. No logos, no signatures, no runtime exposure text. Make the final image look like a complete finished master poster, consistent and coherent throughout.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/expansion/candidates/archive-dragon-atlas_dragon-li-cat_9x16_v01.png",
+    "sha256": "b160c848c11d4e21fa2528ecc2e1e1f35d2781f57ff52d9582734ee66a02419f"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-20T12:00:00+08:00"
+  },
+  "generatedAt": "2026-08-17T16:13:15.441Z",
+  "version": "v01",
+  "candidatePath": "tools/imagegen/out/reference-v1/expansion/candidates/archive-dragon-atlas_dragon-li-cat_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/archive-dragon-atlas_dragon-li-cat_9x16_v01.webp",
+  "masterSha256": "fbbbc6fbc8ccccb3cf5a87e4fb6d335b6c4053c6f9dbac88d7430d04fd1fae43",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-20T12:00:00+08:00",
+    "note": "用户审阅 pending-masters-comparison 后明确表示除指定重做和删除项外，其余模板可以冻结。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/archive-dragon-atlas_dragon-li-cat_9x16_v01.webp",
+      "sha256": "fbbbc6fbc8ccccb3cf5a87e4fb6d335b6c4053c6f9dbac88d7430d04fd1fae43"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate",
+      "unapproved-candidate"
+    ]
+  },
+  "qualityBaseline": {
+    "required": [
+      "Keep the parchment atlas, central species portrait, ability bars and bone/scale inset structure, but rewrite all facts as clearly fictional owner-entered traits.",
+      "exact 720x1280 portrait output",
+      "same approved composition, action, expression, lighting, palette, medium and text hierarchy"
+    ],
+    "reject": [
+      "scene redesign or missing distinctive layout details",
+      "juvenilized, malformed, duplicated or inconsistent pet anatomy",
+      "logo, platform UI, account ID, watermark or signature"
+    ]
+  }
+}

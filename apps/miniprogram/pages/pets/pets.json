@@ -1,0 +1,14 @@
+{
+  "navigationBarTitleText": "宠物档案",
+  "usingComponents": {
+    "t-card": "../../components/card/index",
+    "t-button": "../../components/button/index",
+    "t-field": "../../components/field/index",
+    "t-tag": "../../components/tag/index",
+    "t-notice": "../../components/notice/index",
+    "t-empty": "../../components/empty/index",
+    "t-popup": "../../components/popup/index",
+    "t-dialog": "../../components/dialog/index",
+    "t-skeleton": "../../components/skeleton/index"
+  }
+}

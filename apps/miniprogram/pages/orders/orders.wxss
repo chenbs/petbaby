@@ -1,0 +1,21 @@
+.block-gap {
+  display: block;
+  margin-top: var(--space-4);
+}
+
+.list {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.order-main {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.order-amount {
+  color: var(--text-primary);
+  font-size: var(--font-h3);
+  font-weight: 700;
+}

@@ -1,0 +1,5 @@
+node_modules/
+preview-qrcode.png
+config.local.js
+project.private.config.json
+private.*.key

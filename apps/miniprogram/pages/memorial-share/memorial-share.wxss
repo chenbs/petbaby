@@ -1,0 +1,79 @@
+/*
+ * 访客阅读页按 F（杂志封面）改造：整页没有圆角卡片、没有阴影，
+ * 质感全部由排版纪律承担 —— 宽版心、极端字重对比、满版出血图、细线收口。
+ *
+ * 版心用 --page-x-wide（48rpx）而非原来的 calc(--page-padding * 1.5)：
+ * 后者在四套主题下得到 48/54/48/60 四个值，跨主题对不齐，
+ * 而 F 的留白本身就是主要材料，必须是确定值。
+ */
+.page-read {
+  padding-right: var(--page-x-wide);
+  padding-left: var(--page-x-wide);
+}
+
+/* 期数式标识：大字距小字号 */
+.share-kicker {
+  display: block;
+  color: var(--text-secondary);
+  font-size: var(--eyebrow-size);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-cover);
+}
+
+.share-title {
+  margin: var(--space-4) 0 var(--space-3);
+  color: var(--text-primary);
+  font-size: var(--font-display);
+  font-weight: var(--fw-black);
+  letter-spacing: var(--ls-tight);
+  line-height: var(--lh-display);
+}
+
+/* 副题与标题拉开字重差；300 若在安卓回退到 400，仍有次级色兜底 */
+.share-pet {
+  display: block;
+  color: var(--text-secondary);
+  font-size: var(--font-h3);
+  font-weight: var(--fw-light);
+  letter-spacing: var(--ls-tight);
+}
+
+.share-rule {
+  height: 2rpx;
+  margin-top: var(--space-5);
+  background: var(--divider);
+}
+
+/*
+ * 照片满版出血：用负外边距抵掉版心，图片顶到屏幕两侧。
+ * 去掉描边与圆角 —— F 的规则是「整屏没有一个圆角卡片、没有一个阴影」，
+ * 纪念页尤其不该给遗照套一个 UI 边框。
+ */
+.photo-flow {
+  display: grid;
+  margin: var(--gap-section) calc(-1 * var(--page-x-wide));
+  gap: var(--gap-group);
+}
+
+.photo {
+  display: block;
+  width: 100%;
+  background: var(--skeleton-base);
+}
+
+/* 正文行高比常规更松，长文阅读优先 */
+.story {
+  display: block;
+  margin: var(--gap-section) 0;
+  color: var(--text-primary);
+  font-size: var(--font-h3);
+  font-weight: var(--fw-normal);
+  line-height: var(--lh-body);
+  white-space: pre-wrap;
+}
+
+.closing {
+  display: block;
+  padding-top: var(--space-5);
+  border-top: 2rpx solid var(--divider);
+}

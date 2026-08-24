@@ -1,0 +1,137 @@
+@import "../shared.wxss";
+
+.grid {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.tile {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1;
+  border: 4rpx solid transparent;
+  /* 网格瓦片取固定中档圆角，不随主题漂移，保证同屏多图对齐（方案 2.2） */
+  border-radius: var(--radius-md);
+  /* 图片未加载时的占位底色，避免白块闪烁 */
+  background: var(--skeleton-base);
+  transition: transform var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+
+.tile-image {
+  width: 100%;
+  height: 100%;
+}
+
+.tile-picked {
+  border-color: var(--primary);
+}
+
+.tile-drag {
+  border-color: var(--secondary);
+  transform: scale(.94);
+}
+
+.tile-hover.anim-bounce { transform: scale(.95); }
+.tile-hover.anim-fade { opacity: .86; }
+.tile-hover.anim-glow { box-shadow: inset 0 0 40rpx var(--ai-glow); }
+.tile-hover.anim-neon { box-shadow: inset 0 0 0 2rpx var(--primary); }
+
+.tile-add {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  border: 4rpx dashed var(--border);
+  color: var(--text-secondary);
+}
+
+.add-mark {
+  font-size: var(--font-h2);
+  line-height: 1;
+}
+
+.add-text {
+  font-size: var(--small-size);
+}
+
+.badge {
+  position: absolute;
+  right: var(--space-1);
+  bottom: var(--space-1);
+  display: flex;
+  min-width: 40rpx;
+  height: 40rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  background: var(--primary);
+  color: var(--button-primary-text);
+  font-size: var(--eyebrow-size);
+  font-weight: var(--fw-bold);
+}
+
+.checkbox {
+  position: absolute;
+  top: var(--space-1);
+  right: var(--space-1);
+  width: 40rpx;
+  height: 40rpx;
+  border: 3rpx solid var(--card-background);
+  border-radius: 50%;
+  background: var(--mask);
+}
+
+.checkbox-on {
+  border-color: var(--primary);
+  background: var(--primary);
+}
+
+/*
+ * 图标按钮压在缩略图上。原先是 --card-background 压 --mask，两者都由主题明暗派生
+ * 且同向变化：暗色皮肤下遮罩是浅的、图标也是浅的，glass 两极都不足 1.4:1。
+ * 改用按钮主色配其反白字 —— 这一对本就是为「底色 + 其上文字」定义的，
+ * 四套皮肤都已保证 ≥4.5:1，且与 .badge / .checkbox-on 的选中态语言一致。
+ */
+.remove,
+.zoom {
+  position: absolute;
+  display: flex;
+  width: 48rpx;
+  height: 48rpx;
+  min-width: 48rpx;
+  min-height: 48rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--button-primary);
+  color: var(--button-primary-text);
+  font-size: var(--small-size);
+}
+
+.remove {
+  top: var(--space-1);
+  right: var(--space-1);
+}
+
+.zoom {
+  top: var(--space-1);
+  left: var(--space-1);
+}
+
+/*
+ * --secondary 是装饰强调色，各皮肤明暗不一（cute 亮黄 / dark 中蓝），
+ * 压 --text-primary 只有 cute 达标，其余三套 1.58–3.65:1。
+ * 与 .remove/.zoom 同样改用按钮主色 + 反白字这一「保证成对」的组合。
+ */
+.drag-hint {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: var(--space-1);
+  background: var(--button-primary);
+  color: var(--button-primary-text);
+  font-size: var(--eyebrow-size);
+  text-align: center;
+}

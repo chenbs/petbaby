@@ -1,0 +1,48 @@
+{
+  "jobId": "pet-barista_dog_golden-retriever-dog",
+  "templateId": "pet-barista",
+  "status": "generated-pending-joint-approval",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "sourceMaster": {
+    "role": "self-owned-frozen-master",
+    "path": "tools/imagegen/out/reference-v1/masters/pet-barista_shiba_9x16_v05.webp",
+    "sha256": "c35b8c8b79e3290bee3a377aba4e438aa4cbb23e3e4c2abd8455a17ef23deecd"
+  },
+  "petIdentityReference": {
+    "role": "new-pet-identity-reference",
+    "identityId": "golden-retriever-dog",
+    "species": "dog",
+    "breed": "Golden Retriever",
+    "path": "tools/imagegen/out/source/dog-golden.jpg",
+    "sha256": "1b6348ce4f6cd1d12f4c93d5f2a8a5c21847e0ce9bc43e4326c1ee89f7a89eef"
+  },
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving template transfer. Create a vertical 9:16 high-fidelity pet replacement from exactly two input images, composed for an exact final size of 720x1280 pixels. Image 1 is a frozen self-owned production master created previously by our team. It is the sole composition, scene, styling and layout reference for this request. No third-party effect reference is included at runtime. Image 2 is the sole pet identity reference. Preserve Image 1's the cosy coffee-shop layout, left window, warm side lighting, wooden shelves, chalkboard menu, coffee cup with latte art, cookies, bow tie, apron and clear tabletop-to-subject relationship. Do not redesign the environment or turn it into a generic scene. Allow an optional scene-change budget of approximately 5% to 20%. You may naturally adjust only secondary scenery, small decorations, context-equivalent props, materials or colours when the adjustment clearly fits the current scene. Every adjustment must preserve the same semantics, perspective, scale, lighting and visual style. If no replacement is clearly better, keep the master unchanged. Never force changes merely to meet a percentage. Remove every depiction of the master pet from Image 1 and replace it with the exact Golden Retriever from Image 2. Preserve the warm golden coat, floppy feathered ears, dark friendly eyes, broad soft muzzle and recognisable Golden Retriever build. Image 2 controls pet identity and overrides the sample pet shown in the master. The replacement dog must look youthful, healthy, rounded and irresistibly cute at first glance, with soft full cheeks, friendly bright eyes and appealing proportions for a young audience. Keep the recognisable breed anatomy. Never make the pet skinny, elongated, angular, gaunt, stern, aggressive, strange, elderly-looking or uncanny. Keep one front paw resting naturally beside the coffee setup and retain a clear, calm barista story. Keep the apron and bow tie. They may remain unchanged, change colour or receive minor tailoring for the new pet. Keep the chalkboard heading 'COFFEE' and its readable menu items 'AMERICANO', 'LATTE', 'CAPPUCCINO', 'MOCHA'. Replace only the apron identity wording with the exact wording supplied for this job. The bottle label may remain 'COFFEE'. Omit optional tiny copy rather than generating gibberish. The apron wording for this job must read exactly 'GOLDEN BREW'. Keep exactly one pet identity throughout the image and no unrelated animal. Correct anatomy only: no duplicate or fused limbs, extra ears, warped eyes, broken clothing boundaries or human hands. Preserve rather than delete meaningful clothing, landmarks, distinctive props and text layout from the master. No platform UI, brand logo, known IP, watermark or signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "pre-reviewed-pending-user-approval",
+    "checks": {
+      "petIdentity": "pass",
+      "cuteness": "pass",
+      "masterComposition": "pass",
+      "anatomy": "pass",
+      "text": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [],
+    "preReviewedAt": "2026-08-13T02:52:16.376Z",
+    "finalApproval": "pending-user"
+  },
+  "generatedAt": "2026-08-13T02:01:55.599Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation/pet-barista_dog_golden-retriever-dog_9x16_v01.png",
+    "sha256": "b4e17f32a8c24343b74ac1a3069b5a8a9a0fab293adda7d64179a9a795e74f1f"
+  }
+}

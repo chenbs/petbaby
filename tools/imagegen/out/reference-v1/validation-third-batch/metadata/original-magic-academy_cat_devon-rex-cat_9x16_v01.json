@@ -1,0 +1,65 @@
+{
+  "jobId": "original-magic-academy_cat_devon-rex-cat",
+  "templateId": "original-magic-academy",
+  "title": "原创魔法学院",
+  "status": "superseded-by-pending-revision",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/original-magic-academy_dragon-li-cat_9x16_v01.png",
+      "sha256": "6dfd8f50981e537748f18bd5b4ccdfaa8dfceff03338ab54055b8cc1ab117d4e"
+    },
+    {
+      "role": "new-pet-identity-reference",
+      "identityId": "devon-rex-cat",
+      "species": "cat",
+      "breed": "adult grey-and-white Devon Rex cat",
+      "path": "apps/website/public/assets/hero-devon.jpg",
+      "sha256": "a7df98cb56bde09263defd3a2a174f9c8f14875729c5ec49818cdc3787453eb2"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving template transfer. Produce one exact 720x1280 vertical 9:16 runtime validation image from exactly two input images. Image 1 is our frozen self-owned production master. It is the sole authority for every non-identity detail: scene, composition, crop, camera, pose, action, expression, gaze, lighting, palette, rendering medium, brushwork, clothing, text, props and all physical contacts. No third-party effect reference is included. Image 2 is the sole new-pet identity reference. Change only the pet identity. Remove every depiction and every residual feature of the master pet, then replace it with the new pet from Image 2. Scene-change budget is 0%. Do not redesign, reinterpret, clean up, recolour, restyle, simplify, move, delete or add anything in the master scene. Keep the exact warm stone magic classroom, arched leaded window, dark wood potion counter, steaming black cauldron, potion bottles, seated lower-left composition, black robe, green striped scarf, silver trim, floor reflection and original four-point-star-and-paw academy crest. Replicate the master's complete seated three-quarter pose, front-paw placement, tail silhouette, direct calm gaze, facial expression and adult body scale. Refit only the robe openings around the new ears, neck, shoulders and forelegs. Keep the crest original and unchanged; do not introduce any known school name, crest, letter or franchise symbol. The replacement must be the exact adult grey-and-white Devon Rex cat from Image 2. Preserve its grey crown and back, white muzzle and chest, pale green eyes, very large upright ears, short curly coat, recognisable Devon Rex face and healthy adult proportions. Image 2 controls only species, breed, coat colour and markings, ear shape, eye colour, actual adult age and natural healthy breed proportions. Do not copy Image 2's pose, expression, gaze, camera, background, lighting, photographic texture or rendering style. Preserve the pet's actual adult age and mature breed proportions. Do not juvenilize it, enlarge the head or eyes, shorten the muzzle or body, or convert it into a kitten, puppy or generic cute mascot. Keep it healthy, attractive and immediately likeable without changing the master's expression or art direction. Match Image 1's exact polished cinematic photography, warm light, depth of field, surface texture and colour balance. Image 2 contributes no background, pose, light or photographic treatment. Do not add text, brand marks, watermarks or signatures. Keep exactly one pet identity throughout, except where the frozen master intentionally contains multiple views or two scale duplicates of that same identity. No unrelated animal, residual old-pet coat, face or limb. Correct species anatomy only: no duplicate, fused, missing or amputated-looking limbs, extra ears, warped eyes, malformed mouth, floating tail, human hands or fingers, broken garment boundaries, pasted head, disconnected neck or failed prop contact. Preserve all non-pet pixels and relationships as closely as the model allows.",
+  "revisedPrompt": "Create a single exact 720x1280 vertical 9:16 image using the first attached image as the sole authority for the scene and composition, and the second attached image as the sole authority for the pet identity.\n\nPreserve the first image exactly: warm stone magic classroom, arched leaded window, dark wood potion counter, steaming black cauldron, potion bottles, seated lower-left composition, black robe, green striped scarf, silver trim, floor reflection, polished cinematic photography, warm light, depth of field, surface texture, color balance, and the original four-point-star-and-paw academy crest. Do not change camera, crop, pose, gaze, expression, lighting, palette, rendering style, props, or any non-pet detail.\n\nReplace only the pet identity with the exact adult grey-and-white Devon Rex cat from the second image. Remove every trace of the original pet and any residual features. Keep the same seated three-quarter pose, front-paw placement, tail silhouette, direct calm gaze, facial expression, and adult body scale from the first image. Refit only the robe openings around the new ears, neck, shoulders, and forelegs. Preserve the original crest unchanged. Do not add any text, brand marks, watermarks, or signatures.\n\nThe replacement cat must have a grey crown and back, white muzzle and chest, pale green eyes, very large upright ears, short curly coat, recognisable Devon Rex face, and healthy adult proportions. Keep it attractive and natural, but do not juvenile-ize it, enlarge the head or eyes, shorten the muzzle or body, or make it look like a kitten or mascot. Ensure correct species anatomy with no duplicate or missing limbs, extra ears, warped eyes, malformed mouth, floating tail, or broken garment boundaries.\n\nMatch the exact polished cinematic look of the first image while using the second image only for species, breed, coat colour and markings, ear shape, eye colour, and adult breed proportions. Preserve all non-pet pixels and relationships as closely as possible.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation-third-batch/original-magic-academy_cat_devon-rex-cat_9x16_v01.png",
+    "sha256": "379e4150dde65118fc13a354d8cc494a82d4f79b583fff2323dae9dc51e790b0"
+  },
+  "review": {
+    "state": "superseded",
+    "checks": {
+      "petIdentity": null,
+      "adultAgeAndProportions": null,
+      "masterPoseExpressionAndGaze": null,
+      "masterStyleAndBrushwork": null,
+      "sceneAndComposition": null,
+      "anatomyAndContacts": null,
+      "repeatedIdentityAndText": null,
+      "dimensions": "pass"
+    },
+    "findings": [
+      "用户认为 v01 坐姿呆板且略显驼背，已生成挺拔坐姿 v02 待审批。"
+    ],
+    "finalApproval": "superseded",
+    "reviewedAt": "2026-08-17T13:33:28+08:00"
+  },
+  "generatedAt": "2026-08-17T02:02:22.862Z",
+  "supersededBy": "tools/imagegen/out/reference-v1/validation-third-batch/original-magic-academy_cat_devon-rex-cat_9x16_v02.png"
+}

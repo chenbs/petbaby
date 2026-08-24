@@ -1,0 +1,63 @@
+{
+  "templateId": "06",
+  "status": "revision-required",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "mode": "subject-only-masked-replacement-via-identity-bridge",
+  "inputs": [
+    {
+      "role": "immutable-effect-base",
+      "path": "tools/imagegen/out/reference-v1/reset/bases/color-painted-portrait_dragon-li-cat_9x16_base.png",
+      "sha256": "2ca502388cf693438c98fee6d4d064fa175da93963cc474eae0be0da53dcd0e5"
+    },
+    {
+      "role": "effect-face-and-brushwork-detail",
+      "path": "tools/imagegen/out/reference-v1/reset/bases/color-painted-portrait_dragon-li-cat_9x16_detail.png",
+      "sha256": "e22b0e006a7887b343ba7125fd138b7e647f1bf62cd05af3ede80cc6d84d74d9"
+    },
+    {
+      "role": "non-photographic-pet-identity-structure-only",
+      "path": "tools/imagegen/out/reference-v1/reset/identity-bridges/color-painted-portrait_dragon-li-cat_identity-bridge-v01.png",
+      "sha256": "d153edf91948a1b5edcdd1a867655184966b87cb728e09035c73dfe23005c281",
+      "derivedFrom": {
+        "path": "apps/website/public/assets/avatar-dragonli.jpg",
+        "sha256": "0f403599969b57f32aa314cf474ce4d57d28f48683e16ae9a032d73b94079732"
+      }
+    },
+    {
+      "role": "edit-mask",
+      "path": "tools/imagegen/out/reference-v1/reset/masks/color-painted-portrait_dragon-li-cat_9x16_mask.png",
+      "sha256": "a3247060227b25208f9472cf0259b9ba1db564b11a62d52f64ceb88fbb7b4310"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": true,
+  "inputFidelity": "provider-default",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Task: precise subject-only identity replacement inside the supplied mask, not image redesign and not general style transfer. Image 1 is the immutable edit target and the sole authority for the complete canvas: crop, subject scale and placement, seated pose, body angle, head tilt, upward gaze, gentle sweet expression, orange-yellow-teal background, every background paint mark, palette, saturation, contrast, lighting, edge rhythm and overall finish. Preserve all of it exactly except the animal's species and identity. Image 2 is the absolute authority for how every part of the replacement face and fur must be painted. Copy its simplified hand-painted construction: broad confident dry-brush marks, clean layered colour shapes, sparse broken edges, soft illustrated cheek and muzzle, large dark painted eye shapes with small graphic highlights, a small rounded painted nose and a gentle curved mouth. The new cat's face, eyes, nose, mouth, ears and whisker area must use this same painted language. The face must not read as a photograph placed inside a painting. Image 3 is a deliberately non-photographic identity structure guide. Use it only for adult feline anatomy, Dragon Li ear and face shape, natural adult proportions, brown tabby colours and recognisable stripe placement. Do not copy its pose, background, framing, expression or rendering. Do not infer or restore photographic detail that is absent from Image 3. Replace the original white dog with exactly one adult Dragon Li tabby cat while transferring Image 1's exact pose, head angle, gaze, expression, silhouette occupancy and body gesture onto the cat. Adapt only the anatomy necessary to read as an adult cat. Preserve mature proportions; do not make a kitten and do not enlarge the head, eyes or cheeks. Style wins over literal identity microdetail whenever they conflict. Represent tabby markings as broad painterly strokes, never individual fur strands. Use only a few short painted whisker suggestions, never photographic whiskers. No realistic iris texture, reflective eyeball, wet nose, detailed hair follicles, fine fur direction, photographic facial anatomy, 3D volume rendering, smooth airbrushing or pasted mixed-media face. Change no background, scene, composition, subject placement, palette, saturation or brushwork. Remove only the platform watermark and account ID already covered by the mask. No new text, objects, accessories, extra animal or anatomy changes.",
+  "revisedPrompt": null,
+  "backgroundLock": {
+    "method": "lingsuan-transparent-edit-mask",
+    "exactPixelLock": false,
+    "localHardComposite": false,
+    "acceptance": "No semantic, compositional, palette or scene-content change outside the replacement subject."
+  },
+  "review": {
+    "state": "revision-required-by-user",
+    "finalApproval": "revision-required",
+    "reviewedAt": "2026-08-14T10:30:17+08:00",
+    "findings": [
+      "The face uses the intended hand-painted medium but is not visually appealing enough for the template baseline.",
+      "Black circular eyes, uneven gaze, a pinched nose and muzzle, a rigid W-shaped mouth, oversized upright ears and heavy eye-area markings make the expression startled, severe and unattractive.",
+      "The v01 identity bridge removed photographic detail but leaked its stern facial geometry into the final candidate."
+    ]
+  },
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/reset/candidates/color-painted-portrait_dragon-li-cat_9x16_reset-v03.png",
+    "sha256": "0436d96bfe573e86678c0204001b219fa0af38687f3826c407a2b2455b957e28"
+  },
+  "generatedAt": "2026-08-14T02:19:04.232Z",
+  "supersededBy": "tools/imagegen/out/reference-v1/reset/candidates/color-painted-portrait_dragon-li-cat_9x16_reset-v04.png"
+}

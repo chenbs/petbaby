@@ -1,0 +1,81 @@
+{
+  "templateId": "animal-robot-poster",
+  "entryId": "career",
+  "title": "机器宠物活动海报",
+  "sourceEffectFile": "apps/website/public/assets/example/animal/jimeng-2026-08-08-9329-英文活动海报，软萌机器猫，搭配超大码板鞋；伸手朝向镜头，鞋子快冲出镜头（极具冲击....png",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-08-08-9329-英文活动海报，软萌机器猫，搭配超大码板鞋；伸手朝向镜头，鞋子快冲出镜头（极具冲击....png",
+      "sha256": "961dde640a54a5c4e62595499a7aaa14fd9af4a96fb26c09f4c7a700cbde2f65"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "blue-british-cat",
+      "species": "cat",
+      "breed": "adult blue British Shorthair cat",
+      "path": "tools/imagegen/out/source/cat-british.jpg",
+      "sha256": "ddbdfb39b6cb3c6dddbfdd01555cd2fea299cfa927f76a1e7248d581152e0364"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a one-time third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every designated original animal, human-like creature or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult blue British Shorthair cat with solid blue-grey coat, round broad face, amber eyes, small upright ears, plush dense fur, thick tail and sturdy adult body. Render the face, fur and anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration or turn a stylized scene into a realistic photo. Keep the pet appealing and healthy, never skinny, gaunt, uncanny, aggressive or puppy-like. Keep the poster text blocks, oversized sneaker, reaching paw, event composition and playful impact; replace known character or event wording with original pet-safe wording. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character or artist names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Edit the provided poster image into a 9:16 vertical composition at 720x1280 pixels, preserving the original scene layout, camera angle, crop, perspective, action, pose, lighting, palette, props, text block placement, urban festival environment, oversized sneaker, reaching paw, dust and debris, and overall energetic impact. Replace the original cartoon character subject with a single coherent adult blue British Shorthair cat identity matching the supplied cat reference: solid blue-grey coat, round broad face, amber eyes, small upright ears, plush dense fur, thick tail, sturdy adult proportions, healthy appealing appearance. Keep the cat rendered in the same stylized visual language as the poster art, not photorealistic. Maintain the same central jumping/popping composition and exaggerated sneaker foreground. Preserve all meaningful background landmarks, booths, street, buildings, lighting, and visual relationships. Replace the event wording and any branded/copyrighted text with original pet-safe wording while keeping the same bold text-block hierarchy and visual style; use something like 'CATALYST STREET FEST' and 'URBAN STREET VIBE' in the same positions, with clean original lettering and no logos or watermarks. Remove or replace any platform UI, branding, copyrighted names, or signatures with neutral original text. Ensure correct cat anatomy only: no extra limbs, no human hands, no duplicate pets, no floating head, no broken joints, no pasted photographic face. Keep the playful, poster-like impact and preserve the exact composition feel of the source image.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-robot-poster_blue-british-cat_9x16_v01.png",
+    "sha256": "7846af050bfdd093ef243c713906f1409b0ab9b9afa6b8ac48c3c8b7a597c344"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-18T01:00:00+08:00"
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-17T16:37:44.536Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/animal/candidates/animal-robot-poster_blue-british-cat_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/animal-robot-poster_blue-british-cat_9x16_v01.png",
+  "masterSha256": "7846af050bfdd093ef243c713906f1409b0ab9b9afa6b8ac48c3c8b7a597c344",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-18T01:00:00+08:00",
+    "note": "用户确认本批次除七个待重做模板外，其余动物效果候选均通过并保存为母版。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-robot-poster_blue-british-cat_9x16_v01.png",
+      "sha256": "7846af050bfdd093ef243c713906f1409b0ab9b9afa6b8ac48c3c8b7a597c344"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "unapproved-candidate"
+    ]
+  }
+}

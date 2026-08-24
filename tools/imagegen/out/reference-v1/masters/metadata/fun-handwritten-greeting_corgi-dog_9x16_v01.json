@@ -1,0 +1,94 @@
+{
+  "templateId": "fun-handwritten-greeting",
+  "entryId": "fun",
+  "title": "手写问候头像",
+  "sourceEffectFile": "apps/website/public/assets/example/fc5b8d09-bd2a-497e-a61e-b503b478166e.jpg",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/fc5b8d09-bd2a-497e-a61e-b503b478166e.jpg",
+      "sha256": "ca64b9a99b21f45b727b144d227fe0a653b63a565e5dd36236986b02d8c2f9dd"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "corgi-dog",
+      "species": "dog",
+      "breed": "adult Pembroke Welsh Corgi",
+      "path": "tools/imagegen/out/source/dog-corgi.jpg",
+      "sha256": "750c43038e21f8601be8b903889100c6b165d2b35cea3b7c0b55c0edce7ca9c2"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult Pembroke Welsh Corgi with tan-and-white coat, broad white blaze, white muzzle and chest, dark round eyes, upright ears, short legs and sturdy adult body. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the upward-looking playful illustration, handwritten greeting and small portrait inset; replace the dog identity only. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a single finished vertical 9:16 illustration at exactly 720x1280 pixels using the provided Image 1 as the composition/style/layout reference and Image 2 as the sole identity reference. Preserve Image 1 exactly: same crop, camera angle, perspective, pose, expression, gaze direction, lighting, palette, medium, line quality, brushwork, texture, handwritten greeting placement, inset portrait placement, props, and all background relationships. Replace every animal/character subject in Image 1 with one coherent adult Pembroke Welsh Corgi identity from Image 2 only: tan-and-white coat, broad white blaze, white muzzle and chest, dark round eyes, upright ears, short legs, sturdy adult body. Keep the subject friendly, playful, upward-looking, and appealing, matching the transferred expression and illustration language of Image 1; do not paste a photographic face. Preserve the blue outline sticker-like inset portrait in the top-right but swap only the identity to the same adult corgi. Keep the handwritten greeting text and all non-branded visual hierarchy, but replace any platform/watermark/brand/copyrighted elements with short original pet-safe wording while keeping the same text blocks and layout. Do not redesign the background, do not beautify, do not simplify, do not change the scene except the minimal anatomy needed for correct adult corgi anatomy. No extra limbs, no duplicate pets, no human hands, no residual source subject, no puppy look, no logos or signatures.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/expansion/candidates/fun-handwritten-greeting_corgi-dog_9x16_v01.png",
+    "sha256": "07afd82113c6e6b448f309fcaee230f78da012df6f0d72a83bf8f8fe74f32fb9"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-20T12:00:00+08:00"
+  },
+  "generatedAt": "2026-08-17T16:11:39.827Z",
+  "version": "v01",
+  "candidatePath": "tools/imagegen/out/reference-v1/expansion/candidates/fun-handwritten-greeting_corgi-dog_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/fun-handwritten-greeting_corgi-dog_9x16_v01.webp",
+  "masterSha256": "5595565a16c16d45edb07fa9c4f3c6c422eb3450beef28738efa61ee4df4b806",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-20T12:00:00+08:00",
+    "note": "用户审阅 pending-masters-comparison 后明确表示除指定重做和删除项外，其余模板可以冻结。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/fun-handwritten-greeting_corgi-dog_9x16_v01.webp",
+      "sha256": "5595565a16c16d45edb07fa9c4f3c6c422eb3450beef28738efa61ee4df4b806"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate",
+      "unapproved-candidate"
+    ]
+  },
+  "qualityBaseline": {
+    "required": [
+      "Keep the upward-looking playful illustration, handwritten greeting and small portrait inset; replace the dog identity only.",
+      "exact 720x1280 portrait output",
+      "same approved composition, action, expression, lighting, palette, medium and text hierarchy"
+    ],
+    "reject": [
+      "scene redesign or missing distinctive layout details",
+      "juvenilized, malformed, duplicated or inconsistent pet anatomy",
+      "logo, platform UI, account ID, watermark or signature"
+    ]
+  }
+}

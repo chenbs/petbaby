@@ -1,0 +1,96 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+
+<view class="page page-flat">
+  <text class="eyebrow">GROWTH TIMELINE</text>
+  <view class="title">{{companion || '成长时间线'}}</view>
+  <text class="muted">按拍摄时间排，每张标出是{{anchorLabel}}后的第几天。</text>
+
+  <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
+
+  <view class="section" wx:if="{{pets.length > 1}}">
+    <t-card blur="{{blurOk}}" anim="{{animType}}">
+      <picker range="{{pets}}" range-key="name" bindchange="choosePet">
+        <t-field label="宠物" control="select" value="{{petText}}" placeholder="请选择宠物"></t-field>
+      </picker>
+    </t-card>
+  </view>
+
+  <view class="section" wx:if="{{milestones.length}}">
+    <view class="section-title">已经走过</view>
+    <view class="stones">
+      <view wx:for="{{milestones}}" wx:key="day" class="stone">
+        <view class="stone-label">{{item.label}}</view>
+        <text class="small" wx:if="{{item.date}}">{{item.date}}</text>
+      </view>
+    </view>
+  </view>
+
+  <t-skeleton wx:if="{{loading}}" type="list" count="4"></t-skeleton>
+
+  <t-empty
+    wx:elif="{{empty}}"
+    icon="photo"
+    title="还没有照片"
+    description="上传照片后，这里会按拍摄时间排成一条线。"
+    action-text="去上传照片"
+    anim="{{animType}}"
+    decor="{{decor}}"
+    bindaction="openPhotos"
+  ></t-empty>
+
+  <view wx:else class="section" wx:for="{{groups}}" wx:for-item="group" wx:key="year">
+    <view class="section-title">{{group.year}}</view>
+    <view class="line">
+      <view wx:for="{{group.items}}" wx:for-item="entry" wx:key="key" class="node">
+        <image class="node-photo" src="{{entry.photo.url}}" mode="aspectFill" lazy-load />
+        <view class="node-copy">
+          <view class="node-day">第 {{entry.day}} 天</view>
+          <text class="small">{{entry.date}}</text>
+          <!-- 没有 EXIF 的照片只有上传时间，标注出来，别把它当拍摄事实 -->
+          <text class="small" wx:if="{{entry.dateSource === 'upload'}}">按上传时间</text>
+          <t-tag wx:if="{{entry.milestone}}" tone="accent" size="mini" text="{{entry.milestone}}"></t-tag>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!--
+    叙事年度视频入口（改造项 E5）。`POST /api/annual-films` 早已建成
+    但**零端上调用方** —— 已付出的开发成本拿不到任何用户价值。
+
+    挂在时间线页尾而不是首页：这条片子的素材就是这一页的照片，
+    用户看完一整年再看到「做成一段短片」是顺的；放首页则是在他还没看
+    任何东西之前就推一个重任务（四段 filtergraph，队列并发 1）。
+
+    有照片才出现（empty 时整块隐藏）：没照片的年份服务端会以
+    ANNUAL_PHOTOS_REQUIRED 拒掉，先给按钮再报错是让用户白点一次。
+  -->
+  <view wx:if="{{!loading && !empty}}" class="section">
+    <view class="section-title">做成一段短片</view>
+    <t-card blur="{{blurOk}}" anim="{{animType}}">
+      <text class="small">把这一年的照片按时间剪成一段叙事短片，带上「第 N 天」与当年的数字。</text>
+      <view class="chips">
+        <view
+          wx:for="{{filmYears}}"
+          wx:key="*this"
+          class="chip {{filmYear === item ? 'chip-on' : ''}}"
+          hover-class="chip-hover"
+          data-year="{{item}}"
+          bindtap="chooseFilmYear"
+        >{{item}} 年</view>
+      </view>
+      <view class="chips">
+        <view
+          wx:for="{{filmDurations}}"
+          wx:key="*this"
+          class="chip {{filmDuration === item ? 'chip-on' : ''}}"
+          hover-class="chip-hover"
+          data-duration="{{item}}"
+          bindtap="chooseFilmDuration"
+        >{{item}} 秒</view>
+      </view>
+      <t-button type="ai" block anim="{{animType}}" loading="{{filmBusy}}" class="block-gap" bindtap="createFilm">生成年度短片</t-button>
+      <text wx:if="{{filmHint}}" class="hint">{{filmHint}}</text>
+    </t-card>
+  </view>
+</view>

@@ -1,0 +1,126 @@
+.block-gap {
+  display: block;
+  margin-top: var(--space-4);
+}
+
+.list {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.pet {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.pet-avatar {
+  width: 128rpx;
+  height: 128rpx;
+  flex-shrink: 0;
+  border: var(--card-border);
+  border-radius: 50%;
+  background: var(--surface);
+}
+
+.pet-avatar-blank {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-h2);
+}
+
+.pet-main {
+  display: grid;
+  flex: 1;
+  gap: var(--space-1);
+}
+
+.pet-name {
+  color: var(--text-primary);
+  font-size: var(--font-h3);
+  font-weight: 700;
+}
+
+.pet-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 2rpx solid var(--divider);
+}
+
+.avatar-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.avatar {
+  width: 160rpx;
+  height: 160rpx;
+  border: var(--card-border);
+  border-radius: 50%;
+  background: var(--surface);
+}
+
+.avatar-blank {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--title-size);
+}
+
+.foot {
+  display: flex;
+  gap: var(--space-3);
+}
+
+/* ---------- 方案 E 区块：陪伴天数 + 统计条 ---------- */
+
+/*
+ * 陪伴天数用强调色与加粗抬到信息层级前列。方案称它是「成本最低的留存钩子」：
+ * 每天都在变，且只属于这个用户。已离开的宠物由 JS 改成过去式且不再递增。
+ */
+.companion {
+  color: var(--primary);
+  font-size: var(--small-size);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-tight);
+}
+
+.stats {
+  display: grid;
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 2rpx solid var(--divider);
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* 分隔线用 border-left 而非独立元素：三列等分下 :first-child 去掉左线即可 */
+.stat {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-0);
+  border-left: 2rpx solid var(--divider);
+}
+
+.stat:first-child {
+  border-left: 0;
+}
+
+.stat-value {
+  color: var(--text-primary);
+  font-size: var(--font-h2);
+  font-weight: var(--fw-bold);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--lh-h2);
+}
+
+.stat-label {
+  color: var(--text-secondary);
+  font-size: var(--eyebrow-size);
+  letter-spacing: var(--eyebrow-tracking);
+}

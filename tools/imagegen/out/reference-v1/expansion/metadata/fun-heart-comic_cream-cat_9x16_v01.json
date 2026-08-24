@@ -1,0 +1,94 @@
+{
+  "templateId": "fun-heart-comic",
+  "entryId": "fun",
+  "title": "四格爱心漫画",
+  "sourceEffectFile": "apps/website/public/assets/example/1786369146856.png",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/1786369146856.png",
+      "sha256": "b1b499d1208a6a8e1f38c0a6bc60026836a029d0360bf5853b2d8845e6e80faa"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "cream-cat",
+      "species": "cat",
+      "breed": "adult cream long-haired cat",
+      "path": "tools/imagegen/out/source/cat-cream.jpg",
+      "sha256": "db5fc390f9cbf4f5ee0eee38850e28012a0953a98c148e7df5b354a539dab7e9"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult cream long-haired cat with pale cream long coat, soft cream points, blue eyes, pink nose, triangular ears, fluffy tail and healthy adult body. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the four-panel comic, centre heart and soft handwritten marks; use one consistent pet identity. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a final vertical 9:16 comic composition, 720x1280 pixels, using Image 1 as the exact composition/style reference and Image 2 as the sole identity reference.\n\nReplace every subject in Image 1 with one coherent adult cream long-haired cat identity from Image 2: pale cream long coat, soft cream points, blue eyes, pink nose, triangular ears, fluffy tail, healthy adult body, friendly appealing expression. Preserve the comic’s four-panel layout with the center heart frame, bold manga linework, speed lines, hand-drawn texture, and soft handwritten marks. Keep the same camera framing, crop, perspective, action, pose, and panel arrangement from Image 1. Preserve the background and scene exactly as in Image 1: no redesign, no simplification, no beautification, no background cleanup.\n\nTransfer Image 1’s visual language completely: composition, lighting, palette, brushwork, line quality, texture, and contact relationships. Only change the subject identity to the adult cream long-haired cat and make the smallest anatomy corrections needed for correct cat anatomy. Keep the cat’s expression varied across panels to match the original comic beats: surprised open-mouth, stern side-eye, blushing eyes-closed calm, and big yawning shout, all with the same adult cat identity. Keep the red check bow tie. Keep the heart-center portrait. Keep text blocks in the same positions and hierarchy, but replace any brand/person/copyrighted text with short original pet-safe lettering in the same manga style. No extra limbs, no duplicate pets, no human hands, no pasted photographic face, no uncanny features, no juvenile proportions. Render everything in Image 1’s illustrated manga style, not photorealistic.\n\nOutput only the finished image.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/expansion/candidates/fun-heart-comic_cream-cat_9x16_v01.png",
+    "sha256": "6e1f0b2d5a03d84233a290c4ee29bffda9358663822ef512f3fecf4094a2a235"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-20T12:00:00+08:00"
+  },
+  "generatedAt": "2026-08-17T16:12:09.662Z",
+  "version": "v01",
+  "candidatePath": "tools/imagegen/out/reference-v1/expansion/candidates/fun-heart-comic_cream-cat_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/fun-heart-comic_cream-cat_9x16_v01.webp",
+  "masterSha256": "5f9f66be529f6ba1f66bb6648950859683e4441fdf9273a6215b25b630d380aa",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-20T12:00:00+08:00",
+    "note": "用户审阅 pending-masters-comparison 后明确表示除指定重做和删除项外，其余模板可以冻结。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/fun-heart-comic_cream-cat_9x16_v01.webp",
+      "sha256": "5f9f66be529f6ba1f66bb6648950859683e4441fdf9273a6215b25b630d380aa"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate",
+      "unapproved-candidate"
+    ]
+  },
+  "qualityBaseline": {
+    "required": [
+      "Keep the four-panel comic, centre heart and soft handwritten marks; use one consistent pet identity.",
+      "exact 720x1280 portrait output",
+      "same approved composition, action, expression, lighting, palette, medium and text hierarchy"
+    ],
+    "reject": [
+      "scene redesign or missing distinctive layout details",
+      "juvenilized, malformed, duplicated or inconsistent pet anatomy",
+      "logo, platform UI, account ID, watermark or signature"
+    ]
+  }
+}

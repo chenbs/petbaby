@@ -1,0 +1,91 @@
+{
+  "templateId": "fun-fisheye-closeup",
+  "entryId": "fun",
+  "title": "鱼眼近脸",
+  "version": "v03",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "sourceEffectFile": "apps/website/public/assets/example/bb3a7964-f059-42f2-bb86-94ca19577549.jpg",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/bb3a7964-f059-42f2-bb86-94ca19577549.jpg",
+      "sha256": "302c4efec579b0bf165b89a602f63342ea24a5bb6cbe5b357afc77e3bb5fef40",
+      "requestPath": ".tmp/pending-remediation-20260820-inputs/fun-fisheye-closeup-effect.jpg",
+      "requestBytes": 66287
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "black-cat",
+      "species": "cat",
+      "breed": "adult black domestic shorthair cat",
+      "path": "tools/imagegen/out/source/cat-black.jpg",
+      "sha256": "e9d04dac4cee2a7753bcdbcedce7961cf819ab40fc08e39331977ff15df0df17",
+      "requestPath": ".tmp/pending-remediation-20260820-inputs/fun-fisheye-closeup-identity.jpg",
+      "requestBytes": 129927
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "inputPolicy": {
+    "maxImages": 2,
+    "maxLongestEdge": 1200,
+    "jpegQuality": 82,
+    "combinedBytesBelow": 1048576,
+    "serial": true
+  },
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be adult black domestic shorthair cat with solid glossy black coat, vivid green eyes, black nose, upright ears and a compact healthy adult body. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the extreme fisheye nose-and-mouth perspective and candid snap feeling without importing photographic facial texture. Match the effect reference's distinctive sharp upper eyelids: both upper lids form clean inward-descending angular lines that create a focused, slightly stern gaze while the lower lids stay natural. Do not use round, wide-open, soft or pleading eye contours. Remove the source platform badge, account number and every lower-corner watermark; leave that corner as natural background. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a vertical 9:16 image, 720x1280, by identity-preserving edit of the first reference image using the second reference image as the sole subject identity reference. Preserve the first image’s exact composition, camera, crop, perspective, fisheye nose-and-mouth close-up feeling, action, pose, expression, gaze direction, lighting, color palette, medium, texture, and background layout. Replace the original subject with one coherent adult black domestic shorthair cat: solid glossy black coat, vivid green eyes, black nose, upright ears, compact healthy adult body. Match the first image’s visual language exactly, including the sharp angular upper eyelids forming clean inward-descending lines for a focused slightly stern gaze; keep the lower lids natural. Keep the friendly appealing expression from the reference effect, but do not make the eyes round, soft, pleading, or wide-open. Render the cat fully integrated into the first image’s style—do not paste a photographic cat face. Preserve all meaningful scene details and props from the first image unless a rights-safe replacement is needed. Remove the source platform badge, account number, and lower-corner watermark completely, leaving that corner as natural background. Do not add logos or signatures. No extra ears, eyes, limbs, paws, fused joints, human hands, floating heads, duplicate pets, or residual source subject. Keep the background unchanged and do not redesign, beautify, recolor, or clean it up.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/pending-remediation-20260820/candidates/fun-fisheye-closeup_black-cat_9x16_v03.png",
+    "rawPath": "tools/imagegen/out/reference-v1/pending-remediation-20260820/raw/fun-fisheye-closeup_black-cat_9x16_v03.png",
+    "sha256": "fd6b3783c6d31c7fda82a4443e5a9aa7aae1503430a6c5f69a3aef4e11a628ae"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "checks": {
+      "dimensions": "pass",
+      "inputContract": "pass",
+      "visualAcceptance": "pending-user"
+    },
+    "findings": [],
+    "approvedAt": "2026-08-20T14:00:00+08:00"
+  },
+  "generatedAt": "2026-08-20T01:51:45.258Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/pending-remediation-20260820/candidates/fun-fisheye-closeup_black-cat_9x16_v03.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/fun-fisheye-closeup_black-cat_9x16_v03.webp",
+  "masterSha256": "446494747c6390ec84d7f2814044a4ab1e6a097c320ba89684cba85a93ea7fad",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-20T14:00:00+08:00",
+    "note": "用户明确确认 pending-masters-comparison.png 全部审核通过并要求冻结母版。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/fun-fisheye-closeup_black-cat_9x16_v03.webp",
+      "sha256": "446494747c6390ec84d7f2814044a4ab1e6a097c320ba89684cba85a93ea7fad"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-candidate",
+      "unapproved-candidate"
+    ]
+  }
+}

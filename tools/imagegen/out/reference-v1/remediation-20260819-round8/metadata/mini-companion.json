@@ -1,0 +1,41 @@
+{
+  "task": "user-feedback-frozen-master-refinement-2026-08-19-round8",
+  "templateId": "mini-companion",
+  "title": "同宠大小分身",
+  "kind": "master",
+  "version": "v11",
+  "status": "generated-pending-visual-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputFidelity": "high",
+  "inputPolicy": {
+    "sequential": true,
+    "imageCount": 1,
+    "maxImages": 2,
+    "longestEdge": 1200,
+    "jpegQuality": 82,
+    "maxCombinedBytes": 1000000
+  },
+  "inputs": [
+    {
+      "role": "bengal-master-candidate-immutable-visual-authority-and-contrast-edit-target",
+      "originalPath": "tools/imagegen/out/reference-v1/remediation-20260819-round7/master-candidates/mini-companion_bengal-cat_9x16_v10.png",
+      "preparedPath": ".tmp/master-remediation-20260819-round8-inputs/mini-companion-1.jpg",
+      "bytes": 83972,
+      "sha256": "aa570e9aaf5c39a6f2c1b920eedcc72ad05a90d48f57ee94409037e7147ee877"
+    }
+  ],
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "output": {
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819-round8/raw/mini-companion.png",
+    "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819-round8/master-candidates/mini-companion_bengal-cat_9x16_v11.png",
+    "width": 720,
+    "height": 1280,
+    "sha256": "0201933f7e676ae62fb750c58e7d26a1a8deff7a8d7c84cb6efe1adaa1696bb0"
+  },
+  "prompt": "Use case: lighting-weather precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the sole edit target and immutable authority for every subject, composition and styling detail. Make exactly one restrained tonal adjustment: reduce global contrast by approximately 6 percent, with a permissible range of 5 to 8 percent, while keeping the current overall exposure and brightness unchanged. Gently open the deepest midtone shadows in the black jackets, Bengal fur and purple harness so texture reads more comfortably. Slightly compress the brightest white-studio highlights to narrow the tonal gap. Preserve a natural photographic black point and clean white point. The result must look subtly softer and less dense than Image 1, not brighter, flat, hazy, faded, grey, washed out or low-detail. Black fabric remains visibly black, Bengal rosettes remain dark and crisp, and the continuous black diagonal floor seam remains clearly black and fully visible. Do not alter exposure, lighting direction, color temperature, saturation, coat hue, purple or blue colors, subject identity, Bengal rosette pattern, facial markings, fur texture, anatomy, scale relationship, pose, gaze, goggles, clothing, camera, Dutch tilt, oblique low-angle perspective, sloping floor, crop, depth of field or background geometry. Both subjects remain the same identical adult Bengal cat at different scales, with level forward gaze and complete paws. Keep the exact 9:16 portrait framing and polished commercial photographic realism. No extra subjects, text, logo, watermark or signature.",
+  "revisedPrompt": "Edit the provided image only. Apply exactly one restrained tonal adjustment: reduce global contrast by about 6% (acceptable range 5–8%) while keeping overall exposure and brightness unchanged. Gently open the deepest midtone shadows in the black jackets, Bengal fur, and purple harness so texture reads more comfortably. Slightly compress the brightest white studio highlights to narrow the tonal gap. Preserve a natural photographic black point and clean white point. The result should look subtly softer and less dense than the original, but not brighter, flat, hazy, faded, grey, washed out, or low-detail. Keep black fabric visibly black, Bengal rosettes dark and crisp, and the continuous black diagonal floor seam clearly black and fully visible. Do not alter exposure, lighting direction, color temperature, saturation, coat hue, purple or blue colors, subject identity, Bengal rosette pattern, facial markings, fur texture, anatomy, scale relationship, pose, gaze, goggles, clothing, camera, Dutch tilt, oblique low-angle perspective, sloping floor, crop, depth of field, or background geometry. Preserve the exact 9:16 portrait framing and polished commercial photographic realism. No extra subjects, text, logo, watermark, or signature.",
+  "generatedAt": "2026-08-19T10:08:54.250Z"
+}

@@ -1,0 +1,11 @@
+{
+  "generatedBy": "local-sharp-composite",
+  "modelCall": false,
+  "masterSheet": "tools/imagegen/out/reference-v1/dual-subject/review/dual-master-review.png",
+  "stabilitySheets": [
+    "tools/imagegen/out/reference-v1/dual-subject/review/fish-chase-stability-review.png",
+    "tools/imagegen/out/reference-v1/dual-subject/review/garden-together-stability-review.png",
+    "tools/imagegen/out/reference-v1/dual-subject/review/street-comic-together-stability-review.png",
+    "tools/imagegen/out/reference-v1/dual-subject/review/night-together-stability-review.png"
+  ]
+}

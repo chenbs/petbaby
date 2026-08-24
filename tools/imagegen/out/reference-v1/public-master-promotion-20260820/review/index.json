@@ -1,0 +1,39 @@
+{
+  "status": "approved-by-user",
+  "purpose": "public-preview-to-frozen-master-stability-review",
+  "runtimeMasterUseAllowed": true,
+  "sheet": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/review/public-preview-master-stability-comparison.png",
+  "templates": [
+    {
+      "sequence": 12,
+      "templateId": "dessert-shopkeeper",
+      "title": "甜品饮品主理人"
+    },
+    {
+      "sequence": 17,
+      "templateId": "original-magic-academy",
+      "title": "原创魔法学院"
+    },
+    {
+      "sequence": 28,
+      "templateId": "animal-giant-city-companion",
+      "title": "巨型城市伙伴"
+    },
+    {
+      "sequence": 29,
+      "templateId": "animal-doodle-fisheye-chicken",
+      "title": "鱼眼涂鸦表情"
+    },
+    {
+      "sequence": 30,
+      "templateId": "animal-car-window-westie",
+      "title": "车窗风中写真"
+    },
+    {
+      "sequence": 54,
+      "templateId": "pet-milk-tea-shopkeeper",
+      "title": "奶茶店主理人"
+    }
+  ],
+  "generatedAt": "2026-08-20T06:57:46.968Z"
+}

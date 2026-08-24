@@ -1,0 +1,41 @@
+{
+  "task": "user-feedback-frozen-master-refinement-2026-08-19-round6",
+  "templateId": "mini-companion",
+  "title": "同宠大小分身",
+  "kind": "master",
+  "version": "v09",
+  "status": "generated-pending-visual-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputFidelity": "high",
+  "inputPolicy": {
+    "sequential": true,
+    "imageCount": 1,
+    "maxImages": 2,
+    "longestEdge": 1200,
+    "jpegQuality": 82,
+    "maxCombinedBytes": 1000000
+  },
+  "inputs": [
+    {
+      "role": "approved-composition-outfit-camera-floor-line-and-exposure-edit-target",
+      "originalPath": "tools/imagegen/out/reference-v1/remediation-20260819-round4/master-candidates/mini-companion_abyssinian-cat_9x16_v07.png",
+      "preparedPath": ".tmp/master-remediation-20260819-round6-inputs/mini-companion-1.jpg",
+      "bytes": 71044,
+      "sha256": "8139292c376d1473140796b596c343191d2e8c3f34aaf6f356dc45862030bc9a"
+    }
+  ],
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "output": {
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819-round6/raw/mini-companion.png",
+    "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819-round6/master-candidates/mini-companion_bengal-cat_9x16_v09.png",
+    "width": 720,
+    "height": 1280,
+    "sha256": "61bc1053a68e012ba1ab9b5d8f4bc627517173736585c2b56652d8ef21e35fa5"
+  },
+  "prompt": "Use case: identity-preserve precise-object-edit and pet breed replacement. Asset type: self-owned runtime frozen-master candidate. Image 1 is the strict authority for the entire composition, camera, pose, scale relationship, outfits, white studio, black diagonal floor seam, exposure, contrast, white point, shadow depth and overall tonal range. Replace only both Abyssinian cat identities with two scale versions of one identical adult Bengal cat, also called a Bengal leopard cat. The adult Bengal identity must be unmistakable: warm golden-brown short coat, high-contrast dark brown and black two-tone rosette spots across the shoulders, torso and legs, smaller facial spots and stripes, black-rimmed almond eyes, broad defined whisker pads, athletic muscular adult body, medium upright rounded ears and a thick naturally attached spotted tail. Both subjects must be the same adult Bengal identity at different scales. The smaller cat is an exact miniaturized adult duplicate, never a kitten. Avoid an actual wild leopard, clouded leopard, ocelot, ordinary tabby, Abyssinian, dog or hybrid-looking anatomy. Adapt the mirrored blue goggles, black jackets and purple harnesses naturally and completely to both Bengal cats. Both goggles remain centred over and fully cover both eyes without hiding or deforming the ears. Preserve Image 1's strong oblique low-angle camera looking diagonally upward, slight Dutch tilt, sloping white floor, large-left/small-right placement, wide left foreleg stance and clear continuous black diagonal floor seam behind both cats. Do not remove, fade or replace the black line. Independently from the low camera, both cats keep the same natural level forward gaze with neutral head and muzzle axes; no raised chin and no upward-looking eyes. Do not brighten, relight, recolor, increase exposure, lift shadows, bleach the white studio or alter contrast. Match Image 1's original natural studio exposure and restrained tonal depth exactly. Keep complete paws, coherent seated feline anatomy, exact 9:16 portrait framing and polished commercial photographic realism. No extra subjects, duplicate anatomy, text, logo, watermark or signature.",
+  "revisedPrompt": "Edit the provided image using Image 1 as the strict authority for composition, camera, pose, scale relationship, outfits, white studio, black diagonal floor seam, exposure, contrast, white point, shadow depth, and overall tonal range. Preserve exact 9:16 portrait framing, the strong oblique low-angle camera looking diagonally upward, slight Dutch tilt, sloping white floor, large-left/small-right placement, wide left foreleg stance, and the clear continuous black diagonal floor seam behind both subjects. Do not remove, fade, replace, brighten, relight, recolor, bleach, or alter the studio lighting, exposure, or contrast in any way.\n\nReplace only both Abyssinian cat identities with two scale versions of one identical adult Bengal cat identity. The Bengal identity must be unmistakable and photorealistic: warm golden-brown short coat; high-contrast dark brown and black two-tone rosette spots across shoulders, torso, legs, smaller facial spots and stripes; black-rimmed almond eyes; broad defined whisker pads; athletic muscular adult body; medium upright rounded ears; thick naturally attached spotted tail. Both subjects must be the same adult Bengal identity at different scales, with the smaller cat an exact miniaturized adult duplicate, never a kitten. Avoid any wild leopard, clouded leopard, ocelot, ordinary tabby, Abyssinian, dog, or hybrid-looking anatomy.\n\nAdapt the mirrored blue goggles, black jackets, and purple harnesses naturally and completely to both Bengal cats. Both goggles remain centered over and fully cover both eyes without hiding or deforming the ears. Preserve natural level forward gaze on both cats with neutral head and muzzle axes; no raised chin and no upward-looking eyes. Keep complete paws, coherent seated feline anatomy, and polished commercial photographic realism. No extra subjects, duplicate anatomy, text, logo, watermark, or signature.",
+  "generatedAt": "2026-08-19T09:49:06.012Z"
+}

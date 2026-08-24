@@ -1,0 +1,49 @@
+{
+  "templateId": "animal-fantasy-double-exposure",
+  "entryId": "action",
+  "title": "奇幻双重曝光",
+  "version": "theme-reset-v02",
+  "status": "generated-pending-user-approval",
+  "remediation": "rights-safe-theme-reset",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-07-21-2568-Frank Frazetta绘画风格，奇幻插画大师，奇幻诡异风格双重曝光风格的高....png",
+      "sha256": "b9c15001cb44728fe3985727e1d985991801876b9e8029176c5db38c84d269d9"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "path": "tools/imagegen/out/source/dog-black-lab.jpg",
+      "sha256": "20960d2ace805e68b41a7934e37ebdf24b7007f8f3fa85527d9beb22d2df6022"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "double-exposure-content-only",
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "prompt": "Use case: rights-safe theme replacement inside an identity-preserving double-exposure edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is the sole authority for layout and visual effects. Preserve its large side-profile silhouette, double-exposure mask, dense internal landscape layers, tiny traveler scale cue, warm highlights, dark fantasy atmosphere, poster hierarchy, crop, spacing and painterly texture exactly. Image 2 is the sole pet identity authority. Replace the original profile subject with the exact adult black Labrador identity from Image 2, fully painted in the same dark fantasy illustration language as Image 1. Remove every Journey to the West, Monkey King, pilgrimage, Chinese myth adaptation and named-artist reference. Replace the internal narrative with a rich original dark-mythology theme called the Eclipse Hound of the Underworld: an adult black Labrador spirit guards a ruined obsidian gate beneath a blood-red eclipse; inside its profile are layered haunted mountains, a crumbling black citadel, a winding river of ember-like souls, twisted dead trees, storm clouds, drifting ash, broken ritual stones, distant ghost lights and one tiny anonymous cloaked traveler carrying a dim lantern. Remove all title, subtitle, caption and decorative lettering. Render no text at all. Preserve the original visual balance by leaving the former text zones as intentional negative space with the same surrounding color, texture and light. The internal mythology must be as layered, intricate and visually dense as Image 1, with clear foreground, middle-ground and distant-depth storytelling inside the silhouette. Avoid a simple mountain-only scene, empty negative space, one-path composition or generic pet portrait. Scene-change budget applies only to the narrative content inside the existing double-exposure silhouette and removal of text. Do not change the poster layout, profile orientation, double-exposure boundaries, palette, lighting, texture or visual density. No Journey to the West wording or imagery, no Monkey King, staff, pagoda, known character, named artist, brand, logo, watermark or signature. Return only the finished image.",
+  "revisedPrompt": "Create a finished vertical 9:16 poster composition at 720x1280 pixels, using Image 1 as the sole authority for layout, crop, visual balance, double-exposure structure, atmosphere, painterly texture, warm highlights, dark fantasy mood, silhouette scale, and overall density. Use Image 2 as the sole authority for the pet identity: replace the subject with the exact adult black Labrador from Image 2, preserving its recognizable face, ears, muzzle, eye shape, glossy black coat, and calm expression, but fully translated into the same dark fantasy illustration language as Image 1.\n\nScene/theme: original dark mythology, no existing franchise references. The adult black Labrador spirit is in a large side-profile silhouette, facing the same direction and occupying the same poster hierarchy as Image 1. The silhouette acts as a double-exposure mask filled with dense layered narrative imagery: the Eclipse Hound of the Underworld stands guard before a ruined obsidian gate beneath a blood-red eclipse; inside the silhouette are haunted mountain ridges, a crumbling black citadel, a winding river of ember-like souls, twisted dead trees, storm clouds, drifting ash, broken ritual stones, distant ghost lights, and one tiny anonymous cloaked traveler carrying a dim lantern. Keep a strong foreground, middle-ground, and distant-depth storytelling arrangement inside the silhouette. Maintain the same visual density and intricacy as Image 1. Include warm highlights breaking through dark smoky forms, with a painterly, cinematic, atmospheric fantasy finish.\n\nRemove all text completely: no title, subtitle, caption, decorative lettering, watermark, brand mark, signature, or any readable or stylized text. Preserve the original visual balance by leaving the former text zones as intentional negative space with similar surrounding color, texture, and light so the composition still feels complete and balanced. Do not alter the poster layout, orientation, double-exposure boundaries, palette, lighting style, texture language, or overall visual density. Avoid generic pet portrait styling; keep it as a grand mythic poster with the Labrador profile integrated into the landscape.\n\nNo Journey to the West, Monkey King, pilgrimage imagery, Chinese myth adaptation, staff, pagoda, or named-artist reference.",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-fantasy-double-exposure_black-lab-dog_9x16_theme-reset-v02.png",
+    "sha256": "69af71486852564e5b8ee47280c37bbcb22a768c5818c2c3ebfe41579fd1404a"
+  },
+  "review": {
+    "state": "pending-human-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-18T02:27:32.655Z"
+}

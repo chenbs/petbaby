@@ -1,0 +1,81 @@
+{
+  "templateId": "animal-warrior-cat",
+  "entryId": "character",
+  "title": "古风剑客宠物",
+  "sourceEffectFile": "apps/website/public/assets/example/animal/jimeng-2026-07-22-6567-插画风格特效，古风，动漫风，3D，大师作品，超高清，动态，一只超萌的剑客猫耳娘作....png",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-07-22-6567-插画风格特效，古风，动漫风，3D，大师作品，超高清，动态，一只超萌的剑客猫耳娘作....png",
+      "sha256": "470bb8bdfc16ebe5296ecb9b91834e60d54791f311dafd178d31569c4ccdfcd1"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "abyssinian-cat",
+      "species": "cat",
+      "breed": "adult Abyssinian cat",
+      "path": "apps/website/public/assets/avatar-abyssinian.jpg",
+      "sha256": "8714ff092ab9b9e58a3c440eb16756b1149cd02c4050a8fb4f5f63b902184268"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a one-time third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every designated original animal, human-like creature or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult Abyssinian cat with warm ruddy ticked coat, large alert ears, almond eyes, refined muzzle and healthy adult body. Render the face, fur and anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration or turn a stylized scene into a realistic photo. Keep the pet appealing and healthy, never skinny, gaunt, uncanny, aggressive or puppy-like. Keep the original sword, layered costume, upright stance, warm rim light and stylized action; remove humanoid anatomy and use a natural adult pet wearing adapted clothing. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character or artist names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a finished 9:16 vertical composition at 720x1280 pixels by identity-preserving edit using the provided references. Use Image 1 as the full composition/style/action reference and Image 2 as the sole identity reference. Preserve Image 1’s exact camera angle, crop, perspective, pose, lighting, warm rim light, palette, stylized fantasy medium, layered costume structure, sword presence, contact relationships, and background mood. Replace the original human-like subject in Image 1 with one coherent adult Abyssinian cat identity matching Image 2: warm ruddy ticked coat, large alert ears, almond eyes, refined muzzle, healthy adult proportions. Keep the scene as a stylized fantasy illustration/CG hybrid, not a photo, and render the cat fully in Image 1’s visual language. Maintain the upright dramatic stance and action pose, with adapted clothing that fits natural cat anatomy; no human hands, no human face, no extra limbs, no duplicated pets, no broken joints, no floating head, no juvenile or skinny body. Keep the ornate metallic mask/helmet aesthetic but adapted to a cat face and head shape, with the eyes visible through the mask openings. Preserve the original sword, layered costume, and dynamic arm-like foreground gesture as natural feline forelimb positioning where anatomically possible. Do not redesign, simplify, beautify, recolor, or clean the background; keep Image 1’s composition and contact edges essentially unchanged except for the necessary pet anatomy conversion. Replace visible watermarks, platform UI, and any non-essential brand-like text with short original pet-safe wording in the same visual hierarchy or remove them cleanly if needed; do not create new logos or signatures. Final output must be a single coherent adult Abyssinian cat character, appealing and healthy, integrated seamlessly into Image 1's art style.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-warrior-cat_abyssinian-cat_9x16_v01.png",
+    "sha256": "687bd17d0b416553c4edca3b6250e6de02598c6d9246ea6fc8840dd0b9dda72b"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-18T01:00:00+08:00"
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-17T16:37:24.464Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/animal/candidates/animal-warrior-cat_abyssinian-cat_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/retired-masters/animal-warrior-cat_abyssinian-cat_9x16_v01.png",
+  "masterSha256": "687bd17d0b416553c4edca3b6250e6de02598c6d9246ea6fc8840dd0b9dda72b",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-18T01:00:00+08:00",
+    "note": "用户确认本批次除七个待重做模板外，其余动物效果候选均通过并保存为母版。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/animal-warrior-cat_abyssinian-cat_9x16_v01.png",
+      "sha256": "687bd17d0b416553c4edca3b6250e6de02598c6d9246ea6fc8840dd0b9dda72b"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "unapproved-candidate"
+    ]
+  }
+}

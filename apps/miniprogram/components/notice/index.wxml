@@ -1,0 +1,8 @@
+<view class="notice notice-{{type}}" aria-role="alert">
+  <text class="notice-mark">{{type === 'success' ? '✓' : type === 'error' ? '!' : type === 'warning' ? '△' : 'i'}}</text>
+  <view class="notice-body">
+    <text wx:if="{{message}}">{{message}}</text>
+    <slot></slot>
+  </view>
+  <view wx:if="{{closable}}" class="notice-close hit-area" aria-role="button" aria-label="关闭提示" catchtap="handleClose">×</view>
+</view>

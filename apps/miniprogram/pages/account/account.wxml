@@ -1,0 +1,70 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+
+<view class="page page-flat">
+  <text class="eyebrow">ACCOUNT</text>
+  <view class="title">账户与隐私</view>
+
+  <t-notice wx:if="{{notice}}" type="{{noticeType}}" message="{{notice}}" closable bindclose="clearNotice"></t-notice>
+
+  <t-skeleton wx:if="{{loading}}" type="card" count="2"></t-skeleton>
+
+  <block wx:else>
+    <!-- 资料区 -->
+    <view class="section">
+      <t-card blur="{{blurOk}}">
+        <view class="stack">
+          <t-field
+            label="显示名称"
+            value="{{name}}"
+            placeholder="例如：小林"
+            help="展示在作品与分享页上的名字。"
+            maxlength="20"
+            show-count
+            required
+            bindchange="onName"
+          ></t-field>
+          <t-button
+            type="primary"
+            block
+            anim="{{animType}}"
+            loading="{{saving}}"
+            disabled="{{!name}}"
+            bindtap="save"
+          >保存资料</t-button>
+        </view>
+      </t-card>
+    </view>
+
+    <!-- 数据与隐私区 -->
+    <view class="section">
+      <view class="section-title">数据与隐私</view>
+      <t-card blur="{{blurOk}}">
+        <view class="stack">
+          <text class="muted">导出内容包含你的宠物档案、照片记录与作品清单，格式为 JSON。</text>
+          <t-button type="secondary" block anim="{{animType}}" bindtap="exportData">导出我的数据</t-button>
+        </view>
+      </t-card>
+    </view>
+
+    <!-- 危险区：置于页面最底部 -->
+    <view class="section danger-zone">
+      <view class="danger-head">
+        <text class="sub-title danger-text">危险区</text>
+      </view>
+      <text class="muted">删除账户会隐藏你的全部照片与作品，且<text class="strong danger-text">无法恢复</text>。已完成的订单与退款记录会按法规要求保留。</text>
+      <t-button type="danger" block anim="{{animType}}" loading="{{deleting}}" bindtap="askDelete" class="danger-action">删除账户</t-button>
+    </view>
+  </block>
+</view>
+
+<t-dialog
+  visible="{{confirmDelete}}"
+  title="确认删除账户？"
+  content="删除后你的照片、宠物档案与作品将立即隐藏，且无法恢复。此操作不可撤销。"
+  confirm-text="确认删除"
+  cancel-text="我再想想"
+  danger
+  anim="{{animType}}"
+  bindconfirm="doDelete"
+  bindcancel="cancelDelete"
+></t-dialog>

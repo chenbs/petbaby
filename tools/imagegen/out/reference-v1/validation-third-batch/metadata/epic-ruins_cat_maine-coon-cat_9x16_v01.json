@@ -1,0 +1,62 @@
+{
+  "jobId": "epic-ruins_cat_maine-coon-cat",
+  "templateId": "epic-ruins",
+  "title": "史诗遗迹探险",
+  "status": "approved-runtime-validation",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/epic-ruins_german-shepherd-dog_9x16_v01.png",
+      "sha256": "6d450ed41c8876b08b651a5e2c7f1e78566d0c3682fc62fb2ab9ba4c8b3615ee"
+    },
+    {
+      "role": "new-pet-identity-reference",
+      "identityId": "maine-coon-cat",
+      "species": "cat",
+      "breed": "adult brown-tabby Maine Coon cat",
+      "path": "apps/website/public/assets/work-maine.jpg",
+      "sha256": "1886adfade169bfb7a678ccad1b36555e0cebbd9d78310ee0f23c42d1bcae8cf"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving template transfer. Produce one exact 720x1280 vertical 9:16 runtime validation image from exactly two input images. Image 1 is our frozen self-owned production master. It is the sole authority for every non-identity detail: scene, composition, crop, camera, pose, action, expression, gaze, lighting, palette, rendering medium, brushwork, clothing, text, props and all physical contacts. No third-party effect reference is included. Image 2 is the sole new-pet identity reference. Change only the pet identity. Remove every depiction and every residual feature of the master pet, then replace it with the new pet from Image 2. Scene-change budget is 0%. Do not redesign, reinterpret, clean up, recolour, restyle, simplify, move, delete or add anything in the master scene. Keep the exact low-angle ruined megastructure, towering suspended gothic fragments, luminous circular arch at right, stormy blue-grey sky, rain, drifting debris, wet platform edge, cold steel-blue palette, sharp rim light, subject scale and massive rectangular mechanical back rig. Replicate the master's lower-left four-legged forward-ready stance, body direction toward the right-side ruins, alert determined gaze, head angle, expression and equipment contacts. Keep a mature, strong natural animal body with four complete connected limbs. The mechanical equipment remains a believable back-and-shoulder rig; no human face, hair, skin, hands, fingers, arms or torso may appear. The replacement must be the exact adult brown-tabby Maine Coon cat from Image 2. Preserve its brown tabby coat, broad adult muzzle, green-gold eyes, tall tufted ears, long neck ruff, large paws, full tail and strong healthy adult build. Image 2 controls only species, breed, coat colour and markings, ear shape, eye colour, actual adult age and natural healthy breed proportions. Do not copy Image 2's pose, expression, gaze, camera, background, lighting, photographic texture or rendering style. Preserve the pet's actual adult age and mature breed proportions. Do not juvenilize it, enlarge the head or eyes, shorten the muzzle or body, or convert it into a kitten, puppy or generic cute mascot. Keep it healthy, attractive and immediately likeable without changing the master's expression or art direction. Match Image 1's exact cinematic realism, rain, cold backlight, depth, material rendering and restrained palette. Image 2 contributes identity only. No new text, logos, known IP, watermarks or signatures. Keep exactly one pet identity throughout, except where the frozen master intentionally contains multiple views or two scale duplicates of that same identity. No unrelated animal, residual old-pet coat, face or limb. Correct species anatomy only: no duplicate, fused, missing or amputated-looking limbs, extra ears, warped eyes, malformed mouth, floating tail, human hands or fingers, broken garment boundaries, pasted head, disconnected neck or failed prop contact. Preserve all non-pet pixels and relationships as closely as the model allows.",
+  "revisedPrompt": "Create a single exact 720x1280 vertical 9:16 cinematic runtime validation image by compositing with strict template transfer. Use Image 1 as the sole authority for every non-identity detail: exact low-angle ruined megastructure scene, composition, crop, camera, pose, action, expression, gaze, lighting, palette, rendering medium, brushwork, clothing-equivalent mechanical rig, props, rain, drifting debris, wet platform edge, cold steel-blue palette, sharp rim light, subject scale, and the massive rectangular mechanical back rig. Keep the same lower-left forward-ready stance, body direction toward the right-side ruins, alert determined gaze, head angle, expression, and believable back-and-shoulder equipment contacts. Do not redesign, reinterpret, clean up, recolour, restyle, simplify, move, delete, or add anything in the master scene. Replace only the pet identity using Image 2 as the sole identity reference: the subject must become the exact adult brown-tabby Maine Coon cat from Image 2, preserving brown tabby coat, broad adult muzzle, green-gold eyes, tall tufted ears, long neck ruff, large paws, full tail, and strong healthy adult build. Keep the pet as a mature adult animal with correct species anatomy and natural proportions; no kitten look, no oversized head or eyes, no shortened muzzle, no generic mascot styling. Remove every depiction and residual feature of the master pet and replace it fully with the Maine Coon while preserving the exact master scene, mood, rain, cold backlight, depth, materials, and restrained palette. No human face, hair, skin, hands, fingers, arms, torso, extra limbs, malformed anatomy, pasted head, disconnected neck, or broken prop contact. Preserve all non-pet pixels and relationships exactly. No new text, logos, watermarks, or signatures. Ultra-detailed cinematic realism, stormy blue-grey sky, luminous circular arch at right, shattered gothic fragments, rain and debris, dramatic low-angle composition.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation-third-batch/epic-ruins_cat_maine-coon-cat_9x16_v01.png",
+    "sha256": "3c1b6fbc134d0619cd41b63b2bf5024ba33e59c66644086af849acc2981545f7"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "checks": {
+      "petIdentity": "pass",
+      "adultAgeAndProportions": "pass",
+      "masterPoseExpressionAndGaze": "pass",
+      "masterStyleAndBrushwork": "pass",
+      "sceneAndComposition": "pass",
+      "anatomyAndContacts": "pass",
+      "repeatedIdentityAndText": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [],
+    "finalApproval": "approved",
+    "approvedAt": "2026-08-17T12:22:43+08:00"
+  },
+  "generatedAt": "2026-08-17T02:02:19.987Z"
+}

@@ -1,0 +1,55 @@
+{
+  "kind": "master-candidate",
+  "templateId": "original-magic-academy",
+  "title": "原创魔法学院",
+  "status": "candidate-pending-stability-review",
+  "runtimeMasterUseAllowed": false,
+  "source": {
+    "role": "approved-dedicated-public-preview",
+    "path": "tools/imagegen/out/reference-v1/masters/original-magic-academy_public-v02-master-v01.webp",
+    "sha256": "32b3092734f299d11c082c64b45f0bdd0cf3ebf5cad07c49ff6d08f3a2d83e8e",
+    "publicVersion": "public-v02",
+    "metadataPath": "tools/imagegen/out/reference-v1/public-previews/metadata/original-magic-academy_public-v02.json",
+    "generationInputRole": "effect-reference-edit-target"
+  },
+  "currentFrozenMaster": {
+    "path": "tools/imagegen/out/reference-v1/retired-masters/original-magic-academy_dragon-li-cat_9x16_v01.png",
+    "sha256": "6dfd8f50981e537748f18bd5b4ccdfaa8dfceff03338ab54055b8cc1ab117d4e",
+    "approvedAt": "2026-08-17T09:47:48+08:00"
+  },
+  "candidate": {
+    "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/candidates/original-magic-academy_public-v02_master-candidate.png",
+    "sha256": "afb161ac9bb1ea33d4c927561dedf2e3def8c66ec77fa8f72d8584b9299d57f4",
+    "byteIdenticalToPublicPreview": true,
+    "orientation": "portrait",
+    "size": "720x1280"
+  },
+  "apiInputDerivative": {
+    "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/api-inputs/original-magic-academy_public-v02_master-candidate.jpg",
+    "sha256": "533853e76a7edb471decc06dc0b06ef20ce3b8d11cb192beabacafaffcc7d62c",
+    "format": "jpeg",
+    "quality": 82,
+    "width": 675,
+    "height": 1200,
+    "bytes": 83288,
+    "maxEdgeLimit": 1200,
+    "perFileByteLimit": 460000
+  },
+  "provenance": {
+    "originalEffectReferenceUsedForPublicPreview": true,
+    "frozenMasterUsedToGeneratePublicPreview": false,
+    "thirdPartyEffectReferenceAllowedAtRuntime": false
+  },
+  "productionPromptExtensionOnPromotion": "Keep the dark green magic-academy robe and scarf, stone classroom, potion props, warm cinematic light and the same seated full-body composition.",
+  "review": {
+    "stabilityIdentities": [
+      "british-shorthair-cat",
+      "german-shepherd-dog",
+      "cream-longhair-cat"
+    ],
+    "expectedOutputs": 3,
+    "state": "pending-generation",
+    "finalApproval": "pending-user"
+  },
+  "preparedAt": "2026-08-20T06:36:58.903Z"
+}

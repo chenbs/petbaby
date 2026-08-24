@@ -1,0 +1,143 @@
+{
+  "templateId": "animal-capybara-snapshot",
+  "entryId": "fun",
+  "title": "日常快照萌宠",
+  "sourceEffectFile": "apps/website/public/assets/example/animal/jimeng-2026-06-01-2422-一只拟人化的水豚，以日常快照的视觉风格展现，照片中没有明确的主体或构图感，还带有....png",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-06-01-2422-一只拟人化的水豚，以日常快照的视觉风格展现，照片中没有明确的主体或构图感，还带有....png",
+      "sha256": "94762a995a222764f42d2e5f2bc82f98b57e2b9426e4b29bc6400ec3473a3f85"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "golden-dog",
+      "species": "dog",
+      "breed": "adult Golden Retriever",
+      "path": "tools/imagegen/out/source/dog-golden.jpg",
+      "sha256": "1b6348ce4f6cd1d12f4c93d5f2a8a5c21847e0ce9bc43e4326c1ee89f7a89eef"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: identity-preserve precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the current self-owned master and controls the replacement pet or owner identity unless the request explicitly changes the breed. Image 2 is the composition and effect reference. Use it only to correct the requested composition, pose, expression, gaze or visual treatment. Preserve every aspect that is not explicitly changed below, including the scene, camera, crop, palette, lighting, costume, props, spatial relationships and visual medium. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature. No extra subjects, duplicate anatomy, human hands on animals, malformed paws, text, logo, watermark or signature. Change only the adult Golden Retriever's expression to serious and unsmiling: mouth fully closed, tongue hidden, lips neutral, steady direct eyes and calm workplace-badge demeanor. Keep the same dog identity, close selfie perspective, extended foreleg, monitor, desk, collar and matching ID portrait. The ID portrait must show the same serious closed-mouth expression. Return a 9:16 portrait composition.",
+  "revisedPrompt": "Edit the provided images. Use Image 1 as the identity reference for the adult Golden Retriever; use Image 2 only as the composition/reference for pose, selfie perspective, and visual treatment. Preserve the same dog identity, same office desk/monitor background, same close selfie framing, same extended foreleg, same black collar and dangling ID badge, same camera angle, lighting, palette, and overall scene. Change ONLY the dog's expression to serious and unsmiling: mouth fully closed, tongue hidden, lips neutral, steady direct eyes, calm workplace-badge demeanor. The ID portrait on the badge must show the same dog with the same serious closed-mouth expression. Remove all platform badges, AI-generated labels, account names, account numbers, watermarks, logos, signatures, and any visible text. No extra subjects, no duplicate anatomy, no human hands on the animal, no malformed paws. Return a clean 9:16 portrait composition.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/remediation-20260819/master-candidates/animal-capybara-snapshot_golden-dog_9x16_v02.png",
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/master-animal-capybara-snapshot.png",
+    "sha256": "d25bc01569efa48986f9a32ac3a240911ea253dae26a28e963a8aad4c4156dcf"
+  },
+  "review": {
+    "state": "approved-by-user-request",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-19T14:10:00+08:00"
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-19T05:51:19.368Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/remediation-20260819/master-candidates/animal-capybara-snapshot_golden-dog_9x16_v02.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/animal-capybara-snapshot_golden-dog_9x16_v02.webp",
+  "masterSha256": "18aeb7bcc0d2e88a44d0a291cf8af1341b1364f76b21f2886c922fdb54732807",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-19T14:10:00+08:00",
+    "note": "用户于 2026-08-19 明确要求按逐项意见返工并完成；候选已逐张目视复核后冻结为新版本。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-capybara-snapshot_golden-dog_9x16_v02.webp",
+      "sha256": "18aeb7bcc0d2e88a44d0a291cf8af1341b1364f76b21f2886c922fdb54732807"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate",
+      "unapproved-candidate"
+    ]
+  },
+  "version": "v02",
+  "supersedes": {
+    "path": "tools/imagegen/out/reference-v1/retired-masters/animal-capybara-snapshot_golden-dog_9x16_v01.png",
+    "sha256": "ca2e9a4c59939272d09d9a7fb89f7032cf58b5bdbd63d6f6399f891fbd6ffce8",
+    "metadata": "tools/imagegen/out/reference-v1/retired-masters/metadata/animal-capybara-snapshot_golden-dog_9x16_v01.json"
+  },
+  "remediationRequest": {
+    "task": "user-requested-frozen-master-remediation-2026-08-19",
+    "templateId": "animal-capybara-snapshot",
+    "kind": "master",
+    "version": "v02",
+    "status": "approved-and-promoted",
+    "provider": "lingsuan",
+    "model": "gpt-image-2",
+    "endpoint": "/v1/images/edits",
+    "inputFidelity": "high",
+    "inputPolicy": {
+      "sequential": true,
+      "maxImages": 2,
+      "maxCombinedBytes": 1000000
+    },
+    "inputs": [
+      {
+        "role": "current-self-owned-master",
+        "path": ".tmp/master-remediation-20260819-inputs/animal-capybara-snapshot-master.jpg",
+        "bytes": 106290,
+        "sha256": "d85e3853852bd706f94b6679940d0bc9804a7f4ff3afe380cab837c134d7e5ef"
+      },
+      {
+        "role": "effect-reference-composition-guide",
+        "path": ".tmp/master-remediation-20260819-inputs/animal-capybara-snapshot-effect.jpg",
+        "bytes": 101834,
+        "sha256": "6996aea1cde3a0db6e41f507e2e33f7263aaa1b05bb565eef257fceb157ac10d"
+      }
+    ],
+    "orientation": "portrait",
+    "requestedSize": "720x1280",
+    "output": {
+      "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/master-animal-capybara-snapshot.png",
+      "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819/master-candidates/animal-capybara-snapshot_golden-dog_9x16_v02.png",
+      "width": 720,
+      "height": 1280,
+      "sha256": "d25bc01569efa48986f9a32ac3a240911ea253dae26a28e963a8aad4c4156dcf"
+    },
+    "prompt": "Use case: identity-preserve precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the current self-owned master and controls the replacement pet or owner identity unless the request explicitly changes the breed. Image 2 is the composition and effect reference. Use it only to correct the requested composition, pose, expression, gaze or visual treatment. Preserve every aspect that is not explicitly changed below, including the scene, camera, crop, palette, lighting, costume, props, spatial relationships and visual medium. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature. No extra subjects, duplicate anatomy, human hands on animals, malformed paws, text, logo, watermark or signature. Change only the adult Golden Retriever's expression to serious and unsmiling: mouth fully closed, tongue hidden, lips neutral, steady direct eyes and calm workplace-badge demeanor. Keep the same dog identity, close selfie perspective, extended foreleg, monitor, desk, collar and matching ID portrait. The ID portrait must show the same serious closed-mouth expression. Return a 9:16 portrait composition.",
+    "revisedPrompt": "Edit the provided images. Use Image 1 as the identity reference for the adult Golden Retriever; use Image 2 only as the composition/reference for pose, selfie perspective, and visual treatment. Preserve the same dog identity, same office desk/monitor background, same close selfie framing, same extended foreleg, same black collar and dangling ID badge, same camera angle, lighting, palette, and overall scene. Change ONLY the dog's expression to serious and unsmiling: mouth fully closed, tongue hidden, lips neutral, steady direct eyes, calm workplace-badge demeanor. The ID portrait on the badge must show the same dog with the same serious closed-mouth expression. Remove all platform badges, AI-generated labels, account names, account numbers, watermarks, logos, signatures, and any visible text. No extra subjects, no duplicate anatomy, no human hands on the animal, no malformed paws. Return a clean 9:16 portrait composition.",
+    "generatedAt": "2026-08-19T05:51:19.368Z",
+    "approvedAt": "2026-08-19T14:10:00+08:00"
+  },
+  "qualityBaseline": {
+    "required": [
+      "serious unsmiling candid expression",
+      "exact 720x1280 portrait output",
+      "clean finished image without platform UI, account IDs, logos, watermarks or signatures"
+    ],
+    "reject": [
+      "regression of the composition, expression, gaze, identity, texture or anatomy corrected by this remediation",
+      "extra subjects, duplicate or malformed anatomy, broken costume contacts, logo, watermark or signature"
+    ]
+  }
+}

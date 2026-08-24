@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "AI 四选一",
+  "usingComponents": {
+    "t-button": "../../components/button/index",
+    "t-field": "../../components/field/index",
+    "t-notice": "../../components/notice/index",
+    "t-empty": "../../components/empty/index",
+    "t-skeleton": "../../components/skeleton/index",
+    "t-photo-grid": "../../components/photo-grid/index"
+  }
+}

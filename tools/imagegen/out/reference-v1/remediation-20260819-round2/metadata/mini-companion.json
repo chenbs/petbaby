@@ -1,0 +1,39 @@
+{
+  "task": "user-feedback-frozen-master-refinement-2026-08-19-round2",
+  "templateId": "mini-companion",
+  "title": "同宠大小分身",
+  "kind": "master",
+  "version": "v05",
+  "status": "generated-pending-visual-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputFidelity": "high",
+  "inputPolicy": {
+    "sequential": true,
+    "imageCount": 1,
+    "maxImages": 1,
+    "longestEdge": 1200,
+    "jpegQuality": 82,
+    "maxCombinedBytes": 1000000
+  },
+  "input": {
+    "role": "current-self-owned-frozen-master-edit-target",
+    "originalPath": "tools/imagegen/out/reference-v1/public-previews/mini-companion_abyssinian-cat_9x16_v04.webp",
+    "preparedPath": ".tmp/master-remediation-20260819-round2-inputs/mini-companion-current-master.jpg",
+    "bytes": 70536,
+    "sha256": "2bce1763052ccecd2b1ec80ed797b82c2dca8b438041b599d4ccbe4a2115c7a5"
+  },
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "output": {
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819-round2/raw/mini-companion.png",
+    "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819-round2/master-candidates/mini-companion_abyssinian-cat_9x16_v05.png",
+    "width": 720,
+    "height": 1280,
+    "sha256": "5bef92bca82c313afb50484d0fe9e26b925e32ef239a3358677c518cab6dfeb6"
+  },
+  "prompt": "Use case: identity-preserve precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the current self-owned frozen master and the sole edit target. Make only the explicitly requested micro-adjustment and preserve every other visible detail, including subject identity, scene, camera, crop, pose, anatomy, costume, props, palette, lighting, depth, texture and visual medium. Keep the exact 9:16 portrait composition. No extra subjects, duplicate anatomy, malformed paws, text, logo, watermark or signature. Lower the upward head tilt very slightly, about 5 to 8 degrees, primarily on the large left cat and consistently on the small duplicate. Reduce only the over-raised chin; retain a confident heroic low-angle view from below, with the cats still looking slightly upward rather than forward or downward. Keep both cats as the same adult Abyssinian identity at different scales, and keep both mirrored blue goggles centred over and fully covering both eyes. Do not change either body pose, the large cat's wide left foreleg stance, clothing, harnesses, scale relationship, white studio, floor line or framing.",
+  "revisedPrompt": "Edit the provided self-owned image with a precise, minimal change only: lower the upward head tilt very slightly by about 5 to 8 degrees on the large adult Abyssinian cat, and apply the same subtle chin reduction consistently to the small duplicate cat. Preserve identity, exact 9:16 portrait composition, crop, camera angle, heroic low-angle view, pose, anatomy, costume, harnesses, mirrored blue goggles centered and fully covering both eyes, scale relationship, white studio background, floor line, lighting, palette, depth, texture, and all other visible details exactly. Do not add, remove, or alter any other elements. Keep both cats still looking slightly upward rather than forward or downward. No text, logo, watermark, signature, extra subjects, duplicate anatomy, or malformed paws.",
+  "generatedAt": "2026-08-19T07:03:19.763Z"
+}

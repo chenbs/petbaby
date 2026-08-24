@@ -1,0 +1,39 @@
+{
+  "task": "user-feedback-frozen-master-refinement-2026-08-19-round2",
+  "templateId": "fish-chase",
+  "title": "偷鱼大作战",
+  "kind": "master",
+  "version": "v03",
+  "status": "generated-pending-visual-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputFidelity": "high",
+  "inputPolicy": {
+    "sequential": true,
+    "imageCount": 1,
+    "maxImages": 1,
+    "longestEdge": 1200,
+    "jpegQuality": 82,
+    "maxCombinedBytes": 1000000
+  },
+  "input": {
+    "role": "current-self-owned-frozen-master-edit-target",
+    "originalPath": "tools/imagegen/out/reference-v1/retired-masters/fish-chase_owner-f01_tuxedo-cat_9x16_v02.png",
+    "preparedPath": ".tmp/master-remediation-20260819-round2-inputs/fish-chase-current-master.jpg",
+    "bytes": 148748,
+    "sha256": "b5f35813cdf6f67756bd2434cb0930e235d8de29a735b2b008a7db7806aa3b03"
+  },
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "output": {
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819-round2/raw/fish-chase.png",
+    "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819-round2/master-candidates/fish-chase_owner-f01_tuxedo-cat_9x16_v03.png",
+    "width": 720,
+    "height": 1280,
+    "sha256": "45ab00c06789baece244a386e820f2631cb1dbc1980d53d8842adf0704539041"
+  },
+  "prompt": "Use case: identity-preserve precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the current self-owned frozen master and the sole edit target. Make only the explicitly requested micro-adjustment and preserve every other visible detail, including subject identity, scene, camera, crop, pose, anatomy, costume, props, palette, lighting, depth, texture and visual medium. Keep the exact 9:16 portrait composition. No extra subjects, duplicate anatomy, malformed paws, text, logo, watermark or signature. Reduce only the tuxedo cat's eye size and forward bulging by a small amount, approximately 15 percent. Keep both eyes large, round, startled and clearly affected by the fisheye lens, but seat them naturally inside the eyelids and sockets: no protruding, popping or bead-like eyeballs. Soften the woman's central brow pinch and vertical glabellar creases by about half, with a smooth natural forehead and no swollen veins. She must still read as urgent and angry, with focused eyes, open shouting mouth, reaching hand and chase energy unchanged. Keep the woman and cat identities, fish, extreme wide-angle composition, market street, flying paper, pigeons and all other details unchanged.",
+  "revisedPrompt": "Edit the provided self-owned image with identity-preserving precision. Keep the exact 9:16 portrait composition and preserve every visible detail unchanged except for these micro-adjustments: (1) reduce only the tuxedo cat's eye size and forward bulging by about 15%, while keeping both eyes large, round, startled, and clearly affected by the fisheye lens, but seated naturally inside the eyelids and sockets with no protruding, popping, or bead-like eyeballs; (2) soften the woman's central brow pinch and vertical glabellar creases by about half, giving her a smooth natural forehead with no swollen veins, while preserving her urgent, angry expression, focused eyes, open shouting mouth, reaching hand, and chase energy. Do not alter subject identity, scene, camera, crop, pose, anatomy, costume, props, palette, lighting, depth, texture, visual medium, market street, flying paper, pigeons, fish, or extreme wide-angle perspective. No extra subjects, duplicate anatomy, malformed paws, text, logo, watermark, or signature.",
+  "generatedAt": "2026-08-19T07:02:48.851Z"
+}

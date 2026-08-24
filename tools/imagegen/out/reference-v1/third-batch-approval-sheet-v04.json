@@ -1,0 +1,107 @@
+{
+  "purpose": "third-batch-remaining-master-candidate-user-approval",
+  "filter": "pending-user-only",
+  "generatedBy": "local-sharp-composite",
+  "modelCall": false,
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/third-batch-approval-sheet-v04.png",
+    "width": 1860,
+    "height": 2545,
+    "sha256": "15aa0b70c1d6e9a6800dc62bd8cd9aa299ec2d6d1dec32b69de231b1c87fbfb1"
+  },
+  "items": [
+    {
+      "templateId": "original-magic-academy",
+      "title": "原创魔法学院",
+      "version": "v01",
+      "reviewState": "approved-by-user",
+      "finalApproval": "approved",
+      "findings": [],
+      "files": [
+        {
+          "role": "EFFECT REFERENCE",
+          "path": "apps/website/public/assets/example/c228839a-db36-4deb-a485-40e0a0161715.jpg",
+          "sha256": "59b2e73c3925db6d00fcc16e3b98961e6bd63391ac3f52c8b872ee52901c0ab6"
+        },
+        {
+          "role": "PET IDENTITY / DRAGON-LI-CAT",
+          "path": "apps/website/public/assets/avatar-dragonli.jpg",
+          "sha256": "0f403599969b57f32aa314cf474ce4d57d28f48683e16ae9a032d73b94079732"
+        },
+        {
+          "role": "CANDIDATE V01",
+          "path": "tools/imagegen/out/reference-v1/candidates/original-magic-academy_dragon-li-cat_9x16_v01.png",
+          "sha256": "6dfd8f50981e537748f18bd5b4ccdfaa8dfceff03338ab54055b8cc1ab117d4e"
+        }
+      ],
+      "approvedAt": "2026-08-17T09:47:48+08:00",
+      "master": {
+        "path": "tools/imagegen/out/reference-v1/retired-masters/original-magic-academy_dragon-li-cat_9x16_v01.png",
+        "sha256": "6dfd8f50981e537748f18bd5b4ccdfaa8dfceff03338ab54055b8cc1ab117d4e"
+      }
+    },
+    {
+      "templateId": "epic-ruins",
+      "title": "史诗遗迹探险",
+      "version": "v01",
+      "reviewState": "approved-by-user",
+      "finalApproval": "approved",
+      "findings": [],
+      "files": [
+        {
+          "role": "EFFECT REFERENCE",
+          "path": "apps/website/public/assets/example/14.png",
+          "sha256": "eafe26c3203d9c83ed1831a13291b9d562ef4965d3d726fa1db70c8b8999e7a9"
+        },
+        {
+          "role": "PET IDENTITY / GERMAN-SHEPHERD-DOG",
+          "path": "apps/website/public/assets/hero-shepherd.jpg",
+          "sha256": "f6c37419e96b12425034d2bdcb54cbde952709f37352f3748d67d3db71e937b4"
+        },
+        {
+          "role": "CANDIDATE V01",
+          "path": "tools/imagegen/out/reference-v1/candidates/epic-ruins_german-shepherd-dog_9x16_v01.png",
+          "sha256": "6d450ed41c8876b08b651a5e2c7f1e78566d0c3682fc62fb2ab9ba4c8b3615ee"
+        }
+      ],
+      "approvedAt": "2026-08-17T09:47:48+08:00",
+      "master": {
+        "path": "tools/imagegen/out/reference-v1/retired-masters/epic-ruins_german-shepherd-dog_9x16_v01.png",
+        "sha256": "6d450ed41c8876b08b651a5e2c7f1e78566d0c3682fc62fb2ab9ba4c8b3615ee"
+      }
+    },
+    {
+      "templateId": "pet-life-journal",
+      "title": "本宠生涯日记",
+      "version": "v01",
+      "reviewState": "approved-by-user",
+      "finalApproval": "approved",
+      "findings": [],
+      "files": [
+        {
+          "role": "EFFECT REFERENCE",
+          "path": "apps/website/public/assets/example/10.png",
+          "sha256": "3a8f51ff6814fbc880e23c125c01693a78b7b7b2d749d16d9f0e4aef61fafc86"
+        },
+        {
+          "role": "PET IDENTITY / TOY-POODLE-DOG",
+          "path": "apps/website/public/assets/avatar-poodle.jpg",
+          "sha256": "e15fca17074b5c58cd5d477051ecc00c2d27116ad3f364211f3c350e1e69de2d"
+        },
+        {
+          "role": "CANDIDATE V01",
+          "path": "tools/imagegen/out/reference-v1/candidates/pet-life-journal_toy-poodle-dog_9x16_v01.png",
+          "sha256": "872a072cf5973e13a37a69baf8aee2abc5912e6dea371036d689af7bf854b182"
+        }
+      ],
+      "approvedAt": "2026-08-17T09:47:48+08:00",
+      "master": {
+        "path": "tools/imagegen/out/reference-v1/masters/pet-life-journal_toy-poodle-dog_9x16_v01.webp",
+        "sha256": "d7a87fba5d3d2fe7af7724770c52690265b3aad1d849de88cfdbd53270544a6e"
+      }
+    }
+  ],
+  "status": "approved-by-user-and-frozen",
+  "approvedAt": "2026-08-17T09:47:48+08:00"
+}

@@ -1,0 +1,14 @@
+.block-gap {
+  display: block;
+  margin-top: var(--space-4);
+}
+
+.block {
+  display: block;
+}
+
+.actions {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}

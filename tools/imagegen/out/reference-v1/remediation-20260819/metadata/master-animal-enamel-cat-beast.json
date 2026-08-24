@@ -1,0 +1,42 @@
+{
+  "task": "user-requested-frozen-master-remediation-2026-08-19",
+  "templateId": "animal-enamel-cat-beast",
+  "kind": "master",
+  "version": "v02",
+  "status": "generated-pending-visual-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputFidelity": "high",
+  "inputPolicy": {
+    "sequential": true,
+    "maxImages": 2,
+    "maxCombinedBytes": 1000000
+  },
+  "inputs": [
+    {
+      "role": "current-self-owned-master",
+      "path": ".tmp/master-remediation-20260819-inputs/animal-enamel-cat-beast-master.jpg",
+      "bytes": 124861,
+      "sha256": "a83596e3fef340f652c7952aec385c364b757299cab86c001d1e13b134471459"
+    },
+    {
+      "role": "effect-reference-composition-guide",
+      "path": ".tmp/master-remediation-20260819-inputs/animal-enamel-cat-beast-effect.jpg",
+      "bytes": 136632,
+      "sha256": "bb40064d54aaf4d40dfeb0f79ac4c80dea6cd3e1377e261c0e1f8e007fbfa59c"
+    }
+  ],
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "output": {
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/master-animal-enamel-cat-beast.png",
+    "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819/master-candidates/animal-enamel-cat-beast_ragdoll-cat_9x16_v02.png",
+    "width": 720,
+    "height": 1280,
+    "sha256": "9edfabed0b22f941fe29196b1c19a316d4c71c88d4cb4b55a467de3ab3160e7c"
+  },
+  "prompt": "Use case: identity-preserve precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the current self-owned master and controls the replacement pet or owner identity unless the request explicitly changes the breed. Image 2 is the composition and effect reference. Use it only to correct the requested composition, pose, expression, gaze or visual treatment. Preserve every aspect that is not explicitly changed below, including the scene, camera, crop, palette, lighting, costume, props, spatial relationships and visual medium. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature. No extra subjects, duplicate anatomy, human hands on animals, malformed paws, text, logo, watermark or signature. Replace the current tabby identity with one majestic adult seal-bicolor Ragdoll cat: broad fluffy cream-white face, dark seal ears and mask accents, clear blue eyes, pink nose, long silky chest fur and powerful healthy build. Keep the running pose, red field, white smoke, gold-turquoise-red flowing enamel ribbons and divine-beast energy exactly in the current self-owned visual language. The first read must be unmistakably a Ragdoll cat, not a tabby, kitten, Siamese or dog. Return a 9:16 portrait composition.",
+  "revisedPrompt": "Edit the provided current master image using the second image only as composition/effect reference. Preserve the exact scene, red background, white smoke, flowing gold-turquoise-red enamel ribbons, divine-beast energy, running pose, camera framing, lighting, palette, and overall visual style. Replace the current tabby cat identity with one unmistakable majestic adult seal-bicolor Ragdoll cat: broad fluffy cream-white face, dark seal ears and mask accents, clear blue eyes, pink nose, long silky chest fur, strong healthy adult build, confident forward-running expression. The cat must read clearly as a Ragdoll cat at first glance, not a tabby, kitten, Siamese, or dog. Keep the same running action and dramatic swirling ribbon effects, but adapt the anatomy and face to the Ragdoll breed. Remove every platform badge, AI-generated label, account name, account number, watermark, logo, and signature. No extra subjects, no duplicate anatomy, no human hands, no malformed paws, no text. Return a clean 9:16 portrait composition.",
+  "generatedAt": "2026-08-19T05:51:55.643Z"
+}

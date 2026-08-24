@@ -1,0 +1,106 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+
+<!--
+  岛首屏。**Canvas 只画场景，HUD 是覆盖其上的 WXML**（22 号文 5.1）：
+  UI 层继续复用 token 与既有组件，Canvas 内部像素不受 token 约束。
+
+  岛的内容变量（底板色）由 islandStyle 内联注入，走 scene-presets 的既有先例 ——
+  内容属性不进主题体系，换 UI 主题不改变岛的外观。
+-->
+<view class="island" style="{{islandStyle}}">
+  <!--
+    disable-scroll 是必须的：不加的话画布上的滑动会带着页面走，
+    而岛是满屏无滚动的画面。
+  -->
+  <canvas
+    id="island-scene"
+    class="scene"
+    type="2d"
+    disable-scroll
+    style="width:{{canvasWidth}}px;height:{{canvasHeight}}px"
+    bindtap="handleCanvasTap"
+  ></canvas>
+
+  <!--
+    顶部一行：名字 + 陪伴天数 + 昼夜天气。
+    **必须有奶白底板**（2.3 修订）：16 种昼夜×天气组合下没有任何单一字色能全域达标，
+    最暗的「雨+夜」深色字 3.23:1、白字 4.13:1 双双不达标。底板把文字与场景明度解耦。
+  -->
+  <view class="hud-top" style="padding-top:{{safeTop}}px">
+    <view class="plate">
+      <text class="plate-name">{{petName || '小岛'}}</text>
+      <text wx:if="{{companionText}}" class="plate-dot">·</text>
+      <!-- 天数走 services/companion.js，不重算（CLAUDE.md 硬约定） -->
+      <text wx:if="{{companionText}}" class="plate-days">{{companionText}}</text>
+      <text class="plate-weather">{{phaseText}}{{weatherText}}</text>
+    </view>
+  </view>
+
+  <!-- 素材未就绪：照实说一句，不画占位色块顶替（既有约定：抽象色块是方案点名的违例） -->
+  <view wx:if="{{!loading && !assetsReady}}" class="hud-note">
+    <view class="plate plate-note">
+      <text class="plate-days">画面素材还在准备，先陪它待一会儿</text>
+    </view>
+  </view>
+
+  <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="hud-error"></t-notice>
+
+  <!-- 动作反馈：用完即隐，不常驻 -->
+  <view wx:if="{{actionHint}}" class="hud-hint">
+    <view class="plate plate-note">
+      <text class="plate-days">{{actionHint}}</text>
+    </view>
+  </view>
+
+  <!-- 右下唯一悬浮按钮：写今天（2.3 的版式） -->
+  <view class="fab hit-area" hover-class="fab-hover" bindtap="openDiary">
+    <text class="fab-glyph">✎</text>
+  </view>
+
+  <!--
+    底部三个动作，胶囊。**不出现等级/经验/体力/金币/季节/时钟数字**
+    （前四项是 4.1 的禁止项，后两项属信息噪音）。
+
+    近景档收起动作条：那一档是看表情的情感承载层，压一排按钮上去会把脸挡住。
+  -->
+  <view wx:if="{{camera === 'wide'}}" class="hud-actions">
+    <view class="dock">
+      <view class="dock-item hit-area" hover-class="dock-hover" bindtap="pet">
+        <text class="dock-label">摸摸</text>
+      </view>
+      <view class="dock-item hit-area" hover-class="dock-hover" bindtap="gather">
+        <text class="dock-label">找找</text>
+        <text wx:if="{{gatherLeft !== null}}" class="dock-left">{{gatherLeft}}</text>
+      </view>
+      <view class="dock-item hit-area" hover-class="dock-hover" bindtap="feed">
+        <text class="dock-label">喂它</text>
+        <text wx:if="{{feedLeft !== null}}" class="dock-left">{{feedLeft}}</text>
+      </view>
+      <view class="dock-item hit-area" hover-class="dock-hover" bindtap="openAvatar">
+        <text class="dock-label">形象</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 近景档：一个退回按钮就够，点宠物本体也能退（命中表里那一条） -->
+  <view wx:else class="hud-actions">
+    <view class="dock">
+      <view class="dock-item hit-area" hover-class="dock-hover" bindtap="backToWide">
+        <text class="dock-label">看看院子</text>
+      </view>
+      <view class="dock-item hit-area" hover-class="dock-hover" bindtap="pet">
+        <text class="dock-label">再摸摸</text>
+      </view>
+    </view>
+  </view>
+
+  <!--
+    库存。**掉落物由服务端返回后才出现在这里**（5.6：允许乐观动画，不允许乐观数据）。
+    物品名保持抽象（饼干、小鱼干、毛线球），不出现品牌、成分与克数（4.1 #10）。
+  -->
+  <view wx:if="{{inventory.length && camera === 'wide'}}" class="hud-bag">
+    <view class="plate plate-note">
+      <text wx:for="{{inventory}}" wx:key="itemId" class="bag-item">{{item.name}} {{item.count}}</text>
+    </view>
+  </view>
+</view>

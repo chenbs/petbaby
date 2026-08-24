@@ -1,0 +1,30 @@
+---
+/*
+ * 404。复用 BaseLayout，给回首页与文章列表的出口（方案第 4 章）。
+ *
+ * noindex：错误页被索引没有意义。用 noindex, follow —— 页面上的链接仍该被跟随。
+ * sitemap 里也排掉了（astro.config.mjs 的 filter）。
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="页面不存在"
+  description="这个地址下没有内容。可能是链接过期，或者地址打错了一个字符。回首页看看玩法，或者去文章列表。"
+  noindex
+>
+  <section class="notfound">
+    <p class="notfound-code" aria-hidden="true">404</p>
+    <h1 class="h2 h2-sm">这个地址下没有内容</h1>
+    <p class="page-lead" style="text-align:center">
+      可能是链接过期，或者地址打错了一个字符。
+    </p>
+    <div class="notfound-actions">
+      <a class="btn btn-primary" href="/">
+        回首页
+        <svg class="arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
+      </a>
+      <a class="btn btn-secondary" href="/blog/">看文章</a>
+    </div>
+  </section>
+</BaseLayout>

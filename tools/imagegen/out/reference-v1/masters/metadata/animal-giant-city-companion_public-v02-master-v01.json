@@ -1,0 +1,86 @@
+{
+  "kind": "frozen-master",
+  "templateId": "animal-giant-city-companion",
+  "title": "巨型城市伙伴",
+  "status": "approved-frozen-master",
+  "subjectMode": "pet",
+  "version": "public-v02-master-v01",
+  "orientation": "portrait",
+  "size": "720x1280",
+  "sourcePublicPreview": {
+    "path": "tools/imagegen/out/reference-v1/masters/animal-giant-city-companion_public-v02-master-v01.webp",
+    "sha256": "41bbb8ca30f7ec488c0da33c2ddebeca291fc8a68e24a6bb286c8f1835a200fe",
+    "publicVersion": "public-v02",
+    "metadata": "tools/imagegen/out/reference-v1/public-previews/metadata/animal-giant-city-companion_public-v02.json",
+    "byteIdentical": true,
+    "generatedFromOriginalEffectReference": true,
+    "generatedFromPreviousFrozenMaster": false
+  },
+  "derivedEffectReference": {
+    "role": "original-effect-reference-internal-audit-only",
+    "source": "apps/website/public/assets/example/animal/jimeng-2026-06-06-2771-超现实，一只巨大的猫咪在楼宇间穿行，最高的楼只有猫的一半身高。猫咪好奇的看着行驶....png",
+    "excludedAtRuntime": true,
+    "publicUseAllowed": false
+  },
+  "previousFrozenMaster": {
+    "path": "tools/imagegen/out/reference-v1/masters/animal-giant-city-companion_public-v02-master-v01.webp",
+    "sha256": "41bbb8ca30f7ec488c0da33c2ddebeca291fc8a68e24a6bb286c8f1835a200fe",
+    "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-giant-city-companion_public-v02-master-v01.json",
+    "retainedForRollback": true
+  },
+  "masterPath": "tools/imagegen/out/reference-v1/masters/animal-giant-city-companion_public-v02-master-v01.webp",
+  "masterSha256": "41bbb8ca30f7ec488c0da33c2ddebeca291fc8a68e24a6bb286c8f1835a200fe",
+  "provider": "lingsuan",
+  "endpoint": "/v1/images/edits",
+  "runtimeReferenceContract": {
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-giant-city-companion_public-v02-master-v01.webp",
+      "sha256": "41bbb8ca30f7ec488c0da33c2ddebeca291fc8a68e24a6bb286c8f1835a200fe"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "public-preview-storage-key",
+      "rejected-promotion-candidate"
+    ]
+  },
+  "runtimePromptExtension": "Keep the monumental pet scale among skyscrapers and traffic. Both eyes must stay directed downward toward the tiny people and cars, never toward the camera.",
+  "stabilityReview": {
+    "state": "approved-by-user",
+    "identities": [
+      {
+        "identityId": "british-shorthair-cat",
+        "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-giant-city-companion/animal-giant-city-companion_british-shorthair-cat_stability-v01.png",
+        "outputSha256": "478dc0d2f4dcdaed5acb165fda699aba5fd0a9c1c8d7e3bc82a4e1cfccdc66c8",
+        "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-giant-city-companion/metadata/animal-giant-city-companion_british-shorthair-cat_stability-v01.json"
+      },
+      {
+        "identityId": "german-shepherd-dog",
+        "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-giant-city-companion/animal-giant-city-companion_german-shepherd-dog_stability-v01.png",
+        "outputSha256": "e84e0854419e45371f770dcda4d26424ab62bf58bd345ac0e44f80f731a50023",
+        "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-giant-city-companion/metadata/animal-giant-city-companion_german-shepherd-dog_stability-v01.json"
+      },
+      {
+        "identityId": "cream-longhair-cat",
+        "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-giant-city-companion/animal-giant-city-companion_cream-longhair-cat_stability-v01.png",
+        "outputSha256": "34ec21ba321f3a4450b722580fd294709841afd2db0892a26cd40f15a25b6cf4",
+        "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-giant-city-companion/metadata/animal-giant-city-companion_cream-longhair-cat_stability-v01.json"
+      }
+    ],
+    "approvedAt": "2026-08-20T06:57:35.480Z"
+  },
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-20T06:57:35.480Z",
+    "note": "用户审核公开展示图升母版稳定性总览后明确批准。"
+  },
+  "publicUseAllowed": false,
+  "runtimeMasterUseAllowed": true,
+  "runtimeThirdPartyEffectReferenceIncluded": false
+}

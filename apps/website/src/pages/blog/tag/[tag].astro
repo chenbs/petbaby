@@ -1,0 +1,57 @@
+---
+/* 标签页。标签从 frontmatter 汇总（方案第 4 章）。 */
+import type { GetStaticPaths } from "astro";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import PostCard from "../../../components/PostCard.astro";
+import Breadcrumb from "../../../components/Breadcrumb.astro";
+import Cta from "../../../components/home/Cta.astro";
+import { listPosts, listTags, type Post } from "../../../lib/posts";
+import { breadcrumbLd } from "../../../lib/jsonld";
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const [posts, tags] = await Promise.all([listPosts(), listTags()]);
+  // params 用 slug（空格已换成连字符），展示与筛选用原始标签文字
+  return tags.map(({ tag, slug }) => ({
+    params: { tag: slug },
+    props: { tag, posts: posts.filter((post) => post.data.tags.includes(tag)) },
+  }));
+};
+
+interface Props {
+  tag: string;
+  posts: Post[];
+}
+
+const { tag, posts } = Astro.props;
+
+const crumbs = [
+  { label: "首页", href: "/" },
+  { label: "文章", href: "/blog/" },
+  { label: tag },
+];
+
+const description = `标签「${tag}」下的 ${posts.length} 篇文章。玩法教程、宠物拍照技巧与产品设计取舍，全部基于真实生成结果。`;
+---
+
+<BaseLayout
+  title={`${tag} · 文章`}
+  description={description}
+  jsonLd={[breadcrumbLd(crumbs)]}
+>
+  <section class="section">
+    <div class="container">
+      <div class="page-head">
+        <Breadcrumb items={crumbs} />
+        <p class="eyebrow">标签</p>
+        <h1 class="h2 h2-sm">{tag}</h1>
+        <p class="page-lead">{description}</p>
+      </div>
+
+      <div class="post-grid" style="margin-top:40px">
+        {posts.map((post, index) => <PostCard post={post} eager={index < 3} />)}
+      </div>
+    </div>
+  </section>
+
+  <Cta />
+</BaseLayout>

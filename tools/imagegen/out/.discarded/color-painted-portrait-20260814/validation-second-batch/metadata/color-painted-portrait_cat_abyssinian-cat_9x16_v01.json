@@ -1,0 +1,53 @@
+{
+  "jobId": "color-painted-portrait_cat_abyssinian-cat",
+  "templateId": "color-painted-portrait",
+  "title": "彩色绘画肖像",
+  "status": "generated-pending-user-approval",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/color-painted-portrait_dragon-li-cat_9x16_reset-v06.png",
+      "sha256": "d2025879057a7a8a7c6ba76692b7c78130de887cd6e9dd28017e0706c8b194a2"
+    },
+    {
+      "role": "new-pet-identity-reference",
+      "identityId": "abyssinian-cat",
+      "species": "cat",
+      "breed": "adult ruddy Abyssinian cat",
+      "path": "apps/website/public/assets/work-abyssinian.jpg",
+      "sha256": "5608fe24bd5309a738f10fa59174ab31bbd2a301a1bf5a15dd84d1ef9f4669bd"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Create one exact 720x1280 vertical runtime validation image from exactly two inputs. Image 1 is our frozen self-owned master and controls every non-identity detail: scene, crop, camera, pose, action, expression, gaze, lighting, palette, medium, brushwork, clothing, text and props. Image 2 controls only the new pet's breed, coat, markings, ears, eye colour, adult age and natural proportions. No third-party effect reference is included. Replace only the master pet with the exact adult ruddy Abyssinian cat from Image 2, preserving its warm ruddy ticked coat, darker forehead markings, large upright ears, golden almond eyes, terracotta nose and elegant healthy adult body. Remove the old pet completely. Do not copy Image 2's pose, expression, background, lighting or photographic rendering. Keep the seated three-quarter adult pet portrait, slight upward gaze, small gentle smile, rich orange field and restrained teal, coral, yellow and cream gestural paint marks around the silhouette. Replicate the master's exact seated adult posture, head angle, upward gaze, ear orientation, closed mouth, soft smile and full healthy body scale. Do not turn the subject into a juvenile, chibi figure or enlarged head. Image 1 is the absolute authority for the entire painting, including the face. Render the replacement pet in the same expressive digital painted style: broad decisive directional brush strokes, simplified painterly fur, small dry broken marks only where the master uses them, crisp but not harsh stroke edges and a delicate illustrated face. Translate the new coat markings through the same painted language. Do not import photographic fur, realistic iris reflections, volumetric nose or muzzle modelling, smooth photo shading, fine whiskers, thick impasto or a pasted photo face from Image 2. No clothing or added prop. Keep the image free of text, logos, watermarks and signatures. Scene-change budget 0%. Keep one adult pet. No juvenization, generic cute redesign, residual old-pet parts, extra limbs or ears, malformed face, human hands, broken contacts, logo, watermark or signature.",
+  "revisedPrompt": "Create one exact 720x1280 vertical runtime validation image from exactly two inputs. Image 1 is our frozen self-owned master and controls every non-identity detail: scene, crop, camera, pose, action, expression, gaze, lighting, palette, medium, brushwork, clothing, text and props. Image 2 controls only the new pet's breed, coat, markings, ears, eye colour, adult age and natural proportions. No third-party effect reference is included. Replace only the master pet with the exact adult ruddy Abyssinian cat from Image 2, preserving its warm ruddy ticked coat, darker forehead markings, large upright ears, golden almond eyes, terracotta nose and elegant healthy adult body. Remove the old pet completely. Do not copy Image 2's pose, expression, background, lighting or photographic rendering. Keep the seated three-quarter adult pet portrait, slight upward gaze, small gentle smile, rich orange field and restrained teal, coral, yellow and cream gestural paint marks around the silhouette. Replicate the master's exact seated adult posture, head angle, upward gaze, ear orientation, closed mouth, soft smile and full healthy body scale. Do not turn the subject into a juvenile, chibi figure or enlarged head. Image 1 is the absolute authority for the entire painting, including the face. Render the replacement pet in the same expressive digital painted style: broad decisive directional brush strokes, simplified painterly fur, small dry broken marks only where the master uses them, crisp but not harsh stroke edges and a delicate illustrated face. Translate the new coat markings through the same painted language. Do not import photographic fur, realistic iris reflections, volumetric nose or muzzle modelling, smooth photo shading, fine whiskers, thick impasto or a pasted photo face from Image 2. No clothing or added prop. Keep the image free of text, logos, watermarks and signatures. Scene-change budget 0%. Keep one adult pet. No juvenization, generic cute redesign, residual old-pet parts, extra limbs or ears, malformed face, human hands, broken contacts, logo, watermark or signature.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation-second-batch/color-painted-portrait_cat_abyssinian-cat_9x16_v01.png",
+    "sha256": "bc4a563abcd1f025fb49a3c0c1e8d33611813ea5557fd7e3904c45badc0c3114"
+  },
+  "review": {
+    "state": "pending-human-review",
+    "checks": {
+      "petIdentity": null,
+      "adultAgeAndProportions": null,
+      "masterPoseAndExpression": null,
+      "masterStyleAndBrushwork": null,
+      "sceneAndComposition": null,
+      "anatomyAndContacts": null,
+      "textAndRights": null,
+      "dimensions": "pass"
+    },
+    "findings": [],
+    "finalApproval": "pending-user"
+  },
+  "generatedAt": "2026-08-14T08:17:42.151Z"
+}

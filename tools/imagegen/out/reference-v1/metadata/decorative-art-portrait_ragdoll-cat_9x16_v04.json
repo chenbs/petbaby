@@ -1,0 +1,62 @@
+{
+  "templateId": "decorative-art-portrait",
+  "title": "装饰艺术肖像",
+  "entryId": "art",
+  "status": "superseded-by-current-candidate",
+  "version": "v04",
+  "subject": "ragdoll-cat",
+  "breed": "成年海豹重点色布偶猫",
+  "selectionRationale": "用布偶猫验证碎片化几何笔触能否保住蓝眼、重点色面罩和成年长毛猫身份，避免脸部被切碎。",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-effect-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/08bd1d4d-e149-4670-9867-b288ef488aaa.jpg",
+      "sha256": "b257fa2fc85d27d42077b164f6a8d1e6e5878df02916f0887788094e62a8d6a4"
+    },
+    {
+      "role": "derived-pet-identity-reference-from-prior-candidate",
+      "path": "tools/imagegen/out/reference-v1/candidates/decorative-art-portrait_ragdoll-cat_9x16_v03.png",
+      "sha256": "a5355fe46b81b6bcd7f46dfaa391e1009d19def1ba38530688550a1c1a3506a9"
+    }
+  ],
+  "identityProvenance": {
+    "originalPetIdentityPath": "apps/website/public/assets/work-ragdoll.jpg",
+    "derivedFromCandidate": "tools/imagegen/out/reference-v1/candidates/decorative-art-portrait_ragdoll-cat_9x16_v03.png"
+  },
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "inputFidelity": "not-sent",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving effect replication. Asset type: internal self-owned pet template master, exact final canvas 720x1280 (9x16). Use exactly two input images. Image 1 is the third-party effect reference used only for this internal master-production pass. Image 2 is the sole pet identity reference. Replace only the principal animal or person subject in Image 1 with the exact pet from Image 2. Remove every residual face, hair, skin, hand, paw, limb, coat marking or silhouette from the original subject. Image 2 controls only pet identity: species, breed, coat, markings, ear shape, eye colour, actual age and natural healthy proportions. Image 1 controls every transferred visual detail: composition, crop, camera, perspective, subject position, pose, action, expression, gaze, lighting, palette, rendering medium, brushwork, line quality, texture, clothing, props, text layout and subject-to-scene contacts. Scene-change budget is 0%. Do not redesign, reinterpret, recolour, simplify, clean up or add background content. Translate the original pose, action and expression to correct animal anatomy with only the smallest contact-boundary adjustment required by the new species. Never create a human face, human skin, human hands or fingers. Keep paws anatomically natural and keep clothing and props physically attached. The replacement pet must be rendered completely in Image 1's medium and detail language, including its face, eyes, muzzle, ears and fur. Never paste a photographic pet face into an illustration or leave realistic photographic facial texture inside a painted scene. Do not copy Image 2's pose, expression, background, lighting or photographic rendering. Preserve the pet's adult age and natural breed proportions. Do not turn it into a puppy or kitten, enlarge the head or eyes, shorten the muzzle or body, or force a generic baby face. Keep it healthy, friendly and immediately appealing through the transferred expression and art direction, never skinny, gaunt, old, stern, aggressive, uncanny or strange. Keep the complete meaningful text, clothing, landmarks and distinctive props from Image 1 except for the explicit rights-safe text or emblem replacements stated below. Remove third-party platform watermarks, account IDs, signatures and unrelated brand marks. No new logo or watermark. The replacement identity is the exact adult seal-point Ragdoll cat from Image 2. Preserve the cream long coat, deep seal-brown mask and ears, round blue-grey eyes, broad fluffy cheeks, dark nose, soft full chest and healthy adult long-haired body. Preserve Image 1's exact minimalist fragmented cat portrait: three-quarter right-facing bust, warm off-white paper, large navy-black polygonal paint fragments, translucent grey facets, sharp broken ear and shoulder edges, sparse fine whisker lines, generous negative space, subtle paper texture and faint inset border shadow. Replace only the original black cat with the exact adult seal-point Ragdoll from Image 2. Preserve Image 1's same head angle, rightward gaze, quiet gentle expression, bust scale and fragment placement rhythm. Recognise the adult Ragdoll through the broad head silhouette, dark seal mask and ears, cream outer coat and full chest shape, but express every feature only as flat angular paint fragments and dry broken edges. Image 2 is a derived identity reference from the previous candidate. Use it only to retain the adult Ragdoll's broad head silhouette, seal-point distribution, upright ears and full chest proportions. Explicitly discard Image 2's realistic eyes, eyelids, nose, muzzle shading, soft hair strands, facial gradients and three-dimensional volume. Match Image 1's abstraction level across the entire face. Construct the mask, brow, cheeks, muzzle, nose and mouth from roughly six to twelve large hard-edged navy, black, cream and translucent grey facets with visible gaps of paper; there must be no continuous realistic face underneath. Keep only the near eye clearly visible. It must be one simplified flat pale blue-grey triangular or almond polygon bounded by dark paint with one solid dark wedge, matching Image 1 rather than Image 2: no circular iris, iris texture, glass highlight, catchlight, pupil depth, moist surface, eyelid fold, orbital shading or spherical eyeball. Hide the far eye almost completely behind the profile and dark facets. Reduce the nose and mouth to two or three flat angular brush shapes with no rounded muzzle volume. Flatten the entire face into a strict cut-paper value design: one continuous opaque navy-black polygon for the seal mask, one flat cream paper shape for the outer head and chest, one pale blue-grey eye polygon, and at most four translucent grey facets. Use no beige facial shading, no soft transition between mask and cream coat, no light falloff and no hidden realistic underpainting. The mask must look like a flat graphic shape printed on paper, not fur wrapped around a three-dimensional skull. Suggest long fur only through the broken outer polygon silhouette and a few broad shard edges. No individual strands, soft fluffy photographic hair, realistic whisker roots, smooth facial gradients, anatomical volume, studio light, low-poly 3D rendering or photographic texture. This is a flat two-dimensional fragmented ink-and-paper collage, not a faceted realistic cat portrait. Keep the face coherent and attractive without slicing, duplicating or misaligning features. Retain enough cream paper space to distinguish the coat while keeping the original restrained navy-grey palette. No added colour accent or text. Keep exactly the requested pet identity throughout. Correct animal anatomy only: no duplicate or fused limbs, extra ears, warped eyes, malformed mouth, floating tail, broken garment boundaries or residual original subject.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "superseded-before-user-approval",
+    "checks": {
+      "petIdentity": "pending",
+      "adultAgeAndCuteness": "pending",
+      "poseExpressionAndAction": "pending",
+      "sceneComposition": "pending",
+      "faceAndMediumConsistency": "pending",
+      "anatomyAndContacts": "pending",
+      "textAndRights": "pending",
+      "dimensions": "pass"
+    },
+    "findings": [
+      "大块平面提示词仍残留写实头骨和毛发层次，已由五色扁平身份导引图驱动的几何拼贴版替代。"
+    ],
+    "finalApproval": "not-applicable"
+  },
+  "generatedAt": "2026-08-14T10:53:16.148Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/decorative-art-portrait_ragdoll-cat_9x16_v04.png",
+    "rawPath": "tools/imagegen/out/reference-v1/candidates/raw/decorative-art-portrait_ragdoll-cat_9x16_v04.png",
+    "sha256": "7e9582acc846715f321bb899e40536dcbfc72006beee9db7a52f70794064c731"
+  },
+  "replacedBy": "decorative-art-portrait_ragdoll-cat_9x16_v05"
+}

@@ -1,0 +1,64 @@
+{
+  "templateId": "leaping-cover",
+  "title": "腾空跳跃封面",
+  "entryId": "action",
+  "status": "master-candidate-pending-user-approval",
+  "subject": "border-collie",
+  "breed": "边境牧羊犬",
+  "revision": {
+    "version": "v04",
+    "supersedes": "leaping-cover_border-collie_9x16_v03.png",
+    "reviewFinding": "v03 面部已有厚涂纹理，但眼球仍有玻璃高光，鼻口仍有写实塑形。",
+    "scope": "face-medium-style-transfer"
+  },
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "previous-master-candidate-edit-target",
+      "path": "tools/imagegen/out/reference-v1/candidates/leaping-cover_border-collie_9x16_v03.png",
+      "sha256": "cda0531594192ffdc4824a98f0fa8a3ed9dafad659956fa66858cea301e0cfb0"
+    },
+    {
+      "role": "third-party-face-medium-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/223c5d78-2ba2-49ff-b35e-8c247fd53b20.jpg",
+      "sha256": "ee04f9b8c5a48fe8ad768ec5d51fc5463093f437bf697899d1ee7821e6151a51"
+    },
+    {
+      "role": "pet-identity-only-reference",
+      "path": "apps/website/public/assets/work-border.jpg",
+      "sha256": "8862d1dc48584f73309eac0890afb3367759dd131c681de970976b52a561fc50"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: precise face-medium edit with identity preservation. Create a vertical 9:16 hand-painted pet action cover at exactly 720x1280 pixels from exactly three input images. Image 1 is the edit target. Preserve its exact 9:16 composition, airborne Border Collie pose, body size, four limbs, foreground paws, thick impasto body, turquoise background, magenta-purple floor strokes, orange-yellow accents and all paint outside the head. The body and scene already work; do not redesign them. Image 2 is the authoritative hand-painted face-medium reference. Repaint only the head and facial area of Image 1 so it follows Image 2's visibly handmade impasto logic: broad opaque bristle strokes, palette-knife ridges, simplified pigment masses, broken painted edges and selective dark brush marks. The head must look painted with the same physical paint, brush size and pigment thickness as Image 1's body. Use Image 2's joyful illustrated face treatment: make both eyes friendly happy squinting crescents drawn with short dark-brown brush strokes, with no visible eyeball, iris, pupil, white highlight, reflection, wetness or glass effect. Keep the Border Collie recognisable through the white blaze, black mask, muzzle, ears and overall proportions rather than realistic eyes. Reconstruct the nose as one simplified matte charcoal-and-blue palette-knife shape with visibly uneven paint edges and absolutely no realistic wet shine. Reconstruct muzzle, lips, teeth and tongue from a few bold flat paint shapes with rough handmade edges and no realistic moisture. Convert all cheek fur and whiskers into grouped broad brush marks; no individual photographic strands. Image 3 is identity-only. Preserve the same Border Collie's narrow white blaze, white muzzle, black facial blocks, warm brown eyes, black nose and semi-upright ears. Do not import Image 3's photographic fur, lighting, lens sharpness, glossy reflections or realistic microtexture. Keep the happy open-mouth expression, youthful cuteness and correct anatomy. Blend the repainted face seamlessly into the already painted ears, neck and chest. Reject any open glassy eye, iris detail, eye catchlight, photoreal eye, photographic nose, realistic wet mouth, camera-resolved fur, smooth airbrush shading, cut-out face, 3D render, text, logo, watermark or signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "prechecked-pending-user-approval",
+    "checks": {
+      "petIdentity": "pass",
+      "cuteness": "pass",
+      "effectComposition": "pass",
+      "subjectMediumConsistency": "pass",
+      "faceMediumConsistency": "pass",
+      "anatomy": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [
+      "边牧面部已改为厚涂眯笑弧线与颜料块鼻口，眼鼻无玻璃或湿润照片反光；脸部和身体使用同一刮刀厚涂媒介。"
+    ],
+    "finalApproval": "pending-user"
+  },
+  "generatedAt": "2026-08-13T07:23:30.179Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/leaping-cover_border-collie_9x16_v04.png",
+    "sha256": "07642dbd79383fe8d040c01b94f094c1b8fb013c6bcdb4fbb1b52233564c8568"
+  }
+}

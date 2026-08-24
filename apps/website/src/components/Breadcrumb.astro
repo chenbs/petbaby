@@ -1,0 +1,22 @@
+---
+/*
+ * 面包屑。视觉与 JSON-LD 从同一个数组出 —— 分开写会有一天不一致，
+ * 而结构化数据与页面内容不符是搜索作弊。
+ */
+interface Props {
+  items: Array<{ label: string; href?: string }>;
+}
+
+const { items } = Astro.props;
+---
+
+<nav class="breadcrumb" aria-label="面包屑">
+  {
+    items.map((item, index) => (
+      <>
+        {index > 0 && <span class="breadcrumb-sep" aria-hidden="true">/</span>}
+        {item.href ? <a href={item.href}>{item.label}</a> : <span aria-current="page">{item.label}</span>}
+      </>
+    ))
+  }
+</nav>

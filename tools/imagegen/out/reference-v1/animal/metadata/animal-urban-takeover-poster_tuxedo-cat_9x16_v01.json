@@ -1,0 +1,81 @@
+{
+  "templateId": "animal-urban-takeover-poster",
+  "entryId": "career",
+  "title": "城市潮流活动海报",
+  "sourceEffectFile": "apps/website/public/assets/example/animal/jimeng-2026-07-09-7260-英文活动海报，软萌拟猫咪形象少女，身着街头华丽短裙，搭配超大码板鞋；伸手朝向镜头....png",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-07-09-7260-英文活动海报，软萌拟猫咪形象少女，身着街头华丽短裙，搭配超大码板鞋；伸手朝向镜头....png",
+      "sha256": "23cddb2ff507a78f4bab45394499d3f8afcde38b6d6746ec2036be1c76a1e229"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "tuxedo-cat",
+      "species": "cat",
+      "breed": "adult black-and-white tuxedo cat",
+      "path": "tools/imagegen/out/source/cat-tuxedo.jpg",
+      "sha256": "c4b2ebaac7dd5d59fffd83a827d94fdc03e1befd3e1108f337de8ba5488a7d39"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a one-time third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every designated original animal, human-like creature or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult black-and-white tuxedo cat with black crown and ears, narrow white facial blaze, white muzzle and chest, pale green eyes, pink nose, black back and white front legs. Render the face, fur and anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration or turn a stylized scene into a realistic photo. Keep the pet appealing and healthy, never skinny, gaunt, uncanny, aggressive or puppy-like. Keep the English poster hierarchy, oversized sneaker perspective, reaching action, street outfit, typography blocks and energetic city treatment; replace known event or IP wording with original pet-safe wording. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character or artist names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a vertical 9:16 poster illustration, exact composition and visual energy inspired by a dynamic urban sneaker-culture event poster. Canvas 720x1280. Preserve the original poster structure: dramatic low-angle perspective, huge foreground sneaker, central character reaching toward the viewer, confetti and dust burst, tall city canyon, billboard-like typography blocks at top and bottom, bright blue-and-yellow distressed graphic design, energetic motion, high contrast, cinematic lighting, street market / art fair vibe. Replace the main subject with one coherent adult black-and-white tuxedo cat identity: black crown and ears, narrow white facial blaze, white muzzle and chest, pale green eyes, pink nose, black back, white front legs, healthy adult proportions, appealing and natural. The cat should be rendered in the same stylized illustration language as the poster, not photorealistic, with fur, face, and anatomy integrated into the artwork. Keep the oversized sneaker perspective and reaching action, with the cat wearing a street outfit that matches the original poster's fashion energy. Keep the city background, props, contact relationships, and expressive pose intact; do not redesign the scene. Preserve the text layout and hierarchy but replace any brand/event/IP wording, people names, logos, watermarks, and copyrighted terms with original pet-safe wording in the same bold distressed style. Use original text such as: top headline 'URBAN TAKEOVER', subhead 'STEP INTO THE SPOTLIGHT', middle 'STREET MARKET & ART SHOW', bottom 'ALL EYES ON YOU'. No logos, no signatures, no watermark, no extra limbs, no extra ears or eyes, no duplicate subjects, no uncanny anatomy. Maintain the same vivid blue, yellow, and warm city palette, distressed print texture, and poster-like composition throughout.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-urban-takeover-poster_tuxedo-cat_9x16_v01.png",
+    "sha256": "4a7e9abc9f2fdf13c04ea644d08460874b5579785c1d1ccc34d816a405517c5f"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-18T01:00:00+08:00"
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-17T16:37:35.751Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/animal/candidates/animal-urban-takeover-poster_tuxedo-cat_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/animal-urban-takeover-poster_tuxedo-cat_9x16_v01.webp",
+  "masterSha256": "aab05fb3a5f53062ea526f450b9e00ac4710fefc52873a5fa15c4a1927be098c",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-18T01:00:00+08:00",
+    "note": "用户确认本批次除七个待重做模板外，其余动物效果候选均通过并保存为母版。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-urban-takeover-poster_tuxedo-cat_9x16_v01.webp",
+      "sha256": "aab05fb3a5f53062ea526f450b9e00ac4710fefc52873a5fa15c4a1927be098c"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "unapproved-candidate"
+    ]
+  }
+}

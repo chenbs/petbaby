@@ -1,0 +1,76 @@
+{
+  "templateId": "animal-fantasy-double-exposure",
+  "entryId": "action",
+  "title": "奇幻双重曝光",
+  "version": "eastern-myth-v03",
+  "status": "superseded-by-approved-master",
+  "remediation": "double-exposure-face-background-transition-refinement",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-eastern-myth-v02-edit-target",
+      "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-fantasy-double-exposure_black-lab-dog_9x16_eastern-myth-v02.png",
+      "sha256": "3116bcbc756b44434d009026ee09603e2dd458d0e601c4738cd2f555fa07a72a"
+    }
+  ],
+  "sourceCandidateVersion": "eastern-myth-v02",
+  "rawPetIdentityIncluded": false,
+  "userBackgroundInheritedFromSource": true,
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%-transition-only",
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "prompt": "Use case: transition-only refinement of an existing Eastern dark-mythology double-exposure artwork. Return the exact same 9x16 composition at 720x1280 pixels. Image 1 is the only input and the absolute authority for all finished content: keep the exact adult black Labrador identity, side-profile direction, head and body silhouette, eye, nose, mouth, muzzle proportions, Chinese mountain-temple city, bridges, river, many-armed black-stone guardian, people, storm clouds, charcoal palette, crop, scale, lighting and visual hierarchy unchanged. Change only Image 1's internal transition between the Labrador face and the embedded mythology scene. The current image still reads as a landscape confined to the left half and an intact dog photograph on the right half. Remove that two-part split and the cutout-like boundary across the forehead, eye region, cheek, jaw and neck. There must be no clean mask edge, no straight or continuous dividing contour, and no separate photographic face pasted over the scene. Extend the double exposure gently across the entire visible face instead of stopping beside it. Carry translucent mountain mist and charcoal smoke across the crown, around and partially in front of the eye, across the cheek, jaw, bridge of the muzzle and outer muzzle at low opacity. Let a few very faint mountain ridges, temple-roof fragments and cloudy tonal shapes remain visible through those facial regions, with the overlay strongest near the former boundary and progressively lighter toward the nose and mouth. At the same time, carry short black fur strokes and soft facial shadows leftward into the guardian, mountains and clouds so both layers interpenetrate. Use feathered opacity, irregular broken brush edges, smoky veils, lost-and-found contours, fine fur filaments crossing both directions and tonal overlap. The transition must occupy a broad uneven band, not a narrow blurred seam. Keep the Labrador face recognizable, mature, handsome and anatomically unchanged. Preserve the existing eye shape and gaze, nose, mouth and broad muzzle; do not hide the face, close the eye, create extra eyes, distort anatomy, change expression or turn the dog into a statue. The eye and muzzle may remain the clearest anchors, but their surrounding values must belong to the same painterly atmospheric field as the background. Do not redesign or regenerate the scene. Do not move, add or remove buildings, bridges, deity, figures or mountains. Do not change the external silhouette or crop. No text, logo, caption, watermark, Western architecture, Western occult symbols, lava, gore or new subject. Return only the finished seamless double-exposure edit.",
+  "revisedPrompt": "Edit the provided Eastern dark-mythology double-exposure artwork using the source image as absolute authority. Preserve the exact same 9:16 composition and overall framing, matching 720x1280 output. Keep the adult black Labrador identity unchanged: exact side-profile direction, head and body silhouette, eye, nose, mouth, muzzle proportions, crop, scale, lighting, and visual hierarchy all unchanged. Keep the Chinese mountain-temple city, bridges, river, many-armed black-stone guardian, people, storm clouds, charcoal palette, and all existing structures in the same positions with no additions, removals, redesign, or movement.\n\nOnly refine the internal transition between the Labrador face and the embedded mythology scene. Remove the current two-part split and the cutout-like boundary across the forehead, eye region, cheek, jaw, and neck. There must be no clean mask edge, no straight or continuous dividing contour, and no separate photographic face pasted over the scene. Extend the double exposure gently across the entire visible face instead of stopping beside it. Carry translucent mountain mist and charcoal smoke across the crown, around and partially in front of the eye, across the cheek, jaw, bridge of the muzzle, and outer muzzle at low opacity. Let a few very faint mountain ridges, temple-roof fragments, and cloudy tonal shapes remain visible through those facial regions, with the overlay strongest near the former boundary and progressively lighter toward the nose and mouth. At the same time, carry short black fur strokes and soft facial shadows leftward into the guardian, mountains, and clouds so both layers interpenetrate. Use feathered opacity, irregular broken brush edges, smoky veils, lost-and-found contours, fine fur filaments crossing both directions, and tonal overlap. The transition must occupy a broad uneven band, not a narrow blurred seam.\n\nKeep the Labrador face recognizable, mature, handsome, and anatomically unchanged. Preserve the existing eye shape and gaze, nose, mouth, and broad muzzle; do not hide the face, close the eye, create extra eyes, distort anatomy, change expression, or turn the dog into a statue. The eye and muzzle may remain the clearest anchors, but their surrounding values must belong to the same painterly atmospheric field as the background. Do not redesign or regenerate the scene. Do not move, add, or remove buildings, bridges, deity, figures, or mountains. Do not change the external silhouette or crop. No text, logo, caption, watermark, Western architecture, Western occult symbols, lava, gore, or new subject. Return only the finished seamless double-exposure edit.",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "queue": {
+    "configuredConcurrency": 1,
+    "localWorkerConcurrency": 1,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "allowedChange": "internal-face-to-scene-transition-only",
+  "blendContract": {
+    "preserve": [
+      "pet-identity",
+      "pose",
+      "expression",
+      "external-silhouette",
+      "eastern-myth-scene",
+      "composition",
+      "palette"
+    ],
+    "remove": [
+      "hard-internal-mask-edge",
+      "cutout-face-appearance",
+      "continuous-dividing-contour"
+    ],
+    "method": [
+      "full-face-low-opacity-overlap",
+      "mist-interpenetration",
+      "broken-brush-edges",
+      "lost-and-found-contours",
+      "tonal-overlap"
+    ]
+  },
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-fantasy-double-exposure_black-lab-dog_9x16_eastern-myth-v03.png",
+    "sha256": "ba4306f6c092b6d71ae7b2e664f65aaf840632a6d5d3decec78082ffda73d126"
+  },
+  "review": {
+    "state": "not-selected-by-user",
+    "finalApproval": "not-selected",
+    "findings": [
+      "用户最终选择并冻结 eastern-myth-v02；eastern-myth-v03 仅保留为历史候选。"
+    ],
+    "reviewedAt": "2026-08-18T12:11:17+08:00"
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-18T03:55:16.681Z",
+  "replacedBy": "animal-fantasy-double-exposure_black-lab-dog_9x16_eastern-myth-v02"
+}

@@ -1,0 +1,62 @@
+{
+  "templateId": "leaping-cover",
+  "title": "腾空跳跃封面",
+  "entryId": "action",
+  "status": "master-candidate-pending-user-approval",
+  "subject": "border-collie",
+  "breed": "边境牧羊犬",
+  "revision": {
+    "version": "v03",
+    "supersedes": "leaping-cover_border-collie_9x16_v02.png",
+    "reviewFinding": "v02 身体厚涂效果已通过，但眼睛、鼻口和面部细节仍偏照片质感。",
+    "scope": "face-medium-style-transfer"
+  },
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "previous-master-candidate-edit-target",
+      "path": "tools/imagegen/out/reference-v1/candidates/leaping-cover_border-collie_9x16_v02.png",
+      "sha256": "9c7ed8b0b333dc2d3a7f0251d284758138875e79291c13ce2cd8625326b113cc"
+    },
+    {
+      "role": "third-party-face-medium-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/223c5d78-2ba2-49ff-b35e-8c247fd53b20.jpg",
+      "sha256": "ee04f9b8c5a48fe8ad768ec5d51fc5463093f437bf697899d1ee7821e6151a51"
+    },
+    {
+      "role": "pet-identity-only-reference",
+      "path": "apps/website/public/assets/work-border.jpg",
+      "sha256": "8862d1dc48584f73309eac0890afb3367759dd131c681de970976b52a561fc50"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: precise face-medium edit with identity preservation. Create a vertical 9:16 hand-painted pet action cover at exactly 720x1280 pixels from exactly three input images. Image 1 is the edit target. Preserve its exact 9:16 composition, airborne Border Collie pose, body size, four limbs, foreground paws, thick impasto body, turquoise background, magenta-purple floor strokes, orange-yellow accents and all paint outside the head. The body and scene already work; do not redesign them. Image 2 is the authoritative hand-painted face-medium reference. Repaint only the head and facial area of Image 1 so it follows Image 2's visibly handmade impasto logic: broad opaque bristle strokes, palette-knife ridges, simplified pigment masses, broken painted edges and selective dark brush marks. The head must look painted with the same physical paint, brush size and pigment thickness as Image 1's body. Reconstruct both eyes as simplified painted brown shapes with visible brush texture and tiny matte pigment highlights, not glass lenses. Reconstruct the nose as a faceted dark paint mass with palette-knife texture, not a wet realistic nose. Reconstruct muzzle, lips, teeth and tongue from bold paint shapes with rough handmade edges. Convert every facial hair and whisker into grouped brush marks; no individual photographic strands. Image 3 is identity-only. Preserve the same Border Collie's narrow white blaze, white muzzle, black facial blocks, warm brown eyes, black nose and semi-upright ears. Do not import Image 3's photographic fur, lighting, lens sharpness, glossy reflections or realistic microtexture. Keep the happy open-mouth expression, youthful cuteness and correct anatomy. Blend the repainted face seamlessly into the already painted ears, neck and chest. Reject any photoreal eye, photographic nose, realistic wet mouth, camera-resolved fur, smooth airbrush shading, cut-out face, 3D render, text, logo, watermark or signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "pending-manual-precheck",
+    "checks": {
+      "petIdentity": "pending",
+      "cuteness": "pending",
+      "effectComposition": "pending",
+      "subjectMediumConsistency": "pending",
+      "faceMediumConsistency": "pending",
+      "anatomy": "pending",
+      "textAndRights": "pending",
+      "dimensions": "pass"
+    },
+    "findings": [],
+    "finalApproval": "pending-user"
+  },
+  "generatedAt": "2026-08-13T07:17:51.411Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/leaping-cover_border-collie_9x16_v03.png",
+    "sha256": "cda0531594192ffdc4824a98f0fa8a3ed9dafad659956fa66858cea301e0cfb0"
+  }
+}

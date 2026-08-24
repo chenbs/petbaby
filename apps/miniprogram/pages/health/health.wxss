@@ -1,0 +1,25 @@
+.block-gap {
+  display: block;
+  margin-top: var(--space-4);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.row {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+/* 免疫记录行的主体：项目名与日期两行，右侧留给到期标签与删除按钮 */
+.care-main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-0);
+  min-width: 0;
+}

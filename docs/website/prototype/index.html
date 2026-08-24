@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<!--
+  官网静态原型 —— 按 docs/website/01-KittyPaw复刻规格.md 1:1 复刻 KittyPaw 骨架。
+
+  11 个区块（KittyPaw 的 10 个 + 第 11「作品展示」，规格第 6 章拍板加入）：
+    1 hero(视频)  2 信任条  3 玩法区  4 服务导航  5 服务详情A(图左)
+    6 服务详情B(图右)+2×2  7 流程  8 口碑  9 CTA  10 页脚  11 作品展示
+
+  第 5、6 区块图文左右互换必须保留（规格 1 章：避免连续分栏呆板的关键）。
+
+  待提供内容一律标 data-placeholder，便于收口时 grep 出来：品牌名、主标语、
+  小程序码、用户评价。**没有真实用户评价不编造**（规格 6 章：合规风险），
+  第 8 区块因此在文案里明说是示意，正式站前须替换或整块去掉。
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>宠物星尘 · 官网静态原型</title>
+<meta name="description" content="把每一张宠物照片，变成值得留住的作品。" />
+<!--
+  favicon 用内联 SVG，不引外部文件：待提供正式 logo（第 9 章第 3 项）之前，
+  没有这一行浏览器会去请求 /favicon.ico 并吃一个 404。
+  渐变取值与顶栏 .brand-mark 一致（primary → 暖橘）。
+-->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23C4335C'/%3E%3Cstop offset='1' stop-color='%23E0885A'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3C/svg%3E" />
+<!--
+  poster 提前取：它是首屏唯一决定观感的图（视频加载完成前一直显示它）。
+  不给 preload 的话它与 3.5MB 的 bg.mp4 同时起跑，反而更晚可见。
+-->
+<link rel="preload" as="image" href="assets/bg-poster.jpg" fetchpriority="high" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ══ 顶栏：hero 内浮，深色底反白 ═══════════════════════════════════════ -->
+<header class="topbar" data-hero-topbar>
+  <div class="topbar-inner">
+    <a class="brand" href="#home">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <!-- 待提供：正式品牌名与 logo SVG（顶栏 26→40px、页脚 32px） -->
+      <span class="brand-name" data-placeholder="brand-name">宠物星尘</span>
+    </a>
+
+    <!--
+      导航只有这一个「菜单」按钮，没有内联链接 —— 与原站一致（实测其 SSR HTML：
+      header 里只有 logo + 一个 aria-haspopup 的 Menu 按钮，所有断点都靠它开面板）。
+
+      同一个按钮驱动两个面板，共用一个开合状态，靠断点切换谁可见：
+        · md 及以上 → 顶栏右下的 w-64 下拉（.desktop-menu）
+        · md 以下   → 全屏从右滑入（.mobile-menu）
+    -->
+    <div class="menu-wrap">
+      <button type="button" class="menu-btn" data-menu-toggle aria-expanded="false" aria-haspopup="true" aria-controls="site-menu">
+        <svg class="icon-menu" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+        <svg class="icon-close" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+        <span>菜单</span>
+      </button>
+
+      <!-- 桌面下拉：absolute right-0 mt-3 w-64（规格 5 章）-->
+      <nav class="desktop-menu" id="site-menu" data-menu-desktop aria-label="主导航" hidden>
+        <ul>
+          <li><a href="#home">首页</a></li>
+          <li><a href="#plays">核心玩法</a></li>
+          <li><a href="#services">三类玩法</a></li>
+          <li><a href="#portrait">AI 肖像</a></li>
+          <li><a href="#works">作品展示</a></li>
+          <li><a href="#memorial">星尘纪念</a></li>
+          <li><a href="#contact">联系我们</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<!-- 移动菜单：全屏面板，从右滑入（规格 5 章）-->
+<div class="mobile-menu" data-menu-mobile hidden>
+  <!-- 顶部一行 logo + 关闭按钮，与原站移动分支一致 -->
+  <div class="mobile-menu-top">
+    <a class="brand" href="#home">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-name" data-placeholder="brand-name">宠物星尘</span>
+    </a>
+    <button type="button" class="menu-close" data-menu-close aria-label="关闭菜单">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+    </button>
+  </div>
+  <nav class="mobile-menu-nav" aria-label="移动导航">
+    <a href="#home">首页</a>
+    <a href="#plays">核心玩法</a>
+    <a href="#services">三类玩法</a>
+    <a href="#portrait">AI 肖像</a>
+    <a href="#works">作品展示</a>
+    <a href="#memorial">星尘纪念</a>
+    <a href="#contact">联系我们</a>
+  </nav>
+  <p class="mobile-menu-foot">© 2026 宠物星尘 · 静态原型</p>
+</div>
+
+<!-- ══ 1. HERO：满屏视频 + 大标题 + CTA + 社群证明 ════════════════════════ -->
+<section class="hero" id="home">
+  <!--
+    视频：autoplay muted playsInline aria-hidden，初始 loop=false。
+    5 秒截断循环由 main.js 接管（规格 2.2）；poster 避免加载完成前黑屏。
+
+    preload 用 metadata 而非规格 8.1 的 auto：3.5MB 视频在 auto 下会与首屏图片
+    抢带宽，而 poster（103KB）已经能撑住首屏观感，视频边下边播即可。
+    规格自己也在意这件事 —— 8.1 要求体积 ≤5MB 的理由就是「超了首屏会卡」。
+  -->
+  <video
+    class="hero-video"
+    data-hero-video
+    src="assets/bg.mp4"
+    poster="assets/bg-poster.jpg"
+    autoplay muted playsinline preload="metadata" aria-hidden="true"></video>
+
+  <!-- 压暗遮罩：椭圆中心偏左 30%，正落在标题区（规格 2.3） -->
+  <div class="hero-veil" aria-hidden="true"></div>
+
+  <!--
+    自定义光标（规格 2.7）。DOM 由 main.js 在满足条件时才插入 —— 只在桌面端
+    （有精确指针 + 视口 ≥1024px）且首屏在视野内启用，触屏与 reduced-motion 完全不建。
+    这里只留挂载点，避免移动端白拿一个空节点。
+  -->
+  <div class="hero-cursor-mount" data-cursor-mount aria-hidden="true"></div>
+
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <!-- 待提供：主标语。h1 需 2 行、每行 5–7 字（对应英文两行两词） -->
+      <h1 class="hero-title" data-hero-title data-placeholder="headline">
+        <span class="hero-line"><span class="word">留住</span><span class="word">每一个</span></span>
+        <span class="hero-line"><span class="word">值得的</span><span class="word">瞬间</span></span>
+      </h1>
+      <!--
+        副标语：先给情绪落点，再交代做什么。
+        首版是「上传一张日常照片，几分钟拿到身份证、电影海报…」——把功能罗列完了，
+        但没说清「为什么值得做」。改成先落在「它在你身边的日子」这件事上，
+        功能收成一句带过。仍是占位，等正式文案。
+      -->
+      <p class="hero-sub" data-hero-sub data-placeholder="subhead">
+        它记不住自己有多好看，所以这件事交给我们。
+        一张随手拍的照片，变成很久以后还想再看一遍的样子。
+      </p>
+    </div>
+
+    <!-- 底部条：左主 CTA，右重叠头像 + 数字 + 说明（规格 2.6） -->
+    <div class="hero-bar" data-hero-bar>
+      <!-- 白底黑字：规格 4 章的主按钮原始口径，压在深色视频上对比度最高 -->
+      <a class="btn btn-on-dark btn-lg" href="#contact">
+        开始创作
+        <svg class="arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
+      </a>
+      <div class="hero-proof">
+        <div class="avatars">
+          <img src="assets/hero-shiba.jpg" alt="" width="1200" height="1200" loading="eager" fetchpriority="high" decoding="async" />
+          <img src="assets/hero-shepherd.jpg" alt="" width="1200" height="1200" loading="eager" fetchpriority="high" decoding="async" />
+          <img src="assets/hero-devon.jpg" alt="" width="1200" height="1200" loading="eager" fetchpriority="high" decoding="async" />
+        </div>
+        <div class="proof-text">
+          <span class="proof-num">10 种玩法</span>
+          <span class="proof-label">从成长记录到安静的告别</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 2. 信任条：窄横条，3 项图标文字 ═══════════════════════════════════ -->
+<section class="band">
+  <div class="container trust-row">
+    <div class="trust-item reveal">
+      <span class="trust-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M12 7v5l3.5 2M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z" /></svg>
+      </span>
+      <!-- 待确认：「三分钟」这个数字是否成立 -->
+      <span data-placeholder="trust-timing">一张照片，三分钟出片</span>
+    </div>
+    <div class="trust-item reveal" data-delay="1">
+      <span class="trust-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M4 5h7v6H4zM13 5h7v6h-7zM4 13h7v6H4zM13 13h7v6h-7z" /></svg>
+      </span>
+      <span>10 种玩法，图文 · AI · 视频 · 纪念</span>
+    </div>
+    <div class="trust-item reveal" data-delay="2">
+      <span class="trust-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M19 11V8a7 7 0 0 0-14 0v3M4 11h16v10H4z" /></svg>
+      </span>
+      <span>照片仅用于生成，可随时删除</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 3. 玩法区：3 卡网格，标题左说明右 ═════════════════════════════════ -->
+<section class="section" id="plays">
+  <div class="container">
+    <div class="section-head split reveal">
+      <div>
+        <p class="eyebrow">核心玩法</p>
+        <h2 class="h2">为宠物而做<br />也为记得的人</h2>
+      </div>
+      <p class="section-note">
+        每种玩法都是一套完整的排版与配色，不是滤镜。选一个，上传照片，其余交给它。
+      </p>
+    </div>
+
+    <!-- play-grid：640 两列 → 1024 三列（原站 sm:2 lg:3，比其他三处多一档两列态）-->
+    <div class="grid-3 play-grid">
+      <article class="play-card reveal">
+        <div class="play-media">
+          <img src="assets/play-id-card.jpg" alt="宠物身份证成品：一张平摊在桌面的证件卡" width="1600" height="1200" loading="lazy" decoding="async" />
+          <!-- 徽标写玩法类别，不写 PL-01 这类内部编号 —— 访客不认 -->
+          <span class="badge">图文创作</span>
+        </div>
+        <div class="play-body">
+          <h3 class="h3">宠物身份证</h3>
+          <p class="body-text">姓名、生日、品种与陪伴天数排成一张证件卡，可存图也可印出来。</p>
+          <p class="play-meta">正脸照 1 张 · 约 1 分钟</p>
+          <a class="link-arrow" href="#contact">去创作
+            <svg class="arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
+          </a>
+        </div>
+      </article>
+
+      <article class="play-card reveal" data-delay="1">
+        <div class="play-media">
+          <img src="assets/play-poster.jpg" alt="宠物电影海报成品：贴在墙上的竖版纸质海报" width="1600" height="1200" loading="lazy" decoding="async" />
+          <span class="badge">图文创作</span>
+        </div>
+        <div class="play-body">
+          <h3 class="h3">宠物电影海报</h3>
+          <p class="body-text">把一张抓拍排成主视觉海报，片名、短评与质感一并给到。</p>
+          <p class="play-meta">日常照 1–3 张 · 约 2 分钟</p>
+          <a class="link-arrow" href="#contact">去创作
+            <svg class="arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
+          </a>
+        </div>
+      </article>
+
+      <article class="play-card reveal" data-delay="2">
+        <div class="play-media">
+          <img src="assets/play-album.jpg" alt="宠物时光画册成品：摊开在木桌上的相册跨页" width="1600" height="1200" loading="lazy" decoding="async" />
+          <span class="badge">图文创作</span>
+        </div>
+        <div class="play-body">
+          <h3 class="h3">宠物时光画册</h3>
+          <p class="body-text">从相册里挑几张，装订成手机长图与可打印的纪念 PDF。</p>
+          <p class="play-meta">照片 6–20 张 · 约 3 分钟</p>
+          <a class="link-arrow" href="#contact">去创作
+            <svg class="arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
+          </a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 4. 服务导航：3 张入口卡 ═══════════════════════════════════════════ -->
+<section class="band section" id="services">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">三类玩法</p>
+      <h2 class="h2">从一张照片<br />到一整套作品</h2>
+      <p class="section-note wide">
+        图文类靠排版，AI 类靠模型，视频类靠时间线。三条路径的输入都只是手机里的日常照片。
+      </p>
+    </div>
+
+    <div class="grid-3 nav-grid">
+      <a class="nav-card reveal" href="#plays">
+        <span class="nav-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M4 5h16v14H4zM4 10h16M9 10v9" /></svg>
+        </span>
+        <h3 class="h3">图文创作</h3>
+        <p class="body-text">身份证、电影海报、时光画册、成长对比图。排版与配色成套给到，不用自己拼。</p>
+        <span class="link-arrow">看图文玩法
+          <svg class="arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
+        </span>
+      </a>
+
+      <a class="nav-card reveal" data-delay="1" href="#portrait">
+        <span class="nav-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 3l2.2 5.6L20 10l-5.8 1.4L12 17l-2.2-5.6L4 10l5.8-1.4z" /></svg>
+        </span>
+        <h3 class="h3">AI 肖像</h3>
+        <p class="body-text">四种气质预设一次出四张候选，挑中意的那张继续放大。风格是选的，不是描述的。</p>
+        <span class="link-arrow">看 AI 肖像
+          <svg class="arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
+        </span>
+      </a>
+
+      <a class="nav-card reveal" data-delay="2" href="#memorial">
+        <span class="nav-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M4 6h11l5 4-5 4H4zM4 18h9" /></svg>
+        </span>
+        <h3 class="h3">视频短片</h3>
+        <p class="body-text">照片、字幕与音乐剪成 10 / 20 / 30 秒竖屏短片，先预览再决定要不要高清。</p>
+        <span class="link-arrow">看视频玩法
+          <svg class="arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
+        </span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 5. 服务详情 A：AI 肖像，图在左 ════════════════════════════════════ -->
+<section class="section" id="portrait">
+  <div class="container split-media">
+    <!-- order 反转在 CSS 里：md 以上图在左，移动端图在上 -->
+    <div class="media-frame reveal media-first">
+      <img src="assets/detail-portrait.jpg" alt="AI 宠物肖像成品：装裱挂在墙上的绘画肖像" width="1600" height="1200" loading="lazy" decoding="async" />
+      <span class="badge badge-float">AI 肖像</span>
+    </div>
+    <div class="reveal" data-delay="1">
+      <p class="eyebrow">AI 宠物肖像</p>
+      <h2 class="h2 h2-mid">四张候选<br />只留下最像它的一张</h2>
+      <p class="body-text lead">
+        一次生成四张，不是一张。风格从四个预设里选，不用写提示词 ——
+        挑中意的那张再放大，其余直接丢掉。
+      </p>
+      <ul class="feature-list">
+        <li><span class="dot" aria-hidden="true"></span><strong>暖调胶片</strong>：颗粒与琥珀色偏，像九十年代的傻瓜机</li>
+        <li><span class="dot" aria-hidden="true"></span><strong>纸艺拼贴</strong>：撕边卡纸层叠，平面形状带软投影</li>
+        <li><span class="dot" aria-hidden="true"></span><strong>克制影棚</strong>：中性灰背景，单只柔光箱，不放道具</li>
+        <li><span class="dot" aria-hidden="true"></span><strong>轻幻想</strong>：浮动光点与柔光，暮色调不刺眼</li>
+      </ul>
+      <a class="btn btn-primary" href="#works">
+        看四种风格的实拍对比
+        <svg class="arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 6. 服务详情 B：纪念空间，图在右 + 2×2 数据格 ═══════════════════════ -->
+<section class="band section" id="memorial">
+  <div class="container split-media">
+    <div class="reveal">
+      <p class="eyebrow">星尘纪念</p>
+      <h2 class="h2 h2-mid">陪伴过的日子<br />不该只留在相册里</h2>
+      <p class="body-text lead">
+        为已经离开的伙伴建一个纪念空间。天数停在告别那天，用「陪伴了 N 天」记住，
+        不再往上跳 —— 这件事我们想做得克制一些。
+      </p>
+      <!--
+        2×2 数据格：纪念册 / 纪念视频 / 星尘纪念页 / 成长对比图，正好填满。
+        数字位放的是名称而非 PL-20 这类内部编号 —— 官网访客不认这套代号，
+        编号只对我们自己有意义。
+      -->
+      <div class="stat-grid">
+        <div class="stat-cell">
+          <span class="stat-num">纪念册</span>
+          <span class="stat-label">图文长图 + 可打印 PDF</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-num">纪念视频</span>
+          <span class="stat-label">照片重新流动起来</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-num">纪念页</span>
+          <span class="stat-label">免费的长期入口</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-num">成长对比</span>
+          <span class="stat-label">两个时间点并排看</span>
+        </div>
+      </div>
+      <a class="btn btn-secondary" href="#contact">
+        了解纪念空间
+        <svg class="arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
+      </a>
+    </div>
+    <!-- 黏土质感限 3 处（根 CLAUDE.md），此为其一 -->
+    <div class="clay-frame reveal" data-delay="1">
+      <img src="assets/detail-memorial.jpg" alt="星尘纪念页示例：远景星空下的剪影" width="1600" height="1200" loading="lazy" decoding="async" />
+    </div>
+  </div>
+</section>
+
+<!-- ══ 7. 流程区：01/02/03 三栏，顶线分隔，无卡片 ═════════════════════════ -->
+<section class="section" id="how">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">怎么用</p>
+      <h2 class="h2 h2-sm">三步，就有一张成品</h2>
+    </div>
+    <div class="grid-3 steps">
+      <div class="step reveal">
+        <span class="step-num">01</span>
+        <h3 class="h3">建一个宠物档案</h3>
+        <p class="body-text">名字、生日、品种。陪伴天数会自己往上走，纪念空间除外。</p>
+      </div>
+      <div class="step reveal" data-delay="1">
+        <span class="step-num">02</span>
+        <h3 class="h3">上传日常照片</h3>
+        <p class="body-text">手机随手拍就够。光线正常、脸别挡住，剩下的交给生成。</p>
+      </div>
+      <div class="step reveal" data-delay="2">
+        <span class="step-num">03</span>
+        <h3 class="h3">挑一个玩法出片</h3>
+        <p class="body-text">几分钟拿到成品，存图、分享，或者印成实物寄到家。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--
+  ══ 11. 作品展示区：7 格风格缩略带（摩奇）+ 11 品种瀑布流 ════════════════
+
+  编号 11 是内容映射表的序号（规格 6 章新增区块），位置刻意放在流程之后、
+  口碑之前 —— 先给「真实产出长什么样」，再给评价，说服链条才顺。
+
+  缩略带全部是同一只样板宠物摩奇：并列比较的槽位必须锁定主体（规格 10.1），
+  换宠物用户比较的就是宠物而不是风格。瀑布流反过来，一品种一张。
+-->
+<section class="band section" id="works">
+  <div class="container">
+    <div class="section-head split reveal">
+      <div>
+        <p class="eyebrow">真实产出</p>
+        <h2 class="h2 h2-sm">同一只猫<br />七种风格</h2>
+      </div>
+      <p class="section-note">
+        下面这七张全部由同一只样板宠物「摩奇」生成 —— 换了宠物，
+        比较的就是宠物而不是风格。
+      </p>
+    </div>
+
+    <div class="thumb-strip reveal">
+      <figure><span class="thumb-image"><img src="assets/style-warm-film.jpg" alt="暖调胶片风格的摩奇" width="900" height="1200" loading="lazy" decoding="async" /></span><figcaption>暖调胶片</figcaption></figure>
+      <figure><span class="thumb-image"><img src="assets/style-paper-cut.jpg" alt="纸艺拼贴风格的摩奇" width="900" height="1200" loading="lazy" decoding="async" /></span><figcaption>纸艺拼贴</figcaption></figure>
+      <figure><span class="thumb-image"><img src="assets/style-studio.jpg" alt="克制影棚风格的摩奇" width="900" height="1200" loading="lazy" decoding="async" /></span><figcaption>克制影棚</figcaption></figure>
+      <figure><span class="thumb-image"><img src="assets/style-fantasy.jpg" alt="轻幻想风格的摩奇" width="900" height="1200" loading="lazy" decoding="async" /></span><figcaption>轻幻想</figcaption></figure>
+      <figure><span class="thumb-image"><img src="assets/play-portrait.jpg" alt="肖像封面玩法的摩奇" width="900" height="1200" loading="lazy" decoding="async" /></span><figcaption>肖像封面</figcaption></figure>
+      <figure><span class="thumb-image"><img src="assets/play-storybook.jpg" alt="绘本主角玩法的摩奇" width="900" height="1200" loading="lazy" decoding="async" /></span><figcaption>绘本主角</figcaption></figure>
+      <figure><span class="thumb-image"><img src="assets/play-magazine.jpg" alt="杂志大片玩法的摩奇" width="900" height="1200" loading="lazy" decoding="async" /></span><figcaption>杂志大片</figcaption></figure>
+    </div>
+
+    <div class="works-divider reveal">
+      <h3 class="h3">十一个品种，各来一张</h3>
+      <p class="body-text">长毛短毛、大型小型、纯种土猫土狗都试过。全部是真实生成结果，没有占位图。</p>
+    </div>
+
+    <!-- 瀑布流：CSS columns。混比例是刻意的 —— 等高图会退化成规整网格 -->
+    <div class="masonry">
+      <figure class="work-card reveal">
+        <img src="assets/work-ragdoll.jpg" alt="布偶猫的暖调胶片风格成品" width="900" height="1200" loading="lazy" decoding="async" />
+        <figcaption><span class="work-name">布偶猫</span><span class="work-meta">暖调胶片</span></figcaption>
+      </figure>
+      <figure class="work-card reveal">
+        <img src="assets/work-devon.jpg" alt="德文卷毛猫的杂志大片风格成品" width="1600" height="1200" loading="lazy" decoding="async" />
+        <figcaption><span class="work-name">德文卷毛猫</span><span class="work-meta">杂志大片</span></figcaption>
+      </figure>
+      <figure class="work-card reveal">
+        <img src="assets/work-maine.jpg" alt="缅因猫的克制影棚风格成品" width="1200" height="1200" loading="lazy" decoding="async" />
+        <figcaption><span class="work-name">缅因猫</span><span class="work-meta">克制影棚</span></figcaption>
+      </figure>
+      <figure class="work-card reveal">
+        <img src="assets/work-abyssinian.jpg" alt="阿比西尼亚猫的轻幻想风格成品" width="900" height="1200" loading="lazy" decoding="async" />
+        <figcaption><span class="work-name">阿比西尼亚猫</span><span class="work-meta">轻幻想</span></figcaption>
+      </figure>
+      <figure class="work-card reveal">
+        <img src="assets/work-dragonli.jpg" alt="田园狸花猫的纸艺拼贴风格成品" width="900" height="1200" loading="lazy" decoding="async" />
+        <figcaption><span class="work-name">田园狸花猫</span><span class="work-meta">纸艺拼贴</span></figcaption>
+      </figure>
+      <figure class="work-card reveal">
+        <img src="assets/work-golden.jpg" alt="金毛犬的肖像封面风格成品" width="900" height="1200" loading="lazy" decoding="async" />
+        <figcaption><span class="work-name">金毛犬</span><span class="work-meta">肖像封面</span></figcaption>
+      </figure>
+      <figure class="work-card reveal">
+        <img src="assets/work-poodle.jpg" alt="泰迪的绘本主角风格成品" width="1200" height="1200" loading="lazy" decoding="async" />
+        <figcaption><span class="work-name">泰迪</span><span class="work-meta">绘本主角</span></figcaption>
+      </figure>
+      <figure class="work-card reveal">
+        <img src="assets/work-border.jpg" alt="边境牧羊犬的暖调胶片风格成品" width="900" height="1200" loading="lazy" decoding="async" />
+        <figcaption><span class="work-name">边境牧羊犬</span><span class="work-meta">暖调胶片</span></figcaption>
+      </figure>
+      <figure class="work-card reveal">
+        <img src="assets/work-shepherd.jpg" alt="德国牧羊犬的克制影棚风格成品" width="1600" height="1200" loading="lazy" decoding="async" />
+        <figcaption><span class="work-name">德国牧羊犬</span><span class="work-meta">克制影棚</span></figcaption>
+      </figure>
+      <figure class="work-card reveal">
+        <img src="assets/work-shiba.jpg" alt="柴犬的纸艺拼贴风格成品" width="900" height="1200" loading="lazy" decoding="async" />
+        <figcaption><span class="work-name">柴犬</span><span class="work-meta">纸艺拼贴</span></figcaption>
+      </figure>
+      <figure class="work-card reveal">
+        <img src="assets/work-mixed.jpg" alt="中华田园犬的肖像封面风格成品" width="900" height="1200" loading="lazy" decoding="async" />
+        <figcaption><span class="work-name">中华田园犬</span><span class="work-meta">肖像封面</span></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!--
+  ══ 8. 口碑区：3 条引语卡 ══════════════════════════════════════════════
+
+  待提供：真实用户评价。规格 6 章明确「没有真实评价就不要编造 —— 合规风险」，
+  因此这里的三条是**结构占位**，文案取自产品自身的设计取舍（不是虚构的用户口吻），
+  署名一律写「示意」。正式上线前必须替换成真实评价，或整块删掉。
+-->
+<section class="section" id="voices">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">我们在意的事</p>
+      <h2 class="h2 h2-sm">三个不肯将就的决定</h2>
+      <p class="section-note wide" data-placeholder="testimonials">
+        此处结构对应用户评价区。目前没有可公开引用的真实评价，先放我们自己的三条设计取舍
+        —— 不编造用户口吻。拿到真实评价后原位替换。
+      </p>
+    </div>
+
+    <div class="grid-3 quote-grid">
+      <blockquote class="quote-card reveal">
+        <p class="quote-text">纪念空间的陪伴天数停在告别那天，用过去式说「陪伴了 N 天」。天数继续往上跳，对这些用户是冒犯。</p>
+        <figcaption class="quote-foot">
+          <img src="assets/avatar-dragonli.jpg" alt="" width="1200" height="1200" loading="lazy" decoding="async" />
+          <span>
+            <span class="quote-name" data-placeholder="testimonial-name">产品设计取舍</span>
+            <span class="quote-meta">示意 · 非用户评价</span>
+          </span>
+        </figcaption>
+      </blockquote>
+
+      <blockquote class="quote-card reveal" data-delay="1">
+        <p class="quote-text">风格对比图必须是同一只样板宠物。换了宠物，用户比较的就是宠物而不是风格 —— 这条比省一次生成更重要。</p>
+        <figcaption class="quote-foot">
+          <img src="assets/avatar-poodle.jpg" alt="" width="1200" height="1200" loading="lazy" decoding="async" />
+          <span>
+            <span class="quote-name" data-placeholder="testimonial-name">素材口径</span>
+            <span class="quote-meta">示意 · 非用户评价</span>
+          </span>
+        </figcaption>
+      </blockquote>
+
+      <blockquote class="quote-card reveal" data-delay="2">
+        <p class="quote-text">缺样例图时只留文字，不画占位色块。抽象色块挂在展示位上，比留空更糟。</p>
+        <figcaption class="quote-foot">
+          <img src="assets/avatar-abyssinian.jpg" alt="" width="1200" height="1200" loading="lazy" decoding="async" />
+          <span>
+            <span class="quote-name" data-placeholder="testimonial-name">展示原则</span>
+            <span class="quote-meta">示意 · 非用户评价</span>
+          </span>
+        </figcaption>
+      </blockquote>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 9. CTA：大圆角面板 + 小程序码 ═════════════════════════════════════ -->
+<section class="band section" id="contact">
+  <div class="container">
+    <div class="cta-panel reveal">
+      <div class="cta-sheen" aria-hidden="true"></div>
+      <div class="cta-grid">
+        <div>
+          <p class="eyebrow">开始使用</p>
+          <h2 class="h2 h2-mid">现在就给它拍一张</h2>
+          <p class="body-text lead">微信扫码进入小程序，第一次创作不花钱。</p>
+          <p class="cta-note">已有 10 种玩法可选，图文类 1 分钟起，视频类 3 分钟起。</p>
+        </div>
+        <div class="qr-box">
+          <!-- 待提供：真实小程序码。原型是虚线占位框 -->
+          <div class="qr-frame" data-placeholder="miniprogram-qr" role="img" aria-label="小程序码占位">
+            <span class="qr-hint">小程序码<br />待提供</span>
+          </div>
+          <p class="qr-note">正式站换成真实小程序码</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 10. 页脚：1.4fr 1fr 1fr 1fr 四栏 + 底部版权行 ══════════════════════ -->
+<footer class="footer">
+  <div class="container footer-grid">
+    <div>
+      <a class="brand brand-lg" href="#home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-name" data-placeholder="brand-name">宠物星尘</span>
+      </a>
+      <p class="footer-desc">
+        把每一张宠物照片，变成值得留住的作品。图文、AI 肖像、视频与纪念，都在一个小程序里。
+      </p>
+    </div>
+    <!--
+      三栏用 nav 元素而非裸 div：它们是导航列表，包起来读屏才能当独立区块跳转。
+      标题用 h2 —— 在 footer 地标内 h2 是顶层，用 h3 会被读成上一个 h2
+      （CTA 的「现在就给它拍一张」）的下级内容，语义错。
+    -->
+    <nav aria-labelledby="footer-plays">
+      <h2 class="footer-title" id="footer-plays">玩法</h2>
+      <ul class="footer-links">
+        <li><a href="#plays">宠物身份证</a></li>
+        <li><a href="#plays">宠物电影海报</a></li>
+        <li><a href="#plays">宠物时光画册</a></li>
+        <li><a href="#portrait">AI 宠物肖像</a></li>
+        <li><a href="#services">宠物记忆短片</a></li>
+      </ul>
+    </nav>
+    <nav aria-labelledby="footer-memorial">
+      <h2 class="footer-title" id="footer-memorial">纪念</h2>
+      <ul class="footer-links">
+        <li><a href="#memorial">纪念册</a></li>
+        <li><a href="#memorial">纪念视频</a></li>
+        <li><a href="#memorial">星尘纪念页</a></li>
+        <li><a href="#memorial">成长对比图</a></li>
+      </ul>
+    </nav>
+    <nav aria-labelledby="footer-about">
+      <h2 class="footer-title" id="footer-about">关于</h2>
+      <ul class="footer-links">
+        <li><a href="#home">产品介绍</a></li>
+        <li><a href="#works">作品展示</a></li>
+        <li><a href="#contact">联系我们</a></li>
+        <li><a href="#home">用户协议</a></li>
+        <li><a href="#home">隐私政策</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="container footer-bottom">
+    <p>© 2026 <span data-placeholder="brand-name">宠物星尘</span> · 静态原型，非线上内容</p>
+    <div class="footer-legal">
+      <a href="#home">隐私</a>
+      <a href="#home">条款</a>
+      <a href="#home">Cookie</a>
+    </div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>

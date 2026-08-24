@@ -1,0 +1,30 @@
+{
+  "assetId": "color-painted-portrait-dragon-li-identity-bridge-v02",
+  "status": "intermediate-control-asset",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "mode": "identity-abstraction-bridge",
+  "inputs": [
+    {
+      "role": "adult-pet-identity-source",
+      "path": "apps/website/public/assets/avatar-dragonli.jpg",
+      "sha256": "0f403599969b57f32aa314cf474ce4d57d28f48683e16ae9a032d73b94079732"
+    },
+    {
+      "role": "non-photographic-abstraction-reference",
+      "path": "tools/imagegen/out/reference-v1/reset/bases/color-painted-portrait_dragon-li-cat_9x16_detail.png",
+      "sha256": "e22b0e006a7887b343ba7125fd138b7e647f1bf62cd05af3ede80cc6d84d74d9"
+    }
+  ],
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Task: create a non-photographic identity structure reference, not a finished scene and not a new character design. Image 1 controls only the exact adult Dragon Li identity: mature natural body proportions, feline head silhouette, triangular ear identity, broad adult cheek structure, brown tabby coat colours and the placement of the forehead, cheek, neck and body stripes. Do not copy Image 1's photographic pose, stern expression, yellow realistic irises, camera lighting, fine fur or whiskers. Image 2 is the absolute authority for the head pose, upward gaze, eye shape and spacing, relaxed eyelids, soft friendly expression, full rounded cheek and muzzle masses, small rounded nose, short mouth construction, subtly raised smile, facial proportions, abstraction level and dry-brush painting language. Transfer those exact appealing facial relationships onto the adult cat. Do not copy Image 2's dog species, floppy ears, white coat or orange background. Render the same adult Dragon Li cat as one clear seated identity study on a plain warm light-grey background, but use Image 2's exact gentle head tilt and coordinated upward-looking sweet expression. Keep the full head, chest and enough body visible to communicate mature adult proportions. The face must feel friendly and immediately appealing without becoming a kitten. Build the face and coat from simplified broad matte paint shapes and a limited number of deliberate dry-brush marks. Use balanced soft rounded-almond dark painted eyes with relaxed upper lids and one small clean graphic highlight in each eye. Keep both eyes aligned toward the same upward point. Use a small softly rounded nose, a short philtrum, a broad soft muzzle and a subtle closed-mouth smile with gently raised corners. Remove photographic rendering completely: no individual resolved fur hairs, no realistic whisker strands, no yellow photographic irises, no wet realistic nose, no skin pores, no photographic depth of field and no studio-photo lighting. No black circular button eyes, no startled wide-eyed expression, no hollow eye sockets, no pinched muzzle, no rigid W-shaped mouth, no downturned mouth corners and no oversized vertical ears. Adult cat, not kitten: preserve mature body size and natural limb proportions; no oversized head, no enlarged baby eyes, no shortened baby muzzle, no round baby body and no juvenile anatomy. No scene, props, text, watermark, border or additional animal.",
+  "revisedPrompt": null,
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/reset/identity-bridges/color-painted-portrait_dragon-li-cat_identity-bridge-v02.png",
+    "sha256": "b7f3f498fdec7f3c7b9b03e61b9a54647d5578b77ebe8599208f332ab94c536e"
+  },
+  "generatedAt": "2026-08-14T02:27:45.582Z"
+}

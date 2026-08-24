@@ -1,0 +1,60 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+
+<view class="page page-flat">
+  <text class="eyebrow">LIBRARY</text>
+  <view class="title">照片库</view>
+
+  <view class="bar">
+    <picker range="{{pets}}" range-key="name" bindchange="choosePet">
+      <view class="picker">
+        <text class="small">当前宠物</text>
+        <text class="picker-value">{{petText || '暂无档案'}}</text>
+      </view>
+    </picker>
+    <t-button wx:if="{{photos.length}}" type="ghost" size="mini" anim="{{animType}}" bindtap="toggleManage">{{manage ? '完成' : '管理'}}</t-button>
+  </view>
+
+  <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
+
+  <t-skeleton wx:if="{{loading}}" type="grid" count="9" class="block-gap"></t-skeleton>
+
+  <t-empty
+    wx:elif="{{!photos.length}}"
+    icon="photo"
+    title="照片库还是空的"
+    description="制作作品时上传的照片会自动存到这里，下次可以直接复用。"
+    action-text="去做一个"
+    anim="{{animType}}"
+    decor="{{decor}}"
+    bindaction="goCreate"
+  ></t-empty>
+
+  <block wx:else>
+    <t-photo-grid
+      photos="{{photos}}"
+      selected-ids="{{picked}}"
+      manageable="{{manage}}"
+      previewable="{{!manage}}"
+      anim="{{animType}}"
+      class="block-gap"
+      bindtoggle="togglePick"
+    ></t-photo-grid>
+
+    <!-- 管理模式下的批量删除条固定在底部 -->
+    <view wx:if="{{manage}}" class="dock">
+      <text class="small">已选 {{picked.length}} 张</text>
+      <t-button type="danger" size="mini" anim="{{animType}}" disabled="{{!picked.length}}" bindtap="askRemove">删除所选</t-button>
+    </view>
+  </block>
+</view>
+
+<t-dialog
+  visible="{{removeCount > 0}}"
+  title="删除 {{removeCount}} 张照片？"
+  content="已经用这些照片生成的作品不受影响，但下次制作时无法再选到它们。"
+  confirm-text="删除"
+  danger
+  anim="{{animType}}"
+  bindconfirm="confirmRemove"
+  bindcancel="cancelRemove"
+></t-dialog>

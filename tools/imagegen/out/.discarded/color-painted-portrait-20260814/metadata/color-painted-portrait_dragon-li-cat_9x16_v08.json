@@ -1,0 +1,65 @@
+{
+  "templateId": "color-painted-portrait",
+  "title": "彩色绘画肖像",
+  "entryId": "art",
+  "status": "master-candidate-pending-user-approval",
+  "subject": "dragon-li-cat",
+  "breed": "狸花猫",
+  "revision": {
+    "version": "v08",
+    "supersedes": "color-painted-portrait_dragon-li-cat_9x16_v07.png",
+    "reviewFinding": "v07 的软萌与轻盈感有所改善，但毛发仍由细碎笔触和柔和过渡塑造；原效果图更依赖大尺度、方向明确、果断有力的宽笔触。",
+    "scope": "bold-broad-gestural-brushwork-local-contrast-full-regeneration"
+  },
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-soft-impressionist-effect-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/4f109cb7-2809-459a-93ef-5e7775e16280.jpg",
+      "sha256": "620aa0a865818f88025ed9345f86e0f38a113520a91627a1dfd1535136b0035a"
+    },
+    {
+      "role": "pet-identity-only-reference",
+      "path": "apps/website/public/assets/avatar-dragonli.jpg",
+      "sha256": "0f403599969b57f32aa314cf474ce4d57d28f48683e16ae9a032d73b94079732"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: style-transfer with pet identity preservation. Create a vertical 9:16 soft impressionistic digital-painting pet portrait at exactly 720x1280 pixels from exactly two input images. Image 1 is the authoritative effect, composition, facial softness and style reference. Preserve its half-body three-quarter portrait, saturated orange field, teal and coral accents, broad loose background colour blocks, light splashes, airy negative space, soft fluffy subject edges and youthful gallery-poster energy. Remove only its platform watermark and account ID. Use an expressive illustrative digital-painting style with bold graphic brushwork and a confident painterly portrait finish. The subject must be constructed by bold broad brush strokes, decisive directional strokes, large gestural paint marks and confident energetic brushwork. Define the fur with broad gestural strokes rather than fine detail. Use visible wide brush marks to simplify the brown-grey tabby coat into large directional planes and confident colour masses. The forehead, cheeks, neck and torso must show a small number of larger, deliberate strokes instead of many tiny hair marks. Increase contrast within the broad paint strokes and use crisp defined stroke edges with strong local contrast in the paint application. Keep the portrait painterly and expressive, not photorealistic and not physically thick impasto. Do not smooth or softly blend the boundaries between every colour plane. Keep the saturated orange field with bold yellow, orange, teal and coral-red background strokes. Use dynamic, large colour blocks and decisive marks around the portrait, preserving the half-body three-quarter composition and youthful gallery-poster energy. Keep a cute, slightly cartooned contemporary face with rounded cheeks, a short plush muzzle, a small rounded nose and a subtle sweet expression. Simplify anatomical structure while preserving a clear readable likeness. Give the Dragon Li cat a very soft, lovable, slightly cartooned face. Make the cheeks round and cloud-like, the muzzle short and plush, and the nose small, softly rounded and warm pink-brown. Add a subtle sweet closed-mouth smile with naturally lifted corners. Reduce the hard cheekbone, jaw and nose-bridge structure found in realistic cat portraits. Use large, soft, gently rounded yellow-green eyes with dark pupils and two restrained soft highlights per eye. The gaze should be calm, tender and slightly upward, with no intense stare. Keep the eye edges softly painted and partially surrounded by fluffy short fur marks; avoid glossy spherical realism. Translate the forehead M, cheek stripes and body bands into broad dark-brown gestural strokes with clear direction and bold spacing. Keep the markings recognisable but painterly and simplified. Model the cream muzzle, cheeks and ear highlights with confident wide light strokes. Keep only a few restrained whiskers. Image 2 is identity-only. Preserve its breed, coat colour blocks, distinctive markings, eye colour and recognisable proportions, but do not copy its photographic lighting, realistic hair strands, lens detail, surface texture or anatomical hardness. Reinterpret every identity feature through Image 1's soft impressionistic digital-painting language. Keep one healthy, youthful, rounded and instantly lovable pet with correct limbs and no fused anatomy. Preserve from Image 2 the brown-grey mackerel tabby colour, bold forehead M, dark cheek stripes, yellow-green eyes, pink-brown nose, upright ears and rounded face. Let selected body edges merge into the orange, teal and coral field through broad gestural strokes. Avoid fine detailed fur, tiny repetitive hair marks, soft blended strokes, smooth transitions, realistic fur texture, delicate brushwork, airbrushed gradients, photographic anatomy, glossy spherical eyes, thick impasto, palette-knife relief, text, logo, platform mark, watermark or signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "prechecked-pending-user-approval",
+    "checks": {
+      "petIdentity": "pass",
+      "cuteness": "pass",
+      "effectComposition": "pass",
+      "broadGesturalBrushwork": "pass",
+      "strokeLocalContrast": "pass",
+      "simplifiedPainterlyFur": "pass",
+      "expressiveIllustrativeStyle": "pass",
+      "anatomy": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [
+      "狸花猫身份稳定，额头 M 纹、面颊条纹、黄绿色眼睛、粉棕鼻和圆脸可辨识。",
+      "毛发已由大尺度、方向明确、果断的宽笔触塑造，颈部与身体条纹形成清晰的大色块节奏。",
+      "宽笔触内部反差和边缘清晰度提高，未继续依赖细毛、柔和渐变或照片式毛发纹理。",
+      "橙黄主场与青绿、珊瑚色大笔触保留，整体更接近表现性 illustrator 肖像。",
+      "脸部保持圆润、略向上凝视和轻度卡通可爱感，无异常解剖、文字、水印或平台标识。"
+    ],
+    "finalApproval": "pending-user"
+  },
+  "generatedAt": "2026-08-13T15:27:18.262Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/color-painted-portrait_dragon-li-cat_9x16_v08.png",
+    "sha256": "c801a18ff6f8f50bba461f8b55cf96fc3d9196b4d1baf30797f8e74a7078afe0"
+  }
+}

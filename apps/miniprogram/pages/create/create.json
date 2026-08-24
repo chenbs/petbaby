@@ -1,0 +1,15 @@
+{
+  "navigationBarTitleText": "制作作品",
+  "usingComponents": {
+    "t-glass-sheet": "../../components/glass-sheet/index",
+    "t-card": "../../components/card/index",
+    "t-button": "../../components/button/index",
+    "t-field": "../../components/field/index",
+    "t-steps": "../../components/steps/index",
+    "t-notice": "../../components/notice/index",
+    "t-empty": "../../components/empty/index",
+    "t-loading": "../../components/loading/index",
+    "t-progress": "../../components/progress/index",
+    "t-photo-grid": "../../components/photo-grid/index"
+  }
+}

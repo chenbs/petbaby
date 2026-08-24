@@ -1,0 +1,2 @@
+import Link from "next/link";
+export default function PrivacyPage(){return <main className="screen"><div className="page-heading"><Link className="back-link" href="/me">返回我的</Link><span className="eyebrow">PRIVACY</span><h1>隐私政策</h1><p>更新日期：2026-07-18</p></div><section className="panel"><h2>我们处理的数据</h2><p>仅为提供宠物档案、照片生成、订单、下载和分享服务处理必要数据。照片默认私密，只有用户主动开启分享后访客可见。</p><h2>保存与删除</h2><p>未解锁作品按产品保留期清理；已支付作品和财务记录按合规要求保存。用户可在账户页面导出数据或提交删除。</p><h2>第三方服务</h2><p>正式环境可能使用微信登录与支付、云对象存储和 AI 生成服务，具体供应商在接入后更新。</p></section></main>}

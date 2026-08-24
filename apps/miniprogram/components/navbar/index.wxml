@@ -1,0 +1,9 @@
+<view class="navbar {{transparent ? 'navbar-clear' : ''}} {{tone === 'inverse' ? 'navbar-inverse' : ''}}" style="padding-top:{{statusBarHeight}}px">
+  <view class="navbar-bar">
+    <view wx:if="{{showBack}}" class="navbar-back hit-area" aria-role="button" aria-label="返回" bindtap="handleBack">‹</view>
+    <view wx:else class="navbar-back"></view>
+    <view class="navbar-title">{{title}}</view>
+    <view class="navbar-extra"><slot name="right"></slot></view>
+  </view>
+</view>
+<view class="navbar-spacer" style="padding-top:{{statusBarHeight}}px"></view>

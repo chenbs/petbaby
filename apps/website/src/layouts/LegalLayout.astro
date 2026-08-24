@@ -1,0 +1,63 @@
+---
+/*
+ * 法务页骨架（方案 11.1）。
+ *
+ * 两页都先用占位，但**占位方式必须让人一眼看出是未完成的** —— 半真半假的隐私
+ * 政策比空页面风险更高（用户会当它是承诺，而它没经过法务审核）。所以正文放
+ * 结构化的章节骨架 + 顶部醒目的未完成提示条，不写成像正式条款的样子。
+ *
+ * 章节骨架不是凑数：它把「需要法务回答哪些问题」列清楚了，交给法务时是一份
+ * 需求清单而非空白页。
+ *
+ * **上线前必须确认**：法务正文必须在面向真实用户开放前替换。内部预览不受影响。
+ */
+import BaseLayout from "./BaseLayout.astro";
+import Breadcrumb from "../components/Breadcrumb.astro";
+import { breadcrumbLd } from "../lib/jsonld";
+
+interface Props {
+  title: string;
+  description: string;
+  /** 收口时 grep 用：legal-terms / legal-privacy。 */
+  placeholder: string;
+  sections: ReadonlyArray<{ heading: string; note?: string }>;
+}
+
+const { title, description, placeholder, sections } = Astro.props;
+
+const crumbs = [{ label: "首页", href: "/" }, { label: title }];
+---
+
+<BaseLayout title={title} description={description} jsonLd={[breadcrumbLd(crumbs)]}>
+  <section class="section">
+    <div class="container">
+      <div class="page-head">
+        <Breadcrumb items={crumbs} />
+        <h1 class="h2 h2-sm">{title}（草案骨架）</h1>
+      </div>
+
+      <div style="margin-top:32px;max-width:40em">
+        <div class="notice-draft" role="note">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 9v5M12 17.5v.5M10.3 4.3 2.8 17.2A1.5 1.5 0 0 0 4.1 19.5h15.8a1.5 1.5 0 0 0 1.3-2.3L13.7 4.3a1.5 1.5 0 0 0-2.6 0z" />
+          </svg>
+          <p>
+            <strong>本页内容尚未定稿</strong>，不构成任何承诺或法律文件。正式版本发布前请勿依赖。
+          </p>
+        </div>
+
+        <div class="legal-outline" data-placeholder={placeholder}>
+          {
+            sections.map((section, index) => (
+              <section class="legal-section">
+                <h2>{index + 1}. {section.heading}</h2>
+                {section.note && <p>{section.note}</p>}
+                <p class="legal-todo">待补充。</p>
+              </section>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

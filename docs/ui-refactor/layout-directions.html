@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>宠物创意实验室 · 布局方向终选 v4</title>
+<!--
+  ==========================================================================
+  v4 —— 终选版
+  --------------------------------------------------------------------------
+  已移除：D 手作创作台 / G 创作工作台 / I 便当格 / B 卡包收藏 / H 对话式创作
+  已移除：F 的「目录·本期栏目」屏（仅保留封面屏）
+  --------------------------------------------------------------------------
+  保留 5 个方向：A 作品墙 / C 沉浸故事流 / E 宠物主页 / F 杂志封面 / J 黏土软萌
+  --------------------------------------------------------------------------
+  除 J 外共用同一套中性配色，差异来自 HTML 骨架与信息形态。
+  J 是唯一对配色有强依赖的方向（体积感需色彩配合），单独配糖果色。
+  彩色渐变块 = 真实成品图的位置。
+  ==========================================================================
+-->
+<style>
+:root{
+  --ink:#1A1613; --ink-2:#6B625B; --ink-3:#A69C93;
+  --line:#EDE7E0; --paper:#FFFFFF; --bg:#FAF7F3; --accent:#E8674C;
+  --r-lg:24px; --r-md:16px; --r-sm:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased}
+body{
+  background:#15120F;color:#EFE9E2;
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Helvetica Neue",sans-serif;
+  padding:48px 32px 120px;
+}
+.masthead{max-width:1340px;margin:0 auto 56px}
+.masthead h1{font-size:32px;letter-spacing:-.02em;margin-bottom:14px}
+.masthead .v{display:inline-block;font-size:11px;letter-spacing:.14em;color:#15120F;background:#F0B24A;padding:3px 9px;border-radius:5px;vertical-align:middle;margin-left:10px}
+.masthead p{color:#9A918A;font-size:14px;line-height:1.9;max-width:880px}
+.masthead p strong{color:#F0B24A}
+.masthead .dead{color:#7A6F66;text-decoration:line-through}
+.jump{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.jump a{font-size:13px;text-decoration:none;color:#CFC6BD;border:1px solid #322B24;padding:9px 16px;border-radius:100px;transition:.2s}
+.jump a:hover{background:#241F1A;border-color:#4A3F35;color:#fff}
+
+.dir{max-width:1340px;margin:0 auto 96px;border-top:1px solid #2A241E;padding-top:40px}
+.dir-head{display:flex;gap:40px;align-items:flex-start;margin-bottom:32px;flex-wrap:wrap}
+.dir-head .t{flex:1 1 420px;min-width:320px}
+.dir-num{font-size:12px;letter-spacing:.28em;color:#6E635A;margin-bottom:10px}
+.dir-head h2{font-size:26px;letter-spacing:-.01em;margin-bottom:6px}
+.dir-head h2 span{color:#6E635A;font-weight:400;font-size:15px;letter-spacing:.06em;margin-left:10px}
+.dir-head .lead{color:#A79E96;font-size:14px;line-height:1.85;margin-top:12px}
+.dir-head .lead b{color:#DDD4CB}
+.meta{flex:0 0 306px;font-size:12.5px;line-height:1.8}
+.meta div{display:flex;gap:10px;padding:7px 0;border-bottom:1px dashed #2A241E}
+.meta b{flex:0 0 62px;color:#6E635A;font-weight:400}
+.meta i{font-style:normal;color:#C8BFB6}
+.tagline{margin-top:14px;font-size:12.5px;line-height:1.8;color:#8B8179}
+.tagline em{font-style:normal;color:#F0B24A}
+
+.screens{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start}
+.slot{display:flex;flex-direction:column;gap:12px}
+.slot .cap{font-size:12px;color:#7C726A;letter-spacing:.04em;padding-left:4px}
+
+.phone{
+  width:340px;height:716px;background:var(--bg);color:var(--ink);
+  border-radius:38px;overflow:hidden;position:relative;
+  border:9px solid #241F1A;box-shadow:0 30px 60px -20px rgba(0,0,0,.8);
+  font-size:14px;line-height:1.55;
+}
+.statusbar{height:40px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;font-size:11.5px;font-weight:600;flex:none;position:relative;z-index:30}
+.wxcap{display:flex;align-items:center;gap:6px;border:1px solid rgba(0,0,0,.13);border-radius:100px;padding:3px 9px;font-size:10px;opacity:.6}
+.wxcap b{letter-spacing:1px}
+
+.ph{position:relative;overflow:hidden;background:#E5DCD3;display:grid;place-items:center;flex:none}
+.ph::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 15%,transparent 35%,rgba(60,35,20,.34));pointer-events:none}
+.ph em{font-style:normal;font-size:44px;opacity:.95;position:relative;z-index:1}
+.ph.s em{font-size:26px}
+.ph.xs em{font-size:19px}
+.g1{background:linear-gradient(150deg,#FBD9A4,#EE9B6E 62%,#D4714E)}
+.g2{background:linear-gradient(150deg,#CFE0F0,#8FA9C6 60%,#5D7794)}
+.g3{background:linear-gradient(150deg,#F7CFCB,#DE9192 58%,#B06A70)}
+.g4{background:linear-gradient(150deg,#DCE8D4,#9CB98D 60%,#6C8B60)}
+.g5{background:linear-gradient(150deg,#F0DCC4,#C8A582 58%,#96754F)}
+.g6{background:linear-gradient(150deg,#E0D6EC,#A796C4 60%,#77689B)}
+
+.tabfloat{
+  position:absolute;left:50%;transform:translateX(-50%);bottom:16px;z-index:40;
+  display:flex;gap:4px;background:rgba(26,22,19,.93);
+  padding:5px;border-radius:100px;box-shadow:0 14px 30px -10px rgba(0,0,0,.55);
+}
+.tabfloat a{display:flex;align-items:center;gap:6px;color:rgba(255,255,255,.62);font-size:12px;padding:9px 15px;border-radius:100px;text-decoration:none}
+.tabfloat a.on{background:#fff;color:var(--ink);font-weight:600}
+.tabfloat a i{font-style:normal;font-size:13px}
+
+/* ============ A ============ */
+.A{display:flex;flex-direction:column;height:100%;background:var(--bg)}
+.A .body{flex:1;overflow:hidden;padding-bottom:8px}
+.A .topbar{display:flex;align-items:center;justify-content:space-between;padding:2px 20px 14px}
+.A .brand{font-size:13px;font-weight:700;letter-spacing:.14em}
+.A .brand s{text-decoration:none;color:var(--accent)}
+.A .avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(140deg,#F3C79B,#DE8E6C)}
+.A .wallhead{display:flex;align-items:baseline;justify-content:space-between;padding:0 20px 10px}
+.A .wallhead b{font-size:15px;letter-spacing:-.01em}
+.A .wallhead s{text-decoration:none;font-size:11.5px;color:var(--ink-3)}
+.A .wall{display:flex;gap:10px;padding:0 20px 18px;overflow:hidden}
+.A .wall .ph{width:96px;height:128px;border-radius:12px;box-shadow:0 6px 16px -8px rgba(90,55,30,.5)}
+.A .sec{padding:6px 20px 0}
+.A .sec h4{font-size:16px;letter-spacing:-.01em;margin-bottom:12px}
+.A .hero{position:relative;border-radius:var(--r-lg);overflow:hidden;height:196px;margin-bottom:12px;box-shadow:0 14px 30px -18px rgba(90,55,30,.75)}
+.A .hero .ph{position:absolute;inset:0;border-radius:0}
+.A .veil{position:absolute;inset:0;z-index:2;background:linear-gradient(to top,rgba(20,10,4,.82) 0%,rgba(20,10,4,.28) 45%,transparent 72%)}
+.A .hero .txt{position:absolute;left:16px;right:16px;bottom:14px;z-index:3;color:#fff}
+.A .hero .txt b{display:block;font-size:19px;letter-spacing:-.01em;margin-bottom:3px}
+.A .hero .txt p{font-size:12px;opacity:.82}
+.A .price{position:absolute;top:12px;right:12px;z-index:3;background:rgba(255,255,255,.94);color:var(--ink);font-size:11.5px;font-weight:700;padding:5px 11px;border-radius:100px}
+.A .badge-hot{position:absolute;top:12px;left:12px;z-index:3;background:var(--accent);color:#fff;font-size:10.5px;font-weight:600;padding:5px 10px;border-radius:100px}
+.A .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.A .card{position:relative;border-radius:var(--r-md);overflow:hidden;height:172px;box-shadow:0 10px 22px -16px rgba(90,55,30,.7)}
+.A .card .ph{position:absolute;inset:0;border-radius:0}
+.A .card .txt{position:absolute;left:11px;right:11px;bottom:10px;z-index:3;color:#fff}
+.A .card .txt b{display:block;font-size:14px;margin-bottom:2px}
+.A .card .txt p{font-size:10.5px;opacity:.8}
+.A .card .pz{position:absolute;top:9px;right:9px;z-index:3;background:rgba(255,255,255,.93);color:var(--ink);font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:100px}
+
+.A2{position:relative;height:100%;background:var(--paper)}
+.A2 .cover{position:absolute;top:0;left:0;right:0;height:330px}
+.A2 .cover .ph{position:absolute;inset:0}
+.A2 .navback{position:absolute;top:44px;left:16px;z-index:20;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.9);display:grid;place-items:center;font-size:15px;color:var(--ink)}
+.A2 .sheet{position:absolute;left:0;right:0;top:296px;bottom:0;background:var(--paper);border-radius:26px 26px 0 0;padding:20px 20px 0;z-index:10;box-shadow:0 -18px 34px -22px rgba(60,35,15,.5)}
+.A2 .grab{width:34px;height:4px;border-radius:4px;background:var(--line);margin:0 auto 16px}
+.A2 h3{font-size:21px;letter-spacing:-.02em;margin-bottom:5px}
+.A2 .sub{font-size:12.5px;color:var(--ink-2);margin-bottom:16px}
+.A2 .stats{display:flex;gap:18px;padding-bottom:16px;border-bottom:1px solid var(--line);margin-bottom:16px}
+.A2 .stats div b{display:block;font-size:16px}
+.A2 .stats div s{text-decoration:none;font-size:10.5px;color:var(--ink-3)}
+.A2 .exlabel{font-size:12px;color:var(--ink-2);margin-bottom:9px}
+.A2 .examples{display:flex;gap:9px}
+.A2 .examples .ph{width:84px;height:110px;border-radius:11px}
+.A2 .cta{position:absolute;left:16px;right:16px;bottom:18px;height:50px;border-radius:100px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;font-size:15px;font-weight:600;box-shadow:0 12px 26px -12px rgba(26,22,19,.8)}
+.A2 .cta s{text-decoration:none;opacity:.55;font-weight:400;font-size:12.5px}
+
+/* ============ C ============ */
+.C{position:relative;height:100%;background:#0F0B08;overflow:hidden}
+.C .bg{position:absolute;inset:0}
+.C .bg .ph{position:absolute;inset:0;border-radius:0}
+.C .bg::after{content:"";position:absolute;inset:0;z-index:3;background:linear-gradient(to top,rgba(10,6,3,.94) 4%,rgba(10,6,3,.42) 34%,rgba(10,6,3,.12) 60%,rgba(10,6,3,.5))}
+.C .statusbar{color:#fff}
+.C .wxcap{border-color:rgba(255,255,255,.3);color:#fff}
+.C .chips{position:absolute;top:44px;left:0;right:0;z-index:20;display:flex;gap:8px;padding:0 18px}
+.C .chips a{text-decoration:none;font-size:12px;color:rgba(255,255,255,.68);padding:6px 13px;border-radius:100px;border:1px solid rgba(255,255,255,.2);white-space:nowrap}
+.C .chips a.on{background:#fff;color:#16110C;font-weight:600;border-color:#fff}
+.C .side{position:absolute;right:14px;bottom:190px;z-index:20;display:flex;flex-direction:column;gap:20px;align-items:center;color:#fff}
+.C .side div{text-align:center;font-size:10px;opacity:.9}
+.C .side div i{display:block;font-style:normal;font-size:22px;margin-bottom:3px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.6))}
+.C .caption{position:absolute;left:20px;right:74px;bottom:108px;z-index:20;color:#fff}
+.C .caption .kicker{font-size:10.5px;letter-spacing:.24em;opacity:.68;margin-bottom:9px}
+.C .caption h2{font-size:29px;line-height:1.24;letter-spacing:-.025em;margin-bottom:9px;text-shadow:0 2px 18px rgba(0,0,0,.5)}
+.C .caption p{font-size:12.5px;opacity:.78;line-height:1.7}
+.C .caption .by{display:flex;align-items:center;gap:7px;margin-top:13px;font-size:11px;opacity:.72}
+.C .caption .by u{width:20px;height:20px;border-radius:50%;text-decoration:none;background:linear-gradient(140deg,#F3C79B,#DE8E6C);display:block}
+.C .actbar{position:absolute;left:20px;right:20px;bottom:62px;z-index:20;display:flex;gap:10px}
+.C .actbar .main{flex:1;height:48px;border-radius:100px;background:#fff;color:#16110C;display:flex;align-items:center;justify-content:center;gap:8px;font-size:15px;font-weight:600}
+.C .actbar .main s{text-decoration:none;font-weight:400;font-size:12.5px;opacity:.55}
+.C .actbar .ghost{width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,255,255,.28);display:grid;place-items:center;font-size:17px;color:#fff}
+.C .tabghost{position:absolute;left:0;right:0;bottom:0;z-index:25;height:56px;display:flex;justify-content:space-around;align-items:center;background:linear-gradient(to top,rgba(10,6,3,.92),transparent)}
+.C .tabghost a{text-decoration:none;font-size:11px;color:rgba(255,255,255,.5)}
+.C .tabghost a.on{color:#fff;font-weight:600}
+.C .swipe{position:absolute;right:16px;top:50%;z-index:20;transform:translateY(-50%);writing-mode:vertical-rl;font-size:9.5px;letter-spacing:.2em;color:rgba(255,255,255,.4)}
+
+.C2{position:relative;height:100%;overflow:hidden;background:#0F0B08}
+.C2 .bg{position:absolute;inset:0}
+.C2 .bg .ph{position:absolute;inset:0;border-radius:0;filter:blur(16px) saturate(1.05);transform:scale(1.12)}
+.C2 .bg::after{content:"";position:absolute;inset:0;background:rgba(12,8,4,.42)}
+.C2 .statusbar{color:#fff;position:relative;z-index:20}
+.C2 .steps{position:relative;z-index:20;display:flex;gap:5px;padding:2px 20px 16px}
+.C2 .steps i{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.24)}
+.C2 .steps i.on{background:#fff}
+.C2 .glass{position:absolute;left:14px;right:14px;top:96px;z-index:20;background:rgba(255,255,255,.9);border-radius:24px;padding:20px 18px;border:1px solid rgba(255,255,255,.6);box-shadow:0 24px 50px -20px rgba(0,0,0,.6)}
+.C2 .glass .kicker{font-size:10px;letter-spacing:.24em;color:var(--ink-3);margin-bottom:7px}
+.C2 .glass h3{font-size:20px;letter-spacing:-.02em;margin-bottom:18px}
+.C2 .field{margin-bottom:15px}
+.C2 .field label{display:block;font-size:11.5px;color:var(--ink-2);margin-bottom:6px}
+.C2 .field .inp{height:44px;border-radius:12px;background:rgba(255,255,255,.75);border:1px solid var(--line);display:flex;align-items:center;padding:0 13px;font-size:14px;color:var(--ink-3);justify-content:space-between}
+.C2 .field .inp.filled{color:var(--ink);font-weight:500}
+.C2 .pets{display:flex;gap:9px}
+.C2 .pet{flex:1;border-radius:14px;background:rgba(255,255,255,.72);border:1px solid var(--line);padding:11px 8px;text-align:center;font-size:11.5px}
+.C2 .pet.on{border-color:var(--ink);background:#fff;box-shadow:0 4px 14px -6px rgba(0,0,0,.28);font-weight:600}
+.C2 .pet .ph{width:38px;height:38px;border-radius:50%;margin:0 auto 6px}
+.C2 .next{position:absolute;left:20px;right:20px;bottom:26px;z-index:20;height:50px;border-radius:100px;background:#fff;color:var(--ink);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;box-shadow:0 16px 32px -14px rgba(0,0,0,.7)}
+
+/* ============ E ============ */
+.E{display:flex;flex-direction:column;height:100%;background:var(--bg)}
+.E .pets{display:flex;gap:12px;align-items:center;padding:2px 20px 14px}
+.E .pets .pi{position:relative;flex:none}
+.E .pets .pi .av{width:40px;height:40px;border-radius:50%;overflow:hidden;display:grid;place-items:center;font-size:20px;opacity:.5}
+.E .pets .pi.on .av{opacity:1;box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--ink)}
+.E .pets .add{width:40px;height:40px;border-radius:50%;border:1.5px dashed #D8CEC4;display:grid;place-items:center;color:var(--ink-3);font-size:17px;flex:none}
+.E .pets .sp{flex:1}
+.E .pets .more{font-size:18px;color:var(--ink-3)}
+.E .cover{position:relative;margin:0 20px 14px;height:210px;border-radius:var(--r-lg);overflow:hidden;box-shadow:0 16px 34px -20px rgba(90,55,30,.8)}
+.E .cover .ph{position:absolute;inset:0;border-radius:0}
+.E .cover .veil{position:absolute;inset:0;z-index:2;background:linear-gradient(to top,rgba(20,10,4,.85) 2%,rgba(20,10,4,.2) 48%,transparent 72%)}
+.E .cover .who{position:absolute;left:16px;bottom:14px;z-index:3;color:#fff}
+.E .cover .who h2{font-size:26px;letter-spacing:-.02em;line-height:1.2}
+.E .cover .who .meta2{font-size:11.5px;opacity:.82;margin-top:4px;display:flex;gap:7px;align-items:center}
+.E .cover .who .meta2 u{text-decoration:none;opacity:.5}
+.E .cover .camera{position:absolute;right:14px;bottom:14px;z-index:3;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;font-size:15px}
+.E .cover .days{position:absolute;left:16px;top:14px;z-index:3;background:rgba(255,255,255,.92);font-size:11px;font-weight:700;padding:5px 11px;border-radius:100px}
+.E .nums{display:flex;margin:0 20px 18px;background:#fff;border-radius:var(--r-md);padding:14px 0;box-shadow:0 6px 18px -12px rgba(90,55,30,.55)}
+.E .nums div{flex:1;text-align:center;position:relative}
+.E .nums div+div::before{content:"";position:absolute;left:0;top:4px;bottom:4px;width:1px;background:var(--line)}
+.E .nums b{display:block;font-size:19px;letter-spacing:-.01em}
+.E .nums s{text-decoration:none;font-size:10.5px;color:var(--ink-3)}
+.E .sechd{display:flex;align-items:baseline;justify-content:space-between;padding:0 20px 10px}
+.E .sechd b{font-size:15px}
+.E .sechd s{text-decoration:none;font-size:11.5px;color:var(--ink-3)}
+.E .recent{display:flex;gap:9px;padding:0 20px 20px}
+.E .recent .ph{width:74px;height:98px;border-radius:11px;box-shadow:0 6px 14px -8px rgba(90,55,30,.5)}
+.E .doable{display:grid;grid-template-columns:1fr 1fr;gap:11px;padding:0 20px}
+.E .doable .it{position:relative;height:112px;border-radius:var(--r-md);overflow:hidden;box-shadow:0 8px 18px -14px rgba(90,55,30,.7)}
+.E .doable .it .ph{position:absolute;inset:0;border-radius:0}
+.E .doable .it .veil{position:absolute;inset:0;z-index:2;background:linear-gradient(to top,rgba(20,10,4,.8),transparent 62%)}
+.E .doable .it b{position:absolute;left:10px;bottom:8px;z-index:3;color:#fff;font-size:13px}
+.E .doable .it .pz{position:absolute;right:8px;top:8px;z-index:3;background:rgba(255,255,255,.92);font-size:10px;font-weight:700;padding:2px 7px;border-radius:100px}
+
+.E2{display:flex;flex-direction:column;height:100%;background:var(--bg)}
+.E2 .hd{display:flex;align-items:center;gap:10px;padding:2px 20px 16px}
+.E2 .hd .av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:17px}
+.E2 .hd b{font-size:17px;letter-spacing:-.01em;display:block}
+.E2 .hd s{text-decoration:none;font-size:11px;color:var(--ink-3)}
+.E2 .tl{position:relative;padding:0 20px 0 52px;overflow:hidden;flex:1}
+.E2 .tl::before{content:"";position:absolute;left:31px;top:6px;bottom:0;width:1.5px;background:var(--line)}
+.E2 .ev{position:relative;margin-bottom:20px}
+.E2 .ev .dot{position:absolute;left:-27px;top:6px;width:11px;height:11px;border-radius:50%;background:#fff;border:2.5px solid var(--ink-3)}
+.E2 .ev.hi .dot{border-color:var(--accent);background:var(--accent);box-shadow:0 0 0 4px rgba(232,103,76,.16)}
+.E2 .ev .date{font-size:10.5px;color:var(--ink-3);letter-spacing:.06em;margin-bottom:6px}
+.E2 .ev .box{background:#fff;border-radius:var(--r-md);overflow:hidden;box-shadow:0 6px 18px -12px rgba(90,55,30,.6)}
+.E2 .ev .box .ph{width:100%;height:104px}
+.E2 .ev .box .tx{padding:10px 12px 12px}
+.E2 .ev .box .tx b{display:block;font-size:13.5px;margin-bottom:2px}
+.E2 .ev .box .tx p{font-size:11.5px;color:var(--ink-2);line-height:1.6}
+.E2 .ev.slim .box{padding:11px 13px}
+.E2 .ev.slim .box b{font-size:13.5px;display:block}
+.E2 .ev.slim .box p{font-size:11.5px;color:var(--ink-2);margin-top:2px}
+
+/* ============ F（仅封面） ============ */
+.F{position:relative;height:100%;overflow:hidden;background:#111}
+.F .bg{position:absolute;inset:0}
+.F .bg .ph{position:absolute;inset:0;border-radius:0}
+.F .bg::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(8,5,3,.86) 6%,rgba(8,5,3,.15) 48%,rgba(8,5,3,.42))}
+.F .statusbar{color:#fff;position:relative;z-index:10}
+.F .fhd{position:absolute;top:46px;left:0;right:0;z-index:10;padding:0 24px;display:flex;justify-content:space-between;align-items:baseline;color:#fff}
+.F .fhd .logo{font-size:13px;font-weight:700;letter-spacing:.3em}
+.F .fhd .issue{font-size:10px;letter-spacing:.22em;opacity:.7}
+.F .rule{position:absolute;left:24px;right:24px;top:74px;height:1px;background:rgba(255,255,255,.28);z-index:10}
+.F .fcover{position:absolute;left:24px;right:24px;bottom:112px;z-index:10;color:#fff}
+.F .fcover .cat{font-size:10px;letter-spacing:.28em;opacity:.72;margin-bottom:14px}
+.F .fcover h1{font-size:46px;line-height:1.06;letter-spacing:-.04em;font-weight:700;margin-bottom:14px}
+.F .fcover h1 u{text-decoration:none;font-weight:300;font-style:italic;opacity:.9}
+.F .fcover .dek{font-size:12.5px;line-height:1.8;opacity:.8;max-width:250px;padding-left:12px;border-left:2px solid rgba(255,255,255,.4)}
+.F .fbot{position:absolute;left:24px;right:24px;bottom:64px;z-index:10;display:flex;justify-content:space-between;align-items:center;color:#fff;font-size:10px;letter-spacing:.16em;opacity:.66;border-top:1px solid rgba(255,255,255,.22);padding-top:12px}
+.F .tabghost{position:absolute;left:0;right:0;bottom:0;z-index:20;height:52px;display:flex;justify-content:space-around;align-items:center;background:linear-gradient(to top,rgba(8,5,3,.9),transparent)}
+.F .tabghost a{text-decoration:none;font-size:11px;color:rgba(255,255,255,.5);letter-spacing:.04em}
+.F .tabghost a.on{color:#fff;font-weight:600}
+
+/* ============ J ============ */
+.J{display:flex;flex-direction:column;height:100%;background:linear-gradient(175deg,#FFF4E8 0%,#FFEAF0 52%,#EFF3FF 100%)}
+.J .statusbar{color:#5A4436}
+.J .wxcap{border-color:rgba(120,80,60,.2);color:#5A4436}
+.J .clay{
+  background:#FFFDFB;border-radius:28px;
+  box-shadow:
+    inset 0 -5px 10px rgba(255,255,255,.95),
+    inset 0 5px 12px rgba(190,140,120,.13),
+    0 8px 16px -6px rgba(190,140,120,.34),
+    0 18px 34px -18px rgba(190,140,120,.5);
+}
+.J .hd{display:flex;align-items:center;gap:11px;padding:2px 20px 16px}
+.J .hd .av{
+  width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-size:22px;
+  background:linear-gradient(160deg,#FFD9A8,#FFB183);
+  box-shadow:inset 0 -3px 7px rgba(255,255,255,.85),inset 0 4px 8px rgba(190,120,90,.22),0 7px 14px -5px rgba(210,140,110,.6);
+}
+.J .hd .tx b{font-size:17px;display:block;color:#4A3628;letter-spacing:-.01em}
+.J .hd .tx s{text-decoration:none;font-size:11.5px;color:#9C8272}
+.J .hd .bell{
+  margin-left:auto;width:38px;height:38px;border-radius:14px;display:grid;place-items:center;font-size:16px;
+  background:#FFFDFB;
+  box-shadow:inset 0 -3px 6px rgba(255,255,255,.9),inset 0 3px 7px rgba(190,140,120,.14),0 6px 12px -4px rgba(190,140,120,.4);
+}
+.J .big{margin:0 20px 16px;padding:16px;position:relative}
+.J .big .inner{border-radius:20px;overflow:hidden;height:150px;position:relative;box-shadow:inset 0 3px 9px rgba(150,100,80,.3)}
+.J .big .inner .ph{position:absolute;inset:0;border-radius:0}
+.J .big .r1{display:flex;align-items:center;justify-content:space-between;margin-top:13px}
+.J .big .r1 b{font-size:18px;color:#4A3628;letter-spacing:-.01em;display:block}
+.J .big .r1 s{text-decoration:none;font-size:11.5px;color:#9C8272;display:block;margin-top:2px}
+.J .big .jelly{
+  padding:11px 20px;border-radius:100px;font-size:14px;font-weight:700;color:#fff;
+  background:linear-gradient(160deg,#FF9E7A,#F0664A);
+  box-shadow:inset 0 -3px 7px rgba(255,255,255,.42),inset 0 4px 8px rgba(160,60,40,.24),0 8px 15px -4px rgba(240,102,74,.7);
+  flex:none;
+}
+.J .big .tagx{
+  position:absolute;top:6px;right:16px;z-index:5;
+  background:linear-gradient(160deg,#FFE08A,#FFC24D);color:#6B4A12;
+  font-size:11px;font-weight:800;padding:6px 13px;border-radius:100px;transform:rotate(4deg);
+  box-shadow:inset 0 -2px 5px rgba(255,255,255,.7),0 6px 12px -3px rgba(230,170,50,.75);
+}
+.J .lbl{font-size:13.5px;font-weight:700;color:#4A3628;padding:0 22px 11px}
+.J .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:0 20px 18px}
+.J .grid .it{padding:13px 8px 12px;text-align:center}
+.J .grid .it .bub{
+  width:52px;height:52px;border-radius:20px;margin:0 auto 8px;display:grid;place-items:center;font-size:24px;
+  box-shadow:inset 0 -4px 8px rgba(255,255,255,.85),inset 0 4px 9px rgba(160,110,90,.18),0 7px 13px -4px rgba(190,140,120,.55);
+}
+.J .grid .it .b1{background:linear-gradient(160deg,#FFE2BC,#FFC194)}
+.J .grid .it .b2{background:linear-gradient(160deg,#CFE7FF,#A6C8F5)}
+.J .grid .it .b3{background:linear-gradient(160deg,#E2DAFB,#C3B4F0)}
+.J .grid .it .b4{background:linear-gradient(160deg,#D6F0DD,#A9DCBB)}
+.J .grid .it .b5{background:linear-gradient(160deg,#FFD6E2,#FFAFC5)}
+.J .grid .it .b6{background:linear-gradient(160deg,#FFF0BE,#FFDD8A)}
+.J .grid .it b{font-size:12px;color:#4A3628;display:block}
+.J .grid .it s{text-decoration:none;font-size:10px;color:#A38C7C}
+.J .jtab{
+  position:absolute;left:18px;right:18px;bottom:16px;z-index:40;
+  display:flex;padding:7px;border-radius:26px;background:#FFFDFB;
+  box-shadow:inset 0 -3px 7px rgba(255,255,255,.9),inset 0 3px 8px rgba(190,140,120,.13),0 12px 24px -8px rgba(190,140,120,.62);
+}
+.J .jtab a{flex:1;text-decoration:none;text-align:center;padding:9px 0;border-radius:19px;font-size:11.5px;color:#A38C7C}
+.J .jtab a i{display:block;font-style:normal;font-size:17px;margin-bottom:2px}
+.J .jtab a.on{
+  color:#fff;font-weight:700;
+  background:linear-gradient(160deg,#FF9E7A,#F0664A);
+  box-shadow:inset 0 -2px 6px rgba(255,255,255,.36),0 6px 12px -3px rgba(240,102,74,.72);
+}
+
+.J2{display:flex;flex-direction:column;height:100%;background:linear-gradient(175deg,#FFF0E4 0%,#FFE6EE 55%,#EDF1FF 100%);position:relative}
+.J2 .statusbar{color:#5A4436}
+.J2 .wxcap{border-color:rgba(120,80,60,.2);color:#5A4436}
+.J2 .celebrate{text-align:center;padding:6px 20px 16px}
+.J2 .celebrate b{font-size:22px;color:#4A3628;letter-spacing:-.02em;display:block}
+.J2 .celebrate s{text-decoration:none;font-size:12.5px;color:#9C8272;margin-top:4px;display:block}
+.J2 .frame{
+  margin:0 32px 18px;padding:14px 14px 46px;background:#FFFDFB;border-radius:26px;position:relative;
+  box-shadow:
+    inset 0 -5px 10px rgba(255,255,255,.95),
+    inset 0 5px 12px rgba(190,140,120,.12),
+    0 12px 22px -6px rgba(190,140,120,.42),
+    0 28px 48px -22px rgba(190,140,120,.6);
+  transform:rotate(-1.6deg);
+}
+.J2 .frame .ph{width:100%;height:250px;border-radius:16px;box-shadow:inset 0 3px 9px rgba(150,100,80,.28)}
+.J2 .frame .sign{position:absolute;left:0;right:0;bottom:15px;text-align:center;font-size:12.5px;color:#7A6252;font-weight:600}
+.J2 .frame .seal{
+  position:absolute;right:-9px;bottom:34px;width:52px;height:52px;border-radius:50%;
+  background:linear-gradient(160deg,#FFE08A,#FFB93D);color:#6B4A12;
+  display:grid;place-items:center;text-align:center;font-size:9px;font-weight:800;line-height:1.25;
+  box-shadow:inset 0 -3px 7px rgba(255,255,255,.6),0 8px 16px -4px rgba(230,170,50,.8);
+  transform:rotate(11deg);
+}
+.J2 .acts{display:flex;gap:11px;padding:0 24px}
+.J2 .acts .a{flex:1;height:52px;border-radius:20px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:14.5px;font-weight:700}
+.J2 .acts .a1{
+  color:#fff;background:linear-gradient(160deg,#FF9E7A,#F0664A);
+  box-shadow:inset 0 -3px 7px rgba(255,255,255,.4),inset 0 4px 8px rgba(160,60,40,.22),0 9px 17px -4px rgba(240,102,74,.72);
+}
+.J2 .acts .a2{
+  color:#4A3628;background:#FFFDFB;
+  box-shadow:inset 0 -3px 7px rgba(255,255,255,.9),inset 0 3px 8px rgba(190,140,120,.14),0 8px 15px -4px rgba(190,140,120,.5);
+}
+.J2 .again{text-align:center;margin-top:16px;font-size:12.5px;color:#9C8272}
+.J2 .again u{text-decoration:none;color:#F0664A;font-weight:700}
+.J2 .conf{position:absolute;border-radius:3px;opacity:.85}
+.J2 .c1{width:9px;height:9px;background:#FFC24D;top:112px;left:34px;transform:rotate(24deg)}
+.J2 .c2{width:7px;height:12px;background:#FF9EB5;top:150px;right:30px;transform:rotate(-18deg)}
+.J2 .c3{width:10px;height:10px;background:#A6C8F5;top:230px;left:22px;border-radius:50%}
+.J2 .c4{width:8px;height:8px;background:#A9DCBB;top:96px;right:52px;border-radius:50%}
+.J2 .c5{width:6px;height:11px;background:#C3B4F0;top:300px;right:20px;transform:rotate(32deg)}
+
+.compare{max-width:1340px;margin:0 auto 80px;border-top:1px solid #2A241E;padding-top:40px}
+.compare h2{font-size:22px;margin-bottom:8px}
+.compare .sub{color:#8B8179;font-size:13px;margin-bottom:22px;line-height:1.85}
+.compare .sub b{color:#F0B24A}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:13px 14px;border-bottom:1px solid #262019;vertical-align:top}
+th{color:#7C726A;font-weight:500;font-size:12px;letter-spacing:.06em}
+td b{color:#F0B24A;font-weight:600}
+td{color:#B3AAA2;line-height:1.7}
+.pill{display:inline-block;font-size:11px;padding:3px 9px;border-radius:100px;border:1px solid #3A322A}
+.pill.hi{color:#7BD88F;border-color:#2E4A33}
+.pill.mid{color:#E8C25E;border-color:#4A3F26}
+.pill.low{color:#E88A72;border-color:#4A2F26}
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <h1>宠物创意实验室 · 布局方向终选<span class="v">V 4</span></h1>
+  <p>
+    已移除：<span class="dead">D 手作创作台</span> · <span class="dead">G 创作工作台</span> ·
+    <span class="dead">I 便当格</span> · <span class="dead">B 卡包收藏</span> ·
+    <span class="dead">H 对话式创作</span> · <span class="dead">F 的目录屏</span>
+    <br><br>
+    <strong>保留 5 个方向：A 作品墙 / C 沉浸故事流 / E 宠物主页 / F 杂志封面 / J 黏土软萌</strong>
+    <br><br>
+    除 J 外共用同一套中性配色，差异全部来自 HTML 骨架与信息形态。
+    J 是唯一对配色有强依赖的方向（黏土的体积感必须靠色彩配合才成立）。
+    彩色渐变块 = 真实成品图的位置。
+    <br><br>
+    <strong>本页只做形态展示，不做页面分配。</strong>具体哪个页面用哪种布局，读过项目代码后再定。
+    配套文档见 <code style="background:#241F1A;padding:2px 7px;border-radius:5px;color:#E8A87C">UI重构方案.md</code>。
+  </p>
+  <div class="jump">
+    <a href="#dirA">A · 作品墙优先</a>
+    <a href="#dirC">C · 沉浸故事流</a>
+    <a href="#dirE">E · 宠物主页</a>
+    <a href="#dirF">F · 杂志封面</a>
+    <a href="#dirJ">J · 黏土软萌</a>
+    <a href="#cmp">五向对照</a>
+  </div>
+</div>
+
+<!-- ============ A ============ -->
+<section class="dir" id="dirA">
+  <div class="dir-head">
+    <div class="t">
+      <div class="dir-num">D I R E C T I O N &nbsp; A</div>
+      <h2>作品墙优先 <span>Showcase First</span></h2>
+      <p class="lead">
+        把「别人做出来的成品」放到第一屏。入口不再是文字卡片，而是<b>成品大图本身</b>。
+        杂志式 1 大 + 2 列网格制造节奏，标题压在图上的渐变遮罩里，价格做成浮标。
+        详情页大图顶到状态栏，白色面板上浮盖住图底，底部常驻 CTA。
+      </p>
+      <p class="tagline">用户心智：<em>商品浏览</em>　·　「有什么可以选」</p>
+    </div>
+    <div class="meta">
+      <div><b>抓眼球</b><i><span class="pill hi">高</span> 首屏即结果</i></div>
+      <div><b>可爱度</b><i><span class="pill mid">中</span> 取决于成品图</i></div>
+      <div><b>质感</b><i><span class="pill hi">高</span> 图片主导天然精致</i></div>
+      <div><b>成本</b><i><span class="pill hi">低</span> 常规布局，无特殊 API</i></div>
+      <div><b>硬依赖</b><i>每个入口 3-5 张高质量样例图</i></div>
+      <div><b>风险</b><i>样例图不够好会被直接放大</i></div>
+      <div><b>参考</b><i>小红书 / Lensa / Pinterest</i></div>
+    </div>
+  </div>
+  <div class="screens">
+    <div class="slot">
+      <div class="cap">图片网格列表</div>
+      <div class="phone"><div class="A">
+        <div class="statusbar"><span>9:41</span><div class="wxcap"><b>•••</b>◉</div></div>
+        <div class="body">
+          <div class="topbar"><div class="brand">PET <s>LAB</s></div><div class="avatar"></div></div>
+          <div class="wallhead"><b>今天大家做了这些</b><s>看全部 →</s></div>
+          <div class="wall">
+            <div class="ph g1 s"><em>🐱</em></div><div class="ph g2 s"><em>🐶</em></div>
+            <div class="ph g3 s"><em>🐰</em></div><div class="ph g6 s"><em>🐹</em></div>
+          </div>
+          <div class="sec">
+            <h4>今天想把它变成什么？</h4>
+            <div class="hero">
+              <div class="ph g1"><em>🪪</em></div><div class="veil"></div>
+              <div class="badge-hot">最多人做</div><div class="price">¥9.9</div>
+              <div class="txt"><b>宠物身份证</b><p>今天起，它也是有证的小朋友</p></div>
+            </div>
+            <div class="grid2">
+              <div class="card"><div class="ph g2"><em>🎬</em></div><div class="veil"></div><div class="pz">¥12.9</div>
+                <div class="txt"><b>电影海报</b><p>领衔主演是它</p></div></div>
+              <div class="card"><div class="ph g4"><em>📖</em></div><div class="veil"></div><div class="pz">¥12.9</div>
+                <div class="txt"><b>绘本主角</b><p>插画质感，故事感</p></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="tabfloat"><a class="on" href="#"><i>✦</i>玩法</a><a href="#"><i>◈</i>作品</a><a href="#"><i>◉</i>我的</a></div>
+      </div></div>
+    </div>
+    <div class="slot">
+      <div class="cap">沉浸详情 · 面板上浮</div>
+      <div class="phone"><div class="A2">
+        <div class="cover"><div class="ph g1"><em>🪪</em></div></div>
+        <div class="statusbar" style="color:#fff"><span>9:41</span><div class="wxcap" style="border-color:rgba(255,255,255,.3)"><b>•••</b>◉</div></div>
+        <div class="navback">‹</div>
+        <div class="sheet">
+          <div class="grab"></div>
+          <h3>宠物身份证</h3>
+          <div class="sub">PL-01 · 今天起，它也是有证的小朋友</div>
+          <div class="stats"><div><b>2,481</b><s>已制作</s></div><div><b>约 60s</b><s>生成时间</s></div><div><b>¥9.9</b><s>单次</s></div></div>
+          <div class="exlabel">别人做出来的样子</div>
+          <div class="examples"><div class="ph g3 s"><em>🐱</em></div><div class="ph g4 s"><em>🐶</em></div><div class="ph g5 s"><em>🐰</em></div></div>
+        </div>
+        <div class="cta">上传照片，开始制作 <s>¥9.9</s></div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ C ============ -->
+<section class="dir" id="dirC">
+  <div class="dir-head">
+    <div class="t">
+      <div class="dir-num">D I R E C T I O N &nbsp; C</div>
+      <h2>沉浸故事流 <span>Immersive Feed</span></h2>
+      <p class="lead">
+        一屏一个焦点，图<b>全屏铺满</b>，上下滑切换。文字压在渐变遮罩上，右侧竖排轻交互，
+        底部常驻主 CTA。第二屏演示的是<b>把这个模式用在表单上</b>：背景虚化成目标成品图，
+        表单浮在半透明卡片里 —— 填资料时始终看得见「我要做出来的东西」。
+      </p>
+      <p class="tagline">用户心智：<em>内容消费</em>　·　「下一个是什么」</p>
+    </div>
+    <div class="meta">
+      <div><b>抓眼球</b><i><span class="pill hi">最高</span> 全屏无干扰</i></div>
+      <div><b>可爱度</b><i><span class="pill mid">中</span> 偏酷偏电影感</i></div>
+      <div><b>质感</b><i><span class="pill hi">很高</span> 电影级</i></div>
+      <div><b>成本</b><i><span class="pill mid">中</span> swiper 全屏 + 图片预加载</i></div>
+      <div><b>硬依赖</b><i>竖版高清图，横图会崩</i></div>
+      <div><b>风险</b><i>信息密度最低；半透明层需按兼容性降级</i></div>
+      <div><b>参考</b><i>抖音 / Reels / Apple TV+ 详情页</i></div>
+    </div>
+  </div>
+  <div class="screens">
+    <div class="slot">
+      <div class="cap">全屏内容流</div>
+      <div class="phone"><div class="C">
+        <div class="bg"><div class="ph g3"><em>🐱</em></div></div>
+        <div class="statusbar"><span>9:41</span><div class="wxcap"><b>•••</b>◉</div></div>
+        <div class="chips"><a class="on" href="#">推荐</a><a href="#">证件</a><a href="#">海报</a><a href="#">短片</a><a href="#">纪念</a></div>
+        <div class="swipe">S W I P E&nbsp;&nbsp;U P</div>
+        <div class="side"><div><i>♡</i>1.2k</div><div><i>⤴</i>分享</div><div><i>◫</i>样例</div></div>
+        <div class="caption">
+          <div class="kicker">P L - 0 1 &nbsp; I D &nbsp; C A R D</div>
+          <h2>今天起<br>它也是有证的<br>小朋友</h2>
+          <p>上传一张正脸照，60 秒后带走一张专属证件。</p>
+          <div class="by"><u></u>@橘子今天也很乖 · 刚做完</div>
+        </div>
+        <div class="actbar"><div class="main">立即制作 <s>¥9.9</s></div><div class="ghost">♡</div></div>
+        <div class="tabghost"><a class="on" href="#">玩法</a><a href="#">作品</a><a href="#">我的</a></div>
+      </div></div>
+    </div>
+    <div class="slot">
+      <div class="cap">同模式用于表单 · 浮层</div>
+      <div class="phone"><div class="C2">
+        <div class="bg"><div class="ph g1"><em>🪪</em></div></div>
+        <div class="statusbar"><span>9:41</span><div class="wxcap" style="border-color:rgba(255,255,255,.3)"><b>•••</b>◉</div></div>
+        <div class="steps"><i class="on"></i><i></i><i></i><i></i></div>
+        <div class="glass">
+          <div class="kicker">S T E P &nbsp; 1 &nbsp;/&nbsp; 4</div>
+          <h3>先认识一下它</h3>
+          <div class="field"><label>从已建档的里挑一个</label>
+            <div class="pets">
+              <div class="pet on"><div class="ph g1"><em>🐱</em></div>moon</div>
+              <div class="pet"><div class="ph g2"><em>🐶</em></div>大白</div>
+              <div class="pet"><div class="ph g4"><em>＋</em></div>新建</div>
+            </div></div>
+          <div class="field"><label>名字</label><div class="inp filled">moon</div></div>
+          <div class="field"><label>种类</label><div class="inp filled">猫咪 <s style="text-decoration:none;color:var(--ink-3)">›</s></div></div>
+          <div class="field" style="margin-bottom:0"><label>生日 <s style="text-decoration:none;color:var(--ink-3);font-size:10.5px">选填</s></label>
+            <div class="inp">未填写 <s style="text-decoration:none;color:var(--ink-3)">›</s></div></div>
+        </div>
+        <div class="next">下一步 · 选照片</div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ E ============ -->
+<section class="dir" id="dirE">
+  <div class="dir-head">
+    <div class="t">
+      <div class="dir-num">D I R E C T I O N &nbsp; E</div>
+      <h2>宠物主页 <span>Pet-Centric Hub</span></h2>
+      <p class="lead">
+        唯一<b>动了信息架构</b>的方向。把「功能优先」反转为「对象优先」——
+        进入页面看到的不是功能列表，而是<b>某一只宠物的主页</b>：封面照、陪伴天数、
+        统计数据、最近产出，然后才是「还可以为它做什么」。多对象用顶部头像横切换。
+        第二屏是同一套架构的<b>时间轴形态</b>，用于叙事和回溯。
+      </p>
+      <p class="tagline">用户心智：<em>情感对象</em>　·　「我能为它做什么」</p>
+    </div>
+    <div class="meta">
+      <div><b>抓眼球</b><i><span class="pill hi">高</span> 用户自己的宠物</i></div>
+      <div><b>可爱度</b><i><span class="pill hi">很高</span> 天然温度</i></div>
+      <div><b>质感</b><i><span class="pill hi">高</span> 结构清晰，易做精致</i></div>
+      <div><b>成本</b><i><span class="pill mid">中</span> 需重排信息架构与路由</i></div>
+      <div><b>硬依赖</b><i>用户必须先建档，否则页面是空的</i></div>
+      <div><b>风险</b><i>新用户首启空态；功能入口曝光下沉</i></div>
+      <div><b>参考</b><i>Apple Fitness / Duolingo 角色页 / 宠物医疗 App</i></div>
+    </div>
+  </div>
+  <div class="screens">
+    <div class="slot">
+      <div class="cap">对象主页</div>
+      <div class="phone"><div class="E">
+        <div class="statusbar"><span>9:41</span><div class="wxcap"><b>•••</b>◉</div></div>
+        <div class="pets">
+          <div class="pi on"><div class="av ph g1"><em>🐱</em></div></div>
+          <div class="pi"><div class="av ph g2"><em>🐶</em></div></div>
+          <div class="pi"><div class="av ph g4"><em>🐰</em></div></div>
+          <div class="add">＋</div><div class="sp"></div><div class="more">⋯</div>
+        </div>
+        <div class="cover">
+          <div class="ph g1"><em>🐱</em></div><div class="veil"></div>
+          <div class="days">陪伴第 178 天</div>
+          <div class="who"><h2>moon</h2><div class="meta2">英短 · 2 岁 <u>|</u> 小公主 <u>|</u> 生日 7-21</div></div>
+          <div class="camera">◎</div>
+        </div>
+        <div class="nums">
+          <div><b>12</b><s>作品</s></div><div><b>86</b><s>照片</s></div><div><b>2</b><s>纪念日</s></div>
+        </div>
+        <div class="sechd"><b>最近为它做的</b><s>全部 →</s></div>
+        <div class="recent">
+          <div class="ph g1 s"><em>🪪</em></div><div class="ph g3 s"><em>🎬</em></div>
+          <div class="ph g4 s"><em>📖</em></div><div class="ph g5 s"><em>📰</em></div>
+        </div>
+        <div class="sechd"><b>还可以为它做</b><s>12 个 →</s></div>
+        <div class="doable">
+          <div class="it"><div class="ph g6"><em>✨</em></div><div class="veil"></div><div class="pz">¥12.9</div><b>星空写真</b></div>
+          <div class="it"><div class="ph g2"><em>🎞</em></div><div class="veil"></div><div class="pz">¥19.9</div><b>回忆短片</b></div>
+        </div>
+        <div class="tabfloat"><a class="on" href="#"><i>✦</i>它</a><a href="#"><i>◈</i>玩法</a><a href="#"><i>◉</i>我的</a></div>
+      </div></div>
+    </div>
+    <div class="slot">
+      <div class="cap">同架构 · 时间轴形态</div>
+      <div class="phone"><div class="E2">
+        <div class="statusbar"><span>9:41</span><div class="wxcap"><b>•••</b>◉</div></div>
+        <div class="hd">
+          <div class="av ph g1"><em>🐱</em></div>
+          <div><b>moon 的时间线</b><s>从 2025-02-03 开始，共 178 天</s></div>
+        </div>
+        <div class="tl">
+          <div class="ev hi"><div class="dot"></div><div class="date">2026 · 07 · 21 &nbsp;生日</div>
+            <div class="box"><div class="ph g1"><em>🎂</em></div>
+              <div class="tx"><b>两岁啦</b><p>做了一张生日海报，它全程在睡觉。</p></div></div></div>
+          <div class="ev"><div class="dot"></div><div class="date">2026 · 07 · 14</div>
+            <div class="box"><div class="ph g4"><em>📖</em></div>
+              <div class="tx"><b>绘本主角</b><p>第一次尝试插画风格。</p></div></div></div>
+          <div class="ev slim"><div class="dot"></div><div class="date">2026 · 07 · 02</div>
+            <div class="box"><b>上传了 12 张照片</b><p>夏天的窗台系列</p></div></div>
+        </div>
+        <div class="tabfloat"><a class="on" href="#"><i>✦</i>它</a><a href="#"><i>◈</i>玩法</a><a href="#"><i>◉</i>我的</a></div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ F ============ -->
+<section class="dir" id="dirF">
+  <div class="dir-head">
+    <div class="t">
+      <div class="dir-num">D I R E C T I O N &nbsp; F</div>
+      <h2>杂志封面 <span>Editorial Cover</span></h2>
+      <p class="lead">
+        <b>刊物封面的表达方式</b>：满版图 + 期数标识 + 巨大标题 + 一段引文 + 顶底细线框住版心。
+        它的质感<b>不来自装饰，来自排版纪律</b> —— 大留白、极端字重对比（700 的黑体标题
+        配 300 的斜体）、精确负字距、一条 1px 的横线。整屏没有一个圆角卡片、没有一个阴影。
+        <br><br>
+        这是五个方向里<b>信息量最低但气质最高</b>的一个，适合做「一屏定调」的场景，
+        不适合承载列表和操作。
+      </p>
+      <p class="tagline">用户心智：<em>阅读开篇</em>　·　「这是什么」</p>
+    </div>
+    <div class="meta">
+      <div><b>抓眼球</b><i><span class="pill hi">高</span> 大字 + 满版图</i></div>
+      <div><b>可爱度</b><i><span class="pill low">低</span> 冷静克制，反萌</i></div>
+      <div><b>质感</b><i><span class="pill hi">最高</span> 五向里最「高级」</i></div>
+      <div><b>成本</b><i><span class="pill hi">低</span> 结构极简，<b>难在文案</b></i></div>
+      <div><b>硬依赖</b><i><b>文案质量</b> —— 标题烂了整屏就垮</i></div>
+      <div><b>风险</b><i>信息量极低，不能承载操作和列表</i></div>
+      <div><b>参考</b><i>Kinfolk / NOWNESS / 单向街 / Apple Newsroom</i></div>
+    </div>
+  </div>
+  <div class="screens">
+    <div class="slot">
+      <div class="cap">封面 · 一屏定调</div>
+      <div class="phone"><div class="F">
+        <div class="bg"><div class="ph g5"><em>🐈</em></div></div>
+        <div class="statusbar"><span>9:41</span><div class="wxcap" style="border-color:rgba(255,255,255,.3)"><b>•••</b>◉</div></div>
+        <div class="fhd"><div class="logo">PET LAB</div><div class="issue">I S S U E &nbsp; 0 7</div></div>
+        <div class="rule"></div>
+        <div class="fcover">
+          <div class="cat">本 期 封 面 故 事</div>
+          <h1>夏天的<br><u>它</u></h1>
+          <div class="dek">午后三点的窗台，光正好。<br>这一期，我们把六种方式留给夏天。</div>
+        </div>
+        <div class="fbot"><span>2 0 2 6 · 0 7</span><span>6 个栏目</span><span>下滑阅读 ↓</span></div>
+        <div class="tabghost"><a class="on" href="#">本期</a><a href="#">往期</a><a href="#">我的</a></div>
+      </div></div>
+    </div>
+    <div class="slot" style="max-width:340px">
+      <div class="cap">这一屏的排版规则</div>
+      <div style="background:#1C1814;border-radius:20px;padding:22px 20px;font-size:12.5px;line-height:2;color:#9A918A;height:716px">
+        <div style="color:#F0B24A;font-size:13px;margin-bottom:14px;letter-spacing:.1em">排 版 参 数</div>
+        主标题　　56rpx / 字重 700 / 字距 -0.04em / 行高 1.06<br>
+        副字重　　同字号 / 字重 300 / 斜体 / 透明度 .9<br>
+        栏目标　　20rpx / 字距 +0.28em / 透明度 .72<br>
+        引文　　　25rpx / 行高 1.8 / 左侧 2rpx 竖线 / 缩进 24rpx<br>
+        页眉线　　1rpx / 透明度 .28 / 距顶 148rpx<br>
+        版心边距　48rpx（比常规页面宽 16rpx）<br><br>
+
+        <div style="color:#F0B24A;font-size:13px;margin:20px 0 14px;letter-spacing:.1em">硬 性 约 束</div>
+        · 整屏<b style="color:#C8BFB6">不出现圆角卡片</b><br>
+        · 整屏<b style="color:#C8BFB6">不出现阴影</b><br>
+        · 图片<b style="color:#C8BFB6">满版出血</b>，不留边距<br>
+        · 遮罩用暖褐 rgba(8,5,3)，<b style="color:#C8BFB6">不用纯黑</b><br>
+        · 最多两级字号，<b style="color:#C8BFB6">靠字重和字距拉开层级</b><br>
+        · 主标题<b style="color:#C8BFB6">不超过 8 个字</b><br><br>
+
+        <div style="color:#F0B24A;font-size:13px;margin:20px 0 14px;letter-spacing:.1em">为 什 么 显 得 高 级</div>
+        「高级感」在技术上就是<b style="color:#C8BFB6">克制</b>：<br>
+        元素越少、留白越大、层级越靠字重而非颜色区分，
+        观感就越贵。<br><br>
+        这一屏只有 5 个元素，但每个元素的位置和字距都是精确的 ——
+        <b style="color:#C8BFB6">这正是现有界面缺的东西</b>。<br><br>
+        即使不整屏采用这个方向，
+        <b style="color:#F0B24A">它的排版方法论也值得全站吸收</b>。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ J ============ -->
+<section class="dir" id="dirJ">
+  <div class="dir-head">
+    <div class="t">
+      <div class="dir-num">D I R E C T I O N &nbsp; J</div>
+      <h2>黏土软萌 <span>Claymorphism / Soft 3D</span></h2>
+      <p class="lead">
+        「可爱就要极致可爱」的极端解，五个方向里唯一把可爱度拉满的。
+        核心不是配色，是<b>体积感</b>：超大圆角（28px+）、内高光 + 内阴影 + 双层外投影
+        模拟「捏出来的」厚度，按钮像果冻，按下应有 Q 弹回弹。
+        <br><br>
+        <b>成本远低于看起来的样子</b> —— 黏土质感 100% 由 CSS 多层 box-shadow 实现，
+        不需要任何 3D 素材或图片。左边整屏除成品图外没有一张位图。
+        <br><br>
+        <b>两点必须诚实说明</b>：一，Claymorphism 的趋势材料明显偏薄，多为断言、缺实例；
+        二，<b>它和「企业级质感」是反方向的</b> —— 可爱度拉满的代价就是专业感下降。
+      </p>
+      <p class="tagline">用户心智：<em>玩具</em>　·　「好可爱，想戳一下」</p>
+    </div>
+    <div class="meta">
+      <div><b>抓眼球</b><i><span class="pill hi">很高</span> 在扁平小程序里极显眼</i></div>
+      <div><b>可爱度</b><i><span class="pill hi">最高</span> 唯一拉满的</i></div>
+      <div><b>质感</b><i><span class="pill mid">中</span> 「玩具感」不是「企业级」</i></div>
+      <div><b>成本</b><i><span class="pill hi">低</span> <b>纯 CSS，零素材</b></i></div>
+      <div><b>硬依赖</b><i><b>强依赖配色</b>，唯一不能用中性色的方向</i></div>
+      <div><b>风险</b><i>多层阴影<b>低端安卓掉帧</b>；<br>写实成品图与黏土 UI 可能割裂</i></div>
+      <div><b>参考</b><i>Duolingo / Headspace / Bumble / Clay 3D</i></div>
+    </div>
+  </div>
+  <div class="screens">
+    <div class="slot">
+      <div class="cap">果冻卡片网格</div>
+      <div class="phone" style="border-color:#2B211C"><div class="J">
+        <div class="statusbar"><span>9:41</span><div class="wxcap"><b>•••</b>◉</div></div>
+        <div class="hd">
+          <div class="av">🐱</div>
+          <div class="tx"><b>moon 今天想干嘛</b><s>陪伴第 178 天 · 额度 8</s></div>
+          <div class="bell">🔔</div>
+        </div>
+        <div class="big clay">
+          <div class="tagx">最多人做</div>
+          <div class="inner"><div class="ph g1"><em>🪪</em></div></div>
+          <div class="r1">
+            <div><b>宠物身份证</b><s>约 60 秒 · ¥9.9</s></div>
+            <div class="jelly">做一张</div>
+          </div>
+        </div>
+        <div class="lbl">还想玩点别的？</div>
+        <div class="grid">
+          <div class="it clay"><div class="bub b1">🎬</div><b>电影海报</b><s>¥12.9</s></div>
+          <div class="it clay"><div class="bub b2">📖</div><b>绘本主角</b><s>¥12.9</s></div>
+          <div class="it clay"><div class="bub b3">📰</div><b>杂志封面</b><s>¥12.9</s></div>
+          <div class="it clay"><div class="bub b4">✨</div><b>星空写真</b><s>¥12.9</s></div>
+          <div class="it clay"><div class="bub b5">🎞</div><b>回忆短片</b><s>¥19.9</s></div>
+          <div class="it clay"><div class="bub b6">🎁</div><b>更多</b><s>12 个</s></div>
+        </div>
+        <div class="jtab">
+          <a class="on" href="#"><i>✦</i>玩法</a><a href="#"><i>◈</i>作品</a><a href="#"><i>◉</i>我的</a>
+        </div>
+      </div></div>
+    </div>
+    <div class="slot">
+      <div class="cap">结果反馈 · 仪式感</div>
+      <div class="phone" style="border-color:#2B211C"><div class="J2">
+        <div class="statusbar"><span>9:41</span><div class="wxcap"><b>•••</b>◉</div></div>
+        <div class="conf c1"></div><div class="conf c2"></div><div class="conf c3"></div>
+        <div class="conf c4"></div><div class="conf c5"></div>
+        <div class="celebrate">
+          <b>moon 的证件下来啦！</b>
+          <s>从今天起，它是有证的小朋友</s>
+        </div>
+        <div class="frame">
+          <div class="ph g1"><em>🪪</em></div>
+          <div class="sign">moon · 2026.07.29</div>
+          <div class="seal">PET<br>LAB</div>
+        </div>
+        <div class="acts">
+          <div class="a a1">保存到相册</div>
+          <div class="a a2">分享给朋友</div>
+        </div>
+        <div class="again">不太满意？ <u>换个风格再来一张</u></div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 对照 ============ -->
+<section class="compare" id="cmp">
+  <h2>五向对照</h2>
+  <div class="sub">
+    <b>本表只描述形态特征，不做页面分配。</b>具体分配等读过项目代码后再定。<br>
+    分类依据：一个方向是能支撑整个信息架构（骨架型），还是只适合注入特定场景（局部型）。
+  </div>
+  <table>
+    <tr>
+      <th style="width:10%">方向</th>
+      <th style="width:8%">类型</th>
+      <th style="width:12%">信息密度</th>
+      <th style="width:14%">最强的一点</th>
+      <th style="width:18%">最大的限制</th>
+      <th style="width:38%">形态特征</th>
+    </tr>
+    <tr>
+      <td><b>A 作品墙</b></td>
+      <td>骨架</td>
+      <td><span class="pill mid">中高</span></td>
+      <td>把结果放到最前</td>
+      <td>依赖样例图质量</td>
+      <td>图片为主的规整网格，1 大 + 2 列制造节奏；文字压图，遮罩承载可读性；可复用到几乎所有列表和详情场景。<b>五向里通用性最强的一个。</b></td>
+    </tr>
+    <tr>
+      <td><b>C 沉浸流</b></td>
+      <td>局部</td>
+      <td><span class="pill low">最低</span></td>
+      <td>一屏一个焦点</td>
+      <td>装不下列表和密集信息</td>
+      <td>满屏图 + 渐变遮罩 + 悬浮操作。同一模式可用于两类场景：整屏浏览（上下滑），或把浮层换成表单/面板（背景保持虚化目标图）。</td>
+    </tr>
+    <tr>
+      <td><b>E 宠物主页</b></td>
+      <td>骨架</td>
+      <td><span class="pill mid">中</span></td>
+      <td>情感联结最强</td>
+      <td>无数据时是空的</td>
+      <td>对象优先而非功能优先：封面 + 身份信息 + 统计 + 最近产出 + 可做的事。同一套架构可切换为时间轴形态用于叙事。<b>唯一改变信息架构的方向。</b></td>
+    </tr>
+    <tr>
+      <td><b>F 杂志封面</b></td>
+      <td>局部</td>
+      <td><span class="pill low">最低</span></td>
+      <td>气质最高</td>
+      <td>只能定调，不能承载操作</td>
+      <td>满版出血图 + 期数 + 巨大标题 + 引文 + 细线。无圆角、无阴影、无卡片。靠字重与字距建立层级。<b>即使不整屏采用，排版方法论也应全站吸收。</b></td>
+    </tr>
+    <tr>
+      <td><b>J 黏土软萌</b></td>
+      <td>局部</td>
+      <td><span class="pill mid">中</span></td>
+      <td>可爱度唯一拉满</td>
+      <td>与「企业级」直接冲突</td>
+      <td>纯 CSS 体积感：超大圆角 + 内高光 + 内阴影 + 双层外投影。可整屏采用，也可只把质感注入到按钮、图标容器、结果卡片等局部。<b>可爱与高级必须选一边。</b></td>
+    </tr>
+  </table>
+</section>
+
+</body>
+</html>

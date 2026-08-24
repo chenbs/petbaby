@@ -1,0 +1,94 @@
+{
+  "templateId": "ink-brush-avatar",
+  "entryId": "art",
+  "title": "墨迹动态头像",
+  "sourceEffectFile": "apps/website/public/assets/example/e7d5d895-7c06-479a-9f0c-22c13a81f1ae.jpg",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/e7d5d895-7c06-479a-9f0c-22c13a81f1ae.jpg",
+      "sha256": "a27c934df016cb52ff2b22f225cdcfc8fc59dc45d66bc282ad423daaf4597e29"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "golden-dog",
+      "species": "dog",
+      "breed": "adult Golden Retriever",
+      "path": "tools/imagegen/out/source/dog-golden.jpg",
+      "sha256": "1b6348ce4f6cd1d12f4c93d5f2a8a5c21847e0ce9bc43e4326c1ee89f7a89eef"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult Golden Retriever with warm golden coat, floppy feathered ears, dark friendly eyes, broad soft muzzle and strong healthy adult build. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the broken brush silhouette, high-contrast negative space and energetic profile; render the face as delicate ink, not a photo. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a vertical 9:16 ink-wash illustration, matching the composition of a minimalist Chinese brush painting: a single adult Golden Retriever replaces the original cat subject, while preserving the original scene structure exactly. The dog is centered slightly right, standing on all fours, head tilted up and looking at a floating feather above, with a large fluffy tail arcing upward on the right side. Preserve the same empty pale paper background, scattered feathers, negative space, loose expressive brushwork, broken ink silhouette, and high-contrast calligraphic line quality. The dog must be an adult Golden Retriever with a warm golden coat, floppy feathered ears, dark friendly eyes, broad soft muzzle, and a strong healthy adult build. Render the face and fur fully in the ink-brush visual language—delicate, painterly, not photographic. Keep the expression gentle and curious, matching the original gaze and pose. Maintain the same lighting, palette, texture, and brush dynamics of the original artwork. Include only one coherent dog identity, no extra limbs, no duplicate animals, no human features. Remove any watermark or platform text; leave the lower-right area clean and consistent with the paper background. The finished image should feel like a faithful brush-painting transformation of the reference composition, not a redesign.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/expansion/candidates/ink-brush-avatar_golden-dog_9x16_v01.png",
+    "sha256": "c007dfc7be05abe8553f7b3ef207f8a9d3326b9236ea5ed46c7b9414c62814f4"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-20T12:00:00+08:00"
+  },
+  "generatedAt": "2026-08-17T16:12:39.487Z",
+  "version": "v01",
+  "candidatePath": "tools/imagegen/out/reference-v1/expansion/candidates/ink-brush-avatar_golden-dog_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/ink-brush-avatar_golden-dog_9x16_v01.webp",
+  "masterSha256": "8df38948469b4107603a514af7e50e86783a4ec53376c8d526f1855e3ae077fa",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-20T12:00:00+08:00",
+    "note": "用户审阅 pending-masters-comparison 后明确表示除指定重做和删除项外，其余模板可以冻结。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/ink-brush-avatar_golden-dog_9x16_v01.webp",
+      "sha256": "8df38948469b4107603a514af7e50e86783a4ec53376c8d526f1855e3ae077fa"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate",
+      "unapproved-candidate"
+    ]
+  },
+  "qualityBaseline": {
+    "required": [
+      "Keep the full-body ink-wash pose, upward gaze, blank paper space, floating feathers and dynamic raised tail. Preserve adult proportions and delicate broken ink edges; render the face as ink, never a photograph.",
+      "exact 720x1280 portrait output",
+      "same approved composition, action, expression, lighting, palette, medium and text hierarchy"
+    ],
+    "reject": [
+      "scene redesign or missing distinctive layout details",
+      "juvenilized, malformed, duplicated or inconsistent pet anatomy",
+      "logo, platform UI, account ID, watermark or signature"
+    ]
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "id": "animal-doodle-fisheye-chicken_german-shepherd-dog_stability-v01",
+  "templateId": "animal-doodle-fisheye-chicken",
+  "title": "鱼眼涂鸦表情",
+  "sequence": 29,
+  "identityId": "german-shepherd-dog",
+  "identityLabel": "犬",
+  "species": "dog",
+  "breed": "German Shepherd dog",
+  "status": "generated-pending-human-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "requestPolicy": {
+    "concurrency": 1,
+    "outputsPerRequest": 1,
+    "inputCount": 2,
+    "combinedInputBytes": 268944,
+    "maxCombinedInputBytesExclusive": 1000000,
+    "maxInputEdge": 1200,
+    "comparisonSheetIncluded": false
+  },
+  "inputs": [
+    {
+      "role": "compressed-public-preview-master-candidate",
+      "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/api-inputs/animal-doodle-fisheye-chicken_public-v02_master-candidate.jpg",
+      "sha256": "a3aacc69e4cf9c6721f692e3e7f748f69763efdbc8fe18faedb8cdf7b25522b5",
+      "bytes": 87129,
+      "sourceCandidatePath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/candidates/animal-doodle-fisheye-chicken_public-v02_master-candidate.png",
+      "sourceCandidateSha256": "793b90dd35fa1fc86d230d0fe80899d5fcc61a0013d6306abf304f0b6aff6682"
+    },
+    {
+      "role": "compressed-pet-identity-reference",
+      "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/api-inputs/german-shepherd-dog.jpg",
+      "sha256": "76c098da89afc228c5c72514feb954a25f97cd4880b205356e0ae09e9b98fbac",
+      "bytes": 181815,
+      "sourcePath": "apps/website/public/assets/hero-shepherd.jpg"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "prompt": "Use case: identity-preserving production-master stability validation. Create one vertical 9:16 image composed for an exact final size of 720x1280 pixels from exactly two input images. Image 1 is a proposed self-owned runtime master copied byte-for-byte from an approved public preview. It is the sole reference for composition, scene, pose, expression, styling, lighting, palette, clothing, props and text layout. Image 2 is the sole pet identity reference. Replace every animal depiction in Image 1 with the exact German Shepherd dog from Image 2. Preserve the target pet's tan coat with a defined black saddle and mask, brown eyes, tall upright ears, black muzzle and athletic natural proportions. Image 2 controls identity and species; do not retain the sample animal's breed or facial structure from Image 1. The replacement must remain recognisably the same dog as Image 2 while naturally adopting Image 1's pose and expression. Preserve its real age and breed proportions; do not beautify, juvenilize, enlarge or shrink the head arbitrarily, or invent a generic cute face. Scene-change budget: 0%. Do not redesign, simplify, crop, recolour, relight, add, remove or move any background element, garment, prop, graphic mark or text. Make only the smallest local geometry adjustment needed for the replacement animal to fit the existing pose and clothing. Replace the chicken completely with the target pet while keeping exactly the public master's playful doodle language: a round fisheye body, huge slightly asymmetric comic eyes and a very thick irregular black hand-drawn contour. The red/orange crayon marks are fixed decorative graphics and must not follow the target pet's natural coat colour: retain two obvious pink-red cheek circles with small red freckles plus at least three broad, saturated red/orange zigzag or cross-hatched patches across the lower torso and sides, with roughly the same visual coverage and intensity as Image 1. These marks must be immediately visible at thumbnail size on every cat or dog. Preserve the clean off-white background. Translate identity only through ears, muzzle, eye colour, head silhouette and a few simplified coat-mark cues inside this crayon language. Use flat wax-crayon fills and broken strokes throughout. Do not render realistic fur, fine grey pencil texture, photographic volume, soft graphite shading or a conventional cute-pet illustration. Leave no beak, comb, wattle, wings, feathers, bird feet or other chicken anatomy. Keep all existing readable text unchanged. Add no new text, logo, signature, watermark or AI label. Avoid duplicate heads, extra eyes, extra ears, extra limbs, malformed paws, fused clothing, floating props and mixed-species anatomy.",
+  "revisedPrompt": "Create a single vertical 9:16 image at exact final size 720x1280 pixels using the two attached reference images. Image 1 is the sole composition/style master: preserve its exact scene, pose, expression, framing, off-white background, hand-drawn crayon look, thick irregular black outline, playful doodle language, red/orange crayon markings, pink-red cheeks with freckles, and any readable text exactly unchanged. Image 2 is the sole identity reference: replace the chicken in Image 1 completely with the exact German Shepherd from Image 2, preserving that dog’s identity and breed traits: tan coat with a defined black saddle and black mask, brown eyes, tall upright ears, black muzzle, athletic natural proportions. Keep the dog recognizably the same dog from Image 2 while fitting the same pose and overall silhouette of Image 1 as naturally as possible. Preserve the crayon illustration style: flat wax-crayon fills, broken strokes, huge slightly asymmetric comic eyes only if needed to match the master style, very thick irregular black hand-drawn contour, simplified coat cues, and the same immediate thumbnail-visible red/orange decorative patches across the lower torso/sides plus two pink-red cheek circles with small red freckles. Do not render realistic fur, photographic volume, soft shading, graphite texture, or a conventional cute-pet style. Do not redesign, simplify, crop, recolor, relight, add, remove, or move any background element, garment, prop, graphic mark, or text. No extra heads, eyes, ears, limbs, malformed paws, fused anatomy, floating props, logos, signatures, or watermarks. Keep the same pose and overall composition as Image 1, just with the chicken replaced by the German Shepherd in the same playful crayon drawing language.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-doodle-fisheye-chicken/animal-doodle-fisheye-chicken_german-shepherd-dog_stability-v01.png",
+    "sha256": "3c650fd62c85c7ec0fbf6d7fc361db267166c67f0c49f48a1ed6e9d820d9b03e",
+    "size": "720x1280"
+  },
+  "rawOutputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-doodle-fisheye-chicken/raw/animal-doodle-fisheye-chicken_german-shepherd-dog_stability-v01.png",
+  "automatedChecks": {
+    "dimensions": "pass",
+    "visualContent": "pass",
+    "inputCount": "pass",
+    "inputBytes": "pass",
+    "requestSerial": "pass"
+  },
+  "humanChecks": {
+    "petIdentity": "pending",
+    "compositionAndCrop": "pending",
+    "poseExpressionAndGaze": "pending",
+    "clothingPropsAndText": "pending",
+    "styleAndPalette": "pending",
+    "anatomy": "pending"
+  },
+  "finalApproval": "pending-user",
+  "elapsedMs": 36333,
+  "generatedAt": "2026-08-20T06:38:07.356Z"
+}

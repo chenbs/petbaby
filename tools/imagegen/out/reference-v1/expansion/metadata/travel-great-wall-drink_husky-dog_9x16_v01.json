@@ -1,0 +1,94 @@
+{
+  "templateId": "travel-great-wall-drink",
+  "entryId": "travel",
+  "title": "长城举杯自拍",
+  "sourceEffectFile": "apps/website/public/assets/example/1786368865262.png",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/1786368865262.png",
+      "sha256": "00f69971693fbde377a1a1916adf87b1f614dcbfefad2ddd0f21cda9ac41bcff"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "husky-dog",
+      "species": "dog",
+      "breed": "adult grey-and-white Siberian Husky",
+      "path": "tools/imagegen/out/source/dog-husky.jpg",
+      "sha256": "41280a50599eb23fa200e8851d1c6a12762398d62f868fe29e18c315eff87a8d"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult grey-and-white Siberian Husky with symmetrical grey cap, broad white blaze, white muzzle and chest, ice-blue eyes, upright ears and dense adult coat. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the first-person arm, drink prop and Great Wall context; adapt the paw contact naturally. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create an exact 9:16 final composition at 720x1280 pixels using Image 1 as the locked composition/style reference and Image 2 as the sole identity reference for the animal subject. Preserve Image 1 exactly: same selfie framing, same camera angle, same crop, same Great Wall location, same stone wall perspective, same blue sky with clouds, same distant wall and mountains, same red outfit with yellow trim, same red beret, same clear plastic drink cup with dome lid and green straw, same lighting, same color palette, same expression placement, same overall visual language and texture. Replace the original animal subject entirely with the exact adult grey-and-white Siberian Husky identity from Image 2: symmetrical grey cap, broad white blaze, white muzzle and chest, ice-blue eyes, upright ears, dense adult coat, healthy adult proportions. Keep the husky friendly, appealing and expressive in the same joyful selfie pose, with an open mouth and relaxed happy expression adapted from Image 1. Render the husky face, fur, and anatomy fully in Image 1’s photographic style rather than pasting in a cutout look. Keep the cup-holding contact natural with correct paw anatomy and no extra limbs, no human hand, no duplicate pet, no residual source subject. Preserve all meaningful non-rights-sensitive scene details from Image 1, including the Great Wall context, clothing, props, and composition. Do not redesign the background or simplify any elements. Make only the smallest boundary changes required for correct adult husky anatomy. Ensure the final image is seamless, coherent, and photorealistic in the style of Image 1.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/expansion/candidates/travel-great-wall-drink_husky-dog_9x16_v01.png",
+    "sha256": "ee6f7590bfece0aaff3b5126e8019787afc3b4fbcf40fa2b8ad3733bcd701fa8"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-20T12:00:00+08:00"
+  },
+  "generatedAt": "2026-08-17T16:11:32.894Z",
+  "version": "v01",
+  "candidatePath": "tools/imagegen/out/reference-v1/expansion/candidates/travel-great-wall-drink_husky-dog_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/travel-great-wall-drink_husky-dog_9x16_v01.webp",
+  "masterSha256": "c4342bfb0cc9cad1bd6336a5135c396e19ab1ba858db12eff8146c5f7bab890c",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-20T12:00:00+08:00",
+    "note": "用户审阅 pending-masters-comparison 后明确表示除指定重做和删除项外，其余模板可以冻结。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/travel-great-wall-drink_husky-dog_9x16_v01.webp",
+      "sha256": "c4342bfb0cc9cad1bd6336a5135c396e19ab1ba858db12eff8146c5f7bab890c"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate",
+      "unapproved-candidate"
+    ]
+  },
+  "qualityBaseline": {
+    "required": [
+      "Keep the first-person arm, drink prop and Great Wall context; adapt the paw contact naturally.",
+      "exact 720x1280 portrait output",
+      "same approved composition, action, expression, lighting, palette, medium and text hierarchy"
+    ],
+    "reject": [
+      "scene redesign or missing distinctive layout details",
+      "juvenilized, malformed, duplicated or inconsistent pet anatomy",
+      "logo, platform UI, account ID, watermark or signature"
+    ]
+  }
+}

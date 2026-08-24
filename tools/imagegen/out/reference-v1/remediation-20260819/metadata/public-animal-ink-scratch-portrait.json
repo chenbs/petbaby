@@ -1,0 +1,36 @@
+{
+  "task": "user-requested-frozen-master-remediation-2026-08-19",
+  "templateId": "animal-ink-scratch-portrait",
+  "kind": "public",
+  "version": "public-v02",
+  "status": "generated-pending-visual-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputFidelity": "high",
+  "inputPolicy": {
+    "sequential": true,
+    "maxImages": 2,
+    "maxCombinedBytes": 1000000
+  },
+  "inputs": [
+    {
+      "role": "effect-reference-edit-target",
+      "path": ".tmp/master-remediation-20260819-inputs/animal-ink-scratch-portrait-effect.jpg",
+      "bytes": 97254,
+      "sha256": "9b4e2750f95c55e157e1c8a1fb3e2947dc53c94b5f05f5e307fbcf500214bdd5"
+    }
+  ],
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "output": {
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/public-animal-ink-scratch-portrait.png",
+    "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819/public-previews/animal-ink-scratch-portrait_public-v02.png",
+    "width": 720,
+    "height": 1280,
+    "sha256": "ee2dc079943bb87e7e02b247740acc809416fb810deca0f88c45132fcfbdde26"
+  },
+  "prompt": "Use case: precise-object-edit. Asset type: public Mini Program template preview. Image 1 is the effect-reference edit target and is the sole authority for composition, subject, camera, pose, lighting, medium and all details not explicitly changed below. Create a clean new public-facing rendition, not a collage or framed mockup. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature, reconstructing the covered area seamlessly. Do not add captions, borders, UI, logos, watermarks or signatures. Keep the exact seated long-haired cat, serious gaze, sweeping tail, black ink wash, loose scratch lines, airy off-white paper and negative space unchanged. Return a 9:16 portrait composition.",
+  "revisedPrompt": "Edit the provided image into a clean public-facing 9:16 portrait rendition. Preserve the exact seated long-haired cat, serious gaze, sweeping tail, black ink wash style, loose scratch lines, airy off-white paper texture, and negative space. Remove every platform badge, AI-generated label, account name, account number, watermark, logo, and signature, reconstructing those areas seamlessly. Do not add any captions, borders, UI, logos, watermarks, or signatures. Keep the composition and artistic details unchanged except for the removed markings and clean public presentation.",
+  "generatedAt": "2026-08-19T05:47:15.322Z"
+}

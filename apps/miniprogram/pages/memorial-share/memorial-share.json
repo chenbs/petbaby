@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "纪念空间",
+  "usingComponents": {
+    "t-empty": "../../components/empty/index",
+    "t-skeleton": "../../components/skeleton/index"
+  }
+}

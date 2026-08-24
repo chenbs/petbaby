@@ -1,0 +1,2 @@
+import Link from "next/link";
+export default function RefundPage(){return <main className="screen"><div className="page-heading"><Link className="back-link" href="/orders">返回订单</Link><span className="eyebrow">REFUND</span><h1>退款规则</h1></div><section className="panel"><p>生成失败且未获得可用作品时支持全额退款；对效果不满意可按订单规则申请一次部分退款。退款原路返回，到账时间以支付渠道为准。</p><p>已下载高清文件、已进入实体制作或因用户上传侵权素材导致的订单，可能不适用无理由退款。</p></section></main>}

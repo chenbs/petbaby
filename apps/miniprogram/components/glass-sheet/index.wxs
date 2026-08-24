@@ -1,0 +1,146 @@
+/**
+ * 玻璃面板手势（渲染层）。
+ *
+ * 拖动过程中的 transform / opacity 全部在本文件内改，逻辑层只在手指抬起、
+ * 档位确定时被 callMethod 通知一次，因此拖动期间 setData 次数为 0（需求 theme-2.md 6.2.8）。
+ * 这里允许出现数值常量（阻尼、速度阈值），但不允许出现颜色：材质一律由 CSS 变量决定。
+ */
+var DAMPING = 0.28;          // 越界后位移衰减系数
+var VELOCITY = 0.6;          // px/ms，超过即按方向吸附到相邻档
+var THRESHOLD = 0.25;        // 跨越两档间距的比例，超过即换档
+var DIRECTION_SLOP = 4;      // px，滚动区判定手势方向前的静默位移
+var PANEL_MIN_OPACITY = 0.92;
+var SCRIM_BONUS = 0.1;       // 展开档遮罩相对默认档的增量
+var SCRIM_CEILING = 0.6;
+var ORDER = ["collapsed", "half", "expanded"];
+var ANIMATED = "transform var(--glass-duration) var(--glass-easing),opacity var(--glass-duration) var(--glass-easing)";
+
+function indexOfState(name) {
+  for (var i = 0; i < ORDER.length; i++) { if (ORDER[i] === name) return i; }
+  return 1;
+}
+
+function visibleOf(geo, name) {
+  if (name === "collapsed") return geo.collapsed;
+  if (name === "expanded") return geo.expanded;
+  return geo.half;
+}
+
+/** 遮罩不透明度：collapsed 0 → half scrimMax → expanded scrimMax+0.1（上限 0.6），分段线性。 */
+function scrimFor(geo, visible) {
+  var max = geo.scrimMax;
+  var top = max + SCRIM_BONUS;
+  if (top > SCRIM_CEILING) top = SCRIM_CEILING;
+  if (visible <= geo.collapsed) return 0;
+  if (visible <= geo.half) return geo.half > geo.collapsed ? max * (visible - geo.collapsed) / (geo.half - geo.collapsed) : max;
+  if (visible >= geo.expanded) return top;
+  return geo.expanded > geo.half ? max + (top - max) * (visible - geo.half) / (geo.expanded - geo.half) : top;
+}
+
+/** 收起档整体降透明由固定系数表达，不同主题无差异化需求（需求 theme-2.md 5.1）。 */
+function panelOpacity(geo, visible) {
+  if (visible >= geo.half) return 1;
+  if (visible <= geo.collapsed) return PANEL_MIN_OPACITY;
+  var span = geo.half - geo.collapsed;
+  if (span <= 0) return 1;
+  return PANEL_MIN_OPACITY + (1 - PANEL_MIN_OPACITY) * (visible - geo.collapsed) / span;
+}
+
+function damp(geo, visible) {
+  if (visible > geo.expanded) return geo.expanded + (visible - geo.expanded) * DAMPING;
+  if (visible < geo.collapsed) return geo.collapsed - (geo.collapsed - visible) * DAMPING;
+  return visible;
+}
+
+/** 面板下移时 actions 反向平移，让主 CTA 在任意档位都贴在屏幕底部（需求 theme-2.md 4.6）。 */
+function render(ownerInstance, geo, visible, animated) {
+  var offset = geo.expanded - visible;
+  var transition = animated ? ANIMATED : "none";
+  var panel = ownerInstance.selectComponent(".sheet-panel");
+  var scrim = ownerInstance.selectComponent(".sheet-scrim");
+  var actions = ownerInstance.selectComponent(".sheet-actions");
+  if (panel) panel.setStyle({ transform: "translateY(" + offset + "px)", opacity: panelOpacity(geo, visible), transition: transition });
+  if (scrim) scrim.setStyle({ opacity: scrimFor(geo, visible), transition: transition });
+  if (actions) actions.setStyle({ transform: "translateY(" + -offset + "px)", transition: transition });
+}
+
+function decide(geo, visible, velocity, from) {
+  var index = indexOfState(from);
+  var up = index + 1 > 2 ? 2 : index + 1;
+  var down = index - 1 < 0 ? 0 : index - 1;
+  // clientY 变小即向上拖，面板变高
+  if (velocity < -VELOCITY) return ORDER[up];
+  if (velocity > VELOCITY) return ORDER[down];
+  var origin = visibleOf(geo, from);
+  var delta = visible - origin;
+  if (delta > 0) {
+    var gapUp = visibleOf(geo, ORDER[up]) - origin;
+    if (gapUp > 0 && delta > gapUp * THRESHOLD) return ORDER[up];
+  } else if (delta < 0) {
+    var gapDown = origin - visibleOf(geo, ORDER[down]);
+    if (gapDown > 0 && -delta > gapDown * THRESHOLD) return ORDER[down];
+  }
+  return from;
+}
+
+function start(event, ownerInstance) {
+  var state = ownerInstance.getState();
+  var dataset = event.instance.getDataset();
+  var geo = dataset.geo;
+  state.tracking = false;
+  state.moved = false;
+  if (!geo || geo.disabled) { state.geo = null; return; }
+  var touch = event.touches[0] || event.changedTouches[0];
+  if (!touch) return;
+  state.geo = geo;
+  state.startY = touch.clientY;
+  state.lastY = touch.clientY;
+  state.lastAt = event.timeStamp;
+  state.velocity = 0;
+  state.startVisible = visibleOf(geo, geo.state);
+  state.visible = state.startVisible;
+  // 把手与 header 始终可拖；滚动区要等首次位移判定方向，且只在 scrollTop === 0 且向下时接管
+  state.pending = dataset.zone === "content";
+  state.tracking = !state.pending;
+  state.atTop = dataset.attop === undefined ? true : Boolean(dataset.attop);
+}
+
+function move(event, ownerInstance) {
+  var state = ownerInstance.getState();
+  if (!state.geo) return;
+  var touch = event.touches[0] || event.changedTouches[0];
+  if (!touch) return;
+  var delta = touch.clientY - state.startY;
+  if (state.pending) {
+    if (delta > -DIRECTION_SLOP && delta < DIRECTION_SLOP) return;
+    state.pending = false;
+    state.tracking = delta > 0 && state.atTop;
+    if (!state.tracking) return;
+    state.startY = touch.clientY;
+    delta = 0;
+  }
+  if (!state.tracking) return;
+  if (event.timeStamp > state.lastAt) state.velocity = (touch.clientY - state.lastY) / (event.timeStamp - state.lastAt);
+  state.lastY = touch.clientY;
+  state.lastAt = event.timeStamp;
+  state.moved = true;
+  state.visible = damp(state.geo, state.startVisible - delta);
+  render(ownerInstance, state.geo, state.visible, false);
+}
+
+function end(event, ownerInstance) {
+  var state = ownerInstance.getState();
+  var geo = state.geo;
+  if (!geo || !state.tracking) { state.tracking = false; state.pending = false; return; }
+  state.tracking = false;
+  state.pending = false;
+  if (!state.moved) return;
+  var from = geo.state;
+  var target = decide(geo, state.visible, state.velocity, from);
+  render(ownerInstance, geo, visibleOf(geo, target), true);
+  // 连续手势要读到最新档位，先就地同步 dataset 上的副本
+  geo.state = target;
+  ownerInstance.callMethod("onGestureEnd", { state: target, from: from, ratio: visibleOf(geo, target) / geo.height });
+}
+
+module.exports = { start: start, move: move, end: end };

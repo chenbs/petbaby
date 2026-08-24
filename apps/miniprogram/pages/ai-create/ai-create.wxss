@@ -1,0 +1,77 @@
+.block-gap {
+  display: block;
+  margin-top: var(--space-4);
+}
+
+.flush {
+  margin: 0;
+}
+
+/* 横向滑动选择器：选项多时不挤压文字，也不占纵向空间 */
+.chooser {
+  display: flex;
+  width: 100%;
+  white-space: nowrap;
+}
+
+.option {
+  display: inline-flex;
+  width: 260rpx;
+  box-sizing: border-box;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  border: 2rpx solid var(--border);
+  border-radius: var(--card-radius);
+  background: var(--surface);
+  transition: border-color var(--transition-duration) var(--transition-easing), transform var(--transition-duration) var(--transition-easing);
+}
+
+.option + .option {
+  margin-left: var(--space-3);
+}
+
+.option-hover {
+  transform: scale(.97);
+}
+
+.option-on {
+  border-color: var(--primary);
+  background: var(--card-background);
+  box-shadow: 0 0 0 4rpx var(--ai-glow);
+}
+
+.option-name {
+  color: var(--text-primary);
+  font-size: var(--body-size);
+  font-weight: 700;
+  white-space: normal;
+}
+
+/*
+ * 风格色板：不引入新色值，全部由既有 token 组合而成，
+ * 因此四套主题下都会跟着主题走，而不是固定的四块死色。
+ */
+/*
+ * 风格对比缩略图（方案 3.3）。替换掉原先的 .swatch 抽象渐变色块：
+ * 那 4 个 linear-gradient 是方案点名的硬规则违例 —— 用户在这里比较风格，
+ * 而色块无法回答「我的狗做成这个风格长什么样」。
+ *
+ * 比例锁 3:4 与作品网格同档：四个选项并排，唯一变量必须是画面内容本身。
+ */
+.style-thumb {
+  display: block;
+  width: 100%;
+  aspect-ratio: var(--ratio-card);
+  margin-bottom: var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--skeleton-base);
+  box-shadow: var(--shadow-clay-inset);
+}
+
+/*
+ * `.chips / .chip / .chip-hover / .chip-on` 已于 2026-08-03 提到 app.wxss ——
+ * pages/pets 的四个枚举也改用 chip（CLAUDE.md 的「已知未收口」项），
+ * 第二处要用时就该共用而不是复制一份。此处不再重复声明。
+ */

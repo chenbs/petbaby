@@ -1,0 +1,12 @@
+{
+  "navigationBarTitleText": "订单与退款",
+  "usingComponents": {
+    "t-card": "../../components/card/index",
+    "t-button": "../../components/button/index",
+    "t-tag": "../../components/tag/index",
+    "t-notice": "../../components/notice/index",
+    "t-empty": "../../components/empty/index",
+    "t-dialog": "../../components/dialog/index",
+    "t-skeleton": "../../components/skeleton/index"
+  }
+}

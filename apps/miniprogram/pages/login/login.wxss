@@ -1,0 +1,97 @@
+/* ---------- 品牌区（F 杂志封面）---------- */
+/* 留白是这个方向的主要材料，因此纵向给到 --space-7 档 */
+.brand {
+  padding: var(--space-7) 0 var(--space-6);
+}
+
+.brand-mark {
+  margin-bottom: var(--space-3);
+  font-size: var(--font-display);
+  line-height: var(--lh-display);
+}
+
+/* 期数式标识：小字号 + 大字距，F 的标志性元素 */
+.brand-kicker {
+  display: block;
+  margin-bottom: var(--space-3);
+  color: var(--text-secondary);
+  font-size: var(--eyebrow-size);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-kicker);
+}
+
+/*
+ * 标题走 --font-display（比 --title-size 更大）配负字距。
+ * 字距只取 --ls-tight 而非 --ls-tighter：方案提醒中文负字距 -0.04em 已是上限，
+ * 标题含四个汉字，再紧会粘连。
+ */
+.brand-name {
+  margin-bottom: var(--space-4);
+  color: var(--text-primary);
+  font-size: var(--font-display);
+  font-weight: var(--fw-black);
+  letter-spacing: var(--ls-tight);
+  line-height: var(--lh-display);
+}
+
+/*
+ * 引文用 --fw-light（300）与标题的 800 形成极端字重对比。
+ * 方案指出 300 在部分安卓上会回退到 400，所以同时降到次级文字色 ——
+ * 字重失效时仍有明度差可依赖，不至于对比归零。
+ */
+.brand-quote {
+  display: block;
+  color: var(--text-secondary);
+  font-size: var(--font-h3);
+  font-weight: var(--fw-light);
+  letter-spacing: var(--ls-tight);
+  line-height: var(--lh-h3);
+}
+
+/* 收口细线：F 靠一条 1px 横线代替卡片边界 */
+.brand-rule {
+  height: 2rpx;
+  margin-top: var(--space-5);
+  background: var(--divider);
+}
+
+/* glass：标识发光；light / dark：纯文字标识，不加装饰 */
+.brand-glass .brand-name {
+  text-shadow: 0 0 24rpx var(--ai-glow);
+}
+
+.brand-cute .brand-name {
+  color: var(--primary);
+}
+
+/* ---------- 分段控件 ---------- */
+.segment {
+  display: flex;
+  padding: var(--space-1);
+  border: var(--card-border);
+  border-radius: var(--radius-pill);
+  margin-top: var(--space-5);
+  background: var(--surface);
+  gap: var(--space-1);
+}
+
+.segment-item {
+  min-height: 72rpx;
+  flex: 1;
+  border-radius: var(--radius-pill);
+  color: var(--text-secondary);
+  font-size: var(--body-size);
+  font-weight: 700;
+  line-height: 72rpx;
+  text-align: center;
+}
+
+.segment-on {
+  background: var(--button-primary);
+  color: var(--button-primary-text);
+}
+
+.block-gap {
+  display: block;
+  margin-top: var(--space-4);
+}

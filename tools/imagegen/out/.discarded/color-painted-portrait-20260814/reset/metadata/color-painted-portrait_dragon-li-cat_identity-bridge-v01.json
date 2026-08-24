@@ -1,0 +1,30 @@
+{
+  "assetId": "color-painted-portrait-dragon-li-identity-bridge-v01",
+  "status": "intermediate-control-asset",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "mode": "identity-abstraction-bridge",
+  "inputs": [
+    {
+      "role": "adult-pet-identity-source",
+      "path": "apps/website/public/assets/avatar-dragonli.jpg",
+      "sha256": "0f403599969b57f32aa314cf474ce4d57d28f48683e16ae9a032d73b94079732"
+    },
+    {
+      "role": "non-photographic-abstraction-reference",
+      "path": "tools/imagegen/out/reference-v1/reset/bases/color-painted-portrait_dragon-li-cat_9x16_detail.png",
+      "sha256": "e22b0e006a7887b343ba7125fd138b7e647f1bf62cd05af3ede80cc6d84d74d9"
+    }
+  ],
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Task: create a non-photographic identity structure reference, not a finished scene and not a new character design. Image 1 is the sole identity authority for the exact adult Dragon Li tabby cat: adult age, natural feline head and body proportions, triangular ear shape, broad cheek and muzzle shape, brown tabby coat colours and the placement of the forehead, cheek, neck and body stripes. Image 2 controls only the required abstraction level: simplified hand-painted facial shapes, broad matte colour masses, sparse dry-brush edges and visible painterly marks. Do not copy Image 2's dog identity, pose, white coat, background or composition. Render the same adult Dragon Li cat as one clear seated three-quarter identity study on a plain warm light-grey background. Keep the full head, chest and enough body visible to communicate adult proportions. The result is an anatomy and markings guide for a later edit, so identity must remain recognisable without camera-derived surface detail. Remove photographic rendering completely: no individual resolved fur hairs, no realistic whisker strands, no glossy camera-like irises, no wet realistic nose, no skin pores, no photographic depth of field and no studio-photo lighting. Build the face and coat from simplified broad opaque paint shapes and a limited number of deliberate dry-brush marks. Eyes are simple dark painted shapes with tiny graphic highlights, not realistic eyeballs. Adult cat, not kitten: no enlarged head, no oversized eyes, no shortened muzzle, no round baby body and no juvenile expression. No scene, props, text, watermark, border or additional animal.",
+  "revisedPrompt": null,
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/reset/identity-bridges/color-painted-portrait_dragon-li-cat_identity-bridge-v01.png",
+    "sha256": "d153edf91948a1b5edcdd1a867655184966b87cb728e09035c73dfe23005c281"
+  },
+  "generatedAt": "2026-08-14T02:18:08.108Z"
+}

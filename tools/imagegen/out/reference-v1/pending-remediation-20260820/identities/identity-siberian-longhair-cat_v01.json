@@ -1,0 +1,15 @@
+{
+  "purpose": "self-owned-pet-identity-reference",
+  "identityId": "siberian-longhair-cat",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/generations",
+  "prompt": "Use case: photorealistic-natural pet identity reference for a self-owned image template. Create one appealing adult golden-tabby Siberian forest cat in a clean neutral studio portrait. The cat has a dense long triple coat, full neck ruff, broad rounded wedge-shaped mature face, green-gold almond eyes, tufted upright ears, strong healthy body and a full plume tail. Show a clear front three-quarter view with the complete head, both ears, chest, forelegs and enough body to establish adult proportions. Calm attentive closed-mouth expression. Soft even daylight, pale warm-grey seamless background, realistic natural fur and color, no costume, prop, text, logo, watermark, frame, human or other animal. Clearly adult and breed-accurate, never kitten-like, chibi, flat-faced, Persian, Maine Coon, skinny or oversized-eyed. Exact portrait output 720x1280.",
+  "revisedPrompt": "Photorealistic natural pet identity reference portrait of one appealing adult golden-tabby Siberian forest cat, clean neutral studio setting. The cat is clearly adult and breed-accurate: dense long triple coat, full neck ruff, broad rounded wedge-shaped mature face, green-gold almond eyes, tufted upright ears, strong healthy body, full plume tail. Pose: clear front three-quarter view, showing complete head, both ears, chest, forelegs, and enough body to establish adult proportions. Expression calm, attentive, closed mouth. Lighting: soft even daylight. Background: pale warm-grey seamless studio backdrop. Fur and color realistic and natural. No costume, no prop, no text, no logo, no watermark, no frame, no human, no other animal. Not kitten-like, not chibi, not flat-faced, not Persian, not Maine Coon, not skinny, not oversized-eyed. Vertical portrait composition, exact output 720x1280.",
+  "requestedSize": "720x1280",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/pending-remediation-20260820/identities/identity-siberian-longhair-cat_v01.png",
+    "sha256": "f3cac059a458c8ab24f13b5420385df708c78216a47fc5d806ce7e6a79f1f28e"
+  },
+  "generatedAt": "2026-08-20T01:47:10.804Z"
+}

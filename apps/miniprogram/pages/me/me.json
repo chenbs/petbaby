@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "我的",
+  "usingComponents": {
+    "t-card": "../../components/card/index",
+    "t-tag": "../../components/tag/index",
+    "t-notice": "../../components/notice/index",
+    "t-skeleton": "../../components/skeleton/index",
+    "t-progress": "../../components/progress/index"
+  }
+}

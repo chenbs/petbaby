@@ -1,0 +1,94 @@
+{
+  "templateId": "archive-memory-double-exposure",
+  "entryId": "archive",
+  "title": "本宠记忆双曝",
+  "sourceEffectFile": "apps/website/public/assets/example/18.png",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/18.png",
+      "sha256": "d48c70e753d3ad66004f5fb96eb6db0546c05c620d8da112ac67a673220c7a02"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "cream-cat",
+      "species": "cat",
+      "breed": "adult cream long-haired cat",
+      "path": "tools/imagegen/out/source/cat-cream.jpg",
+      "sha256": "db5fc390f9cbf4f5ee0eee38850e28012a0953a98c148e7df5b354a539dab7e9"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult cream long-haired cat with pale cream long coat, soft cream points, blue eyes, pink nose, triangular ears, fluffy tail and healthy adult body. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the side-profile double exposure and layered memory scenes, while making the wording clearly a pet life journal rather than memorial language. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a vertical 9:16 poster-like watercolor illustration at 720x1280, based on the supplied reference images. Use the composition, framing, pose, side-profile silhouette, layered memory montage, lighting, palette, brushwork, texture, and text layout of Image 1 exactly, but replace every human/character subject with one coherent adult cream long-haired cat from Image 2. The cat identity must match Image 2: adult, healthy proportions, pale cream long coat, soft cream points, blue eyes, pink nose, triangular ears, fluffy tail, friendly gentle expression. Keep the cat rendered fully in Image 1's painterly visual language, not photographic. Preserve the double-exposure memory-scene effect and all floral/Japanese-inspired visual atmosphere. Replace the memorial-style wording with pet-life-journal wording while preserving the same vertical text block placement and hierarchy; use short original pet-safe text only, no brands, no logos, no signatures, no watermarks. Maintain the same landmarks, props, and background structure from Image 1, but with cat-themed scene continuity. Correct anatomy only: no extra ears, eyes, limbs, paws, or human features. Keep one coherent adult cat identity throughout. Do not redesign the background or simplify the scene.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/expansion/candidates/archive-memory-double-exposure_cream-cat_9x16_v01.png",
+    "sha256": "15e8c71c0fbb6115eb42e9fdb37f8e6664fbc377fc5b6373974c7d49d58eadfa"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-20T12:00:00+08:00"
+  },
+  "generatedAt": "2026-08-17T16:13:00.487Z",
+  "version": "v01",
+  "candidatePath": "tools/imagegen/out/reference-v1/expansion/candidates/archive-memory-double-exposure_cream-cat_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/archive-memory-double-exposure_cream-cat_9x16_v01.webp",
+  "masterSha256": "190b34cc6fb7b56a071d34be4bd5a495903176fc2ab2b0207b3679fb6127eb7e",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-20T12:00:00+08:00",
+    "note": "用户审阅 pending-masters-comparison 后明确表示除指定重做和删除项外，其余模板可以冻结。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/archive-memory-double-exposure_cream-cat_9x16_v01.webp",
+      "sha256": "190b34cc6fb7b56a071d34be4bd5a495903176fc2ab2b0207b3679fb6127eb7e"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate",
+      "unapproved-candidate"
+    ]
+  },
+  "qualityBaseline": {
+    "required": [
+      "Keep the side-profile double exposure and layered memory scenes, while making the wording clearly a pet life journal rather than memorial language.",
+      "exact 720x1280 portrait output",
+      "same approved composition, action, expression, lighting, palette, medium and text hierarchy"
+    ],
+    "reject": [
+      "scene redesign or missing distinctive layout details",
+      "juvenilized, malformed, duplicated or inconsistent pet anatomy",
+      "logo, platform UI, account ID, watermark or signature"
+    ]
+  }
+}

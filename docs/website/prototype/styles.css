@@ -1,0 +1,1378 @@
+/*
+ * 官网静态原型样式 —— KittyPaw 骨架 + petbaby 视觉体系。
+ *
+ * 取值来源（不自造）：
+ *   ① 结构 / 排版方法 / 圆角分级 / 动效口径 —— docs/website/01-KittyPaw复刻规格.md
+ *   ② 色彩 —— apps/miniprogram/theme/themes/cute.js
+ *   ③ 间距 / 字重字距行高 / 比例 —— theme/tokens.js 的 CONSTANT_VARS，rpx 折半成 px
+ *   ④ 阴影 —— tokens.js shadowVars()，暖褐基色 SHADOW_HUE = 60,35,20
+ *
+ * 与 KittyPaw 的两处刻意反相（规格 7.1）：
+ *   · 深色站 → 浅色站。hero 与页脚保留深色，形成首尾包夹。
+ *   · 描边「半透明白」→「半透明暖褐」。深色底叠白、浅色底叠暖褐，逻辑对称。
+ *
+ * 中文三条硬约束（规格 7.3）：负字距收敛到 -0.01~-0.02em；不做 uppercase；
+ * 主按钮逐字母弹跳不做（中文按字符弹会散），改整体 scale + 箭头跟随。
+ */
+
+:root {
+  /* ── 色彩：cute 皮肤 ──────────────────────────────────────────── */
+  --primary: #C4335C;          /* rose600 */
+  --primary-hover: #A82A4D;
+  --primary-text: #FFF5F7;     /* rose50，压在 primary 上 */
+  /* amber300。CTA 面板补光要带透明度，那处只能写字面 rgba(255,209,102,…)，
+   * 这个变量留着作取值出处的记录 —— 改色时两处要一起动。 */
+  --secondary: #FFD166;
+  --background: #FFF8F2;       /* cream50，页面基底（对 kp-ink） */
+  --surface: #FFFDFA;          /* cream100，交替横带（对 kp-elevated） */
+  --card: #FFFFFF;
+  --subtle: #FFF1E6;           /* peach100，图片占位与图标底（对 kp-subtle） */
+
+  --text-primary: #3A2C2C;     /* cocoa900，标题（对 kp-white/kp-fg） */
+  --text-secondary: #7A625E;   /* cocoa400，默认正文（对 kp-muted） */
+  /* eyebrow 与元信息（对 kp-faint）。规格 7.1 实测：取 #9C8580 在 cream50 上只有
+   * 3.28:1，而它承载全部 12–13px 小字。取 #836C66 后三档底色分别 4.64 / 4.81 / 4.88。 */
+  --text-tertiary: #836C66;
+
+  --border: rgba(60, 35, 20, 0.10);        /* 对 kp-border 12% 白 */
+  --border-strong: rgba(60, 35, 20, 0.18); /* 对 kp-border-strong 22% 白 */
+
+  /* 首尾深色段：hero 与页脚 */
+  --ink: #2A1F1F;
+  --ink-deep: #1E1616;
+  --on-ink: #FFF8F2;
+  --on-ink-muted: rgba(255, 248, 242, 0.74);
+  --on-ink-faint: rgba(255, 248, 242, 0.52);
+
+  /* ── 阴影：tokens.js shadowVars() 的成品串，不在 CSS 里拼 ────────── */
+  --shadow-card: 0 2px 8px -2px rgba(60,35,20,.1), 0 16px 32px -18px rgba(60,35,20,.28);
+  --shadow-image: 0 4px 12px -4px rgba(60,35,20,.16), 0 28px 48px -24px rgba(60,35,20,.42);
+  --shadow-float: 0 8px 20px -6px rgba(60,35,20,.18), 0 32px 60px -20px rgba(60,35,20,.38);
+  --shadow-press: 0 1px 4px -1px rgba(60,35,20,.14);
+  --veil-vignette: radial-gradient(120% 90% at 50% 15%, transparent 35%, rgba(60,35,20,.34));
+
+  /* 黏土四层（根 CLAUDE.md：限 3 处，此处只用在纪念区图框） */
+  --clay-highlight: rgba(255,255,255,.95);
+  --shadow-clay: inset 0 5px 12px rgba(190,140,120,.13),
+                 0 8px 16px -6px rgba(190,140,120,.34),
+                 0 18px 34px -18px rgba(190,140,120,.5);
+
+  /* 图上徽标：规格 7.1 实测 rgba(42,31,31,.5) 压在纯白图区仅 3.19:1，
+   * 图片内容不可控，按最坏情况取 .62 得 4.57:1 */
+  --badge-bg: rgba(42, 31, 31, 0.62);
+
+  /* ── 间距：CONSTANT_VARS 折半 ─────────────────────────────────── */
+  --space-1: 4px;   --space-2: 8px;   --space-3: 12px;  --space-4: 16px;
+  --space-5: 24px;  --space-6: 32px;  --space-7: 48px;  --space-8: 64px;
+
+  /* ── 圆角：规格 4 章的尺度分级 —— 尺寸越大圆角越大 ─────────────── */
+  --radius-pill: 999px;   /* 按钮、徽标、头像 */
+  --radius-sm: 8px;
+  --radius-2xl: 16px;     /* 小卡（数据格）、图标底 */
+  --radius-card: 24px;    /* 中卡（服务卡、引语卡） */
+  --radius-play: 28px;    /* 产品卡 */
+  --radius-panel: 32px;   /* 大面板（图片框、CTA 面板） */
+
+  /* ── 排版：CONSTANT_VARS ─────────────────────────────────────── */
+  /* h1/h2 的行高不走变量：规格给的是三档具体值（1.1 / 1.12 / clamp），
+   * 抽成变量反而要为每档各建一个，不如写在选择器里直观。 */
+  --lh-h3: 1.4;
+  --lh-body: 1.62; --lh-sm: 1.6; --lh-xs: 1.5;
+  /* 规格用 font-semibold(600) 而非 700 —— 700 在中文黑体上发糊，
+   * 600 更贴「精致不是可爱」的基调。h2/h1 才用 800。 */
+  --fw-medium: 500; --fw-semibold: 600; --fw-bold: 700; --fw-black: 800;
+  --ls-tight: -0.01em; --ls-tighter: -0.02em;
+  --ls-kicker: 0.2em;   /* eyebrow 正字距。中文小字放宽更透气（规格 7.3） */
+
+  /* ── 图片比例 ─────────────────────────────────────────────────── */
+  --ratio-cover: 4 / 3; --ratio-card: 3 / 4; --ratio-square: 1 / 1;
+
+  /* ── 动效：规格 5 章。ease 全站统一 [.16,1,.3,1]（expo.out 型）─────── */
+  --ease: cubic-bezier(.16, 1, .3, 1);
+  /* spring(stiffness 70, damping 12) 的近似：尾部轻微过冲。
+   * CSS 无法真做 spring，但过冲量是 hero 标题「落点有弹性」的观感来源，
+   * 用带回弹的贝塞尔比换成纯 ease-out 更贴近原站。 */
+  --ease-spring: cubic-bezier(.2, 1.35, .32, 1);
+  --dur-fast: 120ms; --dur-base: 240ms; --dur-slow: 500ms;
+  --dur-reveal: 700ms;
+  --stagger: 70ms;      /* 网格子项 delay = i * 0.07s */
+
+  --container: 1152px;  /* max-w-6xl */
+}
+
+/* ══ 基础 ══════════════════════════════════════════════════════════ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--background);
+  color: var(--text-secondary);
+  /* 展示字与正文都走系统栈：规格 7.2 明确不照抄 Google Fonts（国内访问不稳），
+   * 中文展示字（思源宋体 / 霞鹜文楷）待确认商用授权后再子集化自托管。 */
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB",
+               "Microsoft YaHei", "Source Han Sans SC", sans-serif;
+  font-size: 15px;
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+body.menu-open { overflow: hidden; }
+
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+ul { margin: 0; padding: 0; list-style: none; }
+button { font: inherit; cursor: pointer; }
+figure { margin: 0; }
+blockquote { margin: 0; }
+
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 var(--space-4);      /* px-4 → md:px-12 → xl:px-16 */
+}
+
+/* 区块留白 py-20 → md:py-28。锚点补偿 scroll-mt-8 */
+.section { padding: 80px 0; scroll-margin-top: 32px; }
+
+/* 深浅交替横带：规格 1 章「不靠留白分段，靠明度台阶」 */
+.band {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+/* ══ 排版层级（规格 3 章）════════════════════════════════════════════ */
+
+/* eyebrow：小字放松（正字距），与大字收紧形成反差。中文不做 uppercase */
+.eyebrow {
+  margin: 0 0 var(--space-3);
+  color: var(--text-tertiary);
+  font-size: 12px;
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--ls-kicker);
+  line-height: var(--lh-xs);
+}
+
+/*
+ * h2 三档（规格 3 章）。原站按区块分工，不是随手取的：
+ *   大 4vw/3.5rem  lh 1.1   → 产品区、服务导航（页面的两个主推区）
+ *   中 3.5vw/3rem  lh 1.12  → 服务详情 A/B、CTA（旁边有图或表单，标题要让位）
+ *   小 4vw/3.25rem lh 1.1   → 流程区、口碑区（纯文字排布，压一档避免抢戏）
+ * 中档行高 1.12 比另两档松一点 —— 它字号最小，配图时行距紧了会显局促。
+ */
+.h2 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: var(--fw-black);
+  letter-spacing: var(--ls-tighter);
+  line-height: 1.1;
+}
+.h2-mid { font-size: clamp(1.85rem, 3.5vw, 3rem); line-height: 1.12; }
+.h2-sm { font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1.1; }
+
+/* 卡标题：规格 3 章 text-lg / md:text-xl（18 / 20px）。
+ * 首版给的是 17 / 18px，与 15px 正文的层级差太小，卡片标题读不出主次。 */
+.h3 {
+  margin: 0 0 var(--space-2);
+  color: var(--text-primary);
+  font-size: 1.125rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-tight);
+  line-height: var(--lh-h3);
+}
+
+/*
+ * 默认次级色，强调才主色（规格 3 章末：整站克制感的来源）。
+ * 字号 15 → md:16px。规格是 text-sm → md:text-base（14 → 16），移动端这档
+ * 显式抬到 15px：中文字面比西文满，14px 在手机上偏小。
+ */
+.body-text { margin: 0; color: var(--text-secondary); font-size: 15px; line-height: var(--lh-body); }
+.body-text.lead { margin: var(--space-4) 0 var(--space-6); max-width: 30em; }
+
+.section-head { margin-bottom: 48px; max-width: 36em; }
+.section-head.split { display: block; }
+.section-note {
+  margin: var(--space-4) 0 0;
+  max-width: 26em;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+.section-note.wide { max-width: 34em; }
+
+/* ══ 按钮三级（规格 4 章，仅此三种）══════════════════════════════════ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: 0 22px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  font-size: 15px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-tight);
+  transition: background-color var(--dur-base) var(--ease),
+              color var(--dur-base) var(--ease),
+              border-color var(--dur-base) var(--ease),
+              transform var(--dur-fast) var(--ease),
+              box-shadow var(--dur-base) var(--ease);
+}
+/* 全站唯一的按压反馈（规格 4 章）。中文逐字母弹跳不做，改整体微缩放 */
+.btn:active { transform: scale(.95); }
+
+/*
+ * hero 主 CTA 的 hover 动效（规格 7.3：中文不做逐字母弹跳，改整体 scale + 箭头跟随）。
+ *
+ * 三层叠加，都很轻：
+ *   ① 整体放大 1.03 —— 幅度要小，按钮 52px 高，再大会显得廉价
+ *   ② 阴影抬高 —— 制造「浮起来」而不只是「变大」
+ *   ③ 箭头 x:6（.arrow 的通用规则已覆盖，用 --ease-spring 有轻微过冲）
+ * transform 与 :active 的 scale(.95) 同属性，靠 :active 在后声明取胜。
+ */
+.btn-lg {
+  /* hover 放大要比按压慢：120ms 的按压反馈是对的（要跟手），
+   * 但同样时长用在放大上会显得急躁。这里给 240ms + 轻过冲。 */
+  transition: background-color var(--dur-base) var(--ease),
+              transform var(--dur-base) var(--ease-spring),
+              box-shadow var(--dur-base) var(--ease);
+}
+.btn-lg:hover {
+  transform: scale(1.03);
+  box-shadow: 0 14px 24px -6px rgba(0,0,0,.28), 0 6px 10px -6px rgba(0,0,0,.22);
+}
+/* 按压回到 120ms —— 这一下必须跟手 */
+.btn-lg:active { transform: scale(.97); transition-duration: var(--dur-fast); }
+
+/*
+ * 主按钮：唯一实心。两个变体，按所在底色选：
+ *
+ *   .btn-primary   品牌玫红，用在浅色区块（第 5 区块的「看四种风格对比」）
+ *   .btn-on-dark   白底黑字，用在 hero 深色视频上 —— 这是规格 4 章的原始口径
+ *                  （`rounded-full bg-white px-6 py-3 font-semibold text-black shadow-lg`）
+ *
+ * 首版 hero 也用了玫红，与原站不符。白底黑字压在深色视频上对比度最高，
+ * 且玫红在暖调视频上会与画面里的花色打架。
+ */
+.btn-primary {
+  background: var(--primary);
+  color: var(--primary-text);
+  box-shadow: var(--shadow-card);
+}
+.btn-primary:hover { background: var(--primary-hover); box-shadow: var(--shadow-float); }
+
+.btn-on-dark {
+  background: #fff;
+  color: #000;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,.2), 0 4px 6px -4px rgba(0,0,0,.2);  /* 对应 shadow-lg */
+}
+.btn-on-dark:hover { background: #f5f5f5; }   /* 原站 hover:bg-neutral-100 */
+
+/* 次：描边透明底，hover 反白 */
+.btn-secondary {
+  border-color: var(--border-strong);
+  background: transparent;
+  color: var(--text-primary);
+}
+.btn-secondary:hover { background: var(--text-primary); border-color: var(--text-primary); color: var(--background); }
+
+/* 只有 btn-lg 在用（hero 底部条的主 CTA）。原先还有个 btn-sm 给顶栏 CTA 用，
+ * 顶栏按原站取消了内联导航与 CTA 后它就没去处了，一并删掉。 */
+.btn-lg { min-height: 52px; padding: 0 28px; font-size: 16px; }
+
+.arrow {
+  width: 18px; height: 18px;
+  fill: none; stroke: currentColor; stroke-width: 1.8;
+  stroke-linecap: round; stroke-linejoin: round;
+  transition: transform var(--dur-base) var(--ease-spring);
+}
+/* 箭头 x:6 spring(300,12) */
+.btn:hover .arrow, .link-arrow:hover .arrow, .nav-card:hover .arrow { transform: translateX(6px); }
+
+/* 文字按钮：箭头跟随 */
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  color: var(--primary);
+  font-size: 14px;
+  font-weight: var(--fw-bold);
+  opacity: .85;
+  transition: opacity var(--dur-base) var(--ease);
+}
+.link-arrow:hover { opacity: 1; }
+
+/* 图上徽标：backdrop-blur + 半透明底，压在任何图上都可读（规格 4 章）*/
+.badge {
+  position: absolute;
+  top: var(--space-3); left: var(--space-3);
+  z-index: 1;
+  padding: 5px 11px;
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: var(--radius-pill);
+  background: var(--badge-bg);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font-size: 12px;
+  font-weight: var(--fw-medium);
+}
+.badge-float { top: var(--space-5); left: var(--space-5); }
+
+/* ══ 顶栏 + 移动菜单 ═══════════════════════════════════════════════ */
+
+/* hero 内浮：absolute 而非 fixed —— 深色顶栏滚到浅色区会读不出层级 */
+.topbar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 20;
+  opacity: 0;
+  transform: translateY(-40px);
+  transition: opacity 1.4s var(--ease), transform 1.4s var(--ease);
+}
+.topbar.is-in { opacity: 1; transform: none; }
+
+/* 同 .hero-inner：铺满视口宽，内边距三档（原站 px-4 pt-4 → md:px-12 pt-5 → xl:px-16 pt-[22px]） */
+.topbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+  width: 100%;
+  padding: 16px var(--space-4);
+}
+
+.brand { display: inline-flex; align-items: center; gap: var(--space-3); }
+/*
+ * 品牌标识三档：26 → 36 → 40px（原站 logo 是 h-[26px] md:h-9 xl:h-10）。
+ * 首版固定 26px，桌面下比原站小 14px，顶栏显得单薄。
+ * 正式 logo SVG 到位后换成 <img>，高度沿用这三档。
+ */
+.brand-mark {
+  width: 26px; height: 26px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(120deg, var(--primary), #E0885A);
+  box-shadow: var(--shadow-press);
+}
+.brand-name {
+  color: #fff;
+  font-size: 17px;
+  font-weight: var(--fw-black);
+  letter-spacing: var(--ls-tight);
+  text-shadow: 0 2px 6px rgba(0,0,0,.4);
+}
+.brand-lg .brand-mark { width: 32px; height: 32px; }
+.brand-lg .brand-name { font-size: 19px; }
+
+/* 下拉要相对它定位，所以按钮与面板包一层 */
+.menu-wrap { position: relative; }
+
+/* 「菜单」按钮（规格 5 章末）：border-white/60 bg-white/10。所有断点都显示 */
+.menu-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 38px;
+  padding: 0 16px;
+  border: 1px solid rgba(255,255,255,.6);
+  border-radius: var(--radius-pill);
+  background: rgba(255,255,255,.1);
+  color: #fff;
+  font-size: 14px;
+  font-weight: var(--fw-medium);
+  transition: background-color var(--dur-base) var(--ease), transform var(--dur-fast) var(--ease);
+}
+.menu-btn:hover { background: rgba(255,255,255,.2); }
+.menu-btn:active { transform: scale(.95); }
+.menu-btn svg {
+  width: 18px; height: 18px;
+  fill: none; stroke: currentColor; stroke-width: 1.5;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.menu-btn .icon-close { display: none; }
+.menu-btn[aria-expanded="true"] .icon-menu { display: none; }
+.menu-btn[aria-expanded="true"] .icon-close { display: block; }
+
+/*
+ * 桌面下拉（规格 5 章）：w-64 rounded-2xl border-white/20 bg-white/10 p-4 backdrop-blur-xl
+ * 入场 {opacity:0,scale:.92,y:10} → spring(380,26)。
+ *
+ * spring(380,26) 阻尼比约 0.67，是「快到位、几乎不回弹」的手感，
+ * 折算 240ms + 轻过冲的贝塞尔。移动面板那条 spring(300,30) 更沉，用了 400ms。
+ */
+.desktop-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 12px);         /* mt-3 */
+  z-index: 50;
+  width: 256px;                   /* w-64 */
+  padding: var(--space-4);
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: var(--radius-2xl);
+  /*
+   * 原站是 bg-white/10。那成立是因为它是深色站、面板底下是深色天窗铝框；
+   * 我们的面板压在 hero 亮天空上，white/10 实测白字只有 4.43:1（最亮处 1.11:1）。
+   * 改为暖褐半透明底 —— 与全站描边同一个 SHADOW_HUE 家族，不引入新色。
+   */
+  background: rgba(42, 31, 31, 0.72);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  box-shadow: 0 24px 48px -12px rgba(0,0,0,.45);
+  opacity: 0;
+  transform: scale(.92) translateY(10px);
+  transform-origin: top right;
+  transition: opacity var(--dur-base) var(--ease), transform var(--dur-base) var(--ease-spring);
+}
+.desktop-menu.is-open { opacity: 1; transform: none; }
+.desktop-menu[hidden] { display: none; }
+.desktop-menu ul { display: flex; flex-direction: column; gap: 2px; }
+.desktop-menu a {
+  display: block;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  color: rgba(255,255,255,.9);
+  font-size: 15px;
+  transition: background-color var(--dur-base) var(--ease), color var(--dur-base) var(--ease);
+}
+.desktop-menu a:hover { background: rgba(255,255,255,.14); color: #fff; }
+
+/* 移动面板顶部的 logo + 关闭按钮一行 */
+.mobile-menu-top { display: flex; align-items: center; justify-content: space-between; }
+.menu-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px; height: 40px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: rgba(255,255,255,.1);
+  color: #fff;
+  transition: background-color var(--dur-base) var(--ease), transform var(--dur-fast) var(--ease);
+}
+.menu-close:hover { background: rgba(255,255,255,.2); }
+.menu-close:active { transform: scale(.95); }
+.menu-close svg {
+  width: 22px; height: 22px;
+  fill: none; stroke: currentColor; stroke-width: 1.6;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+
+/*
+ * 移动菜单：全屏 x:100% → 0，spring(damping 30, stiffness 300)。
+ * 三段布局（顶栏行 / 导航 / 版权），px-8 py-10 与原站一致 ——
+ * 面板自带 logo 行，不需要再给顶部留出让位顶栏的大内边距。
+ */
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 40;                    /* 高于顶栏的 20，否则顶栏会浮在面板上 */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 40px var(--space-6);
+  background: rgba(30,22,22,.72);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  transform: translateX(100%);
+  transition: transform 400ms var(--ease-spring);
+}
+.mobile-menu.is-open { transform: none; }
+.mobile-menu[hidden] { display: none; }
+
+.mobile-menu-nav { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-4); }
+/* 原站是 text-2xl font-medium text-white/90（24px / 500），不是粗体 */
+.mobile-menu-nav a {
+  color: rgba(255,248,242,.9);
+  font-size: 24px;
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--ls-tight);
+  opacity: 0;
+  transform: translateX(20px);
+  transition: opacity var(--dur-slow) var(--ease), transform var(--dur-slow) var(--ease);
+}
+.mobile-menu.is-open .mobile-menu-nav a { opacity: 1; transform: none; }
+/* 菜单项 delay = i * 0.1s（规格 5 章）*/
+.mobile-menu-nav a:nth-child(1) { transition-delay: .05s; }
+.mobile-menu-nav a:nth-child(2) { transition-delay: .15s; }
+.mobile-menu-nav a:nth-child(3) { transition-delay: .25s; }
+.mobile-menu-nav a:nth-child(4) { transition-delay: .35s; }
+.mobile-menu-nav a:nth-child(5) { transition-delay: .45s; }
+.mobile-menu-nav a:nth-child(6) { transition-delay: .55s; }
+.mobile-menu-nav a:nth-child(7) { transition-delay: .65s; }
+
+.mobile-menu-foot {
+  margin: 0;
+  color: var(--on-ink-faint);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+}
+
+/*
+ * 两个面板的断点归属。写在这里而非响应式段末尾 —— 它们是同一个按钮的两个
+ * 渲染分支，规则跟着定义走才不会漏改一边（原站用 hidden md:block / md:hidden）。
+ * 用 display:none 而非 visibility，避免隐藏那侧的 backdrop-filter 仍在合成。
+ */
+@media (max-width: 767px) {
+  .desktop-menu { display: none !important; }
+}
+@media (min-width: 768px) {
+  .mobile-menu { display: none !important; }
+}
+
+/* ══ 1. HERO（规格 2 章）═══════════════════════════════════════════ */
+
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 100svh;
+  overflow: hidden;
+  background: var(--ink-deep);   /* 视频加载前的底，不是兜底色块 */
+  scroll-margin-top: 0;
+}
+
+.hero-video {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+/*
+ * 压暗遮罩。规格 2.3 的椭圆原样保留（中心偏左 30%，画面中央主体不被压），
+ * 另叠一道左下压暗 —— 这是必要的偏离，理由：
+ *
+ * 原站椭圆中心是 transparent 0%，即文案区最亮。它成立是因为英文标题落在
+ * 深灰天窗铝框内；我们的中文标题更宽、压到了中央亮天空上，实测白字对该区
+ * 均值只有 2.72:1，靠 text-shadow 撑不住。
+ *
+ * 因此加一道只覆盖文案区（左下）的线性压暗，中央与右上不动 —— 猫和壁虎
+ * 仍完整露出，规格「中央上方不放强对比细节、那里会完全露出」的意图不变。
+ */
+.hero-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  /*
+   * 强度是实测定的，不是估的。四档候选在最亮帧（0.5s 空镜）下量标题区纯底色：
+   *   .66/.38/.56/.22（首版）  7.51:1  画面亮度 .332  ← 偏暗，视频细节被压掉
+   *   .56/.30/.46/.18          6.37:1  .373
+   *   .48/.24/.38/.14          5.53:1  .410
+   *   .40/.20/.30/.12（采用）  4.99:1  .437  ← 亮度 +32%，仍守住 4.5:1
+   *   只留椭圆（原站原值）      3.09:1  .575  ← 不可用，中文标题读不出
+   * 原站能只用椭圆是因为它的英文标题落在深灰天窗铝框内；中文标题更宽，
+   * 压到了中央亮天空上，必须留这两道线性压暗。
+   */
+  background:
+    linear-gradient(to top, rgba(0,0,0,.40) 0%, rgba(0,0,0,.20) 34%, transparent 62%),
+    linear-gradient(to right, rgba(0,0,0,.30) 0%, rgba(0,0,0,.12) 42%, transparent 68%),
+    radial-gradient(ellipse at 30% 50%,
+              transparent 0%, rgba(0,0,0,.25) 70%, rgba(0,0,0,.55) 100%);
+  pointer-events: none;
+}
+
+/*
+ * hero 铺满视口宽，**不套 max-w-6xl 容器**。
+ *
+ * 实测原站：顶栏、文案区、底部条三块各自只有 px-4 → md:px-12 → xl:px-16，
+ * hero 区内没有 max-w-6xl 也没有 mx-auto。首版给它套了 1152px 容器，
+ * 1440px 视口下左右各白留 144px，首屏明显偏窄 —— 这是与原站最大的一处结构差。
+ * 下方各区块仍走 .container（那些原站确实有 max-w-6xl）。
+ */
+.hero-inner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  width: 100%;
+  padding: 140px var(--space-4) 44px;
+}
+
+.hero-copy { display: flex; flex-direction: column; }
+
+/* h1：字距随字号联动收紧（规格 2.4）。中文负字距比西文保守（规格 7.3）*/
+.hero-title {
+  margin: 0 0 var(--space-5);
+  color: #fff;
+  font-size: clamp(2.5rem, 6.875vw, 110px);
+  font-weight: var(--fw-black);
+  letter-spacing: clamp(-0.01em, -0.2vw, -0.03em);
+  line-height: 1.1;
+  text-shadow: 2px 5px 2px rgba(0,0,0,.40);
+}
+/*
+ * 词间距比原站收一档（原站 gap-x-4 → md:gap-x-6，约 16/24px）。
+ * 西文单词之间本就有空格，中文没有 —— 照抄西文词距会把「留住 每一个」
+ * 读成两个断开的词组。这里给到 8/12px，只够标示分词节奏。
+ */
+.hero-line { display: flex; flex-wrap: wrap; gap: 0 var(--space-2); }
+/* 逐词从左滑入，spring 落点轻微过冲。delay 由 main.js 按下标算（词数随文案变）*/
+.hero-title .word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateX(-50px);
+  transition: opacity .9s var(--ease), transform .9s var(--ease-spring);
+}
+.hero-title.is-in .word { opacity: 1; transform: none; }
+
+.hero-sub {
+  margin: 0;
+  max-width: 280px;
+  color: rgba(255,255,255,.9);
+  font-size: 14px;
+  line-height: 1.56;
+  letter-spacing: var(--ls-tight);
+  text-shadow: 0 2px 8px rgba(0,0,0,.45);
+  opacity: 0;
+  transform: translateY(15px);
+  transition: opacity 1s ease-out 1.8s, transform 1s ease-out 1.8s;
+}
+.hero-sub.is-in { opacity: 1; transform: none; }
+
+/* 底部条：左 CTA，右头像 + 数字 + 说明（规格 2.6）*/
+.hero-bar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 1.2s var(--ease) 2.2s, transform 1.2s var(--ease) 2.2s;
+}
+.hero-bar.is-in { opacity: 1; transform: none; }
+
+.hero-proof { display: flex; align-items: center; gap: var(--space-4); }
+.avatars { display: flex; flex: none; }
+.avatars img {
+  width: 44px; height: 44px;
+  margin-right: -10px;
+  border: 1.5px solid #fff;
+  border-radius: var(--radius-pill);
+  object-fit: cover;
+}
+.avatars img:last-child { margin-right: 0; }
+
+.proof-num {
+  display: block;
+  color: #fff;
+  font-size: clamp(1.5rem, 2vw, 32px);
+  font-weight: var(--fw-black);
+  letter-spacing: clamp(-0.01em, -0.06vw, -0.02em);
+  line-height: 1.15;
+  text-shadow: 0 2px 8px rgba(0,0,0,.4);
+}
+.proof-label {
+  display: block;
+  max-width: 26em;
+  color: rgba(255,255,255,.8);
+  font-size: 10px;
+  line-height: var(--lh-sm);
+  text-shadow: 0 1px 6px rgba(0,0,0,.4);
+}
+
+/* ── 首屏自定义光标（规格 2.7）───────────────────────────────────────
+ *
+ * DOM 由 main.js 按条件插入：桌面 + 精确指针 + 非 reduced-motion 才建。
+ * 位置由 JS 逐帧写 transform（spring 积分），CSS 只管外观与显隐。
+ *
+ * 只在 hero 内隐藏系统指针，不动 documentElement/body —— 原站是全局
+ * cursor:none 再靠 hover 白名单恢复，漏一个选择器就有一片区域没指针。
+ */
+.hero-cursor-mount {
+  position: absolute;
+  inset: 0;
+  z-index: 3;             /* 高于遮罩(1)与文案(2)，但它 pointer-events:none 不挡点击 */
+  overflow: hidden;       /* 环划到边缘时不撑出滚动条 */
+  pointer-events: none;
+}
+/* 指针进入 hero 且不在可交互元素上时才隐藏系统指针 */
+.hero.cursor-on { cursor: none; }
+
+.hero-cursor {
+  position: absolute;
+  top: 0; left: 0;
+  /*
+   * 84px：容器要装下 RADIUS×2(64) + 字自身向外占的两边余量。
+   * 实测字符包围盒是 81px —— 给 68px 时四边各裁掉约 6px，环上的字会缺角。
+   * 改 RADIUS 或字号时要重量这个值。
+   */
+  width: 84px; height: 84px;
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease);
+  will-change: transform;
+}
+.hero-cursor.is-in { opacity: 1; }
+/* 悬到按钮/链接上时淡出，系统指针接管 */
+.hero-cursor.is-muted { opacity: 0; }
+
+/* 文字环：整体匀速自转 12 秒一圈 */
+.hero-cursor-ring {
+  position: absolute;
+  inset: 0;
+  animation: cursorSpin 12s linear infinite;
+}
+.hero-cursor-ring span {
+  position: absolute;
+  /* 锚点落在环心；transform 由 JS 按下标写入（translate → rotate → translateY），
+   * 不要在这里再设 transform-origin 或 margin，会与那串变换叠加错位。 */
+  top: 50%; left: 50%;
+  color: rgba(255,255,255,.94);
+  font-size: 10px;
+  font-weight: var(--fw-medium);
+  letter-spacing: 0;
+  /* 环压在视频上，底色不可控，阴影要足够撑住 */
+  text-shadow: 0 1px 5px rgba(0,0,0,.75);
+  white-space: pre;       /* 保住 LABEL 里的空格，否则字符间距会塌 */
+}
+
+@keyframes cursorSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* 圆心白点 + 光晕 */
+.hero-cursor-dot {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 3px; height: 3px;
+  margin: -1.5px 0 0 -1.5px;
+  border-radius: var(--radius-pill);
+  background: #fff;
+  box-shadow: 0 0 8px rgba(255,255,255,.8);
+}
+
+/* ══ 2. 信任条 ════════════════════════════════════════════════════ */
+
+.trust-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+  padding-top: 22px;
+  padding-bottom: 22px;
+}
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+.trust-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 34px; height: 34px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--card);
+}
+.trust-icon svg {
+  width: 16px; height: 16px;
+  fill: none; stroke: var(--primary); stroke-width: 1.6;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* ══ 3. 玩法区 ════════════════════════════════════════════════════ */
+
+/*
+ * 三卡网格的基底：单列。列数由各区块自己的断点决定 —— 原站四处用了三套不同规则，
+ * 不是一套通用的（实测其 class 串）：
+ *   产品区   gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6   → 640 两列、1024 三列
+ *   服务导航 gap-4 md:grid-cols-3 md:gap-5                  → 768 直接三列，无两列态
+ *   流程区   gap-6 md:grid-cols-3 md:gap-8                  → 同上，间距更大
+ *   口碑区   gap-5 md:grid-cols-3                           → 同上
+ * 服务导航/流程/口碑跳过两列态是有道理的：三项一组的内容两列会留一个孤项。
+ * 产品卡带图更高，窄屏下两列还读得动，所以多一档。
+ */
+.grid-3 { display: grid; grid-template-columns: 1fr; gap: 20px; }
+
+/* 产品区：sm 两列（原站 sm:grid-cols-2） */
+@media (min-width: 640px) {
+  .play-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+/* 服务导航 / 流程 / 口碑：md 直接三列，跳过两列态（三项一组，两列会留孤项） */
+@media (min-width: 768px) {
+  .nav-grid, .steps, .quote-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .nav-grid { gap: 20px; }
+  .quote-grid { gap: 20px; }
+}
+/* 产品区：lg 三列并放大间距（原站 lg:grid-cols-3 lg:gap-6） */
+@media (min-width: 1024px) {
+  .play-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+}
+
+.play-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-play);
+  background: var(--card);
+  box-shadow: var(--shadow-card);
+  transition: transform var(--dur-base) var(--ease),
+              box-shadow var(--dur-base) var(--ease),
+              border-color var(--dur-base) var(--ease);
+}
+.play-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-float);
+}
+
+/* 全站图片统一 4:3 + object-cover（规格 4 章）*/
+.play-media { position: relative; aspect-ratio: var(--ratio-cover); overflow: hidden; background: var(--subtle); }
+.play-media img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform var(--dur-slow) ease-out;
+}
+/* 产品图 hover scale-[1.04]（规格 5 章）*/
+.play-card:hover .play-media img { transform: scale(1.04); }
+/* 暗角：压住 AI 出图偏亮的边缘（tokens.js --veil-vignette）*/
+.play-media::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: var(--veil-vignette);
+  opacity: .45;
+  pointer-events: none;
+}
+
+.play-body { display: flex; flex-direction: column; padding: 20px; }
+.play-meta { margin: var(--space-3) 0 0; color: var(--text-tertiary); font-size: 12px; }
+.play-body .link-arrow { margin-top: auto; padding-top: var(--space-4); }
+
+/* ══ 4. 服务导航 ══════════════════════════════════════════════════ */
+
+.nav-card {
+  display: flex;
+  flex-direction: column;
+  padding: 28px 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--card);
+  box-shadow: var(--shadow-card);
+  transition: border-color var(--dur-base) var(--ease), box-shadow var(--dur-base) var(--ease);
+}
+/* 服务卡 hover：描边加深；图标底反相、图标转白（规格 5 章的浅色站等价）*/
+.nav-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-float); }
+
+.nav-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px; height: 46px;
+  margin-bottom: var(--space-5);
+  border-radius: var(--radius-2xl);
+  background: var(--subtle);
+  transition: background-color var(--dur-base) var(--ease);
+}
+.nav-icon svg {
+  width: 22px; height: 22px;
+  fill: none; stroke: var(--text-primary); stroke-width: 1.6;
+  stroke-linecap: round; stroke-linejoin: round;
+  transition: stroke var(--dur-base) var(--ease);
+}
+.nav-card:hover .nav-icon { background: var(--text-primary); }
+.nav-card:hover .nav-icon svg { stroke: var(--background); }
+
+.nav-card .body-text { margin-bottom: var(--space-4); }
+.nav-card .link-arrow { margin-top: auto; }
+
+/* ══ 5 / 6. 服务详情：图文左右分栏 ═════════════════════════════════ */
+
+/*
+ * 图文分栏：移动单列 → md 两列（原站 md:grid-cols-2 md:gap-14）。
+ * 移动端一律图在上（.media-first / .clay-frame 的 order），因为文字先出的话
+ * 用户要滚过一屏字才看到成品，而这两块的说服力全在图上。
+ */
+.split-media {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: center;
+}
+.media-first, .clay-frame { order: -1; }
+
+@media (min-width: 768px) {
+  .split-media { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 56px; }
+  /* md 以上回归 DOM 顺序：第 5 区块图在左、第 6 区块图在右 */
+  .media-first, .clay-frame { order: 0; }
+}
+
+/* 图片框：overflow-hidden + border + 4:3（规格 4 章）*/
+.media-frame {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+  background: var(--subtle);
+  box-shadow: var(--shadow-image);
+}
+/* height:auto 必须给：img 上有 height="1200" 属性（防 CLS 用），
+ * CSS 只设 width 的话属性高度会生效，aspect-ratio 被无视、图撑到 1200px 高。 */
+.media-frame img { width: 100%; height: auto; aspect-ratio: var(--ratio-cover); object-fit: cover; }
+
+/* 黏土四层（限 3 处，此为其一）：纪念区图框 */
+.clay-frame {
+  padding: 12px;
+  border-radius: var(--radius-panel);
+  background: var(--card);
+  box-shadow: var(--clay-highlight) 0 5px 0 0 inset, var(--shadow-clay);
+}
+.clay-frame img {
+  width: 100%;
+  height: auto;              /* 同 .media-frame img：不给会被 height 属性撑到 1200px */
+  aspect-ratio: var(--ratio-cover);
+  object-fit: cover;
+  border-radius: var(--radius-card);
+  /* 让写实照片「嵌进」黏土表面（tokens.js --shadow-clay-inset）*/
+  box-shadow: inset 0 3px 9px rgba(58,44,44,.28);
+}
+
+.feature-list { margin: 0 0 var(--space-6); display: grid; gap: var(--space-3); }
+.feature-list li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  color: var(--text-primary);   /* 列表项抬到主色（规格 3 章：强调才主色）*/
+  font-size: 14px;
+  line-height: var(--lh-sm);
+}
+.feature-list strong { font-weight: var(--fw-bold); }
+.dot {
+  flex: none;
+  width: 5px; height: 5px;
+  margin-top: .55em;
+  border-radius: var(--radius-pill);
+  background: var(--primary);
+}
+
+/* 2×2 数据格：rounded-2xl + border + 比区块底更深一档（规格 4 章）*/
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin: 0 0 var(--space-6);
+}
+.stat-cell {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  background: var(--background);
+}
+/* 规格 4 章：数字 text-2xl / md:text-3xl（24 / 30px），标签 text-xs / md:text-sm（12 / 14px）。
+ * 实测四个中文名在三档视口下都不换行。 */
+.stat-num {
+  display: block;
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  font-weight: var(--fw-black);
+  letter-spacing: var(--ls-tighter);
+  line-height: 1.2;
+}
+.stat-label { display: block; margin-top: var(--space-1); color: var(--text-secondary); font-size: 12px; line-height: var(--lh-sm); }
+
+/* ══ 7. 流程区：顶线分隔，无卡片 ═══════════════════════════════════ */
+
+.steps { gap: 28px; }
+.step { border-top: 1px solid var(--border-strong); padding-top: 22px; }
+.step-num {
+  display: block;
+  margin-bottom: var(--space-4);
+  color: var(--text-primary);
+  font-size: 2.25rem;
+  font-weight: var(--fw-black);
+  letter-spacing: var(--ls-tighter);
+  line-height: 1;
+  /* 规格 3 章：序号压到近乎背景（深色站 text-white/20 的浅色等价）*/
+  opacity: .18;
+}
+
+/* ══ 11. 作品展示区 ═══════════════════════════════════════════════ */
+
+/*
+ * 缩略带：xl 铺满 7 格，列数跟随风格数量，与 h2「同一只猫，七种风格」一致。
+ * 本区块原站没有（规格第 6 章新增），断点自定：2 → 4 → 7。
+ * 7 格只在 1280 以上给 —— 1152 容器下每格约 145px 已是可读下限，再窄就看不清风格差异了。
+ */
+.thumb-strip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+@media (min-width: 768px) {
+  .thumb-strip { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (min-width: 1280px) {
+  .thumb-strip { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+}
+/*
+ * 标签放格外而非压在图上。
+ *
+ * 七格平分 1152px 后每格只剩约 145px，压在图上的 11px 徽标既盖住画面
+ * 又读不出 —— 图上徽标是给大图用的（play-media / media-frame 那种），
+ * 小格子该把画面完整留给图，文字下沉到格外。
+ */
+.thumb-strip figure { display: flex; flex-direction: column; gap: var(--space-2); }
+.thumb-strip .thumb-image {
+  display: block;
+  overflow: hidden;
+  aspect-ratio: var(--ratio-square);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  background: var(--subtle);
+  transition: border-color var(--dur-base) var(--ease), box-shadow var(--dur-base) var(--ease);
+}
+.thumb-strip figure:hover .thumb-image { border-color: var(--border-strong); box-shadow: var(--shadow-card); }
+.thumb-strip img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform var(--dur-slow) ease-out;
+}
+.thumb-strip figure:hover img { transform: scale(1.04); }
+.thumb-strip figcaption {
+  color: var(--text-secondary);
+  font-size: 12px;
+  letter-spacing: var(--ls-tight);
+  text-align: center;
+}
+
+.works-divider { margin: 56px 0 32px; max-width: 34em; }
+
+/*
+ * 瀑布流：纯 CSS columns，无 JS。混比例是刻意的 —— 等高图会退化成规整网格。
+ * `columns: 3 280px` 是「最多 3 列、每列至少 280px」，浏览器按容器宽自己减列，
+ * 所以只需在手机显式压成单列（280px 下限在 390px 视口会算出 1 列，但显式写更稳）。
+ */
+.masonry { columns: 1; column-gap: 20px; }
+@media (min-width: 768px) {
+  .masonry { columns: 3 280px; }
+}
+.work-card {
+  display: inline-block;
+  width: 100%;
+  margin: 0 0 20px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--card);
+  box-shadow: var(--shadow-card);
+  transition: transform var(--dur-base) var(--ease), box-shadow var(--dur-base) var(--ease);
+}
+.work-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-float); }
+.work-card img { width: 100%; height: auto; }
+.work-card figcaption {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 14px 16px;
+}
+.work-name { color: var(--text-primary); font-size: 15px; font-weight: var(--fw-bold); letter-spacing: var(--ls-tight); }
+.work-meta { color: var(--text-tertiary); font-size: 12px; }
+
+/* ══ 8. 口碑区：3 条引语卡 ═════════════════════════════════════════ */
+
+.quote-card {
+  display: flex;
+  flex-direction: column;
+  padding: 28px 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--card);
+  box-shadow: var(--shadow-card);
+}
+/* 引语正文比正文亮一档（规格 3 章：kp-fg 而非 kp-muted）*/
+.quote-text {
+  margin: 0 0 var(--space-6);
+  color: var(--text-primary);
+  font-size: 15px;
+  line-height: var(--lh-body);
+}
+.quote-foot { display: flex; align-items: center; gap: var(--space-3); margin-top: auto; }
+.quote-foot img {
+  flex: none;
+  width: 40px; height: 40px;
+  border-radius: var(--radius-pill);
+  object-fit: cover;
+}
+.quote-name { display: block; color: var(--text-primary); font-size: 14px; font-weight: var(--fw-semibold); }
+.quote-meta { display: block; color: var(--text-tertiary); font-size: 12px; }
+
+/* ══ 9. CTA 面板 ══════════════════════════════════════════════════ */
+
+.cta-panel {
+  position: relative;
+  overflow: hidden;
+  padding: 56px 40px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+  background: var(--card);
+  box-shadow: var(--shadow-card);
+}
+/* 右上一点微光，避免大面板发死（规格 4 章）*/
+.cta-sheen {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 80% 20%, rgba(255,209,102,.32), transparent 55%);
+  opacity: .8;
+  pointer-events: none;
+}
+/* 原站 lg:grid-cols-[1.2fr_1fr] —— 1024 才分栏，不是 768。
+ * 二维码那一栏在 768–1023 之间挤成窄条会扫不动，多留一档单列是对的。 */
+.cta-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: center;
+}
+@media (min-width: 1024px) {
+  .cta-grid { grid-template-columns: 1.2fr 1fr; }
+}
+.cta-note { margin: 0; color: var(--text-tertiary); font-size: 12px; }
+
+.qr-box { display: flex; flex-direction: column; align-items: center; gap: var(--space-3); }
+/* 占位是虚线框而非色块：规格 7.4 —— 缺图只留文字排版，不放占位色块 */
+.qr-frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 168px; height: 168px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-card);
+  background: var(--background);
+  color: var(--text-tertiary);
+  font-size: 13px;
+  text-align: center;
+}
+.qr-hint { line-height: var(--lh-sm); }
+.qr-note { margin: 0; color: var(--text-tertiary); font-size: 12px; }
+
+/* ══ 10. 页脚 ═════════════════════════════════════════════════════ */
+
+.footer { background: var(--ink); color: var(--on-ink-muted); }
+.footer .brand-name { color: var(--on-ink); text-shadow: none; }
+/* 原站 grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr] —— md 直接四栏，无两栏中间态 */
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  padding-top: 56px;
+  padding-bottom: 40px;
+}
+@media (min-width: 768px) {
+  .footer-grid { grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 40px; }
+}
+.footer-desc { margin: var(--space-5) 0 0; max-width: 22em; font-size: 14px; line-height: var(--lh-body); }
+.footer-title {
+  margin: 0 0 var(--space-4);
+  color: var(--on-ink);
+  font-size: 14px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: .04em;
+}
+.footer-links { display: grid; gap: var(--space-3); font-size: 14px; }
+.footer-links a { transition: color var(--dur-base) var(--ease); }
+.footer-links a:hover { color: var(--on-ink); }
+
+.footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-top: 28px;
+  padding-bottom: 32px;
+  border-top: 1px solid rgba(255,248,242,.12);
+  color: var(--on-ink-faint);
+  font-size: 12px;
+}
+.footer-bottom p { margin: 0; }
+.footer-legal { display: flex; gap: 20px; }
+.footer-legal a:hover { color: var(--on-ink); }
+
+/* ══ 滚动入场（规格 5 章）══════════════════════════════════════════ */
+
+/*
+ * 区块级入场：y:28 / 0.7s（规格 5 章）。
+ * 网格子项另有两档更轻快的参数（见下）—— 子项若跟容器同幅度同时长，
+ * 三张卡会齐刷刷大幅位移，反而比错峰更晃眼。
+ */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity var(--dur-reveal) var(--ease),
+              transform var(--dur-reveal) var(--ease);
+}
+
+/*
+ * 网格子项（实测原站，按圆角反查区块）：
+ *   服务导航卡  y:20 / .55s / delay i*0.07
+ *   产品卡      y:24 / .6s  / delay i*0.08   ← 规格正文漏了这档
+ *   流程 / 口碑 y:20 / .55s / delay i*0.08
+ * 位移与时长挂在容器类上，delay 靠 data-delay 逐项给。
+ */
+.play-grid > .reveal {
+  transform: translateY(24px);
+  transition-duration: .6s;
+}
+.nav-grid > .reveal,
+.steps > .reveal,
+.quote-grid > .reveal,
+.masonry > .reveal {
+  transform: translateY(20px);
+  transition-duration: .55s;
+}
+/*
+ * 瀑布流 11 张不给 stagger：按 0.08s 递进尾部要等 0.88s 才出齐，太拖。
+ * 分列错峰倒是更合理，但 CSS columns 下 DOM 顺序与视觉列不对应，
+ * 按 nth-child 给延迟会错峰错到别的列上。同时入场是这里的正确选择。
+ */
+/* 放在网格子项之后：要覆盖它们各自的初始位移 */
+.reveal.is-in { opacity: 1; transform: none; }
+
+/* delay 两档：服务导航 0.07s，其余网格 0.08s */
+.nav-grid > .reveal[data-delay="1"] { transition-delay: .07s; }
+.nav-grid > .reveal[data-delay="2"] { transition-delay: .14s; }
+.nav-grid > .reveal[data-delay="3"] { transition-delay: .21s; }
+
+.play-grid > .reveal[data-delay="1"],
+.steps > .reveal[data-delay="1"],
+.quote-grid > .reveal[data-delay="1"] { transition-delay: .08s; }
+.play-grid > .reveal[data-delay="2"],
+.steps > .reveal[data-delay="2"],
+.quote-grid > .reveal[data-delay="2"] { transition-delay: .16s; }
+.play-grid > .reveal[data-delay="3"],
+.steps > .reveal[data-delay="3"],
+.quote-grid > .reveal[data-delay="3"] { transition-delay: .24s; }
+
+/* 区块级（非网格子项）的 stagger，如信任条三项 */
+.trust-row > .reveal[data-delay="1"] { transition-delay: calc(var(--stagger) * 1); }
+.trust-row > .reveal[data-delay="2"] { transition-delay: calc(var(--stagger) * 2); }
+.split-media > .reveal[data-delay="1"] { transition-delay: calc(var(--stagger) * 1); }
+
+/* ══ 响应式：三档（规格 1 章）══════════════════════════════════════ */
+
+@media (min-width: 768px) {
+  .container { padding: 0 48px; }
+  .topbar-inner, .hero-inner { padding-left: 48px; padding-right: 48px; }
+  .section { padding: 112px 0; }
+  .section-head { margin-bottom: 64px; }
+  /* 标题左、说明右。两个 flex 子项都要显式定宽：
+   * 不给的话标题会被挤到每行 3–4 字、说明被压成窄条。 */
+  .section-head.split {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-7);
+    max-width: none;
+  }
+  .section-head.split > div { flex: 1 1 auto; min-width: 0; }
+  .section-head.split .section-note { flex: 0 1 22em; margin-top: 0; }
+
+  .eyebrow { font-size: 13px; }
+  /* 正文 text-sm → md:text-base（14 → 16px），卡标题 text-lg → md:text-xl（18 → 20px） */
+  .body-text { font-size: 16px; }
+  .h3 { font-size: 1.25rem; }
+  .step-num { font-size: 3rem; }
+  .cta-panel { padding: 72px 64px; }
+
+  /* 顶栏 pt-4 → md:pt-5 */
+  .topbar-inner { padding-top: 20px; padding-bottom: 20px; }
+  /* 品牌与菜单放大到原站第二档：logo md:h-9(36px)、菜单字 md:text-lg(18px) */
+  /* 12px：方块放大后 8px 圆角显得偏方，按比例跟上。不引 --radius-md（无此变量） */
+  .brand-mark { width: 36px; height: 36px; border-radius: 12px; }
+  .brand-name { font-size: 22px; }
+  .brand-lg .brand-mark { width: 40px; height: 40px; }
+  .brand-lg .brand-name { font-size: 24px; }
+  .menu-btn { min-height: 46px; padding: 0 20px; font-size: 18px; }
+  .menu-btn svg { width: 20px; height: 20px; }
+  /* 主 CTA 第二档（原站 md:text-xl） */
+  .btn-lg { min-height: 56px; padding: 0 28px; font-size: 20px; }
+  .btn-lg .arrow { width: 22px; height: 22px; }
+
+  .hero-inner { padding-top: 160px; padding-bottom: 56px; }
+  .hero-line { gap: 0 var(--space-3); }
+  .hero-sub { max-width: 420px; font-size: 18px; }
+  .hero-bar { flex-direction: row; align-items: flex-end; justify-content: space-between; gap: var(--space-7); }
+  .proof-label { font-size: 12px; }
+  .avatars img { margin-right: -14px; }
+  .stat-num { font-size: 1.875rem; }
+  .stat-label { font-size: 14px; }
+}
+
+@media (min-width: 1024px) {
+  /* 文案区约占视口一半（规格 2.4 的 lg:w-[48.75vw]）*/
+  .hero-copy { width: 48.75vw; }
+}
+
+@media (min-width: 1280px) {
+  .container { padding: 0 64px; }
+  .topbar-inner, .hero-inner { padding-left: 64px; padding-right: 64px; }
+  /* 顶栏 xl:pt-[22px] */
+  .topbar-inner { padding-top: 22px; padding-bottom: 22px; }
+  /* 第三档：logo xl:h-10(40px)、菜单字 xl:text-[22px] */
+  .brand-mark { width: 40px; height: 40px; border-radius: 13px; }
+  .brand-name { font-size: 26px; }
+  .brand-lg .brand-mark { width: 44px; height: 44px; }
+  .brand-lg .brand-name { font-size: 28px; }
+  .menu-btn { min-height: 52px; padding: 0 24px; font-size: 22px; }
+  .menu-btn svg { width: 22px; height: 22px; }
+  /* 主 CTA 第三档：原站 xl:px-[26px] xl:py-[14px] xl:text-2xl */
+  .btn-lg { min-height: 60px; padding: 0 30px; font-size: 24px; }
+  .btn-lg .arrow { width: 24px; height: 24px; }
+
+  .hero-sub { max-width: 504px; font-size: 22px; }
+  .proof-label { font-size: 18px; }
+  .avatars img { width: 52px; height: 52px; margin-right: -16px; }
+}
+
+/* 手机：单列基底之上的收窄调整 */
+@media (max-width: 767px) {
+  /* 底部条别贴屏幕下缘：移动浏览器的工具栏会盖住最后十几个 px */
+  .hero-inner { padding-top: 120px; padding-bottom: 56px; gap: 32px; }
+  .hero-bar .btn { width: 100%; }
+  /* 头像缩一档，给右侧说明文字腾出行宽 —— 44px 头像 + 说明在 390px 宽下每行只剩三四字 */
+  .avatars img { width: 38px; height: 38px; margin-right: -8px; }
+  .stat-grid { gap: var(--space-2); }
+  .trust-row { flex-direction: column; align-items: flex-start; gap: var(--space-4); }
+  .cta-panel { padding: 40px 24px; }
+  .clay-frame { order: -1; }
+}
+
+/* backdrop-filter 不支持时把半透明底加深，否则压在亮图/亮视频上读不出 */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .badge, .thumb-strip figcaption { background: rgba(42,31,31,.82); }
+  .mobile-menu { background: rgba(30,22,22,.97); }
+  .desktop-menu { background: rgba(42,31,31,.95); }
+}
+
+/* 尊重系统减弱动效设置 */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal, .topbar, .hero-title .word, .hero-sub, .hero-bar {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .mobile-menu { transition: none; }
+  /* 自定义光标整块退出：JS 已按 reduced-motion 挡住不建 DOM，这里兜一层 ——
+   * 万一脚本没跑到（CSP 拦下、加载失败），系统指针必须还在。 */
+  .hero.cursor-on { cursor: auto; }
+  .hero-cursor { display: none; }
+  * { transition-duration: 1ms !important; animation: none !important; }
+}

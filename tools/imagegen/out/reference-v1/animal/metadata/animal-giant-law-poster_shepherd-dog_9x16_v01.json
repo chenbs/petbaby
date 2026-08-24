@@ -1,0 +1,53 @@
+{
+  "templateId": "animal-giant-law-poster",
+  "entryId": "action",
+  "title": "巨物法相海报",
+  "sourceEffectFile": "apps/website/public/assets/example/animal/jimeng-2026-07-11-4451-电影级，8K超高清，超广角仰拍，巨物恐惧，法天象地，至尊法相，人形巨神，身高万丈....png",
+  "status": "generated-pending-user-approval",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-07-11-4451-电影级，8K超高清，超广角仰拍，巨物恐惧，法天象地，至尊法相，人形巨神，身高万丈....png",
+      "sha256": "4027959ff35c4775359da43e729eab36e6775b2c95f28b060ffd491ef59eee01"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "shepherd-dog",
+      "species": "dog",
+      "breed": "adult German Shepherd",
+      "path": "apps/website/public/assets/hero-shepherd.jpg",
+      "sha256": "f6c37419e96b12425034d2bdcb54cbde952709f37352f3748d67d3db71e937b4"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a one-time third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every designated original animal, human-like creature or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult German Shepherd with tan coat with defined black saddle and mask, brown eyes, tall upright ears, black muzzle and athletic adult build. Render the face, fur and anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration or turn a stylized scene into a realistic photo. Keep the pet appealing and healthy, never skinny, gaunt, uncanny, aggressive or puppy-like. Keep the extreme low angle, monumental scale, clouds, lightning, small human scale cues and epic poster hierarchy; replace the humanoid deity with a natural adult pet while retaining the drama. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character or artist names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a vertical 9:16 composition at 720x1280 pixels in a dramatic fantasy-poster style. Use the first reference image only as the composition/lighting/style guide: extreme low-angle monumental scale, stormy clouds, lightning, swirling atmosphere, epic cinematic hierarchy, warm gold and charcoal palette, painterly/illustrative texture, and the same overall pose/camera/framing. Replace the central humanoid deity/giant subject with one coherent adult German Shepherd identity: tan coat with a defined black saddle and black mask, brown eyes, tall upright ears, black muzzle, athletic adult build, healthy natural proportions, appealing and non-puppy-like. Keep the same dramatic reaching-forward pose and low-angle power perspective, but adapt only the minimum anatomy needed for a correct dog: no extra limbs, no human hands, no duplicated heads, no uncanny features. Preserve the original scene composition, clouds, lightning, birds, smoke, and background environment as closely as possible; do not redesign or simplify the background. Keep the same epic visual language, brushwork, and lighting, rendering the dog's fur and face in the same stylized language rather than a photographic cutout. Preserve any text blocks, hierarchy, and overall layout; replace any brand/watermark-like elements with subtle original pet-safe wording only if needed, without adding logos or signatures.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-giant-law-poster_shepherd-dog_9x16_v01.png",
+    "sha256": "f08bf550aa1b14512a65fa7202416963186c4fac5653989525cd3cf3becd26b4"
+  },
+  "review": {
+    "state": "pending-human-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-17T16:37:06.807Z"
+}

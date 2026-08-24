@@ -1,0 +1,48 @@
+---
+/*
+ * 6. 服务详情 B：纪念空间，图在右 + 2×2 数据格。
+ *
+ * 2×2 数据格：纪念册 / 纪念视频 / 星尘纪念页 / 成长对比图，正好填满。
+ * 数字位放的是名称而非 PL-20 这类内部编号 —— 官网访客不认这套代号（偏离 ④）。
+ *
+ * 陪伴天数的口径：过去式且不递增（「陪伴了 N 天」）。天数继续往上跳对这些用户
+ * 是冒犯，文案不能改成进行时。
+ */
+const STATS = [
+  { num: "纪念册", label: "图文长图 + 可打印 PDF" },
+  { num: "纪念视频", label: "照片重新流动起来" },
+  { num: "纪念页", label: "免费的长期入口" },
+  { num: "成长对比", label: "两个时间点并排看" },
+];
+---
+
+<section class="band section" id="memorial">
+  <div class="container split-media">
+    <div class="reveal">
+      <p class="eyebrow">星尘纪念</p>
+      <h2 class="h2 h2-mid">陪伴过的日子<br />不该只留在相册里</h2>
+      <p class="body-text lead">
+        为已经离开的伙伴建一个纪念空间。天数停在告别那天，用「陪伴了 N 天」记住，
+        不再往上跳 —— 这件事我们想做得克制一些。
+      </p>
+      <div class="stat-grid">
+        {
+          STATS.map((stat) => (
+            <div class="stat-cell">
+              <span class="stat-num">{stat.num}</span>
+              <span class="stat-label">{stat.label}</span>
+            </div>
+          ))
+        }
+      </div>
+      <a class="btn btn-secondary" href="#contact">
+        了解纪念空间
+        <svg class="arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
+      </a>
+    </div>
+    {/* 黏土质感：原型已用 1 处（此处），小程序码弹框是第 2 处，仍在 3 处限额内 */}
+    <div class="clay-frame reveal" data-delay="1">
+      <img src="/assets/detail-memorial.jpg" alt="星尘纪念页示例：远景星空下的剪影" width="1600" height="1200" loading="lazy" decoding="async" />
+    </div>
+  </div>
+</section>

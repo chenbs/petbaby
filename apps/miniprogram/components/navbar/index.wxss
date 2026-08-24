@@ -1,0 +1,78 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 30;
+  background: var(--nav-bar-background);
+  transition: background var(--transition-duration) var(--transition-easing);
+}
+
+.navbar-clear {
+  background: transparent;
+}
+
+/*
+ * 沉浸式页面：导航栏叠在作品图上，标题与返回箭头改用玻璃面板文字色。
+ * 作品图内容不可预知，单靠文字色无法保证可读（light 主题的深色标题遇到深色底图即失效），
+ * 故补一层由遮罩色渐隐的顶部底衬 —— 与面板的遮罩层同源，不引入新颜色。
+ */
+.navbar-inverse::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(180deg, var(--glass-scrim), transparent);
+  content: "";
+  opacity: var(--glass-scrim-max);
+}
+
+.navbar-inverse .navbar-bar {
+  position: relative;
+}
+
+.navbar-inverse .navbar-back,
+.navbar-inverse .navbar-title {
+  color: var(--glass-text-primary);
+}
+
+.navbar-bar {
+  display: flex;
+  height: 88rpx;
+  align-items: center;
+  padding: 0 var(--space-3);
+}
+
+.navbar-back {
+  display: flex;
+  width: 88rpx;
+  height: 88rpx;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  font-size: var(--title-size);
+  line-height: 1;
+}
+
+.navbar-title {
+  flex: 1;
+  overflow: hidden;
+  color: var(--text-primary);
+  font-size: var(--font-h3);
+  font-weight: var(--fw-bold);
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.navbar-extra {
+  display: flex;
+  min-width: 88rpx;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.navbar-spacer {
+  height: 88rpx;
+}

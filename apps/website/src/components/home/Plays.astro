@@ -1,0 +1,69 @@
+---
+/*
+ * 3. 玩法区：3 卡网格，标题左说明右。
+ *
+ * play-grid：640 两列 → 1024 三列（原站 sm:2 lg:3，比其他三处多一档两列态）。
+ * 徽标写玩法类别，不写 PL-01 这类内部编号 —— 访客不认（偏离 ④）。
+ */
+const PLAYS = [
+  {
+    image: "/assets/play-id-card.jpg",
+    alt: "宠物身份证成品：一张平摊在桌面的证件卡",
+    badge: "图文创作",
+    title: "宠物身份证",
+    body: "姓名、生日、品种与陪伴天数排成一张证件卡，可存图也可印出来。",
+    meta: "正脸照 1 张 · 约 1 分钟",
+  },
+  {
+    image: "/assets/play-poster.jpg",
+    alt: "宠物电影海报成品：贴在墙上的竖版纸质海报",
+    badge: "图文创作",
+    title: "宠物电影海报",
+    body: "把一张抓拍排成主视觉海报，片名、短评与质感一并给到。",
+    meta: "日常照 1–3 张 · 约 2 分钟",
+  },
+  {
+    image: "/assets/play-album.jpg",
+    alt: "宠物时光画册成品：摊开在木桌上的相册跨页",
+    badge: "图文创作",
+    title: "宠物时光画册",
+    body: "从相册里挑几张，装订成手机长图与可打印的纪念 PDF。",
+    meta: "照片 6–20 张 · 约 3 分钟",
+  },
+];
+---
+
+<section class="section" id="plays">
+  <div class="container">
+    <div class="section-head split reveal">
+      <div>
+        <p class="eyebrow">核心玩法</p>
+        <h2 class="h2">为宠物而做<br />也为记得的人</h2>
+      </div>
+      <p class="section-note">
+        每种玩法都是一套完整的排版与配色，不是滤镜。选一个，上传照片，其余交给它。
+      </p>
+    </div>
+
+    <div class="grid-3 play-grid">
+      {
+        PLAYS.map((play, index) => (
+          <article class="play-card reveal" data-delay={index > 0 ? String(index) : null}>
+            <div class="play-media">
+              <img src={play.image} alt={play.alt} width="1600" height="1200" loading="lazy" decoding="async" />
+              <span class="badge">{play.badge}</span>
+            </div>
+            <div class="play-body">
+              <h3 class="h3">{play.title}</h3>
+              <p class="body-text">{play.body}</p>
+              <p class="play-meta">{play.meta}</p>
+              <a class="link-arrow" href="#contact">去创作
+                <svg class="arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
+              </a>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

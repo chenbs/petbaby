@@ -1,0 +1,154 @@
+{
+  "templateId": "animal-sword-cat-alt",
+  "entryId": "action",
+  "title": "古风剑客宠物二",
+  "sourceEffectFile": "apps/website/public/assets/example/animal/jimeng-2026-08-13-4087-插画风格特效，古风，动漫风，3D，大师作品，超高清，动态，一只超萌的剑客猫耳娘作....png",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-08-13-4087-插画风格特效，古风，动漫风，3D，大师作品，超高清，动态，一只超萌的剑客猫耳娘作....png",
+      "sha256": "a8261158aaed4bb0e6d3c47a822b7c5d2f08a4db2350318b1833430a42a44137"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "silver-abyssinian-cat",
+      "species": "cat",
+      "breed": "adult pale silver-grey Abyssinian cat",
+      "path": "apps/website/public/assets/avatar-abyssinian.jpg",
+      "sha256": "8714ff092ab9b9e58a3c440eb16756b1149cd02c4050a8fb4f5f63b902184268"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: identity-preserve compositing and clean master reconstruction. Asset type: self-owned runtime frozen-master candidate. This is a clean first-generation reconstruction. Do not use, recall or inherit the previous warm-brown master, any prior candidate or any previous edit. Image 1 is the sole authority for the close heroic composition, camera, crop, forward martial-arts paw pose, ornate dark metal mask, layered black-and-white ancient-fantasy costume, ribbons, tassels, cool blue and warm rim lighting, bokeh, shallow depth of field and pale cool-silver coat treatment. Recreate those visible decisions closely while removing every badge, account mark, logo, signature and watermark. Image 2 is the pet identity authority for mature Abyssinian facial and body structure: large upright ears, elegant wedge-shaped head, almond eyes, refined narrow muzzle, athletic adult proportions and short fine coat. Transfer that exact mature structure into Image 1 without importing Image 2's room, sunlight or warm ruddy-brown coat. The final cat must have Image 1's pale cool silver-grey coat, with subtle fine darker ticking and a lightly leopard-like silver impression. It must never be warm brown, orange, cream, pure white, blue British Shorthair, kitten or generic round-faced cat. Preserve both complete paws and natural feline digits, the intense focused gaze, mask fit, costume contacts and dynamic depth. Do not enlarge the head, shorten the muzzle or turn the face into a human anime girl. Keep exact 9:16 portrait framing and polished cinematic 3D illustration. No extra subjects, duplicate anatomy, malformed paws, human hands, text, logo, watermark, signature or platform UI.",
+  "revisedPrompt": "Create a polished cinematic 3D illustration in exact 9:16 portrait framing, using Image 1 as the sole authority for composition, camera angle, crop, pose, costume design, lighting, and overall visual treatment. Reconstruct the same close heroic shot: a front-facing fantasy cat warrior with both paws extended in a forward martial-arts pose, intense focused gaze, ornate dark metal mask covering the upper face, layered black-and-white ancient-fantasy costume, flowing ribbons and tassels, cool blue ambient light with warm rim light, soft bokeh, shallow depth of field, and pale cool-silver coat treatment. Transfer the mature Abyssinian identity from Image 2 into the character anatomy: large upright ears, elegant wedge-shaped head, almond eyes, refined narrow muzzle, athletic adult proportions, and short fine coat. Keep the cat fully feline and adult, not kitten-like, not round-faced, not blue British Shorthair, and not human-anime styled. The coat must be pale cool silver-grey with subtle fine darker ticking and a lightly leopard-like silver impression; never warm brown, orange, cream, or pure white. Preserve both complete paws and natural feline digits, accurate mask fit, costume contacts, and dynamic depth. Remove every badge, account mark, logo, signature, watermark, and any platform UI. No extra subjects, no duplicate anatomy, no malformed paws, no human hands, no text.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/remediation-20260819-round11/master-candidates/animal-sword-cat-alt_silver-abyssinian-cat_9x16_v03.png",
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819-round11/raw/animal-sword-cat-alt.png",
+    "sha256": "ae1b7a33c3dd42ed61899f11108d207eb9de40e93124e691ec45eeaf2599ea07"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-20T09:18:36+08:00"
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-19T10:39:43.851Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/remediation-20260819-round11/master-candidates/animal-sword-cat-alt_silver-abyssinian-cat_9x16_v03.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/animal-sword-cat-alt_silver-abyssinian-cat_9x16_v03.webp",
+  "masterSha256": "08ff8046f31d27dcbde14c441976c0fa1b1713b4df5f761a030414c659c64bdb",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-20T09:18:36+08:00",
+    "note": "用户确认由原始效果图与 avatar-abyssinian.jpg 重建的古风剑客宠物二 v03 通过并冻结。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-sword-cat-alt_silver-abyssinian-cat_9x16_v03.webp",
+      "sha256": "08ff8046f31d27dcbde14c441976c0fa1b1713b4df5f761a030414c659c64bdb"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate",
+      "unapproved-candidate"
+    ]
+  },
+  "subject": "abyssinian-cat",
+  "breed": "成年浅灰色阿比西尼亚猫",
+  "version": "v03",
+  "supersedes": {
+    "version": "v02",
+    "path": "tools/imagegen/out/reference-v1/public-previews/animal-sword-cat-alt_silver-abyssinian-cat_9x16_v02.webp",
+    "sha256": "cf590e99fc55a7d00ee2137bb9713a031448499f14bc0a7bab664e519f81c9dc",
+    "metadata": "tools/imagegen/out/reference-v1/public-previews/metadata/animal-sword-cat-alt_silver-abyssinian-cat_9x16_v02.json"
+  },
+  "remediationRequest": {
+    "task": "user-feedback-frozen-master-refinement-2026-08-19-round11",
+    "templateId": "animal-sword-cat-alt",
+    "title": "古风剑客宠物二",
+    "kind": "master",
+    "version": "v03",
+    "status": "approved-and-promoted",
+    "provider": "lingsuan",
+    "model": "gpt-image-2",
+    "endpoint": "/v1/images/edits",
+    "inputFidelity": "high",
+    "inputPolicy": {
+      "sequential": true,
+      "imageCount": 2,
+      "maxImages": 2,
+      "longestEdge": 1200,
+      "jpegQuality": 82,
+      "maxCombinedBytes": 1000000
+    },
+    "inputs": [
+      {
+        "role": "original-effect-reference-composition-costume-silver-coat-and-lighting-only",
+        "originalPath": "apps/website/public/assets/example/animal/jimeng-2026-08-13-4087-插画风格特效，古风，动漫风，3D，大师作品，超高清，动态，一只超萌的剑客猫耳娘作....png",
+        "preparedPath": ".tmp/master-remediation-20260819-round11-inputs/animal-sword-cat-alt-1.jpg",
+        "bytes": 127722,
+        "sha256": "556c96f4bdc812b3e7b06a60b8e90a3286965351dddb83c82230b0408db47d7b"
+      },
+      {
+        "role": "abyssinian-cat-pet-identity-structure-only",
+        "originalPath": "apps/website/public/assets/avatar-abyssinian.jpg",
+        "preparedPath": ".tmp/master-remediation-20260819-round11-inputs/animal-sword-cat-alt-2.jpg",
+        "bytes": 220258,
+        "sha256": "477b4fa13ea3b29b26a092333d792ad62e1348cfd37db7fb39a329291f9b62f5"
+      }
+    ],
+    "orientation": "portrait",
+    "requestedSize": "720x1280",
+    "output": {
+      "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819-round11/raw/animal-sword-cat-alt.png",
+      "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819-round11/master-candidates/animal-sword-cat-alt_silver-abyssinian-cat_9x16_v03.png",
+      "width": 720,
+      "height": 1280,
+      "sha256": "ae1b7a33c3dd42ed61899f11108d207eb9de40e93124e691ec45eeaf2599ea07"
+    },
+    "prompt": "Use case: identity-preserve compositing and clean master reconstruction. Asset type: self-owned runtime frozen-master candidate. This is a clean first-generation reconstruction. Do not use, recall or inherit the previous warm-brown master, any prior candidate or any previous edit. Image 1 is the sole authority for the close heroic composition, camera, crop, forward martial-arts paw pose, ornate dark metal mask, layered black-and-white ancient-fantasy costume, ribbons, tassels, cool blue and warm rim lighting, bokeh, shallow depth of field and pale cool-silver coat treatment. Recreate those visible decisions closely while removing every badge, account mark, logo, signature and watermark. Image 2 is the pet identity authority for mature Abyssinian facial and body structure: large upright ears, elegant wedge-shaped head, almond eyes, refined narrow muzzle, athletic adult proportions and short fine coat. Transfer that exact mature structure into Image 1 without importing Image 2's room, sunlight or warm ruddy-brown coat. The final cat must have Image 1's pale cool silver-grey coat, with subtle fine darker ticking and a lightly leopard-like silver impression. It must never be warm brown, orange, cream, pure white, blue British Shorthair, kitten or generic round-faced cat. Preserve both complete paws and natural feline digits, the intense focused gaze, mask fit, costume contacts and dynamic depth. Do not enlarge the head, shorten the muzzle or turn the face into a human anime girl. Keep exact 9:16 portrait framing and polished cinematic 3D illustration. No extra subjects, duplicate anatomy, malformed paws, human hands, text, logo, watermark, signature or platform UI.",
+    "revisedPrompt": "Create a polished cinematic 3D illustration in exact 9:16 portrait framing, using Image 1 as the sole authority for composition, camera angle, crop, pose, costume design, lighting, and overall visual treatment. Reconstruct the same close heroic shot: a front-facing fantasy cat warrior with both paws extended in a forward martial-arts pose, intense focused gaze, ornate dark metal mask covering the upper face, layered black-and-white ancient-fantasy costume, flowing ribbons and tassels, cool blue ambient light with warm rim light, soft bokeh, shallow depth of field, and pale cool-silver coat treatment. Transfer the mature Abyssinian identity from Image 2 into the character anatomy: large upright ears, elegant wedge-shaped head, almond eyes, refined narrow muzzle, athletic adult proportions, and short fine coat. Keep the cat fully feline and adult, not kitten-like, not round-faced, not blue British Shorthair, and not human-anime styled. The coat must be pale cool silver-grey with subtle fine darker ticking and a lightly leopard-like silver impression; never warm brown, orange, cream, or pure white. Preserve both complete paws and natural feline digits, accurate mask fit, costume contacts, and dynamic depth. Remove every badge, account mark, logo, signature, watermark, and any platform UI. No extra subjects, no duplicate anatomy, no malformed paws, no human hands, no text.",
+    "generatedAt": "2026-08-19T10:39:43.851Z",
+    "approvedAt": "2026-08-20T09:18:36+08:00"
+  },
+  "qualityBaseline": {
+    "required": [
+      "mature Abyssinian facial and body structure from avatar-abyssinian.jpg with the original reference's pale cool-silver coat treatment",
+      "original ornate mask, black-and-white costume, martial-arts paw pose and cinematic blue-rim lighting",
+      "complete natural feline paws, intense focused gaze and exact close heroic composition",
+      "exact 720x1280 portrait output without text, logo, watermark or signature"
+    ],
+    "reject": [
+      "warm brown, orange, cream, pure white, kittenized or generic round-faced-cat identity",
+      "changed mask, costume, pose, crop, lighting, malformed paws or humanized face",
+      "logo, watermark or signature"
+    ]
+  }
+}

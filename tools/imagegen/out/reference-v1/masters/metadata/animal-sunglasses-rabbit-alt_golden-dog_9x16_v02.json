@@ -1,0 +1,143 @@
+{
+  "templateId": "animal-sunglasses-rabbit-alt",
+  "entryId": "fun",
+  "title": "草丛墨镜萌宠二",
+  "sourceEffectFile": "apps/website/public/assets/example/animal/jimeng-2026-08-01-3172-极繁主义，笔触细腻，仰拍，一个毛绒绒的小白兔，戴着墨镜，系着围巾，站在草丛中，被....png",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-08-01-3172-极繁主义，笔触细腻，仰拍，一个毛绒绒的小白兔，戴着墨镜，系着围巾，站在草丛中，被....png",
+      "sha256": "0b546beb5d9b66108929f7d2542d31ef4f73215ea30d11b812aa5ecd9b6ba1a4"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "golden-dog",
+      "species": "dog",
+      "breed": "adult Golden Retriever",
+      "path": "tools/imagegen/out/source/dog-golden.jpg",
+      "sha256": "1b6348ce4f6cd1d12f4c93d5f2a8a5c21847e0ce9bc43e4326c1ee89f7a89eef"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: identity-preserve precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the current self-owned master and controls the replacement pet or owner identity unless the request explicitly changes the breed. Image 2 is the composition and effect reference. Use it only to correct the requested composition, pose, expression, gaze or visual treatment. Preserve every aspect that is not explicitly changed below, including the scene, camera, crop, palette, lighting, costume, props, spatial relationships and visual medium. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature. No extra subjects, duplicate anatomy, human hands on animals, malformed paws, text, logo, watermark or signature. Make the Golden Retriever subject dramatically more rough, scribbly and windswept like Image 2: long chaotic fur spikes around the entire face, crown, cheeks and both ears, with loose stray strands breaking the silhouette. Keep the recognizable warm golden adult-dog identity, but simplify and fluff the facial forms so the face and ear treatment matches the reference's deliberately unkempt tactile effect. Keep the round sunglasses, red plaid scarf, low grass-level angle, blue sky, flowers and framing unchanged. Return a 9:16 portrait composition.",
+  "revisedPrompt": "Edit the provided master image of the Golden Retriever, using the second reference image only as style guidance for the fur treatment. Preserve the exact composition and scene: low grass-level angle, blue sky, fluffy white clouds, wildflowers in the foreground, the round black sunglasses, red plaid scarf flowing to the right, and the same overall framing. Maintain the recognizable warm golden adult Golden Retriever identity. Transform the dog’s fur to be much more rough, scribbly, windswept, and deliberately unkempt, with long chaotic fur spikes around the entire face, crown, cheeks, and both ears, plus loose stray strands breaking the silhouette, matching the tactile messy effect of the reference. Simplify and fluff the facial forms while keeping the dog clearly identifiable. Do not change breed, pose, gaze, expression, camera angle, crop, palette, lighting, costume, props, or background. Remove any platform badges, AI-generated labels, account names, account numbers, watermark, logo, and signature. Ensure no extra subjects, no duplicate anatomy, no human hands, no malformed paws, and no added text. Return a clean 9:16 portrait image.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/remediation-20260819/master-candidates/animal-sunglasses-rabbit-alt_golden-dog_9x16_v02.png",
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/master-animal-sunglasses-rabbit-alt.png",
+    "sha256": "ce93f1d0f669371472e68b0c8ad7903fd5dcb632a15602245f5dd3be55c1ffc0"
+  },
+  "review": {
+    "state": "approved-by-user-request",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-19T14:10:00+08:00"
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-19T05:53:25.048Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/remediation-20260819/master-candidates/animal-sunglasses-rabbit-alt_golden-dog_9x16_v02.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/animal-sunglasses-rabbit-alt_golden-dog_9x16_v02.webp",
+  "masterSha256": "8812cad9e9094dd65c4abd3565e0ce6b0489d801962fceef145038c152c756d2",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-19T14:10:00+08:00",
+    "note": "用户于 2026-08-19 明确要求按逐项意见返工并完成；候选已逐张目视复核后冻结为新版本。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-sunglasses-rabbit-alt_golden-dog_9x16_v02.webp",
+      "sha256": "8812cad9e9094dd65c4abd3565e0ce6b0489d801962fceef145038c152c756d2"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate",
+      "unapproved-candidate"
+    ]
+  },
+  "version": "v02",
+  "supersedes": {
+    "path": "tools/imagegen/out/reference-v1/retired-masters/animal-sunglasses-rabbit-alt_golden-dog_9x16_v01.png",
+    "sha256": "1d50fc048879d325d6cd8f1c1bfd4b5572e0da90af33b63306956a41ff2d127f",
+    "metadata": "tools/imagegen/out/reference-v1/retired-masters/metadata/animal-sunglasses-rabbit-alt_golden-dog_9x16_v01.json"
+  },
+  "remediationRequest": {
+    "task": "user-requested-frozen-master-remediation-2026-08-19",
+    "templateId": "animal-sunglasses-rabbit-alt",
+    "kind": "master",
+    "version": "v02",
+    "status": "approved-and-promoted",
+    "provider": "lingsuan",
+    "model": "gpt-image-2",
+    "endpoint": "/v1/images/edits",
+    "inputFidelity": "high",
+    "inputPolicy": {
+      "sequential": true,
+      "maxImages": 2,
+      "maxCombinedBytes": 1000000
+    },
+    "inputs": [
+      {
+        "role": "current-self-owned-master",
+        "path": ".tmp/master-remediation-20260819-inputs/animal-sunglasses-rabbit-alt-master.jpg",
+        "bytes": 109656,
+        "sha256": "6f0e0809eab52674d7f45406f6bef507f44d32178bdb13fe17124537f0dc6158"
+      },
+      {
+        "role": "effect-reference-composition-guide",
+        "path": ".tmp/master-remediation-20260819-inputs/animal-sunglasses-rabbit-alt-effect.jpg",
+        "bytes": 109594,
+        "sha256": "cd8c10ebc913341a301f3eb16c90977c1fa374f3b0acdbbdfa8737cdb45384a2"
+      }
+    ],
+    "orientation": "portrait",
+    "requestedSize": "720x1280",
+    "output": {
+      "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/master-animal-sunglasses-rabbit-alt.png",
+      "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819/master-candidates/animal-sunglasses-rabbit-alt_golden-dog_9x16_v02.png",
+      "width": 720,
+      "height": 1280,
+      "sha256": "ce93f1d0f669371472e68b0c8ad7903fd5dcb632a15602245f5dd3be55c1ffc0"
+    },
+    "prompt": "Use case: identity-preserve precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the current self-owned master and controls the replacement pet or owner identity unless the request explicitly changes the breed. Image 2 is the composition and effect reference. Use it only to correct the requested composition, pose, expression, gaze or visual treatment. Preserve every aspect that is not explicitly changed below, including the scene, camera, crop, palette, lighting, costume, props, spatial relationships and visual medium. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature. No extra subjects, duplicate anatomy, human hands on animals, malformed paws, text, logo, watermark or signature. Make the Golden Retriever subject dramatically more rough, scribbly and windswept like Image 2: long chaotic fur spikes around the entire face, crown, cheeks and both ears, with loose stray strands breaking the silhouette. Keep the recognizable warm golden adult-dog identity, but simplify and fluff the facial forms so the face and ear treatment matches the reference's deliberately unkempt tactile effect. Keep the round sunglasses, red plaid scarf, low grass-level angle, blue sky, flowers and framing unchanged. Return a 9:16 portrait composition.",
+    "revisedPrompt": "Edit the provided master image of the Golden Retriever, using the second reference image only as style guidance for the fur treatment. Preserve the exact composition and scene: low grass-level angle, blue sky, fluffy white clouds, wildflowers in the foreground, the round black sunglasses, red plaid scarf flowing to the right, and the same overall framing. Maintain the recognizable warm golden adult Golden Retriever identity. Transform the dog’s fur to be much more rough, scribbly, windswept, and deliberately unkempt, with long chaotic fur spikes around the entire face, crown, cheeks, and both ears, plus loose stray strands breaking the silhouette, matching the tactile messy effect of the reference. Simplify and fluff the facial forms while keeping the dog clearly identifiable. Do not change breed, pose, gaze, expression, camera angle, crop, palette, lighting, costume, props, or background. Remove any platform badges, AI-generated labels, account names, account numbers, watermark, logo, and signature. Ensure no extra subjects, no duplicate anatomy, no human hands, no malformed paws, and no added text. Return a clean 9:16 portrait image.",
+    "generatedAt": "2026-08-19T05:53:25.048Z",
+    "approvedAt": "2026-08-19T14:10:00+08:00"
+  },
+  "qualityBaseline": {
+    "required": [
+      "loose intentionally rough face-and-ear brushwork matching the effect reference",
+      "exact 720x1280 portrait output",
+      "clean finished image without platform UI, account IDs, logos, watermarks or signatures"
+    ],
+    "reject": [
+      "regression of the composition, expression, gaze, identity, texture or anatomy corrected by this remediation",
+      "extra subjects, duplicate or malformed anatomy, broken costume contacts, logo, watermark or signature"
+    ]
+  }
+}

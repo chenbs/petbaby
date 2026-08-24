@@ -1,0 +1,32 @@
+<view class="grid" style="grid-template-columns:repeat({{columns}},1fr)">
+  <view wx:if="{{addable}}" class="tile tile-add anim-{{anim}}" aria-role="button" aria-label="追加照片" hover-class="tile-hover" bindtap="handleAdd">
+    <text class="add-mark">＋</text>
+    <text class="add-text">添加</text>
+  </view>
+
+  <view
+    wx:for="{{tiles}}"
+    wx:key="id"
+    class="tile {{item.picked ? 'tile-picked' : ''}} {{dragIndex === index ? 'tile-drag' : ''}} anim-{{anim}}"
+    data-id="{{item.id}}"
+    data-index="{{index}}"
+    aria-role="checkbox"
+    aria-checked="{{item.picked}}"
+    hover-class="tile-hover"
+    bindtap="handleTap"
+    bindlongpress="handleLongPress"
+  >
+    <image class="tile-image" src="{{item.url}}" mode="aspectFill" lazy-load />
+
+    <!-- 选中角标：ordered 时显示序号，供视频等依赖顺序的场景 -->
+    <view wx:if="{{item.picked}}" class="badge">{{ordered ? item.order : '✓'}}</view>
+
+    <view wx:if="{{manageable}}" class="checkbox {{item.picked ? 'checkbox-on' : ''}}"></view>
+
+    <view wx:if="{{removable}}" class="remove hit-area" aria-role="button" aria-label="移除照片" data-index="{{index}}" data-id="{{item.id}}" catchtap="handleRemove">×</view>
+
+    <view wx:if="{{previewable && !manageable}}" class="zoom" aria-role="button" aria-label="放大预览" data-id="{{item.id}}" catchtap="handlePreview">⤢</view>
+
+    <view wx:if="{{dragIndex === index}}" class="drag-hint">点另一张交换</view>
+  </view>
+</view>

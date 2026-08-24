@@ -1,0 +1,94 @@
+{
+  "templateId": "fun-breed-expression-grid",
+  "entryId": "fun",
+  "title": "品种表情九宫格",
+  "sourceEffectFile": "apps/website/public/assets/example/9e6a1f75-ae77-4a9b-a9ac-fd7a20c3408d.jpg",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/9e6a1f75-ae77-4a9b-a9ac-fd7a20c3408d.jpg",
+      "sha256": "336cf6a271ce5721c5fa53a4b78e5dc342d374e864d4ad0f731800318a5306d7"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "corgi-dog",
+      "species": "dog",
+      "breed": "adult Pembroke Welsh Corgi",
+      "path": "tools/imagegen/out/source/dog-corgi.jpg",
+      "sha256": "750c43038e21f8601be8b903889100c6b165d2b35cea3b7c0b55c0edce7ca9c2"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult Pembroke Welsh Corgi with tan-and-white coat, broad white blaze, white muzzle and chest, dark round eyes, upright ears, short legs and sturdy adult body. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the nine-cell expression and pose array, but replace every breed depiction with one identical adult pet. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a single finished 9:16 portrait image at 720x1280 pixels. Use the first reference image as the exact composition/style template: a clean white background with a 3x3 grid of nine cute chibi pet poses, evenly spaced, each character centered in its cell with small soft blue floor shadows, thick black outline, simple pastel cartoon shading, playful rounded proportions. Preserve the full composition, crop, camera angle, spacing, pose variety, expression variety, line quality, palette, and overall visual language of the template exactly. Replace every animal subject in all nine cells with the same adult Pembroke Welsh Corgi identity from the second reference: tan-and-white coat, broad white blaze, white muzzle and chest, dark round eyes, upright ears, short legs, sturdy adult body, friendly appealing expression, not puppy-like. Keep the corgi consistent across all nine poses while matching each cell’s original pose, expression, gaze, and body language from the template. Render the corgi in the same cute illustration style as the template, not photographic, not pasted-on, with anatomy integrated into the drawing language. Preserve any decorative speech-bubble-like marks, hearts, and motion marks where they appear in the template, but adapt them to the corgi poses. Maintain the same white background and simple blue ground shadows. Do not add new characters, extra limbs, extra ears, floating heads, or background redesigns. If any text or watermark-like marks appear in the template, replace them only with short original pet-safe wording in the same visual position and hierarchy, without logos or signatures. Overall: exact template-preserving nine-cell corgi character sheet, adult corgi identity throughout, clean cartoon finish, no scene change, no background cleanup, no beautification beyond matching the template style.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/expansion/candidates/fun-breed-expression-grid_corgi-dog_9x16_v01.png",
+    "sha256": "57f9f5767d65ae44b744c58d99d9255511f0788d9b23a8528d3357d7749b2ea2"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-20T12:00:00+08:00"
+  },
+  "generatedAt": "2026-08-17T16:11:40.669Z",
+  "version": "v01",
+  "candidatePath": "tools/imagegen/out/reference-v1/expansion/candidates/fun-breed-expression-grid_corgi-dog_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/fun-breed-expression-grid_corgi-dog_9x16_v01.webp",
+  "masterSha256": "d1c4152bc5fcbb8d9f022a41992af5a601ed3eb6b2e17edb47ddfc8b9ab94c40",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-20T12:00:00+08:00",
+    "note": "用户审阅 pending-masters-comparison 后明确表示除指定重做和删除项外，其余模板可以冻结。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/fun-breed-expression-grid_corgi-dog_9x16_v01.webp",
+      "sha256": "d1c4152bc5fcbb8d9f022a41992af5a601ed3eb6b2e17edb47ddfc8b9ab94c40"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate",
+      "unapproved-candidate"
+    ]
+  },
+  "qualityBaseline": {
+    "required": [
+      "Keep the nine-cell expression and pose array, but replace every breed depiction with one identical adult pet.",
+      "exact 720x1280 portrait output",
+      "same approved composition, action, expression, lighting, palette, medium and text hierarchy"
+    ],
+    "reject": [
+      "scene redesign or missing distinctive layout details",
+      "juvenilized, malformed, duplicated or inconsistent pet anatomy",
+      "logo, platform UI, account ID, watermark or signature"
+    ]
+  }
+}

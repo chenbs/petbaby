@@ -1,0 +1,57 @@
+{
+  "jobId": "landmark-adventure_cat_cream-longhair-cat",
+  "templateId": "landmark-adventure",
+  "title": "环球地标与户外探险",
+  "status": "superseded-by-approved-revision",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/landmark-adventure_abyssinian-cat_9x16_v01.webp",
+      "sha256": "61ebb97fa9a7b755c04526e247d161ec2a2e1e3ba19a41f0dea519bc1eaed1f9"
+    },
+    {
+      "role": "new-pet-identity-reference",
+      "identityId": "cream-longhair-cat",
+      "species": "cat",
+      "breed": "adult cream long-haired cat",
+      "path": "tools/imagegen/out/source/cat-cream.jpg",
+      "sha256": "db5fc390f9cbf4f5ee0eee38850e28012a0953a98c148e7df5b354a539dab7e9"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving template transfer. Produce one exact 720x1280 vertical 9:16 runtime validation image from exactly two input images. Image 1 is a frozen self-owned production master and is the sole authority for composition, scene, camera, crop, pose, action, expression, gaze, lighting, palette, rendering medium, brushwork, text layout, clothing, landmarks, props and all contacts. No third-party effect reference is included. Image 2 is the sole pet identity reference. Change only the pet identity. Remove the sample pet in Image 1 completely and replace it with the pet from Image 2. Scene-change budget is 0%. Do not redesign, reinterpret, clean up, recolour, restyle, simplify or add anything in the master scene. Preserve Image 1's the bright Paris daytime setting, Eiffel Tower at rear left, close ultra-wide selfie perspective, extended foreground paw, blue sky, black beret, round landmark-reflecting sunglasses and red-and-white striped shirt. Replicate the master's exact cheerful open-mouth smile, selfie gaze, head angle and single front paw reaching toward the camera. Keep the tower scale, crowd blur and lens perspective unchanged. The replacement must be the exact adult cream long-haired cat from Image 2. Preserve its pale cream long coat, soft cream points, blue eyes, pink nose, triangular ears, fluffy tail and full healthy adult body. Image 2 controls only species, breed, coat colour and markings, ear shape, eye colour, actual age and natural healthy body proportions. Do not copy its pose, expression, camera, background, lighting, photographic texture or rendering style. Preserve the pet's actual adult age and natural breed proportions. Do not juvenilize it, enlarge the head or eyes, shorten the muzzle or body, or force a generic cute face. Appeal must come from the master's expression and art direction while the new pet remains recognisable, healthy and immediately likeable. Preserve the polished photographic treatment, daylight, depth, material texture and colour balance of Image 1. Image 2 supplies identity only, not its original background or lighting. Keep the black beret, round sunglasses and striped shirt; tailor only the openings needed for the new ears, neck and foreleg. No new text, tourism branding or sponsorship claim. Keep exactly one pet and one identity. No residual coat, face or limb from the master pet. Correct species anatomy only: no duplicate or fused limbs, extra ears, warped eyes, malformed mouth, floating tail, human hands, fingers or broken garment and prop boundaries. Preserve all non-pet pixels and scene relationships as closely as the model allows.",
+  "revisedPrompt": "Use case: compositing and identity-preserving template transfer. Produce one exact 720x1280 vertical 9:16 runtime validation image from exactly two input images. Image 1 is a frozen self-owned production master and is the sole authority for composition, scene, camera, crop, pose, action, expression, gaze, lighting, palette, rendering medium, brushwork, text layout, clothing, landmarks, props and all contacts. No third-party effect reference is included. Image 2 is the sole pet identity reference. Change only the pet identity. Remove the sample pet in Image 1 completely and replace it with the pet from Image 2. Scene-change budget is 0%. Do not redesign, reinterpret, clean up, recolour, restyle, simplify or add anything in the master scene. Preserve Image 1's the bright Paris daytime setting, Eiffel Tower at rear left, close ultra-wide selfie perspective, extended foreground paw, blue sky, black beret, round landmark-reflecting sunglasses and red-and-white striped shirt. Replicate the master's exact cheerful open-mouth smile, selfie gaze, head angle and single front paw reaching toward the camera. Keep the tower scale, crowd blur and lens perspective unchanged. The replacement must be the exact adult cream long-haired cat from Image 2. Preserve its pale cream long coat, soft cream points, blue eyes, pink nose, triangular ears, fluffy tail and full healthy adult body. Image 2 controls only species, breed, coat colour and markings, ear shape, eye colour, actual age and natural healthy body proportions. Do not copy its pose, expression, camera, background, lighting, photographic texture or rendering style. Preserve the pet's actual adult age and natural breed proportions. Do not juvenilize it, enlarge the head or eyes, shorten the muzzle or body, or force a generic cute face. Appeal must come from the master's expression and art direction while the new pet remains recognisable, healthy and immediately likeable. Preserve the polished photographic treatment, daylight, depth, material texture and colour balance of Image 1. Image 2 supplies identity only, not its original background or lighting. Keep the black beret, round sunglasses and striped shirt; tailor only the openings needed for the new ears, neck and foreleg. No new text, tourism branding or sponsorship claim. Keep exactly one pet and one identity. No residual coat, face or limb from the master pet. Correct species anatomy only: no duplicate or fused limbs, extra ears, warped eyes, malformed mouth, floating tail, human hands, fingers or broken garment and prop boundaries. Preserve all non-pet pixels and scene relationships as closely as the model allows.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation-second-batch/landmark-adventure_cat_cream-longhair-cat_9x16_v01.png",
+    "sha256": "5793702a63ede62aa32901ca0d2fd93753b933888814bd8d017dd6af350110ad"
+  },
+  "review": {
+    "state": "superseded",
+    "checks": {
+      "petIdentity": null,
+      "adultAgeAndProportions": null,
+      "masterPoseAndExpression": null,
+      "masterStyleAndBrushwork": null,
+      "sceneAndComposition": null,
+      "anatomyAndContacts": null,
+      "textAndRights": null,
+      "dimensions": "pass"
+    },
+    "findings": [
+      "v01 墨镜镜片偏浅，已由用户批准的深色近黑镜片 v02 替代。"
+    ],
+    "finalApproval": "superseded",
+    "reviewedAt": "2026-08-14T17:57:02+08:00"
+  },
+  "generatedAt": "2026-08-14T07:07:08.026Z",
+  "supersededBy": "tools/imagegen/out/reference-v1/validation-second-batch/landmark-adventure_cat_cream-longhair-cat_9x16_v02.png"
+}

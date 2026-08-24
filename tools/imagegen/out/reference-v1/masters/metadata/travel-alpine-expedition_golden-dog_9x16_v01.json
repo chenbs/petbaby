@@ -1,0 +1,94 @@
+{
+  "templateId": "travel-alpine-expedition",
+  "entryId": "travel",
+  "title": "雪山探险大片",
+  "sourceEffectFile": "apps/website/public/assets/example/1786368973628.png",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/1786368973628.png",
+      "sha256": "78dce032c6d37c40e79f3c647e740663fdb0e34a415bd2ec221a2d2c4af2fe73"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "golden-dog",
+      "species": "dog",
+      "breed": "adult Golden Retriever",
+      "path": "tools/imagegen/out/source/dog-golden.jpg",
+      "sha256": "1b6348ce4f6cd1d12f4c93d5f2a8a5c21847e0ce9bc43e4326c1ee89f7a89eef"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult Golden Retriever with warm golden coat, floppy feathered ears, dark friendly eyes, broad soft muzzle and strong healthy adult build. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the large alpine environment, outdoor jacket and expedition mood; do not turn the adult dog into a puppy. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a finished 9:16 vertical composition, exactly 720x1280 pixels. Use Image 1 as the full composition/style reference and Image 2 as the sole identity reference. Replace the original dog subject in Image 1 with the exact adult Golden Retriever identity from Image 2 while preserving Image 1’s camera angle, crop, perspective, pose, expression, gaze, lighting, palette, environment, textures, and overall visual language. Keep the same alpine lake setting, the warm sunset mountain reflection, the seated centered front-facing pose on the rocky shore, the dark outdoor expedition jacket, and the sunglasses if they are part of the transferred composition. Maintain the friendly, appealing expression and coherent adult retriever anatomy: warm golden coat, floppy feathered ears, dark friendly eyes, broad soft muzzle, strong healthy adult build. Render the retriever fully in the style of Image 1, not as a pasted photographic cutout. Preserve all non-subject visual details and scene mood exactly; no redesign, no beautification, no background simplification, no added props, no extra animals or limbs, no duplicated heads, no residual source subject. Keep any meaningful text/layout consistent, but do not create new logos, signatures, or watermarks.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/expansion/candidates/travel-alpine-expedition_golden-dog_9x16_v01.png",
+    "sha256": "0ee94c5801341bdfd6f9cfc94fe9a6e5fec1ae1d0468c0eb0bbf5bcbe162ac1d"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-20T12:00:00+08:00"
+  },
+  "generatedAt": "2026-08-17T16:11:43.139Z",
+  "version": "v01",
+  "candidatePath": "tools/imagegen/out/reference-v1/expansion/candidates/travel-alpine-expedition_golden-dog_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/travel-alpine-expedition_golden-dog_9x16_v01.webp",
+  "masterSha256": "4892416eb16c65832b367d8908db5d6b5d5ced8d2fc17858186173379714dc91",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-20T12:00:00+08:00",
+    "note": "用户审阅 pending-masters-comparison 后明确表示除指定重做和删除项外，其余模板可以冻结。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/travel-alpine-expedition_golden-dog_9x16_v01.webp",
+      "sha256": "4892416eb16c65832b367d8908db5d6b5d5ced8d2fc17858186173379714dc91"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate",
+      "unapproved-candidate"
+    ]
+  },
+  "qualityBaseline": {
+    "required": [
+      "Keep the large alpine environment, outdoor jacket and expedition mood; do not turn the adult dog into a puppy.",
+      "exact 720x1280 portrait output",
+      "same approved composition, action, expression, lighting, palette, medium and text hierarchy"
+    ],
+    "reject": [
+      "scene redesign or missing distinctive layout details",
+      "juvenilized, malformed, duplicated or inconsistent pet anatomy",
+      "logo, platform UI, account ID, watermark or signature"
+    ]
+  }
+}

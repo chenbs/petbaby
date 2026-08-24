@@ -1,0 +1,81 @@
+{
+  "templateId": "animal-haunted-cctv-panels",
+  "entryId": "action",
+  "title": "鬼屋监控四格",
+  "sourceEffectFile": "apps/website/public/assets/example/animal/jimeng-2026-08-12-6903-每张图片只能有一个镜头分别用四张来展现从开始到最后的过程，废弃游乐园鬼屋的遗留监....png",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-08-12-6903-每张图片只能有一个镜头分别用四张来展现从开始到最后的过程，废弃游乐园鬼屋的遗留监....png",
+      "sha256": "185435d9de84442d18e2ae364b5f9b91733be4b7de59aa3824d78e0cd3f86299"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "shiba-dog",
+      "species": "dog",
+      "breed": "adult red Shiba Inu",
+      "path": "tools/imagegen/out/source/dog-shiba.jpg",
+      "sha256": "fbe7fcef9561979da3d66090d3e9f0bd693c1e1dbfa92820e7942d93a92d29a6"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a one-time third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every designated original animal, human-like creature or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult red Shiba Inu with red-and-cream coat, cream cheeks and chest, dark almond eyes, triangular ears, curled tail and compact adult body. Render the face, fur and anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration or turn a stylized scene into a realistic photo. Keep the pet appealing and healthy, never skinny, gaunt, uncanny, aggressive or puppy-like. Keep the four separate surveillance frames, abandoned amusement-park setting, timestamps-like layout and escalating suspense; replace the source creature with the same adult pet in all frames. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character or artist names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a vertical 9:16 image, exact composition for a 720x1280 poster-like final frame, styled as a four-panel stacked surveillance-camera horror sequence. Use the first reference image ONLY as the composition/lighting/layout/style guide: preserve its abandoned amusement-park / decayed corridor atmosphere, VHS/CCTV glitches, four separate frames stacked vertically, escalating suspense, same camera language, same crop behavior, same general perspective and contact relationships, same timestamps-like overlay in the upper left of each frame, same dark blue-gray palette, same dirty walls, cobwebs, cracked paint, and overall visual language. Replace the original creature in every frame with ONE coherent adult red Shiba Inu identity from the second reference image: red-and-cream coat, cream cheeks and chest, dark almond eyes, triangular ears, curled tail, compact healthy adult body, appealing but not puppy-like. Keep the pet anatomically correct and consistent across all four frames. Do NOT make the pet photorealistic if the source is illustrated/CG; instead render the dog in the same medium/texture/brushwork as the first image so it looks native to the scene, not pasted in.\n\nFrame 1 (top): the Shiba Inu sits alone in the corridor at a medium distance, centered similarly to the source, with the same eerie empty hallway, cobwebs on both sides, and a small surveillance timestamp overlay in the top-left. Maintain the source’s exact framing feel and suspense.\nFrame 2: a closer push-in on the same Shiba Inu, slightly tilted and more unsettling, with glitch streaks and scanline interference. Keep the same hallway perspective and lighting.\nFrame 3: an extreme close-up on the Shiba Inu’s face filling most of the frame, with heavy VHS noise and horizontal distortion. Preserve the same dark corridor background fragments and surveillance aesthetic.\nFrame 4 (bottom): an even tighter, more intense close-up of the Shiba Inu’s muzzle and face, with dramatic glitch artifacts and harsh contrast, but keep the dog still clearly the same adult Shiba Inu identity. Do not add extra teeth, eyes, ears, limbs, or any malformed anatomy.\n\nPreserve the source image’s scene-change budget at 0%: do not redesign, beautify, brighten, clean up, or modernize the environment. Keep the abandoned, grim, tense feeling, the same panel structure, and the same escalating horror progression. Keep all meaningful text blocks, but replace any brand/watermark/copyrighted or nonessential text with short original pet-safe wording that matches the same visual hierarchy. Use only simple original CCTV-style overlays such as ‘CAM 07’ and changing timestamps. No logos, no signatures, no extra characters, no duplicate pets, no human hands, no floating heads. Make the final image coherent, high-detail, and faithful to the source composition while fully swapping the subject identity to the adult red Shiba Inu.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-haunted-cctv-panels_shiba-dog_9x16_v01.png",
+    "sha256": "f1451c92fa9adc2afa904d2a7438c72cd32244883cdc1a7860fd175f43ece6ee"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-18T01:00:00+08:00"
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-17T16:38:17.014Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/animal/candidates/animal-haunted-cctv-panels_shiba-dog_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/animal-haunted-cctv-panels_shiba-dog_9x16_v01.webp",
+  "masterSha256": "dd6e1a01e2eeafe3faed6250daf89fddb3eb875076e5dac7c114fd99000d1e49",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-18T01:00:00+08:00",
+    "note": "用户确认本批次除七个待重做模板外，其余动物效果候选均通过并保存为母版。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-haunted-cctv-panels_shiba-dog_9x16_v01.webp",
+      "sha256": "dd6e1a01e2eeafe3faed6250daf89fddb3eb875076e5dac7c114fd99000d1e49"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "unapproved-candidate"
+    ]
+  }
+}

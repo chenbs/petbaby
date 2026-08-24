@@ -1,0 +1,45 @@
+/* 岛日记页。零硬编码，全走 token（门禁 17） */
+.block-gap {
+  display: block;
+  margin-top: var(--space-4);
+}
+
+/*
+ * 竖轴用左边框而不是绝对定位的线条：条目高度不定，
+ * 绝对定位的线要么短一截要么溢出（与 pages/timeline 同一处理）。
+ */
+.line {
+  padding-left: var(--space-5);
+  border-left: 2rpx solid var(--divider);
+}
+
+.entry {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3) 0;
+}
+
+.entry-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.entry-date {
+  color: var(--text-secondary);
+  font-size: var(--small-size);
+  letter-spacing: var(--ls-tight);
+}
+
+.entry-text {
+  color: var(--text-primary);
+  font-size: var(--body-size);
+  line-height: var(--lh-body);
+}
+
+.center {
+  display: block;
+  margin-top: var(--space-4);
+  text-align: center;
+}

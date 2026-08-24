@@ -1,0 +1,7 @@
+{
+  "endpoint": "/v1/images/edits",
+  "accepted": true,
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "generatedAt": "2026-08-14T01:16:10.204Z"
+}

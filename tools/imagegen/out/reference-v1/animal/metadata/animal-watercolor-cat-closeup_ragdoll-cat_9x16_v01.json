@@ -1,0 +1,53 @@
+{
+  "templateId": "animal-watercolor-cat-closeup",
+  "entryId": "art",
+  "title": "金箔水彩猫咪",
+  "sourceEffectFile": "apps/website/public/assets/example/animal/jimeng-2026-06-23-4902-手绘插画，金箔岩彩，古风写意，水墨油画交融流体笔触，大面积淡彩晕染，猫咪局部特写....png",
+  "status": "generated-pending-user-approval",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-06-23-4902-手绘插画，金箔岩彩，古风写意，水墨油画交融流体笔触，大面积淡彩晕染，猫咪局部特写....png",
+      "sha256": "63688681892e1bd2d18f9bdf47b10b0fa5a7ee21423a66c8fc411b5ea782008f"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "ragdoll-cat",
+      "species": "cat",
+      "breed": "adult seal-point Ragdoll cat",
+      "path": "apps/website/public/assets/work-ragdoll.jpg",
+      "sha256": "cadd89cfd6150cb0c9560bffec9b7c5a7e80d7126032eb7ecab4933cb836ed9e"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a one-time third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every designated original animal, human-like creature or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult seal-point Ragdoll cat with cream long coat, deep seal-brown mask and ears, round blue eyes, broad fluffy cheeks, dark nose, full chest and healthy adult body. Render the face, fur and anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration or turn a stylized scene into a realistic photo. Keep the pet appealing and healthy, never skinny, gaunt, uncanny, aggressive or puppy-like. Keep the close crop, pale aqua and gold wash, antique illustrative brushwork, soft highlights and fine facial details; make the pet face painterly rather than photographic. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character or artist names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Edit the provided reference image set into a single final 9:16 composition, preserving Image 1’s exact composition, crop, perspective, palette, lighting, painterly brushwork, soft highlights, antique illustrative feel, pale aqua and gold wash, and close-up framing. Replace the original subject in Image 1 with the adult self-owned pet identity from Image 2: an adult seal-point Ragdoll cat with a cream long coat, deep seal-brown mask and ears, round blue eyes, broad fluffy cheeks, dark nose, full chest, and healthy natural adult proportions. Keep the face painterly and integrated into Image 1’s visual language, not photographic. Maintain the same close crop and dreamy watercolor/airbrush texture with delicate facial detail. Preserve the background exactly as in Image 1, without redesigning, simplifying, or cleaning it up. Make only the smallest anatomy corrections needed for a correct cat face and body. Do not add extra limbs, eyes, ears, paws, or duplicate subjects. Keep all meaningful layout relationships and the original visual mood. Output a finished vertical 720x1280 image.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-watercolor-cat-closeup_ragdoll-cat_9x16_v01.png",
+    "sha256": "978aee0bbeb089146ca5e0c1984136fbe8cd760a6852b16e64cd92be04058a74"
+  },
+  "review": {
+    "state": "pending-human-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-17T16:37:16.482Z"
+}

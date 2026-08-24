@@ -1,0 +1,65 @@
+{
+  "jobId": "ink-portrait_cat_black-cat",
+  "templateId": "ink-portrait",
+  "title": "黑白水墨肖像",
+  "status": "superseded-by-approved-revision",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/ink-portrait_black-labrador-dog_9x16_reset-v03-reference-gaze-rerun-v01.webp",
+      "sha256": "050b7f7f346b6a26cd3725872cea643ce1bb0d4430a4dac9f7bddbb20d574893"
+    },
+    {
+      "role": "new-pet-identity-reference",
+      "identityId": "black-cat",
+      "species": "cat",
+      "breed": "adult black domestic shorthair cat",
+      "path": "tools/imagegen/out/source/cat-black.jpg",
+      "sha256": "e9d04dac4cee2a7753bcdbcedce7961cf819ab40fc08e39331977ff15df0df17"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving template transfer. Produce one exact 720x1280 vertical 9:16 runtime validation image from exactly two input images. Image 1 is our frozen self-owned production master. It is the sole authority for every non-identity detail: scene, composition, crop, camera, pose, action, expression, gaze, lighting, palette, rendering medium, brushwork, clothing, text, props and all physical contacts. No third-party effect reference is included. Image 2 is the sole new-pet identity reference. Change only the pet identity. Remove every depiction and every residual feature of the master pet, then replace it with the new pet from Image 2. Scene-change budget is 0%. Do not redesign, reinterpret, clean up, recolour, restyle, simplify, move, delete or add anything in the master scene. Keep the exact right-facing bust crop, head turn, paper-white negative space, large black ink masses, broken contour, dry-brush gaps, splatters and long diagonal downward strokes. Use the gaze from Image 1 exactly. Replicate Image 1's eye direction, eyelid shape, brow energy, expression, muzzle angle, ear attitude, head proportion and adult silhouette. Image 2 controls only the replacement breed identity; it must never redesign the gaze, expression or pose. The replacement must be the exact adult black domestic shorthair cat from Image 2. Preserve its solid glossy black coat without white patches, vivid green eyes, black nose, upright ears and compact healthy adult body. Image 2 controls only species, breed, coat colour and markings, ear shape, eye colour, actual adult age and natural healthy breed proportions. Do not copy Image 2's pose, expression, gaze, camera, background, lighting, photographic texture or rendering style. Preserve the pet's actual adult age and mature breed proportions. Do not juvenilize it, enlarge the head or eyes, shorten the muzzle or body, or convert it into a kitten, puppy or generic cute mascot. Keep it healthy, attractive and immediately likeable without changing the master's expression or art direction. Image 1 is the absolute authority for the whole face and body treatment. Convert every replacement feature, including eyes, eyelids, nose, mouth, ears and coat markings, into the same flat black-and-white hand-drawn ink language. Use broad graphic ink masses, broken dry edges, paper gaps and a few decisive linear marks. No realistic eyeball, iris depth, catchlight, wet nose, photographic fur, continuous hair strands, anatomical volume, smooth gradient, 3D shading, camera light or pasted photo face. Keep the image free of text, colour, logos, watermarks and signatures. Keep exactly one pet identity throughout, except where the frozen master intentionally contains multiple views or two scale duplicates of that same identity. No unrelated animal, residual old-pet coat, face or limb. Correct species anatomy only: no duplicate, fused, missing or amputated-looking limbs, extra ears, warped eyes, malformed mouth, floating tail, human hands or fingers, broken garment boundaries, pasted head, disconnected neck or failed prop contact. Preserve all non-pet pixels and relationships as closely as the model allows.",
+  "revisedPrompt": "Create one exact 720x1280 vertical 9:16 runtime validation image by compositing the two provided reference images. Use Image 1 as the sole authority for the entire scene, composition, crop, negative space, black-ink brushwork, paper texture, and all non-identity details. Keep Image 1’s exact right-facing bust crop, head turn, white paper background, large black ink masses, broken contour, dry-brush gaps, splatters, and long diagonal downward strokes. Replace only the pet identity with the exact adult black domestic shorthair cat from Image 2. Remove every trace of the dog and all residual dog features. Preserve the cat’s solid glossy black coat, vivid green eyes, black nose, upright ears, compact healthy adult body, and natural adult proportions. Keep the cat in the same pose, gaze direction, expression energy, head angle, and crop implied by Image 1, but render all features in Image 1’s flat black-and-white hand-drawn ink language: broad graphic ink masses, broken dry edges, paper gaps, and a few decisive linear marks. No realistic fur, no photographic texture, no color, no text, no logos, no watermarks, no extra animals, no extra limbs, no warped anatomy, no kittenization. Preserve the master composition exactly while changing only the pet identity to the black cat.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation-third-batch/ink-portrait_cat_black-cat_9x16_v01.png",
+    "sha256": "ce7ee1d17520edb3980d95de6dfd06881f9de92e7335c9517476b62030362c28"
+  },
+  "review": {
+    "state": "superseded",
+    "checks": {
+      "petIdentity": null,
+      "adultAgeAndProportions": null,
+      "masterPoseExpressionAndGaze": null,
+      "masterStyleAndBrushwork": null,
+      "sceneAndComposition": null,
+      "anatomyAndContacts": null,
+      "repeatedIdentityAndText": null,
+      "dimensions": "pass"
+    },
+    "findings": [
+      "v01 面部画法偏写实。"
+    ],
+    "finalApproval": "superseded",
+    "reviewedAt": "2026-08-17T13:33:28+08:00"
+  },
+  "generatedAt": "2026-08-17T02:02:12.216Z",
+  "supersededBy": "tools/imagegen/out/reference-v1/validation-third-batch/ink-portrait_cat_black-cat_9x16_v03.png"
+}

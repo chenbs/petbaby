@@ -1,0 +1,62 @@
+{
+  "jobId": "decorative-art-portrait_cat_abyssinian-cat",
+  "templateId": "decorative-art-portrait",
+  "title": "装饰艺术肖像",
+  "status": "approved-runtime-validation",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/decorative-art-portrait_ragdoll-cat_9x16_v05.webp",
+      "sha256": "7113eeca312feb28ffec548830943be74aab8512db99316686b7700d1cc7a976"
+    },
+    {
+      "role": "new-pet-identity-reference",
+      "identityId": "abyssinian-cat",
+      "species": "cat",
+      "breed": "adult ruddy Abyssinian cat",
+      "path": "apps/website/public/assets/work-abyssinian.jpg",
+      "sha256": "5608fe24bd5309a738f10fa59174ab31bbd2a301a1bf5a15dd84d1ef9f4669bd"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 4,
+    "localWorkerConcurrency": 4,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Edit Image 1 into one exact 720x1280 vertical runtime validation image using exactly two inputs. Image 1 is our frozen self-owned master and the edit target. Keep its exact crop, right-facing head angle, quiet gaze, bust scale, warm paper, border, negative space, shard placement rhythm and restrained paper-white, cream, translucent-grey and navy-black palette. No third-party effect reference is included. Scene-change budget is 0%. Replace only the animal identity with the exact adult adult ruddy Abyssinian cat from Image 2. Use Image 2 only to recognise the breed's outer silhouette, ears and coat-marking layout; do not render or copy its face, eyes, nose, fur texture, literal colour, lighting or photographic depth. Build the complete new head, eyes, brow, cheeks, muzzle, nose, ears, neck and chest only from the same few large flat angular navy, grey, cream and paper-gap fragments used by Image 1. The whole face must be visibly broken and abstract at first glance, with no continuous realistic animal face underneath. No detailed eyeballs, circular irises, catchlights, rounded wet nose, pencil drawing, tiny fur facets, continuous hair strands, smooth gradients, 3D skull volume, photography, tan, brown or orange wash, text, logo, watermark or signature. Keep the fragmented face coherent, mature, healthy and attractive.",
+  "revisedPrompt": "Edit the provided first image into a 720x1280 vertical abstract runtime-validation style illustration. Preserve the exact crop, right-facing head angle, quiet gaze, bust scale, warm paper background, border, negative space, shard placement rhythm, and restrained palette of paper-white, cream, translucent-grey, and navy-black. Replace only the animal identity with an adult ruddy Abyssinian cat, using the second provided image only as breed reference for outer silhouette, ear shape, and coat-marking layout. Do not copy the second image’s face, eyes, nose, fur texture, literal color, lighting, or photographic depth. Build the new head, eyes, brow, cheeks, muzzle, nose, ears, neck, and chest only from the same few large flat angular navy, grey, cream, and paper-gap fragments already present in the first image. The face must remain visibly broken and abstract at first glance, with no continuous realistic animal face underneath. No detailed eyeballs, circular irises, catchlights, rounded wet nose, pencil drawing, tiny fur facets, continuous hair strands, smooth gradients, 3D skull volume, photography, tan, brown, or orange wash, text, logo, watermark, or signature. Keep it coherent, mature, healthy, and attractive.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation-third-batch/decorative-art-portrait_cat_abyssinian-cat_9x16_v03.png",
+    "sha256": "887ae535c70473612dd6dc684f890a5ce9833a0f84273b5781b49d32c0936ee2"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "checks": {
+      "petIdentity": "pass",
+      "adultAgeAndProportions": "pass",
+      "masterPoseExpressionAndGaze": "pass",
+      "masterStyleAndBrushwork": "pass",
+      "sceneAndComposition": "pass",
+      "anatomyAndContacts": "pass",
+      "repeatedIdentityAndText": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [],
+    "finalApproval": "approved",
+    "approvedAt": "2026-08-17T12:22:43+08:00"
+  },
+  "generatedAt": "2026-08-17T02:38:49.077Z"
+}

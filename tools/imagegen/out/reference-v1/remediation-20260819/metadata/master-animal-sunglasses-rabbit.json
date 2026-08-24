@@ -1,0 +1,42 @@
+{
+  "task": "user-requested-frozen-master-remediation-2026-08-19",
+  "templateId": "animal-sunglasses-rabbit",
+  "kind": "master",
+  "version": "v02",
+  "status": "generated-pending-visual-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputFidelity": "high",
+  "inputPolicy": {
+    "sequential": true,
+    "maxImages": 2,
+    "maxCombinedBytes": 1000000
+  },
+  "inputs": [
+    {
+      "role": "current-self-owned-master",
+      "path": ".tmp/master-remediation-20260819-inputs/animal-sunglasses-rabbit-master.jpg",
+      "bytes": 93372,
+      "sha256": "2d0f7ad9aa9d428df83c5b9cb2b856a069eec61ce10c319c7de64cefdc14d8d4"
+    },
+    {
+      "role": "effect-reference-composition-guide",
+      "path": ".tmp/master-remediation-20260819-inputs/animal-sunglasses-rabbit-effect.jpg",
+      "bytes": 103347,
+      "sha256": "be850d5f2fdec2c97eb30a51d75b7845ef1ce472737beb76e36cf0023508acd9"
+    }
+  ],
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "output": {
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/master-animal-sunglasses-rabbit.png",
+    "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819/master-candidates/animal-sunglasses-rabbit_cream-cat_9x16_v02.png",
+    "width": 720,
+    "height": 1280,
+    "sha256": "86082e12509ea94857ebfa99429d4ff557df6655aba990ea2328c3c9066db78a"
+  },
+  "prompt": "Use case: identity-preserve precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the current self-owned master and controls the replacement pet or owner identity unless the request explicitly changes the breed. Image 2 is the composition and effect reference. Use it only to correct the requested composition, pose, expression, gaze or visual treatment. Preserve every aspect that is not explicitly changed below, including the scene, camera, crop, palette, lighting, costume, props, spatial relationships and visual medium. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature. No extra subjects, duplicate anatomy, human hands on animals, malformed paws, text, logo, watermark or signature. Increase the cream long-haired cat's fluff specifically across the entire face, cheeks, forehead and both ears until those areas are as densely furry and tousled as the body and as tactile as Image 2. Keep cat anatomy, sunglasses fitted over the eyes, scarf, low angle, grass, blue sky, stance and airy illustration unchanged. Do not smooth the face, shorten the ear fur or expose bald ear edges. Return a 9:16 portrait composition.",
+  "revisedPrompt": "Edit the provided image using Image 1 as the master/base and Image 2 only as a reference for fluff density and tactile fur treatment. Preserve the same cream long-haired cat identity, anatomy, sunglasses fitted over the eyes, scarf, low-angle viewpoint, grass foreground, blue sky, stance, airy illustration style, scene, camera, crop framing logic, palette, lighting, and spatial relationships. Increase the cat’s fluff specifically across the entire face, cheeks, forehead, and both ears so those areas are as densely furry, tousled, and tactile as the body and match the fluffiness feel of Image 2. Do not smooth the face, do not shorten ear fur, and do not expose bald ear edges. Keep the sunglasses, scarf, and pose unchanged. Remove all platform badges, AI-generated labels, account names, account numbers, watermarks, logos, and signatures. No extra subjects, no duplicate anatomy, no human hands on animals, no malformed paws, and no text. Output as a clean 9:16 portrait composition.",
+  "generatedAt": "2026-08-19T05:50:42.778Z"
+}

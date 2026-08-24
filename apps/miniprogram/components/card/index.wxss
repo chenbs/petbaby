@@ -1,0 +1,92 @@
+.card {
+  box-sizing: border-box;
+  /* 描边改为顶部高光边（UI 重构方案 3.1）：亮色皮肤取 0 宽度、层级交给多层暖褐阴影；
+     暗色与玻璃皮肤才真正用它 —— 暗底上阴影几乎不可见，只能靠高光边分层。 */
+  border: var(--border-highlight);
+  border-radius: var(--card-radius);
+  background: var(--card-background);
+  box-shadow: var(--shadow-card);
+  transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.card-pad {
+  padding: var(--space-4);
+}
+
+/* cute 主题的不对称圆角由 --card-radius-variant 提供；其余主题该 token 等于 --card-radius */
+.card-variant {
+  border-radius: var(--card-radius-variant);
+}
+
+/* 图片卡贴边：容器不留内边距，由内部 image 铺满。阴影升一档，让图片有实体感 */
+.card-media {
+  overflow: hidden;
+  padding: 0;
+  box-shadow: var(--shadow-image);
+}
+
+.card-media.card-pad {
+  padding: 0;
+}
+
+.card-glass {
+  background: var(--surface);
+}
+
+/* backdrop-filter 不可用时页面不传 blur，退回不透明底，不出现「白到看不清」的空玻璃 */
+.card-blur {
+  backdrop-filter: blur(var(--card-blur));
+  -webkit-backdrop-filter: blur(var(--card-blur));
+}
+
+/* ── 方案 3.1 的新卡型。圆角一律取阶梯档而非 --card-radius，保证同屏网格对齐 ── */
+
+/* Hero 大图入口：A 方向首屏主角 */
+.card-hero,
+.card-grid {
+  overflow: hidden;
+  padding: 0;
+  box-shadow: var(--shadow-image);
+}
+
+.card-hero.card-pad,
+.card-grid.card-pad {
+  padding: 0;
+}
+
+.card-hero { border-radius: var(--radius-lg); }
+.card-grid { border-radius: var(--radius-md); }
+
+/* 浮层卡：弹层与抽屉内的面板 */
+.card-float {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-float);
+}
+
+/*
+ * 黏土卡：J 方向局部注入，只用于结果页与空状态（方案限同屏 ≤12 个）。
+ * 四层阴影由「按主题下发的内高光 + 三层常量」拼成，原因见 theme/tokens.js。
+ */
+.card-clay {
+  border: 0;
+  border-radius: var(--radius-clay);
+  box-shadow: inset 0 -10rpx 20rpx var(--clay-highlight), var(--shadow-clay-body);
+}
+
+/* 封面卡：F 方向满版出血 —— 无圆角、无阴影、无底色，质感全靠排版纪律 */
+.card-flat {
+  border: 0;
+  border-radius: var(--radius-none);
+  background: transparent;
+  box-shadow: var(--shadow-none);
+}
+
+/* 统一按压态：缩放 + 阴影收紧（方案 2.6 投产比最高的三个动效之一） */
+.card-hover {
+  transform: scale(.97);
+  box-shadow: var(--shadow-press);
+}
+
+.card-hover.anim-fade { opacity: .92; }
+.card-hover.anim-glow { box-shadow: 0 0 36rpx var(--ai-glow); }
+.card-hover.anim-neon { box-shadow: 0 0 0 2rpx var(--primary), 0 0 32rpx var(--ai-glow); }

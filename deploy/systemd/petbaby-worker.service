@@ -1,0 +1,21 @@
+[Unit]
+Description=Petbaby generation and notification worker
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=petbaby
+Group=petbaby
+WorkingDirectory=/opt/petbaby/apps/platform
+EnvironmentFile=/etc/petbaby/petbaby.env
+ExecStart=/usr/local/bin/pnpm worker
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/opt/petbaby/apps/platform/.data
+
+[Install]
+WantedBy=multi-user.target

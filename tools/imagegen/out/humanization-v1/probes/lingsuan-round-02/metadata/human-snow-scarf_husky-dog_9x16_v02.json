@@ -1,0 +1,64 @@
+{
+  "purpose": "preview-only-second-stage-pet-humanization",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "modelCall": true,
+  "useCase": "identity-preserve",
+  "status": "preview-pending-user-review",
+  "title": "风雪回眸 x 哈士奇",
+  "generatedAt": "2026-08-19T06:28:00.355Z",
+  "humanizationChain": [
+    "original-pet-photo",
+    "private-derived-human-identity-card",
+    "final-human-output"
+  ],
+  "currentCallStage": 2,
+  "firstStageIdentityCardReused": true,
+  "originalPetPhotoIncluded": false,
+  "requestOrder": [
+    "self-owned-human-master",
+    "private-derived-human-identity-card"
+  ],
+  "inputs": {
+    "image1": {
+      "role": "self-owned-human-master",
+      "path": "tools/imagegen/out/humanization-v1/masters/candidates/human-snow-scarf_9x16_v01.png",
+      "sha256": "c8a1d7a161e5b3bb624a15421289ac4b87f7bd9e439f856257a094d9846a0829",
+      "dimensions": {
+        "width": 941,
+        "height": 1672
+      }
+    },
+    "image2": {
+      "role": "private-derived-human-identity-card",
+      "path": "tools/imagegen/out/humanization-v1/identity-cards/husky-dog_v01.png",
+      "sha256": "c01d769385edd1a9c876f151b16b847baa776cfb3b95089821ad35a73d2d8f69",
+      "dimensions": {
+        "width": 1086,
+        "height": 1448
+      }
+    }
+  },
+  "request": {
+    "size": "720x1280",
+    "quality": "high",
+    "outputFormat": "png",
+    "inputFidelity": "high",
+    "prompt": "Use case: identity-preserve\nAsset type: preview-only second-stage pet humanization result\nPrimary request: This is an identity replacement image edit, not a new scene design.\nInput images: Image 1 is the self-owned human master and the only authority for the complete image. Image 2 is a private human identity card derived from one pet and is the sole authority for replacement facial identity.\nChange only: Replace only the adult human facial identity in Image 1 with the human facial identity in Image 2, including eye spacing, face width, eye-color relationship, nose-to-mouth proportions and distinctive expression.\nMaster invariants: Preserve Image 1 exactly outside the minimum facial identity replacement. Scene-change budget is 0%. Preserve its composition, camera, crop, complete adult human body, pose, gaze, expression intensity, hairstyle silhouette, clothing, accessories, scene, lighting, color, rendering medium, brushwork and texture.\nTemplate-specific invariants: Preserve the black scarf and coat, over-the-shoulder pose, snow scene and backlight.\nIdentity constraints: Keep Image 2's distinctive human facial proportions. Do not transfer Image 2's hairstyle, clothing, body, background, lighting or rendering style. Do not beautify away its identity.\nHuman anatomy constraints: Keep exactly one complete, natural, credible adult human. Do not introduce the original pet or any animal anatomy. No animal ears, animal nose, muzzle, fur face, whiskers, feathers, tail, paws, claws or hybrid anatomy.\nAvoid: extra subjects, changed body or pose, changed clothing, changed hairstyle silhouette, changed background, changed lighting, changed style, text, logo, watermark or malformed anatomy."
+  },
+  "providerOutput": {
+    "dimensions": {
+      "width": 941,
+      "height": 1672
+    },
+    "revisedPrompt": "Edit the provided image 1 using image 2 as the face-identity reference. Keep image 1 exactly the same outside the minimum facial identity replacement: preserve the over-the-shoulder pose, black scarf and coat, snow scene, backlight, composition, crop, hairstyle silhouette, clothing, accessories, lighting, rendering style, and overall body/pose. Replace only the adult human facial identity with the face proportions from image 2: eye spacing, face width, eye-color relationship, nose-to-mouth proportions, and distinctive expression. Keep exactly one natural adult human, with no animal anatomy, no hybrid features, no extra subjects, and no changes to background or style."
+  },
+  "output": {
+    "path": "tools/imagegen/out/humanization-v1/probes/lingsuan-round-02/human-snow-scarf_husky-dog_9x16_v02.png",
+    "sha256": "d08c0481663ac6173e44a0c062fe1e85aa170b3536e9afd5dba90d6166c71c9a",
+    "dimensions": {
+      "width": 720,
+      "height": 1280
+    }
+  }
+}

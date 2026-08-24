@@ -1,0 +1,44 @@
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.step-track {
+  display: flex;
+  gap: var(--space-1);
+}
+
+/* 线高 6rpx、全圆角（方案 3.5）。未开始段用柔性分割色而非 --border，避免过重 */
+.step-seg {
+  flex: 1;
+  height: 6rpx;
+  border-radius: var(--radius-pill);
+  background: var(--divider-soft);
+  transition: background var(--dur-base) var(--ease-out);
+}
+
+/* 已完成段与当前段同色：进度条表达的是「走到哪」，再区分两者反而增加解读成本 */
+.step-seg-on {
+  background: var(--primary);
+}
+
+.step-meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.step-name {
+  color: var(--text-primary);
+  font-size: var(--body-size);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-tight);
+}
+
+.step-count {
+  color: var(--text-secondary);
+  font-size: var(--small-size);
+  font-variant-numeric: tabular-nums;
+}

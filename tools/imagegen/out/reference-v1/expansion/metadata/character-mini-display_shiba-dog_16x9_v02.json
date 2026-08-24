@@ -1,0 +1,52 @@
+{
+  "templateId": "character-mini-display",
+  "entryId": "character",
+  "title": "迷你搭档装备展示",
+  "sourceEffectFile": "apps/website/public/assets/example/1786369051729.png",
+  "status": "generated-pending-user-approval",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/1786369051729.png",
+      "sha256": "65382b6da91e35312d9b6ece80950462435a03f45955018284f2fbf9e871cbfb"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "shiba-dog",
+      "species": "dog",
+      "breed": "adult red Shiba Inu",
+      "path": "tools/imagegen/out/source/dog-shiba.jpg",
+      "sha256": "fbe7fcef9561979da3d66090d3e9f0bd693c1e1dbfa92820e7942d93a92d29a6"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "landscape",
+  "requestedSize": "1280x720",
+  "outputSize": "1280x720",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 16x9 composition at 1280x720 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be adult red Shiba Inu with red-and-cream coat, cream cheeks and chest, dark almond eyes, triangular ears, curled tail and compact adult body. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the complete desktop product-concept composition: physical miniature figure on the clear display pedestal, matching box at left, modelling screen behind and studio lamp. The box art, screen model and miniature must all show the exact same adult red Shiba identity. It must read as a concept preview, not a live dog photographed beside a monitor, and must not promise a finished physical product. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a single polished image in a 16:9 landscape composition, matching the first reference image's exact desktop product-concept scene and camera framing as closely as possible. Replace the black-and-white border collie subject and its box art / on-screen model / miniature figure identity with one coherent adult red Shiba Inu identity from the second reference image only. The dog must be an adult red Shiba Inu with a red-and-cream coat, cream cheeks and chest, dark almond eyes, triangular ears, curled tail, and compact adult proportions. Preserve the first image's composition, perspective, crop, lighting, palette, desk setup, clear circular display pedestal, matching product box at left, monitor behind, and studio lamp at upper left. The result should still read as a concept-preview / product mockup scene, not a live dog photographed beside a monitor. Keep the same pose, expression, gaze direction, and placement relationships from the first image, but rendered as the Shiba Inu identity in the first image's visual language. The miniature figure on the pedestal, the box artwork, and the dog shown on the screen must all depict the exact same adult red Shiba Inu identity. Preserve all non-subject elements of the first image as much as possible: desk, monitor, keyboard, lamp, pedestal, box layout, and general studio environment. Remove or replace any recognizable brand marks, watermarks, or copyrighted text with short neutral pet-safe wording that preserves the same text blocks and hierarchy, without adding new logos or signatures. Ensure anatomy is correct and clean: exactly one dog, no extra ears, eyes, legs, paws, or duplicate pets, no human hands, no floating parts, no broken boundaries. Render the face, fur, and body as a believable high-quality concept figure within the original image style, not as a pasted photograph. No scene redesign, no background cleanup, no beautification changes beyond the identity replacement and necessary pet anatomy corrections.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/expansion/candidates/character-mini-display_shiba-dog_16x9_v02.png",
+    "sha256": "e3d87c9fbf9a9c328b3caf811ec48438f50905c3084fd37c7749720b2df58996"
+  },
+  "review": {
+    "state": "pending-human-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generatedAt": "2026-08-18T07:12:46.181Z"
+}

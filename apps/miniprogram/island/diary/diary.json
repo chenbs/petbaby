@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "小岛日记",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "t-tag": "../../components/tag/index",
+    "t-notice": "../../components/notice/index",
+    "t-empty": "../../components/empty/index",
+    "t-skeleton": "../../components/skeleton/index"
+  }
+}

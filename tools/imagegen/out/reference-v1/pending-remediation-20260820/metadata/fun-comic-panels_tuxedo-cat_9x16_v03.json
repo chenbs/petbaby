@@ -1,0 +1,91 @@
+{
+  "templateId": "fun-comic-panels",
+  "entryId": "fun",
+  "title": "城堡巨型伙伴",
+  "version": "v03",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "sourceEffectFile": "apps/website/public/assets/example/1786369082391.png",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/1786369082391.png",
+      "sha256": "cdbd055226e301eb2f1cdd18a9247a7466667205ef4a788e16f1591c59de86cc",
+      "requestPath": ".tmp/pending-remediation-20260820-inputs/fun-comic-panels-effect.jpg",
+      "requestBytes": 65202
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "tuxedo-cat",
+      "species": "cat",
+      "breed": "adult black-and-white tuxedo cat",
+      "path": "tools/imagegen/out/source/cat-tuxedo.jpg",
+      "sha256": "c4b2ebaac7dd5d59fffd83a827d94fdc03e1befd3e1108f337de8ba5488a7d39",
+      "requestPath": ".tmp/pending-remediation-20260820-inputs/fun-comic-panels-identity.jpg",
+      "requestBytes": 98644
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "inputPolicy": {
+    "maxImages": 2,
+    "maxLongestEdge": 1200,
+    "jpegQuality": 82,
+    "combinedBytesBelow": 1048576,
+    "serial": true
+  },
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be adult black-and-white tuxedo cat with black crown and ears, narrow white facial blaze, white muzzle and chest, pale green eyes, pink nose, black back and white front legs. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the illuminated castle lake, starry blue night, giant sparkling dandelion-shaped pet head in the sky and smaller clothed pet in the foreground. Both depictions must be the exact same tuxedo cat identity with matching feline ears, muzzle and markings; no source dog or poodle may remain. Give both the giant sky face and the foreground cat a clearly visible happy smiling mouth, matching the cheerful expression in the effect reference. Preserve the scale contrast, reflections, outfit and composition, and remove every watermark or account mark. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a vertical 9:16 final composition, 720x1280, matching the effect/reference composition exactly: a starry deep-blue night with an illuminated fairytale castle centered in the distance, its reflection mirrored in the lake, and a giant sparkling dandelion-like pet head in the sky above the castle. Foreground: a clothed adult black-and-white tuxedo cat standing at lower left, looking up toward the sky head. Preserve the original image's camera angle, crop, perspective, lighting, palette, reflections, castle placement, sky sparkle density, and overall scene layout with zero scene redesign. Replace the original dog identity completely with the exact same adult tuxedo cat identity in both the giant sky head and the foreground pet. Cat identity must be consistent across both depictions: black crown and ears, narrow white facial blaze, white muzzle and chest, pale green eyes, pink nose, black back and white front legs. Keep natural adult feline proportions, friendly cheerful expression, and a clearly visible happy smiling mouth on both the giant sky face and the foreground cat. Render the cat in the reference image's visual language and texture—not as a pasted photo—while preserving the effect reference's glowing, sparkling, whimsical style. Keep the striped outfit and any existing props/clothing placement as close as possible to the reference, but remove any watermark/account mark and any source dog traits. No extra ears, eyes, limbs, paws, or duplicate subjects. Maintain the castle, lake reflection, night sky, and composition exactly as in the reference image. Do not add logos or signatures.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/pending-remediation-20260820/candidates/fun-comic-panels_tuxedo-cat_9x16_v03.png",
+    "rawPath": "tools/imagegen/out/reference-v1/pending-remediation-20260820/raw/fun-comic-panels_tuxedo-cat_9x16_v03.png",
+    "sha256": "49e9624ae2d4c266a3ba986fb006fb9f923f6c43bc57f20da0d15df002c62377"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "checks": {
+      "dimensions": "pass",
+      "inputContract": "pass",
+      "visualAcceptance": "pending-user"
+    },
+    "findings": [],
+    "approvedAt": "2026-08-20T14:00:00+08:00"
+  },
+  "generatedAt": "2026-08-20T01:49:40.285Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/pending-remediation-20260820/candidates/fun-comic-panels_tuxedo-cat_9x16_v03.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/fun-comic-panels_tuxedo-cat_9x16_v03.webp",
+  "masterSha256": "72dca582f7eb2d8607a37a2fa16ec048732652b4653f767c96f7dcf31298d73d",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-20T14:00:00+08:00",
+    "note": "用户明确确认 pending-masters-comparison.png 全部审核通过并要求冻结母版。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/fun-comic-panels_tuxedo-cat_9x16_v03.webp",
+      "sha256": "72dca582f7eb2d8607a37a2fa16ec048732652b4653f767c96f7dcf31298d73d"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-candidate",
+      "unapproved-candidate"
+    ]
+  }
+}

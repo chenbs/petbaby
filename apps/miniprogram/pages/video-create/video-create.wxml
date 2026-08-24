@@ -1,0 +1,76 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+
+<view class="page page-flat">
+  <text class="eyebrow">PL-19 · MEMORY FILM</text>
+  <view class="title">剪一段回忆短片</view>
+  <text class="muted">按选择顺序排片，最多 {{maxPhotos}} 张。</text>
+
+  <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
+
+  <view class="section">
+    <t-card blur="{{blurOk}}" anim="{{animType}}">
+      <view class="stack">
+        <picker range="{{pets}}" range-key="name" bindchange="choosePet">
+          <t-field label="宠物" control="select" value="{{petText}}" placeholder="请选择宠物"></t-field>
+        </picker>
+        <t-field label="项目名称" value="{{title}}" placeholder="给这段片子起个名字" maxlength="40" bindchange="inputTitle"></t-field>
+        <t-field label="片尾字幕" value="{{caption}}" placeholder="选填，例如「谢谢你陪我这些年」" maxlength="40" bindchange="inputCaption"></t-field>
+      </view>
+    </t-card>
+  </view>
+
+  <view class="section">
+    <view class="section-title">成片时长</view>
+    <t-chip-group options="{{durationOptions}}" value="{{durationValue}}" anim="{{animType}}" bindchange="chooseDuration"></t-chip-group>
+    <text class="small">时长固定，照片越多每张停留越短。</text>
+  </view>
+
+  <view class="section">
+    <view class="section-title">背景音乐</view>
+    <view class="bgm">
+      <view
+        wx:for="{{bgmOptions}}"
+        wx:key="id"
+        class="bgm-option {{bgm === item.id ? 'bgm-on' : ''}}"
+        data-id="{{item.id}}"
+        hover-class="bgm-hover"
+        bindtap="chooseBgm"
+      >
+        <view class="bgm-name">{{item.label}}</view>
+        <text class="small">{{item.hint}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="row">
+      <view class="section-title flush">选照片</view>
+      <text class="small">已选 {{selected.length}}/{{maxPhotos}}{{durationText ? ' · ' + durationText : ''}}</text>
+    </view>
+
+    <t-skeleton wx:if="{{loading}}" type="grid" count="9"></t-skeleton>
+
+    <t-empty
+      wx:elif="{{!photos.length}}"
+      icon="photo"
+      title="还没有照片"
+      description="短片需要至少一张照片，先去照片库上传。"
+      action-text="去上传照片"
+      anim="{{animType}}"
+      decor="{{decor}}"
+      bindaction="openPhotos"
+    ></t-empty>
+
+    <t-photo-grid
+      wx:else
+      photos="{{photos}}"
+      selected-ids="{{selected}}"
+      max="{{maxPhotos}}"
+      ordered
+      anim="{{animType}}"
+      bindtoggle="toggle"
+    ></t-photo-grid>
+  </view>
+
+  <t-button type="primary" block anim="{{animType}}" loading="{{busy}}" disabled="{{!selected.length || selected.length > maxPhotos}}" class="block-gap" bindtap="create">创建并编辑（{{selected.length}} 张 · {{durationSeconds}} 秒）</t-button>
+</view>

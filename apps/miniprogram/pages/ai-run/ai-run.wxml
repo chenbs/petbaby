@@ -1,0 +1,147 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+
+<t-navbar
+  title="AI 任务与候选"
+  transparent="{{immersive}}"
+  tone="{{immersive ? 'inverse' : 'default'}}"
+></t-navbar>
+
+<!-- 已选中候选：结果确认区改为沉浸式，选中图占满全屏 -->
+<t-glass-sheet
+  wx:if="{{immersive}}"
+  background-image="{{selectedUrl}}"
+  title="确认这一张"
+  state="half"
+  blur="{{blurOk}}"
+  anim="{{animType}}"
+>
+  <view slot="header">
+    <text class="glass-eyebrow">AI IMAGE · 已选中</text>
+    <view class="glass-title run-title">确认这一张</view>
+    <text class="glass-muted">{{humanMode ? '解锁只对这一张生效。' : '解锁只对这一张生效，重抽会作废当前选择。'}}</text>
+  </view>
+
+  <t-notice wx:if="{{message}}" type="{{messageType}}" message="{{message}}" class="block-gap"></t-notice>
+
+  <view class="facts">
+    <view class="fact">
+      <text class="glass-small">玩法编号</text>
+      <text class="glass-strong">{{run.pluginId}}</text>
+    </view>
+    <view class="fact">
+      <text class="glass-small">Provider</text>
+      <text class="glass-strong">{{run.provider || '待确认'}}</text>
+    </view>
+    <view class="fact">
+      <text class="glass-small">模型</text>
+      <text class="glass-strong">{{run.modelVersion || '默认'}}</text>
+    </view>
+    <view wx:if="{{!humanMode}}" class="fact">
+      <text class="glass-small">剩余重抽</text>
+      <text class="glass-strong">{{run.rerollRemaining}} 次</text>
+    </view>
+    <view wx:else class="fact">
+      <text class="glass-small">候选数量</text>
+      <text class="glass-strong">2 张</text>
+    </view>
+  </view>
+
+  <view wx:if="{{run.selectedUnlocked}}" class="section-block">
+    <view class="glass-sub-title">已解锁</view>
+    <view class="share-actions">
+      <t-button type="primary" block anim="{{animType}}" loading="{{busy}}" bindtap="save">保存高清图到相册</t-button>
+      <t-button type="secondary" block anim="{{animType}}" bindtap="share">创建 7 天分享链接</t-button>
+      <t-button type="ghost" block anim="{{animType}}" bindtap="openWork">查看作品档案</t-button>
+    </view>
+  </view>
+
+  <view slot="actions">
+    <t-button type="ai" block anim="{{animType}}" disabled="{{run.selectedUnlocked}}" loading="{{busy}}" bindtap="unlock">
+      {{run.order && run.order.status === 'pending' ? '继续支付解锁' : '解锁选中的这张'}}
+    </t-button>
+    <t-button wx:if="{{!humanMode}}" type="secondary" block anim="{{animType}}" class="block-gap" disabled="{{!run.rerollRemaining || run.workId}}" bindtap="reroll">重抽一组（剩 {{run.rerollRemaining}} 次）</t-button>
+  </view>
+</t-glass-sheet>
+
+<view wx:else class="page page-flat">
+  <t-skeleton wx:if="{{loading}}" type="card" count="2"></t-skeleton>
+
+  <block wx:elif="{{run}}">
+    <view class="row">
+      <text class="eyebrow">AI IMAGE · {{humanMode ? '2 SELECT 1' : '4 SELECT 1'}}</text>
+      <t-tag tone="{{run.status === 'failed' ? 'error' : run.status === 'succeeded' ? 'success' : 'accent'}}" size="mini" text="{{statusText}}"></t-tag>
+    </view>
+    <view class="title">{{run.status === 'succeeded' ? '挑一张最像它的' : 'AI 任务状态'}}</view>
+
+    <t-notice wx:if="{{message}}" type="{{messageType}}" message="{{message}}" class="block-gap"></t-notice>
+
+    <!-- 排队/生成中 -->
+    <t-card wx:if="{{run.status === 'queued' || run.status === 'processing'}}" blur="{{blurOk}}" anim="{{animType}}">
+      <t-loading anim="{{animType}}" label="{{run.status === 'queued' ? '正在排队，第 ' + (run.queuePosition || 1) + ' 位' : humanMode ? '正在生成两张候选' : '正在生成四张候选'}}"></t-loading>
+      <text class="muted center block">{{run.status === 'queued' ? '预计 ' + (run.estimatedSeconds || 20) + ' 秒' : '第 ' + run.attempt + ' 次尝试，可以先退出，稍后回来看'}}</text>
+      <t-button type="ghost" block anim="{{animType}}" class="block-gap" bindtap="askCancel">取消任务</t-button>
+    </t-card>
+
+    <!-- 失败 -->
+    <t-card wx:elif="{{run.status === 'failed'}}" blur="{{blurOk}}" anim="{{animType}}">
+      <view class="state-title">生成没有完成</view>
+      <text class="muted">额度已经返还。可以直接重试，用同样的照片和描述再跑一次。</text>
+      <text wx:if="{{run.errorCode}}" class="small">错误码 {{run.errorCode}}</text>
+      <t-button type="primary" block anim="{{animType}}" loading="{{busy}}" class="block-gap" bindtap="retry">重试一次</t-button>
+    </t-card>
+
+    <!-- 已取消 -->
+    <t-card wx:elif="{{run.status === 'cancelled'}}" blur="{{blurOk}}" anim="{{animType}}">
+      <view class="state-title">任务已取消</view>
+      <text class="muted">没有产生订单，也没有扣减额度。</text>
+    </t-card>
+
+    <!-- 候选比较：普通玩法四选一，宠物人化二选一 -->
+    <block wx:else>
+      <view class="section">
+        <view class="candidates">
+          <view
+            wx:for="{{candidates}}"
+            wx:key="id"
+            class="candidate {{run.selectedId === item.id ? 'candidate-on' : ''}}"
+            data-id="{{item.id}}"
+            aria-role="radio"
+            aria-checked="{{run.selectedId === item.id}}"
+            hover-class="candidate-hover"
+            bindtap="select"
+          >
+            <image class="candidate-image" src="{{item.url}}" mode="aspectFill" lazy-load />
+            <view class="candidate-foot">
+              <text class="small strong">0{{item.number}}</text>
+              <t-tag wx:if="{{run.selectedId === item.id}}" tone="success" size="mini" text="已选中"></t-tag>
+            </view>
+          </view>
+        </view>
+        <text class="small">{{run.provider || 'Provider'}} · {{humanMode ? '二选一结果' : '还能重抽 ' + run.rerollRemaining + ' 次'}}</text>
+      </view>
+
+      <view class="actions">
+        <t-button type="ai" block anim="{{animType}}" disabled="{{!run.selectedId || run.selectedUnlocked}}" loading="{{busy}}" bindtap="unlock">
+          {{run.order && run.order.status === 'pending' ? '继续支付解锁' : '解锁选中的这张'}}
+        </t-button>
+        <view wx:if="{{!humanMode}}" class="chips">
+          <view wx:for="{{rerollReasons}}" wx:key="id" class="chip {{rerollReason === item.id ? 'chip-on' : ''}}" data-id="{{item.id}}" hover-class="chip-hover" bindtap="chooseRerollReason">{{item.label}}</view>
+        </view>
+        <t-button wx:if="{{!humanMode}}" type="secondary" block anim="{{animType}}" disabled="{{!run.rerollRemaining || run.workId}}" bindtap="reroll">重抽一组（剩 {{run.rerollRemaining}} 次）</t-button>
+      </view>
+    </block>
+  </block>
+
+  <t-notice wx:else type="error" message="{{message || '任务不存在'}}"></t-notice>
+</view>
+
+<t-dialog
+  visible="{{confirmCancel}}"
+  title="取消这次生成？"
+  content="已经排进队列的任务会立刻停止，免费额度原样返还。"
+  confirm-text="取消任务"
+  danger
+  anim="{{animType}}"
+  bindconfirm="cancel"
+  bindcancel="dismissCancel"
+></t-dialog>

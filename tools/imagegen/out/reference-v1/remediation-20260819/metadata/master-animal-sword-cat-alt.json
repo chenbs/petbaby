@@ -1,0 +1,42 @@
+{
+  "task": "user-requested-frozen-master-remediation-2026-08-19",
+  "templateId": "animal-sword-cat-alt",
+  "kind": "master",
+  "version": "v02",
+  "status": "generated-pending-visual-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputFidelity": "high",
+  "inputPolicy": {
+    "sequential": true,
+    "maxImages": 2,
+    "maxCombinedBytes": 1000000
+  },
+  "inputs": [
+    {
+      "role": "current-self-owned-master",
+      "path": ".tmp/master-remediation-20260819-inputs/animal-sword-cat-alt-master.jpg",
+      "bytes": 139021,
+      "sha256": "90d4678d5573a4605c01e98a36aaf8ca07298c39abb10dbb31eb869e1cf4598f"
+    },
+    {
+      "role": "effect-reference-composition-guide",
+      "path": ".tmp/master-remediation-20260819-inputs/animal-sword-cat-alt-effect.jpg",
+      "bytes": 127722,
+      "sha256": "556c96f4bdc812b3e7b06a60b8e90a3286965351dddb83c82230b0408db47d7b"
+    }
+  ],
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "output": {
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/master-animal-sword-cat-alt.png",
+    "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819/master-candidates/animal-sword-cat-alt_silver-abyssinian-cat_9x16_v02.png",
+    "width": 720,
+    "height": 1280,
+    "sha256": "1440759f04ad83d17c64a9e1fcd6ef04d3b98b57e5f5cf98be3f3134548d0c0c"
+  },
+  "prompt": "Use case: identity-preserve precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the current self-owned master and controls the replacement pet or owner identity unless the request explicitly changes the breed. Image 2 is the composition and effect reference. Use it only to correct the requested composition, pose, expression, gaze or visual treatment. Preserve every aspect that is not explicitly changed below, including the scene, camera, crop, palette, lighting, costume, props, spatial relationships and visual medium. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature. No extra subjects, duplicate anatomy, human hands on animals, malformed paws, text, logo, watermark or signature. Replace the current warm brown cat with the same type of pale cool-grey cat seen in Image 2: a refined light-silver Abyssinian or lightly spotted silver leopard-cat look, large upright ears, narrow elegant muzzle and pale grey coat. Keep the ornate dark metal mask, martial-arts paw pose, layered black-white costume, blue-red lighting, shallow depth of field and exact framing. The coat must read pale silver-grey, never ruddy brown, orange, cream or pure white. Return a 9:16 portrait composition.",
+  "revisedPrompt": "Edit the provided master/reference into a precise identity-preserving portrait. Keep the exact composition, camera angle, crop, shallow depth of field, blue-red cinematic lighting, background bokeh, ornate dark metal mask, martial-arts paw pose, layered black-and-white costume, ribbons, tassels, fur trim, and all spatial relationships exactly as in the reference. Replace the current warm brown cat with the same type of cat as the reference: a refined pale cool-grey cat, light-silver Abyssinian / lightly spotted silver leopard-cat look, large upright ears, narrow elegant muzzle, pale grey coat with subtle silver sheen, never brown, orange, cream, or pure white. The cat should retain the masked warrior styling and fierce focused expression, with the same forward-reaching paw pose. Preserve the realistic fur detail and fantasy costume materials. Remove every platform badge, AI-generated label, account name, account number, watermark, logo, signature, and any text. No extra subjects, no duplicate anatomy, no human hands, no malformed paws. Return a clean 9:16 portrait composition with the same framing and visual treatment as the reference.",
+  "generatedAt": "2026-08-19T05:53:57.336Z"
+}

@@ -1,0 +1,48 @@
+{
+  "task": "user-feedback-frozen-master-refinement-2026-08-19-round5",
+  "templateId": "mini-companion",
+  "title": "同宠大小分身",
+  "kind": "master",
+  "version": "v08",
+  "status": "generated-pending-visual-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputFidelity": "high",
+  "inputPolicy": {
+    "sequential": true,
+    "imageCount": 2,
+    "maxImages": 2,
+    "longestEdge": 1200,
+    "jpegQuality": 82,
+    "maxCombinedBytes": 1000000
+  },
+  "inputs": [
+    {
+      "role": "approved-composition-outfit-camera-and-floor-line-edit-target",
+      "originalPath": "tools/imagegen/out/reference-v1/remediation-20260819-round4/master-candidates/mini-companion_abyssinian-cat_9x16_v07.png",
+      "preparedPath": ".tmp/master-remediation-20260819-round5-inputs/mini-companion-1.jpg",
+      "bytes": 71044,
+      "sha256": "8139292c376d1473140796b596c343191d2e8c3f34aaf6f356dc45862030bc9a"
+    },
+    {
+      "role": "german-shepherd-identity-reference",
+      "originalPath": "apps/website/public/assets/hero-shepherd.jpg",
+      "preparedPath": ".tmp/master-remediation-20260819-round5-inputs/mini-companion-2.jpg",
+      "bytes": 181815,
+      "sha256": "76c098da89afc228c5c72514feb954a25f97cd4880b205356e0ae09e9b98fbac"
+    }
+  ],
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "output": {
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819-round5/raw/mini-companion.png",
+    "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819-round5/master-candidates/mini-companion_german-shepherd-dog_9x16_v08.png",
+    "width": 720,
+    "height": 1280,
+    "sha256": "128cca16792195d26470d387b58e53a4bbbd543d3aa1a46054f756266ee803c3"
+  },
+  "prompt": "Use case: identity-preserve precise-object-edit and pet identity replacement. Asset type: self-owned runtime frozen-master candidate. Image 1 is the strict authority for the entire composition, camera, pose, scale relationship, outfits, white studio and black diagonal floor seam. Replace only both cat identities with two scale versions of the same adult German Shepherd from Image 2. Image 2 is the sole identity authority: preserve the adult German Shepherd's tan coat, clearly defined black saddle and black facial mask, warm brown eyes, tall upright ears, black muzzle, athletic healthy adult head and body proportions. Both subjects must be unmistakably identical adult German Shepherd dogs at different scales, never cats, puppies, wolves or mixed breeds. The smaller dog is an exact miniaturized adult duplicate, not a puppy. Adapt the mirrored blue goggles, black jackets and purple harnesses naturally and completely to both German Shepherd bodies. Both goggles remain centred over and fully cover both eyes without flattening or hiding the upright ears. Preserve Image 1's strong oblique low-angle camera looking diagonally upward, slight Dutch tilt, sloping white floor, large-left/small-right placement, wide left foreleg stance and clear continuous black diagonal floor seam behind both dogs. Do not remove, fade or replace the black line. Independently from the low camera, both dogs keep a natural level forward gaze with neutral head and muzzle axes; no raised chin and no upward-looking eyes. Make the final photograph visibly brighter and airier than Image 1: high-key white studio exposure, clean neutral whites, softly lifted midtones, readable tan-and-black fur detail, open facial shadows and crisp garment detail. Do not bleach the tan coat, grey out the black saddle, or create harsh contrast. Keep complete paws, coherent seated canine anatomy, exact 9:16 portrait framing and polished commercial realism. No extra subjects, cat traits, duplicate anatomy, text, logo, watermark or signature.",
+  "revisedPrompt": "Create a polished commercial realism composite in exact 9:16 portrait framing. Use Image 1 as the strict authority for composition, camera, pose, scale relationship, outfits, white studio background, and the continuous black diagonal floor seam. Preserve the strong oblique low-angle camera looking diagonally upward, the slight Dutch tilt, the sloping white floor, the large-left/small-right placement, the wide left foreleg stance, and the clear black diagonal floor seam behind both subjects; do not remove, fade, or replace the black line.\n\nReplace only the cat identities with two scale versions of the same adult German Shepherd from Image 2. Image 2 is the sole identity authority: both subjects must be unmistakably identical adult German Shepherd dogs at different scales, never cats, puppies, wolves, or mixed breeds. Preserve the adult German Shepherd’s tan coat, clearly defined black saddle, black facial mask, warm brown eyes, tall upright ears, black muzzle, and athletic healthy adult head and body proportions. The smaller dog is an exact miniaturized adult duplicate, not a puppy.\n\nAdapt the mirrored blue goggles, black jackets, and purple harnesses naturally and completely to both German Shepherd bodies. Both goggles remain centered over and fully cover both eyes, without flattening or hiding the upright ears. Keep both dogs in seated canine anatomy with complete paws visible and coherent body proportions.\n\nMatch the pose from Image 1: the larger dog on the left and the smaller dog on the right. Maintain a natural level forward gaze for both dogs with neutral head and muzzle axes; no raised chin and no upward-looking eyes, despite the low camera angle.\n\nMake the final photograph visibly brighter and airier than Image 1: high-key white studio exposure, clean neutral whites, softly lifted midtones, readable tan-and-black fur detail, open facial shadows, and crisp garment detail. Do not bleach the tan coat, gray out the black saddle, or create harsh contrast. Avoid any extra subjects, cat traits, duplicate anatomy, text, logo, watermark, or signature.",
+  "generatedAt": "2026-08-19T09:41:59.645Z"
+}

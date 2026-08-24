@@ -1,0 +1,26 @@
+{
+  "templateId": "travel-selfie",
+  "status": "direction-preview",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-effect-reference-internal-only",
+      "path": "apps/website/public/assets/example/1786368752371.png",
+      "sha256": "390c02e6931842e65c3b63c66c276ce3d6baf69a3057cf72396d46c6bf440725"
+    },
+    {
+      "role": "pet-identity-reference",
+      "path": "apps/website/public/assets/hero-devon.jpg",
+      "sha256": "a7df98cb56bde09263defd3a2a174f9c8f14875729c5ec49818cdc3787453eb2"
+    }
+  ],
+  "inputFidelity": "high",
+  "requestedSize": "1200x1600",
+  "outputSize": "1200x1600",
+  "quality": "high",
+  "prompt": "Image 1 is a temporary composition reference only: retain only its close travel-selfie camera language, extended-paw perspective, vertical energy and cheerful holiday mood. Discard every source-specific subject, clothing pattern, flower, architecture, landmark, graphic, text and logo from Image 1. Image 2 is the only identity reference: preserve this exact grey Devon Rex cat, including the enormous upright ears, short curly grey coat, pale green eyes, slim angular face and delicate body. Create a newly designed vertical 3:4 travel-selfie photograph. The Devon Rex is the only character, very close to the action camera, naturally extending one front paw toward the lower foreground as if operating it. Place it at an entirely invented northern sea cliff overlook with basalt formations, windswept beach grass, a misty blue inlet and a small plain olive travel pack. Use cool clear morning light, realistic short curly fur, believable ultra-wide camera optics and restrained premium editorial pet photography. Leave quiet sky space in the upper-left for later programmatic copy. Do not reproduce Image 1's composition literally or retain any recognisable source detail. Exactly one Devon Rex cat and no other animal. Anatomically plausible face, body, tail and four limbs; no duplicate paws or fused objects. No human, no human hands, no brand, no real landmark, no platform UI, no text, no letters, no numbers, no logo, no watermark and no signature.",
+  "revisedPrompt": null,
+  "generatedAt": "2026-08-12T08:17:39.287Z"
+}

@@ -1,0 +1,15 @@
+<view class="tabbar tabbar-{{themeId}}" style="{{themeStyle}}">
+  <view
+    wx:for="{{items}}"
+    wx:key="pagePath"
+    class="item anim-{{animType}} {{selected === index ? 'active' : ''}}"
+    data-index="{{index}}"
+    aria-role="tab"
+    aria-selected="{{selected === index}}"
+    hover-class="item-hover"
+    bindtap="switchTab"
+  >
+    <text class="item-glyph">{{item.glyph}}</text>
+    <text class="item-text">{{item.text}}</text>
+  </view>
+</view>

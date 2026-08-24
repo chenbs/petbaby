@@ -1,0 +1,36 @@
+{
+  "task": "user-requested-frozen-master-remediation-2026-08-19",
+  "templateId": "original-magic-academy",
+  "kind": "public",
+  "version": "public-v02",
+  "status": "generated-pending-visual-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputFidelity": "high",
+  "inputPolicy": {
+    "sequential": true,
+    "maxImages": 2,
+    "maxCombinedBytes": 1000000
+  },
+  "inputs": [
+    {
+      "role": "effect-reference-edit-target",
+      "path": ".tmp/master-remediation-20260819-inputs/original-magic-academy-effect.jpg",
+      "bytes": 100126,
+      "sha256": "fd3979189bcc4844a0b3da3e246bbfe56dbe6a4c740173b3df6d859b4f9e8e9f"
+    }
+  ],
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "output": {
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/public-original-magic-academy.png",
+    "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819/public-previews/original-magic-academy_public-v02.png",
+    "width": 720,
+    "height": 1280,
+    "sha256": "afb161ac9bb1ea33d4c927561dedf2e3def8c66ec77fa8f72d8584b9299d57f4"
+  },
+  "prompt": "Use case: precise-object-edit. Asset type: public Mini Program template preview. Image 1 is the effect-reference edit target and is the sole authority for composition, subject, camera, pose, lighting, medium and all details not explicitly changed below. Create a clean new public-facing rendition, not a collage or framed mockup. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature, reconstructing the covered area seamlessly. Do not add captions, borders, UI, logos, watermarks or signatures. Keep the seated fluffy cat, dark green academy robe and scarf, stone classroom, potion bottles, cauldron, warm light and camera unchanged. Replace the small snake-like chest emblem only with an original simple paw-and-star academy crest so no known franchise mark remains. Return a 9:16 portrait composition.",
+  "revisedPrompt": "Edit the provided image into a clean public-facing 9:16 portrait rendition, preserving the exact composition, subject, camera angle, pose, lighting, medium, and all visible scene details unless explicitly changed here. Keep the seated fluffy cat, dark green academy robe and scarf, stone classroom interior, potion bottles, cauldron, warm light, and overall framing unchanged. Remove every platform badge, AI-generated label, account name, account number, watermark, logo, and signature from the image, reconstructing any covered areas seamlessly and naturally with matching floor/background texture and lighting. Do not add any captions, borders, UI, logos, watermarks, signatures, or extra text. Replace only the small snake-like chest emblem on the robe with a new original simple paw-and-star academy crest, clean and minimal, ensuring no known franchise mark remains. The final result should look like a natural, polished portrait image, not a collage or framed mockup.",
+  "generatedAt": "2026-08-19T05:45:13.838Z"
+}

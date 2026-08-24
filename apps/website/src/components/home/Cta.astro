@@ -1,0 +1,39 @@
+---
+/*
+ * 9. CTA：大圆角面板 + 小程序码。
+ *
+ * 也被文章详情页复用（方案 7.6 第 2 条：从「看完教程」直接接到「扫码去做」），
+ * 那里传 id={undefined} 避免与首页的 #contact 撞 id —— 同一页只会出现一个。
+ */
+import QrImage from "../QrImage.astro";
+import { MINIPROGRAM_QR } from "../../config/site";
+
+interface Props {
+  id?: string;
+}
+
+const { id = "contact" } = Astro.props;
+---
+
+<section class="band section" id={id}>
+  <div class="container">
+    <div class="cta-panel reveal">
+      <div class="cta-sheen" aria-hidden="true"></div>
+      <div class="cta-grid">
+        <div>
+          <p class="eyebrow">开始使用</p>
+          <h2 class="h2 h2-mid">现在就给它拍一张</h2>
+          <p class="body-text lead">微信扫码进入小程序，第一次创作不花钱。</p>
+          <p class="cta-note">已有 10 种玩法可选，图文类 1 分钟起，视频类 3 分钟起。</p>
+        </div>
+        <div class="qr-box">
+          {/* 待提供：真实小程序码。缺图时是虚线占位框，不是色块（规格 7.4）*/}
+          <QrImage size={MINIPROGRAM_QR.size} loading="lazy" />
+          <p class="qr-note">
+            {MINIPROGRAM_QR.available ? "微信扫码开始创作" : "正式站换成真实小程序码"}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,58 @@
+{
+  "templateId": "action-giant-companion",
+  "entryId": "action",
+  "title": "巨型伙伴幻想",
+  "version": "v02",
+  "status": "replacement-master-candidate-pending-user-approval",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "sourceEffectFile": "apps/website/public/assets/example/1786369038890.png",
+  "inputs": [
+    {
+      "role": "one-time-original-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/1786369038890.png",
+      "sha256": "920975a5f3f4cd2d76e76939206c9345a430d4eab2aacceed0250ee6c86f4d14",
+      "requestPath": ".tmp/remediation-20260820-round12-inputs/action-giant-companion-original-effect.jpg",
+      "requestBytes": 54723
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "ragdoll-cat",
+      "path": "apps/website/public/assets/work-ragdoll.jpg",
+      "sha256": "cadd89cfd6150cb0c9560bffec9b7c5a7e80d7126032eb7ecab4933cb836ed9e",
+      "requestPath": ".tmp/remediation-20260820-round12-inputs/action-giant-companion-identity.jpg",
+      "requestBytes": 118252
+    }
+  ],
+  "forbiddenInputsVerifiedAbsent": [
+    "frozen-master",
+    "public-preview",
+    "previous-candidate",
+    "comparison-sheet",
+    "contact-sheet"
+  ],
+  "inputPolicy": {
+    "serial": true,
+    "maxImages": 2,
+    "maxLongestEdge": 1200,
+    "jpegQuality": 82,
+    "combinedBytesBelow": 1048576
+  },
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be adult seal-point Ragdoll cat with cream long coat, deep seal-brown mask and ears, round blue eyes, broad fluffy cheeks, dark nose, full chest and healthy adult body. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the original effect reference's giant-versus-small same-pet fantasy, exact cloud glow, frontal walking pose, reaching forepaw, tiny seated companion, scale contrast, palette and camera. Both depictions must be the same appealing adult seal-point Ragdoll from the identity reference, with the same cream long coat, seal mask and ears, blue eyes and broad fluffy face. Do not use any frozen master or previous candidate as a reference. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image. Input audit: Image 1 is the untouched original effect reference and Image 2 is the self-owned pet identity reference. No frozen master, public preview, generated candidate, contact sheet or comparison sheet is present in this request.",
+  "revisedPrompt": "Create a vertical 9:16 image, 720x1280, matching the first reference’s composition and visual language exactly: a fantasy painterly scene with a giant adult seal-point Ragdoll cat dominating the upper frame in a frontal walking pose through glowing clouds, reaching one forepaw forward toward a tiny seated companion cat on the lower center foreground. Preserve the original scene structure, camera angle, crop, perspective, scale contrast, cloud glow, lighting, palette, brushwork, soft atmospheric texture, and the same giant-versus-small same-pet fantasy feeling. Replace all subjects with the same adult seal-point Ragdoll identity from the pet reference: cream long coat, deep seal-brown mask and ears, round blue eyes, broad fluffy cheeks, dark nose, full chest, healthy adult proportions, friendly appealing expression. Render the face and fur in the same illustrative, dreamy style as the effect reference, not photographic. The giant cat should have the same expression, gaze direction, and pose as the reference, with glowing halo-like rim light around the fur and swirling cloud forms. The tiny seated companion should also be the same adult seal-point Ragdoll identity, simplified by distance but still clearly the same breed and colors. Keep the original background, clouds, glow, and overall composition unchanged except for subject identity. Do not add new props, logos, watermarks, or extra characters. Ensure anatomy is correct with no extra limbs, no fused paws, no human features, and no duplicated subjects.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/remediation-20260820-round12/master-candidates/action-giant-companion_ragdoll-cat_9x16_v02.png",
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260820-round12/raw/action-giant-companion_ragdoll-cat_9x16_v02.png",
+    "sha256": "d64a83e5e9dbc95bb62e30996191f5934a9ab4a5949bf2d40929dcfeabaf0f20"
+  },
+  "review": {
+    "state": "pending-user-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generatedAt": "2026-08-20T03:01:14.089Z"
+}

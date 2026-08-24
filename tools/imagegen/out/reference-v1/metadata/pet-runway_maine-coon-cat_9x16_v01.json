@@ -1,0 +1,50 @@
+{
+  "templateId": "pet-runway",
+  "title": "宠物时装周",
+  "entryId": "career",
+  "status": "master-candidate-pending-user-approval",
+  "subject": "maine-coon-cat",
+  "breed": "缅因猫",
+  "selectionRationale": "验证 T 台、全套服装和大型长毛猫身份，避免生成瘦长拟人身体。",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-effect-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/1786368555480.png",
+      "sha256": "63e95e99f17cd26f37ba4639b284091d067bdfc8084a0a17741178520bc31862"
+    },
+    {
+      "role": "pet-identity-reference",
+      "path": "apps/website/public/assets/work-maine.jpg",
+      "sha256": "1886adfade169bfb7a678ccad1b36555e0cebbd9d78310ee0f23c42d1bcae8cf"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving fashion portrait. Create a vertical 9:16 premium pet runway photograph from exactly two input images, composed for an exact final size of 720x1280 pixels. Image 1 is the primary effect reference and scene base. Preserve its core composition, camera language, scene type, clothing, landmark, distinctive props, meaningful text layout and overall visual effect. Allow an optional scene-change budget of approximately 5% to 20%. You may naturally adjust only secondary details, colours, materials, small decorations or context-equivalent props when the adjustment clearly improves the result and belongs in the current scene. Match the original perspective, scale, lighting and visual style. This is not a quota: if no replacement is clearly better, keep the source scene unchanged. Do not redesign the environment or weaken its story. Preserve Image 1's centred runway, dark audience on both sides, grey spotlight backdrop, frontal walking momentum and distinctive layered outfit: oversized light-grey wool coat, cream cable-knit layer, charcoal patterned neck scarf and pale sage wide-leg lower garment. The outfit may receive minor tailoring or colour balancing, but keep its recognisable silhouette, materials and fashion-week restraint. Image 2 is the sole pet identity reference and overrides the animal shown in Image 1. Remove the original animal from Image 1 completely and replace it with the exact pet from Image 2. The replacement must look youthful, healthy, rounded and irresistibly cute at first glance, with soft full cheeks, friendly bright eyes and appealing contemporary proportions. Preserve recognisable breed anatomy and the identity markings stated below. Never make the pet skinny, elongated, angular, gaunt, stern, aggressive, strange, elderly-looking or uncanny. Keep exactly one pet identity and no unrelated animal. Correct anatomy only: no duplicate or fused limbs, extra ears, warped eyes, malformed mouth, human hands or broken clothing boundaries. No brand logo, known IP, platform UI, watermark or signature. Preserve the brown-black classic tabby coat, golden eyes, square but soft muzzle, tall lynx-tipped ears, large neck ruff, sturdy body and very full dark tail of the exact Maine Coon in Image 2. Adapt the fashion look to a believable sturdy Maine Coon walking naturally toward the camera on four paws. Do not create a human torso, human hands, a narrow waist or a tall skinny biped. Shape the coat and sage draped garment around natural feline shoulders and forelegs while leaving the face, ear tufts, chest ruff, front paws and tail identity visible. The expression should be calm, confident and cute rather than stern or old-fashioned. Keep runway lighting, garment texture and audience blur. No designer logo, readable brand name, platform UI or watermark.",
+  "revisedPrompt": "Use case: compositing and identity-preserving fashion portrait. Create a vertical 9:16 premium pet runway photograph from exactly two input images, composed for an exact final size of 720x1280 pixels. Image 1 is the primary effect reference and scene base. Preserve its core composition, camera language, scene type, clothing, landmark, distinctive props, meaningful text layout and overall visual effect. Allow an optional scene-change budget of approximately 5% to 20%. You may naturally adjust only secondary details, colours, materials, small decorations or context-equivalent props when the adjustment clearly improves the result and belongs in the current scene. Match the original perspective, scale, lighting and visual style. This is not a quota: if no replacement is clearly better, keep the source scene unchanged. Do not redesign the environment or weaken its story. Preserve Image 1's centred runway, dark audience on both sides, grey spotlight backdrop, frontal walking momentum and distinctive layered outfit: oversized light-grey wool coat, cream cable-knit layer, charcoal patterned neck scarf and pale sage wide-leg lower garment. The outfit may receive minor tailoring or colour balancing, but keep its recognisable silhouette, materials and fashion-week restraint. Image 2 is the sole pet identity reference and overrides the animal shown in Image 1. Remove the original animal from Image 1 completely and replace it with the exact pet from Image 2. The replacement must look youthful, healthy, rounded and irresistibly cute at first glance, with soft full cheeks, friendly bright eyes and appealing contemporary proportions. Preserve recognisable breed anatomy and the identity markings stated below. Never make the pet skinny, elongated, angular, gaunt, stern, aggressive, strange, elderly-looking or uncanny. Keep exactly one pet identity and no unrelated animal. Correct anatomy only: no duplicate or fused limbs, extra ears, warped eyes, malformed mouth, human hands or broken clothing boundaries. No brand logo, known IP, platform UI, watermark or signature. Preserve the brown-black classic tabby coat, golden eyes, square but soft muzzle, tall lynx-tipped ears, large neck ruff, sturdy body and very full dark tail of the exact Maine Coon in Image 2. Adapt the fashion look to a believable sturdy Maine Coon walking naturally toward the camera on four paws. Do not create a human torso, human hands, a narrow waist or a tall skinny biped. Shape the coat and sage draped garment around natural feline shoulders and forelegs while leaving the face, ear tufts, chest ruff, front paws and tail identity visible. The expression should be calm, confident and cute rather than stern or old-fashioned. Keep runway lighting, garment texture and audience blur. No designer logo, readable brand name, platform UI or watermark.",
+  "review": {
+    "state": "pending-user-approval",
+    "checks": {
+      "petIdentity": "pending",
+      "cuteness": "pending",
+      "effectComposition": "pending",
+      "anatomy": "pending",
+      "textAndRights": "pending",
+      "dimensions": "pass"
+    },
+    "findings": [],
+    "finalApproval": "pending-user"
+  },
+  "generatedAt": "2026-08-13T04:08:36.959Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/pet-runway_maine-coon-cat_9x16_v01.png",
+    "sha256": "b8bac5059d0c4b138ca9212344891ea3b82458f1cdd49c7c9c5005c6d01b6d54"
+  }
+}

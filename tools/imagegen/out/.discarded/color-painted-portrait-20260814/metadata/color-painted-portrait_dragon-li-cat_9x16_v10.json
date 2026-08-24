@@ -1,0 +1,69 @@
+{
+  "templateId": "color-painted-portrait",
+  "title": "彩色绘画肖像",
+  "entryId": "art",
+  "status": "master-candidate-pending-user-approval",
+  "subject": "dragon-li-cat",
+  "breed": "狸花猫",
+  "revision": {
+    "version": "v10",
+    "supersedes": "color-painted-portrait_dragon-li-cat_9x16_v09.png",
+    "reviewFinding": "v09 的颜色洁净度和水彩面部方向正确，但金橙、赭黄、青绿与狸花中间调略浅，需要只加深一小档。",
+    "scope": "slight-watercolor-pigment-depth-adjustment"
+  },
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-candidate-authoritative-edit-target",
+      "path": "tools/imagegen/out/reference-v1/candidates/color-painted-portrait_dragon-li-cat_9x16_v09.png",
+      "sha256": "1ffe5a354d006b181d641a286e7997eb301991d13ef3af55309b1870f27f6c02"
+    },
+    {
+      "role": "third-party-effect-and-colour-calibration-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/4f109cb7-2809-459a-93ef-5e7775e16280.jpg",
+      "sha256": "620aa0a865818f88025ed9345f86e0f38a113520a91627a1dfd1535136b0035a"
+    },
+    {
+      "role": "pet-identity-only-reference",
+      "path": "apps/website/public/assets/avatar-dragonli.jpg",
+      "sha256": "0f403599969b57f32aa314cf474ce4d57d28f48683e16ae9a032d73b94079732"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: precise watercolor colour-depth adjustment with pet identity preservation. Create a vertical 9:16 output at exactly 720x1280 pixels from exactly three input images. Image 1 is the authoritative self-owned edit target. Preserve its exact Dragon Li cat identity, half-body three-quarter portrait, framing, gentle upward gaze, simplified flat watercolor eyes and nose, broad watercolor fur strokes, paper texture, clean colour grouping and all anatomy. Change only the watercolor pigment depth by one small step. Increase pigment concentration, midtone depth and selected dark-watercolor accents by roughly 8 to 12 percent. Make the warm golden-orange, ochre, limited muted teal, coral accents and brown-grey tabby strokes slightly richer and deeper without changing their hue balance. Image 2 is only a calibration reference for the intended effect and colour depth. Move Image 1 slightly toward Image 2's pigment strength, but stop well before the oversaturated v08 direction. Do not copy its watermark or account text. Image 3 is identity-only. Preserve the forehead M, cheek stripes, yellow-green eyes, pink-brown nose, upright ears, round face and recognisable Dragon Li proportions without importing photographic lighting, realistic fur or facial anatomy. Keep the entire face in the same hand-painted watercolor medium as the body and background: simplified flat watercolor eye shapes, ink-wash pupils, one restrained paper-white highlight per eye, a small flat pink-brown nose mark and loose brush curves for the mouth. Do not redesign, recolour or add details. Do not increase the number of colour blocks or speckles. Avoid neon orange, excessive yellow glow, high saturation, dirty teal collisions, clipped highlights, crushed shadows, glossy eyes, realistic nose or fur, hard outlines, thick impasto, text, logo, watermark or signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "prechecked-pending-user-approval",
+    "checks": {
+      "petIdentity": "pass",
+      "cuteness": "pass",
+      "effectComposition": "pass",
+      "slightPigmentDepthIncrease": "pass",
+      "cleanControlledPalette": "pass",
+      "watercolorFaceConsistency": "pass",
+      "reducedFacialRealism": "pass",
+      "anatomy": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [
+      "相对 v09，金橙、赭黄和狸花深色笔触的水彩中间调加深一小档，层次更清楚但未改变色相平衡。",
+      "青绿与珊瑚仍只作为少量大色组，未增加 v08 的高饱和碰撞、荧光感或杂色 speckles。",
+      "眼睛、鼻子、嘴巴、狸花纹路和身体继续使用扁平或宽幅水彩笔触，面部没有恢复玻璃球眼、真实鼻口或写实毛发。",
+      "狸花猫身份、半身构图、圆脸和温和仰视保持稳定，无异常解剖、文字、水印或平台标识。"
+    ],
+    "finalApproval": "pending-user"
+  },
+  "generatedAt": "2026-08-13T15:57:43.447Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/color-painted-portrait_dragon-li-cat_9x16_v10.png",
+    "sha256": "e996ad2a2f001480cdb53bce36e4481873956192fe9dbe2b14e0d82539535379"
+  }
+}

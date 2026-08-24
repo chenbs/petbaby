@@ -1,0 +1,41 @@
+{
+  "generatedAt": "2026-08-18T12:24:22.361Z",
+  "generatedBy": "local-sharp-composite",
+  "modelCall": false,
+  "outputs": [
+    {
+      "path": "tools/imagegen/out/humanization-v1/review/approval-detail-1.png",
+      "width": 1664,
+      "height": 4728,
+      "sha256": "0a3fee49369db73ab509f39b1f25b7f037c35c32607fd3a6df20cfdac51fb7cd",
+      "kind": "detailed-approval",
+      "page": 1
+    },
+    {
+      "path": "tools/imagegen/out/humanization-v1/review/approval-detail-2.png",
+      "width": 1664,
+      "height": 4728,
+      "sha256": "7d0ff9456be89bfeede44039a6815a64e2680f10e570f14cbcaedf6bb06c6f26",
+      "kind": "detailed-approval",
+      "page": 2
+    },
+    {
+      "path": "tools/imagegen/out/humanization-v1/review/approval-overview.png",
+      "width": 1676,
+      "height": 2154,
+      "sha256": "ff1814cde82145eb16351ac15318a2aea8ef34fc820216fb3459e30edb766b6b",
+      "kind": "anonymous-overview"
+    },
+    {
+      "path": "tools/imagegen/out/humanization-v1/review/blind-pipeline-comparison.png",
+      "width": 1748,
+      "height": 829,
+      "sha256": "6c284e699bd5f9ccd6b756e11c3b0ea92b0db81a29d6b7613d1d8458a4862dcc",
+      "kind": "blind-pipeline-comparison"
+    }
+  ],
+  "files": {
+    "blindKey": "tools/imagegen/out/humanization-v1/review/blind-key.json",
+    "approvalForm": "tools/imagegen/out/humanization-v1/review/approval-form.md"
+  }
+}

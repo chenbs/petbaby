@@ -1,0 +1,58 @@
+{
+  "templateId": "pet-expression-grid",
+  "status": "approved-frozen-master",
+  "category": "今日表情九宫格",
+  "subject": "cream-longhair-cat",
+  "breed": "cream long-haired cat",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-effect-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/1786368990305.png",
+      "sha256": "5e8653c0cb6a34b1409269f827a183bc4e4914674aca47471a0d70aaafca7cad"
+    },
+    {
+      "role": "pet-identity-reference",
+      "path": "tools/imagegen/out/source/cat-cream.jpg",
+      "sha256": "db5fc390f9cbf4f5ee0eee38850e28012a0953a98c148e7df5b354a539dab7e9"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving expression sheet. Create a vertical 9:16 polished 3x3 pet expression grid from both input images, composed for an exact final size of 720x1280 pixels. Image 1 is the internal effect and layout reference. Preserve its clean white 3x3 grid, nine evenly sized portrait cells, consistent close-up framing, bright high-key studio light and simple social-media expression-sheet readability. Allow only about 5% to 20% natural adjustments to spacing, subtle background tone, head angle and crop when they improve coherence; this is optional, and unchanged details are preferred when no better replacement exists. Image 2 is the sole pet identity reference. Replace every Shiba Inu in Image 1 with the exact same cream long-haired cat from Image 2. Preserve the pale cream long coat, soft cream points, blue eyes, pink nose, triangular ears and fluffy healthy proportions in every cell. The nine cells must show the same cat, not nine different cats. Show these nine distinct expressions in reading order: happy, surprised, aggrieved, unimpressed, sleepy, proud, affectionate, mildly angry, daydreaming. Change only expression and a small natural head angle; keep breed, facial structure, coat colour and pattern, eye colour, ear shape and apparent age consistent. The cat must look youthful, rounded, soft and immediately lovable to a young audience. Avoid a thin body, sharp or long face, old-fashioned styling, aggression, odd anatomy, uncanny eyes or gloomy ageing features. No text, captions, speech bubbles, logos, watermark, accessories that vary between cells, duplicate facial parts or malformed mouths. Keep all ears and facial features fully inside their cells.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "approved-by-user",
+    "checks": {
+      "samePetAcrossNineCells": "pass",
+      "nineDistinctExpressions": "pass",
+      "cuteness": "pass",
+      "anatomy": "pass",
+      "noText": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [],
+    "preReviewedAt": "2026-08-13T02:52:16.754Z",
+    "finalApproval": "approved",
+    "approvedAt": "2026-08-13T00:00:00.000+08:00"
+  },
+  "generatedAt": "2026-08-13T02:00:00.735Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/masters/pet-expression-grid_cream-cat_9x16_v01.webp",
+    "sha256": "30c2d334126279b15ca7c74c29ebfd52f92769e19904514d25b59e7d09031b78"
+  },
+  "masterPath": "tools/imagegen/out/reference-v1/masters/pet-expression-grid_cream-cat_9x16_v01.webp",
+  "masterSha256": "30c2d334126279b15ca7c74c29ebfd52f92769e19904514d25b59e7d09031b78",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-13T00:00:00.000+08:00",
+    "note": "用户确认九宫格保持当前版本，不再修改。"
+  }
+}

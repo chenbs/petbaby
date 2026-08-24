@@ -1,0 +1,45 @@
+{
+  "templateId": "travel-selfie",
+  "status": "approved-frozen-master",
+  "category": "旅行自拍",
+  "subject": "devon-kitten",
+  "breed": "黑白幼年德文猫",
+  "selectionRationale": "验证近距离自拍透视、地标与服装保留、幼态猫身份迁移",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-effect-reference-internal-only",
+      "path": "apps/website/public/assets/example/1786368752371.png",
+      "sha256": "390c02e6931842e65c3b63c66c276ce3d6baf69a3057cf72396d46c6bf440725"
+    },
+    {
+      "role": "pet-identity-reference",
+      "path": "tools/imagegen/out/reference-v1/characters/devon-black-white-kitten.png",
+      "sha256": "878ddb4913e395434cd4f35041c9f607288eca462e1eafb9b7098c6cafcbd96e"
+    }
+  ],
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing. Create a vertical 9:16 high-fidelity pet replacement based on both input images. Compose for an exact final size of 720x1280 pixels. Image 1 is the primary effect reference and scene base. Preserve its core tropical island travel-selfie composition, scene type, cheerful holiday story, close ultra-wide camera perspective, foreground selfie action, distant volcano, temple-like landmark, turquoise water, straw hat, flowers and colourful floral shirt. Use a restrained scene-change budget of approximately 5% to 20%. You may naturally adjust a few secondary details such as vegetation, small background decorations, clothing colours, flower colours, material details or replace a prop only with a contextually equivalent travel item. Every change must look native to this tropical island scene and match its perspective, scale, daylight, colour temperature and visual style. This is an optional budget, not a quota: if there is no clearly more suitable replacement, keep the original content unchanged. Do not add unrelated objects, change the location type, remove the landmark or weaken the selfie story. Remove the original grey cat from Image 1 completely and replace it with the exact black-and-white Devon Rex kitten from Image 2. Image 2 is the identity and cuteness reference: preserve the black crown and ears, broad white blaze down the face, white muzzle, pink nose, white chest and white paws, very large round blue eyes, oversized upright ears and short curly coat. The replacement must look like the same young kitten in Image 2: irresistibly cute at first glance, round baby face, soft full cheeks, short compact plump body, bright gentle curious eyes and a warm happy expression. Keep the kitten healthy and cuddly, not skinny, not elongated, not angular, not gaunt, not gloomy, not uncanny and not elderly-looking. Keep exactly one kitten and no other animal. Preserve the readable selfie action and plausible paw contact. Correct anatomy only: no duplicate paws, fused limbs, extra ears, warped eyes or broken clothing boundaries. Photorealistic polished social-media travel portrait with soft natural daylight and detailed soft fur. No platform UI, watermark or signature. If any incidental text exists, keep it short, legible and semantically appropriate rather than deleting it or generating gibberish.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "approved-by-user",
+    "score": null,
+    "findings": []
+  },
+  "generatedAt": "2026-08-12T11:09:06.500Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/candidates/travel-selfie_devon-kitten_9x16_v05.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/travel-selfie_devon-kitten_9x16_v05.webp",
+  "masterSha256": "7cddcdca2c12a8c89b95720bb1876a3bb5302ca85a410171a8e1f667d975b723",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-13T00:00:00.000+08:00",
+    "note": "用户已审批通过；此后运行时仅使用自有母版和用户宠物身份图。"
+  }
+}

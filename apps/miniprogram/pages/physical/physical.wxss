@@ -1,0 +1,59 @@
+.block-gap {
+  display: block;
+  margin-top: var(--space-4);
+}
+
+.list {
+  display: grid;
+  gap: var(--space-3);
+}
+
+/* 作品缩略图选择器：横向滚动，选中态用 --primary 描边（需求 5.20-2） */
+.work-rail {
+  display: flex;
+  width: 100%;
+  white-space: nowrap;
+}
+
+.work-item {
+  display: inline-flex;
+  width: 220rpx;
+  box-sizing: border-box;
+  flex-direction: column;
+  padding: var(--space-2);
+  border: var(--card-border);
+  border-radius: var(--card-radius);
+  margin-right: var(--space-3);
+  background: var(--card-background);
+  gap: var(--space-2);
+}
+
+/*
+ * 选中态用 --primary 的双层环，而非 --border-highlight ——
+ * 后者是 border 简写且在 light/cute 下是 `0 solid transparent`，
+ * 拿来当 box-shadow 会让这两套主题彻底失去选中反馈。
+ */
+.work-item-on {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4rpx var(--primary);
+}
+
+/* 横滑小图同样锁 3:4（方案 2.5），固定像素高会让不同产出比例的缩略图参差 */
+.work-cover {
+  display: block;
+  width: 100%;
+  aspect-ratio: var(--ratio-card);
+  border-radius: var(--radius-sm);
+  background: var(--skeleton-base);
+}
+
+.work-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.order-main {
+  display: grid;
+  gap: var(--space-1);
+}

@@ -1,0 +1,42 @@
+{
+  "task": "user-requested-frozen-master-remediation-2026-08-19",
+  "templateId": "mini-companion",
+  "kind": "master",
+  "version": "v04",
+  "status": "generated-pending-visual-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputFidelity": "high",
+  "inputPolicy": {
+    "sequential": true,
+    "maxImages": 2,
+    "maxCombinedBytes": 1000000
+  },
+  "inputs": [
+    {
+      "role": "current-self-owned-master",
+      "path": ".tmp/master-remediation-20260819-inputs/mini-companion-master.jpg",
+      "bytes": 65671,
+      "sha256": "0d612206591d1bc56fa8ca983c52c05ee5480da7f1db8133bf8d67fa8363489d"
+    },
+    {
+      "role": "effect-reference-composition-guide",
+      "path": ".tmp/master-remediation-20260819-inputs/mini-companion-effect.jpg",
+      "bytes": 47347,
+      "sha256": "67246dbb98fdd87d124d5f49bff25dba1e61e8bc547e16d3d34db0a3532c2d06"
+    }
+  ],
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "output": {
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/master-mini-companion.png",
+    "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819/master-candidates/mini-companion_abyssinian-cat_9x16_v04.png",
+    "width": 720,
+    "height": 1280,
+    "sha256": "af965a4eebfb7cb655a57100559fbd09ec59c575de32f72b078f34d5fe35b17f"
+  },
+  "prompt": "Use case: identity-preserve precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the current self-owned master and controls the replacement pet or owner identity unless the request explicitly changes the breed. Image 2 is the composition and effect reference. Use it only to correct the requested composition, pose, expression, gaze or visual treatment. Preserve every aspect that is not explicitly changed below, including the scene, camera, crop, palette, lighting, costume, props, spatial relationships and visual medium. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature. No extra subjects, duplicate anatomy, human hands on animals, malformed paws, text, logo, watermark or signature. Regenerate the two identical adult Abyssinian cats with a substantially stronger heroic low-angle view from below, following Image 2's upward-looking attitude. Move the large cat's left front leg farther left to create a wider, more powerful stance while keeping the paw fully grounded and anatomically correct. Both cats must remain the same adult identity at different scales, and both blue mirrored goggles must fully cover both eyes rather than sit on the forehead. Keep the black jackets, purple harnesses, clean white studio and large-left/small-right relationship. Return a 9:16 portrait composition.",
+  "revisedPrompt": "Edit the provided reference composition into a 9:16 portrait studio scene while preserving the original self-owned master identity of the adult Abyssinian cats. Keep the clean white studio background, minimal floor line, large-left/small-right relationship, black jackets, purple harnesses, blue mirrored goggles, and overall photographic realism. Use the second image only as a pose/composition reference for a stronger heroic low-angle view from below, with an upward-looking attitude. Regenerate TWO identical adult Abyssinian cats at different scales: the larger cat on the left and the smaller cat on the right, both clearly the same adult identity/breed, with anatomically correct paws and no extra subjects. Make the large cat’s left front leg placed farther left to create a wider, more powerful stance while keeping that paw fully grounded and natural. Ensure both blue mirrored goggles fully cover both eyes and sit properly over the face, not on the forehead. Preserve the black jackets and purple harnesses exactly in style and placement. Remove any platform badges, AI labels, account names, account numbers, watermarks, logos, signatures, text, or other markings. No malformed paws, no duplicate anatomy, no human hands, no extra limbs, no cropping errors. Studio lighting remains clean, bright, and evenly lit, with a stronger dramatic low-angle perspective emphasizing the heroic posture.",
+  "generatedAt": "2026-08-19T05:48:24.066Z"
+}

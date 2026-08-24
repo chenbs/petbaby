@@ -1,0 +1,46 @@
+<view class="field {{error ? 'field-invalid' : ''}} {{focused ? 'field-focus' : ''}}">
+  <view wx:if="{{label}}" class="field-head">
+    <text class="field-label">{{label}}<text wx:if="{{required}}" class="field-star">＊</text></text>
+    <text wx:if="{{showCount}}" class="small">{{value.length}}/{{maxlength}}</text>
+  </view>
+
+  <view wx:if="{{control === 'select'}}" class="control control-select">
+    <text class="{{value ? 'control-text' : 'control-hint'}}">{{value || placeholder}}</text>
+    <text class="control-arrow">›</text>
+  </view>
+
+  <textarea
+    wx:elif="{{control === 'textarea'}}"
+    class="control control-area"
+    value="{{value}}"
+    placeholder="{{placeholder}}"
+    placeholder-class="control-hint"
+    maxlength="{{maxlength}}"
+    disabled="{{disabled}}"
+    bindinput="handleInput"
+    bindfocus="handleFocus"
+    bindblur="handleBlur"
+  />
+
+  <view wx:elif="{{control === 'slot'}}" class="control control-slot"><slot></slot></view>
+
+  <view wx:else class="control control-input">
+    <input
+      class="control-inner"
+      value="{{value}}"
+      type="{{inputType}}"
+      password="{{password && !revealed}}"
+      placeholder="{{placeholder}}"
+      placeholder-class="control-hint"
+      maxlength="{{maxlength}}"
+      disabled="{{disabled}}"
+      bindinput="handleInput"
+      bindfocus="handleFocus"
+      bindblur="handleBlur"
+    />
+    <view wx:if="{{password}}" class="control-reveal hit-area" aria-role="button" aria-label="{{revealed ? '隐藏密码' : '显示密码'}}" catchtap="toggleReveal">{{revealed ? '隐藏' : '显示'}}</view>
+  </view>
+
+  <text wx:if="{{error}}" class="field-error">{{error}}</text>
+  <text wx:elif="{{help}}" class="small">{{help}}</text>
+</view>

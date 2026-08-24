@@ -1,0 +1,86 @@
+.picks {
+  display: grid;
+  gap: var(--gap-item);
+}
+
+.picks-2 { grid-template-columns: repeat(2, 1fr); }
+.picks-3 { grid-template-columns: repeat(3, 1fr); }
+
+.pick {
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  border: var(--border-highlight);
+  border-radius: var(--radius-md);
+  background: var(--card-background);
+  box-shadow: var(--shadow-card);
+  transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+}
+
+/* 缩略图按 3:4 竖版，与作品网格同比例，选完立刻能对上结果页的观感 */
+.pick-shot {
+  position: relative;
+  aspect-ratio: var(--ratio-card);
+}
+
+.pick-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* 底部压暗，保证下方文字在任意亮度的缩略图上都可读 */
+.pick-veil {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 45%;
+  background: var(--veil-image);
+}
+
+.pick-meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-0);
+  padding: var(--space-2) var(--space-3) var(--space-3);
+}
+
+.pick-label {
+  color: var(--text-primary);
+  font-size: var(--body-size);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-tight);
+}
+
+.pick-hint {
+  color: var(--text-secondary);
+  font-size: var(--eyebrow-size);
+}
+
+/* 选中态：主色描边 + 右上角实心角标。不改缩略图本身的明暗，
+   否则用户会把选中造成的变暗误读为该风格的出图偏暗。 */
+.pick-on {
+  border: 4rpx solid var(--primary);
+  box-shadow: var(--shadow-image);
+}
+
+.pick-tick {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  width: 32rpx;
+  height: 32rpx;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: var(--shadow-press);
+}
+
+.pick-hover {
+  transform: scale(.97);
+  box-shadow: var(--shadow-press);
+}
+
+.pick-hover.anim-fade { opacity: .9; }
+.pick-hover.anim-glow { box-shadow: 0 0 28rpx var(--ai-glow); }
+.pick-hover.anim-neon { box-shadow: 0 0 0 2rpx var(--primary), 0 0 24rpx var(--ai-glow); }

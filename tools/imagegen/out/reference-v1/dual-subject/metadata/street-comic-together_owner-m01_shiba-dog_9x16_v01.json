@@ -1,0 +1,76 @@
+{
+  "templateId": "street-comic-together",
+  "title": "潮流漫画合照",
+  "entryId": "together",
+  "version": "v01",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "requestOrder": [
+    "effect-reference",
+    "owner-identity",
+    "pet-identity"
+  ],
+  "inputs": [
+    {
+      "role": "third-party-effect-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/16.png",
+      "sha256": "aa93ba2b0a9fc62b1f691ebfeb677f13f7639241246f21d6bb7b0bd82b9911e4"
+    },
+    {
+      "role": "authorized-owner-identity-reference-internal-only",
+      "path": "tools/imagegen/out/source/boy-sample.png",
+      "sha256": "49b88a050ea71482ae41baed294d6738c8aad99a7552eb66dd00ee77565325c0"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "path": "tools/imagegen/out/source/dog-shiba.jpg",
+      "sha256": "fbe7fcef9561979da3d66090d3e9f0bd693c1e1dbfa92820e7942d93a92d29a6"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "ownerPublicSampleAllowed": false,
+  "sceneChangeBudget": "0%",
+  "inputFidelity": "high",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "elapsedMs": 222511,
+  "prompt": "Use case: compositing and identity-preserve. Create a vertical 9:16 self-owned master candidate from exactly three input images. The final delivered asset will be exactly 720x1280 pixels. Image 1 is the effect reference and has highest priority for every non-identity visual decision. Keep a strict 0% scene-change budget: preserve its background, environment, camera position, lens, crop, composition, subject placement, action timing, expression, gaze, hand and paw placement, lighting, colour balance, medium, brushwork or photographic texture, clothing, landmarks, unique props and text layout. Change only the two subject identities and the minimum physical fit around their different bodies. Image 2 is the only owner identity reference. Preserve that exact adult person's face, facial proportions, hair, gender presentation and adult age. It contributes no pose, hand gesture, clothing, camera, scene, light or style. Image 3 is the only pet identity reference. Preserve that exact pet's species, breed, coat colours, markings, face, eye colour, ear shape, muzzle, fur length and healthy adult proportions. It contributes no pose, camera, scene, light or style. Never reuse either original subject identity from Image 1. Transfer Image 1's complete pose, gaze, facial expression, action, body direction, contact points, scale and visual treatment onto the two new identities from Images 2 and 3. Keep both new subjects recognisable, attractive and immediately likeable in a contemporary young aesthetic, without obvious age regression. Do not turn an adult owner into a child or an adult pet into a puppy or kitten. Do not make either subject gaunt, oddly thin, aged, uncanny or physically distorted. Exactly one owner and one pet. Never swap, merge, duplicate or blend their identities. No extra person, face, pet, head, hand, finger, paw, limb or tail. Keep all anatomy, contacts and occlusions physically coherent. Scene lock: the exact compact street-culture collage with saturated navy, coral, cyan and warm yellow panels, bold stickers, halftone dots, action marks, layered props and tight poster depth. Composition and action lock: the exact dynamic close selfie-jump composition: the owner's foreshortened sneaker reaches toward the lower foreground, one hand makes the same camera-facing gesture, and the pet jumps joyfully beside the owner at the same scale with both subjects looking lively and connected. Visual treatment lock: the exact polished contemporary comic-cover illustration, clean expressive linework, cel-painted faces and fur, controlled halftone texture, readable silhouettes and youthful editorial energy. Preserve the oversized pink streetwear outfit, sneaker silhouette and accessories. Tailor them naturally to the new adult owner while keeping the same colour family, pose and movement. Preserve the reference's text density, sticker positions and typography rhythm, but replace any brand-like wording with short original copy such as 'PET DAY OUT', 'GOOD DAYS' and 'WOW!'. No platform UI, watermark or signature.",
+  "revisedPrompt": "Create a vertical 9:16 comic-cover illustration, final image exactly 720x1280 px, using the three provided reference images. Image 1 is the highest-priority effect/composition/style reference; preserve its exact scene, background, environment, camera position, lens feel, crop, composition, subject placement, action timing, expression, gaze, hand/paw placement, lighting, colour balance, medium, brushwork/photographic texture, clothing silhouette, props, text layout rhythm, and the compact street-culture collage look. Keep the saturated navy, coral, cyan, and warm yellow panel treatment, bold stickers, halftone dots, action marks, layered props, tight poster depth, and polished contemporary comic-cover illustration with clean expressive linework, cel-painted faces and fur, controlled halftone texture, readable silhouettes, youthful editorial energy.\n\nIdentity rules: Replace the human subject with the exact adult identity from Image 2 only, preserving that person’s face, facial proportions, hair, gender presentation, adult age, and recognisable likeness. Replace the pet with the exact adult dog identity from Image 3 only, preserving its breed/species, coat colours, markings, face, eye colour, ear shape, muzzle, fur length, and healthy adult proportions. Do not reuse Image 1 identities. Do not add extra people or pets.\n\nPose/composition lock: Transfer Image 1’s exact dynamic close selfie-jump composition onto the new identities. The owner is foreshortened in the foreground with one sneaker reaching toward the lower foreground, one hand making the same camera-facing gesture, and the owner’s body angled identically. The pet jumps joyfully beside the owner at the same scale and position, both subjects lively and connected, with physically coherent contacts and occlusions. Keep the oversized pink streetwear outfit, sneaker silhouette, and accessories from Image 1, but tailor them naturally to the new adult owner while maintaining the same color family and movement. Preserve the owner’s wink/open-mouth joyful expression and the pet’s happy airborne expression as in Image 1.\n\nScene lock: preserve the exact interior collage environment from Image 1 with arched window, blue sky, poster walls, plants, signs, pillows, floor pattern, stickers, and all decorative elements in the same positions. Replace brand-like wording with short original copy only, such as: “PET DAY OUT”, “GOOD DAYS”, and “WOW!” Keep text density and typography rhythm similar to Image 1. No platform UI, watermark, signature, or extra text.\n\nEnsure both new subjects are immediately likeable and contemporary, without age regression. Keep anatomy coherent and attractive. Maintain exact 9:16 framing and the same visual treatment as the reference image.",
+  "automatedChecks": {
+    "dimensions": "pass",
+    "visualContent": "pass",
+    "inputCount": 3,
+    "inputRoleOrder": "pass"
+  },
+  "visualReview": {
+    "state": "approved-by-user",
+    "failureChecks": [
+      "both-subjects-illustrated",
+      "owner-face-identity",
+      "pet-face-identity",
+      "foreshortened-sneaker",
+      "one-owner-one-pet"
+    ],
+    "approvedAt": "2026-08-17T00:00:00.000+08:00"
+  },
+  "generatedAt": "2026-08-17T08:31:25.786Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/dual-subject/candidates/street-comic-together_owner-m01_shiba-dog_9x16_v01.png",
+    "rawPath": "tools/imagegen/out/reference-v1/dual-subject/candidates/raw/street-comic-together_owner-m01_shiba-dog_9x16_v01.png",
+    "sha256": "aaba8d40c8a42e29a8b4566a451626d1d56e0112f7f57f03c92c988d9bf70fc9"
+  },
+  "candidatePath": "tools/imagegen/out/reference-v1/dual-subject/candidates/street-comic-together_owner-m01_shiba-dog_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/street-comic-together_owner-m01_shiba-dog_9x16_v01.webp",
+  "masterSha256": "f3df172173bd51c5ed824788f53127a630267fcee210ca5319338b6caca8e057",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-17T00:00:00.000+08:00",
+    "note": "四张双主体母版已由用户逐组查看并明确审批通过。"
+  },
+  "ownerSourcePhotoPublicSampleAllowed": false,
+  "approvedDerivedMasterPublicSampleAllowed": true
+}

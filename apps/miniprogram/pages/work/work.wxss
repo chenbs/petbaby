@@ -1,0 +1,57 @@
+/* 沉浸式版式下页面自身不再是卡片流，样式只服务于玻璃面板内的插槽内容 */
+.block-gap {
+  display: block;
+  margin-bottom: var(--space-3);
+}
+
+.work-title {
+  margin: var(--space-2) 0;
+}
+
+/* 首屏事实区：两列键值，half 档就能看全 */
+.facts {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.fact {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.section-block {
+  margin-top: var(--space-5);
+}
+
+.share-actions {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.versions {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.version {
+  display: flex;
+  min-height: 88rpx;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-top: var(--glass-border);
+}
+
+.version:first-child {
+  border-top: 0;
+}
+
+.version-info {
+  display: grid;
+  gap: var(--space-1);
+}

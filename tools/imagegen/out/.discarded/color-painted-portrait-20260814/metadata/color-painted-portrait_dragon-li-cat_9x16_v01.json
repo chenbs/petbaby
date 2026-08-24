@@ -1,0 +1,52 @@
+{
+  "templateId": "color-painted-portrait",
+  "title": "彩色绘画肖像",
+  "entryId": "art",
+  "status": "master-candidate-pending-user-approval",
+  "subject": "dragon-li-cat",
+  "breed": "狸花猫",
+  "selectionRationale": "验证橙底粗笔触艺术转译能否保住狸花纹路、圆润脸型和年轻审美。",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-effect-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/4f109cb7-2809-459a-93ef-5e7775e16280.jpg",
+      "sha256": "620aa0a865818f88025ed9345f86e0f38a113520a91627a1dfd1535136b0035a"
+    },
+    {
+      "role": "pet-identity-reference",
+      "path": "apps/website/public/assets/avatar-dragonli.jpg",
+      "sha256": "0f403599969b57f32aa314cf474ce4d57d28f48683e16ae9a032d73b94079732"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving painted portrait. Create a vertical 9:16 collectible pet painting from exactly two input images, composed for an exact final size of 720x1280 pixels. Image 1 is the primary effect reference and scene base. Preserve its core composition, camera language, scene type, clothing, landmark, distinctive props, meaningful text layout and overall visual effect. Allow an optional scene-change budget of approximately 5% to 20%. You may naturally adjust only secondary details, colours, materials, small decorations or context-equivalent props when the adjustment clearly improves the result and belongs in the current scene. Match the original perspective, scale, lighting and visual style. This is not a quota: if no replacement is clearly better, keep the source scene unchanged. Do not redesign the environment or weaken its story. Preserve Image 1's saturated orange field, loose teal and coral accents, bold dry-brush edges, half-body three-quarter pose, generous painted negative space and contemporary gallery-poster energy. Remove the bottom-right platform watermark and account ID only; preserve all meaningful artwork content. Image 2 is the sole pet identity reference and overrides the animal shown in Image 1. Remove the original animal from Image 1 completely and replace it with the exact pet from Image 2. The replacement must look youthful, healthy, rounded and irresistibly cute at first glance, with soft full cheeks, friendly bright eyes and appealing contemporary proportions. Preserve recognisable breed anatomy and the identity markings stated below. Never make the pet skinny, elongated, angular, gaunt, stern, aggressive, strange, elderly-looking or uncanny. Keep exactly one pet identity and no unrelated animal. Correct anatomy only: no duplicate or fused limbs, extra ears, warped eyes, malformed mouth, human hands or broken clothing boundaries. No brand logo, known IP, platform UI, watermark or signature. Preserve the brown-grey mackerel tabby coat, bold forehead M, dark cheek stripes, yellow-green round eyes, pink-brown nose, upright ears and rounded healthy face of the exact Dragon Li cat in Image 2. Give the same cat a warm subtle smile through bright relaxed eyes and a soft closed mouth. Keep the cheeks full and youthful. Translate the tabby markings into expressive brushwork without erasing or randomly changing them. Keep both eyes sharp and recognisable even where the surrounding paint becomes loose. No text, platform mark, logo, watermark or signature.",
+  "revisedPrompt": "Use case: compositing and identity-preserving painted portrait. Create a vertical 9:16 collectible pet painting from exactly two input images, composed for an exact final size of 720x1280 pixels. Image 1 is the primary effect reference and scene base. Preserve its core composition, camera language, scene type, clothing, landmark, distinctive props, meaningful text layout and overall visual effect. Allow an optional scene-change budget of approximately 5% to 20%. You may naturally adjust only secondary details, colours, materials, small decorations or context-equivalent props when the adjustment clearly improves the result and belongs in the current scene. Match the original perspective, scale, lighting and visual style. This is not a quota: if no replacement is clearly better, keep the source scene unchanged. Do not redesign the environment or weaken its story. Preserve Image 1's saturated orange field, loose teal and coral accents, bold dry-brush edges, half-body three-quarter pose, generous painted negative space and contemporary gallery-poster energy. Remove the bottom-right platform watermark and account ID only; preserve all meaningful artwork content. Image 2 is the sole pet identity reference and overrides the animal shown in Image 1. Remove the original animal from Image 1 completely and replace it with the exact pet from Image 2. The replacement must look youthful, healthy, rounded and irresistibly cute at first glance, with soft full cheeks, friendly bright eyes and appealing contemporary proportions. Preserve recognisable breed anatomy and the identity markings stated below. Never make the pet skinny, elongated, angular, gaunt, stern, aggressive, strange, elderly-looking or uncanny. Keep exactly one pet identity and no unrelated animal. Correct anatomy only: no duplicate or fused limbs, extra ears, warped eyes, malformed mouth, human hands or broken clothing boundaries. No brand logo, known IP, platform UI, watermark or signature. Preserve the brown-grey mackerel tabby coat, bold forehead M, dark cheek stripes, yellow-green round eyes, pink-brown nose, upright ears and rounded healthy face of the exact Dragon Li cat in Image 2. Give the same cat a warm subtle smile through bright relaxed eyes and a soft closed mouth. Keep the cheeks full and youthful. Translate the tabby markings into expressive brushwork without erasing or randomly changing them. Keep both eyes sharp and recognisable even where the surrounding paint becomes loose. No text, platform mark, logo, watermark or signature.",
+  "review": {
+    "state": "prechecked-pending-user-approval",
+    "checks": {
+      "petIdentity": "pass",
+      "cuteness": "pass",
+      "effectComposition": "pass",
+      "anatomy": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [
+      "狸花纹路、眼睛与圆润脸型稳定；粗笔触未遮挡身份特征，未保留原水印。"
+    ],
+    "finalApproval": "pending-user"
+  },
+  "generatedAt": "2026-08-13T04:09:25.180Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/color-painted-portrait_dragon-li-cat_9x16_v01.png",
+    "sha256": "25e8deb401dea9b1827657d972591c93a4512cc7dbbdf7a7d05cc9048cfd9e8a"
+  }
+}

@@ -1,0 +1,145 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+
+<view class="page page-tabbar">
+  <text class="eyebrow">ACCOUNT</text>
+  <view class="title">我的宠物造物局</view>
+
+  <t-skeleton wx:if="{{loading}}" type="card" count="2"></t-skeleton>
+
+  <block wx:else>
+    <!--
+      方案 E：个人中心先给「对象」再给功能。默认宠物的封面 + 陪伴天数 + 统计条置顶，
+      用户第一眼看到的是自己的宠物，不是功能货架。
+      没有宠物时整块不出现 —— 方案点出 E 的缺点正是「无数据时页面是空的」，
+      这里的处理是干脆不占位，让下面的额度卡照常打头。
+    -->
+    <t-card
+      wx:if="{{hero}}"
+      variant="hero"
+      clickable
+      blur="{{false}}"
+      anim="{{animType}}"
+      bindtap="openPets"
+    >
+      <view class="hero-media">
+        <image wx:if="{{hero.avatarUrl}}" class="hero-image" src="{{hero.avatarUrl}}" mode="aspectFill" lazy-load />
+        <view wx:else class="hero-image hero-image-blank">🐾</view>
+        <view class="hero-veil"></view>
+        <view class="hero-caption">
+          <text wx:if="{{hero.companionDays}}" class="hero-days">{{hero.companionText}}</text>
+          <view class="hero-name">{{hero.name}}</view>
+        </view>
+      </view>
+      <view class="hero-stats">
+        <view class="hero-stat">
+          <view class="hero-stat-value">{{hero.counts.works}}</view>
+          <text class="hero-stat-label">作品</text>
+        </view>
+        <view class="hero-stat">
+          <view class="hero-stat-value">{{hero.counts.photos}}</view>
+          <text class="hero-stat-label">照片</text>
+        </view>
+        <view class="hero-stat">
+          <view class="hero-stat-value">{{hero.counts.memorials}}</view>
+          <text class="hero-stat-label">纪念日</text>
+        </view>
+      </view>
+    </t-card>
+
+    <!-- 额度用环形进度呈现，一眼看出还剩多少 -->
+    <t-card wx:if="{{status}}" blur="{{blurOk}}" anim="{{animType}}" class="block-gap">
+      <view class="quota">
+        <t-progress
+          shape="ring"
+          tone="ai"
+          percent="{{status.quota.daily ? status.quota.remaining / status.quota.daily * 100 : 0}}"
+          value-text="{{status.quota.remaining}}"
+          label="剩余次数"
+        ></t-progress>
+        <view class="quota-copy">
+          <view class="sub-title">今日免费额度</view>
+          <text class="muted">还能免费生成 {{status.quota.remaining}} 次，每天 {{status.quota.daily}} 次，凌晨重置。</text>
+          <text wx:if="{{profile}}" class="small">{{profile.displayName || '我的账户'}}</text>
+        </view>
+      </view>
+      <view wx:if="{{status.refunds.length}}" class="quota-foot">
+        <t-tag tone="warning" size="mini" text="{{status.refunds.length}} 笔退款处理中"></t-tag>
+      </view>
+    </t-card>
+
+    <view wx:if="{{status.notifications.length}}" class="section">
+      <view class="section-title">站内通知</view>
+      <view class="stack-tight">
+        <t-notice wx:for="{{status.notifications}}" wx:key="id" type="info" message="{{item.title}}：{{item.body}}"></t-notice>
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-title">常用功能</view>
+      <t-card blur="{{blurOk}}" anim="{{animType}}" padded="{{false}}">
+        <view class="entry" hover-class="entry-hover" bindtap="openOrders">
+          <view class="entry-text"><view class="entry-name">订单与退款</view><text class="small">支付记录、发票与退款进度</text></view>
+          <text class="entry-arrow">›</text>
+        </view>
+        <view class="entry" hover-class="entry-hover" bindtap="openPets">
+          <view class="entry-text"><view class="entry-name">宠物档案</view><text class="small">名字、生日与生命阶段</text></view>
+          <text class="entry-arrow">›</text>
+        </view>
+        <view class="entry" hover-class="entry-hover" bindtap="openPhotos">
+          <view class="entry-text"><view class="entry-name">照片库</view><text class="small">已上传的照片与批量管理</text></view>
+          <text class="entry-arrow">›</text>
+        </view>
+        <!-- 健康助手：分诊 + 记录，不是问诊。副标题要说清边界。 -->
+        <view class="entry" hover-class="entry-hover" bindtap="openHealth">
+          <view class="entry-text"><view class="entry-name">健康助手</view><text class="small">要不要去医院、去之前准备什么</text></view>
+          <text class="entry-arrow">›</text>
+        </view>
+        <!--
+          宠物小岛。**入口是卡片/按钮，不是第四个 tab**（22 号文 5.2）：
+          tabBar 页面必须在主包内，而主包余量不足 700KB，撑不住岛首页。
+          是否升 tab 留到 M3 后按留存数据再定。
+
+          名字叫「小岛」而不是「游戏」—— 1.1 的安全区判据把入口措辞也算在内。
+        -->
+        <view class="entry" hover-class="entry-hover" bindtap="openIsland">
+          <view class="entry-text"><view class="entry-name">宠物小岛</view><text class="small">它在小岛上的日子</text></view>
+          <text class="entry-arrow">›</text>
+        </view>
+        <!-- 指首页的玩法货架（X2 删掉了中间那层「选择创作方式」页） -->
+        <view class="entry" hover-class="entry-hover" bindtap="openGrowth">
+          <view class="entry-text"><view class="entry-name">AI、互动与视频</view><text class="small">回到玩法货架挑一个</text></view>
+          <text class="entry-arrow">›</text>
+        </view>
+        <view class="entry" hover-class="entry-hover" bindtap="openMemorials">
+          <view class="entry-text"><view class="entry-name">纪念空间</view><text class="small">为离开的它留一个位置</text></view>
+          <text class="entry-arrow">›</text>
+        </view>
+        <view class="entry" hover-class="entry-hover" bindtap="openCommerce">
+          <view class="entry-text"><view class="entry-name">会员与年度报告</view><text class="small">订阅、权益与实体周边</text></view>
+          <text class="entry-arrow">›</text>
+        </view>
+      </t-card>
+    </view>
+
+    <view class="section">
+      <view class="section-title">设置</view>
+      <t-card blur="{{blurOk}}" anim="{{animType}}" padded="{{false}}">
+        <view class="entry" hover-class="entry-hover" bindtap="openTheme">
+          <view class="entry-text"><view class="entry-name">外观主题</view><text class="small">四套风格，随时切换</text></view>
+          <view class="entry-side">
+            <text class="small strong">{{themeName}}</text>
+            <text class="entry-arrow">›</text>
+          </view>
+        </view>
+        <view class="entry" hover-class="entry-hover" bindtap="openAccount">
+          <view class="entry-text"><view class="entry-name">账户与隐私</view><text class="small">数据导出与账号注销</text></view>
+          <text class="entry-arrow">›</text>
+        </view>
+        <view class="entry" hover-class="entry-hover" bindtap="openLogin">
+          <view class="entry-text"><view class="entry-name">登录与退出</view><text class="small">切换账号</text></view>
+          <text class="entry-arrow">›</text>
+        </view>
+      </t-card>
+    </view>
+  </block>
+</view>

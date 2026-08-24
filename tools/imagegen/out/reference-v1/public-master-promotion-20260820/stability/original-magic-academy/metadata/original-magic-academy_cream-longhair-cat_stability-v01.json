@@ -1,0 +1,67 @@
+{
+  "id": "original-magic-academy_cream-longhair-cat_stability-v01",
+  "templateId": "original-magic-academy",
+  "title": "原创魔法学院",
+  "sequence": 17,
+  "identityId": "cream-longhair-cat",
+  "identityLabel": "长毛猫",
+  "species": "cat",
+  "breed": "cream long-haired cat",
+  "status": "generated-pending-human-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "requestPolicy": {
+    "concurrency": 1,
+    "outputsPerRequest": 1,
+    "inputCount": 2,
+    "combinedInputBytes": 188700,
+    "maxCombinedInputBytesExclusive": 1000000,
+    "maxInputEdge": 1200,
+    "comparisonSheetIncluded": false
+  },
+  "inputs": [
+    {
+      "role": "compressed-public-preview-master-candidate",
+      "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/api-inputs/original-magic-academy_public-v02_master-candidate.jpg",
+      "sha256": "533853e76a7edb471decc06dc0b06ef20ce3b8d11cb192beabacafaffcc7d62c",
+      "bytes": 83288,
+      "sourceCandidatePath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/candidates/original-magic-academy_public-v02_master-candidate.png",
+      "sourceCandidateSha256": "afb161ac9bb1ea33d4c927561dedf2e3def8c66ec77fa8f72d8584b9299d57f4"
+    },
+    {
+      "role": "compressed-pet-identity-reference",
+      "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/api-inputs/cream-longhair-cat.jpg",
+      "sha256": "5efb20f77e222564fc3d51c99c596895625f61b60e1bdfb8225fb820eaec9d1b",
+      "bytes": 105412,
+      "sourcePath": "tools/imagegen/out/source/cat-cream.jpg"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "prompt": "Use case: identity-preserving production-master stability validation. Create one vertical 9:16 image composed for an exact final size of 720x1280 pixels from exactly two input images. Image 1 is a proposed self-owned runtime master copied byte-for-byte from an approved public preview. It is the sole reference for composition, scene, pose, expression, styling, lighting, palette, clothing, props and text layout. Image 2 is the sole pet identity reference. Replace every animal depiction in Image 1 with the exact cream long-haired cat from Image 2. Preserve the target pet's pale cream long coat, soft cream points, blue eyes, pink nose, triangular ears, fluffy tail and full natural proportions. Image 2 controls identity and species; do not retain the sample animal's breed or facial structure from Image 1. The replacement must remain recognisably the same cat as Image 2 while naturally adopting Image 1's pose and expression. Preserve its real age and breed proportions; do not beautify, juvenilize, enlarge or shrink the head arbitrarily, or invent a generic cute face. Scene-change budget: 0%. Do not redesign, simplify, crop, recolour, relight, add, remove or move any background element, garment, prop, graphic mark or text. Make only the smallest local geometry adjustment needed for the replacement animal to fit the existing pose and clothing. Keep the dark green magic-academy robe and scarf, stone classroom, potion props, warm cinematic light and the same seated full-body composition. Keep all existing readable text unchanged. Add no new text, logo, signature, watermark or AI label. Avoid duplicate heads, extra eyes, extra ears, extra limbs, malformed paws, fused clothing, floating props and mixed-species anatomy.",
+  "revisedPrompt": "Create a single vertical 9:16 image, final framing matching 720x1280 pixels. Use Image 1 as the exact scene/composition/style reference and Image 2 as the sole identity reference for the cat. Preserve the dark green magic-academy robe and scarf, stone classroom interior, potion props, warm cinematic lighting, and the same seated full-body composition from Image 1. Replace the animal in Image 1 with the exact cat from Image 2: a pale cream long-haired cat with soft cream points, blue eyes, pink nose, triangular ears, fluffy tail, and natural adult proportions. Keep the cat recognizably the same as Image 2 while adapting to the pose and expression of Image 1 with only the smallest local geometry changes needed for fit. Do not change background elements, garments, props, graphic marks, or text. Keep all readable text unchanged. Do not add any new text, logo, signature, watermark, or label. Avoid duplicate heads, extra eyes, extra ears, extra limbs, malformed paws, fused clothing, floating props, or mixed-species anatomy. Scene-change budget: 0%.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/original-magic-academy/original-magic-academy_cream-longhair-cat_stability-v01.png",
+    "sha256": "d59bd5613f8dc606fbf1a3fa076191a31d1180e0fc050b13591646233ce507ec",
+    "size": "720x1280"
+  },
+  "rawOutputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/original-magic-academy/raw/original-magic-academy_cream-longhair-cat_stability-v01.png",
+  "automatedChecks": {
+    "dimensions": "pass",
+    "visualContent": "pass",
+    "inputCount": "pass",
+    "inputBytes": "pass",
+    "requestSerial": "pass"
+  },
+  "humanChecks": {
+    "petIdentity": "pending",
+    "compositionAndCrop": "pending",
+    "poseExpressionAndGaze": "pending",
+    "clothingPropsAndText": "pending",
+    "styleAndPalette": "pending",
+    "anatomy": "pending"
+  },
+  "finalApproval": "pending-user",
+  "elapsedMs": 38833,
+  "generatedAt": "2026-08-20T06:18:07.490Z"
+}

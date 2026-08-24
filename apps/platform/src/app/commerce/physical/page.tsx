@@ -1,0 +1,2 @@
+import Link from "next/link"; import { PhysicalCommerceClient } from "@/components/physical-commerce-client";
+export default function PhysicalCommercePage(){return <main className="screen"><div className="page-heading"><Link className="back-link" href="/commerce">返回权益中心</Link><span className="eyebrow">PHYSICAL EDITION</span><h1>把作品做成实体纪念品</h1><p>选择已解锁作品，填写收货地址，支付后进入印刷和物流履约。</p></div><PhysicalCommerceClient/></main>}

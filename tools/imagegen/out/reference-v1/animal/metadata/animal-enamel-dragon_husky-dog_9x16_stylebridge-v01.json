@@ -1,0 +1,63 @@
+{
+  "templateId": "animal-enamel-dragon",
+  "entryId": "character",
+  "title": "珐琅彩龙宠",
+  "version": "stylebridge-v01",
+  "status": "generated-pending-user-approval",
+  "remediation": "shared-two-stage-style-bridge",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-06-20-2057-图片风格为CG 厚涂,CG 厚涂，游戏CG ，丰富的色彩层次，质感细腻，真实光影....png",
+      "sha256": "93c62325edce2e2080f92f7866da2d7e38375dfcedbfbafc31fa01d55a86e1ab"
+    },
+    {
+      "role": "self-owned-pet-identity-reference-for-guide-only",
+      "path": "tools/imagegen/out/source/dog-husky.jpg",
+      "sha256": "41280a50599eb23fa200e8851d1c6a12762398d62f868fe29e18c315eff87a8d"
+    },
+    {
+      "role": "pre-stylized-identity-guide-for-final-edit",
+      "path": "tools/imagegen/out/reference-v1/animal/style-guides/animal-enamel-dragon_husky-dog_guide-v01.png",
+      "sha256": "e23cb362e698422a4b7128ac16915a6883865a250b1bd24e7c2fcea4a8f63f87"
+    }
+  ],
+  "finalEditInputOrder": [
+    "one-time-third-party-effect-reference",
+    "pre-stylized-identity-guide"
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "guide": {
+    "prompt": "Use case: style-transfer identity preprocessing for a reusable pet template pipeline. Image 1 is the sole authority for visual medium and stylization only: copy its brushwork, line language, pigment behavior, edge treatment, texture scale, shape simplification, facial abstraction, anatomical stylization, local contrast and degree of realism. Image 2 is the sole authority for pet identity only: preserve its adult breed, coat pattern, markings, ear shape, eye color, muzzle proportions and healthy mature body type. Create one clean centered subject study of the pet from Image 2, fully redrawn through Image 1's non-photographic visual language. Use a plain unobtrusive background and do not copy Image 1's scene, pose, costume, props, text or layout. The pet must look drawn, painted or sculpted by the same visual system as Image 1 before it enters the final scene. Replace literal fur strands with the reference's marks and shapes; replace photographic eyes, wet nose highlights, lens lighting and realistic facial volume with the reference's stylized equivalents. Keep the pet recognizable, appealing, adult and healthy. No puppy or kitten proportions, no photorealistic face, no studio-photo lighting, no shallow depth of field, no realistic fur microtexture, no text, no logo and no watermark. Identity: adult adult grey-and-white Siberian Husky; symmetrical grey cap, broad white blaze, white muzzle and chest, ice-blue eyes, upright ears and dense adult coat. Return only the finished pre-stylized identity guide.",
+    "revisedPrompt": "Create a single clean centered character study of an adult grey-and-white Siberian Husky, fully redrawn in a non-photographic fantasy illustration style inspired by a luminous crystalline painterly system: soft airbrushed glow, crisp decorative edge highlights, swirling mark language, simplified fur masses instead of individual fur strands, smooth sculpted anatomy, elegant stylized facial planes, subtle iridescent blue-cyan-violet accents used as painterly sheen, gentle bloom, and appealing large expressive ice-blue eyes rendered as stylized luminous gems rather than realistic eyes. Preserve the husky identity precisely: adult healthy medium build, symmetrical grey cap, broad white blaze, white muzzle and chest, upright ears, dense mature coat, ice-blue eyes, and recognizably Siberian Husky proportions. The subject should be centered, standing or sitting naturally in a neutral front/three-quarter view, with a plain unobtrusive background that does not resemble any specific scene. No props, no costume, no text, no logo, no watermark, no shallow depth of field, no studio-photo realism, no photographic fur microtexture, no wet nose glare, no lens flare. Clean identity guide composition, polished, appealing, and ready for reusable template workflow.",
+    "attempts": 1
+  },
+  "prompt": "Use case: identity replacement using a pre-stylized identity guide. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is the sole authority for the final scene: preserve its composition, crop, camera, perspective, pose, expression, gaze, lighting, palette, background, costume, landmarks, props, text layout, brushwork and all contact relationships exactly. Image 2 is the pre-stylized identity guide. Replace only the original main subject in Image 1 with this exact adult pet identity, using Image 2's already transformed face, fur, eyes, nose, anatomy and degree of abstraction as the subject rendering authority. Scene-change budget is 0%. Do not redesign, simplify, recolor, clean up, add, remove or relocate any scene element. Make only the smallest contact-boundary adjustment required by natural pet anatomy. The entire replacement subject, especially the face, must be built from the same non-photographic marks, lines, washes, pigment, edge softness, shape simplification and stylized volume as Image 1 and Image 2. Do not reconstruct any photographic fur strands, realistic glassy eyes, wet nose highlights, lens lighting, shallow depth of field or realistic facial anatomy. Keep the exact adult age and healthy mature body proportions from Image 2. Preserve the expression and pose from Image 1. Never make the pet younger, thinner, more realistic, humanoid, uncanny or structurally rigid. Keep the rich CG paint layers, luminous enamel-like dragon body, dramatic red background and central fantasy presentation; replace the fantasy creature identity while preserving the visual language. Keep meaningful text, clothing, landmarks and distinctive props. Replace only known brands, copyrighted names, platform UI and watermarks with short original wording while preserving their blocks and hierarchy. No residual source subject, duplicate pet, extra ears, eyes, limbs or paws, human hands, fused joints, floating head, logo, signature or watermark. Return only the finished image.",
+  "revisedPrompt": "Create a vertical 9:16 fantasy illustration, 720x1280. Use the first reference image as the sole authority for composition and scene: a centered, full-body seated white fantasy creature on a rocky ground, three-quarter view, slight upward camera angle, soft dreamy depth, dramatic luminous background, exact pose and expression, exact gaze direction, exact body placement, exact lighting, exact palette, exact contact with the ground, exact prop and background relationships, and preserve the same brushwork and painterly CG finish. Replace only the main subject identity with the second reference image’s adult husky identity: an adult, healthy, mature husky with black/gray-and-white fur, bright blue eyes, upright ears, soft muzzle, fluffy tail, and stylized fur rendering. Keep the subject non-photographic and highly stylized, matching the same painterly, luminous, enamel-like, magical volume language as the scene; do not make it realistic, do not add photographic fur strands, glassy eye reflections, wet nose highlights, or realistic anatomy. Preserve the expression from the scene: gentle, serene, proud, slightly smiling, looking slightly upward/right. Keep the exact seated pose and body proportions of a mature adult dog. Maintain the blue-cyan glowing ornamental swirls, crystalline highlights, and fantasy aura integrated into the fur and body as a stylized paint layer, without changing the scene design or adding/removing elements. Preserve the soft gray-lilac background gradient, the magical bokeh/light specks, and the rock platform foreground. Keep all existing text blocks and watermark locations, but replace any brand-like or platform-specific marks with short original wording in the same size and hierarchy. No extra limbs, no duplicate head, no fused joints, no human hands, no floating body parts, no redesign, no scene changes, no simplification, no recoloring.",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-enamel-dragon_husky-dog_9x16_stylebridge-v01.png",
+    "sha256": "db1cab23e5389f9c5389184faa965899b56b31e1d0dc2e7d1f1d6766fd42b82c"
+  },
+  "review": {
+    "state": "pending-human-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-18T01:52:22.291Z"
+}

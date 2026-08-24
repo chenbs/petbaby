@@ -1,0 +1,56 @@
+{
+  "templateId": "fun-scream-reaction",
+  "entryId": "fun",
+  "title": "尖叫瞬间",
+  "sourceEffectFile": "apps/website/public/assets/example/1786368532819.png",
+  "status": "revision-required-by-user",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/1786368532819.png",
+      "sha256": "d88075d81335cc9e4593221644d67a34a067a4fc57365fc29dcada13bc45ad15"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "husky-dog",
+      "species": "dog",
+      "breed": "adult grey-and-white Siberian Husky",
+      "path": "tools/imagegen/out/source/dog-husky.jpg",
+      "sha256": "41280a50599eb23fa200e8851d1c6a12762398d62f868fe29e18c315eff87a8d"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult grey-and-white Siberian Husky with symmetrical grey cap, broad white blaze, white muzzle and chest, ice-blue eyes, upright ears and dense adult coat. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the open-mouth surprised expression and speed-line sketch energy; preserve a friendly, appealing adult face. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Edit the provided Image 1 into a final 9:16 composition at 720x1280, preserving Image 1's exact cartoon/sketch style, crop, perspective, pose, expression, line quality, brushwork, texture, palette, background, and speed-line energy. Replace the original dog identity in Image 1 with the adult grey-and-white Siberian Husky identity from Image 2: symmetrical grey cap, broad white blaze, white muzzle and chest, ice-blue eyes, upright ears, dense adult coat, friendly appealing adult proportions. Keep the same open-mouth surprised expression and dynamic sketch look from Image 1, but make the subject clearly the Husky identity from Image 2. Do not paste a photo-real face; render the Husky fully in Image 1's visual language. Preserve all meaningful background, lighting, composition, and motion marks exactly; do not redesign or clean up the scene. Correct only the smallest anatomy needed for a coherent adult husky: no extra limbs, no duplicated head, no residual source subject. No text changes unless unavoidable; keep the rest of Image 1 intact. Finish as a clean vertical 9:16 master image.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/expansion/candidates/fun-scream-reaction_husky-dog_9x16_v01.png",
+    "sha256": "0e90e0d2f55f843b8b7335f31f268d6631bfa02960f58a0e8a879c4b5c6590e6"
+  },
+  "review": {
+    "state": "revision-required-by-user",
+    "finalApproval": "revision-required",
+    "findings": [
+      "用户要求按 pending-masters-comparison 逐项修正，并以 fun-scream-reaction_husky-dog_9x16_v02 作为下一版待审候选。"
+    ],
+    "reviewedAt": "2026-08-20T00:00:00+08:00"
+  },
+  "generatedAt": "2026-08-17T16:11:39.681Z",
+  "replacedBy": "fun-scream-reaction_husky-dog_9x16_v02"
+}

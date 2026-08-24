@@ -1,0 +1,53 @@
+/**
+ * 组件内共享文本类。
+ *
+ * 组件默认 styleIsolation 为 isolated，app.wxss 不会下渗到组件内部，
+ * 因此需要文本层级类的组件用 `@import "../shared.wxss";` 引入本文件。
+ * 这里只做变量到语义类的映射，与 app.wxss 保持同名同义，仍然零硬编码。
+ */
+.muted {
+  color: var(--text-secondary);
+  font-size: var(--body-size);
+  line-height: 1.7;
+}
+
+.small {
+  color: var(--text-secondary);
+  font-size: var(--small-size);
+  line-height: 1.6;
+}
+
+.strong {
+  color: var(--text-primary);
+  font-weight: var(--fw-bold);
+}
+
+.center {
+  text-align: center;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.eyebrow {
+  display: block;
+  color: var(--text-secondary);
+  font-size: var(--eyebrow-size);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--eyebrow-tracking);
+}
+
+.sub-title {
+  color: var(--text-primary);
+  font-size: var(--font-h3);
+  font-weight: var(--fw-bold);
+}
+
+.hit-area {
+  min-width: 88rpx;
+  min-height: 88rpx;
+}

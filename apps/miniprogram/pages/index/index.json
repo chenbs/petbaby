@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "玩法",
+  "usingComponents": {
+    "t-card": "../../components/card/index",
+    "t-tag": "../../components/tag/index",
+    "t-notice": "../../components/notice/index",
+    "t-empty": "../../components/empty/index",
+    "t-skeleton": "../../components/skeleton/index"
+  }
+}

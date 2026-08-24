@@ -1,0 +1,91 @@
+{
+  "templateId": "fun-beach-caption",
+  "entryId": "fun",
+  "title": "海边三格字幕",
+  "version": "v02",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "sourceEffectFile": "apps/website/public/assets/example/1786369093259.png",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/1786369093259.png",
+      "sha256": "7cc77e5717efe3f38889efa9ec305b329727cb4ddb380be9bda0628662eee88c",
+      "requestPath": ".tmp/pending-remediation-20260820-inputs/fun-beach-caption-effect.jpg",
+      "requestBytes": 55604
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "shiba-dog",
+      "species": "dog",
+      "breed": "adult red Shiba Inu",
+      "path": "tools/imagegen/out/source/dog-shiba.jpg",
+      "sha256": "fbe7fcef9561979da3d66090d3e9f0bd693c1e1dbfa92820e7942d93a92d29a6",
+      "requestPath": ".tmp/pending-remediation-20260820-inputs/fun-beach-caption-identity.jpg",
+      "requestBytes": 72441
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "inputPolicy": {
+    "maxImages": 2,
+    "maxLongestEdge": 1200,
+    "jpegQuality": 82,
+    "combinedBytesBelow": 1048576,
+    "serial": true
+  },
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be adult red Shiba Inu with red-and-cream coat, cream cheeks and chest, dark almond eyes, triangular ears, curled tail and compact adult body. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the beach and the exact three-panel action and caption timing. Preserve bilingual Chinese-and-English subtitles in every panel. Render the three Chinese lines verbatim as '山的那边是什么--', '你不用告诉我--', and '我自己会去看'. Render their English lines verbatim as '-What's beyond the mountain?', '-You don't have to tell me', and 'I will go and see it myself'. The last Chinese line must be exactly '我自己会去看', never '我自己去看看'. Do not omit the English subtitles and do not add alternative wording. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a vertical 9:16 image at 720x1280 that is an exact composition-preserving edit of the first attached reference image, using the second attached image only as the identity reference for the subject. Preserve the three-panel layout, camera angles, crops, horizon lines, lighting, atmosphere, colors, background, and all visual timing from the first image exactly. Replace every original animal subject with one coherent adult red Shiba Inu identity from the second image, keeping only Shiba anatomy and coat traits: red-and-cream coat, cream cheeks and chest, dark almond eyes, triangular ears, curled tail, compact adult body. Match the first image’s visual language in each panel rather than pasting a photographic face into an illustration. Keep the beach scene and exact three-panel action.\n\nPanel 1: back-view Shiba on the beach at dusk, centered, looking out at the ocean, with the same composition and mood as the reference. Preserve the subtitle placement and text block style. Render the Chinese line exactly as: 山的那边是什么--\nRender the English line exactly as: -What's beyond the mountain?\n\nPanel 2: seated Shiba on the beach beside the flowers, same pose and framing as the reference, with the same subtitle placement. Render the Chinese line exactly as: 你不用告诉我--\nRender the English line exactly as: -you don't have to tell me\n\nPanel 3: extreme close-up Shiba face filling the frame, with the same subtitle placement and hierarchy as the reference. Render the Chinese line exactly as: 我自己会去看\nRender the English line exactly as: -I will go and see it myself\n\nKeep all subtitles bilingual, preserve their relative positions and timing feel, and do not add any extra wording. Do not introduce new logos, signatures, or unrelated elements. Correct anatomy only; no extra ears, eyes, limbs, or duplicate pets. Preserve the original image’s background and composition exactly while changing only the subject identity to the adult Shiba Inu.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/pending-remediation-20260820/candidates/fun-beach-caption_shiba-dog_9x16_v02.png",
+    "rawPath": "tools/imagegen/out/reference-v1/pending-remediation-20260820/raw/fun-beach-caption_shiba-dog_9x16_v02.png",
+    "sha256": "6d94b19c7362f91963a284751c4cf06b717a56ac69311fad354df39eec7e43cf"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "checks": {
+      "dimensions": "pass",
+      "inputContract": "pass",
+      "visualAcceptance": "pending-user"
+    },
+    "findings": [],
+    "approvedAt": "2026-08-20T14:00:00+08:00"
+  },
+  "generatedAt": "2026-08-20T01:50:38.929Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/pending-remediation-20260820/candidates/fun-beach-caption_shiba-dog_9x16_v02.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/fun-beach-caption_shiba-dog_9x16_v02.webp",
+  "masterSha256": "c2518f34eb4169842e7a0c0c83d1aede610c5f06e55f5f789c12c22f05d2df7b",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-20T14:00:00+08:00",
+    "note": "用户明确确认 pending-masters-comparison.png 全部审核通过并要求冻结母版。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/fun-beach-caption_shiba-dog_9x16_v02.webp",
+      "sha256": "c2518f34eb4169842e7a0c0c83d1aede610c5f06e55f5f789c12c22f05d2df7b"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-candidate",
+      "unapproved-candidate"
+    ]
+  }
+}

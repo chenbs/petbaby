@@ -1,0 +1,64 @@
+{
+  "templateId": "color-painted-portrait",
+  "title": "彩色绘画肖像",
+  "entryId": "art",
+  "status": "master-candidate-pending-user-approval",
+  "subject": "dragon-li-cat",
+  "breed": "狸花猫",
+  "revision": {
+    "version": "v05",
+    "supersedes": "color-painted-portrait_dragon-li-cat_9x16_v04.png",
+    "reviewFinding": "v04 面部笔触已增强，但眼睛仍有白色镜面高光，鼻口和胡须仍略偏写实。",
+    "scope": "face-medium-style-transfer"
+  },
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "previous-master-candidate-edit-target",
+      "path": "tools/imagegen/out/reference-v1/candidates/color-painted-portrait_dragon-li-cat_9x16_v04.png",
+      "sha256": "5b7e5dcba316eb5e5ccd41d043aba1619ee5a0206e550c7637c43970c31d8c1d"
+    },
+    {
+      "role": "third-party-face-medium-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/4f109cb7-2809-459a-93ef-5e7775e16280.jpg",
+      "sha256": "620aa0a865818f88025ed9345f86e0f38a113520a91627a1dfd1535136b0035a"
+    },
+    {
+      "role": "pet-identity-only-reference",
+      "path": "apps/website/public/assets/avatar-dragonli.jpg",
+      "sha256": "0f403599969b57f32aa314cf474ce4d57d28f48683e16ae9a032d73b94079732"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: precise face-medium edit with identity preservation. Create a vertical 9:16 hand-painted pet portrait at exactly 720x1280 pixels from exactly three input images. Image 1 is the edit target. Preserve its exact composition, half-body pose, body proportions, orange field, teal and coral accents, dry-brushed body, scraped pigment, negative space and all paint outside the head. The body and background already work; do not redesign them. Image 2 is the authoritative hand-painted face-medium reference. Repaint the complete head and facial area of Image 1 with the same rough dry-brush language: broad broken bristle strokes, scraped pigment, flat colour masses, exposed underpainting, simplified dark gestural lines and intentionally incomplete edges. The face, ears and neck must visibly belong to the same physical painting as the body. Follow Image 2's gentle illustrated eye treatment. Replace both open eyes completely with friendly relaxed squinting eyes: each eye is only a short curved charcoal dry-brush arc with a small muted ochre shadow beneath it. There must be no visible eyeball, iris, pupil, white highlight, reflected window, gradient, translucency, wetness or glass depth. The cat remains identifiable through its forehead M, cheek stripes, rounded face, ears, nose and coat pattern. Reconstruct the pink-brown nose as one flat matte coral paint patch outlined by a broken charcoal stroke, with rough dry-brush edges, no pores, no gradient and no shine. Create a tiny calm closed-mouth smile using two short charcoal brush curves. Build the muzzle, cheek stripes and forehead M from broad broken dry-brush marks. Reduce cheek and brow fur to chunky directional paint groups. Use only three or four broken charcoal whisker strokes per side, never clean camera-sharp white hairs. Image 3 is identity-only. Preserve the same Dragon Li cat's brown-grey mackerel tabby pattern, forehead M, cheek stripes, yellow-green eyes, pink-brown nose, upright ears and rounded youthful face. Do not import Image 3's photographic lighting, individual hairs, lens sharpness, smooth shading or glossy surfaces. Keep the expression warm, calm, contented and lovable. Blend the repainted head naturally into the already painted chest and background, allowing some edge strokes to dissolve into orange and teal. Reject any open eyeball, iris, pupil, eye catchlight, reflected window, glass depth, photoreal eye, photographic nose, camera-resolved whiskers or fur, smooth airbrush realism, cut-out face, 3D rendering, text, logo, watermark or signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "prechecked-pending-user-approval",
+    "checks": {
+      "petIdentity": "pass",
+      "cuteness": "pass",
+      "effectComposition": "pass",
+      "subjectMediumConsistency": "pass",
+      "faceMediumConsistency": "pass",
+      "anatomy": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [
+      "狸花猫面部已改为干刷眯眼、扁平颜料鼻口和断续炭笔胡须；无镜面眼球，脸部和身体使用同一干刷刮擦媒介。"
+    ],
+    "finalApproval": "pending-user"
+  },
+  "generatedAt": "2026-08-13T07:30:24.739Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/color-painted-portrait_dragon-li-cat_9x16_v05.png",
+    "sha256": "de29fac422c28b79bc94ddbb5ff47caf2249cc2e73d9f2350c6bcee308c61bc2"
+  }
+}

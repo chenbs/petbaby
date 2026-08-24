@@ -1,0 +1,70 @@
+{
+  "generatedAt": "2026-08-18T12:24:22.359Z",
+  "overview": [
+    {
+      "code": "A01",
+      "templateId": "human-breezy-fence",
+      "identityId": "tuxedo-cat"
+    },
+    {
+      "code": "A02",
+      "templateId": "human-color-splash",
+      "identityId": "parrot"
+    },
+    {
+      "code": "A03",
+      "templateId": "human-jade-garden",
+      "identityId": "rabbit"
+    },
+    {
+      "code": "A04",
+      "templateId": "human-moonlit-fantasy",
+      "identityId": "ragdoll-cat"
+    },
+    {
+      "code": "A05",
+      "templateId": "human-snow-scarf",
+      "identityId": "husky-dog"
+    },
+    {
+      "code": "A06",
+      "templateId": "human-hanfu-summer",
+      "identityId": "corgi-dog"
+    },
+    {
+      "code": "A07",
+      "templateId": "human-urban-collar",
+      "identityId": "black-cat"
+    },
+    {
+      "code": "A08",
+      "templateId": "human-evening-blazer",
+      "identityId": "golden-dog"
+    },
+    {
+      "code": "A09",
+      "templateId": "human-flower-daylight",
+      "identityId": "hamster"
+    },
+    {
+      "code": "A10",
+      "templateId": "human-black-tee",
+      "identityId": "black-lab-dog"
+    },
+    {
+      "code": "A11",
+      "templateId": "human-sunlit-short-hair",
+      "identityId": "poodle-dog"
+    },
+    {
+      "code": "A12",
+      "templateId": "human-tailored-suit",
+      "identityId": "blue-british-cat"
+    }
+  ],
+  "comparison": {
+    "optionA": "direct-pet-reference",
+    "optionB": "two-stage-human-identity",
+    "expectedWinner": "optionB"
+  }
+}

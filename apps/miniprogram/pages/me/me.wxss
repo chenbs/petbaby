@@ -1,0 +1,149 @@
+.quota {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.quota-copy {
+  display: grid;
+  flex: 1;
+  gap: var(--space-1);
+}
+
+.quota-foot {
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 2rpx solid var(--divider);
+}
+
+/* 入口行：整行可点，最小高度 88rpx 保证触达 */
+.entry {
+  display: flex;
+  min-height: 112rpx;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-5);
+  border-bottom: 2rpx solid var(--divider);
+}
+
+.entry:last-child {
+  border-bottom: 0;
+}
+
+.entry-hover {
+  background: var(--surface);
+}
+
+.entry-text {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.entry-name {
+  color: var(--text-primary);
+  font-size: var(--body-size);
+  font-weight: 700;
+}
+
+.entry-side {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.entry-arrow {
+  color: var(--text-secondary);
+  font-size: var(--font-h3);
+  line-height: 1;
+}
+
+/* ---------- 方案 E 区块：默认宠物置顶 ---------- */
+
+.hero-media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: var(--ratio-hero);
+  border-radius: inherit;
+}
+
+.hero-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--skeleton-base);
+}
+
+/* 没上传头像时给爪印占位。这不是「假成品图」——它标的是档案本身，不冒充产出 */
+.hero-image-blank {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  font-size: var(--title-size);
+}
+
+.hero-veil {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 62%;
+  background: var(--veil-image);
+  pointer-events: none;
+}
+
+.hero-caption {
+  position: absolute;
+  right: var(--space-4);
+  bottom: var(--space-4);
+  left: var(--space-4);
+  display: grid;
+  gap: var(--space-0);
+}
+
+/* 压图文字走玻璃态亮色：遮罩下永远是暗底，浅色主题的深色正文在这里看不见 */
+.hero-days {
+  color: var(--glass-text-secondary);
+  font-size: var(--small-size);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--eyebrow-tracking);
+}
+
+.hero-name {
+  color: var(--glass-text-primary);
+  font-size: var(--font-h2);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-h2);
+}
+
+.hero-stats {
+  display: grid;
+  padding: var(--space-4) var(--space-5);
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.hero-stat {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-0);
+  border-left: 2rpx solid var(--divider);
+}
+
+.hero-stat:first-child {
+  border-left: 0;
+}
+
+.hero-stat-value {
+  color: var(--text-primary);
+  font-size: var(--font-h3);
+  font-weight: var(--fw-bold);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--lh-h3);
+}
+
+.hero-stat-label {
+  color: var(--text-secondary);
+  font-size: var(--eyebrow-size);
+  letter-spacing: var(--eyebrow-tracking);
+}

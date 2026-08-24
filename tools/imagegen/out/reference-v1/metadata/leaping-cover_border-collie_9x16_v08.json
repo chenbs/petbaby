@@ -1,0 +1,66 @@
+{
+  "templateId": "leaping-cover",
+  "title": "腾空跳跃封面",
+  "entryId": "action",
+  "status": "master-candidate-pending-user-approval",
+  "subject": "border-collie",
+  "breed": "边境牧羊犬",
+  "revision": {
+    "version": "v08",
+    "supersedes": "leaping-cover_border-collie_9x16_v07.png",
+    "reviewFinding": "v07 的碎密笔触与动势已经过强：高饱和纯色和大量杂色点使画面发脏，眼鼻、口鼻与毛发塑形仍残留真实动物质感，没有与背景统一为手绘水彩媒介。",
+    "scope": "restrained-palette-watercolor-face-medium-unification-full-regeneration"
+  },
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-soft-impressionist-effect-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/223c5d78-2ba2-49ff-b35e-8c247fd53b20.jpg",
+      "sha256": "ee04f9b8c5a48fe8ad768ec5d51fc5463093f437bf697899d1ee7821e6151a51"
+    },
+    {
+      "role": "pet-identity-only-reference",
+      "path": "apps/website/public/assets/work-border.jpg",
+      "sha256": "8862d1dc48584f73309eac0890afb3367759dd131c681de970976b52a561fc50"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: style-transfer with pet identity preservation. Create a vertical 9:16 hand-painted watercolor-impressionist pet action cover at exactly 720x1280 pixels from exactly two input images. Image 1 is the authoritative effect, composition, expression and style reference. Preserve its front-facing joyful leap, two large soft foreground paws, compact airborne body, completely closed happy crescent eyes, gentle open smile, small rounded nose, turquoise atmosphere, magenta-purple lower field, orange-yellow accents, loose colour blocks, light splashes and airy visual rhythm. Remove only its platform watermark and account ID. Use one consistent hand-painted watercolor medium across the dog, face and background: visible wet-on-dry brush marks, translucent layered washes, broken dry-brush edges, subtle paper grain and small areas of natural pigment pooling. The result must look painted by hand, never like a realistic animal placed over a painted background. Render the fur with dense short broken watercolor strokes and irregular multi-directional dry-brush dabs. Keep the marks fragmented and lively but controlled: concentrate them on the face, ears, cheeks, chest and paws, leaving occasional calmer wash areas so the image stays clean and breathable. Preserve a soft fluffy silhouette without smooth photographic hair or hard anatomical modelling. Use moderate local contrast only where individual dark and light watercolor marks overlap. Keep brush marks readable but slightly absorbent and organic, with watercolor edge variation rather than digital sharpening, hard outlines or crisp photo detail. Match Image 1's colour intensity instead of exceeding it. Use a restrained medium-saturation palette of softened turquoise, blue-green, muted magenta-purple, warm ochre and coral-orange. Place a few larger background strokes close to the dog to support motion, but reduce tiny multicolour speckles, neon purity, all-over colour collisions and visual dirt. Preserve clear breathing space between colour groups. Give the Border Collie a cute, simplified watercolor face. Both eyes are fully closed as two soft hand-painted crescent strokes with no eyeballs, eyelid volume or realistic surrounding anatomy. Paint the brow and cheeks with loose broken washes rather than sculpted fur. Make the muzzle shorter, fuller and rounder than a realistic Border Collie. Paint the nose as a small low-detail charcoal watercolor shape with uneven pigment edges, no wet shine, nostril realism or three-dimensional modelling. Paint the open mouth as a simple dark watercolor shape, the tongue as one soft muted-coral wash and the teeth as tiny simplified light marks. Keep a gentle sweet smile. Make the black-and-white facial coat feel like airy cotton built from short charcoal, muted navy, cream and warm-grey watercolor marks. Let the white blaze, cheeks and chest use paper-white gaps and light translucent washes instead of realistic highlights. Image 2 is identity-only. Preserve its breed, coat colour blocks, distinctive markings, eye colour and recognisable proportions, but do not copy its photographic lighting, realistic hair strands, lens detail, surface texture or anatomical hardness. Reinterpret every identity feature through Image 1's hand-painted watercolor brush language. Keep one healthy, youthful, rounded and instantly lovable pet with correct limbs and no fused anatomy. Preserve from Image 2 the narrow white facial blaze, white muzzle and chest, black coat blocks, warm-brown eye identity even though the eyes are closed, black nose and semi-upright ears. Keep all four limbs readable but soften their structural definition beneath fluffy fur. Avoid neon colours, excessive saturation, too many competing colour flecks, dirty all-over splatter, glossy nose, realistic mouth depth, photographic fur, individual realistic hairs, sculpted facial planes, realistic anatomy, digital airbrushing, digital sharpening, hard outlines, thick impasto, oil-paint relief, 3D rendering, text, logo, platform mark, watermark or signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "prechecked-pending-user-approval",
+    "checks": {
+      "petIdentity": "pass",
+      "cuteness": "pass",
+      "effectComposition": "pass",
+      "denseFragmentedFur": "pass",
+      "restrainedCleanPalette": "pass",
+      "watercolorFaceConsistency": "pass",
+      "reducedFacialRealism": "pass",
+      "softFluffySilhouette": "pass",
+      "anatomy": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [
+      "黑白边牧身份、窄白鼻梁、白口鼻、半立耳和腾空双爪保持稳定，闭眼甜笑年轻可爱。",
+      "背景收敛为青绿、赭黄、珊瑚与紫红几个中等饱和度色组，杂乱高饱和彩点明显减少，画面更干净。",
+      "脸部、身体与背景统一使用可见水彩块面、短碎干刷和纸张吸色边缘，不再像真实宠物叠加手绘背景。",
+      "闭眼为两道松软水彩弧线；鼻子、嘴与舌头均为低细节水彩形状，湿亮反光、口腔深度与写实塑形明显降低。",
+      "毛发仍保持碎密、方向多变和蓬松轮廓，但局部锐化与纯色爆炸已收住；无异常解剖、文字、水印或平台标识。"
+    ],
+    "finalApproval": "pending-user"
+  },
+  "generatedAt": "2026-08-13T15:47:34.158Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/leaping-cover_border-collie_9x16_v08.png",
+    "sha256": "f52fc5674ca57b6c47f457d8f814017426d76950aec2467a1a72993de7ab4a98"
+  }
+}

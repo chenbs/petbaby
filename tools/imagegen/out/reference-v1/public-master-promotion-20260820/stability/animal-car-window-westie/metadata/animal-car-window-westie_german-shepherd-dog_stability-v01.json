@@ -1,0 +1,67 @@
+{
+  "id": "animal-car-window-westie_german-shepherd-dog_stability-v01",
+  "templateId": "animal-car-window-westie",
+  "title": "车窗风中写真",
+  "sequence": 30,
+  "identityId": "german-shepherd-dog",
+  "identityLabel": "犬",
+  "species": "dog",
+  "breed": "German Shepherd dog",
+  "status": "generated-pending-human-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "requestPolicy": {
+    "concurrency": 1,
+    "outputsPerRequest": 1,
+    "inputCount": 2,
+    "combinedInputBytes": 259155,
+    "maxCombinedInputBytesExclusive": 1000000,
+    "maxInputEdge": 1200,
+    "comparisonSheetIncluded": false
+  },
+  "inputs": [
+    {
+      "role": "compressed-public-preview-master-candidate",
+      "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/api-inputs/animal-car-window-westie_public-v02_master-candidate.jpg",
+      "sha256": "9eed162f218489f1d03e4d6b9a3c1baec8d47f2bb407b6e11f965e9732f1ce25",
+      "bytes": 77340,
+      "sourceCandidatePath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/candidates/animal-car-window-westie_public-v02_master-candidate.png",
+      "sourceCandidateSha256": "f8a53f1ba1fb9f701c3d11c45eb07d0625edc116ff57335bf1b281b484ef48c0"
+    },
+    {
+      "role": "compressed-pet-identity-reference",
+      "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/api-inputs/german-shepherd-dog.jpg",
+      "sha256": "76c098da89afc228c5c72514feb954a25f97cd4880b205356e0ae09e9b98fbac",
+      "bytes": 181815,
+      "sourcePath": "apps/website/public/assets/hero-shepherd.jpg"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "prompt": "Use case: identity-preserving production-master stability validation. Create one horizontal 16:9 image composed for an exact final size of 1280x720 pixels from exactly two input images. Image 1 is a proposed self-owned runtime master copied byte-for-byte from an approved public preview. It is the sole reference for composition, scene, pose, expression, styling, lighting, palette, clothing, props and text layout. Image 2 is the sole pet identity reference. Replace every animal depiction in Image 1 with the exact German Shepherd dog from Image 2. Preserve the target pet's tan coat with a defined black saddle and mask, brown eyes, tall upright ears, black muzzle and athletic natural proportions. Image 2 controls identity and species; do not retain the sample animal's breed or facial structure from Image 1. The replacement must remain recognisably the same dog as Image 2 while naturally adopting Image 1's pose and expression. Preserve its real age and breed proportions; do not beautify, juvenilize, enlarge or shrink the head arbitrarily, or invent a generic cute face. Scene-change budget: 0%. Do not redesign, simplify, crop, recolour, relight, add, remove or move any background element, garment, prop, graphic mark or text. Make only the smallest local geometry adjustment needed for the replacement animal to fit the existing pose and clothing. Keep the pet leaning from the yellow car window, light green shirt, windblown fur, blue sky, green roadside landscape and the same horizontal travel-photo framing. Keep all existing readable text unchanged. Add no new text, logo, signature, watermark or AI label. Avoid duplicate heads, extra eyes, extra ears, extra limbs, malformed paws, fused clothing, floating props and mixed-species anatomy.",
+  "revisedPrompt": "Create a single horizontal 16:9 photorealistic image at exact final size 1280x720 using the two provided input images. Use Image 1 as the sole reference for the full composition, scene, pose, expression, styling, lighting, palette, clothing, props, background, and text layout. Replace only the animal in Image 1 with the exact German Shepherd dog identity from Image 2, preserving the dog’s tan coat, defined black saddle and black facial mask, brown eyes, tall upright ears, black muzzle, and athletic natural proportions. The dog must remain recognizably the same dog as Image 2 while naturally adopting Image 1’s leaning-from-car-window pose and windblown look. Keep the light green shirt, yellow car, blue sky, green roadside landscape, highway guardrail, and all existing readable text exactly unchanged. Do not add, remove, move, crop, recolor, relight, beautify, juvenilize, or redesign anything. Make only the smallest local geometry adjustment needed for the German Shepherd to fit the existing window pose and shirt. Avoid duplicate heads, extra eyes, extra ears, extra limbs, malformed paws, fused clothing, or mixed-species anatomy.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-car-window-westie/animal-car-window-westie_german-shepherd-dog_stability-v01.png",
+    "sha256": "c40415267b4f76193bebc7c7926b7ee31bb4b95b134fe60e9dc317a7fb9aeb9c",
+    "size": "1280x720"
+  },
+  "rawOutputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-car-window-westie/raw/animal-car-window-westie_german-shepherd-dog_stability-v01.png",
+  "automatedChecks": {
+    "dimensions": "pass",
+    "visualContent": "pass",
+    "inputCount": "pass",
+    "inputBytes": "pass",
+    "requestSerial": "pass"
+  },
+  "humanChecks": {
+    "petIdentity": "pending",
+    "compositionAndCrop": "pending",
+    "poseExpressionAndGaze": "pending",
+    "clothingPropsAndText": "pending",
+    "styleAndPalette": "pending",
+    "anatomy": "pending"
+  },
+  "finalApproval": "pending-user",
+  "elapsedMs": 28105,
+  "generatedAt": "2026-08-20T06:22:51.287Z"
+}

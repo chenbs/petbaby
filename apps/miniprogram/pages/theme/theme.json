@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "外观主题",
+  "usingComponents": {
+    "t-notice": "../../components/notice/index"
+  }
+}

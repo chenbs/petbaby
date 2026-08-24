@@ -1,0 +1,66 @@
+{
+  "templateId": "animal-watercolor-cat-closeup",
+  "entryId": "art",
+  "title": "金箔水彩猫咪",
+  "version": "position-lock-v01",
+  "status": "generated-pending-user-approval",
+  "remediation": "position-locked-identity-attribute-replacement",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-edit-target-and-position-authority",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-06-23-4902-手绘插画，金箔岩彩，古风写意，水墨油画交融流体笔触，大面积淡彩晕染，猫咪局部特写....png",
+      "sha256": "63688681892e1bd2d18f9bdf47b10b0fa5a7ee21423a66c8fc411b5ea782008f"
+    },
+    {
+      "role": "self-owned-pet-identity-attributes-only",
+      "path": "apps/website/public/assets/work-ragdoll.jpg",
+      "sha256": "cadd89cfd6150cb0c9560bffec9b7c5a7e80d7126032eb7ecab4933cb836ed9e"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "prompt": "Use case: position-locked identity attribute replacement in an existing watercolor portrait. Return the exact same 9x16 composition at 720x1280 pixels. Image 1 is the edit target and absolute authority for every spatial fact. Keep its canvas, crop, close-up scale, head position, head angle, face outline, eye positions, eye spacing, ear positions, ear bases, ear tips, crown position, nose position, muzzle position, negative space, watercolor background, gold accents, paper texture, lighting and all surrounding details unchanged. Image 2 supplies only the adult Ragdoll identity attributes. Change only these properties on Image 1's existing subject: facial breed features and markings; nose color; eye shape and eye color; ear shape and ear color; coat and fur color. This is not a new portrait and not a recomposition. Do not move, rotate, resize, recrop, recenter, zoom out or zoom in any eye, ear, nose, head or body region. New eye and ear shapes must remain anchored to the exact original eye and ear locations and occupy the same visual bounds. The ears, complete crown, forehead, cheeks and muzzle are part of the original subject, never background. Replace their identity attributes in place while preserving their positions and the original watercolor edge treatment. Do not erase, dissolve, reconstruct or relocate them. Keep Image 1's watercolor and gold-leaf medium exactly. Do not alter the background washes, add a new body, reveal more of the pet, remove existing crop boundaries, or change the amount of visible face and fur. No text, logo, watermark, signature, extra subject or anatomy change. Return only the finished position-locked edit.",
+  "revisedPrompt": "Edit target: an existing 9:16 watercolor portrait of a close-up cat face on white paper with pastel blue/pink washes and gold leaf accents. Preserve the exact original composition, crop, scale, head position, head angle, eye positions, ear positions, muzzle placement, negative space, lighting, watercolor edges, paper texture, and all surrounding details exactly as-is. Do not add, remove, move, recenter, zoom, rotate, or recrop anything. Use Image 2 only as identity reference for the cat's adult Ragdoll features.\n\nPerform a strict position-locked identity replacement in place on the subject already present in Image 1: change only the facial breed features and markings, nose color, eye shape and eye color, ear shape and ear color, and coat/fur color to match an adult Ragdoll cat. Keep every feature anchored to the exact same spatial locations and visual bounds as the original subject. The ears, crown, forehead, cheeks, and muzzle remain part of the original subject and must not be erased, reconstructed, or relocated. Maintain the original watercolor painting style and gold-leaf medium. Keep the background washes, paper texture, gold accents, and all visible crop boundaries unchanged. No text, logo, watermark, signature, extra anatomy, or new body parts.\n\nDesired identity from Image 2: adult Ragdoll, cream/fawn body, dark seal mask and ears, blue eyes, pink nose, fluffy long fur, soft rounded Ragdoll facial markings. Retain the exact portrait framing and the original watercolor treatment while replacing only the identity attributes in place.",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "positionLock": [
+    "crop",
+    "head",
+    "eyes",
+    "ears",
+    "crown",
+    "nose",
+    "background"
+  ],
+  "allowedChanges": [
+    "facial-features",
+    "nose-color",
+    "eye-shape-and-color",
+    "ear-shape-and-color",
+    "fur-color"
+  ],
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-watercolor-cat-closeup_ragdoll-cat_9x16_position-lock-v01.png",
+    "sha256": "6266201e561c42e0655ad96f581b3ebf4829a2e1b0544a7e142a169a58474ce0"
+  },
+  "review": {
+    "state": "pending-human-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generationAttempts": 3,
+  "generatedAt": "2026-08-18T03:15:27.315Z"
+}

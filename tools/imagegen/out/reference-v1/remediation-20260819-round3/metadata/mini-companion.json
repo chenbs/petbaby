@@ -1,0 +1,41 @@
+{
+  "task": "user-feedback-frozen-master-refinement-2026-08-19-round3",
+  "templateId": "mini-companion",
+  "title": "同宠大小分身",
+  "kind": "master",
+  "version": "v06",
+  "status": "generated-pending-visual-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputFidelity": "high",
+  "inputPolicy": {
+    "sequential": true,
+    "imageCount": 1,
+    "maxImages": 2,
+    "longestEdge": 1200,
+    "jpegQuality": 82,
+    "maxCombinedBytes": 1000000
+  },
+  "inputs": [
+    {
+      "role": "round2-candidate-edit-target",
+      "originalPath": "tools/imagegen/out/reference-v1/remediation-20260819-round2/master-candidates/mini-companion_abyssinian-cat_9x16_v05.png",
+      "preparedPath": ".tmp/master-remediation-20260819-round3-inputs/mini-companion-1.jpg",
+      "bytes": 70088,
+      "sha256": "1da5f58072a582dcf0817c7d2a98d8148062108acc52a57c7631a11e35f88fcf"
+    }
+  ],
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "output": {
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819-round3/raw/mini-companion.png",
+    "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819-round3/master-candidates/mini-companion_abyssinian-cat_9x16_v06.png",
+    "width": 720,
+    "height": 1280,
+    "sha256": "6db5c2338ad9005ab9daeb7373e6f757ba37311904c4be699c68e661940abc74"
+  },
+  "prompt": "Use case: identity-preserve precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the sole edit target. Change the viewing attitude to a natural straight eye-level front view: both adult Abyssinian cats face the camera levelly, with their head axis and muzzle horizontal rather than tilted upward. Lower both chins enough to remove the remaining high-looking or upward-looking angle. Do not leave either cat gazing above the camera. Keep the camera at the cats' eye level without a top-down or low-angle effect. Preserve both cats as the exact same adult identity at different scales, and keep both mirrored blue goggles centred over and fully covering both eyes. Do not change either seated body pose, the large cat's wide left foreleg stance, clothing, harnesses, scale relationship, white studio, floor line, lighting, crop or any other detail. Keep the exact 9:16 portrait composition. No text, logo, watermark or signature.",
+  "revisedPrompt": "Edit the provided portrait photo of two adult Abyssinian cats in a white studio, preserving the exact same identities, clothing, harnesses, body poses, scale relationship, crop, lighting, floor line, and 9:16 composition. Only change the viewing attitude: both cats should face the camera in a natural straight eye-level front view, with head axis and muzzle horizontal and neither cat tilted upward or gazing above the camera. Lower both chins slightly so the faces look level and centered toward the viewer. Keep both mirrored blue goggles perfectly centered and fully covering both eyes. Do not change the seated poses, the large cat’s wide left foreleg stance, background, or any other detail. No text, logo, watermark, or signature.",
+  "generatedAt": "2026-08-19T07:43:48.383Z"
+}

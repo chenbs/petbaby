@@ -1,0 +1,23 @@
+{
+  "purpose": "coordinate-free-pose-aligned-pet-identity-reference",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "original-pet-identity-reference",
+      "path": "tools/imagegen/out/source/dog-black-lab.jpg",
+      "sha256": "20960d2ace805e68b41a7934e37ebdf24b7007f8f3fa85527d9beb22d2df6022"
+    }
+  ],
+  "hardcodedSemanticCoordinates": false,
+  "mask": null,
+  "prompt": "Use case: identity-preserving pose alignment through image editing. Image 1 is the sole pet identity reference. Create a neutral studio identity photograph of the exact same adult black Labrador, preserving its naturally dropped ears, broad muzzle, black coat, adult skull proportions and healthy build. Rotate the whole head and neck into a strong left-facing three-quarter profile, close to a side profile. The muzzle, nose and gaze point decisively left. The far eye must be completely hidden behind the bridge of the muzzle and skull perspective; exactly one near eye is visible. The near ear remains naturally dropped and the far ear is mostly occluded by the head. Keep a closed mouth, calm alert expression and proud lifted neck. Do not make the dog sad, pleading, puppy-like, aggressive or front-facing. No symmetrical face, direct camera gaze, visible far eye or shortened muzzle. Use a plain off-white seamless studio background and soft flat neutral light. No accessories, clothing, text, logo, watermark, dramatic scenery or art style. This is a clean pose-aligned identity reference, not the final watercolour artwork. Exact final canvas 720x1280.",
+  "revisedPrompt": "Edit the provided reference photo into a clean neutral studio identity photograph of the exact same adult black Labrador retriever. Preserve identity faithfully: naturally dropped ears, broad muzzle, adult skull proportions, healthy build, glossy black coat, calm alert expression. Repose the head and neck into a strong left-facing three-quarter profile, close to side profile: the muzzle, nose, and gaze point decisively left; exactly one near eye visible; the far eye completely hidden behind the bridge of the muzzle and skull perspective; no direct camera gaze; no symmetrical front-facing face. Keep the near ear naturally dropped, far ear mostly occluded by the head. Closed mouth, proud lifted neck, not sad, not pleading, not puppy-like, not aggressive. Replace the background with a plain off-white seamless studio backdrop and soft flat neutral lighting. No accessories, clothing, text, logo, watermark, dramatic scenery, or art style. Clean pose-aligned identity reference. Vertical composition, final canvas 720x1280.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/identity-guides/ink-portrait_black-labrador-dog_profile-identity_reset-v02.png",
+    "size": "720x1280",
+    "sha256": "d54bb3bdc3179e687c1449bb5d2bced840ca7f082e0047b92f2b3124f6298f0c"
+  },
+  "generatedAt": "2026-08-14T17:00:03.284Z"
+}

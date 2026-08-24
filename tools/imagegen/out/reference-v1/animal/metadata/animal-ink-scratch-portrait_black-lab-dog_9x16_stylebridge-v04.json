@@ -1,0 +1,49 @@
+{
+  "templateId": "animal-ink-scratch-portrait",
+  "entryId": "art",
+  "title": "空气感素描肖像",
+  "version": "stylebridge-v04",
+  "status": "generated-pending-user-approval",
+  "remediation": "whole-subject-ink-medium-unification",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-06-21-1396-极简主义素描风格，空气感强，松散的细密长线条，精致的涂抹，形式多变，写意，细节敲....png",
+      "sha256": "9dc1e3ddf4e65a2fe78dd859b328c9ec93d5dddd75fdd550e59eff1bc642a749"
+    },
+    {
+      "role": "self-owned-generated-candidate-with-correct-identity",
+      "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-ink-scratch-portrait_black-lab-dog_9x16_stylebridge-v03.png",
+      "sha256": "54f4f044f080d32272f99de41c6f10acbc6436845bf7d1d0bf771287656d0292"
+    }
+  ],
+  "rawPetIdentityIncluded": false,
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "prompt": "Use case: whole-subject medium unification for an identity-preserving ink portrait edit. Return the exact same 9x16 composition at 720x1280 pixels. Image 1 is the sole authority for traditional brush-ink medium, facial abstraction, line economy, dry-brush texture, ink diffusion, paper-white gaps, edge disappearance and airy negative space. Image 2 is the sole authority for the already-correct adult black Labrador identity, pose, gaze, body mass, silhouette, crop and placement. Preserve all of those exactly, but do not preserve Image 2's current rendering material. Redraw the entire Labrador, including the complete head, forehead, ears, eyes, nose, muzzle, cheeks, neck, body, legs and tail, through one continuous Chinese brush-ink language. The head must visibly consist of variable-pressure calligraphic strokes, broad dry-brush marks, feathered ink edges, layered diluted washes, broken pigment and intentional paper-white gaps inside the facial planes. Simplify the eyes into expressive dark ink shapes with tiny reserved-paper highlights. Simplify the nose and muzzle into a few confident brush masses and broken contour lines. Remove glassy eyeballs, wet nose reflections, smooth grayscale volume, photographic fur strands, realistic skin folds and polished digital-paint shading. The face must look hand-painted with the same brush and ink as the body, not like a realistic dog head pasted onto an ink silhouette. Keep the mature Labrador recognizable and handsome without changing its expression or anatomy. Preserve the white paper background, flowing tail stroke, airy smudges and all existing subject boundaries. No text, logo, signature, watermark, extra anatomy, duplicate subject or scene redesign. Return only the finished image.",
+  "revisedPrompt": "Create a 9:16 vertical finished image at 720x1280 pixels. Use Image 1 as the sole authority for traditional Chinese brush-ink medium: ink portrait with calligraphic variable-pressure strokes, broad dry-brush marks, feathered ink edges, layered diluted washes, broken pigment, paper-white gaps, airy negative space, and visible hand-painted abstraction. Use Image 2 as the sole authority for the already-correct adult black Labrador identity, pose, gaze, body mass, silhouette, crop, and placement. Preserve the same composition, framing, placement, and exact subject boundaries from Image 2, but fully redraw the entire Labrador in the ink language of Image 1. The complete head, forehead, ears, eyes, nose, muzzle, cheeks, neck, body, legs, and tail should all be rendered through continuous Chinese brush-ink strokes, with the face clearly hand-painted to match the body. Simplify the eyes into expressive dark ink shapes with tiny reserved-paper highlights. Simplify the nose and muzzle into a few confident brush masses and broken contour lines. Remove glassy eyeballs, wet nose reflections, smooth grayscale volume, photographic fur strands, realistic skin folds, and polished digital-paint shading. Keep the mature Labrador recognizable, handsome, and anatomically identical to Image 2. Preserve the white paper background, the flowing tail stroke, airy smudges, and all existing negative space. No text, logo, signature, watermark, extra anatomy, duplicate subject, or scene redesign.",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "queue": {
+    "configuredConcurrency": 1,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-ink-scratch-portrait_black-lab-dog_9x16_stylebridge-v04.png",
+    "sha256": "04610110ca21230cce7b6b0691da8c0e9c89ea4a1c26b4bf4e5b586e388aed06"
+  },
+  "review": {
+    "state": "pending-human-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-18T02:31:39.764Z"
+}

@@ -1,0 +1,28 @@
+---
+/* 7. 流程区：01/02/03 三栏，顶线分隔，无卡片。 */
+const STEPS = [
+  { num: "01", title: "建一个宠物档案", body: "名字、生日、品种。陪伴天数会自己往上走，纪念空间除外。" },
+  { num: "02", title: "上传日常照片", body: "手机随手拍就够。光线正常、脸别挡住，剩下的交给生成。" },
+  { num: "03", title: "挑一个玩法出片", body: "几分钟拿到成品，存图、分享，或者印成实物寄到家。" },
+];
+---
+
+<section class="section" id="how">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">怎么用</p>
+      <h2 class="h2 h2-sm">三步，就有一张成品</h2>
+    </div>
+    <div class="grid-3 steps">
+      {
+        STEPS.map((step, index) => (
+          <div class="step reveal" data-delay={index > 0 ? String(index) : null}>
+            <span class="step-num">{step.num}</span>
+            <h3 class="h3">{step.title}</h3>
+            <p class="body-text">{step.body}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

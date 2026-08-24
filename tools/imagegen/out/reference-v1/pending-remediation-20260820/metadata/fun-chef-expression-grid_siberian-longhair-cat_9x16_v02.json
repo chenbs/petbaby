@@ -1,0 +1,91 @@
+{
+  "templateId": "fun-chef-expression-grid",
+  "entryId": "fun",
+  "title": "厨师表情九宫格",
+  "version": "v02",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "sourceEffectFile": "apps/website/public/assets/example/1786369023697.png",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/1786369023697.png",
+      "sha256": "d9f7302f825684d29fb923b6edb7a92475b5a7b96945e5852a0d0ffd38772fc1",
+      "requestPath": ".tmp/pending-remediation-20260820-inputs/fun-chef-expression-grid-effect.jpg",
+      "requestBytes": 60587
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "siberian-longhair-cat",
+      "species": "cat",
+      "breed": "adult golden-tabby Siberian forest cat",
+      "path": "tools/imagegen/out/reference-v1/pending-remediation-20260820/identities/identity-siberian-longhair-cat_v01.png",
+      "sha256": "f3cac059a458c8ab24f13b5420385df708c78216a47fc5d806ce7e6a79f1f28e",
+      "requestPath": ".tmp/pending-remediation-20260820-inputs/fun-chef-expression-grid-identity.jpg",
+      "requestBytes": 75522
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "inputPolicy": {
+    "maxImages": 2,
+    "maxLongestEdge": 1200,
+    "jpegQuality": 82,
+    "combinedBytesBelow": 1048576,
+    "serial": true
+  },
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be adult golden-tabby Siberian forest cat with dense golden-brown triple coat, full neck ruff, broad rounded wedge-shaped face, green-gold eyes, tufted upright ears, large plume tail and sturdy adult forest-cat body. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the complete 3x3 chef grid, chef hat, apron, food props and expression rhythm; every cell must show the same adult Siberian forest cat. Recompose the grid with generous white outer margins and safe gutters so the entire left and right columns, ears, hats, faces, aprons and props remain fully visible with nothing touching or crossing the canvas edges. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a finished vertical poster image at 720x1280, exact 9:16 composition, based on a 3x3 chef-grid meme layout. Preserve the source layout: nine equal panels in a 3x3 grid, clean white outer margins and safe gutters between panels, all subjects fully visible with nothing touching or crossing the canvas edges. Every panel must show the same adult golden-tabby Siberian forest cat identity, not a different animal: dense golden-brown triple coat, full neck ruff, broad rounded wedge-shaped face, green-gold eyes, tufted upright ears, large plume tail, sturdy adult body proportions. The cat must be rendered in the same soft illustrated studio style and lighting language as the reference grid, not as a pasted photo. Keep the chef hat, apron, bow, food props, and expression rhythm from the reference grid. Match the panel poses and expressions of the source as closely as possible: front-facing wide-eyed tongue-out, sleepy eyes closed, neutral front view, another sleepy front view, three-quarter side look up, profile side look, front-facing surprised tongue-out, eyes closed front view, and side profile view. White or very light background in every panel. Keep the apron, bow tie, and cupcake-like food props in each panel, but use original pet-safe decorative text or simple unreadable stylized markings instead of copyrighted or branded text. No extra ears, eyes, limbs, paws, floating heads, duplicate cats, human hands, broken clothing, or anatomy errors. Keep the cat friendly, appealing, and adult. The overall image should feel like a cohesive polished meme poster with a frozen-master quality finish, preserving the grid structure and composition exactly.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/pending-remediation-20260820/candidates/fun-chef-expression-grid_siberian-longhair-cat_9x16_v02.png",
+    "rawPath": "tools/imagegen/out/reference-v1/pending-remediation-20260820/raw/fun-chef-expression-grid_siberian-longhair-cat_9x16_v02.png",
+    "sha256": "4a2a8cde1d44952eb303dd5aceb75d02d4f40d0ccd0a4ed99e6a43e192737902"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "checks": {
+      "dimensions": "pass",
+      "inputContract": "pass",
+      "visualAcceptance": "pending-user"
+    },
+    "findings": [],
+    "approvedAt": "2026-08-20T14:00:00+08:00"
+  },
+  "generatedAt": "2026-08-20T01:48:33.422Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/pending-remediation-20260820/candidates/fun-chef-expression-grid_siberian-longhair-cat_9x16_v02.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/fun-chef-expression-grid_siberian-longhair-cat_9x16_v02.webp",
+  "masterSha256": "d9c9d2584cdea948178a8d73b3150fd00b126b28cb2273b291db73e7443876ca",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-20T14:00:00+08:00",
+    "note": "用户明确确认 pending-masters-comparison.png 全部审核通过并要求冻结母版。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/fun-chef-expression-grid_siberian-longhair-cat_9x16_v02.webp",
+      "sha256": "d9c9d2584cdea948178a8d73b3150fd00b126b28cb2273b291db73e7443876ca"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-candidate",
+      "unapproved-candidate"
+    ]
+  }
+}

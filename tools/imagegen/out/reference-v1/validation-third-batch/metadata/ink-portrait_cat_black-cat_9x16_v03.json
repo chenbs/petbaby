@@ -1,0 +1,62 @@
+{
+  "jobId": "ink-portrait_cat_black-cat",
+  "templateId": "ink-portrait",
+  "title": "黑白水墨肖像",
+  "status": "approved-runtime-validation",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/ink-portrait_black-labrador-dog_9x16_reset-v03-reference-gaze-rerun-v01.webp",
+      "sha256": "050b7f7f346b6a26cd3725872cea643ce1bb0d4430a4dac9f7bddbb20d574893"
+    },
+    {
+      "role": "new-pet-identity-reference",
+      "identityId": "black-cat",
+      "species": "cat",
+      "breed": "adult black domestic shorthair cat",
+      "path": "tools/imagegen/out/source/cat-black.jpg",
+      "sha256": "e9d04dac4cee2a7753bcdbcedce7961cf819ab40fc08e39331977ff15df0df17"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 4,
+    "localWorkerConcurrency": 4,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Edit Image 1 into one exact 720x1280 vertical runtime validation image using exactly two inputs. Image 1 is our frozen self-owned master and the edit target. Keep its exact crop, placement, head angle, expression, gaze, paper-white negative space, black ink masses, broken dry-brush edges, splatters and long diagonal strokes. No third-party effect reference is included. Scene-change budget is 0%. Replace only the animal identity with the exact adult adult black domestic shorthair cat from Image 2. Use Image 2 only to recognise breed silhouette, ears and coat-marking layout; do not render or copy its face, eyes, nose, fur texture, lighting, colour or photographic depth. Use the gaze from Image 1 exactly. Paint the complete new face in the exact same black-ink vocabulary as Image 1: a few broad opaque black shapes, paper gaps, broken dry edges and sparse decisive lines. The face and body must be one continuous hand-painted ink work, never a detailed portrait placed over an ink-stroke body. No realistic or pencil-rendered eyeballs, irises, catchlights, nose volume, individual fur direction, grey micro-shading, gradients, 3D anatomy, photography, colour, text, logo, watermark or signature. Keep a mature, healthy and attractive breed silhouette with correct connected anatomy.",
+  "revisedPrompt": "Create a single 720x1280 vertical image by editing the provided Image 1 only, using Image 2 only as breed/anatomy reference for a black domestic shorthair cat. Preserve Image 1 exactly: same crop, placement, head angle, expression, gaze direction, paper-white negative space, black ink masses, broken dry-brush edges, splatters, and long diagonal strokes. Keep the composition as a hand-painted black ink illustration on white paper, with no scene change. Replace only the animal identity: transform the dog in Image 1 into an adult black domestic shorthair cat with correct connected anatomy, mature healthy silhouette, cat ears, cat head shape, and cat body shape. Keep the gaze from Image 1 exactly, but render it as a cat. Paint the entire new face and body in the exact same black-ink vocabulary as Image 1: broad opaque black shapes, paper gaps, broken dry edges, sparse decisive lines, splatters, and diagonal brush strokes. The face and body must read as one continuous hand-painted ink work, not a realistic portrait or overlay. Do not use realistic or pencil-rendered eyeballs, irises, catchlights, nose volume, individual fur direction, grey micro-shading, gradients, 3D anatomy, photography, color, text, logo, watermark, or signature. Keep the black coat in an expressive ink style, but make the silhouette unmistakably an adult black domestic shorthair cat.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation-third-batch/ink-portrait_cat_black-cat_9x16_v03.png",
+    "sha256": "9a92df4670e337688978690e73a6fa3142ae3fe65f21e2b86a692c28f688c79f"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "checks": {
+      "petIdentity": "pass",
+      "adultAgeAndProportions": "pass",
+      "masterPoseExpressionAndGaze": "pass",
+      "masterStyleAndBrushwork": "pass",
+      "sceneAndComposition": "pass",
+      "anatomyAndContacts": "pass",
+      "repeatedIdentityAndText": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [],
+    "finalApproval": "approved",
+    "approvedAt": "2026-08-17T12:22:43+08:00"
+  },
+  "generatedAt": "2026-08-17T02:38:48.017Z"
+}

@@ -1,0 +1,69 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+
+<view class="page page-flat">
+  <t-skeleton wx:if="{{loading}}" type="card" count="2"></t-skeleton>
+
+  <block wx:elif="{{project}}">
+    <view class="row">
+      <text class="eyebrow">MEMORY FILM</text>
+      <t-tag wx:if="{{renderText}}" tone="{{render.status === 'failed' ? 'error' : render.status === 'succeeded' ? 'success' : 'accent'}}" size="mini" text="{{renderText}}"></t-tag>
+    </view>
+    <view class="title">{{project.title}}</view>
+
+    <t-notice wx:if="{{message}}" type="{{messageType}}" message="{{message}}" class="block-gap"></t-notice>
+
+    <!-- 渲染进度只在有任务时出现，避免空进度条误导 -->
+    <t-card wx:if="{{render && (render.status === 'queued' || render.status === 'processing')}}" blur="{{blurOk}}" anim="{{animType}}">
+      <t-progress percent="{{render.progress || 0}}" tone="ai" label="{{renderText}}" show-value></t-progress>
+      <text class="muted center block">服务端渲染中，可以先退出，完成后会归档到作品柜。</text>
+      <t-button type="ghost" block anim="{{animType}}" class="block-gap" bindtap="askCancel">取消渲染</t-button>
+    </t-card>
+
+    <t-card wx:elif="{{render && render.status === 'failed'}}" blur="{{blurOk}}" anim="{{animType}}">
+      <view class="sub-title">渲染没有完成</view>
+      <text class="muted">素材还在，直接重试即可。</text>
+      <t-button type="primary" block anim="{{animType}}" class="block-gap" bindtap="retry">重试渲染</t-button>
+    </t-card>
+
+    <view class="section">
+      <view class="section-title">字幕</view>
+      <t-card blur="{{blurOk}}" anim="{{animType}}">
+        <t-field
+          label="片尾字幕"
+          control="textarea"
+          value="{{caption}}"
+          placeholder="写一句想留在结尾的话"
+          maxlength="60"
+          show-count
+          bindchange="inputCaption"
+        ></t-field>
+      </t-card>
+    </view>
+
+    <view class="actions">
+      <t-button type="secondary" block anim="{{animType}}" bindtap="save">保存草稿</t-button>
+      <t-button
+        type="ai"
+        block
+        anim="{{animType}}"
+        loading="{{busy}}"
+        disabled="{{render && (render.status === 'queued' || render.status === 'processing')}}"
+        bindtap="render"
+      >提交渲染</t-button>
+      <t-button wx:if="{{render && render.work_id}}" type="primary" block anim="{{animType}}" bindtap="openWork">查看作品与解锁</t-button>
+    </view>
+  </block>
+
+  <t-notice wx:else type="error" message="{{message || '项目不存在'}}"></t-notice>
+</view>
+
+<t-dialog
+  visible="{{confirmCancel}}"
+  title="取消渲染？"
+  content="当前渲染进度会丢弃，项目和字幕会保留，之后可以重新提交。"
+  confirm-text="取消渲染"
+  danger
+  anim="{{animType}}"
+  bindconfirm="cancel"
+  bindcancel="dismissCancel"
+></t-dialog>

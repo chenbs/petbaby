@@ -1,0 +1,47 @@
+{
+  "templateId": "06",
+  "status": "rejected-by-user",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "mode": "subject-only-masked-replacement",
+  "inputs": [
+    {
+      "role": "immutable-effect-base",
+      "path": "tools/imagegen/out/reference-v1/reset/bases/color-painted-portrait_dragon-li-cat_9x16_base.png",
+      "sha256": "2ca502388cf693438c98fee6d4d064fa175da93963cc474eae0be0da53dcd0e5"
+    },
+    {
+      "role": "pet-identity-only",
+      "path": "apps/website/public/assets/avatar-dragonli.jpg",
+      "sha256": "0f403599969b57f32aa314cf474ce4d57d28f48683e16ae9a032d73b94079732"
+    },
+    {
+      "role": "edit-mask",
+      "path": "tools/imagegen/out/reference-v1/reset/masks/color-painted-portrait_dragon-li-cat_9x16_mask.png",
+      "sha256": "41fa73cbbe2069ce056a1595a09a739eeaea3022bb89c93dd78ca25369a11933"
+    }
+  ],
+  "inputFidelity": "provider-default",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Task: subject-only identity replacement, not image redesign and not style transfer. Image 1 is the immutable base image and the sole authority for every visible detail except animal identity: canvas, crop, composition, orange and teal background, every paint mark, palette, saturation, contrast, lighting, seated pose, head angle, upward gaze, gentle expression, facial treatment, fur treatment, edge quality and texture. Replace only the original animal identity in Image 1 with the exact adult Dragon Li tabby cat from Image 2. Image 2 controls only species, breed, brown tabby coat markings, ear shape, yellow-green eye colour, actual adult age and natural feline proportions. Do not copy Image 2's photographic lighting, background, pose, expression, detailed fur or realism. Transfer Image 1's exact pose, head angle, gaze, gentle expression, painted facial treatment, painted fur treatment and all other visual details onto the new identity. Preserve adult proportions; do not turn the cat into a kitten and do not enlarge the head, eyes or cheeks. Change no background, scene, composition, palette or brushwork. Remove only the platform watermark and account ID. Exactly one animal; no added text, objects or anatomy changes.",
+  "revisedPrompt": null,
+  "immutablePixelAudit": {
+    "outsidePixels": 258418,
+    "changedOutsidePixels": 0,
+    "maxOutsideChannelDifference": 0
+  },
+  "review": {
+    "state": "rejected-by-user",
+    "finalApproval": "rejected",
+    "reviewedAt": "2026-08-14T10:02:56+08:00",
+    "findings": [
+      "The forced exact-pixel background reconstruction introduced visible subject-edge seams and mixed-media compositing artifacts.",
+      "The cat face did not inherit the effect reference's hand-painted facial construction closely enough."
+    ]
+  },
+  "generatedAt": "2026-08-14T01:18:50.477Z",
+  "postprocessedAt": "2026-08-14T01:25:24.695Z"
+}

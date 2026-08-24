@@ -1,0 +1,56 @@
+{
+  "templateId": "pet-runway",
+  "title": "宠物时装周",
+  "entryId": "career",
+  "status": "revision-required",
+  "subject": "maine-coon-cat",
+  "breed": "缅因猫",
+  "revision": {
+    "version": "v03",
+    "sourceVersion": "v02",
+    "reviewFinding": "v01 身体过度拟人直立，v02 仍有衣袖包裹前肢、躯干偏直立；继续保留 T 台、构图与服装材料进行四足化返修。",
+    "scope": "targeted-fix"
+  },
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "previous-master-candidate-edit-target",
+      "path": "tools/imagegen/out/reference-v1/candidates/pet-runway_maine-coon-cat_9x16_v02.png",
+      "sha256": "5c813f31874e8140a1f216f11773cff8137aef9e1f34444704837dbedd2d2f6c"
+    },
+    {
+      "role": "pet-identity-reference",
+      "path": "apps/website/public/assets/work-maine.jpg",
+      "sha256": "1886adfade169bfb7a678ccad1b36555e0cebbd9d78310ee0f23c42d1bcae8cf"
+    }
+  ],
+  "upstreamEffectReference": {
+    "role": "third-party-effect-reference-internal-master-production-only",
+    "path": "apps/website/public/assets/example/1786368555480.png",
+    "sha256": "63e95e99f17cd26f37ba4639b284091d067bdfc8084a0a17741178520bc31862"
+  },
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: precise-object-edit with pet identity preservation. Produce a vertical 9:16 premium pet runway master candidate at exactly 720x1280 pixels from exactly two input images. Image 1 is the edit target. Preserve its centred fashion runway, dark blurred audience, grey spotlight backdrop, frontal walking momentum, restrained premium photography, full fluffy tail and the recognisable layered outfit: oversized light-grey wool coat, cream cable-knit layer, charcoal patterned neck scarf and pale sage draped lower garment. Keep the original camera height, crop, lighting, garment palette, fabrics and scene. The garment can be refitted into a short quadruped-safe cape or open drape around the cat's shoulders and chest, while retaining the same materials, colours and layered fashion look. Edit only the Maine Coon's age impression, expression, body proportions and animal anatomy. Make it a youthful, healthy, sturdy, rounded and immediately lovable Maine Coon, with fuller soft cheeks, slightly larger friendly golden eyes, a relaxed closed mouth and a gentle confident expression. Retain the breed's square but soft muzzle, brown-black classic tabby markings, tall lynx-tipped ears, neck ruff and full dark tail from Image 2. The cat must be a natural quadruped in a clear mid-stride walking pose, body axis horizontal like a real Maine Coon. Show four separate fur-covered feline legs and paws, with at least three paws clearly visible and the front paws emerging from the open cape rather than from human-like sleeves. The shoulders, chest ruff, belly and hindquarters must read as one continuous furry cat body. Keep the tail attached naturally and visible. Strictly avoid any human torso, human shoulders, human arms, human hands, sleeve-like forelimbs, trouser legs, waistband, fly, narrow waist, upright bipedal pose, mannequin pose, gaunt cheeks, stern stare, elderly face, aggressive look or elongated body. This must look like a real cute cat wearing a small runway cape, not a person in a cat costume. Image 2 is the sole identity reference. Preserve the same Maine Coon, not a generic replacement. Keep exactly one pet. No logo, readable brand, platform UI, watermark, signature, malformed paw, duplicate limb or fused clothing boundary.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "revision-required-by-user",
+    "finalApproval": "revision-required",
+    "reviewedAt": "2026-08-14T05:40:37.255Z",
+    "findings": [
+      "The user wants the Maine Coon to retain the effect reference's upright runway posture; v03 is quadrupedal."
+    ]
+  },
+  "generatedAt": "2026-08-13T04:17:31.481Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/pet-runway_maine-coon-cat_9x16_v03.png",
+    "sha256": "e2283084a06f74eb3b967eaac3fde8dd175947fd03d7fa33d4b3c7c2252bef8c"
+  },
+  "supersededBy": "tools/imagegen/out/reference-v1/candidates/pet-runway_maine-coon-cat_9x16_v04.png"
+}

@@ -1,0 +1,4 @@
+<view class="tag tag-{{tone}} tag-{{size}}">
+  <text wx:if="{{text}}">{{text}}</text>
+  <slot></slot>
+</view>

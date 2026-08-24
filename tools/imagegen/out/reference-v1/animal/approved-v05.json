@@ -1,0 +1,272 @@
+{
+  "status": "approved-complete",
+  "approvedAt": "2026-08-18T12:11:17+08:00",
+  "approvedCount": 24,
+  "pendingRerun": [],
+  "templates": [
+    {
+      "templateId": "animal-capybara-snapshot",
+      "title": "日常快照萌宠",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/animal-capybara-snapshot_golden-dog_9x16_v01.png",
+      "sha256": "ca2e9a4c59939272d09d9a7fb89f7032cf58b5bdbd63d6f6399f891fbd6ffce8",
+      "metadata": "tools/imagegen/out/reference-v1/retired-masters/metadata/animal-capybara-snapshot_golden-dog_9x16_v01.json",
+      "approvedAt": "2026-08-18T01:00:00+08:00",
+      "storageKey": "samples/image-templates/animal-capybara-snapshot-ca2e9a4c5993.png"
+    },
+    {
+      "templateId": "animal-car-window-westie",
+      "title": "车窗风中写真",
+      "orientation": "landscape",
+      "size": "1280x720",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/animal-car-window-westie_poodle-dog_16x9_v01.png",
+      "sha256": "4189a33b25626e7399050ee24aaa5bd15539c660f981d20f1781c2d9b0851880",
+      "metadata": "tools/imagegen/out/reference-v1/retired-masters/metadata/animal-car-window-westie_poodle-dog_16x9_v01.json",
+      "approvedAt": "2026-08-18T01:00:00+08:00",
+      "storageKey": "samples/image-templates/animal-car-window-westie-4189a33b2562.png"
+    },
+    {
+      "templateId": "animal-desert-pilot",
+      "title": "沙漠飞行员",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-desert-pilot_shepherd-dog_9x16_v01.webp",
+      "sha256": "fc04632d29a1d08108f29a75a9c403b873d0fc471dc48b7e95e57b1c4bc81d2a",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-desert-pilot_shepherd-dog_9x16_v01.json",
+      "approvedAt": "2026-08-18T01:00:00+08:00",
+      "storageKey": "samples/image-templates/animal-desert-pilot-fc04632d29a1.webp"
+    },
+    {
+      "templateId": "animal-doodle-fisheye-chicken",
+      "title": "鱼眼涂鸦表情",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/animal-doodle-fisheye-chicken_corgi-dog_9x16_v01.png",
+      "sha256": "a791ad52cb0c41b391c8c7a2c85c4f4bb66d8cbc89c5889ddacfa14ccdd93c13",
+      "metadata": "tools/imagegen/out/reference-v1/retired-masters/metadata/animal-doodle-fisheye-chicken_corgi-dog_9x16_v01.json",
+      "approvedAt": "2026-08-18T01:00:00+08:00",
+      "storageKey": "samples/image-templates/animal-doodle-fisheye-chicken-a791ad52cb0c.png"
+    },
+    {
+      "templateId": "animal-enamel-cat-beast",
+      "title": "流体珐琅猫神兽",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/animal-enamel-cat-beast_dragon-li-cat_9x16_v01.png",
+      "sha256": "ee4399b7d29912940e84902d4abed24332dff6a34aca820bfa63c8d2a93ba93f",
+      "metadata": "tools/imagegen/out/reference-v1/retired-masters/metadata/animal-enamel-cat-beast_dragon-li-cat_9x16_v01.json",
+      "approvedAt": "2026-08-18T01:00:00+08:00",
+      "storageKey": "samples/image-templates/animal-enamel-cat-beast-ee4399b7d299.png"
+    },
+    {
+      "templateId": "animal-enamel-dragon",
+      "title": "珐琅彩龙宠",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-enamel-dragon_husky-dog_9x16_stylebridge-v02.webp",
+      "sha256": "ae44bbbcdb96acc6a18e24e200019d61e455a853224ea58744a3b10f2d8bd022",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-enamel-dragon_husky-dog_9x16_stylebridge-v02.json",
+      "approvedAt": "2026-08-18T10:30:00+08:00",
+      "storageKey": "samples/image-templates/animal-enamel-dragon-ae44bbbcdb96.webp"
+    },
+    {
+      "templateId": "animal-fantasy-double-exposure",
+      "title": "奇幻双重曝光",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-fantasy-double-exposure_black-lab-dog_9x16_eastern-myth-v02.webp",
+      "sha256": "243baf5783f3f27f3366d6648ebd7f9543674cce3ce73c08a376c7a27c8b3def",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-fantasy-double-exposure_black-lab-dog_9x16_eastern-myth-v02.json",
+      "approvedAt": "2026-08-18T12:11:17+08:00",
+      "storageKey": "samples/image-templates/animal-fantasy-double-exposure-243baf5783f3.webp"
+    },
+    {
+      "templateId": "animal-giant-city-companion",
+      "title": "巨型城市伙伴",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/animal-giant-city-companion_ragdoll-cat_9x16_v01.png",
+      "sha256": "667482821819e62b3235efa04484236af3370e936f3d443b2853d96ec0449182",
+      "metadata": "tools/imagegen/out/reference-v1/retired-masters/metadata/animal-giant-city-companion_ragdoll-cat_9x16_v01.json",
+      "approvedAt": "2026-08-18T01:00:00+08:00",
+      "storageKey": "samples/image-templates/animal-giant-city-companion-667482821819.png"
+    },
+    {
+      "templateId": "animal-giant-law-poster",
+      "title": "巨物法相海报",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/animal-giant-law-poster_shepherd-dog_9x16_stylebridge-v02.png",
+      "sha256": "1bdd846a2e11b527e209a2982f71bac857726ec4c545c683eef44b8bd5367794",
+      "metadata": "tools/imagegen/out/reference-v1/retired-masters/metadata/animal-giant-law-poster_shepherd-dog_9x16_stylebridge-v02.json",
+      "approvedAt": "2026-08-18T10:30:00+08:00",
+      "storageKey": "samples/image-templates/animal-giant-law-poster-1bdd846a2e11.png"
+    },
+    {
+      "templateId": "animal-glass-paw-portrait",
+      "title": "玻璃爪印特写",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/animal-glass-paw-portrait_black-cat_9x16_v01.png",
+      "sha256": "369a5503476f2dcab7952bb3fd8c7236fe6fc2d1f033b06ace229f887e440d8f",
+      "metadata": "tools/imagegen/out/reference-v1/retired-masters/metadata/animal-glass-paw-portrait_black-cat_9x16_v01.json",
+      "approvedAt": "2026-08-18T01:00:00+08:00",
+      "storageKey": "samples/image-templates/animal-glass-paw-portrait-369a5503476f.png"
+    },
+    {
+      "templateId": "animal-gold-ink-fox",
+      "title": "金箔岩彩幻想",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-gold-ink-fox_shiba-dog_9x16_v01.png",
+      "sha256": "6b87522ef6618ad90ab331d36d647b63e791823e66fdb090a6e5c19019296723",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-gold-ink-fox_shiba-dog_9x16_v01.json",
+      "approvedAt": "2026-08-18T01:00:00+08:00",
+      "storageKey": "samples/image-templates/animal-gold-ink-fox-6b87522ef661.png"
+    },
+    {
+      "templateId": "animal-haunted-cctv-panels",
+      "title": "鬼屋监控四格",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-haunted-cctv-panels_shiba-dog_9x16_v01.webp",
+      "sha256": "dd6e1a01e2eeafe3faed6250daf89fddb3eb875076e5dac7c114fd99000d1e49",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-haunted-cctv-panels_shiba-dog_9x16_v01.json",
+      "approvedAt": "2026-08-18T01:00:00+08:00",
+      "storageKey": "samples/image-templates/animal-haunted-cctv-panels-dd6e1a01e2ee.webp"
+    },
+    {
+      "templateId": "animal-headphone-streetwear",
+      "title": "耳麦潮流宠物",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/animal-headphone-streetwear_blue-british-cat_9x16_v01.png",
+      "sha256": "51b84708bf7cef2c42a280b5ede5d53e4726c681cbae9d3c4eb35bedf4d73a66",
+      "metadata": "tools/imagegen/out/reference-v1/retired-masters/metadata/animal-headphone-streetwear_blue-british-cat_9x16_v01.json",
+      "approvedAt": "2026-08-18T01:00:00+08:00",
+      "storageKey": "samples/image-templates/animal-headphone-streetwear-51b84708bf7c.png"
+    },
+    {
+      "templateId": "animal-ink-scratch-portrait",
+      "title": "空气感素描肖像",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-ink-scratch-portrait_black-lab-dog_9x16_stylebridge-v02.png",
+      "sha256": "b2ebe1c6a0679ee807d3a69d581ea00f2365b0ece0c90392dd804909d473f594",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-ink-scratch-portrait_black-lab-dog_9x16_stylebridge-v02.json",
+      "approvedAt": "2026-08-18T10:30:00+08:00",
+      "storageKey": "samples/image-templates/animal-ink-scratch-portrait-b2ebe1c6a067.png"
+    },
+    {
+      "templateId": "animal-pink-scooter",
+      "title": "粉色摩托夜行",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-pink-scooter_corgi-dog_9x16_v01.webp",
+      "sha256": "1f0caec0e1df626638a74dfe431e1d13d87a2fc1f636fdbb5823894dd4715221",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-pink-scooter_corgi-dog_9x16_v01.json",
+      "approvedAt": "2026-08-18T01:00:00+08:00",
+      "storageKey": "samples/image-templates/animal-pink-scooter-1f0caec0e1df.webp"
+    },
+    {
+      "templateId": "animal-rabbit-yokai",
+      "title": "古风妖灵宠物",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/animal-rabbit-yokai_cream-cat_9x16_stylebridge-v02.png",
+      "sha256": "fc8e35e98533d22a33569470e8f13324a31e7c22028fbe747472190cefd373c3",
+      "metadata": "tools/imagegen/out/reference-v1/retired-masters/metadata/animal-rabbit-yokai_cream-cat_9x16_stylebridge-v02.json",
+      "approvedAt": "2026-08-18T10:30:00+08:00",
+      "storageKey": "samples/image-templates/animal-rabbit-yokai-fc8e35e98533.png"
+    },
+    {
+      "templateId": "animal-robot-poster",
+      "title": "机器宠物活动海报",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-robot-poster_blue-british-cat_9x16_v01.png",
+      "sha256": "7846af050bfdd093ef243c713906f1409b0ab9b9afa6b8ac48c3c8b7a597c344",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-robot-poster_blue-british-cat_9x16_v01.json",
+      "approvedAt": "2026-08-18T01:00:00+08:00",
+      "storageKey": "samples/image-templates/animal-robot-poster-7846af050bfd.png"
+    },
+    {
+      "templateId": "animal-sunglasses-rabbit",
+      "title": "草丛墨镜萌宠",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/animal-sunglasses-rabbit_cream-cat_9x16_v01.png",
+      "sha256": "5e41f24b8aa8b57288dcdcfdb0a96091ef49d7d75a96ea42999878d9b99e6632",
+      "metadata": "tools/imagegen/out/reference-v1/retired-masters/metadata/animal-sunglasses-rabbit_cream-cat_9x16_v01.json",
+      "approvedAt": "2026-08-18T01:00:00+08:00",
+      "storageKey": "samples/image-templates/animal-sunglasses-rabbit-5e41f24b8aa8.png"
+    },
+    {
+      "templateId": "animal-sunglasses-rabbit-alt",
+      "title": "草丛墨镜萌宠二",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/animal-sunglasses-rabbit-alt_golden-dog_9x16_v01.png",
+      "sha256": "1d50fc048879d325d6cd8f1c1bfd4b5572e0da90af33b63306956a41ff2d127f",
+      "metadata": "tools/imagegen/out/reference-v1/retired-masters/metadata/animal-sunglasses-rabbit-alt_golden-dog_9x16_v01.json",
+      "approvedAt": "2026-08-18T01:00:00+08:00",
+      "storageKey": "samples/image-templates/animal-sunglasses-rabbit-alt-1d50fc048879.png"
+    },
+    {
+      "templateId": "animal-sword-cat-alt",
+      "title": "古风剑客宠物二",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/animal-sword-cat-alt_abyssinian-cat_9x16_v01.png",
+      "sha256": "dfe380f65a30bf2b6dc457d83015b02b05530ed12e0eee3c3e8f9f1ce799c926",
+      "metadata": "tools/imagegen/out/reference-v1/retired-masters/metadata/animal-sword-cat-alt_abyssinian-cat_9x16_v01.json",
+      "approvedAt": "2026-08-18T01:00:00+08:00",
+      "storageKey": "samples/image-templates/animal-sword-cat-alt-dfe380f65a30.png"
+    },
+    {
+      "templateId": "animal-tiger-storm",
+      "title": "风暴巨兽概念",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-tiger-storm_golden-dog_9x16_stylebridge-v02.webp",
+      "sha256": "6b9dc5cd3c136a242ea383a71075d2bdd961fc7aee5ce6c663bcbd33efe8de90",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-tiger-storm_golden-dog_9x16_stylebridge-v02.json",
+      "approvedAt": "2026-08-18T10:30:00+08:00",
+      "storageKey": "samples/image-templates/animal-tiger-storm-6b9dc5cd3c13.webp"
+    },
+    {
+      "templateId": "animal-urban-takeover-poster",
+      "title": "城市潮流活动海报",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-urban-takeover-poster_tuxedo-cat_9x16_v01.webp",
+      "sha256": "aab05fb3a5f53062ea526f450b9e00ac4710fefc52873a5fa15c4a1927be098c",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-urban-takeover-poster_tuxedo-cat_9x16_v01.json",
+      "approvedAt": "2026-08-18T01:00:00+08:00",
+      "storageKey": "samples/image-templates/animal-urban-takeover-poster-aab05fb3a5f5.webp"
+    },
+    {
+      "templateId": "animal-warrior-cat",
+      "title": "古风剑客宠物",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/animal-warrior-cat_abyssinian-cat_9x16_v01.png",
+      "sha256": "687bd17d0b416553c4edca3b6250e6de02598c6d9246ea6fc8840dd0b9dda72b",
+      "metadata": "tools/imagegen/out/reference-v1/retired-masters/metadata/animal-warrior-cat_abyssinian-cat_9x16_v01.json",
+      "approvedAt": "2026-08-18T01:00:00+08:00",
+      "storageKey": "samples/image-templates/animal-warrior-cat-687bd17d0b41.png"
+    },
+    {
+      "templateId": "animal-watercolor-cat-closeup",
+      "title": "金箔水彩猫咪",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-watercolor-cat-closeup_ragdoll-cat_9x16_stylebridge-v03.webp",
+      "sha256": "e1e6abeba4d4bc3ff8976b9b6ef9bc7e392dd3af3a22fa4ad5cfbdbf373f0174",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/animal-watercolor-cat-closeup_ragdoll-cat_9x16_stylebridge-v03.json",
+      "approvedAt": "2026-08-18T11:48:29+08:00",
+      "storageKey": "samples/image-templates/animal-watercolor-cat-closeup-e1e6abeba4d4.webp"
+    }
+  ]
+}

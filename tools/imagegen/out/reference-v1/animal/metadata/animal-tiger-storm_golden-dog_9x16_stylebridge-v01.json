@@ -1,0 +1,63 @@
+{
+  "templateId": "animal-tiger-storm",
+  "entryId": "action",
+  "title": "风暴巨兽概念",
+  "version": "stylebridge-v01",
+  "status": "generated-pending-user-approval",
+  "remediation": "shared-two-stage-style-bridge",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-08-06-7301-【正向提示词】 史诗级巨物恐惧症概念艺术图，电影级构图，蚂蚁视角，超现实主义。 ....png",
+      "sha256": "7d3a4508e69d9080bd8adba26ae6032e79f319910d20bfd4f6d8f601bdc6a935"
+    },
+    {
+      "role": "self-owned-pet-identity-reference-for-guide-only",
+      "path": "tools/imagegen/out/source/dog-golden.jpg",
+      "sha256": "1b6348ce4f6cd1d12f4c93d5f2a8a5c21847e0ce9bc43e4326c1ee89f7a89eef"
+    },
+    {
+      "role": "pre-stylized-identity-guide-for-final-edit",
+      "path": "tools/imagegen/out/reference-v1/animal/style-guides/animal-tiger-storm_golden-dog_guide-v01.png",
+      "sha256": "28d581a63383edd8b64199ee15b3f0b066e5b065c1693753cbb647573c1b07dd"
+    }
+  ],
+  "finalEditInputOrder": [
+    "one-time-third-party-effect-reference",
+    "pre-stylized-identity-guide"
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "guide": {
+    "prompt": "Use case: style-transfer identity preprocessing for a reusable pet template pipeline. Image 1 is the sole authority for visual medium and stylization only: copy its brushwork, line language, pigment behavior, edge treatment, texture scale, shape simplification, facial abstraction, anatomical stylization, local contrast and degree of realism. Image 2 is the sole authority for pet identity only: preserve its adult breed, coat pattern, markings, ear shape, eye color, muzzle proportions and healthy mature body type. Create one clean centered subject study of the pet from Image 2, fully redrawn through Image 1's non-photographic visual language. Use a plain unobtrusive background and do not copy Image 1's scene, pose, costume, props, text or layout. The pet must look drawn, painted or sculpted by the same visual system as Image 1 before it enters the final scene. Replace literal fur strands with the reference's marks and shapes; replace photographic eyes, wet nose highlights, lens lighting and realistic facial volume with the reference's stylized equivalents. Keep the pet recognizable, appealing, adult and healthy. No puppy or kitten proportions, no photorealistic face, no studio-photo lighting, no shallow depth of field, no realistic fur microtexture, no text, no logo and no watermark. Identity: adult adult Golden Retriever; warm golden coat, floppy feathered ears, dark friendly eyes, broad soft muzzle and strong healthy adult build. Return only the finished pre-stylized identity guide.",
+    "revisedPrompt": "Create a single clean centered subject study of an adult Golden Retriever, fully redrawn in a dramatic non-photographic painterly visual system inspired by the provided style reference: high-contrast stormy lighting, flowing energetic brushwork, wispy edge treatment, layered paint-like texture, stylized fur made of marks and shapes rather than realistic strands, luminous cool highlights, soft sculptural simplification, and a slightly mythic but appealing realism. Preserve the dog's identity faithfully: adult Golden Retriever, warm golden coat, floppy feathered ears, dark friendly eyes, broad soft muzzle, black nose, healthy mature build, recognizable breed proportions, calm attentive expression. Use a plain unobtrusive neutral background with no scene, props, costume, text, logo, or watermark. Do not mimic the reference image's tiger, pose, composition, or layout; only borrow its visual medium and stylization. The dog should look painted/sculpted by the same visual system before entering a final scene, with stylized eyes, stylized nose highlights, simplified facial volume, and elegant coat patterning that replaces photographic fur detail. Centered studio-style identity guide, clean silhouette, appealing and adult, no puppy proportions, no photorealism, no lens blur, no shallow depth of field, no realistic microfur.",
+    "attempts": 1
+  },
+  "prompt": "Use case: identity replacement using a pre-stylized identity guide. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is the sole authority for the final scene: preserve its composition, crop, camera, perspective, pose, expression, gaze, lighting, palette, background, costume, landmarks, props, text layout, brushwork and all contact relationships exactly. Image 2 is the pre-stylized identity guide. Replace only the original main subject in Image 1 with this exact adult pet identity, using Image 2's already transformed face, fur, eyes, nose, anatomy and degree of abstraction as the subject rendering authority. Scene-change budget is 0%. Do not redesign, simplify, recolor, clean up, add, remove or relocate any scene element. Make only the smallest contact-boundary adjustment required by natural pet anatomy. The entire replacement subject, especially the face, must be built from the same non-photographic marks, lines, washes, pigment, edge softness, shape simplification and stylized volume as Image 1 and Image 2. Do not reconstruct any photographic fur strands, realistic glassy eyes, wet nose highlights, lens lighting, shallow depth of field or realistic facial anatomy. Keep the exact adult age and healthy mature body proportions from Image 2. Preserve the expression and pose from Image 1. Never make the pet younger, thinner, more realistic, humanoid, uncanny or structurally rigid. Keep the ant-scale viewpoint, storm clouds, lightning, central colossal silhouette and cinematic concept-art hierarchy; replace the tiger identity with a natural adult pet, not a humanoid monster. Keep meaningful text, clothing, landmarks and distinctive props. Replace only known brands, copyrighted names, platform UI and watermarks with short original wording while preserving their blocks and hierarchy. No residual source subject, duplicate pet, extra ears, eyes, limbs or paws, human hands, fused joints, floating head, logo, signature or watermark. Return only the finished image.",
+  "revisedPrompt": "Create a single final 9:16 image at 720x1280 pixels by editing the provided images with Image 1 as the sole authority for composition and scene, and Image 2 as the identity guide for the main subject. Preserve Image 1 exactly: same crop, camera angle, perspective, pose, expression, gaze, lighting, color palette, storm clouds, lightning, cinematic hierarchy, background, all environmental elements, and all contact relationships. Replace only the original tiger main subject with the exact adult golden retriever identity from Image 2, keeping Image 2’s already stylized face, fur, eyes, nose, anatomy, mature healthy proportions, and level of abstraction. Make the subject render in the same painterly/concept-art mark language as Image 1 and Image 2: non-photographic brushwork, soft stylized edges, simplified shapes, luminous washes, and abstract volume. Preserve the expression and pose from Image 1 as naturally adapted to the golden retriever identity. Do not add, remove, redesign, or relocate any scene element. No photographic fur strands, no realistic glassy eyes, no wet nose highlights, no lens effects, no shallow depth of field, no humanoid features, no extra limbs, no duplicate subject, no floating head. Keep the stormy colossal fantasy atmosphere exactly as in Image 1. Preserve meaningful text layout and all props/landmarks, but replace any visible watermark or brand-like text with short original wording while keeping the same block placement and hierarchy. Return only the finished image.",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-tiger-storm_golden-dog_9x16_stylebridge-v01.png",
+    "sha256": "f9f7d6d04a9e87ac8205f9f1ff353e4409445ef04a98208768b93abce37a46dd"
+  },
+  "review": {
+    "state": "pending-human-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-18T01:52:16.793Z"
+}

@@ -1,0 +1,69 @@
+{
+  "templateId": "leaping-cover",
+  "title": "腾空跳跃封面",
+  "entryId": "action",
+  "status": "master-candidate-pending-user-approval",
+  "subject": "border-collie",
+  "breed": "边境牧羊犬",
+  "revision": {
+    "version": "v09",
+    "supersedes": "leaping-cover_border-collie_9x16_v08.png",
+    "reviewFinding": "v08 的颜色与水彩面部方向正确，但整体颜料浓度和中间调略浅，需要只加深一小档。",
+    "scope": "slight-watercolor-pigment-depth-adjustment"
+  },
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-candidate-authoritative-edit-target",
+      "path": "tools/imagegen/out/reference-v1/candidates/leaping-cover_border-collie_9x16_v08.png",
+      "sha256": "f52fc5674ca57b6c47f457d8f814017426d76950aec2467a1a72993de7ab4a98"
+    },
+    {
+      "role": "third-party-effect-and-colour-calibration-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/223c5d78-2ba2-49ff-b35e-8c247fd53b20.jpg",
+      "sha256": "ee04f9b8c5a48fe8ad768ec5d51fc5463093f437bf697899d1ee7821e6151a51"
+    },
+    {
+      "role": "pet-identity-only-reference",
+      "path": "apps/website/public/assets/work-border.jpg",
+      "sha256": "8862d1dc48584f73309eac0890afb3367759dd131c681de970976b52a561fc50"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: precise watercolor colour-depth adjustment with pet identity preservation. Create a vertical 9:16 output at exactly 720x1280 pixels from exactly three input images. Image 1 is the authoritative self-owned edit target. Preserve its exact Border Collie identity, joyful leaping pose, framing, scale, closed crescent eyes, simplified watercolor nose and mouth, fluffy broken brushwork, paper texture, clean colour grouping and all anatomy. Change only the watercolor pigment depth by one small step. Increase pigment concentration, midtone depth and selected dark-watercolor accents by roughly 8 to 12 percent. Make softened turquoise, blue-green, muted magenta-purple, warm ochre and coral-orange slightly richer and deeper, while keeping their existing hue relationships and clean separation. Image 2 is only a calibration reference for the intended effect and colour depth. Move Image 1 slightly toward Image 2's pigment strength, but stop well before the oversaturated v07 direction. Do not copy its watermark or account text. Image 3 is identity-only. Preserve the narrow white blaze, white muzzle and chest, black coat blocks, semi-upright ears and recognisable Border Collie proportions without importing photographic lighting, realistic fur, glossy eyes or realistic facial anatomy. Keep the entire face in the same hand-painted watercolor medium as the body and background: two soft closed-eye brush crescents, a low-detail charcoal watercolor nose, a simple dark watercolor mouth and one muted-coral tongue wash. Do not redesign, recolour or add details. Do not increase the number of colour flecks or splashes. Avoid neon colours, high saturation, clipped highlights, crushed shadows, dirty colour collisions, glossy facial features, photorealism, hard outlines, thick impasto, text, logo, watermark or signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "prechecked-pending-user-approval",
+    "checks": {
+      "petIdentity": "pass",
+      "cuteness": "pass",
+      "effectComposition": "pass",
+      "slightPigmentDepthIncrease": "pass",
+      "cleanControlledPalette": "pass",
+      "watercolorFaceConsistency": "pass",
+      "reducedFacialRealism": "pass",
+      "anatomy": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [
+      "相对 v08，青绿、蓝灰、赭黄和紫红水彩中间调加深一小档，颜料浓度提高但色相关系未改变。",
+      "未重新引入 v07 的霓虹纯色、过量杂色点或脏乱色彩碰撞，背景色组仍然干净可呼吸。",
+      "闭眼、鼻子、嘴巴和舌头保持低细节水彩形状，脸部与身体、背景的手绘水彩媒介一致。",
+      "边牧身份、腾空构图、碎密蓬松毛发和前景双爪保持稳定，无异常解剖、文字、水印或平台标识。"
+    ],
+    "finalApproval": "pending-user"
+  },
+  "generatedAt": "2026-08-13T15:56:46.998Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/leaping-cover_border-collie_9x16_v09.png",
+    "sha256": "178554fa5613658b7f4dbb1f6e4b14a25207e2eac160bfdfa22fee0de6083dde"
+  }
+}

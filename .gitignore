@@ -1,0 +1,43 @@
+# Local dependencies and generated outputs
+**/node_modules/
+**/.next/
+**/.data/
+**/coverage/
+**/test-results/
+**/playwright-report/
+apps/website/dist/
+apps/website/.astro/
+# 逐像素比对的截图产物（apps/website/scripts/pixel-diff.mjs），本机排查用
+apps/website/.pixel-diff/
+
+# Local secrets and environment files
+.env
+.env.*
+!.env.example
+!deploy/.env.production.example
+!deploy/.env.staging.example
+deploy/.env.production
+deploy/.env.staging
+deploy/backups/
+apps/miniprogram/config.local.js
+apps/miniprogram/project.private.config.json
+apps/miniprogram/private.*.key
+apps/miniprogram/preview-qrcode.png
+
+# Authorized owner identity references: local validation only, never commit or publish.
+tools/imagegen/out/source/girl-sample.png
+tools/imagegen/out/source/girl-sample2.png
+tools/imagegen/out/source/boy-sample.png
+tools/imagegen/out/source/boy-sample2.png
+tools/imagegen/out/reference-v1/owners/
+tools/imagegen/out/reference-v1/dual-subject/probe/
+tools/imagegen/out/reference-v1/dual-subject/stability/
+tools/imagegen/out/reference-v1/dual-subject/review/*-stability-review.png
+
+# Local CodeGraph index
+.codegraph/
+
+# Logs and OS files
+*.log
+.DS_Store
+Thumbs.db

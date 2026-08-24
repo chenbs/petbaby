@@ -1,0 +1,39 @@
+.block-gap {
+  display: block;
+  margin-top: var(--space-4);
+}
+
+.flush {
+  margin: 0;
+}
+
+.bgm {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+}
+
+.bgm-option {
+  padding: var(--space-4) var(--space-3);
+  border: 2rpx solid var(--border);
+  border-radius: var(--card-radius);
+  background: var(--surface);
+  text-align: center;
+  transition: border-color var(--transition-duration) var(--transition-easing), transform var(--transition-duration) var(--transition-easing);
+}
+
+.bgm-hover {
+  transform: scale(.97);
+}
+
+.bgm-on {
+  border-color: var(--primary);
+  background: var(--card-background);
+  box-shadow: 0 0 0 4rpx var(--ai-glow);
+}
+
+.bgm-name {
+  color: var(--text-primary);
+  font-size: var(--body-size);
+  font-weight: 700;
+}

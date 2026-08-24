@@ -1,0 +1,40 @@
+---
+/*
+ * 小程序码弹框，三个触点共用（方案 6.1）。
+ *
+ * 结构约束（都来自 6.2 的三条实现细节）：
+ *   · 弹框与触发按钮零间隙 —— 视觉间距靠 .qr-pop 的 padding 撑，热区连续。
+ *     中间留真空隙时鼠标从按钮移到弹框会先触发 mouseleave，弹框闪一下就关。
+ *   · aria-describedby 指向本弹框，按钮带 aria-expanded。
+ *   · hidden 属性管可访问性树（关闭时对读屏隐藏），.is-open 管动画 ——
+ *     与原型菜单同一套分工，关闭时等过渡结束再置 hidden。
+ *
+ * 二维码图 loading="lazy"：三处引用同一张图，弹框展开时才需要，
+ * eager 会白拖首屏（方案第 13 章第 2 步的复验项）。
+ */
+import QrImage from "./QrImage.astro";
+import { MINIPROGRAM_QR } from "../config/site";
+
+interface Props {
+  /** 与触发按钮的 aria-describedby 对应，同页多处时必须唯一。 */
+  id: string;
+}
+
+const { id } = Astro.props;
+---
+
+<div class="qr-pop" id={id} data-qr-pop hidden>
+  <div class="qr-card">
+    {/* 爪印装饰，纯装饰 */}
+    <svg class="qr-paw" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M8.5 13.5c-1.4 0-2.5 1.1-2.5 2.4 0 1.6 1.6 2.6 3 3.1 1.9.6 4.1.6 6 0 1.4-.5 3-1.5 3-3.1 0-1.3-1.1-2.4-2.5-2.4-1 0-1.9.5-2.4 1.3h-2.2c-.5-.8-1.4-1.3-2.4-1.3z" />
+      <circle cx="6" cy="9" r="1.7" />
+      <circle cx="10" cy="6.5" r="1.7" />
+      <circle cx="14" cy="6.5" r="1.7" />
+      <circle cx="18" cy="9" r="1.7" />
+    </svg>
+    <QrImage size={MINIPROGRAM_QR.size} loading="lazy" />
+    <p class="qr-card-title">微信扫码开始创作</p>
+    <p class="qr-card-note">第一次创作不花钱</p>
+  </div>
+</div>

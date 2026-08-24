@@ -1,0 +1,338 @@
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: var(--space-5) 0 var(--space-4);
+}
+
+.hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.hero-theme {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: var(--text-secondary);
+  font-size: var(--font-h3);
+}
+
+.hero-title {
+  margin-top: var(--space-3);
+}
+
+/* cute：黄底贴纸卡 + 印章；其余主题不加装饰，靠留白与字重表达层级 */
+.hero-cute {
+  padding: var(--space-6) var(--space-5) var(--space-6);
+  border: var(--card-border);
+  border-radius: var(--card-radius-variant);
+  background: var(--secondary);
+  /* 从旧的单层 --card-shadow 换到暖褐双层 --shadow-card（方案 2.4） */
+  box-shadow: var(--shadow-card);
+}
+
+.hero-glass {
+  padding: var(--space-6) var(--space-5);
+  border: var(--card-border);
+  border-radius: var(--card-radius);
+  background: var(--surface);
+  backdrop-filter: blur(var(--card-blur));
+  -webkit-backdrop-filter: blur(var(--card-blur));
+}
+
+.seal {
+  position: absolute;
+  right: var(--space-5);
+  bottom: var(--space-4);
+  display: flex;
+  width: 116rpx;
+  height: 116rpx;
+  align-items: center;
+  justify-content: center;
+  border: 6rpx double var(--primary);
+  border-radius: 50%;
+  color: var(--primary);
+  font-size: var(--eyebrow-size);
+  font-weight: 900;
+  text-align: center;
+  transform: rotate(10deg);
+}
+
+/*
+ * ---------- E1：首屏的宠物区块 ----------
+ *
+ * 与下面玩法 Hero 的 .hero-* 刻意分开命名（.pet-*）：两者比例不同
+ * （宠物封面走 3:4 的 --ratio-card 更像一张照片，玩法入口走 16:10），
+ * 且宠物区块没有价格浮标。共用一套类名会让改一处动到另一处。
+ */
+
+.pet-media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: var(--ratio-hero);
+  border-radius: inherit;
+}
+
+.pet-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--skeleton-base);
+}
+
+/* 没上传头像时给爪印占位。它标的是档案本身，不冒充产出（同 pages/me） */
+.pet-image-blank {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  font-size: var(--title-size);
+}
+
+.pet-veil {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 62%;
+  background: var(--veil-image);
+  pointer-events: none;
+}
+
+.pet-caption {
+  position: absolute;
+  right: var(--space-4);
+  bottom: var(--space-4);
+  left: var(--space-4);
+  display: grid;
+  gap: var(--space-0);
+}
+
+/* 压图文字一律用玻璃态亮色：遮罩下永远是暗底，浅色主题的深色正文在这里看不见 */
+.pet-days {
+  color: var(--glass-text-secondary);
+  font-size: var(--small-size);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--eyebrow-tracking);
+}
+
+/*
+ * 用 --title-size（方案 2.3 的 h1 阶，44rpx）而不是 --font-h2：
+ * 首屏的宠物名字是这一屏的主标题，比玩法 Hero 的卡名高一阶。
+ * 没有 --font-h1 这个 token —— h1 就是 --title-size 本身。
+ */
+.pet-name {
+  color: var(--glass-text-primary);
+  font-size: var(--title-size);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-tight);
+  line-height: var(--lh-h2);
+}
+
+.pet-hint {
+  color: var(--glass-text-secondary);
+  font-size: var(--small-size);
+}
+
+/* ---------- E3：里程碑行 ---------- */
+
+.stone-main {
+  display: grid;
+  gap: var(--space-0);
+}
+
+/* ---------- E4：去年今日 ---------- */
+
+.memory {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.memory-photo {
+  flex: none;
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: var(--card-radius-variant);
+  background: var(--skeleton-base);
+}
+
+.memory-copy {
+  display: grid;
+  flex: 1;
+  gap: var(--space-0);
+  /* 不给 min-width:0 时长文案会把图挤出容器 */
+  min-width: 0;
+}
+
+/* ---------- A 方向：Hero 大图入口 ---------- */
+
+/* 比例锁 16:10（--ratio-hero），方案 2.5 要求入口主图比例严格固定 */
+.hero-media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: var(--ratio-hero);
+  border-radius: inherit;
+}
+
+.hero-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--skeleton-base);
+}
+
+/* 三段遮罩保证压图文字可读；基色是暖褐而非纯黑（方案 A 落地要点） */
+.hero-veil {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 72%;
+  background: var(--veil-image);
+  pointer-events: none;
+}
+
+/* 价格浮标 */
+.hero-price {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  background: var(--button-primary);
+  color: var(--button-primary-text);
+  font-size: var(--small-size);
+  font-weight: var(--fw-bold);
+}
+
+.hero-caption {
+  position: absolute;
+  right: var(--space-4);
+  bottom: var(--space-4);
+  left: var(--space-4);
+  display: grid;
+  gap: var(--space-0);
+}
+
+/*
+ * 压图文字一律用玻璃态亮色，不跟随 --text-primary：
+ * 遮罩之下永远是暗底，浅色主题若沿用深色正文会彻底看不见。
+ */
+.hero-code {
+  color: var(--glass-text-secondary);
+  font-size: var(--eyebrow-size);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--eyebrow-tracking);
+}
+
+.hero-name {
+  color: var(--glass-text-primary);
+  font-size: var(--font-h2);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-tight);
+  line-height: var(--lh-h2);
+}
+
+.hero-tagline {
+  overflow: hidden;
+  color: var(--glass-text-secondary);
+  font-size: var(--small-size);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------- 2 列网格 ---------- */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--gap-item);
+  margin-top: var(--gap-item);
+}
+
+.grid-media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: var(--ratio-card);
+  border-radius: inherit;
+}
+
+.grid-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--skeleton-base);
+}
+
+.grid-veil {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 62%;
+  background: var(--veil-image);
+  pointer-events: none;
+}
+
+.grid-price {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  padding: var(--space-0) var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--button-primary);
+  color: var(--button-primary-text);
+  font-size: var(--eyebrow-size);
+  font-weight: var(--fw-bold);
+}
+
+.grid-caption {
+  position: absolute;
+  right: var(--space-3);
+  bottom: var(--space-3);
+  left: var(--space-3);
+  display: grid;
+  gap: var(--space-0);
+}
+
+.grid-name {
+  overflow: hidden;
+  color: var(--glass-text-primary);
+  font-size: var(--body-size);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-h3);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.grid-code {
+  color: var(--glass-text-secondary);
+  font-size: var(--eyebrow-size);
+  letter-spacing: var(--eyebrow-tracking);
+}
+
+.card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.card-title {
+  margin: var(--space-5) 0 var(--space-2);
+  color: var(--text-primary);
+  font-size: var(--font-h2);
+  font-weight: var(--title-weight);
+  letter-spacing: var(--title-letter-spacing);
+}
+
+.card-foot {
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 2rpx solid var(--divider);
+  color: var(--text-secondary);
+  font-size: var(--small-size);
+  font-weight: 700;
+}

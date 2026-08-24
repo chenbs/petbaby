@@ -1,0 +1,62 @@
+{
+  "templateId": "color-painted-portrait",
+  "title": "彩色绘画肖像",
+  "entryId": "art",
+  "status": "master-candidate-pending-user-approval",
+  "subject": "dragon-li-cat",
+  "breed": "狸花猫",
+  "revision": {
+    "version": "v03",
+    "supersedes": "color-painted-portrait_dragon-li-cat_9x16_v02.png",
+    "reviewFinding": "v02 身体干刷效果已通过，但眼睛、鼻口和面颊仍保留较强照片质感。",
+    "scope": "face-medium-style-transfer"
+  },
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "previous-master-candidate-edit-target",
+      "path": "tools/imagegen/out/reference-v1/candidates/color-painted-portrait_dragon-li-cat_9x16_v02.png",
+      "sha256": "666a97a1ca249e99e33fcf7ebd41e69e53f7bfccec7aeb2f5cd67df390aaa4c5"
+    },
+    {
+      "role": "third-party-face-medium-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/4f109cb7-2809-459a-93ef-5e7775e16280.jpg",
+      "sha256": "620aa0a865818f88025ed9345f86e0f38a113520a91627a1dfd1535136b0035a"
+    },
+    {
+      "role": "pet-identity-only-reference",
+      "path": "apps/website/public/assets/avatar-dragonli.jpg",
+      "sha256": "0f403599969b57f32aa314cf474ce4d57d28f48683e16ae9a032d73b94079732"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: precise face-medium edit with identity preservation. Create a vertical 9:16 hand-painted pet portrait at exactly 720x1280 pixels from exactly three input images. Image 1 is the edit target. Preserve its exact composition, half-body pose, body proportions, orange field, teal and coral accents, dry-brushed body, scraped pigment, negative space and all paint outside the head. The body and background already work; do not redesign them. Image 2 is the authoritative hand-painted face-medium reference. Repaint the complete head and facial area of Image 1 with the same rough dry-brush language: broad broken bristle strokes, scraped pigment, flat colour masses, exposed underpainting, simplified dark gestural lines and intentionally incomplete edges. The face, ears and neck must visibly belong to the same physical painting as the body. Reconstruct both yellow-green eyes as visibly painted almond shapes with matte pigment, brush texture, simplified pupils and restrained flat highlights. They must not look glassy, wet or photographic. Reconstruct the pink-brown nose as a rough painted colour shape with no realistic pores or shine. Build muzzle, mouth, cheek stripes, forehead M and whiskers from dry-brush marks and gestural lines, not photo-detail fur. Image 3 is identity-only. Preserve the same Dragon Li cat's brown-grey mackerel tabby pattern, forehead M, cheek stripes, yellow-green eyes, pink-brown nose, upright ears and rounded youthful face. Do not import Image 3's photographic lighting, individual hairs, lens sharpness, smooth shading or glossy surfaces. Keep the expression warm, calm and lovable. Blend the repainted head naturally into the already painted chest and background, allowing some edge strokes to dissolve into orange and teal. Reject photoreal eyes, photographic nose, camera-resolved whiskers or fur, smooth airbrush realism, cut-out face, 3D rendering, text, logo, watermark or signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "pending-manual-precheck",
+    "checks": {
+      "petIdentity": "pending",
+      "cuteness": "pending",
+      "effectComposition": "pending",
+      "subjectMediumConsistency": "pending",
+      "faceMediumConsistency": "pending",
+      "anatomy": "pending",
+      "textAndRights": "pending",
+      "dimensions": "pass"
+    },
+    "findings": [],
+    "finalApproval": "pending-user"
+  },
+  "generatedAt": "2026-08-13T07:18:55.146Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/color-painted-portrait_dragon-li-cat_9x16_v03.png",
+    "sha256": "346340e4ca164bd2f6df88703f93f69da3bda2e0d4b1f5cf6d4dc8e307779554"
+  }
+}

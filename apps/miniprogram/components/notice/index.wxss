@@ -1,0 +1,71 @@
+@import "../shared.wxss";
+
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text-primary);
+  font-size: var(--small-size);
+  line-height: 1.6;
+}
+
+.notice-mark {
+  display: flex;
+  width: 36rpx;
+  height: 36rpx;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--divider);
+  font-size: var(--small-size);
+  font-weight: var(--fw-bold);
+}
+
+.notice-body {
+  flex: 1;
+}
+
+.notice-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  font-size: var(--font-h3);
+}
+
+.notice-success {
+  background: var(--success-surface);
+}
+
+/*
+ * 徽标字色一律取 --button-primary-text，不取 --card-background。
+ * 后者在 glass 下是 15% 白的半透明面，压在亮色实心圆上几乎同色（1.07:1）。
+ * --button-primary-text 是各皮肤专为「压在主色实底上」定义的反色，四套都 ≥4.5:1。
+ */
+.notice-success .notice-mark {
+  background: var(--success);
+  color: var(--button-primary-text);
+}
+
+.notice-error {
+  background: var(--error-surface);
+}
+
+.notice-error .notice-mark {
+  background: var(--error);
+  color: var(--button-primary-text);
+}
+
+.notice-warning .notice-mark {
+  background: var(--warning);
+  color: var(--button-primary-text);
+}
+
+.notice-info .notice-mark {
+  background: var(--primary);
+  color: var(--button-primary-text);
+}

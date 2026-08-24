@@ -1,0 +1,65 @@
+{
+  "jobId": "decorative-art-portrait_dog_toy-poodle-dog",
+  "templateId": "decorative-art-portrait",
+  "title": "装饰艺术肖像",
+  "status": "superseded-by-approved-revision",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/decorative-art-portrait_ragdoll-cat_9x16_v05.webp",
+      "sha256": "7113eeca312feb28ffec548830943be74aab8512db99316686b7700d1cc7a976"
+    },
+    {
+      "role": "new-pet-identity-reference",
+      "identityId": "toy-poodle-dog",
+      "species": "dog",
+      "breed": "adult apricot Toy Poodle",
+      "path": "apps/website/public/assets/avatar-poodle.jpg",
+      "sha256": "e15fca17074b5c58cd5d477051ecc00c2d27116ad3f364211f3c350e1e69de2d"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving template transfer. Produce one exact 720x1280 vertical 9:16 runtime validation image from exactly two input images. Image 1 is our frozen self-owned production master. It is the sole authority for every non-identity detail: scene, composition, crop, camera, pose, action, expression, gaze, lighting, palette, rendering medium, brushwork, clothing, text, props and all physical contacts. No third-party effect reference is included. Image 2 is the sole new-pet identity reference. Change only the pet identity. Remove every depiction and every residual feature of the master pet, then replace it with the new pet from Image 2. Scene-change budget is 0%. Do not redesign, reinterpret, clean up, recolour, restyle, simplify, move, delete or add anything in the master scene. Keep the exact three-quarter right-facing bust, warm off-white paper, large navy-black polygonal fragments, translucent grey facets, cream paper gaps, sharp broken ear and shoulder edges, sparse whisker lines, generous negative space and faint inset border shadow. Replicate Image 1's head angle, rightward gaze, quiet gentle expression, bust scale, adult silhouette and fragment placement rhythm. Express the new identity only through its breed-specific outer silhouette, coat-colour distribution, ear shape and the minimum facial facets needed for recognition. The replacement must be the exact adult apricot Toy Poodle from Image 2. Preserve its warm apricot tight curls, round dark eyes, small dark nose, rounded muzzle, floppy curly ears and compact healthy adult body. Image 2 controls only species, breed, coat colour and markings, ear shape, eye colour, actual adult age and natural healthy breed proportions. Do not copy Image 2's pose, expression, gaze, camera, background, lighting, photographic texture or rendering style. Preserve the pet's actual adult age and mature breed proportions. Do not juvenilize it, enlarge the head or eyes, shorten the muzzle or body, or convert it into a kitten, puppy or generic cute mascot. Keep it healthy, attractive and immediately likeable without changing the master's expression or art direction. Flatten the complete replacement face and body into Image 1's exact two-dimensional fragmented ink-and-paper collage. Eyes, brow, cheeks, muzzle, nose and mouth must be flat angular paint shapes with paper gaps and no realistic face underneath. No circular iris, catchlight, wet eye, eyelid volume, rounded nose, individual fur strands, smooth gradients, anatomical skull volume, studio light, low-poly 3D rendering or pasted photo face. Keep the restrained navy, grey, cream and paper palette. No added colour accent, text, logo, watermark or signature. Keep exactly one pet identity throughout, except where the frozen master intentionally contains multiple views or two scale duplicates of that same identity. No unrelated animal, residual old-pet coat, face or limb. Correct species anatomy only: no duplicate, fused, missing or amputated-looking limbs, extra ears, warped eyes, malformed mouth, floating tail, human hands or fingers, broken garment boundaries, pasted head, disconnected neck or failed prop contact. Preserve all non-pet pixels and relationships as closely as the model allows.",
+  "revisedPrompt": "Create one single exact 720x1280 vertical 9:16 runtime validation image by compositing the two provided input images. Use Image 1 as the frozen production master and preserve its scene, composition, crop, camera, pose, action, expression, gaze, lighting, palette, rendering medium, brushwork, clothing, props, contact relations, negative space, inset border shadow, and all non-pet pixels exactly as the master allows. Use Image 2 only as the new pet identity reference. Replace every depiction and residual feature of the master pet with the exact adult apricot Toy Poodle identity from Image 2, while keeping Image 1’s exact three-quarter right-facing bust, warm off-white paper background, large navy-black polygonal fragments, translucent grey facets, cream paper gaps, sharp broken ear and shoulder edges, sparse whisker lines, and fragmented ink-and-paper collage style. Preserve Image 1’s head angle, rightward gaze, quiet gentle expression, bust scale, adult silhouette, and fragment placement rhythm. Change only species/breed identity, coat-color distribution, ear shape, eye color, and the minimum facial facets needed for recognition. The new pet must be an adult apricot Toy Poodle with warm apricot tight curls, rounded dark eyes, small dark nose, rounded muzzle, floppy curly ears, and compact healthy adult proportions. Keep it distinctly adult, not puppy-like, not oversized head or eyes, not shortened muzzle. Flatten the face and body into Image 1’s exact two-dimensional fragmented ink-and-paper collage: angular paint shapes, paper gaps, no realistic face underlay, no circular iris or catchlight, no wet eye, no eyelid volume, no rounded nose, no individual fur strands, no smooth gradients, no anatomical skull volume, no 3D rendering, no pasted photo face. Maintain the restrained navy, grey, cream, and paper palette. No added text, logo, watermark, signature, or extra objects. Preserve all non-pet pixels and scene relationships as closely as possible.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation-third-batch/decorative-art-portrait_dog_toy-poodle-dog_9x16_v01.png",
+    "sha256": "1aadf9316d6c815501239b95349f7553284fb93361a06866611b224f7fe2cbc9"
+  },
+  "review": {
+    "state": "superseded",
+    "checks": {
+      "petIdentity": null,
+      "adultAgeAndProportions": null,
+      "masterPoseExpressionAndGaze": null,
+      "masterStyleAndBrushwork": null,
+      "sceneAndComposition": null,
+      "anatomyAndContacts": null,
+      "repeatedIdentityAndText": null,
+      "dimensions": "pass"
+    },
+    "findings": [
+      "v01 色彩和面部过于写实。"
+    ],
+    "finalApproval": "superseded",
+    "reviewedAt": "2026-08-17T13:33:28+08:00"
+  },
+  "generatedAt": "2026-08-17T02:02:17.077Z",
+  "supersededBy": "tools/imagegen/out/reference-v1/validation-third-batch/decorative-art-portrait_dog_toy-poodle-dog_9x16_v03.png"
+}

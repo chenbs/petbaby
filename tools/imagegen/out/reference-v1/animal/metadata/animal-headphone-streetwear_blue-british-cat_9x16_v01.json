@@ -1,0 +1,81 @@
+{
+  "templateId": "animal-headphone-streetwear",
+  "entryId": "character",
+  "title": "耳麦潮流宠物",
+  "sourceEffectFile": "apps/website/public/assets/example/animal/jimeng-2026-05-07-9340-IP形象设计：Q版，一只毛茸茸的黑色小猫，戴着耳麦，陶醉的神态，身穿白色潮流T恤....png",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-05-07-9340-IP形象设计：Q版，一只毛茸茸的黑色小猫，戴着耳麦，陶醉的神态，身穿白色潮流T恤....png",
+      "sha256": "9865c34abba5e3f308a74bf92e3fb0b2853fe3150a61508263dba6930adb8a7d"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "blue-british-cat",
+      "species": "cat",
+      "breed": "adult blue British Shorthair cat",
+      "path": "tools/imagegen/out/source/cat-british.jpg",
+      "sha256": "ddbdfb39b6cb3c6dddbfdd01555cd2fea299cfa927f76a1e7248d581152e0364"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a one-time third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every designated original animal, human-like creature or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult blue British Shorthair cat with solid blue-grey coat, round broad face, amber eyes, small upright ears, plush dense fur, thick tail and sturdy adult body. Render the face, fur and anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration or turn a stylized scene into a realistic photo. Keep the pet appealing and healthy, never skinny, gaunt, uncanny, aggressive or puppy-like. Keep the headphones, white streetwear shirt, relaxed music-listening expression and clean poster layout; preserve the same adult pet across the design. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character or artist names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a finished vertical 9:16 poster composition matching the reference layout: a centered full-body stylized character on a smooth gray studio background with soft floor shadow, minimal clean poster design, and the same overall pose and camera framing as the reference. Replace the original subject with one coherent adult blue British Shorthair cat identity throughout: solid blue-gray coat, round broad face, amber eyes, small upright ears, plush dense fur, thick tail, sturdy adult body, healthy proportions. The cat should be standing relaxed with a calm, music-listening expression, wearing large silver-and-black over-ear headphones, a white oversized streetwear T-shirt with a simple original pet-safe emblem instead of any brand/logo, black loose pants, black sneakers with white soles, and a small crossbody bag. Preserve the exact composition, crop, perspective, action, pose, gaze, lighting, palette, line quality, texture style, and contact relationships of the reference poster. Keep the same clean graphic character design language, not photorealistic. Do not redesign the background or add extra props. Remove any copyrighted brand, team, platform UI, watermark, or signature text and replace with short original pet-safe wording only if needed, while keeping the same text block positions and visual hierarchy. Ensure correct cat anatomy only, with one head, two eyes, two ears, four paws, no human hands, no duplicate animals, no broken clothing boundaries, no extra limbs. Render the face, fur, and anatomy in the same stylized visual language as the reference rather than a pasted photo. Final result should look like a polished frozen-master identity-preserving edit with the same adult pet across the entire design.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-headphone-streetwear_blue-british-cat_9x16_v01.png",
+    "sha256": "51b84708bf7cef2c42a280b5ede5d53e4726c681cbae9d3c4eb35bedf4d73a66"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-18T01:00:00+08:00"
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-17T16:37:04.163Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/animal/candidates/animal-headphone-streetwear_blue-british-cat_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/retired-masters/animal-headphone-streetwear_blue-british-cat_9x16_v01.png",
+  "masterSha256": "51b84708bf7cef2c42a280b5ede5d53e4726c681cbae9d3c4eb35bedf4d73a66",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-18T01:00:00+08:00",
+    "note": "用户确认本批次除七个待重做模板外，其余动物效果候选均通过并保存为母版。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/animal-headphone-streetwear_blue-british-cat_9x16_v01.png",
+      "sha256": "51b84708bf7cef2c42a280b5ede5d53e4726c681cbae9d3c4eb35bedf4d73a66"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "unapproved-candidate"
+    ]
+  }
+}

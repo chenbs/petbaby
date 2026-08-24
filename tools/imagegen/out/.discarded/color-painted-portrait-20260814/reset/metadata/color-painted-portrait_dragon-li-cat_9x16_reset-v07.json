@@ -1,0 +1,68 @@
+{
+  "templateId": "06",
+  "status": "not-selected-by-user",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "mode": "medium-strength-localized-face-refinement-from-v06",
+  "sourceCandidate": {
+    "role": "v06-accepted-direction-base",
+    "path": "tools/imagegen/out/reference-v1/reset/candidates/color-painted-portrait_dragon-li-cat_9x16_reset-v06.png",
+    "sha256": "d2025879057a7a8a7c6ba76692b7c78130de887cd6e9dd28017e0706c8b194a2"
+  },
+  "inputs": [
+    {
+      "role": "v06-immutable-edit-target",
+      "path": "tools/imagegen/out/reference-v1/reset/candidates/color-painted-portrait_dragon-li-cat_9x16_reset-v06.png",
+      "sha256": "d2025879057a7a8a7c6ba76692b7c78130de887cd6e9dd28017e0706c8b194a2"
+    },
+    {
+      "role": "effect-face-and-brushwork-detail-only",
+      "path": "tools/imagegen/out/reference-v1/reset/bases/color-painted-portrait_dragon-li-cat_9x16_detail.png",
+      "sha256": "e22b0e006a7887b343ba7125fd138b7e647f1bf62cd05af3ede80cc6d84d74d9"
+    },
+    {
+      "role": "same-soft-localized-face-mask",
+      "path": "tools/imagegen/out/reference-v1/reset/masks/color-painted-portrait_dragon-li-cat_9x16_face-only-v04.png",
+      "sha256": "0fb83b2da9292ee4336cf21c9e8ade767241218d057dc90700c68025a2d2dfb6"
+    }
+  ],
+  "excludedInputs": [
+    "original-pet-identity-photo",
+    "all-identity-bridges",
+    "reset-v05"
+  ],
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "adjustmentStrength": "medium-one-step-from-v06",
+  "prompt": "Task: strengthen the existing localized facial painterly treatment in Image 1 by one controlled step inside the supplied face mask. This is the same accepted direction as Image 1, only more visible. Do not redesign or replace the face. Image 1 is immutable for the adult Dragon Li identity, breed, coat and stripe placement, head silhouette, ear shape, head tilt, eye size, eye position and spacing, coordinated upward gaze, sweet appealing expression, cheek and muzzle proportions, nose and mouth positions, mature body, pose, subject scale, body rendering, background, palette, saturation and everything outside the mask. Preserve these exactly. Image 2 is only the facial paint-medium reference. Move the existing masked facial rendering a clear medium-strength step toward Image 2's refined loose digital-impressionist brushwork. The adjustment must be visibly stronger than Image 1 but remain detailed, mature and integrated with Image 1's surrounding fur. Preserve the exact shape and location of both eyes while clearly reducing photographic eyeball volume: simplify internal value transitions, remove iris-like depth and lens-like gloss, and resolve each eye as a dark softly painted form with one restrained matte brush highlight. Preserve the exact nose shape and location while replacing smooth wet-looking volume with several visible rounded matte paint strokes. Preserve the exact muzzle contour and gentle smile while breaking smooth anatomical shading into short layered soft brush marks. Convert remaining fine whisker and facial fur lines into fewer, slightly broader broken painted suggestions. Increase visible short soft brush marks and broken painted edges across the masked cheeks, eye surrounds, bridge of the nose and muzzle so the whole face unmistakably belongs to the same hand-painted medium as the body and background. Keep all existing tabby markings recognizable and in place. Do not flatten into a sticker, vector, primitive icon, children's drawing, chibi mascot or black-dot face. Do not enlarge or move eyes, alter gaze, change expression, shorten the muzzle, round the head, change ears, simplify the adult identity or erase facial stripes. No realistic iris texture, glassy eyeball, wet nose, airbrushed muzzle gradient, resolved hair strands, long wire whiskers, pores, 3D render or pasted face. No change outside the face mask.",
+  "revisedPrompt": null,
+  "backgroundLock": {
+    "method": "lingsuan-face-mask-plus-local-soft-alpha-composite",
+    "exactPixelLockOutsideMask": true,
+    "localHardComposite": false,
+    "localSoftComposite": true,
+    "sceneChangeBudget": "0%",
+    "acceptance": "Only the feathered facial region comes from the edit; all fully opaque mask pixels are restored exactly from v06."
+  },
+  "review": {
+    "state": "not-selected-by-user",
+    "finalApproval": "not-selected",
+    "reviewedAt": "2026-08-14T11:35:12+08:00",
+    "findings": [
+      "The user selected reset-v06 as the final master instead of the stronger reset-v07 facial adjustment."
+    ]
+  },
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/reset/candidates/color-painted-portrait_dragon-li-cat_9x16_reset-v07.png",
+    "sha256": "8af9ce16ea2967cedabde25bec8521f3fbf03d7be0e7a8e99812663f76647bea"
+  },
+  "generatedAt": "2026-08-14T03:16:12.985Z",
+  "rawOutput": {
+    "path": "tools/imagegen/out/reference-v1/reset/raw/color-painted-portrait_dragon-li-cat_9x16_reset-v07.png",
+    "sha256": "aa5fd2c130f70db697c2c5c48e833763d0fb50617e924cc9128e45b346264306"
+  },
+  "postprocessedAt": "2026-08-14T03:19:15.323Z",
+  "selectedAlternative": "tools/imagegen/out/reference-v1/masters/color-painted-portrait_dragon-li-cat_9x16_reset-v06.png"
+}

@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "小岛",
+  "navigationStyle": "custom",
+  "disableScroll": true,
+  "usingComponents": {
+    "t-notice": "../../components/notice/index"
+  }
+}

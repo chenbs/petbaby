@@ -1,0 +1,91 @@
+{
+  "templateId": "archive-fish-anatomy",
+  "entryId": "archive",
+  "title": "本宠结构图谱",
+  "version": "v02",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "sourceEffectFile": "apps/website/public/assets/example/7.png",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/7.png",
+      "sha256": "554e62d70dde411bf168aad5479fa4ed0b96585963c8a6af657d6c5424c21cf2",
+      "requestPath": ".tmp/pending-remediation-20260820-inputs/archive-fish-anatomy-effect.jpg",
+      "requestBytes": 180754
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "blue-british-cat",
+      "species": "cat",
+      "breed": "adult blue British Shorthair cat",
+      "path": "tools/imagegen/out/source/cat-british.jpg",
+      "sha256": "ddbdfb39b6cb3c6dddbfdd01555cd2fea299cfa927f76a1e7248d581152e0364",
+      "requestPath": ".tmp/pending-remediation-20260820-inputs/archive-fish-anatomy-identity.jpg",
+      "requestBytes": 149277
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "inputPolicy": {
+    "maxImages": 2,
+    "maxLongestEdge": 1200,
+    "jpegQuality": 82,
+    "combinedBytesBelow": 1048576,
+    "serial": true
+  },
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be adult blue British Shorthair cat with solid blue-grey coat, round broad face, amber eyes, small upright ears, plush dense fur, thick tail and sturdy adult body. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the central diagram, leader lines, data blocks and modular information hierarchy, but label it as playful fictional pet information, never medical fact. Recompose the entire atlas inside a generous safe margin so the full left and right information columns, ribbon ends, borders, labels and ornaments are completely visible and readable; nothing may be clipped by either side edge. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a single finished vertical poster image at exact 9:16 ratio, 720x1280 px, using the two attached references. Use Image 1 as the strict layout/style/composition reference and Image 2 as the sole identity reference for the subject. Preserve Image 1's full atlas composition exactly: antique parchment background, ornate steampunk/occult infographic design, top title ribbon, left and right modular information columns, central circular diagram, leader lines, data blocks, borders, ornaments, bottom philosophy panel and compass-like wheel. Keep the entire frame within a generous safe margin so nothing is clipped on either side; all text blocks, ribbon ends, borders and ornaments fully visible and readable.\n\nReplace the original central subject(s) in Image 1 with one coherent adult blue British Shorthair cat identity based on Image 2: solid blue-grey coat, round broad face, amber eyes, small upright ears, plush dense fur, thick tail, sturdy adult body, friendly appealing expression. The cat must be rendered in Image 1's exact visual language—antique engraved/illustrated mechanical-fantasy treatment with matching line quality, brushwork, texture, metallic ornamentation and diagrammatic structure. Do not paste a photographic cat face; integrate the cat naturally into the illustration style.\n\nPreserve Image 1's camera, crop, perspective, pose, action, gaze direction, lighting, palette, medium, texture, layout hierarchy, props, leader lines and contact relationships. Change only the designated subject identity and the minimum anatomy needed for correct adult cat anatomy. No extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, duplicate pets, residual source subject or broken boundaries.\n\nKeep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is required. Replace any known people, teams, brands, platform UI, watermarks, or copyrighted character names with short original pet-safe wording while preserving the same text blocks and hierarchy. The central diagram and side panels should remain, but label them as playful fictional pet information rather than medical fact. Do not generate new logos or signatures. The final result should look like a faithful preserved atlas page with the cat identity substituted in place of the original subject, not a redesign.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/pending-remediation-20260820/candidates/archive-fish-anatomy_blue-british-cat_9x16_v02.png",
+    "rawPath": "tools/imagegen/out/reference-v1/pending-remediation-20260820/raw/archive-fish-anatomy_blue-british-cat_9x16_v02.png",
+    "sha256": "4ecab1fb3a83f0831ca98e8df766fb99756368d244f4c1fb9f548024ea3d3e0c"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "checks": {
+      "dimensions": "pass",
+      "inputContract": "pass",
+      "visualAcceptance": "pending-user"
+    },
+    "findings": [],
+    "approvedAt": "2026-08-20T14:00:00+08:00"
+  },
+  "generatedAt": "2026-08-20T01:59:49.284Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/pending-remediation-20260820/candidates/archive-fish-anatomy_blue-british-cat_9x16_v02.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/archive-fish-anatomy_blue-british-cat_9x16_v02.webp",
+  "masterSha256": "cf9676c5dfdb50420dd9c836f4b31a57421cf986ac35ec27eff9893857c0580f",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-20T14:00:00+08:00",
+    "note": "用户明确确认 pending-masters-comparison.png 全部审核通过并要求冻结母版。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/archive-fish-anatomy_blue-british-cat_9x16_v02.webp",
+      "sha256": "cf9676c5dfdb50420dd9c836f4b31a57421cf986ac35ec27eff9893857c0580f"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-candidate",
+      "unapproved-candidate"
+    ]
+  }
+}

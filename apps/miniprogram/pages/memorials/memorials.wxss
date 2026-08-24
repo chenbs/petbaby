@@ -1,0 +1,45 @@
+/**
+ * 纪念页情绪降级（需求 5.17-1 / 9.5）：
+ * 动效由 themedPage({ mood: "memorial" }) 统一降为 fade、装饰位关闭；
+ * 本文件再把光晕与阴影调弱，使四套主题在此页都保持克制。
+ * 页面禁止出现促销类视觉（价格红标、倒计时、闪动）。
+ */
+.page-memorial {
+  --ai-glow: var(--divider);
+  --card-shadow: 0 6rpx 18rpx var(--divider);
+}
+
+.block-gap {
+  display: block;
+  margin-top: var(--space-4);
+}
+
+.list {
+  display: grid;
+  margin-top: var(--space-4);
+  gap: var(--space-3);
+}
+
+.memorial-main {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.memorial-more {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: var(--text-secondary);
+  font-size: var(--font-h3);
+}
+
+.memorial-tags {
+  display: flex;
+  margin-top: var(--space-3);
+  gap: var(--space-2);
+}
+
+.foot {
+  display: flex;
+  gap: var(--space-3);
+}

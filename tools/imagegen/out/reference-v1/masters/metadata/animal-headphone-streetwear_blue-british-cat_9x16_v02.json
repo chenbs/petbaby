@@ -1,0 +1,143 @@
+{
+  "templateId": "animal-headphone-streetwear",
+  "entryId": "character",
+  "title": "耳麦潮流宠物",
+  "sourceEffectFile": "apps/website/public/assets/example/animal/jimeng-2026-05-07-9340-IP形象设计：Q版，一只毛茸茸的黑色小猫，戴着耳麦，陶醉的神态，身穿白色潮流T恤....png",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-05-07-9340-IP形象设计：Q版，一只毛茸茸的黑色小猫，戴着耳麦，陶醉的神态，身穿白色潮流T恤....png",
+      "sha256": "9865c34abba5e3f308a74bf92e3fb0b2853fe3150a61508263dba6930adb8a7d"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "blue-british-cat",
+      "species": "cat",
+      "breed": "adult blue British Shorthair cat",
+      "path": "tools/imagegen/out/source/cat-british.jpg",
+      "sha256": "ddbdfb39b6cb3c6dddbfdd01555cd2fea299cfa927f76a1e7248d581152e0364"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: identity-preserve precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the current self-owned master and controls the replacement pet or owner identity unless the request explicitly changes the breed. Image 2 is the composition and effect reference. Use it only to correct the requested composition, pose, expression, gaze or visual treatment. Preserve every aspect that is not explicitly changed below, including the scene, camera, crop, palette, lighting, costume, props, spatial relationships and visual medium. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature. No extra subjects, duplicate anatomy, human hands on animals, malformed paws, text, logo, watermark or signature. Make the adult blue British Shorthair face distinctly Q-version and cartoon-cute like Image 2: noticeably oversized round plush head, broad soft cheeks, tiny short muzzle, simplified friendly features and a relaxed music-loving expression. Keep the blue-grey coat and amber eyes recognizable, plus the headphones, white shirt, crossbody bag, baggy black trousers, sneakers and clean studio poster composition. Avoid a realistic ordinary-cat head, kitten body, human face or uncanny proportions. Return a 9:16 portrait composition.",
+  "revisedPrompt": "Create a precise identity-preserving edit of the provided self-owned master image, using the second reference only for composition/effect cues. Keep the exact clean studio poster setup and 9:16 portrait framing. Preserve the adult blue British Shorthair as the same character, but transform the face into a distinctly Q-version cartoon-cute style: noticeably oversized round plush head, broad soft cheeks, tiny short muzzle, simplified friendly features, relaxed music-loving expression, while still clearly blue-grey with amber eyes. Keep the same headphones, white shirt, crossbody bag, baggy black trousers, sneakers, and tail. Maintain the same standing pose, camera angle, crop, palette, lighting, and spatial relationships. Make it look polished and cute, not realistic, not a human face, not a kitten body, not uncanny. Remove all badges, labels, account names, account numbers, watermark, logo, and signature. No extra subjects, no duplicate anatomy, no human hands, no malformed paws, no text.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/remediation-20260819/master-candidates/animal-headphone-streetwear_blue-british-cat_9x16_v02.png",
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/master-animal-headphone-streetwear.png",
+    "sha256": "233fa151041c9e60c4bfadef77dcf0d71280a7c00687d2437b676f870ed911d2"
+  },
+  "review": {
+    "state": "approved-by-user-request",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-19T14:10:00+08:00"
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-19T05:50:15.704Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/remediation-20260819/master-candidates/animal-headphone-streetwear_blue-british-cat_9x16_v02.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/animal-headphone-streetwear_blue-british-cat_9x16_v02.webp",
+  "masterSha256": "911c9bf3cc468c6ff53f1ca4da7fc76b9b4b3baec6d6fa20d076a8fb38df69f0",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-19T14:10:00+08:00",
+    "note": "用户于 2026-08-19 明确要求按逐项意见返工并完成；候选已逐张目视复核后冻结为新版本。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/animal-headphone-streetwear_blue-british-cat_9x16_v02.webp",
+      "sha256": "911c9bf3cc468c6ff53f1ca4da7fc76b9b4b3baec6d6fa20d076a8fb38df69f0"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate",
+      "unapproved-candidate"
+    ]
+  },
+  "version": "v02",
+  "supersedes": {
+    "path": "tools/imagegen/out/reference-v1/retired-masters/animal-headphone-streetwear_blue-british-cat_9x16_v01.png",
+    "sha256": "51b84708bf7cef2c42a280b5ede5d53e4726c681cbae9d3c4eb35bedf4d73a66",
+    "metadata": "tools/imagegen/out/reference-v1/retired-masters/metadata/animal-headphone-streetwear_blue-british-cat_9x16_v01.json"
+  },
+  "remediationRequest": {
+    "task": "user-requested-frozen-master-remediation-2026-08-19",
+    "templateId": "animal-headphone-streetwear",
+    "kind": "master",
+    "version": "v02",
+    "status": "approved-and-promoted",
+    "provider": "lingsuan",
+    "model": "gpt-image-2",
+    "endpoint": "/v1/images/edits",
+    "inputFidelity": "high",
+    "inputPolicy": {
+      "sequential": true,
+      "maxImages": 2,
+      "maxCombinedBytes": 1000000
+    },
+    "inputs": [
+      {
+        "role": "current-self-owned-master",
+        "path": ".tmp/master-remediation-20260819-inputs/animal-headphone-streetwear-master.jpg",
+        "bytes": 54604,
+        "sha256": "1ef704679d7cbb5c0c02ee2882e7dfb86caf2ac9b3e3d2fe2334ef90cf5ac6d3"
+      },
+      {
+        "role": "effect-reference-composition-guide",
+        "path": ".tmp/master-remediation-20260819-inputs/animal-headphone-streetwear-effect.jpg",
+        "bytes": 62578,
+        "sha256": "456c5dbfeaea12cee3a9372768ec3dbaf8d66a4ac550f2343bf46745ea7691b2"
+      }
+    ],
+    "orientation": "portrait",
+    "requestedSize": "720x1280",
+    "output": {
+      "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/master-animal-headphone-streetwear.png",
+      "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819/master-candidates/animal-headphone-streetwear_blue-british-cat_9x16_v02.png",
+      "width": 720,
+      "height": 1280,
+      "sha256": "233fa151041c9e60c4bfadef77dcf0d71280a7c00687d2437b676f870ed911d2"
+    },
+    "prompt": "Use case: identity-preserve precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the current self-owned master and controls the replacement pet or owner identity unless the request explicitly changes the breed. Image 2 is the composition and effect reference. Use it only to correct the requested composition, pose, expression, gaze or visual treatment. Preserve every aspect that is not explicitly changed below, including the scene, camera, crop, palette, lighting, costume, props, spatial relationships and visual medium. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature. No extra subjects, duplicate anatomy, human hands on animals, malformed paws, text, logo, watermark or signature. Make the adult blue British Shorthair face distinctly Q-version and cartoon-cute like Image 2: noticeably oversized round plush head, broad soft cheeks, tiny short muzzle, simplified friendly features and a relaxed music-loving expression. Keep the blue-grey coat and amber eyes recognizable, plus the headphones, white shirt, crossbody bag, baggy black trousers, sneakers and clean studio poster composition. Avoid a realistic ordinary-cat head, kitten body, human face or uncanny proportions. Return a 9:16 portrait composition.",
+    "revisedPrompt": "Create a precise identity-preserving edit of the provided self-owned master image, using the second reference only for composition/effect cues. Keep the exact clean studio poster setup and 9:16 portrait framing. Preserve the adult blue British Shorthair as the same character, but transform the face into a distinctly Q-version cartoon-cute style: noticeably oversized round plush head, broad soft cheeks, tiny short muzzle, simplified friendly features, relaxed music-loving expression, while still clearly blue-grey with amber eyes. Keep the same headphones, white shirt, crossbody bag, baggy black trousers, sneakers, and tail. Maintain the same standing pose, camera angle, crop, palette, lighting, and spatial relationships. Make it look polished and cute, not realistic, not a human face, not a kitten body, not uncanny. Remove all badges, labels, account names, account numbers, watermark, logo, and signature. No extra subjects, no duplicate anatomy, no human hands, no malformed paws, no text.",
+    "generatedAt": "2026-08-19T05:50:15.704Z",
+    "approvedAt": "2026-08-19T14:10:00+08:00"
+  },
+  "qualityBaseline": {
+    "required": [
+      "clearly Q-version cartoon face and proportions while retaining the headphones and streetwear layout",
+      "exact 720x1280 portrait output",
+      "clean finished image without platform UI, account IDs, logos, watermarks or signatures"
+    ],
+    "reject": [
+      "regression of the composition, expression, gaze, identity, texture or anatomy corrected by this remediation",
+      "extra subjects, duplicate or malformed anatomy, broken costume contacts, logo, watermark or signature"
+    ]
+  }
+}

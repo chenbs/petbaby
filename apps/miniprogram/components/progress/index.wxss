@@ -1,0 +1,75 @@
+.progress {
+  width: 100%;
+}
+
+.bar-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 0 0 var(--space-2);
+  gap: var(--space-2);
+}
+
+.bar-label {
+  color: var(--text-secondary);
+  font-size: var(--small-size);
+}
+
+.bar-value {
+  color: var(--text-primary);
+  font-size: var(--small-size);
+  font-weight: var(--fw-bold);
+}
+
+.bar {
+  height: 12rpx;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--divider);
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--primary);
+  transition: width var(--transition-duration) var(--transition-easing);
+}
+
+.bar-ai {
+  background: var(--ai-gradient);
+}
+
+.bar-success {
+  background: var(--success);
+}
+
+.ring {
+  display: flex;
+  width: 176rpx;
+  height: 176rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.ring-hole {
+  display: flex;
+  width: 128rpx;
+  height: 128rpx;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--card-background);
+}
+
+.ring-text {
+  color: var(--text-primary);
+  font-size: var(--font-h3);
+  font-weight: var(--fw-bold);
+}
+
+.ring-label {
+  color: var(--text-secondary);
+  font-size: var(--eyebrow-size);
+}

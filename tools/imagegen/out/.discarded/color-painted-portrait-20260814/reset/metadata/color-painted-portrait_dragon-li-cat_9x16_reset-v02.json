@@ -1,0 +1,54 @@
+{
+  "templateId": "06",
+  "status": "revision-required",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "mode": "subject-only-masked-replacement",
+  "inputs": [
+    {
+      "role": "immutable-effect-base",
+      "path": "tools/imagegen/out/reference-v1/reset/bases/color-painted-portrait_dragon-li-cat_9x16_base.png",
+      "sha256": "2ca502388cf693438c98fee6d4d064fa175da93963cc474eae0be0da53dcd0e5"
+    },
+    {
+      "role": "effect-face-and-brushwork-detail",
+      "path": "tools/imagegen/out/reference-v1/reset/bases/color-painted-portrait_dragon-li-cat_9x16_detail.png",
+      "sha256": "e22b0e006a7887b343ba7125fd138b7e647f1bf62cd05af3ede80cc6d84d74d9"
+    },
+    {
+      "role": "pet-identity-only",
+      "path": "apps/website/public/assets/avatar-dragonli.jpg",
+      "sha256": "0f403599969b57f32aa314cf474ce4d57d28f48683e16ae9a032d73b94079732"
+    },
+    {
+      "role": "edit-mask",
+      "path": "tools/imagegen/out/reference-v1/reset/masks/color-painted-portrait_dragon-li-cat_9x16_mask.png",
+      "sha256": "a3247060227b25208f9472cf0259b9ba1db564b11a62d52f64ceb88fbb7b4310"
+    }
+  ],
+  "inputFidelity": "provider-default",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Task: subject-only identity replacement, not image redesign and not style transfer. Image 1 is the immutable base image and the sole authority for every visible detail except animal identity: canvas, crop, composition, orange and teal background, every paint mark, palette, saturation, contrast, lighting, seated pose, head angle, upward gaze, gentle expression, facial treatment, fur treatment, edge quality and texture. Image 2 is a detail crop from Image 1 and reinforces the exact hand-painted face construction, simplified features and brushwork that must be retained. Replace only the original animal identity in Image 1 with the exact adult Dragon Li tabby cat from Image 3. Image 3 controls only species, breed, brown tabby coat markings, ear shape, yellow-green eye colour, actual adult age and natural feline proportions. Do not copy Image 3's photographic lighting, background, pose, expression, individual fur strands, photographic facial detail or realism. Do not paste or reconstruct the photographed face. Transfer Image 1's exact pose, head angle, gaze, gentle expression, painted facial treatment, painted fur treatment and all other visual details onto the new identity. Preserve adult proportions; do not turn the cat into a kitten and do not enlarge the head, eyes or cheeks. Change no background, scene, composition, palette or brushwork. Remove only the platform watermark and account ID. Exactly one animal; no added text, objects or anatomy changes.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "revision-required-by-user",
+    "finalApproval": "revision-required",
+    "reviewedAt": "2026-08-14T10:02:56+08:00",
+    "findings": [
+      "The seamless output fixed the v01 compositing failure, but the face remains too photographic relative to the painted body and scene.",
+      "The dog-to-cat replacement must reconstruct feline anatomy from a high-resolution close-up photo, causing photographic fur, eyes, nose and muzzle rendering to leak from the identity input.",
+      "Before another 06 generation, derive a low-photo-detail adult Dragon Li identity structure reference and use it only for anatomy, markings and age; keep the effect base and its face-detail crop authoritative for all rendering."
+    ]
+  },
+  "generatedAt": "2026-08-14T01:29:13.101Z",
+  "backgroundLock": {
+    "method": "lingsuan-transparent-edit-mask",
+    "exactPixelLock": false,
+    "reason": "The provider semantically respects the mask but re-encodes the full canvas; pixel-for-pixel compositing creates visible fur-edge seams.",
+    "acceptance": "No semantic, compositional, palette or scene-content change outside the replacement subject."
+  },
+  "postprocessedAt": "2026-08-14T01:30:56.085Z"
+}

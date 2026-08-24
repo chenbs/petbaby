@@ -1,0 +1,42 @@
+{
+  "task": "user-requested-frozen-master-remediation-2026-08-19",
+  "templateId": "animal-rabbit-yokai",
+  "kind": "master",
+  "version": "stylebridge-v03",
+  "status": "generated-pending-visual-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputFidelity": "high",
+  "inputPolicy": {
+    "sequential": true,
+    "maxImages": 2,
+    "maxCombinedBytes": 1000000
+  },
+  "inputs": [
+    {
+      "role": "current-self-owned-master",
+      "path": ".tmp/master-remediation-20260819-inputs/animal-rabbit-yokai-master.jpg",
+      "bytes": 141473,
+      "sha256": "cf6f9cf23b4ca102088e908645ab5e947ab0f2110e11d72b4736ea8cd882a031"
+    },
+    {
+      "role": "effect-reference-composition-guide",
+      "path": ".tmp/master-remediation-20260819-inputs/animal-rabbit-yokai-effect.jpg",
+      "bytes": 167679,
+      "sha256": "346e956dd88a639e8018442cc9eee1e474732c866bc3fcc6e599a2e2b0cde6fe"
+    }
+  ],
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "output": {
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/master-animal-rabbit-yokai.png",
+    "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819/master-candidates/animal-rabbit-yokai_cream-cat_9x16_stylebridge-v03.png",
+    "width": 720,
+    "height": 1280,
+    "sha256": "1c6c2247646e020105fb37d20c332147d434edddd96890d8b17a5bf31c9fd957"
+  },
+  "prompt": "Use case: identity-preserve precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the current self-owned master and controls the replacement pet or owner identity unless the request explicitly changes the breed. Image 2 is the composition and effect reference. Use it only to correct the requested composition, pose, expression, gaze or visual treatment. Preserve every aspect that is not explicitly changed below, including the scene, camera, crop, palette, lighting, costume, props, spatial relationships and visual medium. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature. No extra subjects, duplicate anatomy, human hands on animals, malformed paws, text, logo, watermark or signature. Refine the current cream-cat yokai master to the detail standard of Image 2: sharper and more delicate facial fur, layered cheek and chest strands, intricate embroidered blue-red textile, crisp metal filigree, individual gemstones, tassels and ornamental hardware. Add subtle cool blue-silver tonal depth to the fur and shadows while preserving the cream cat identity, stern elegant gaze, headpiece, frontal pose and night-market background. The result must look polished, premium and finely resolved rather than simplified or plastic. Return a 9:16 portrait composition.",
+  "revisedPrompt": "A premium, finely resolved 9:16 portrait of the self-owned cream-cat yokai master, preserving the exact identity, frontal pose, stern elegant gaze, headpiece, ornate costume, and night-market background from the source. Refine the character to a higher detail standard: sharper and more delicate facial fur, layered cheek and chest strands, subtle cool blue-silver tonal depth in the cream fur and shadows while keeping the cat clearly cream-colored, crisp embroidered blue-red textile patterns, intricate metal filigree, individual gemstones, tassels, dangling ornamental hardware, and refined jewelry details. Maintain the same composition, camera angle, crop, lighting, palette, and spatial relationships. Remove all platform badges, AI labels, account names, watermarks, logos, signatures, and any text. No extra subjects, no duplicate anatomy, no human hands, no malformed paws. Polished, luxurious, high-detail fantasy illustration, not plastic, not simplified.",
+  "generatedAt": "2026-08-19T05:55:20.023Z"
+}

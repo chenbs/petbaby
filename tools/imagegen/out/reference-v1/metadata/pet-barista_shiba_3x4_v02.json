@@ -1,0 +1,26 @@
+{
+  "templateId": "pet-barista",
+  "status": "direction-preview",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-effect-reference-internal-only",
+      "path": "apps/website/public/assets/example/1786367434575.png",
+      "sha256": "be3d89cfda9d0350c8df3e7c2135b92256a28006eca9cb8360c342414040ccd8"
+    },
+    {
+      "role": "pet-identity-reference",
+      "path": "apps/website/public/assets/hero-shiba.jpg",
+      "sha256": "7145a7ce0e93b73b16129b8f74a465050c02d82799a349a265e73cf6c15c012a"
+    }
+  ],
+  "inputFidelity": "high",
+  "requestedSize": "1200x1600",
+  "outputSize": "1200x1600",
+  "quality": "high",
+  "prompt": "Image 1 is a temporary composition and action reference only: retain only the idea of one pet actively working at a compact coffee counter, warm side-window lighting and a readable counter-to-subject relationship. Discard every source-specific animal, typography, paw-mark graphic, apron, menu board, cups, cookies, labels, logo and shop layout from Image 1. Image 2 is the only identity reference: preserve this exact red Shiba Inu, including the fox-like triangular ears, compact athletic body, curled tail, red coat, cream cheek markings and dark almond eyes. Create a newly designed vertical 3:4 environmental portrait of the Shiba Inu as the active owner of a small independent botanical coffee counter. The Shiba stands naturally behind a pale ash-wood counter, operating a simple unbranded hand coffee grinder with one front paw while the other stabilizes the grinder base. Use a plain sage canvas apron that leaves the face, ears, chest markings and front paws visible. Build an original setting with handmade speckled ceramic cups, a clear bean jar, rosemary, a brushed steel kettle and a warm limewashed wall. The action, tool and workplace must read immediately; this is not a seated costume portrait. Leave a clean section of wall in the upper-right for later programmatic copy. Use warm side-window light, tactile wood and ceramic textures, realistic fur and premium editorial pet photography. Do not reproduce Image 1's layout literally or retain any recognisable source detail. Exactly one Shiba Inu and no other animal. Anatomically plausible face, body, tail and four limbs; no duplicate paws or fused objects. No human, no human hands, no brand, no platform UI, no text, no letters, no numbers, no logo, no watermark and no signature.",
+  "revisedPrompt": null,
+  "generatedAt": "2026-08-12T08:18:57.793Z"
+}

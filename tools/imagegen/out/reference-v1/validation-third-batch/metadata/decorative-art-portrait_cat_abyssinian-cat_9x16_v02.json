@@ -1,0 +1,65 @@
+{
+  "jobId": "decorative-art-portrait_cat_abyssinian-cat",
+  "templateId": "decorative-art-portrait",
+  "title": "装饰艺术肖像",
+  "status": "superseded-by-approved-revision",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/decorative-art-portrait_ragdoll-cat_9x16_v05.webp",
+      "sha256": "7113eeca312feb28ffec548830943be74aab8512db99316686b7700d1cc7a976"
+    },
+    {
+      "role": "new-pet-identity-reference",
+      "identityId": "abyssinian-cat",
+      "species": "cat",
+      "breed": "adult ruddy Abyssinian cat",
+      "path": "apps/website/public/assets/work-abyssinian.jpg",
+      "sha256": "5608fe24bd5309a738f10fa59174ab31bbd2a301a1bf5a15dd84d1ef9f4669bd"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 6,
+    "localWorkerConcurrency": 6,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving template transfer. Produce one exact 720x1280 vertical 9:16 runtime validation image from exactly two input images. Image 1 is our frozen self-owned production master. It is the sole authority for every non-identity detail: scene, composition, crop, camera, pose, action, expression, gaze, lighting, palette, rendering medium, brushwork, clothing, text, props and all physical contacts. No third-party effect reference is included. Image 2 is the sole new-pet identity reference. Change only the pet identity. Remove every depiction and every residual feature of the master pet, then replace it with the new pet from Image 2. Scene-change budget is 0%. Do not redesign, reinterpret, clean up, recolour, restyle, simplify, move, delete or add anything in the master scene. Keep the exact three-quarter right-facing bust, warm off-white paper, large navy-black polygonal fragments, translucent grey facets, cream paper gaps, sharp broken ear and shoulder edges, sparse whisker lines, generous negative space and faint inset border shadow. Replicate Image 1's head angle, rightward gaze, quiet gentle expression, bust scale, adult silhouette and fragment placement rhythm. Express the new identity only through its breed-specific outer silhouette, coat-colour distribution, ear shape and the minimum facial facets needed for recognition. The replacement must be the exact adult ruddy Abyssinian cat from Image 2. Preserve its warm ruddy ticked coat, darker forehead markings, large upright ears, golden almond eyes, terracotta nose and elegant healthy adult body. Image 2 controls only species, breed, coat colour and markings, ear shape, eye colour, actual adult age and natural healthy breed proportions. Do not copy Image 2's pose, expression, gaze, camera, background, lighting, photographic texture or rendering style. Preserve the pet's actual adult age and mature breed proportions. Do not juvenilize it, enlarge the head or eyes, shorten the muzzle or body, or convert it into a kitten, puppy or generic cute mascot. Keep it healthy, attractive and immediately likeable without changing the master's expression or art direction. Flatten the complete replacement face and body into Image 1's exact two-dimensional fragmented ink-and-paper collage. Eyes, brow, cheeks, muzzle, nose and mouth must be flat angular paint shapes with paper gaps and no realistic face underneath. No circular iris, catchlight, wet eye, eyelid volume, rounded nose, individual fur strands, smooth gradients, anatomical skull volume, studio light, low-poly 3D rendering or pasted photo face. Keep the restrained navy, grey, cream and paper palette. No added colour accent, text, logo, watermark or signature. Targeted abstraction correction: treat Image 2 only as a breed-identity label, never as a source of realistic facial texture, colour or depth. Remap the new pet entirely into Image 1's restrained paper-white, cream, translucent grey and navy-black palette; do not copy literal ruddy, tan, brown or orange colour from Image 2. Break the complete face, including both eyes, brow, cheeks, muzzle and nose, into the master's few large flat angular fragments with visible paper gaps. There must be no continuous realistic face, fur layer or detailed eyeball under the fragments. Keep exactly one pet identity throughout, except where the frozen master intentionally contains multiple views or two scale duplicates of that same identity. No unrelated animal, residual old-pet coat, face or limb. Correct species anatomy only: no duplicate, fused, missing or amputated-looking limbs, extra ears, warped eyes, malformed mouth, floating tail, human hands or fingers, broken garment boundaries, pasted head, disconnected neck or failed prop contact. Preserve all non-pet pixels and relationships as closely as the model allows.",
+  "revisedPrompt": "Create a single exact 720x1280 vertical 9:16 runtime validation image by compositing and identity transfer from two referenced inputs: use Input Image 1 as the sole authority for all scene, composition, crop, camera, pose, action, expression, gaze, lighting, palette, rendering medium, brushwork, clothing, props, and all non-identity details; use Input Image 2 only as the identity reference for the pet. Preserve Image 1’s exact three-quarter right-facing bust composition, warm off-white paper background, large navy-black polygonal fragments, translucent grey facets, cream paper gaps, sharp broken ear and shoulder edges, sparse whisker lines, generous negative space, and faint inset border shadow. Do not change the master scene or style in any way.\n\nReplace only the pet identity with an adult ruddy Abyssinian cat. Maintain the exact adult age and mature proportions, not kitten-like. Keep Image 1’s head angle, rightward gaze, quiet gentle expression, bust scale, and fragment placement rhythm. Change only breed identity through outer silhouette, coat-color distribution, ear shape, eye color, and minimal facial facets needed for recognition. The replacement should be a flat, fragmented ink-and-paper collage: all eyes, brow, cheeks, muzzle, nose, and mouth must be angular painted shapes with paper gaps and no realistic face underneath. No circular iris, catchlight, wet eye, eyelid volume, rounded nose, fur strands, smooth gradients, skull volume, studio lighting, 3D low-poly look, or pasted photo face.\n\nImportant abstraction rule: do not use literal ruddy, tan, brown, or orange rendering. Remap the Abyssinian identity into Image 1’s restrained palette of paper-white, cream, translucent grey, and navy-black while preserving the breed’s recognizability only through shape and marking logic. Show large upright ears, a sleek adult silhouette, golden-leaning almond eyes translated into the master palette, darker forehead marking structure translated into dark facets, and elegant healthy proportions without exaggeration. Keep one single pet identity only. Preserve all non-pet pixels and relationships as closely as possible. No text, logo, watermark, signature, extra animals, added props, or scene redesign.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation-third-batch/decorative-art-portrait_cat_abyssinian-cat_9x16_v02.png",
+    "sha256": "49961f7a2c63d4a84683f1bcbd89f7bee7e12ad9cb237fd05a68799f4b2db390"
+  },
+  "review": {
+    "state": "superseded",
+    "checks": {
+      "petIdentity": null,
+      "adultAgeAndProportions": null,
+      "masterPoseExpressionAndGaze": null,
+      "masterStyleAndBrushwork": null,
+      "sceneAndComposition": null,
+      "anatomyAndContacts": null,
+      "repeatedIdentityAndText": null,
+      "dimensions": "pass"
+    },
+    "findings": [
+      "v02 面部抽象程度不足。"
+    ],
+    "finalApproval": "superseded",
+    "reviewedAt": "2026-08-17T13:33:28+08:00"
+  },
+  "generatedAt": "2026-08-17T02:35:23.968Z",
+  "supersededBy": "tools/imagegen/out/reference-v1/validation-third-batch/decorative-art-portrait_cat_abyssinian-cat_9x16_v03.png"
+}

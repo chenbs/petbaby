@@ -1,0 +1,58 @@
+{
+  "templateId": "color-painted-portrait",
+  "title": "彩色绘画肖像",
+  "entryId": "art",
+  "status": "master-candidate-pending-user-approval",
+  "subject": "dragon-li-cat",
+  "breed": "狸花猫",
+  "revision": {
+    "version": "v02",
+    "supersedes": "color-painted-portrait_dragon-li-cat_9x16_v01.png",
+    "reviewFinding": "旧版只替换了宠物主体，主体仍偏照片质感，没有完整转译为效果参考图的手绘媒介。",
+    "scope": "full-subject-medium-style-transfer"
+  },
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-effect-and-medium-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/4f109cb7-2809-459a-93ef-5e7775e16280.jpg",
+      "sha256": "620aa0a865818f88025ed9345f86e0f38a113520a91627a1dfd1535136b0035a"
+    },
+    {
+      "role": "pet-identity-only-reference",
+      "path": "apps/website/public/assets/avatar-dragonli.jpg",
+      "sha256": "0f403599969b57f32aa314cf474ce4d57d28f48683e16ae9a032d73b94079732"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: style-transfer with pet identity preservation. Create a vertical 9:16 collectible hand-painted pet portrait at exactly 720x1280 pixels from exactly two input images. Image 1 is the primary effect, composition and physical-medium reference. Preserve its saturated orange field, loose teal and coral accents, bold dry-brush edges, half-body three-quarter pose, generous negative space, contemporary gallery-poster energy and intentionally unfinished paint transitions. Remove only its platform watermark and account ID. Render the entire Dragon Li cat as an unmistakable expressive dry-brush painting. Build the head, ears, cheeks, eyes, nose, muzzle, whiskers, chest, forelegs and every tabby marking from broad broken bristle strokes, scraped pigment, flat painted colour shapes and selective dark gestural lines. Let some body and fur edges dissolve naturally into the teal, coral, yellow and orange brush field exactly as in Image 1. The eyes and nose must still read clearly but must be painted forms, not photographic organs: use simplified pigment shapes, visible bristle texture and restrained hand-painted highlights. The coat must never show individual camera-resolved hairs, photographic pores, lens sharpness or smooth realistic shading. Image 2 is an identity-only reference. Use it solely to identify breed anatomy, coat colour blocks, facial markings, eye colour and recognisable proportions. Do not copy Image 2's photographic rendering, individual photo-real hair strands, camera lighting, lens blur, skin or fur microtexture, glossy photographic highlights or cut-out edges. Reconstruct the pet from the ground up inside Image 1's hand-painted medium. The animal and background must visibly be one continuous artwork made by the same artist, with the same brush family, pigment thickness, edge language, colour granulation and level of abstraction. The pet must remain youthful, healthy, rounded and immediately lovable, with correct anatomy and no extra or fused limbs. Preserve from Image 2 the brown-grey mackerel tabby colour, bold forehead M, dark cheek stripes, yellow-green round eyes, pink-brown nose, upright ears and rounded healthy face of the same Dragon Li cat. Express these identity features using brush shapes rather than photo texture. Keep the expression warm, relaxed, youthful and lovable. Keep exactly one cat with correct anatomy. Reject any mixed-media result: no photorealistic cat pasted over painted swatches, no photographic fur, no cut-out halo, no airbrushed 3D rendering, no smooth digital-photo face, no text, logo, watermark or signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "prechecked-pending-user-approval",
+    "checks": {
+      "petIdentity": "pass",
+      "cuteness": "pass",
+      "effectComposition": "pass",
+      "subjectMediumConsistency": "pass",
+      "anatomy": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [
+      "狸花猫的脸、眼鼻、虎斑纹、身体与边缘均由干刷、刮擦和颜料色块构成，主体自然融入背景，不再呈现照片抠图感。"
+    ],
+    "finalApproval": "pending-user"
+  },
+  "generatedAt": "2026-08-13T05:58:43.541Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/color-painted-portrait_dragon-li-cat_9x16_v02.png",
+    "sha256": "666a97a1ca249e99e33fcf7ebd41e69e53f7bfccec7aeb2f5cd67df390aaa4c5"
+  }
+}

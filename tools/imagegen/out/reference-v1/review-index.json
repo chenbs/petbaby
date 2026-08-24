@@ -1,0 +1,128 @@
+{
+  "status": "pre-reviewed-pending-user-approval",
+  "provider": "lingsuan",
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "migrations": [
+    {
+      "id": "pet-barista_cat_black-cat_9x16_v01",
+      "kind": "migration-validation",
+      "path": "tools/imagegen/out/reference-v1/validation/pet-barista_cat_black-cat_9x16_v01.png",
+      "sha256": "3c89a0f7ef895cd54c80696ddfd8042751cdaecb3e38ffc9ca08574fd1c5821c",
+      "size": "720x1280",
+      "reviewState": "approved-by-user",
+      "findings": []
+    },
+    {
+      "id": "pet-barista_dog_golden-retriever-dog_9x16_v01",
+      "kind": "migration-validation",
+      "path": "tools/imagegen/out/reference-v1/validation/pet-barista_dog_golden-retriever-dog_9x16_v01.png",
+      "sha256": "b4e17f32a8c24343b74ac1a3069b5a8a9a0fab293adda7d64179a9a795e74f1f",
+      "size": "720x1280",
+      "reviewState": "pre-reviewed-pending-user-approval",
+      "findings": []
+    },
+    {
+      "id": "pet-character-sheet_cat_cream-longhair-cat_16x9_v01",
+      "kind": "migration-validation",
+      "path": "tools/imagegen/out/reference-v1/validation/pet-character-sheet_cat_cream-longhair-cat_16x9_v01.png",
+      "sha256": "dae71fe38e10b76518cc002ef78939165dd4656b640bf4b860eb63d79c0f5e59",
+      "size": "1280x720",
+      "reviewState": "pre-reviewed-pending-user-approval",
+      "findings": []
+    },
+    {
+      "id": "pet-character-sheet_dog_german-shepherd-dog_16x9_v01",
+      "kind": "migration-validation",
+      "path": "tools/imagegen/out/reference-v1/validation/pet-character-sheet_dog_german-shepherd-dog_16x9_v01.png",
+      "sha256": "d71b5cd6fb3799a434142804bf9ec76007d7c8ff1aed883fc0aea82d09882021",
+      "size": "1280x720",
+      "reviewState": "pre-reviewed-pending-user-approval",
+      "findings": []
+    },
+    {
+      "id": "pet-encyclopedia_cat_devon-rex-cat_9x16_v01",
+      "kind": "migration-validation",
+      "path": "tools/imagegen/out/reference-v1/validation/pet-encyclopedia_cat_devon-rex-cat_9x16_v01.png",
+      "sha256": "be46e443e420ef0e55ec1cf685465ce7c2a09230078abab738149a18ad0f849d",
+      "size": "720x1280",
+      "reviewState": "pre-reviewed-pending-user-approval",
+      "findings": []
+    },
+    {
+      "id": "pet-encyclopedia_dog_corgi-dog_9x16_v01",
+      "kind": "migration-validation",
+      "path": "tools/imagegen/out/reference-v1/validation/pet-encyclopedia_dog_corgi-dog_9x16_v01.png",
+      "sha256": "e3ad2c7d2f63a2367e239d93a285d1bd52df5959ed30ac5b500df3fc96a57666",
+      "size": "720x1280",
+      "reviewState": "pre-reviewed-pending-user-approval",
+      "findings": []
+    },
+    {
+      "id": "pet-wanted-poster_cat_tuxedo-cat_9x16_v01",
+      "kind": "migration-validation",
+      "path": "tools/imagegen/out/reference-v1/validation/pet-wanted-poster_cat_tuxedo-cat_9x16_v01.png",
+      "sha256": "e72cdcca9f03be4c85f0380fe3fe1ac2f2e5f6333b47eef9953aedfce67530cc",
+      "size": "720x1280",
+      "reviewState": "pre-reviewed-pending-user-approval",
+      "findings": []
+    },
+    {
+      "id": "pet-wanted-poster_dog_black-labrador-dog_9x16_v01",
+      "kind": "migration-validation",
+      "path": "tools/imagegen/out/reference-v1/validation/pet-wanted-poster_dog_black-labrador-dog_9x16_v01.png",
+      "sha256": "9e07af9cd0b6afa9ecdb84539db6d627d81e2eeae0d938925ba379a6e5ac17d2",
+      "size": "720x1280",
+      "reviewState": "pre-reviewed-pending-user-approval",
+      "findings": []
+    },
+    {
+      "id": "roller-coaster_cat_british-shorthair-cat_9x16_v01",
+      "kind": "migration-validation",
+      "path": "tools/imagegen/out/reference-v1/validation/roller-coaster_cat_british-shorthair-cat_9x16_v01.png",
+      "sha256": "405030c9c2bb59231e156fb8031d3e560771c6a1fcaf59fc4bf730d280acd4dc",
+      "size": "720x1280",
+      "reviewState": "pre-reviewed-pending-user-approval",
+      "findings": []
+    },
+    {
+      "id": "roller-coaster_dog_shiba-dog_9x16_v02",
+      "kind": "migration-validation",
+      "path": "tools/imagegen/out/reference-v1/validation/roller-coaster_dog_shiba-dog_9x16_v02.png",
+      "sha256": "2f2f904be3e0087f4717444fb41d4f352c62ee3b449c5f5d2490103f1cbfd788",
+      "size": "720x1280",
+      "reviewState": "pre-reviewed-pending-user-approval",
+      "findings": []
+    },
+    {
+      "id": "travel-selfie_cat_cream-longhair-cat_9x16_v01",
+      "kind": "migration-validation",
+      "path": "tools/imagegen/out/reference-v1/validation/travel-selfie_cat_cream-longhair-cat_9x16_v01.png",
+      "sha256": "ab190e2721690cfc24dfce3db9e7aafaee2147ad5553052c343932c489954e6d",
+      "size": "720x1280",
+      "reviewState": "pre-reviewed-pending-user-approval",
+      "findings": []
+    },
+    {
+      "id": "travel-selfie_dog_husky-dog_9x16_v01",
+      "kind": "migration-validation",
+      "path": "tools/imagegen/out/reference-v1/validation/travel-selfie_dog_husky-dog_9x16_v01.png",
+      "sha256": "62b1242db7ed7a8547468c891fd7d86232a9144b42c0527d9fb732325775748d",
+      "size": "720x1280",
+      "reviewState": "pre-reviewed-pending-user-approval",
+      "findings": []
+    }
+  ],
+  "frozenMastersApprovedThisRound": [
+    {
+      "id": "pet-expression-grid_cream-cat_9x16_v01",
+      "kind": "frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/pet-expression-grid_cream-cat_9x16_v01.webp",
+      "sha256": "30c2d334126279b15ca7c74c29ebfd52f92769e19904514d25b59e7d09031b78",
+      "size": "720x1280",
+      "reviewState": "approved-by-user",
+      "findings": []
+    }
+  ],
+  "newMasterCandidates": [],
+  "auditedAt": "2026-08-13T02:52:16.755Z"
+}

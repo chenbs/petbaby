@@ -1,0 +1,94 @@
+{
+  "templateId": "pet-milk-tea-shopkeeper",
+  "entryId": "career",
+  "title": "奶茶店主理人",
+  "sourceEffectFile": "apps/website/public/assets/example/1786367423393.png",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/1786367423393.png",
+      "sha256": "1009214ebc240b447bec04eebccee9b2cd41a25c0a4986f499388263253db2ea"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "black-cat",
+      "species": "cat",
+      "breed": "adult black domestic shorthair cat",
+      "path": "tools/imagegen/out/source/cat-black.jpg",
+      "sha256": "e9d04dac4cee2a7753bcdbcedce7961cf819ab40fc08e39331977ff15df0df17"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult black domestic shorthair cat with solid glossy black coat, vivid green eyes, black nose, upright ears and a compact healthy adult body. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the milk-tea counter, hat, shop display and service pose; adapt text to an original pet shop. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a vertical 9:16 composition at 720x1280 pixels by editing the provided reference images. Use Image 1 as the exact composition/template, scene, camera angle, crop, perspective, lighting, palette, props, text placement, and overall visual style. Replace the original cat subject in Image 1 with the exact adult black domestic shorthair cat identity from Image 2, preserving the same service-pose placement and friendly expression transferred from Image 1. The cat must be an adult, compact, healthy black shorthair with a solid glossy black coat, vivid green eyes, black nose, upright ears, and natural proportions. Render the pet in Image 1’s visual language, not as a pasted photo; match the illustration/photo hybrid look of Image 1 exactly. Preserve the milk-tea counter, hat, apron, bow tie, drink props, background shop interior, flowers, and overall cozy aesthetic. Keep the same pose, gaze, contact relationships, and composition. Do not redesign or improve the scene; scene change budget is 0%. Only alter the designated subject identity and the minimum anatomy needed for correct cat anatomy. Replace any readable brand/person/platform text with original pet-safe wording while keeping the same text blocks and hierarchy; avoid logos, signatures, or watermarks. Ensure no extra limbs, extra paws, extra ears, duplicate pets, human hands, floating heads, or residual source animal remains. Keep the final image cohesive, appealing, and anatomically correct.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/expansion/candidates/pet-milk-tea-shopkeeper_black-cat_9x16_v01.png",
+    "sha256": "572ed07f5ea4cc37aec52caa287c55186e48f15d77ca4903d0c9f211a0c1bbe9"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-20T12:00:00+08:00"
+  },
+  "generatedAt": "2026-08-17T16:11:45.621Z",
+  "version": "v01",
+  "candidatePath": "tools/imagegen/out/reference-v1/expansion/candidates/pet-milk-tea-shopkeeper_black-cat_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/retired-masters/pet-milk-tea-shopkeeper_black-cat_9x16_v01.png",
+  "masterSha256": "572ed07f5ea4cc37aec52caa287c55186e48f15d77ca4903d0c9f211a0c1bbe9",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-20T12:00:00+08:00",
+    "note": "用户审阅 pending-masters-comparison 后明确表示除指定重做和删除项外，其余模板可以冻结。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/pet-milk-tea-shopkeeper_black-cat_9x16_v01.png",
+      "sha256": "572ed07f5ea4cc37aec52caa287c55186e48f15d77ca4903d0c9f211a0c1bbe9"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate",
+      "unapproved-candidate"
+    ]
+  },
+  "qualityBaseline": {
+    "required": [
+      "Keep the milk-tea counter, hat, shop display and service pose; adapt text to an original pet shop.",
+      "exact 720x1280 portrait output",
+      "same approved composition, action, expression, lighting, palette, medium and text hierarchy"
+    ],
+    "reject": [
+      "scene redesign or missing distinctive layout details",
+      "juvenilized, malformed, duplicated or inconsistent pet anatomy",
+      "logo, platform UI, account ID, watermark or signature"
+    ]
+  }
+}

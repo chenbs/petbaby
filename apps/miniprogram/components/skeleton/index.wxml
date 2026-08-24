@@ -1,0 +1,16 @@
+<view class="skeleton skeleton-{{type}}" aria-role="progressbar" aria-label="内容加载中">
+  <view wx:for="{{slots}}" wx:key="*this" class="sk-item">
+    <view wx:if="{{type === 'card'}}" class="sk-block sk-shimmer"></view>
+    <block wx:elif="{{type === 'grid'}}">
+      <view class="sk-tile sk-shimmer"></view>
+    </block>
+    <block wx:elif="{{type === 'list'}}">
+      <view class="sk-avatar sk-shimmer"></view>
+      <view class="sk-lines">
+        <view class="sk-line sk-shimmer"></view>
+        <view class="sk-line sk-line-short sk-shimmer"></view>
+      </view>
+    </block>
+    <view wx:else class="sk-line sk-shimmer"></view>
+  </view>
+</view>

@@ -1,0 +1,41 @@
+{
+  "task": "user-feedback-frozen-master-refinement-2026-08-19-round7",
+  "templateId": "mini-companion",
+  "title": "同宠大小分身",
+  "kind": "master",
+  "version": "v10",
+  "status": "generated-pending-visual-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputFidelity": "high",
+  "inputPolicy": {
+    "sequential": true,
+    "imageCount": 1,
+    "maxImages": 2,
+    "longestEdge": 1200,
+    "jpegQuality": 82,
+    "maxCombinedBytes": 1000000
+  },
+  "inputs": [
+    {
+      "role": "bengal-master-candidate-immutable-visual-authority-and-lighting-edit-target",
+      "originalPath": "tools/imagegen/out/reference-v1/remediation-20260819-round6/master-candidates/mini-companion_bengal-cat_9x16_v09.png",
+      "preparedPath": ".tmp/master-remediation-20260819-round7-inputs/mini-companion-1.jpg",
+      "bytes": 76298,
+      "sha256": "d633fdb420ad008d1518986fa243975ee2ae83caaa0c9ba233ef21c288ef708a"
+    }
+  ],
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "output": {
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819-round7/raw/mini-companion.png",
+    "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819-round7/master-candidates/mini-companion_bengal-cat_9x16_v10.png",
+    "width": 720,
+    "height": 1280,
+    "sha256": "838267ddf8291631bead89278278bb6c0cd40726db638fdf188667054c7160fd"
+  },
+  "prompt": "Use case: lighting-weather precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the sole edit target and immutable authority for every visual detail. Make exactly one subtle lighting adjustment: raise the overall photographic exposure by approximately +0.15 EV, no more than +0.2 EV, so the white studio, Bengal fur midtones and garment details read only slightly brighter. This must be a restrained professional exposure correction, not a relighting, high-key conversion, glow effect, lifted-shadow look or washed-out treatment. Preserve rich black depth in the jackets, Bengal rosettes and black diagonal floor seam. Preserve the purple harness saturation, blue mirrored goggles, warm golden-brown coat and neutral white background without clipping highlights, greying blacks or reducing local contrast. Change no subject identity, breed, Bengal rosette pattern, facial markings, fur texture, anatomy, size relationship, pose, gaze, goggles, clothing, camera, Dutch tilt, oblique low-angle perspective, sloping floor, black floor seam, crop, depth of field or background geometry. Both subjects remain the same identical adult Bengal cat at different scales, with level forward gaze and complete paws. Keep the exact 9:16 portrait framing and polished commercial photographic realism. No extra subjects, text, logo, watermark or signature.",
+  "revisedPrompt": "Use case: lighting-weather precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the sole edit target and immutable authority for every visual detail. Make exactly one subtle lighting adjustment: raise the overall photographic exposure by approximately +0.15 EV, no more than +0.2 EV, so the white studio, Bengal fur midtones and garment details read only slightly brighter. This must be a restrained professional exposure correction, not a relighting, high-key conversion, glow effect, lifted-shadow look or washed-out treatment. Preserve rich black depth in the jackets, Bengal rosettes and black diagonal floor seam. Preserve the purple harness saturation, blue mirrored goggles, warm golden-brown coat and neutral white background without clipping highlights, greying blacks or reducing local contrast. Change no subject identity, breed, Bengal rosette pattern, facial markings, fur texture, anatomy, size relationship, pose, gaze, goggles, clothing, camera, Dutch tilt, oblique low-angle perspective, sloping floor, black floor seam, crop, depth of field or background geometry. Both subjects remain the same identical adult Bengal cat at different scales, with level forward gaze and complete paws. Keep the exact 9:16 portrait framing and polished commercial photographic realism. No extra subjects, text, logo, watermark or signature.",
+  "generatedAt": "2026-08-19T10:03:46.045Z"
+}

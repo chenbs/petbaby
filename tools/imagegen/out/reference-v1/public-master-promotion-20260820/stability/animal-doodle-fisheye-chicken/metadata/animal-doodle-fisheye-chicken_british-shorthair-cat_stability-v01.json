@@ -1,0 +1,67 @@
+{
+  "id": "animal-doodle-fisheye-chicken_british-shorthair-cat_stability-v01",
+  "templateId": "animal-doodle-fisheye-chicken",
+  "title": "鱼眼涂鸦表情",
+  "sequence": 29,
+  "identityId": "british-shorthair-cat",
+  "identityLabel": "短毛猫",
+  "species": "cat",
+  "breed": "blue British Shorthair cat",
+  "status": "generated-pending-human-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "requestPolicy": {
+    "concurrency": 1,
+    "outputsPerRequest": 1,
+    "inputCount": 2,
+    "combinedInputBytes": 236406,
+    "maxCombinedInputBytesExclusive": 1000000,
+    "maxInputEdge": 1200,
+    "comparisonSheetIncluded": false
+  },
+  "inputs": [
+    {
+      "role": "compressed-public-preview-master-candidate",
+      "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/api-inputs/animal-doodle-fisheye-chicken_public-v02_master-candidate.jpg",
+      "sha256": "a3aacc69e4cf9c6721f692e3e7f748f69763efdbc8fe18faedb8cdf7b25522b5",
+      "bytes": 87129,
+      "sourceCandidatePath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/candidates/animal-doodle-fisheye-chicken_public-v02_master-candidate.png",
+      "sourceCandidateSha256": "793b90dd35fa1fc86d230d0fe80899d5fcc61a0013d6306abf304f0b6aff6682"
+    },
+    {
+      "role": "compressed-pet-identity-reference",
+      "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/api-inputs/british-shorthair-cat.jpg",
+      "sha256": "7e7576e87460bfab6b4b9fd7a75733238348f9b39ddd1ee9f71b41836094fc59",
+      "bytes": 149277,
+      "sourcePath": "tools/imagegen/out/source/cat-british.jpg"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "prompt": "Use case: identity-preserving production-master stability validation. Create one vertical 9:16 image composed for an exact final size of 720x1280 pixels from exactly two input images. Image 1 is a proposed self-owned runtime master copied byte-for-byte from an approved public preview. It is the sole reference for composition, scene, pose, expression, styling, lighting, palette, clothing, props and text layout. Image 2 is the sole pet identity reference. Replace every animal depiction in Image 1 with the exact blue British Shorthair cat from Image 2. Preserve the target pet's solid blue-grey plush short coat, round broad face, amber eyes, small upright ears and sturdy natural proportions. Image 2 controls identity and species; do not retain the sample animal's breed or facial structure from Image 1. The replacement must remain recognisably the same cat as Image 2 while naturally adopting Image 1's pose and expression. Preserve its real age and breed proportions; do not beautify, juvenilize, enlarge or shrink the head arbitrarily, or invent a generic cute face. Scene-change budget: 0%. Do not redesign, simplify, crop, recolour, relight, add, remove or move any background element, garment, prop, graphic mark or text. Make only the smallest local geometry adjustment needed for the replacement animal to fit the existing pose and clothing. Replace the chicken completely with the target pet while keeping exactly the public master's playful doodle language: a round fisheye body, huge slightly asymmetric comic eyes and a very thick irregular black hand-drawn contour. The red/orange crayon marks are fixed decorative graphics and must not follow the target pet's natural coat colour: retain two obvious pink-red cheek circles with small red freckles plus at least three broad, saturated red/orange zigzag or cross-hatched patches across the lower torso and sides, with roughly the same visual coverage and intensity as Image 1. These marks must be immediately visible at thumbnail size on every cat or dog. Preserve the clean off-white background. Translate identity only through ears, muzzle, eye colour, head silhouette and a few simplified coat-mark cues inside this crayon language. Use flat wax-crayon fills and broken strokes throughout. Do not render realistic fur, fine grey pencil texture, photographic volume, soft graphite shading or a conventional cute-pet illustration. Leave no beak, comb, wattle, wings, feathers, bird feet or other chicken anatomy. Keep all existing readable text unchanged. Add no new text, logo, signature, watermark or AI label. Avoid duplicate heads, extra eyes, extra ears, extra limbs, malformed paws, fused clothing, floating props and mixed-species anatomy.",
+  "revisedPrompt": "Create a single vertical 9:16 image at exact final size 720x1280 pixels using exactly the two provided reference images. Use Image 1 as the composition/style master: preserve the clean off-white background, the centered single-character layout, the same playful doodle/crayon language, the same thick irregular black hand-drawn outline, flat wax-crayon fills, broken strokes, and the same placement and visual coverage of the decorative markings. Use Image 2 as the sole identity and species reference for the animal: replace the chicken completely with the exact blue British Shorthair cat from Image 2, preserving its solid blue-grey plush short coat, round broad face, amber eyes, small upright ears, and sturdy natural proportions. Keep the cat recognizably the same individual from Image 2 while adapting it into the pose and expression of Image 1. Do not retain any chicken anatomy. Keep the playful doodle treatment from Image 1: a round fisheye-like body, huge slightly asymmetric comic eyes, and thick black contour. Preserve the same red/orange decorative marks from Image 1 regardless of the cat's coat: include two obvious pink-red cheek circles with small red freckles, plus at least three broad saturated red/orange zigzag or cross-hatched patches across the lower torso and sides with roughly the same coverage and intensity as the reference. Keep the existing readable text unchanged if any is present. Do not add new text, logos, watermarks, or extra elements. No background changes, no relighting, no cropping changes, no extra limbs or species-mixing. Only make the smallest local geometry adjustments necessary so the cat fits the original character pose and clothing-free silhouette within Image 1.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-doodle-fisheye-chicken/animal-doodle-fisheye-chicken_british-shorthair-cat_stability-v01.png",
+    "sha256": "ca58978d4cc91b4333950cf6d9d2bf8112085d768cf5a44ea4e7b1cb5a8c6f4d",
+    "size": "720x1280"
+  },
+  "rawOutputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-doodle-fisheye-chicken/raw/animal-doodle-fisheye-chicken_british-shorthair-cat_stability-v01.png",
+  "automatedChecks": {
+    "dimensions": "pass",
+    "visualContent": "pass",
+    "inputCount": "pass",
+    "inputBytes": "pass",
+    "requestSerial": "pass"
+  },
+  "humanChecks": {
+    "petIdentity": "pending",
+    "compositionAndCrop": "pending",
+    "poseExpressionAndGaze": "pending",
+    "clothingPropsAndText": "pending",
+    "styleAndPalette": "pending",
+    "anatomy": "pending"
+  },
+  "finalApproval": "pending-user",
+  "elapsedMs": 31497,
+  "generatedAt": "2026-08-20T06:37:31.021Z"
+}

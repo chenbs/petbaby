@@ -1,0 +1,62 @@
+{
+  "templateId": "animal-fantasy-double-exposure",
+  "entryId": "action",
+  "title": "奇幻双重曝光",
+  "version": "eastern-myth-v01",
+  "status": "superseded-by-approved-master",
+  "remediation": "user-background-eastern-dark-myth-double-exposure",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-double-exposure-layout-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-07-21-2568-Frank Frazetta绘画风格，奇幻插画大师，奇幻诡异风格双重曝光风格的高....png",
+      "sha256": "b9c15001cb44728fe3985727e1d985991801876b9e8029176c5db38c84d269d9"
+    },
+    {
+      "role": "user-supplied-eastern-dark-myth-background-reference",
+      "path": "tools/imagegen/out/reference-v1/animal/user-references/eastern-dark-myth-background.png",
+      "sha256": "ba46401ce5539f4e55b9e0d0c5c2f8996ea2aa7969bcddea2f5016186528c39c"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "path": "tools/imagegen/out/source/dog-black-lab.jpg",
+      "sha256": "20960d2ace805e68b41a7934e37ebdf24b7007f8f3fa85527d9beb22d2df6022"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "double-exposure-content-replaced-by-user-background",
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "prompt": "Use case: three-reference Eastern dark-mythology double-exposure composition. Return an exact 9x16 composition at 720x1280 pixels. Image 1 is the authority for the double-exposure design: preserve its large side-profile pet silhouette, profile orientation, mask boundaries, layered scene-inside-subject effect, tiny human scale cues, cinematic depth, crop, visual hierarchy and painterly integration. Image 2 is the actual background and mythology setting authority. Use its mist-filled Chinese mountain temple city, dark tiled roofs, cliff bridges, river path, deep ravines, storm clouds, colossal multi-armed black-stone guardian deity, restrained charcoal palette and red eye accents as the full environmental foundation and as the detailed landscape embedded inside the pet silhouette. Image 3 is the sole pet identity authority. Replace the original profile subject with this exact healthy adult black Labrador, recognizable through its black coat, floppy ears, broad mature muzzle and adult proportions, while rendering it in Image 1's dark painterly double-exposure language. Create an original Eastern traditional dark-mythology setting: an ancient mountain sanctuary awakened beneath storm clouds, with the many-armed guardian looming over layered cliff temples and bridge networks while tiny pilgrims cross the river town below. Keep the mood ominous, sacred, monumental and mysterious rather than gory. The mythology must be unmistakably East Asian and specifically rooted in traditional Chinese mountain-temple visual language. No Western gothic cathedral, European castle, hellhound, demon gate, medieval armor, lava underworld, Western occult symbols or generic dark-fantasy citadel. Remove the 'AI生成' label and every watermark, account name, caption and logo from Image 2. Render no text anywhere. Do not reproduce Journey to the West, Monkey King, a known copyrighted character or a named artist style. Keep the scene dense and layered with foreground roofs, middle-ground bridges and river settlement, distant misty peaks and the colossal guardian. Preserve clear double-exposure blending rather than producing a plain pet portrait or merely placing a dog in front of the background. Return only the finished image.",
+  "revisedPrompt": "Create a vertical 9:16 cinematic double-exposure artwork, composed to 720x1280 pixels. Use the first reference image as the design authority: a large side-profile pet silhouette dominating the frame, clear mask boundaries, layered scene-inside-subject effect, tiny human scale cues, cinematic depth, painterly integration, and a dramatic crop. Replace the subject with the exact identity of the third reference: a healthy adult black Labrador, recognizable by its black coat, floppy ears, broad mature muzzle, and adult proportions. The Labrador is shown in elegant side profile, calm and monumental, with the entire Eastern mythic landscape embedded inside its silhouette rather than merely behind it.\n\nUse the second reference as the environmental authority: a mist-filled Chinese mountain temple city with dark tiled roofs, cliff bridges, river path, deep ravines, storm clouds, layered foothill temples, distant misty peaks, and a colossal multi-armed black-stone guardian deity with restrained charcoal palette and subtle red eye accents. Make the setting unmistakably East Asian and specifically rooted in traditional Chinese mountain-temple visual language. The guardian looms over the sanctuary like a sacred awakened deity, monumental but not gory.\n\nComposition: the Labrador’s profile should occupy most of the right half of the image, with the embedded landscape flowing through the silhouette from top to bottom. Inside the dog silhouette, show foreground temple roofs, middle-ground bridges and river settlement, tiny pilgrims crossing narrow paths, and distant cliffs and peaks fading into mist. Include the colossal many-armed black-stone guardian in the upper and central distance, integrated into cloud and stone layers. Use dark charcoal, slate, muted jade, and faint warm lantern glows, with restrained red accents in the guardian’s eyes. Keep the mood ominous, sacred, monumental, and mysterious. No gore, no Western gothic cathedral, no European castle, no hellhound look, no demon gate, no medieval armor, no lava underworld, no Western occult symbols, no generic dark-fantasy citadel.\n\nImportant: remove all text, all watermarks, all captions, all logos, and any 'AI生成' label. Render no text anywhere. Preserve a true double-exposure blend with a readable Labrador silhouette and a detailed Chinese mythic landscape embedded within it. High detail, painterly, atmospheric, dramatic lighting, sacred storm-cloud ambience, original composition.",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "userBackgroundIncluded": true,
+  "theme": "original-eastern-traditional-dark-mythology",
+  "textPolicy": "no-text-or-watermark",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-fantasy-double-exposure_black-lab-dog_9x16_eastern-myth-v01.png",
+    "sha256": "2d4edeea50e3e22de20939480e062613398053c7f87e9d0b389dbc2fe552f1ed"
+  },
+  "review": {
+    "state": "not-selected-by-user",
+    "finalApproval": "not-selected",
+    "findings": [
+      "用户最终选择并冻结 eastern-myth-v02；eastern-myth-v01 仅保留为历史候选。"
+    ],
+    "reviewedAt": "2026-08-18T12:11:17+08:00"
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-18T03:15:45.770Z",
+  "replacedBy": "animal-fantasy-double-exposure_black-lab-dog_9x16_eastern-myth-v02"
+}

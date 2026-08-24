@@ -1,0 +1,104 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+
+<view class="page page-flat">
+  <t-skeleton wx:if="{{loading}}" type="card" count="2"></t-skeleton>
+
+  <block wx:elif="{{session}}">
+    <block wx:if="{{!publicMode}}">
+      <text class="eyebrow">INTERACTIVE H5</text>
+      <view class="title">互动场景</view>
+    </block>
+
+    <t-notice wx:if="{{message}}" type="{{messageType}}" message="{{message}}" class="block-gap"></t-notice>
+
+    <!-- 场景本体：访客视角下就是整个页面，编辑态里是实时预览 -->
+    <view class="scene" style="{{sceneStyle}}" bindtap="addStar">
+      <view class="scene-stars">✦ · ✧ · ✦ · ✧ · ✦</view>
+      <view class="scene-title">{{title}}</view>
+      <text class="scene-copy">{{copy}}</text>
+      <view class="scene-count">{{stardust}} 粒星尘</view>
+      <text class="scene-hint">轻点屏幕，再收一粒</text>
+    </view>
+
+    <block wx:if="{{!publicMode}}">
+      <view class="section">
+        <view class="row">
+          <view class="section-title flush">编辑内容</view>
+          <t-button type="ghost" size="mini" anim="{{animType}}" bindtap="toggleEditing">{{editing ? '收起' : '展开'}}</t-button>
+        </view>
+
+        <block wx:if="{{editing}}">
+          <t-photo-grid
+            photos="{{photos}}"
+            selected-ids="{{photoIds}}"
+            max="6"
+            ordered
+            anim="{{animType}}"
+            bindtoggle="togglePhoto"
+          ></t-photo-grid>
+
+          <t-card blur="{{blurOk}}" anim="{{animType}}" class="block-gap">
+            <view class="stack">
+              <t-field label="标题" value="{{title}}" maxlength="60" show-count bindchange="inputTitle"></t-field>
+              <t-field label="页面文案" control="textarea" value="{{copy}}" maxlength="180" show-count bindchange="inputCopy"></t-field>
+            </view>
+          </t-card>
+
+          <view class="scenes">
+            <view
+              wx:for="{{scenePresets}}"
+              wx:key="id"
+              class="scene-option {{theme === item.id ? 'scene-option-on' : ''}}"
+              data-id="{{item.id}}"
+              hover-class="scene-option-hover"
+              bindtap="chooseScene"
+            >
+              <view class="scene-chip" style="background:{{item.sky}}">
+                <view class="scene-dot" style="background:{{item.glow}}"></view>
+              </view>
+              <view class="scene-name">{{item.name}}</view>
+            </view>
+          </view>
+
+          <t-button type="primary" block anim="{{animType}}" loading="{{busy}}" class="block-gap" bindtap="save">保存场景</t-button>
+        </block>
+      </view>
+
+      <view class="section">
+        <view class="section-title">分享与导出</view>
+        <view class="actions">
+          <t-button wx:if="{{!session.shareToken || session.revokedAt}}" type="secondary" block anim="{{animType}}" bindtap="share">开启 7 天公开分享</t-button>
+          <t-button wx:else type="ghost" block anim="{{animType}}" bindtap="askRevoke">停止分享</t-button>
+
+          <t-button
+            type="secondary"
+            block
+            anim="{{animType}}"
+            loading="{{busy}}"
+            disabled="{{session.exportStatus === 'queued' || session.exportStatus === 'processing'}}"
+            bindtap="exportVideo"
+          >{{session.exportStatus === 'queued' || session.exportStatus === 'processing' ? '导出中 ' + (session.exportProgress || 0) + '%' : '导出 15 秒 MP4'}}</t-button>
+
+          <view wx:if="{{session.exportStatus === 'queued' || session.exportStatus === 'processing'}}" class="export-line">
+            <t-progress percent="{{session.exportProgress || 0}}" label="视频导出 · {{exportText}}" show-value></t-progress>
+          </view>
+
+          <t-button wx:if="{{session.workId}}" type="ghost" block anim="{{animType}}" bindtap="openWork">查看归档作品</t-button>
+        </view>
+      </view>
+    </block>
+  </block>
+
+  <t-notice wx:else type="error" message="{{message || '互动页不存在或分享已过期'}}"></t-notice>
+</view>
+
+<t-dialog
+  visible="{{confirmRevoke}}"
+  title="停止分享？"
+  content="拿到链接的人将无法再打开这一页，已收集的星尘会保留。"
+  confirm-text="停止分享"
+  danger
+  anim="{{animType}}"
+  bindconfirm="revoke"
+  bindcancel="dismissRevoke"
+></t-dialog>

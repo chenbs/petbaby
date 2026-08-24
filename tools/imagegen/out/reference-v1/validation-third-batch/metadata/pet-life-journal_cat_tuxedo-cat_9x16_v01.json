@@ -1,0 +1,65 @@
+{
+  "jobId": "pet-life-journal_cat_tuxedo-cat",
+  "templateId": "pet-life-journal",
+  "title": "本宠生涯日记",
+  "status": "superseded-by-approved-revision",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/pet-life-journal_toy-poodle-dog_9x16_v01.webp",
+      "sha256": "d7a87fba5d3d2fe7af7724770c52690265b3aad1d849de88cfdbd53270544a6e"
+    },
+    {
+      "role": "new-pet-identity-reference",
+      "identityId": "tuxedo-cat",
+      "species": "cat",
+      "breed": "adult black-and-white tuxedo cat",
+      "path": "tools/imagegen/out/source/cat-tuxedo.jpg",
+      "sha256": "c4b2ebaac7dd5d59fffd83a827d94fdc03e1befd3e1108f337de8ba5488a7d39"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving template transfer. Produce one exact 720x1280 vertical 9:16 runtime validation image from exactly two input images. Image 1 is our frozen self-owned production master. It is the sole authority for every non-identity detail: scene, composition, crop, camera, pose, action, expression, gaze, lighting, palette, rendering medium, brushwork, clothing, text, props and all physical contacts. No third-party effect reference is included. Image 2 is the sole new-pet identity reference. Change only the pet identity. Remove every depiction and every residual feature of the master pet, then replace it with the new pet from Image 2. Scene-change budget is 0%. Do not redesign, reinterpret, clean up, recolour, restyle, simplify, move, delete or add anything in the master scene. Keep the exact warm campus-at-sunset scene, old stone building, glowing windows, lawn, path, right-side tree, outdoor wooden table, open notebook, pen, laptop with a plain unbranded paw mark, green sweater, soft backlight, film warmth and all pastel hand-drawn annotations, arrows, stars, hearts and clouds. Replicate the master's lower-right seated study pose, gentle downward focused expression, head angle, green sweater and exact interactions with the notebook, pen, laptop and table. Keep natural connected animal forepaws at the contact points. Remove the master animal completely and leave no human face, hair, skin, arm, hand or finger. The replacement must be the exact adult black-and-white tuxedo cat from Image 2. Preserve its black ears and crown, narrow white facial blaze, white muzzle and chest, pale green eyes, pink nose, black back and white forelegs. Image 2 controls only species, breed, coat colour and markings, ear shape, eye colour, actual adult age and natural healthy breed proportions. Do not copy Image 2's pose, expression, gaze, camera, background, lighting, photographic texture or rendering style. Preserve the pet's actual adult age and mature breed proportions. Do not juvenilize it, enlarge the head or eyes, shorten the muzzle or body, or convert it into a kitten, puppy or generic cute mascot. Keep it healthy, attractive and immediately likeable without changing the master's expression or art direction. Match Image 1's exact warm photographic treatment and preserve the hand-drawn annotation medium, placement and colour. Image 2 contributes identity only. Preserve the existing readable annotation phrases and their placement. Keep the laptop mark as one small plain paw icon; no brand logo, watermark or signature. Keep exactly one pet identity throughout, except where the frozen master intentionally contains multiple views or two scale duplicates of that same identity. No unrelated animal, residual old-pet coat, face or limb. Correct species anatomy only: no duplicate, fused, missing or amputated-looking limbs, extra ears, warped eyes, malformed mouth, floating tail, human hands or fingers, broken garment boundaries, pasted head, disconnected neck or failed prop contact. Preserve all non-pet pixels and relationships as closely as the model allows.",
+  "revisedPrompt": "Create a single exact 720x1280 vertical 9:16 runtime validation image by compositing from the two provided input images. Use Image 1 as the immutable master for everything except the pet identity. Preserve Image 1’s exact scene, composition, crop, camera, pose, action, expression, gaze, lighting, palette, rendering medium, brushwork, clothing, text, props, hand-drawn annotations, arrows, stars, hearts, clouds, and all non-pet pixels/relationships as closely as possible. Keep the warm campus-at-sunset scene, old stone building, glowing windows, lawn, path, right-side tree, outdoor wooden table, open notebook, pen, laptop with a plain unbranded paw mark, green sweater, soft backlight, film warmth, and all pastel annotations in their original placement and color. Preserve the lower-right seated study pose and the exact interaction with notebook, pen, laptop, and table. Keep natural connected animal forepaws at contact points. Remove the master pet completely and replace it only with the exact adult black-and-white tuxedo cat from Image 2. Change only species identity and coat markings from Image 2: black ears and crown, narrow white facial blaze, white muzzle and chest, pale green eyes, pink nose, black back, white forelegs, mature healthy adult proportions. Do not juvenilize, enlarge the head or eyes, shorten the muzzle or body, or alter it into a mascot. Do not copy Image 2’s pose, background, lighting, camera, or texture. Preserve Image 1’s warm photographic treatment and hand-drawn annotation medium. Keep exactly one cat identity throughout. Ensure correct cat anatomy and seamless contact with the notebook/table/laptop, with no human features, no residual old pet coat or face, no extra limbs, no pasted head, no disconnected neck, no floating tail, and no brand logo or watermark. Keep the laptop mark as one small plain paw icon only.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation-third-batch/pet-life-journal_cat_tuxedo-cat_9x16_v01.png",
+    "sha256": "4bf204c2ad10f33b4e78b4fb550dc0915020bb531abd2811c68a1f70d2808f20"
+  },
+  "review": {
+    "state": "superseded",
+    "checks": {
+      "petIdentity": null,
+      "adultAgeAndProportions": null,
+      "masterPoseExpressionAndGaze": null,
+      "masterStyleAndBrushwork": null,
+      "sceneAndComposition": null,
+      "anatomyAndContacts": null,
+      "repeatedIdentityAndText": null,
+      "dimensions": "pass"
+    },
+    "findings": [
+      "v01 未采用母版低头专注视线。"
+    ],
+    "finalApproval": "superseded",
+    "reviewedAt": "2026-08-17T13:33:28+08:00"
+  },
+  "generatedAt": "2026-08-17T02:02:33.891Z",
+  "supersededBy": "tools/imagegen/out/reference-v1/validation-third-batch/pet-life-journal_cat_tuxedo-cat_9x16_v02.png"
+}

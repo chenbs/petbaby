@@ -1,0 +1,48 @@
+---
+/*
+ * 小程序码本体。三个触点共用（CTA 面板、顶栏按钮弹框、右下角悬浮弹框），
+ * 图片路径在 src/config/site.ts 定义一次 —— 换真实小程序码只改那一处。
+ *
+ * 未提供真实二维码前渲染虚线占位框（规格 7.4：缺图只留文字排版，不放占位色块）。
+ * `.qr-frame` 与 `.qr-hint` 是原型已有的类，占位形态与原型 CTA 面板完全一致。
+ */
+import { MINIPROGRAM_QR } from "../config/site";
+
+interface Props {
+  size?: number;
+  loading?: "lazy" | "eager";
+}
+
+const { size = MINIPROGRAM_QR.size, loading = "lazy" } = Astro.props;
+
+/*
+ * 默认尺寸就是 CSS 里写的 168px，此时不输出 style 属性 —— 与原型的 HTML 逐字一致。
+ * 只有调用方要别的尺寸时才内联覆盖。
+ */
+const sizeStyle = size === MINIPROGRAM_QR.size ? undefined : `width:${size}px;height:${size}px`;
+---
+
+{
+  MINIPROGRAM_QR.available ? (
+    <img
+      class="qr-image"
+      src={MINIPROGRAM_QR.src}
+      alt={MINIPROGRAM_QR.alt}
+      width={size}
+      height={size}
+      loading={loading}
+      decoding="async"
+      style={sizeStyle}
+    />
+  ) : (
+    <div
+      class="qr-frame"
+      data-placeholder="miniprogram-qr"
+      role="img"
+      aria-label="小程序码占位"
+      style={sizeStyle}
+    >
+      <span class="qr-hint">小程序码<br />待提供</span>
+    </div>
+  )
+}

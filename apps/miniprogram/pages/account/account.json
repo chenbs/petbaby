@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "账户与隐私",
+  "usingComponents": {
+    "t-card": "../../components/card/index",
+    "t-field": "../../components/field/index",
+    "t-button": "../../components/button/index",
+    "t-notice": "../../components/notice/index",
+    "t-dialog": "../../components/dialog/index",
+    "t-skeleton": "../../components/skeleton/index"
+  }
+}

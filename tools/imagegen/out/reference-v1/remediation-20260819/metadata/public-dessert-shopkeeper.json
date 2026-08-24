@@ -1,0 +1,36 @@
+{
+  "task": "user-requested-frozen-master-remediation-2026-08-19",
+  "templateId": "dessert-shopkeeper",
+  "kind": "public",
+  "version": "public-v02",
+  "status": "generated-pending-visual-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputFidelity": "high",
+  "inputPolicy": {
+    "sequential": true,
+    "maxImages": 2,
+    "maxCombinedBytes": 1000000
+  },
+  "inputs": [
+    {
+      "role": "effect-reference-edit-target",
+      "path": ".tmp/master-remediation-20260819-inputs/dessert-shopkeeper-effect.jpg",
+      "bytes": 48383,
+      "sha256": "7841632c8482d927162ac2c560c5999794237e4f891fdadf153acb9f6a6d9b55"
+    }
+  ],
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "output": {
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/public-dessert-shopkeeper.png",
+    "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819/public-previews/dessert-shopkeeper_public-v02.png",
+    "width": 720,
+    "height": 1280,
+    "sha256": "2116a4cd9edc9d446ec4c019edb8b212d6ddcb53eafe7a8bd73bc84e3331c1b9"
+  },
+  "prompt": "Use case: precise-object-edit. Asset type: public Mini Program template preview. Image 1 is the effect-reference edit target and is the sole authority for composition, subject, camera, pose, lighting, medium and all details not explicitly changed below. Create a clean new public-facing rendition, not a collage or framed mockup. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature, reconstructing the covered area seamlessly. Do not add captions, borders, UI, logos, watermarks or signatures. Add exactly three small fresh strawberries around the existing large strawberry on the cream cake hat, arranged naturally and securely in the whipped cream. Keep the white fluffy cat, pink dessert shop, foreground cake, flowers, glass cloche, lighting and all other details unchanged. Keep only the readable decorative word STRAWBERRY where it already belongs; add no other text. Return a 9:16 portrait composition.",
+  "revisedPrompt": "Edit the provided image into a clean public-facing 9:16 portrait rendition, preserving the original composition, subject, camera angle, pose, lighting, and all visible details unless explicitly changed here. Use the image as the sole authority for the cat, pink dessert shop background, foreground cake, flowers, glass cloche, and overall soft pastel look. Remove every platform badge, AI-generated label, account name, account number, watermark, logo, signature, framing, UI, or mockup element, reconstructing any covered areas seamlessly and naturally. Keep only the readable decorative word STRAWBERRY where it already belongs; add no other text. On the cream cake hat on top of the white fluffy cat’s head, add exactly three small fresh strawberries around the existing large strawberry, arranged naturally and securely nestled in the whipped cream. Do not alter the cat, cake, flowers, cloche, background shop interior, or lighting beyond the minimal changes needed for the requested edits. No captions, borders, logos, or watermarks. Final image should be a clean, realistic 9:16 portrait composition.",
+  "generatedAt": "2026-08-19T05:44:45.340Z"
+}

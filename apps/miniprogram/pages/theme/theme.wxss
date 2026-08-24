@@ -1,0 +1,123 @@
+.theme-list {
+  display: grid;
+  gap: var(--space-4);
+}
+
+/*
+ * 预览卡的 style 上挂的是「该主题」的变量串，所以卡内元素全部读到对应主题的取值：
+ * 底色、圆角、描边、阴影、按钮形状、字重都会跟着变，而不只是换个色块。
+ */
+.preview {
+  overflow: hidden;
+  border: 2rpx solid var(--border);
+  border-radius: var(--card-radius);
+  background: var(--background);
+  transition: transform var(--transition-duration) var(--transition-easing);
+}
+
+.preview-hover {
+  transform: scale(.985);
+}
+
+.preview-on {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4rpx var(--ai-glow);
+}
+
+.preview-inner {
+  padding: var(--space-5);
+}
+
+.preview-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.preview-name {
+  color: var(--text-primary);
+  font-size: var(--font-h3);
+  font-weight: var(--title-weight);
+  letter-spacing: var(--title-letter-spacing);
+}
+
+.preview-check {
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  background: var(--primary);
+  color: var(--button-primary-text);
+  font-size: var(--eyebrow-size);
+  font-weight: 700;
+}
+
+.preview-desc {
+  display: block;
+  margin-top: var(--space-1);
+  color: var(--text-secondary);
+  font-size: var(--small-size);
+}
+
+.preview-demo {
+  display: flex;
+  margin-top: var(--space-4);
+  gap: var(--space-3);
+}
+
+.demo-card {
+  display: grid;
+  flex: 1;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border: var(--card-border);
+  border-radius: var(--card-radius-variant);
+  background: var(--card-background);
+  box-shadow: var(--card-shadow);
+}
+
+.demo-line {
+  height: 14rpx;
+  border-radius: var(--radius-pill);
+  background: var(--divider);
+}
+
+.demo-line-title {
+  width: 62%;
+  height: 22rpx;
+  background: var(--text-secondary);
+}
+
+.demo-line-short {
+  width: 42%;
+}
+
+.demo-side {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+}
+
+.demo-btn {
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--button-radius);
+  background: var(--button-primary);
+  color: var(--button-primary-text);
+  font-size: var(--eyebrow-size);
+  font-weight: 700;
+  text-align: center;
+}
+
+.demo-btn-ai {
+  background: var(--ai-gradient);
+  box-shadow: 0 4rpx 20rpx var(--ai-glow);
+}
+
+.demo-tag {
+  padding: var(--space-1) var(--space-3);
+  border: 2rpx solid var(--success);
+  border-radius: var(--radius-pill);
+  background: var(--success-surface);
+  color: var(--success);
+  font-size: var(--eyebrow-size);
+  text-align: center;
+}

@@ -1,0 +1,99 @@
+{
+  "templateId": "epic-ruins",
+  "title": "史诗遗迹探险",
+  "entryId": "action",
+  "status": "approved-frozen-master",
+  "version": "v01",
+  "subject": "german-shepherd-dog",
+  "breed": "成年德国牧羊犬",
+  "selectionRationale": "用成年德牧承接冷峻遗迹、低机位逆光和重型探险装备，保持英气但避免凶相与幼化。",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-effect-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/14.png",
+      "sha256": "eafe26c3203d9c83ed1831a13291b9d562ef4965d3d726fa1db70c8b8999e7a9"
+    },
+    {
+      "role": "pet-identity-reference",
+      "path": "apps/website/public/assets/hero-shepherd.jpg",
+      "sha256": "f6c37419e96b12425034d2bdcb54cbde952709f37352f3748d67d3db71e937b4"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving effect replication. Asset type: internal self-owned pet template master, exact final canvas 720x1280 (9x16). Use exactly two input images. Image 1 is the third-party effect reference used only for this internal master-production pass. Image 2 is the sole pet identity reference. Replace only the principal animal or person subject in Image 1 with the exact pet from Image 2. Remove every residual face, hair, skin, hand, paw, limb, coat marking or silhouette from the original subject. Image 2 controls only pet identity: species, breed, coat, markings, ear shape, eye colour, actual age and natural healthy proportions. Image 1 controls every transferred visual detail: composition, crop, camera, perspective, subject position, pose, action, expression, gaze, lighting, palette, rendering medium, brushwork, line quality, texture, clothing, props, text layout and subject-to-scene contacts. Scene-change budget is 0%. Do not redesign, reinterpret, recolour, simplify, clean up or add background content. Translate the original pose, action and expression to correct animal anatomy with only the smallest contact-boundary adjustment required by the new species. Never create a human face, human skin, human hands or fingers. Keep paws anatomically natural and keep clothing and props physically attached. The replacement pet must be rendered completely in Image 1's medium and detail language, including its face, eyes, muzzle, ears and fur. Never paste a photographic pet face into an illustration or leave realistic photographic facial texture inside a painted scene. Do not copy Image 2's pose, expression, background, lighting or photographic rendering. Preserve the pet's adult age and natural breed proportions. Do not turn it into a puppy or kitten, enlarge the head or eyes, shorten the muzzle or body, or force a generic baby face. Keep it healthy, friendly and immediately appealing through the transferred expression and art direction, never skinny, gaunt, old, stern, aggressive, uncanny or strange. Keep the complete meaningful text, clothing, landmarks and distinctive props from Image 1 except for the explicit rights-safe text or emblem replacements stated below. Remove third-party platform watermarks, account IDs, signatures and unrelated brand marks. No new logo or watermark. The replacement identity is the exact adult German Shepherd from Image 2. Preserve the tan coat with a defined black saddle and mask, warm brown eyes, tall upright ears, black muzzle and athletic healthy adult build. Preserve Image 1's exact epic ruined-megastructure scene and visual treatment: towering suspended gothic fragments, the luminous circular arch at right, stormy blue-grey sky, rain and drifting debris, low-angle scale, cold steel-blue palette, sharp rim light, wet platform edge and immense vertical depth. Replace only the silver-haired humanoid explorer on the left with the exact adult German Shepherd from Image 2. Keep the explorer in the same lower-left position, facing toward the right-side ruins with the same alert determined gaze and forward-ready action. Preserve the dark segmented expedition armour, red ribbon accents and massive rectangular mechanical exploration device, adapted as a believable back-and-shoulder rig rather than held by human hands. Keep all four canine limbs anatomically plausible and keep the dog recognisably adult. Preserve the complete luminous arch and the subject-versus-monument scale. Recompose only as required to fit the same scene into the requested vertical canvas; do not invent a different ruin, sky, weapon or story. Keep exactly the requested pet identity throughout. Correct animal anatomy only: no duplicate or fused limbs, extra ears, warped eyes, malformed mouth, floating tail, broken garment boundaries or residual original subject.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "approved-by-user",
+    "checks": {
+      "petIdentity": "pass",
+      "adultAgeAndCuteness": "pass",
+      "poseExpressionAndAction": "pass",
+      "sceneComposition": "pass",
+      "faceAndMediumConsistency": "pass",
+      "anatomyAndContacts": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [],
+    "finalApproval": "approved",
+    "precheckedAt": "2026-08-15T14:40:05.605Z",
+    "approvedAt": "2026-08-17T09:47:48+08:00"
+  },
+  "generatedAt": "2026-08-14T10:18:51.340Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/epic-ruins_german-shepherd-dog_9x16_v01.png",
+    "rawPath": "tools/imagegen/out/reference-v1/candidates/raw/epic-ruins_german-shepherd-dog_9x16_v01.png",
+    "sha256": "6d450ed41c8876b08b651a5e2c7f1e78566d0c3682fc62fb2ab9ba4c8b3615ee"
+  },
+  "candidatePath": "tools/imagegen/out/reference-v1/candidates/epic-ruins_german-shepherd-dog_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/retired-masters/epic-ruins_german-shepherd-dog_9x16_v01.png",
+  "masterSha256": "6d450ed41c8876b08b651a5e2c7f1e78566d0c3682fc62fb2ab9ba4c8b3615ee",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-17T09:47:48+08:00",
+    "note": "用户通过第三批待审批总览中的史诗遗迹探险 v01，并要求进入后续流程。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/epic-ruins_german-shepherd-dog_9x16_v01.png",
+      "sha256": "6d450ed41c8876b08b651a5e2c7f1e78566d0c3682fc62fb2ab9ba4c8b3615ee"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate",
+      "unapproved-candidate"
+    ]
+  },
+  "qualityBaseline": {
+    "required": [
+      "one healthy adult German Shepherd with upright ears, black saddle and mask, tan coat and athletic build",
+      "heroic three-quarter standing pose on a rain-wet ledge with all visible limbs anatomically connected",
+      "large dark mechanical exploration harness integrated around the shoulders, chest and back",
+      "towering storm-lit ruins, monumental scale, cold blue-grey atmosphere and exact 720x1280 portrait framing"
+    ],
+    "reject": [
+      "residual human face, hair, hands, fingers, clothing anatomy or duplicated original explorer",
+      "puppy proportions, generic wolf identity, malformed legs, floating armour, fused straps or broken paws",
+      "flattened scale, bright generic fantasy scenery, removed ruins, calm studio lighting or background redesign",
+      "known franchise insignia, logo, watermark, signature or platform UI"
+    ]
+  }
+}

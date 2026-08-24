@@ -1,0 +1,16 @@
+/* 危险区：--error 描边卡，与常规分区在视觉上明确区隔（需求 5.9-2） */
+.danger-zone {
+  padding: var(--space-5);
+  border: 2rpx solid var(--error);
+  border-radius: var(--card-radius);
+  background: var(--error-surface);
+}
+
+.danger-head {
+  margin-bottom: var(--space-3);
+}
+
+.danger-action {
+  display: block;
+  margin-top: var(--space-4);
+}

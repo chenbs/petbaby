@@ -1,0 +1,68 @@
+@import "../shared.wxss";
+
+.mask {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 55;
+  display: flex;
+  align-items: flex-end;
+  background: var(--mask);
+  animation: mask-in var(--transition-duration) var(--transition-easing);
+}
+
+@keyframes mask-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.sheet {
+  display: flex;
+  width: 100%;
+  max-height: 82vh;
+  box-sizing: border-box;
+  flex-direction: column;
+  padding: var(--space-4) var(--page-padding) calc(var(--space-5) + env(safe-area-inset-bottom));
+  border-radius: var(--card-radius) var(--card-radius) 0 0;
+  background: var(--card-background);
+  box-shadow: var(--shadow-float);
+  animation: sheet-up var(--dur-slow) var(--ease-out);
+}
+
+@keyframes sheet-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0 var(--space-3);
+  border-bottom: 2rpx solid var(--divider);
+}
+
+.sheet-title {
+  color: var(--text-primary);
+  font-size: var(--font-h3);
+  font-weight: var(--fw-bold);
+}
+
+.sheet-close {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: var(--text-secondary);
+  font-size: var(--font-h2);
+}
+
+.sheet-body {
+  max-height: 60vh;
+  padding: var(--space-4) 0;
+}
+
+.sheet-foot {
+  padding-top: var(--space-2);
+}

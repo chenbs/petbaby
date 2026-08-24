@@ -1,0 +1,48 @@
+{
+  "jobId": "pet-encyclopedia_cat_devon-rex-cat",
+  "templateId": "pet-encyclopedia",
+  "status": "generated-pending-joint-approval",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "sourceMaster": {
+    "role": "self-owned-frozen-master",
+    "path": "tools/imagegen/out/reference-v1/masters/pet-encyclopedia_british-shorthair_9x16_v02.webp",
+    "sha256": "4c9d456a080dd208433afeaf5715eb740d3377d556c1999bc9e338a77b16eaa9"
+  },
+  "petIdentityReference": {
+    "role": "new-pet-identity-reference",
+    "identityId": "devon-rex-cat",
+    "species": "cat",
+    "breed": "grey-and-white Devon Rex cat",
+    "path": "apps/website/public/assets/hero-devon.jpg",
+    "sha256": "a7df98cb56bde09263defd3a2a174f9c8f14875729c5ec49818cdc3787453eb2"
+  },
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving template transfer. Create a vertical 9:16 high-fidelity pet replacement from exactly two input images, composed for an exact final size of 720x1280 pixels. Image 1 is a frozen self-owned production master created previously by our team. It is the sole composition, scene, styling and layout reference for this request. No third-party effect reference is included at runtime. Image 2 is the sole pet identity reference. Preserve Image 1's the cream editorial atlas design, large title area, central full-body portrait, circular ear-eye-fur-paw detail insets with leader lines, countryside backdrop, modular information panels, green accents, icon rhythm and dense but orderly hierarchy. Do not redesign the environment or turn it into a generic scene. Allow an optional scene-change budget of approximately 5% to 20%. You may naturally adjust only secondary scenery, small decorations, context-equivalent props, materials or colours when the adjustment clearly fits the current scene. Every adjustment must preserve the same semantics, perspective, scale, lighting and visual style. If no replacement is clearly better, keep the master unchanged. Never force changes merely to meet a percentage. Remove every depiction of the master pet from Image 1 and replace it with the exact grey-and-white Devon Rex cat from Image 2. Preserve the grey crown and back, white muzzle and chest, pale green eyes, very large upright ears, short curly coat and recognisable Devon Rex face. Image 2 controls pet identity and overrides the sample pet shown in the master. The replacement cat must look youthful, healthy, rounded and irresistibly cute at first glance, with soft full cheeks, friendly bright eyes and appealing proportions for a young audience. Keep the recognisable breed anatomy. Never make the pet skinny, elongated, angular, gaunt, stern, aggressive, strange, elderly-looking or uncanny. Replace every pet depiction, including the main portrait, circular details and small action views, with the same pet from Image 2. All views must retain one identity. No clothing is required. Preserve the editorial panels, leader lines, icons and countryside setting. Keep the top-left header '宠物科普百科'. Use the exact Chinese breed title and English subtitle supplied for this job. Retain the readable section headings '基础档案', '外观特征', '性格行为', '饲养护理', '互动建议'. Keep body copy short and neutral; omit unreadable tiny sentences rather than inventing medical claims. The exact breed title must read '德文卷毛猫' and the English subtitle must read 'DEVON REX'. Keep exactly one pet identity throughout the image and no unrelated animal. Correct anatomy only: no duplicate or fused limbs, extra ears, warped eyes, broken clothing boundaries or human hands. Preserve rather than delete meaningful clothing, landmarks, distinctive props and text layout from the master. No platform UI, brand logo, known IP, watermark or signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "pre-reviewed-pending-user-approval",
+    "checks": {
+      "petIdentity": "pass",
+      "cuteness": "pass",
+      "masterComposition": "pass",
+      "anatomy": "pass",
+      "text": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [],
+    "preReviewedAt": "2026-08-13T02:52:16.462Z",
+    "finalApproval": "pending-user"
+  },
+  "generatedAt": "2026-08-13T02:04:51.263Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation/pet-encyclopedia_cat_devon-rex-cat_9x16_v01.png",
+    "sha256": "be46e443e420ef0e55ec1cf685465ce7c2a09230078abab738149a18ad0f849d"
+  }
+}

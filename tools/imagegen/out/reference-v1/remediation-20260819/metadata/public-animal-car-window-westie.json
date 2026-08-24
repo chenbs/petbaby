@@ -1,0 +1,36 @@
+{
+  "task": "user-requested-frozen-master-remediation-2026-08-19",
+  "templateId": "animal-car-window-westie",
+  "kind": "public",
+  "version": "public-v02",
+  "status": "generated-pending-visual-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputFidelity": "high",
+  "inputPolicy": {
+    "sequential": true,
+    "maxImages": 2,
+    "maxCombinedBytes": 1000000
+  },
+  "inputs": [
+    {
+      "role": "effect-reference-edit-target",
+      "path": ".tmp/master-remediation-20260819-inputs/animal-car-window-westie-effect.jpg",
+      "bytes": 120693,
+      "sha256": "5b214e0a7d60c35adec5a429b4b43f3d928b20c2f5206b9dfb5530a104970703"
+    }
+  ],
+  "orientation": "landscape",
+  "requestedSize": "1280x720",
+  "output": {
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/public-animal-car-window-westie.png",
+    "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819/public-previews/animal-car-window-westie_public-v02.png",
+    "width": 1280,
+    "height": 720,
+    "sha256": "f8a53f1ba1fb9f701c3d11c45eb07d0625edc116ff57335bf1b281b484ef48c0"
+  },
+  "prompt": "Use case: precise-object-edit. Asset type: public Mini Program template preview. Image 1 is the effect-reference edit target and is the sole authority for composition, subject, camera, pose, lighting, medium and all details not explicitly changed below. Create a clean new public-facing rendition, not a collage or framed mockup. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature, reconstructing the covered area seamlessly. Do not add captions, borders, UI, logos, watermarks or signatures. Change only the dog's pale blue shirt to a pale fresh green shirt. Keep the white West Highland Terrier, windblown fur, sleepy closed eyes, paws, yellow car, open window, landscape, motion and daylight unchanged. Return a 16:9 landscape composition.",
+  "revisedPrompt": "Edit the provided reference image into a clean public-facing 16:9 landscape rendition, preserving the exact composition, subject, camera angle, pose, lighting, medium, motion, and all details except the specified change. Keep the white West Highland Terrier, windblown fur, sleepy closed eyes, paws, yellow car, open window, landscape, and daylight unchanged. Remove every platform badge, AI-generated label, account name, account number, watermark, logo, and signature by seamlessly reconstructing the covered area. Do not add any captions, borders, UI, logos, watermarks, or signatures. Change only the dog's pale blue shirt to a pale fresh green shirt.",
+  "generatedAt": "2026-08-19T05:46:50.809Z"
+}

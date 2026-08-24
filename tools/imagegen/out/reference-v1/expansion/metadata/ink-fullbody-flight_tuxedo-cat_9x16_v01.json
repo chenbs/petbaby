@@ -1,0 +1,52 @@
+{
+  "templateId": "ink-fullbody-flight",
+  "entryId": "art",
+  "title": "飞羽水墨全身像",
+  "sourceEffectFile": "apps/website/public/assets/example/e4cbfb45-aeb8-48d7-bed1-7a6400ebd4f1.jpg",
+  "status": "generated-pending-user-approval",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/e4cbfb45-aeb8-48d7-bed1-7a6400ebd4f1.jpg",
+      "sha256": "57c834d94e981b9645e8fc7397fe81cab8bf57c7b1575cdae776c49cf3991cfd"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "tuxedo-cat",
+      "species": "cat",
+      "breed": "adult black-and-white tuxedo cat",
+      "path": "tools/imagegen/out/source/cat-tuxedo.jpg",
+      "sha256": "c4b2ebaac7dd5d59fffd83a827d94fdc03e1befd3e1108f337de8ba5488a7d39"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult black-and-white tuxedo cat with black crown and ears, narrow white facial blaze, white muzzle and chest, pale green eyes, pink nose, black back and white front legs. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the full-body ink pose, blank space, feathers and dynamic tail; preserve the new pet's adult proportions and fine ink edges. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a vertical 9:16 image at 720x1280 pixels in the exact composition and visual language of a simple studio character poster: seamless warm beige background, lots of empty negative space above the subject, full-body centered character standing upright on a soft floor shadow, front-facing, slightly low-angle perspective, minimal props, clean studio lighting, and a small watermark-style text block area in the lower-right kept as plain original pet-safe placeholder shapes with no brand names or real logos. Replace the original subject with one coherent adult black-and-white tuxedo cat identity only: black crown and ears, narrow white facial blaze, white muzzle and chest, pale green eyes, pink nose, black back, white front legs, healthy adult proportions, friendly appealing expression, fine ink-like edge detail, and a full-body upright pose with the same blank-space-heavy composition and dynamic silhouette. Render the cat in the same stylized 3D illustration language as the reference image, not photorealistic, with smooth brushy fur texture, clean line quality, and matching lighting/palette. Preserve the reference’s pose, crop, camera angle, spacing, and overall poster feel; do not redesign the background, do not add extra subjects, do not add extra limbs or eyes, and do not make the cat skinny, gaunt, juvenile, aggressive, or uncanny. Keep all text-like areas minimal and generic, with no readable copyrighted names, brands, or watermarks.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/expansion/candidates/ink-fullbody-flight_tuxedo-cat_9x16_v01.png",
+    "sha256": "2595f633ee96c0d9a9e5f4b8499beced9457b64f0227a37164154fb6ddd64f58"
+  },
+  "review": {
+    "state": "pending-human-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generatedAt": "2026-08-17T16:12:19.346Z"
+}

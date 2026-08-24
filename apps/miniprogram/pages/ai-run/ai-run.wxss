@@ -1,0 +1,98 @@
+.block-gap {
+  display: block;
+  margin-top: var(--space-4);
+}
+
+.block {
+  display: block;
+}
+
+.state-title {
+  margin-bottom: var(--space-2);
+  color: var(--text-primary);
+  font-size: var(--font-h2);
+  font-weight: var(--title-weight);
+}
+
+/* 候选双列铺满：普通玩法四张，宠物人化两张。 */
+.candidates {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+/*
+ * 阴影从旧的 --card-shadow 换到 --shadow-card（方案 2.4）：
+ * 旧 token 是单层、各主题自定色；新 token 是暖褐双层，方案称这是「廉价与高级的分水岭」。
+ * 同屏的 t-card 已走新 token，这里不换就会出现两套投影语言。
+ */
+.candidate {
+  overflow: hidden;
+  border: 4rpx solid transparent;
+  border-radius: var(--radius-md);
+  background: var(--card-background);
+  box-shadow: var(--shadow-card);
+  transition: transform var(--transition-duration) var(--transition-easing), border-color var(--transition-duration) var(--transition-easing);
+}
+
+.candidate-hover {
+  transform: scale(.98);
+}
+
+.candidate-on {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 6rpx var(--ai-glow);
+}
+
+/*
+ * 比例锁 3:4（方案 2.5）替代固定 340rpx —— 候选图并排比较，
+ * 固定高在不同机型宽度下会得到不同比例，破坏「唯一变量是画面内容」的比较前提。
+ * --shadow-clay-inset 让写实出图嵌进卡面（方案 J 落地要点），缓解容器与照片的割裂。
+ */
+.candidate-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: var(--ratio-card);
+  background: var(--skeleton-base);
+  box-shadow: var(--shadow-clay-inset);
+}
+
+.candidate-foot {
+  display: flex;
+  min-height: 72rpx;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-3);
+}
+
+.actions {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+/* ---------- 沉浸式结果确认区 ---------- */
+.run-title {
+  margin: var(--space-2) 0;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.fact {
+  display: grid;
+  gap: var(--space-1);
+}
+
+/* .section-block 已提到 app.wxss 全局（create 的 C 表单变体同样要用） */
+
+.share-actions {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}

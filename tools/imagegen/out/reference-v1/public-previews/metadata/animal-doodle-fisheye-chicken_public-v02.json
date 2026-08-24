@@ -1,0 +1,49 @@
+{
+  "task": "user-requested-frozen-master-remediation-2026-08-19",
+  "templateId": "animal-doodle-fisheye-chicken",
+  "kind": "public",
+  "version": "public-v02",
+  "status": "approved-public-preview",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputFidelity": "high",
+  "inputPolicy": {
+    "sequential": true,
+    "maxImages": 2,
+    "maxCombinedBytes": 1000000
+  },
+  "inputs": [
+    {
+      "role": "effect-reference-edit-target",
+      "path": ".tmp/master-remediation-20260819-inputs/animal-doodle-fisheye-chicken-effect.jpg",
+      "bytes": 119026,
+      "sha256": "cc4bb677716836ad433e924bf1ee349cf7d7d9c2b7720436c30dd8250ddad3dd"
+    }
+  ],
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "output": {
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/public-animal-doodle-fisheye-chicken.png",
+    "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819/public-previews/animal-doodle-fisheye-chicken_public-v02.png",
+    "width": 720,
+    "height": 1280,
+    "sha256": "793b90dd35fa1fc86d230d0fe80899d5fcc61a0013d6306abf304f0b6aff6682"
+  },
+  "prompt": "Use case: precise-object-edit. Asset type: public Mini Program template preview. Image 1 is the effect-reference edit target and is the sole authority for composition, subject, camera, pose, lighting, medium and all details not explicitly changed below. Create a clean new public-facing rendition, not a collage or framed mockup. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature, reconstructing the covered area seamlessly. Do not add captions, borders, UI, logos, watermarks or signatures. Keep the exact rough hand-drawn chicken doodle, huge fisheye eyes, red comb and scribbled feathers, white paper, childish loose black linework and framing unchanged. Return a 9:16 portrait composition.",
+  "revisedPrompt": "Edit the provided image into a clean public-facing rendition, preserving the exact composition and all artwork details of the original chicken doodle. Keep unchanged: the rough hand-drawn chicken, huge fisheye eyes, red comb, scribbled red feathers, white paper background, childish loose black linework, and overall framing. Remove every platform badge, AI-generated label, account name, account number, watermark, logo, signature, or any other UI/overlay text by reconstructing the covered areas seamlessly so the image looks naturally clean and unmarked. Do not add any captions, borders, UI elements, logos, watermarks, or signatures. Return as a 9:16 portrait composition.",
+  "generatedAt": "2026-08-19T05:46:26.980Z",
+  "approvedAt": "2026-08-19T14:10:00+08:00",
+  "publicPath": "tools/imagegen/out/reference-v1/masters/animal-doodle-fisheye-chicken_public-v02-master-v01.webp",
+  "publicSha256": "43759e12d722b2f6380087e324ca6c10097e561d83eaeac214a9ecb0ef8bb22f",
+  "publicUseAllowed": true,
+  "approval": {
+    "state": "approved-for-mini-program-display",
+    "approvedBy": "user-request",
+    "approvedAt": "2026-08-19T14:10:00+08:00"
+  },
+  "masterSha256": "43759e12d722b2f6380087e324ca6c10097e561d83eaeac214a9ecb0ef8bb22f",
+  "currentFrozenMasterPath": "tools/imagegen/out/reference-v1/masters/animal-doodle-fisheye-chicken_public-v02-master-v01.webp",
+  "currentFrozenMasterVersion": "public-v02-master-v01",
+  "runtimeMasterUseAllowed": false
+}

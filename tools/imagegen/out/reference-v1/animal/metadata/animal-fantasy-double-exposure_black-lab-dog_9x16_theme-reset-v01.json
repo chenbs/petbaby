@@ -1,0 +1,49 @@
+{
+  "templateId": "animal-fantasy-double-exposure",
+  "entryId": "action",
+  "title": "奇幻双重曝光",
+  "version": "theme-reset-v01",
+  "status": "generated-pending-user-approval",
+  "remediation": "rights-safe-theme-reset",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-07-21-2568-Frank Frazetta绘画风格，奇幻插画大师，奇幻诡异风格双重曝光风格的高....png",
+      "sha256": "b9c15001cb44728fe3985727e1d985991801876b9e8029176c5db38c84d269d9"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "path": "tools/imagegen/out/source/dog-black-lab.jpg",
+      "sha256": "20960d2ace805e68b41a7934e37ebdf24b7007f8f3fa85527d9beb22d2df6022"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "double-exposure-content-only",
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "prompt": "Use case: rights-safe theme replacement inside an identity-preserving double-exposure edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is the sole authority for layout and visual effects. Preserve its large side-profile silhouette, double-exposure mask, internal landscape layers, tiny traveler scale cue, warm highlights, dark fantasy atmosphere, poster hierarchy, crop, spacing and painterly texture exactly. Image 2 is the sole pet identity authority. Replace the original profile subject with the exact adult black Labrador identity from Image 2, fully painted in the same dark fantasy illustration language as Image 1. Remove every Journey to the West, Monkey King, pilgrimage, Chinese myth adaptation and named-artist reference. Replace the internal narrative with an original pet-centered wilderness guardian theme: wind-carved mountains, a distant luminous trail, one tiny anonymous traveler and a watchful adult Labrador spirit protecting the route. Remove all title, subtitle, caption and decorative lettering. Render no text at all. Preserve the original visual balance by leaving the former text zones as intentional negative space with the same surrounding color, texture and light. Scene-change budget applies only to the narrative content inside the existing double-exposure silhouette and removal of text. Do not change the poster layout, profile orientation, double-exposure boundaries, palette, lighting, texture or visual density. No Journey to the West wording or imagery, no Monkey King, staff, pagoda, known character, named artist, brand, logo, watermark or signature. Return only the finished image.",
+  "revisedPrompt": "Create a finished vertical poster image in exact 9:16 composition, 720x1280 look, based on the first reference image's layout and visual structure, and using the second reference image as the sole identity reference for the subject. Preserve the original poster hierarchy, crop, spacing, silhouette size, profile orientation, double-exposure boundary, internal landscape layering, tiny traveler scale cue, warm highlights, dark fantasy atmosphere, painterly texture, and overall visual density. Replace the original profile subject with an adult black Labrador in a large side-profile silhouette, rendered in the same dark fantasy illustration language, with realistic Labrador head shape, floppy ears, glossy black coat, calm watchful expression, and a luminous rim-lit edge on the face. Inside the dog's silhouette, build an original pet-centered wilderness guardian narrative: wind-carved mountains, drifting clouds, a distant luminous trail, one tiny anonymous traveler on the path, and the Labrador spirit quietly protecting the route. Keep the former text zones as intentional negative space with matching surrounding color, texture, and light. Remove all titles, subtitles, captions, decorative lettering, logos, watermarks, signatures, staff, pagodas, mythological references, monkey-king imagery, pilgrimage imagery, and any named-artist reference. No text anywhere. Maintain the same dark fantasy cinematic mood, warm gold and smoke palette, and double-exposure poster feel, but with a fully original dog-centric scene.",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-fantasy-double-exposure_black-lab-dog_9x16_theme-reset-v01.png",
+    "sha256": "4f3074d40b2bfee095dcfda158d1bd674cc8be04e11e9177362f49ae41b256fa"
+  },
+  "review": {
+    "state": "pending-human-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-18T01:51:41.415Z"
+}

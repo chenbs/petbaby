@@ -1,0 +1,125 @@
+---
+/*
+ * 文章详情。
+ *
+ * 与 [...page].astro 不冲突：Astro 优先匹配更具体的静态路径，且这个路由
+ * 只产出真实存在的 slug（getStaticPaths 从 collection 出），不会吃掉 /blog/2/ ——
+ * 但要留意**文章 slug 不能是纯数字**，那会与分页路径撞。当前文章都是中文语义
+ * slug，不会撞；check:links 会在真撞上时报出来。
+ */
+import type { GetStaticPaths } from "astro";
+import { Image } from "astro:assets";
+import { render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
+import Cta from "../../components/home/Cta.astro";
+import { formatDate, listPosts, tagPath, type Post } from "../../lib/posts";
+import { articleLd, breadcrumbLd } from "../../lib/jsonld";
+import "../../styles/prose.css";
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const posts = await listPosts();
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+};
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const { data } = post;
+const { Content } = await render(post);
+
+/* related 是 reference('posts')，引用不存在的 slug 在构建时就会报错，不会留死链 */
+const allPosts = await listPosts();
+const related = data.related
+  .map((ref) => allPosts.find((candidate) => candidate.id === ref.id))
+  .filter((candidate): candidate is Post => Boolean(candidate));
+
+const crumbs = [
+  { label: "首页", href: "/" },
+  { label: "文章", href: "/blog/" },
+  { label: data.title },
+];
+
+const path = `/blog/${post.id}/`;
+---
+
+<BaseLayout
+  title={data.title}
+  description={data.description}
+  ogType="article"
+  image={data.cover?.src}
+  jsonLd={[
+    breadcrumbLd(crumbs),
+    articleLd({
+      title: data.title,
+      description: data.description,
+      path,
+      publishedAt: data.publishedAt,
+      updatedAt: data.updatedAt,
+      author: data.author,
+      image: data.cover?.src,
+    }),
+  ]}
+>
+  <article class="article">
+    <div class="container">
+      <header class="article-header">
+        <Breadcrumb items={crumbs} />
+        <h1 class="article-title">{data.title}</h1>
+        <p class="post-meta">
+          <time datetime={data.publishedAt.toISOString()}>{formatDate(data.publishedAt)}</time>
+          {data.updatedAt && <span>· 更新于 {formatDate(data.updatedAt)}</span>}
+          <span>· {data.author}</span>
+        </p>
+        {
+          data.tags.length > 0 && (
+            <div class="tag-list" style="margin-top:16px">
+              {data.tags.map((tag) => (
+                <a class="tag" href={tagPath(tag)}>{tag}</a>
+              ))}
+            </div>
+          )
+        }
+      </header>
+
+      {
+        data.cover && (
+          <figure class="article-cover">
+            <Image
+              src={data.cover}
+              alt={data.coverAlt ?? ""}
+              widths={[600, 1200]}
+              sizes="(min-width: 768px) 720px, 100vw"
+              loading="eager"
+              decoding="async"
+            />
+          </figure>
+        )
+      }
+
+      <div class="prose">
+        <Content />
+      </div>
+
+      {
+        related.length > 0 && (
+          <div class="article-foot">
+            <h2 class="h3">相关文章</h2>
+            <ul class="footer-links" style="margin-top:12px">
+              {related.map((item) => (
+                <li><a class="link-arrow" href={`/blog/${item.id}/`}>{item.data.title}
+                  <svg class="arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
+                </a></li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+    </div>
+  </article>
+
+  {/* 复用首页第 9 区块：从「看完教程」直接接到「扫码去做」（方案 7.6 第 2 条）*/}
+  <Cta />
+</BaseLayout>

@@ -1,0 +1,48 @@
+{
+  "jobId": "pet-encyclopedia_dog_corgi-dog",
+  "templateId": "pet-encyclopedia",
+  "status": "generated-pending-joint-approval",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "sourceMaster": {
+    "role": "self-owned-frozen-master",
+    "path": "tools/imagegen/out/reference-v1/masters/pet-encyclopedia_british-shorthair_9x16_v02.webp",
+    "sha256": "4c9d456a080dd208433afeaf5715eb740d3377d556c1999bc9e338a77b16eaa9"
+  },
+  "petIdentityReference": {
+    "role": "new-pet-identity-reference",
+    "identityId": "corgi-dog",
+    "species": "dog",
+    "breed": "Pembroke Welsh Corgi",
+    "path": "tools/imagegen/out/source/dog-corgi.jpg",
+    "sha256": "750c43038e21f8601be8b903889100c6b165d2b35cea3b7c0b55c0edce7ca9c2"
+  },
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving template transfer. Create a vertical 9:16 high-fidelity pet replacement from exactly two input images, composed for an exact final size of 720x1280 pixels. Image 1 is a frozen self-owned production master created previously by our team. It is the sole composition, scene, styling and layout reference for this request. No third-party effect reference is included at runtime. Image 2 is the sole pet identity reference. Preserve Image 1's the cream editorial atlas design, large title area, central full-body portrait, circular ear-eye-fur-paw detail insets with leader lines, countryside backdrop, modular information panels, green accents, icon rhythm and dense but orderly hierarchy. Do not redesign the environment or turn it into a generic scene. Allow an optional scene-change budget of approximately 5% to 20%. You may naturally adjust only secondary scenery, small decorations, context-equivalent props, materials or colours when the adjustment clearly fits the current scene. Every adjustment must preserve the same semantics, perspective, scale, lighting and visual style. If no replacement is clearly better, keep the master unchanged. Never force changes merely to meet a percentage. Remove every depiction of the master pet from Image 1 and replace it with the exact Pembroke Welsh Corgi from Image 2. Preserve the tan-and-white coat, broad white facial blaze, white muzzle and chest, dark round eyes, large upright ears, short legs and compact sturdy body. Image 2 controls pet identity and overrides the sample pet shown in the master. The replacement dog must look youthful, healthy, rounded and irresistibly cute at first glance, with soft full cheeks, friendly bright eyes and appealing proportions for a young audience. Keep the recognisable breed anatomy. Never make the pet skinny, elongated, angular, gaunt, stern, aggressive, strange, elderly-looking or uncanny. Replace every pet depiction, including the main portrait, circular details and small action views, with the same pet from Image 2. All views must retain one identity. No clothing is required. Preserve the editorial panels, leader lines, icons and countryside setting. Keep the top-left header '宠物科普百科'. Use the exact Chinese breed title and English subtitle supplied for this job. Retain the readable section headings '基础档案', '外观特征', '性格行为', '饲养护理', '互动建议'. Keep body copy short and neutral; omit unreadable tiny sentences rather than inventing medical claims. The exact breed title must read '彭布罗克威尔士柯基犬' and the English subtitle must read 'PEMBROKE WELSH CORGI'. Keep exactly one pet identity throughout the image and no unrelated animal. Correct anatomy only: no duplicate or fused limbs, extra ears, warped eyes, broken clothing boundaries or human hands. Preserve rather than delete meaningful clothing, landmarks, distinctive props and text layout from the master. No platform UI, brand logo, known IP, watermark or signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "pre-reviewed-pending-user-approval",
+    "checks": {
+      "petIdentity": "pass",
+      "cuteness": "pass",
+      "masterComposition": "pass",
+      "anatomy": "pass",
+      "text": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [],
+    "preReviewedAt": "2026-08-13T02:52:16.499Z",
+    "finalApproval": "pending-user"
+  },
+  "generatedAt": "2026-08-13T02:04:45.785Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation/pet-encyclopedia_dog_corgi-dog_9x16_v01.png",
+    "sha256": "e3ad2c7d2f63a2367e239d93a285d1bd52df5959ed30ac5b500df3fc96a57666"
+  }
+}

@@ -1,0 +1,478 @@
+/*
+ * 原型没有的页面类型与交互所需的样式。**site.css 保持字节不变**（方案第 12 章：
+ * 原型的视觉一致性靠「同一份 CSS 文件」保证，改它就说明视觉出现了偏差）。
+ *
+ * 这里只放三类：
+ *   ① 顶栏 solid 变体 —— 文章/标签/法务/404 没有 hero，照搬 hero 变体会得到浅底白字
+ *   ② 小程序码三触点 —— 顶栏按钮、右下角悬浮、共用弹框（方案第 6 章）
+ *   ③ 新页面的版式骨架 —— 文章列表/详情/法务页的容器与页头
+ *
+ * 取值一律引用 site.css 已有的 CSS 变量，不新造。
+ */
+
+/* ══ 顶栏右侧动作区 ═══════════════════════════════════════════════════
+ *
+ * 原型顶栏右侧只有「菜单」一个元素、直接当 flex 子项。现在多了「扫码」，
+ * 包一层 flex 行。只做布局，不引入视觉变化。
+ */
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* ══ 顶栏 solid 变体（方案第 3 章）══════════════════════════════════════
+ *
+ * 只覆盖必要的几条，其余继承 .topbar。对比度按新底色实算：
+ *   --text-primary(#3A2C2C) on --surface(#FFFDFA)  13.12:1
+ *   --text-secondary                                5.54:1
+ *   --primary                                       5.20:1
+ * 桌面下拉面板保持深底白字 —— 它是浮层，深底在浅色页上对比度更高。
+ */
+.topbar-solid {
+  position: sticky;             /* 滚动时保留导航；hero 变体是 absolute */
+  top: 0;
+  /* 入场动画不要：文章页不需要入场表演。site.js 只给 [data-hero-topbar] 加
+   * .is-in，solid 顶栏拿不到那个类，所以必须在这里把初始态复位 —— 否则
+   * .topbar 的 opacity:0 会让它永远不可见。 */
+  opacity: 1;
+  transform: none;
+  transition: none;
+  border-bottom: 1px solid var(--border);
+  background: rgba(255, 253, 250, 0.86);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+.topbar-solid .brand-name {
+  color: var(--text-primary);
+  text-shadow: none;
+}
+.topbar-solid .menu-btn,
+.topbar-solid .qr-trigger {
+  border-color: var(--border-strong);
+  background: transparent;
+  color: var(--text-primary);
+}
+.topbar-solid .menu-btn:hover,
+.topbar-solid .qr-trigger:hover {
+  background: var(--subtle);
+}
+
+/* backdrop-filter 不支持时把半透明底加深，否则滚动时正文会从顶栏下透出来 */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .topbar-solid { background: var(--surface); }
+}
+
+/* ══ 移动面板第 8 项的入场 delay ════════════════════════════════════════
+ *
+ * site.css 的 .mobile-menu-nav a:nth-child(n) 只写到 7（原型 7 个导航项）。
+ * 方案 7.6 要求加「文章」入口，第 8 条在这里补，delay 沿用 i*0.1s 的递进。
+ * 导航项再增加时同步往下补。
+ */
+.mobile-menu-nav a:nth-child(8) { transition-delay: .75s; }
+
+/* ══ 小程序码：三触点共用的弹框（方案 6.1）═══════════════════════════════
+ *
+ * 四层黏土（与纪念区图框同一套）。这是黏土的第 2 处，仍在根 CLAUDE.md 的
+ * 3 处限额内 —— 再加之前先回看 UI 重构拍板全文。
+ *
+ * 「可爱」由三处细节承担，都不引入新的设计语汇：入场轻微过冲、爪印装饰、
+ * 小尾巴三角。不加彩色渐变、不加多色描边、不加弹跳循环动画。
+ */
+.qr-anchor { position: relative; }
+
+.qr-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid rgba(255, 255, 255, .6);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, .1);
+  color: #fff;
+  font-size: 14px;
+  font-weight: var(--fw-medium);
+  transition: background-color var(--dur-base) var(--ease), transform var(--dur-fast) var(--ease);
+}
+.qr-trigger:hover { background: rgba(255, 255, 255, .2); }
+.qr-trigger:active { transform: scale(.95); }
+.qr-trigger svg {
+  width: 17px; height: 17px;
+  fill: none; stroke: currentColor; stroke-width: 1.6;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+
+/*
+ * 移动端隐藏顶栏按钮：390px 下顶栏只放得下品牌名与菜单按钮，再加一个会挤。
+ * 移动端靠右下角悬浮按钮，功能不缺（方案 6.3）。
+ */
+@media (max-width: 767px) {
+  .topbar .qr-anchor { display: none; }
+}
+
+/* 顶栏第二、三档尺寸跟着菜单按钮一起放大 */
+@media (min-width: 768px) {
+  .qr-trigger { min-height: 46px; padding: 0 18px; font-size: 18px; }
+  .qr-trigger svg { width: 19px; height: 19px; }
+}
+@media (min-width: 1280px) {
+  .qr-trigger { min-height: 52px; padding: 0 22px; font-size: 22px; }
+  .qr-trigger svg { width: 21px; height: 21px; }
+}
+
+/*
+ * 弹框本体。**必须是触发按钮的兄弟且与按钮零间隙**（方案 6.2 第一条）：
+ * 中间有空隙时鼠标从按钮移到弹框上会先触发 mouseleave，弹框闪一下就关。
+ * 这里靠 padding-top 撑出视觉间距，热区仍连续。
+ */
+.qr-pop {
+  position: absolute;
+  top: 100%;
+  z-index: 60;                  /* 高于桌面下拉的 50，两者不会同时开但顺序要定 */
+  padding-top: 10px;            /* 热区连续用的透明缓冲，不是外边距 */
+  opacity: 0;
+  transform: scale(.9) translateY(8px);
+  transform-origin: top right;
+  /* 入场带轻微过冲：--ease-spring 是 hero 标题逐词滑入用的同一个变量 */
+  transition: opacity var(--dur-base) var(--ease), transform var(--dur-base) var(--ease-spring);
+  pointer-events: none;
+}
+.qr-pop[hidden] { display: none; }
+.qr-pop.is-open { opacity: 1; transform: none; pointer-events: auto; }
+
+/* 顶栏那处向左展开（按钮在右上角，向右会出视口）；悬浮那处见 .qr-fab-pop */
+.qr-anchor .qr-pop { right: 0; }
+
+.qr-card {
+  position: relative;
+  padding: 16px;
+  /* 方案 6.1 写的是 var(--radius-clay)（28px），site.css 里没有这个变量 ——
+   * 同值的既有变量是 --radius-play(28px)。不新造变量，直接用它。 */
+  border-radius: var(--radius-play);
+  background: var(--card);
+  box-shadow: var(--clay-highlight) 0 5px 0 0 inset, var(--shadow-clay);
+  text-align: center;
+}
+.qr-card .qr-image,
+.qr-card .qr-frame {
+  border-radius: var(--radius-card);
+  /* 让二维码「嵌进」黏土表面，与纪念区图框同一手法 */
+  box-shadow: inset 0 3px 9px rgba(58, 44, 44, .28);
+}
+.qr-card-title {
+  margin: var(--space-3) 0 0;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-tight);
+}
+.qr-card-note { margin: 2px 0 0; color: var(--text-tertiary); font-size: 12px; }
+
+/* 爪印装饰：右上角，纯装饰（aria-hidden）。stroke-width 与页面其他图标一致 */
+.qr-paw {
+  position: absolute;
+  top: 10px; right: 12px;
+  width: 22px; height: 22px;
+  opacity: .12;
+  fill: none; stroke: var(--text-primary); stroke-width: 1.6;
+  stroke-linecap: round; stroke-linejoin: round;
+  pointer-events: none;
+}
+
+/* 小尾巴三角：用 ::after + border 画，不加额外元素 */
+.qr-card::after {
+  content: "";
+  position: absolute;
+  width: 0; height: 0;
+  border: 7px solid transparent;
+}
+.qr-anchor .qr-card::after {
+  top: -14px; right: 22px;
+  border-bottom-color: var(--card);
+}
+
+/* ══ 右下角悬浮按钮（方案 6.4）═══════════════════════════════════════════
+ *
+ * z-index 排进原型现有层级：顶栏 20、移动全屏菜单 40、桌面下拉 50（在顶栏的 20 内）。
+ * 取 30 —— 高于顶栏、低于移动菜单，菜单打开时它被盖住（该被盖住，全屏菜单是模态）。
+ */
+.qr-fab {
+  position: fixed;
+  right: 20px;
+  /* 底部留出 iOS 安全区，否则在 iPhone 上会被 Home 指示条压住 */
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  z-index: 30;
+  /*
+   * 默认隐藏：首页在 hero 内不显示（首屏已有主 CTA「开始创作」，悬浮按钮在那里
+   * 是重复且遮挡），滚过 hero 后由 qr.js 加 .is-visible 淡入；滚到 CTA 区再淡出。
+   * 无 hero 的页面（文章等）由 qr.js 直接给 .is-visible。
+   *
+   * 用 opacity + visibility 而非 display：display 切换不能过渡，会硬闪。
+   * visibility 同时挡住键盘焦点，否则不可见时 Tab 还能聚焦到它。
+   */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition: opacity var(--dur-base) var(--ease),
+              transform var(--dur-base) var(--ease),
+              visibility var(--dur-base) var(--ease);
+}
+.qr-fab.is-visible { opacity: 1; visibility: visible; transform: none; }
+
+/* 移动端位置收一档，避开可能的系统手势区 */
+@media (max-width: 767px) {
+  .qr-fab {
+    right: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+.qr-fab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 48px;
+  padding: 0 18px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  background: var(--card);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-tight);
+  box-shadow: var(--shadow-float);
+  transition: background-color var(--dur-base) var(--ease), transform var(--dur-fast) var(--ease);
+}
+.qr-fab-btn:hover { background: var(--subtle); }
+.qr-fab-btn:active { transform: scale(.95); }
+.qr-fab-btn svg {
+  width: 19px; height: 19px;
+  fill: none; stroke: currentColor; stroke-width: 1.6;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* 悬浮按钮的弹框向上展开（按钮在视口底部，向下会出屏） */
+.qr-fab .qr-pop {
+  top: auto;
+  bottom: 100%;
+  right: 0;
+  padding-top: 0;
+  padding-bottom: 10px;
+  transform-origin: bottom right;
+  transform: scale(.9) translateY(-8px);
+}
+.qr-fab .qr-pop.is-open { transform: none; }
+.qr-fab .qr-card::after {
+  bottom: -14px; right: 22px;
+  border-top-color: var(--card);
+}
+
+/* reduced-motion 下弹框直接显示，不做入场动画（与原型现有分支一致）*/
+@media (prefers-reduced-motion: reduce) {
+  .qr-pop, .qr-fab { transition: none; transform: none; }
+  .qr-pop.is-open, .qr-fab.is-visible { transform: none; }
+}
+
+/* ══ 新页面类型的版式骨架 ═══════════════════════════════════════════════
+ *
+ * 文章列表/详情、标签页、法务页、404。全部复用 site.css 的容器、排版层级与
+ * 卡片材质，这里只补它们需要的布局。
+ */
+
+/* 页头：solid 顶栏是 sticky 的，正文顶部要留出它的高度 */
+.page-head { padding: 56px 0 8px; }
+.page-head .h2 { margin-bottom: var(--space-4); }
+.page-lead { margin: 0; max-width: 34em; color: var(--text-secondary); font-size: 16px; }
+@media (min-width: 768px) {
+  .page-head { padding: 80px 0 8px; }
+}
+
+/* 面包屑：文字小、层级弱，不抢标题 */
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-4);
+  color: var(--text-tertiary);
+  font-size: 12px;
+}
+.breadcrumb a { color: var(--text-tertiary); }
+.breadcrumb a:hover { color: var(--primary); }
+.breadcrumb-sep { opacity: .5; }
+
+/* 文章列表：与玩法区同一档网格（640 两列 → 1024 三列）*/
+.post-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+@media (min-width: 640px) {
+  .post-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 1024px) {
+  .post-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+}
+
+.post-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-play);
+  background: var(--card);
+  box-shadow: var(--shadow-card);
+  transition: transform var(--dur-base) var(--ease),
+              box-shadow var(--dur-base) var(--ease),
+              border-color var(--dur-base) var(--ease);
+}
+.post-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-float);
+}
+.post-cover { position: relative; aspect-ratio: var(--ratio-cover); overflow: hidden; background: var(--subtle); }
+.post-cover img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform var(--dur-slow) ease-out;
+}
+.post-card:hover .post-cover img { transform: scale(1.04); }
+.post-body { display: flex; flex-direction: column; flex: 1; padding: 20px; }
+.post-body .h3 { margin-bottom: var(--space-3); }
+.post-excerpt { margin: 0; color: var(--text-secondary); font-size: 15px; line-height: var(--lh-body); }
+.post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin: var(--space-4) 0 0;
+  color: var(--text-tertiary);
+  font-size: 12px;
+}
+.post-body .post-meta { margin-top: auto; padding-top: var(--space-4); }
+
+/* 标签：pill，与徽标同圆角但浅底深字（浅色区块上的徽标不能用深底）*/
+.tag-list { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 11px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--card);
+  color: var(--text-secondary);
+  font-size: 12px;
+  transition: border-color var(--dur-base) var(--ease), color var(--dur-base) var(--ease);
+}
+.tag:hover { border-color: var(--border-strong); color: var(--primary); }
+.tag-current { border-color: var(--primary); color: var(--primary); }
+
+/* 分页：上一页/下一页 + 页码，居中 */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-top: 56px;
+  color: var(--text-tertiary);
+  font-size: 14px;
+}
+.pagination .btn { min-height: 40px; padding: 0 18px; font-size: 14px; }
+
+/* 文章详情：正文单列，行宽收到 34em（中文可读行宽上限）*/
+.article { padding: 40px 0 80px; }
+.article-header { max-width: 34em; margin-bottom: var(--space-6); }
+.article-title {
+  margin: 0 0 var(--space-4);
+  color: var(--text-primary);
+  /* 比区块 h2 小一档：文章标题不需要与首页主推区同等音量 */
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: var(--fw-black);
+  letter-spacing: var(--ls-tighter);
+  line-height: 1.18;
+}
+.article-cover {
+  overflow: hidden;
+  margin: 0 0 var(--space-7);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+  background: var(--subtle);
+  box-shadow: var(--shadow-image);
+}
+/* height:auto 必须给：img 带 height 属性时 CSS 只设 width 会让属性高度生效，
+ * aspect-ratio 被无视（原型的 .media-frame img 踩过这个坑）*/
+.article-cover img { width: 100%; height: auto; aspect-ratio: var(--ratio-cover); object-fit: cover; }
+
+/* 文章底部的相关入口与 CTA 之间的分隔 */
+.article-foot { margin-top: 56px; padding-top: 28px; border-top: 1px solid var(--border-strong); }
+
+/* 空状态：不画占位色块，只留文字（规格 7.4）*/
+.empty-state {
+  padding: 56px 24px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+  color: var(--text-tertiary);
+  text-align: center;
+}
+
+/* ══ 法务页未定稿提示条（方案 11.1）═══════════════════════════════════════
+ *
+ * 占位方式必须让人一眼看出是未完成的 —— 半真半假的隐私政策比空页面风险更高
+ * （用户会当它是承诺，而它没经过法务审核）。
+ */
+.notice-draft {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin: 0 0 var(--space-7);
+  padding: 16px 20px;
+  border: 1px solid var(--primary);
+  border-radius: var(--radius-2xl);
+  background: rgba(196, 51, 92, .06);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: var(--lh-sm);
+}
+.notice-draft svg {
+  flex: none;
+  width: 20px; height: 20px;
+  margin-top: 1px;
+  fill: none; stroke: var(--primary); stroke-width: 1.6;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.notice-draft p { margin: 0; }
+.notice-draft strong { color: var(--primary); font-weight: var(--fw-semibold); }
+
+/* 法务章节骨架：每节一个小标题 + 一句待补充 */
+.legal-outline { display: grid; gap: var(--space-5); max-width: 40em; }
+.legal-section { border-top: 1px solid var(--border); padding-top: var(--space-4); }
+.legal-section h2 {
+  margin: 0 0 var(--space-2);
+  color: var(--text-primary);
+  font-size: 1.0625rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-tight);
+  line-height: var(--lh-h3);
+}
+.legal-section p { margin: 0; color: var(--text-secondary); font-size: 14px; line-height: var(--lh-body); }
+.legal-section .legal-todo { color: var(--text-tertiary); font-size: 13px; }
+
+/* 404：居中一屏，给回首页与文章列表的出口 */
+.notfound {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-5);
+  padding: 120px 24px 140px;
+  text-align: center;
+}
+.notfound-code {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: clamp(3rem, 8vw, 5rem);
+  font-weight: var(--fw-black);
+  letter-spacing: var(--ls-tighter);
+  line-height: 1;
+  opacity: .18;
+}
+.notfound-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-3); }

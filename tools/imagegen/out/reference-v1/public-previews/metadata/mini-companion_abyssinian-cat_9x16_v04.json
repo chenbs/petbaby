@@ -1,0 +1,135 @@
+{
+  "templateId": "mini-companion",
+  "title": "同宠大小分身",
+  "entryId": "character",
+  "status": "approved-frozen-master",
+  "version": "v04",
+  "subject": "abyssinian-cat",
+  "breed": "成年阿比西尼亚猫",
+  "selectionRationale": "用阿比西尼亚猫验证同一身份的大小分身、护目镜反射和成套户外服装在横版中保持一致。",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-effect-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/1786369135481.png",
+      "sha256": "d7a6c5fc1bf7fbb460d9bd384512f4095d011e2063d9f3be0855f5fad7fd047b"
+    },
+    {
+      "role": "pet-identity-reference",
+      "path": "apps/website/public/assets/avatar-abyssinian.jpg",
+      "sha256": "8714ff092ab9b9e58a3c440eb16756b1149cd02c4050a8fb4f5f63b902184268"
+    }
+  ],
+  "identityProvenance": null,
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: identity-preserve precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the current self-owned master and controls the replacement pet or owner identity unless the request explicitly changes the breed. Image 2 is the composition and effect reference. Use it only to correct the requested composition, pose, expression, gaze or visual treatment. Preserve every aspect that is not explicitly changed below, including the scene, camera, crop, palette, lighting, costume, props, spatial relationships and visual medium. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature. No extra subjects, duplicate anatomy, human hands on animals, malformed paws, text, logo, watermark or signature. Regenerate the two identical adult Abyssinian cats with a substantially stronger heroic low-angle view from below, following Image 2's upward-looking attitude. Move the large cat's left front leg farther left to create a wider, more powerful stance while keeping the paw fully grounded and anatomically correct. Both cats must remain the same adult identity at different scales, and both blue mirrored goggles must fully cover both eyes rather than sit on the forehead. Keep the black jackets, purple harnesses, clean white studio and large-left/small-right relationship. Return a 9:16 portrait composition.",
+  "revisedPrompt": "Edit the provided reference composition into a 9:16 portrait studio scene while preserving the original self-owned master identity of the adult Abyssinian cats. Keep the clean white studio background, minimal floor line, large-left/small-right relationship, black jackets, purple harnesses, blue mirrored goggles, and overall photographic realism. Use the second image only as a pose/composition reference for a stronger heroic low-angle view from below, with an upward-looking attitude. Regenerate TWO identical adult Abyssinian cats at different scales: the larger cat on the left and the smaller cat on the right, both clearly the same adult identity/breed, with anatomically correct paws and no extra subjects. Make the large cat’s left front leg placed farther left to create a wider, more powerful stance while keeping that paw fully grounded and natural. Ensure both blue mirrored goggles fully cover both eyes and sit properly over the face, not on the forehead. Preserve the black jackets and purple harnesses exactly in style and placement. Remove any platform badges, AI labels, account names, account numbers, watermarks, logos, signatures, text, or other markings. No malformed paws, no duplicate anatomy, no human hands, no extra limbs, no cropping errors. Studio lighting remains clean, bright, and evenly lit, with a stronger dramatic low-angle perspective emphasizing the heroic posture.",
+  "review": {
+    "state": "approved-by-user-request",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-19T14:10:00+08:00"
+  },
+  "generatedAt": "2026-08-19T05:48:24.066Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/remediation-20260819/master-candidates/mini-companion_abyssinian-cat_9x16_v04.png",
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/master-mini-companion.png",
+    "sha256": "af965a4eebfb7cb655a57100559fbd09ec59c575de32f72b078f34d5fe35b17f"
+  },
+  "candidatePath": "tools/imagegen/out/reference-v1/remediation-20260819/master-candidates/mini-companion_abyssinian-cat_9x16_v04.png",
+  "masterPath": "tools/imagegen/out/reference-v1/public-previews/mini-companion_abyssinian-cat_9x16_v04.webp",
+  "masterSha256": "347ec995843315237e8dda6e601bbf016d1f35fc7d900b12299e5204f5da9526",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-19T14:10:00+08:00",
+    "note": "用户于 2026-08-19 明确要求按逐项意见返工并完成；候选已逐张目视复核后冻结为新版本。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/public-previews/mini-companion_abyssinian-cat_9x16_v04.webp",
+      "sha256": "347ec995843315237e8dda6e601bbf016d1f35fc7d900b12299e5204f5da9526"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate",
+      "unapproved-candidate"
+    ]
+  },
+  "qualityBaseline": {
+    "required": [
+      "strong heroic low-angle view, large cat's left foreleg set farther left, and identical adult duplicates with correctly worn goggles",
+      "exact 720x1280 portrait output",
+      "clean finished image without platform UI, account IDs, logos, watermarks or signatures"
+    ],
+    "reject": [
+      "regression of the composition, expression, gaze, identity, texture or anatomy corrected by this remediation",
+      "extra subjects, duplicate or malformed anatomy, broken costume contacts, logo, watermark or signature"
+    ]
+  },
+  "supersedes": {
+    "version": "v03",
+    "path": "tools/imagegen/out/reference-v1/retired-masters/mini-companion_abyssinian-cat_9x16_v03.png",
+    "sha256": "540845541503d1e126a5a47133e2a0f9279b376f8add19e0fdffff2c5becf52c",
+    "metadata": "tools/imagegen/out/reference-v1/retired-masters/metadata/mini-companion_abyssinian-cat_9x16_v03.json"
+  },
+  "remediationRequest": {
+    "task": "user-requested-frozen-master-remediation-2026-08-19",
+    "templateId": "mini-companion",
+    "kind": "master",
+    "version": "v04",
+    "status": "approved-and-promoted",
+    "provider": "lingsuan",
+    "model": "gpt-image-2",
+    "endpoint": "/v1/images/edits",
+    "inputFidelity": "high",
+    "inputPolicy": {
+      "sequential": true,
+      "maxImages": 2,
+      "maxCombinedBytes": 1000000
+    },
+    "inputs": [
+      {
+        "role": "current-self-owned-master",
+        "path": ".tmp/master-remediation-20260819-inputs/mini-companion-master.jpg",
+        "bytes": 65671,
+        "sha256": "0d612206591d1bc56fa8ca983c52c05ee5480da7f1db8133bf8d67fa8363489d"
+      },
+      {
+        "role": "effect-reference-composition-guide",
+        "path": ".tmp/master-remediation-20260819-inputs/mini-companion-effect.jpg",
+        "bytes": 47347,
+        "sha256": "67246dbb98fdd87d124d5f49bff25dba1e61e8bc547e16d3d34db0a3532c2d06"
+      }
+    ],
+    "orientation": "portrait",
+    "requestedSize": "720x1280",
+    "output": {
+      "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/master-mini-companion.png",
+      "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819/master-candidates/mini-companion_abyssinian-cat_9x16_v04.png",
+      "width": 720,
+      "height": 1280,
+      "sha256": "af965a4eebfb7cb655a57100559fbd09ec59c575de32f72b078f34d5fe35b17f"
+    },
+    "prompt": "Use case: identity-preserve precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the current self-owned master and controls the replacement pet or owner identity unless the request explicitly changes the breed. Image 2 is the composition and effect reference. Use it only to correct the requested composition, pose, expression, gaze or visual treatment. Preserve every aspect that is not explicitly changed below, including the scene, camera, crop, palette, lighting, costume, props, spatial relationships and visual medium. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature. No extra subjects, duplicate anatomy, human hands on animals, malformed paws, text, logo, watermark or signature. Regenerate the two identical adult Abyssinian cats with a substantially stronger heroic low-angle view from below, following Image 2's upward-looking attitude. Move the large cat's left front leg farther left to create a wider, more powerful stance while keeping the paw fully grounded and anatomically correct. Both cats must remain the same adult identity at different scales, and both blue mirrored goggles must fully cover both eyes rather than sit on the forehead. Keep the black jackets, purple harnesses, clean white studio and large-left/small-right relationship. Return a 9:16 portrait composition.",
+    "revisedPrompt": "Edit the provided reference composition into a 9:16 portrait studio scene while preserving the original self-owned master identity of the adult Abyssinian cats. Keep the clean white studio background, minimal floor line, large-left/small-right relationship, black jackets, purple harnesses, blue mirrored goggles, and overall photographic realism. Use the second image only as a pose/composition reference for a stronger heroic low-angle view from below, with an upward-looking attitude. Regenerate TWO identical adult Abyssinian cats at different scales: the larger cat on the left and the smaller cat on the right, both clearly the same adult identity/breed, with anatomically correct paws and no extra subjects. Make the large cat’s left front leg placed farther left to create a wider, more powerful stance while keeping that paw fully grounded and natural. Ensure both blue mirrored goggles fully cover both eyes and sit properly over the face, not on the forehead. Preserve the black jackets and purple harnesses exactly in style and placement. Remove any platform badges, AI labels, account names, account numbers, watermarks, logos, signatures, text, or other markings. No malformed paws, no duplicate anatomy, no human hands, no extra limbs, no cropping errors. Studio lighting remains clean, bright, and evenly lit, with a stronger dramatic low-angle perspective emphasizing the heroic posture.",
+    "generatedAt": "2026-08-19T05:48:24.066Z",
+    "approvedAt": "2026-08-19T14:10:00+08:00"
+  }
+}

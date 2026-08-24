@@ -1,0 +1,67 @@
+{
+  "id": "pet-milk-tea-shopkeeper_german-shepherd-dog_stability-v01",
+  "templateId": "pet-milk-tea-shopkeeper",
+  "title": "奶茶店主理人",
+  "sequence": 54,
+  "identityId": "german-shepherd-dog",
+  "identityLabel": "犬",
+  "species": "dog",
+  "breed": "German Shepherd dog",
+  "status": "generated-pending-human-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "requestPolicy": {
+    "concurrency": 1,
+    "outputsPerRequest": 1,
+    "inputCount": 2,
+    "combinedInputBytes": 282591,
+    "maxCombinedInputBytesExclusive": 1000000,
+    "maxInputEdge": 1200,
+    "comparisonSheetIncluded": false
+  },
+  "inputs": [
+    {
+      "role": "compressed-public-preview-master-candidate",
+      "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/api-inputs/pet-milk-tea-shopkeeper_public-v01_master-candidate.jpg",
+      "sha256": "34393386da250f3821462a477b6d4a534623a5931a99446e2b21142235b31653",
+      "bytes": 100776,
+      "sourceCandidatePath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/candidates/pet-milk-tea-shopkeeper_public-v01_master-candidate.png",
+      "sourceCandidateSha256": "39b95473a40b28d1b0767fa82f5637c57135df0603f73d14cc2a13bb54ab8dbd"
+    },
+    {
+      "role": "compressed-pet-identity-reference",
+      "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/api-inputs/german-shepherd-dog.jpg",
+      "sha256": "76c098da89afc228c5c72514feb954a25f97cd4880b205356e0ae09e9b98fbac",
+      "bytes": 181815,
+      "sourcePath": "apps/website/public/assets/hero-shepherd.jpg"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "prompt": "Use case: identity-preserving production-master stability validation. Create one vertical 9:16 image composed for an exact final size of 720x1280 pixels from exactly two input images. Image 1 is a proposed self-owned runtime master copied byte-for-byte from an approved public preview. It is the sole reference for composition, scene, pose, expression, styling, lighting, palette, clothing, props and text layout. Image 2 is the sole pet identity reference. Replace every animal depiction in Image 1 with the exact German Shepherd dog from Image 2. Preserve the target pet's tan coat with a defined black saddle and mask, brown eyes, tall upright ears, black muzzle and athletic natural proportions. Image 2 controls identity and species; do not retain the sample animal's breed or facial structure from Image 1. The replacement must remain recognisably the same dog as Image 2 while naturally adopting Image 1's pose and expression. Preserve its real age and breed proportions; do not beautify, juvenilize, enlarge or shrink the head arbitrarily, or invent a generic cute face. Scene-change budget: 0%. Do not redesign, simplify, crop, recolour, relight, add, remove or move any background element, garment, prop, graphic mark or text. Make only the smallest local geometry adjustment needed for the replacement animal to fit the existing pose and clothing. Keep the pet behind the milk-tea counter, paper shop hat, beige apron, cups and tapioca props, warm cream shop interior and all existing sign layout. Keep all existing readable text unchanged. Add no new text, logo, signature, watermark or AI label. Avoid duplicate heads, extra eyes, extra ears, extra limbs, malformed paws, fused clothing, floating props and mixed-species anatomy.",
+  "revisedPrompt": "Create a vertical 9:16 image at exact final size 720x1280 pixels by editing the provided reference images. Use Image 1 as the sole composition/style/scene reference. Replace every animal depiction in Image 1 with the exact German Shepherd from Image 2, preserving the dog’s identity and breed traits: tan coat with defined black saddle and mask, brown eyes, tall upright ears, black muzzle, athletic natural proportions. Match Image 1’s pose, expression, clothing placement, lighting, color palette, props, and all background elements exactly. Keep the dog behind the milk-tea counter wearing the existing paper shop hat and beige apron from Image 1, with the same cups, tapioca props, cream shop interior, sign layout, and all readable text unchanged. Make only the smallest local geometry adjustments needed for the German Shepherd to fit the existing framing and clothing. Do not redesign, crop, recolor, relight, add, remove, or move anything else. No new text, logos, watermarks, or labels. Avoid duplicate heads, extra eyes, extra ears, extra limbs, malformed paws, fused clothing, floating props, or mixed-species anatomy.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/pet-milk-tea-shopkeeper/pet-milk-tea-shopkeeper_german-shepherd-dog_stability-v01.png",
+    "sha256": "dc8a9bf97d509d3be0d70b20adf8cf3a0e640508539f554db8e61d531ed91ca5",
+    "size": "720x1280"
+  },
+  "rawOutputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/pet-milk-tea-shopkeeper/raw/pet-milk-tea-shopkeeper_german-shepherd-dog_stability-v01.png",
+  "automatedChecks": {
+    "dimensions": "pass",
+    "visualContent": "pass",
+    "inputCount": "pass",
+    "inputBytes": "pass",
+    "requestSerial": "pass"
+  },
+  "humanChecks": {
+    "petIdentity": "pending",
+    "compositionAndCrop": "pending",
+    "poseExpressionAndGaze": "pending",
+    "clothingPropsAndText": "pending",
+    "styleAndPalette": "pending",
+    "anatomy": "pending"
+  },
+  "finalApproval": "pending-user",
+  "elapsedMs": 40968,
+  "generatedAt": "2026-08-20T06:26:41.718Z"
+}

@@ -1,0 +1,2 @@
+import Link from "next/link"; import { CommerceClient } from "@/components/commerce-client";
+export default function CommercePage(){return <main className="screen"><div className="page-heading"><Link className="back-link" href="/me">返回我的</Link><span className="eyebrow">COMMERCE</span><h1>会员、提醒与年度报告</h1><p>管理复购权益、订阅授权和年度报告，实体纪念品另有独立履约页。</p></div><div className="button-row"><Link className="secondary-button" href="/commerce/physical">实体纪念品订单</Link></div><CommerceClient/></main>}

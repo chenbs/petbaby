@@ -1,0 +1,48 @@
+{
+  "jobId": "pet-character-sheet_cat_cream-longhair-cat",
+  "templateId": "pet-character-sheet",
+  "status": "generated-pending-joint-approval",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "sourceMaster": {
+    "role": "self-owned-frozen-master",
+    "path": "tools/imagegen/out/reference-v1/masters/pet-character-sheet_tuxedo-cat_16x9_v01.webp",
+    "sha256": "d10172f389dc86daead937b7de0e42d9317c44518ed24086c89d59351f31530b"
+  },
+  "petIdentityReference": {
+    "role": "new-pet-identity-reference",
+    "identityId": "cream-longhair-cat",
+    "species": "cat",
+    "breed": "cream long-haired cat",
+    "path": "tools/imagegen/out/source/cat-cream.jpg",
+    "sha256": "db5fc390f9cbf4f5ee0eee38850e28012a0953a98c148e7df5b354a539dab7e9"
+  },
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "landscape",
+  "requestedSize": "1280x720",
+  "outputSize": "1280x720",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving template transfer. Create a horizontal 16:9 high-fidelity pet replacement from exactly two input images, composed for an exact final size of 1280x720 pixels. Image 1 is a frozen self-owned production master created previously by our team. It is the sole composition, scene, styling and layout reference for this request. No third-party effect reference is included at runtime. Image 2 is the sole pet identity reference. Preserve Image 1's the clean white professional character-sheet structure: profile block on the left, front-side-back turnaround across the upper middle, six facial-expression portraits at upper right, clothing and accessory breakdown along the bottom, compact colour palette and one small forest-world vignette. Do not redesign the environment or turn it into a generic scene. Allow an optional scene-change budget of approximately 5% to 20%. You may naturally adjust only secondary scenery, small decorations, context-equivalent props, materials or colours when the adjustment clearly fits the current scene. Every adjustment must preserve the same semantics, perspective, scale, lighting and visual style. If no replacement is clearly better, keep the master unchanged. Never force changes merely to meet a percentage. Remove every depiction of the master pet from Image 1 and replace it with the exact cream long-haired cat from Image 2. Preserve the pale cream long coat, soft cream points, blue eyes, pink nose, triangular ears, fluffy tail and full healthy body. Image 2 controls pet identity and overrides the sample pet shown in the master. The replacement cat must look youthful, healthy, rounded and irresistibly cute at first glance, with soft full cheeks, friendly bright eyes and appealing proportions for a young audience. Keep the recognisable breed anatomy. Never make the pet skinny, elongated, angular, gaunt, stern, aggressive, strange, elderly-looking or uncanny. Every repeated view must depict the exact same pet from Image 2. Keep accurate front, side and back views, six distinct friendly expressions, an equipped full-body view, outfit pieces and a coherent colour palette. Keep the padded explorer jacket, scarf, goggles, boots and waist pouch, adapted naturally to the new animal. Clothing may change colour or receive minor tailoring but must not hide identity markings. Keep the exact English headings 'CHARACTER SHEET', 'PROFILE', 'TURNAROUND', 'FACIAL EXPRESSIONS', 'ITEM & COSTUME', 'COLOR PALETTE', 'WORLD'. Replace the character name with the exact name supplied for this job. Omit optional tiny body copy rather than generating gibberish. The exact character name for this job must read 'LUNA'. Adapt all repeated views to natural cat anatomy, never a humanoid body. Keep exactly one pet identity throughout the image and no unrelated animal. Correct anatomy only: no duplicate or fused limbs, extra ears, warped eyes, broken clothing boundaries or human hands. Preserve rather than delete meaningful clothing, landmarks, distinctive props and text layout from the master. No platform UI, brand logo, known IP, watermark or signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "pre-reviewed-pending-user-approval",
+    "checks": {
+      "petIdentity": "pass",
+      "cuteness": "pass",
+      "masterComposition": "pass",
+      "anatomy": "pass",
+      "text": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [],
+    "preReviewedAt": "2026-08-13T02:52:16.405Z",
+    "finalApproval": "pending-user"
+  },
+  "generatedAt": "2026-08-13T02:05:42.852Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation/pet-character-sheet_cat_cream-longhair-cat_16x9_v01.png",
+    "sha256": "dae71fe38e10b76518cc002ef78939165dd4656b640bf4b860eb63d79c0f5e59"
+  }
+}

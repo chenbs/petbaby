@@ -1,0 +1,62 @@
+{
+  "jobId": "ink-portrait_dog_german-shepherd-dog",
+  "templateId": "ink-portrait",
+  "title": "黑白水墨肖像",
+  "status": "approved-runtime-validation",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/ink-portrait_black-labrador-dog_9x16_reset-v03-reference-gaze-rerun-v01.webp",
+      "sha256": "050b7f7f346b6a26cd3725872cea643ce1bb0d4430a4dac9f7bddbb20d574893"
+    },
+    {
+      "role": "new-pet-identity-reference",
+      "identityId": "german-shepherd-dog",
+      "species": "dog",
+      "breed": "adult German Shepherd",
+      "path": "apps/website/public/assets/hero-shepherd.jpg",
+      "sha256": "f6c37419e96b12425034d2bdcb54cbde952709f37352f3748d67d3db71e937b4"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 4,
+    "localWorkerConcurrency": 4,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Edit Image 1 into one exact 720x1280 vertical runtime validation image using exactly two inputs. Image 1 is our frozen self-owned master and the edit target. Keep its exact crop, placement, head angle, expression, gaze, paper-white negative space, black ink masses, broken dry-brush edges, splatters and long diagonal strokes. No third-party effect reference is included. Scene-change budget is 0%. Replace only the animal identity with the exact adult adult German Shepherd from Image 2. Use Image 2 only to recognise breed silhouette, ears and coat-marking layout; do not render or copy its face, eyes, nose, fur texture, lighting, colour or photographic depth. Use the gaze from Image 1 exactly. Paint the complete new face in the exact same black-ink vocabulary as Image 1: a few broad opaque black shapes, paper gaps, broken dry edges and sparse decisive lines. The face and body must be one continuous hand-painted ink work, never a detailed portrait placed over an ink-stroke body. No realistic or pencil-rendered eyeballs, irises, catchlights, nose volume, individual fur direction, grey micro-shading, gradients, 3D anatomy, photography, colour, text, logo, watermark or signature. Keep a mature, healthy and attractive breed silhouette with correct connected anatomy.",
+  "revisedPrompt": "Create a single 720x1280 vertical monochrome ink illustration on warm white paper. Base the composition on a stylized dog bust in left-facing profile/three-quarter view with the exact same crop, placement, head angle, gaze direction, expression, paper-white negative space, black ink masses, broken dry-brush edges, splatters, and long diagonal strokes as the reference ink artwork described by the user. Replace only the animal identity with an adult German Shepherd silhouette: upright alert ears, noble wedge-shaped head, connected neck and shoulder anatomy, mature healthy build, and the characteristic German Shepherd coat-marking layout interpreted abstractly in black ink. Keep the face and body as one continuous hand-painted ink work, not a realistic portrait. Use only broad opaque black shapes, paper gaps, broken dry edges, and sparse decisive lines for the face; no realistic eyes, irises, catchlights, nose volume, individual fur texture, gradients, 3D anatomy, photography, color, text, logo, watermark, or signature. Match the gaze from the original ink image exactly, with the same serene alertness. Preserve dramatic black splatter and diagonal stroke energy around the right side and lower portion of the figure, leaving clean negative space on the paper-white background.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation-third-batch/ink-portrait_dog_german-shepherd-dog_9x16_v03.png",
+    "sha256": "5bd861e53ff5c71be957b9431d435b144821001055d1b7ad01f9f72fe705429b"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "checks": {
+      "petIdentity": "pass",
+      "adultAgeAndProportions": "pass",
+      "masterPoseExpressionAndGaze": "pass",
+      "masterStyleAndBrushwork": "pass",
+      "sceneAndComposition": "pass",
+      "anatomyAndContacts": "pass",
+      "repeatedIdentityAndText": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [],
+    "finalApproval": "approved",
+    "approvedAt": "2026-08-17T12:22:43+08:00"
+  },
+  "generatedAt": "2026-08-17T02:38:55.613Z"
+}

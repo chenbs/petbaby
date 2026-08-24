@@ -1,0 +1,55 @@
+{
+  "kind": "master-candidate",
+  "templateId": "animal-car-window-westie",
+  "title": "车窗风中写真",
+  "status": "candidate-pending-stability-review",
+  "runtimeMasterUseAllowed": false,
+  "source": {
+    "role": "approved-dedicated-public-preview",
+    "path": "tools/imagegen/out/reference-v1/masters/animal-car-window-westie_public-v02-master-v01.webp",
+    "sha256": "ce10c248c6befe6e6e262f8247828453d73d4503bbffb33a1c0ccdc400a78955",
+    "publicVersion": "public-v02",
+    "metadataPath": "tools/imagegen/out/reference-v1/public-previews/metadata/animal-car-window-westie_public-v02.json",
+    "generationInputRole": "effect-reference-edit-target"
+  },
+  "currentFrozenMaster": {
+    "path": "tools/imagegen/out/reference-v1/retired-masters/animal-car-window-westie_poodle-dog_16x9_v01.png",
+    "sha256": "4189a33b25626e7399050ee24aaa5bd15539c660f981d20f1781c2d9b0851880",
+    "approvedAt": "2026-08-18T01:00:00+08:00"
+  },
+  "candidate": {
+    "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/candidates/animal-car-window-westie_public-v02_master-candidate.png",
+    "sha256": "f8a53f1ba1fb9f701c3d11c45eb07d0625edc116ff57335bf1b281b484ef48c0",
+    "byteIdenticalToPublicPreview": true,
+    "orientation": "landscape",
+    "size": "1280x720"
+  },
+  "apiInputDerivative": {
+    "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/api-inputs/animal-car-window-westie_public-v02_master-candidate.jpg",
+    "sha256": "9eed162f218489f1d03e4d6b9a3c1baec8d47f2bb407b6e11f965e9732f1ce25",
+    "format": "jpeg",
+    "quality": 82,
+    "width": 1200,
+    "height": 675,
+    "bytes": 77340,
+    "maxEdgeLimit": 1200,
+    "perFileByteLimit": 460000
+  },
+  "provenance": {
+    "originalEffectReferenceUsedForPublicPreview": true,
+    "frozenMasterUsedToGeneratePublicPreview": false,
+    "thirdPartyEffectReferenceAllowedAtRuntime": false
+  },
+  "productionPromptExtensionOnPromotion": "Keep the pet leaning from the yellow car window, light green shirt, windblown fur, blue sky, green roadside landscape and the same horizontal travel-photo framing.",
+  "review": {
+    "stabilityIdentities": [
+      "british-shorthair-cat",
+      "german-shepherd-dog",
+      "cream-longhair-cat"
+    ],
+    "expectedOutputs": 3,
+    "state": "pending-generation",
+    "finalApproval": "pending-user"
+  },
+  "preparedAt": "2026-08-20T06:36:59.210Z"
+}

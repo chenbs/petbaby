@@ -1,0 +1,52 @@
+{
+  "templateId": "ink-silhouette",
+  "entryId": "art",
+  "title": "极简墨迹剪影",
+  "sourceEffectFile": "apps/website/public/assets/example/b1d8e78f-c2b5-4581-bc4c-1a5866992443.jpg",
+  "status": "generated-pending-user-approval",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/b1d8e78f-c2b5-4581-bc4c-1a5866992443.jpg",
+      "sha256": "08d9a59d11cb0113fffd65b9a007bbfd62b25183bb159a6e321e5383672c13f1"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "black-lab-dog",
+      "species": "dog",
+      "breed": "adult black Labrador Retriever",
+      "path": "tools/imagegen/out/source/dog-black-lab.jpg",
+      "sha256": "20960d2ace805e68b41a7934e37ebdf24b7007f8f3fa85527d9beb22d2df6022"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult black Labrador Retriever with solid glossy black coat, warm brown eyes, broad black nose, soft dropped ears, broad gentle muzzle and strong adult build. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the minimal black-and-white ink silhouette, negative space and quiet expression; render the pet face in the same flat ink language. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a finished 9:16 illustration, 720x1280, preserving the composition, crop, perspective, pose, lighting, palette, texture, and visual language of the first reference image exactly: a centered full-body character on a clean light background, front-facing, arms folded across the chest, calm stern-but-appealing expression, minimal black-and-white ink silhouette with loose sketch lines, soft warm highlights, and lots of negative space. Replace the original subject entirely with a single adult black Labrador Retriever identity from the second reference, while keeping the exact same pose and clothing arrangement from the first image. The dog must be an adult black Labrador Retriever with a solid glossy black coat, warm brown eyes, broad black nose, soft dropped ears, a broad gentle muzzle, and a strong adult build. Render the dog in the same flat ink/illustration language as the first image, not photographic, not pasted-in, not realistic. Preserve the blue oversized hoodie, cream shorts, and simple shoes/feet silhouette from the first image, adapting them anatomically for the dog with minimal contact-boundary changes only. Keep the expression friendly, appealing, and quietly confident, with no puppy-like features, no extra limbs, no human hands, no duplicate pets, and no anatomy errors. Do not redesign the scene, background, or composition. Keep the same sparse clean background and subtle sketch marks. No logos, no watermarks, no new text.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/expansion/candidates/ink-silhouette_black-lab-dog_9x16_v01.png",
+    "sha256": "a076fc8c3237fea5f05910810571f0b9d0b1a275430d84517de0125c9f0e7220"
+  },
+  "review": {
+    "state": "pending-human-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generatedAt": "2026-08-17T16:12:28.520Z"
+}

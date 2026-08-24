@@ -1,0 +1,60 @@
+{
+  "purpose": "preview-only-direct-pet-to-human-transfer",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "modelCall": true,
+  "useCase": "identity-preserve",
+  "strategy": "single-stage-direct-human-master-plus-original-pet",
+  "status": "preview-pending-user-review",
+  "title": "黑色裁缝 x 英短（直接方案）",
+  "generatedAt": "2026-08-19T06:48:21.944Z",
+  "currentCallStage": 1,
+  "originalPetPhotoIncluded": true,
+  "humanIdentityCardIncluded": false,
+  "requestOrder": [
+    "self-owned-human-master",
+    "original-pet-photo"
+  ],
+  "inputs": {
+    "image1": {
+      "role": "self-owned-human-master",
+      "path": "tools/imagegen/out/humanization-v1/masters/candidates/human-tailored-suit_9x16_v01.png",
+      "sha256": "89dfb5bc412a0f6121e5cb435e6b7e06b3da5ac567efec061e429d8e5842640e",
+      "dimensions": {
+        "width": 941,
+        "height": 1672
+      }
+    },
+    "image2": {
+      "role": "original-pet-photo",
+      "path": "tools/imagegen/out/source/cat-british.jpg",
+      "sha256": "ddbdfb39b6cb3c6dddbfdd01555cd2fea299cfa927f76a1e7248d581152e0364",
+      "dimensions": {
+        "width": 1200,
+        "height": 1600
+      }
+    }
+  },
+  "request": {
+    "size": "720x1280",
+    "quality": "high",
+    "outputFormat": "png",
+    "inputFidelity": "high",
+    "prompt": "Use case: identity-preserve\nAsset type: preview-only direct pet-to-human identity transfer\nPrimary request: Create a new human facial identity for the adult human in Image 1, inferred directly from the original pet in Image 2. This is the single-stage direct method: human master plus original animal photo. Do not use or imagine an intermediate human identity card.\nInput images: Image 1 is the self-owned human master and the only authority for the final composition and all non-facial content. Image 2 is the original pet photo and is the sole identity inspiration, never a subject to paste into the result.\nPet identity to translate into natural human facial traits: adult blue British Shorthair cat: broad round face, amber eyes, compact nose-to-mouth proportions, dense blue-grey coloring and serious direct gaze.\nRequired identity change: Do not retain Image 1's original facial identity. Infer a recognizably different but fully natural adult human face directly from Image 2. Translate only the pet's eye color relationship, gaze, expression, face-width relationship, visual contrast and distinctive proportions into plausible human facial features.\nMaster invariants: Preserve Image 1 exactly outside the minimum facial identity change. Scene-change budget is 0%. Preserve its composition, camera, crop, complete adult human body, pose, gaze direction, expression intensity, hairstyle silhouette, clothing, accessories, scene, lighting, color, rendering medium, brushwork and texture.\nTemplate-specific invariants: Preserve the complete black tailored suit, gloves, seated pose, brooch and geometric background.\nStrict human-only result: The output must contain exactly one complete, credible adult human and no visible animal. Convert every identity cue into normal human anatomy. No animal ears, beak, animal nose, muzzle, snout, fur, feathers, whiskers, tail, paws, claws, slit pupils or hybrid anatomy.\nAvoid: keeping the original human face unchanged, showing Image 2 or its background, adding an animal, costume animal traits, changed body or pose, changed clothing, changed hairstyle silhouette, changed scene, changed lighting, changed style, text, logo, watermark or malformed anatomy."
+  },
+  "providerOutput": {
+    "dimensions": {
+      "width": 941,
+      "height": 1672
+    },
+    "revisedPrompt": "Edit the provided human portrait using the provided cat photo as the sole identity inspiration. Keep Image 1 exactly the same everywhere except the face: preserve the full seated pose, black tailored suit, striped shirt, black tie, gloves, brooch, hairstyle silhouette, camera angle, crop, background, lighting, rendering style, and all non-facial details. Replace the existing human facial identity with a new, fully natural adult human face directly translated from the cat's traits: broad rounded face structure, large amber-brown eyes with a serious direct gaze, compact nose-to-mouth proportions, subtle cool-toned complexion inspired by blue-grey coloring, and a calm intense expression. Make the result a single credible adult human only, with normal human anatomy and no animal features. No ears, whiskers, muzzle, snout, fur, paws, claws, slit pupils, or hybrid traits. Realistic, seamless, identity-preserved full-body portrait."
+  },
+  "output": {
+    "path": "tools/imagegen/out/humanization-v1/probes/lingsuan-direct-round-01/human-tailored-suit_blue-british-cat_direct_9x16_v01.png",
+    "sha256": "aaba053d5bfa20eb499e49a9088422e09c7828a53db6db7c6b7603843d76f1d9",
+    "dimensions": {
+      "width": 720,
+      "height": 1280
+    }
+  }
+}

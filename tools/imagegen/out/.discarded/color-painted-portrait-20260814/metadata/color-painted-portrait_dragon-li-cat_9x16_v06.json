@@ -1,0 +1,65 @@
+{
+  "templateId": "color-painted-portrait",
+  "title": "彩色绘画肖像",
+  "entryId": "art",
+  "status": "master-candidate-pending-user-approval",
+  "subject": "dragon-li-cat",
+  "breed": "狸花猫",
+  "revision": {
+    "version": "v06",
+    "supersedes": "color-painted-portrait_dragon-li-cat_9x16_v05.png",
+    "reviewFinding": "v05 已消除镜面眼球，但面部仍偏粗颗粒物理颜料，线条不够细腻，可爱度不足。",
+    "scope": "fine-watercolor-cartoon-face-style-transfer"
+  },
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "previous-master-candidate-edit-target",
+      "path": "tools/imagegen/out/reference-v1/candidates/color-painted-portrait_dragon-li-cat_9x16_v05.png",
+      "sha256": "de29fac422c28b79bc94ddbb5ff47caf2249cc2e73d9f2350c6bcee308c61bc2"
+    },
+    {
+      "role": "third-party-watercolor-cartoon-effect-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/4f109cb7-2809-459a-93ef-5e7775e16280.jpg",
+      "sha256": "620aa0a865818f88025ed9345f86e0f38a113520a91627a1dfd1535136b0035a"
+    },
+    {
+      "role": "pet-identity-only-reference",
+      "path": "apps/website/public/assets/avatar-dragonli.jpg",
+      "sha256": "0f403599969b57f32aa314cf474ce4d57d28f48683e16ae9a032d73b94079732"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: precise face-style edit with pet identity preservation. Create a vertical 9:16 illustrated pet portrait at exactly 720x1280 pixels from exactly three input images. Image 1 is the edit target. Preserve its exact half-body pose, body proportions, tabby body pattern, orange field, teal and coral accents, negative space and all paint below the neck. The body and composition are approved and must not be redesigned. Image 2 is the authoritative effect reference for facial delicacy and illustration language. Study its refined soft watercolour face, small controlled line strokes, simplified cute proportions, gentle open illustrated eyes and clean transition into colourful brush fields. Remove its watermark and do not copy its original breed. Repaint the complete face as delicate contemporary watercolour-and-ink illustration, not thick impasto and not a physical realistic animal portrait. Use fine tapered ink contours, small controlled fur-line groups, translucent watercolour washes, soft colour blooms, subtle paper grain and clean cel-like shadow shapes. Keep facial detail fine-grained and refined at close viewing. Use a slightly cartooned, manga-like facial design: rounder cheeks, a shorter softer muzzle, clear appealing eye shapes, simplified planes and a friendly youthful expression. Preserve breed identity without preserving photographic realism. The eyes, nose and mouth must be drawn illustration forms. Use clean linework and a few flat watercolour values; avoid spherical glass depth, wet reflections, pores, realistic lens highlights and sculpted 3D shading. Strictly avoid coarse pigment chunks, palette-knife ridges on the face, canvas relief, cracked paint, gritty granulation, thick oil paint, photoreal fur, camera-resolved whiskers, realistic-world lighting, airbrushed 3D rendering or a pasted photo face. For the Dragon Li cat, use two open, friendly yellow-green illustrated eyes with fine charcoal outlines, simple vertical pupils and at most one tiny flat cream brush dot per eye. The eyes must remain flat drawn shapes with visible paper wash, not glossy spheres. Draw the pink-brown nose as a small coral watercolour triangle with a delicate broken ink contour. Use a tiny relaxed closed-mouth smile and a short rounded muzzle. Build the forehead M, cheek stripes, brows and facial fur from fine tapered ink strokes plus translucent brown-grey wash. Use many small refined line groups rather than large pigment chunks. Keep whiskers sparse, thin, slightly broken and visibly drawn. Image 3 is identity-only. Preserve the brown-grey mackerel tabby colour, forehead M, dark cheek stripes, yellow-green eyes, pink-brown nose, upright ears and rounded face. Do not import photographic lighting, individual real hairs, lens sharpness or realistic surface texture. Increase cuteness through rounder cheeks, a shorter muzzle, slightly larger illustrated eyes, a gentle bright expression and clean contemporary proportions. Keep it young, healthy and lovable, never stern, sleepy, elderly or uncanny. Blend the refined watercolour head naturally into the approved body with smaller transitional strokes. Keep exactly one cat with correct anatomy. No text, logo, platform mark, watermark or signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "prechecked-pending-user-approval",
+    "checks": {
+      "petIdentity": "pass",
+      "cuteness": "pass",
+      "effectComposition": "pass",
+      "faceLineDelicacy": "pass",
+      "watercolorCartoonStyle": "pass",
+      "physicalRealismReduction": "pass",
+      "anatomy": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [
+      "面部改为细排线、浅水彩铺色与简化漫画五官；眼睛明亮但保持扁平插画结构，圆脸和短口鼻提升了年轻可爱度。"
+    ],
+    "finalApproval": "pending-user"
+  },
+  "generatedAt": "2026-08-13T10:17:25.255Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/color-painted-portrait_dragon-li-cat_9x16_v06.png",
+    "sha256": "ed5815825e17ae8fc31ac83a84ec41d2bfa1d7c89c7e3e12436d09bb0c038a3e"
+  }
+}

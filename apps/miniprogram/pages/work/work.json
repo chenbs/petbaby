@@ -1,0 +1,14 @@
+{
+  "navigationBarTitleText": "作品详情",
+  "navigationStyle": "custom",
+  "enableShareAppMessage": true,
+  "usingComponents": {
+    "t-glass-sheet": "../../components/glass-sheet/index",
+    "t-navbar": "../../components/navbar/index",
+    "t-button": "../../components/button/index",
+    "t-tag": "../../components/tag/index",
+    "t-notice": "../../components/notice/index",
+    "t-dialog": "../../components/dialog/index",
+    "t-skeleton": "../../components/skeleton/index"
+  }
+}

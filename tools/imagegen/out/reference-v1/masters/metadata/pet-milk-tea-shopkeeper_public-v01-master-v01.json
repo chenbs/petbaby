@@ -1,0 +1,86 @@
+{
+  "kind": "frozen-master",
+  "templateId": "pet-milk-tea-shopkeeper",
+  "title": "奶茶店主理人",
+  "status": "approved-frozen-master",
+  "subjectMode": "pet",
+  "version": "public-v01-master-v01",
+  "orientation": "portrait",
+  "size": "720x1280",
+  "sourcePublicPreview": {
+    "path": "tools/imagegen/out/reference-v1/masters/pet-milk-tea-shopkeeper_public-v01-master-v01.webp",
+    "sha256": "c88f2aafc907b1772f7c909f71835e1f6c15eba5913478ba89bdf305881cbeaf",
+    "publicVersion": "public-v01",
+    "metadata": "tools/imagegen/out/reference-v1/public-previews/metadata/pet-milk-tea-shopkeeper_public-v01.json",
+    "byteIdentical": true,
+    "generatedFromOriginalEffectReference": true,
+    "generatedFromPreviousFrozenMaster": false
+  },
+  "derivedEffectReference": {
+    "role": "original-effect-reference-internal-audit-only",
+    "source": "apps/website/public/assets/example/1786367423393.png",
+    "excludedAtRuntime": true,
+    "publicUseAllowed": false
+  },
+  "previousFrozenMaster": {
+    "path": "tools/imagegen/out/reference-v1/masters/pet-milk-tea-shopkeeper_public-v01-master-v01.webp",
+    "sha256": "c88f2aafc907b1772f7c909f71835e1f6c15eba5913478ba89bdf305881cbeaf",
+    "metadata": "tools/imagegen/out/reference-v1/masters/metadata/pet-milk-tea-shopkeeper_public-v01-master-v01.json",
+    "retainedForRollback": true
+  },
+  "masterPath": "tools/imagegen/out/reference-v1/masters/pet-milk-tea-shopkeeper_public-v01-master-v01.webp",
+  "masterSha256": "c88f2aafc907b1772f7c909f71835e1f6c15eba5913478ba89bdf305881cbeaf",
+  "provider": "lingsuan",
+  "endpoint": "/v1/images/edits",
+  "runtimeReferenceContract": {
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/pet-milk-tea-shopkeeper_public-v01-master-v01.webp",
+      "sha256": "c88f2aafc907b1772f7c909f71835e1f6c15eba5913478ba89bdf305881cbeaf"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "public-preview-storage-key",
+      "rejected-promotion-candidate"
+    ]
+  },
+  "runtimePromptExtension": "Keep the pet behind the milk-tea counter, paper shop hat, beige apron, cups and tapioca props, warm cream shop interior and all existing sign layout.",
+  "stabilityReview": {
+    "state": "approved-by-user",
+    "identities": [
+      {
+        "identityId": "british-shorthair-cat",
+        "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/pet-milk-tea-shopkeeper/pet-milk-tea-shopkeeper_british-shorthair-cat_stability-v01.png",
+        "outputSha256": "90c00bd7fa1271ae23c993d5e57063a12355f9d697db8a276daa99833e11a32b",
+        "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/pet-milk-tea-shopkeeper/metadata/pet-milk-tea-shopkeeper_british-shorthair-cat_stability-v01.json"
+      },
+      {
+        "identityId": "german-shepherd-dog",
+        "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/pet-milk-tea-shopkeeper/pet-milk-tea-shopkeeper_german-shepherd-dog_stability-v01.png",
+        "outputSha256": "dc8a9bf97d509d3be0d70b20adf8cf3a0e640508539f554db8e61d531ed91ca5",
+        "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/pet-milk-tea-shopkeeper/metadata/pet-milk-tea-shopkeeper_german-shepherd-dog_stability-v01.json"
+      },
+      {
+        "identityId": "cream-longhair-cat",
+        "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/pet-milk-tea-shopkeeper/pet-milk-tea-shopkeeper_cream-longhair-cat_stability-v01.png",
+        "outputSha256": "586b3aec6b16a2bd1cd5edcfb6fac1c0108c32641281318996c83cb1f5dea438",
+        "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/pet-milk-tea-shopkeeper/metadata/pet-milk-tea-shopkeeper_cream-longhair-cat_stability-v01.json"
+      }
+    ],
+    "approvedAt": "2026-08-20T06:57:35.480Z"
+  },
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-20T06:57:35.480Z",
+    "note": "用户审核公开展示图升母版稳定性总览后明确批准。"
+  },
+  "publicUseAllowed": false,
+  "runtimeMasterUseAllowed": true,
+  "runtimeThirdPartyEffectReferenceIncluded": false
+}

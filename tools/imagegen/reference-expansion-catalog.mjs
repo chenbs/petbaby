@@ -1,0 +1,114 @@
+import path from "node:path";
+
+const ROOT = path.resolve(import.meta.dirname, "../..");
+const EFFECT_ROOT = path.join(ROOT, "apps", "website", "public", "assets", "example");
+const PET_ROOT = path.join(ROOT, "tools", "imagegen", "out", "source");
+const ASSET_ROOT = path.join(ROOT, "apps", "website", "public", "assets");
+
+export const expansionOutputSpecs = {
+  portrait: { size: "720x1280", ratio: "9x16", width: 720, height: 1280 },
+  landscape: { size: "1280x720", ratio: "16x9", width: 1280, height: 720 }
+};
+
+export const identities = {
+  "black-cat": { species: "cat", breed: "adult black domestic shorthair cat", path: path.join(PET_ROOT, "cat-black.jpg"), identity: "solid glossy black coat, vivid green eyes, black nose, upright ears and a compact healthy adult body" },
+  "blue-british-cat": { species: "cat", breed: "adult blue British Shorthair cat", path: path.join(PET_ROOT, "cat-british.jpg"), identity: "solid blue-grey coat, round broad face, amber eyes, small upright ears, plush dense fur, thick tail and sturdy adult body" },
+  "siberian-longhair-cat": { species: "cat", breed: "adult golden-tabby Siberian forest cat", path: path.join(import.meta.dirname, "out", "reference-v1", "pending-remediation-20260820", "identities", "identity-siberian-longhair-cat_v01.png"), identity: "dense golden-brown triple coat, full neck ruff, broad rounded wedge-shaped face, green-gold eyes, tufted upright ears, large plume tail and sturdy adult forest-cat body" },
+  "cream-cat": { species: "cat", breed: "adult cream long-haired cat", path: path.join(PET_ROOT, "cat-cream.jpg"), identity: "pale cream long coat, soft cream points, blue eyes, pink nose, triangular ears, fluffy tail and healthy adult body" },
+  "tuxedo-cat": { species: "cat", breed: "adult black-and-white tuxedo cat", path: path.join(PET_ROOT, "cat-tuxedo.jpg"), identity: "black crown and ears, narrow white facial blaze, white muzzle and chest, pale green eyes, pink nose, black back and white front legs" },
+  "ragdoll-cat": { species: "cat", breed: "adult seal-point Ragdoll cat", path: path.join(ASSET_ROOT, "work-ragdoll.jpg"), identity: "cream long coat, deep seal-brown mask and ears, round blue eyes, broad fluffy cheeks, dark nose, full chest and healthy adult body" },
+  "dragon-li-cat": { species: "cat", breed: "adult Chinese Dragon Li tabby cat", path: path.join(ASSET_ROOT, "avatar-dragonli.jpg"), identity: "brown tabby coat, clear forehead stripes, warm eyes, upright ears, broad muzzle and healthy adult proportions" },
+  "abyssinian-cat": { species: "cat", breed: "adult Abyssinian cat", path: path.join(ASSET_ROOT, "avatar-abyssinian.jpg"), identity: "warm ruddy ticked coat, large alert ears, almond eyes, refined muzzle and healthy adult body" },
+  "golden-dog": { species: "dog", breed: "adult Golden Retriever", path: path.join(PET_ROOT, "dog-golden.jpg"), identity: "warm golden coat, floppy feathered ears, dark friendly eyes, broad soft muzzle and strong healthy adult build" },
+  "husky-dog": { species: "dog", breed: "adult grey-and-white Siberian Husky", path: path.join(PET_ROOT, "dog-husky.jpg"), identity: "symmetrical grey cap, broad white blaze, white muzzle and chest, ice-blue eyes, upright ears and dense adult coat" },
+  "corgi-dog": { species: "dog", breed: "adult Pembroke Welsh Corgi", path: path.join(PET_ROOT, "dog-corgi.jpg"), identity: "tan-and-white coat, broad white blaze, white muzzle and chest, dark round eyes, upright ears, short legs and sturdy adult body" },
+  "shiba-dog": { species: "dog", breed: "adult red Shiba Inu", path: path.join(PET_ROOT, "dog-shiba.jpg"), identity: "red-and-cream coat, cream cheeks and chest, dark almond eyes, triangular ears, curled tail and compact adult body" },
+  "black-lab-dog": { species: "dog", breed: "adult black Labrador Retriever", path: path.join(PET_ROOT, "dog-black-lab.jpg"), identity: "solid glossy black coat, warm brown eyes, broad black nose, soft dropped ears, broad gentle muzzle and strong adult build" },
+  "shepherd-dog": { species: "dog", breed: "adult German Shepherd", path: path.join(ASSET_ROOT, "hero-shepherd.jpg"), identity: "tan coat with defined black saddle and mask, brown eyes, tall upright ears, black muzzle and athletic adult build" },
+  "poodle-dog": { species: "dog", breed: "adult Toy Poodle", path: path.join(ASSET_ROOT, "avatar-poodle.jpg"), identity: "apricot curly coat, dark round eyes, compact muzzle, floppy curly ears and healthy adult proportions" },
+  "longhair-chihuahua-dog": { species: "dog", breed: "adult long-coated Chihuahua", path: path.join(import.meta.dirname, "out", "reference-v1", "pending-remediation-20260820", "identities", "identity-longhair-chihuahua_v01.png"), identity: "cream-and-tan long silky coat, large upright feathered ears, dark almond eyes, compact tapered muzzle, feathered chest and tail, and petite but clearly adult healthy proportions" },
+  "border-dog": { species: "dog", breed: "adult Border Collie", path: path.join(ASSET_ROOT, "work-border.jpg"), identity: "black-and-white coat, white blaze and chest, intelligent eyes, feathered tail and athletic adult build" }
+};
+
+const rows = [
+  ["fun-chef-expression-grid", "fun", "1786369023697.png", "siberian-longhair-cat", "portrait", "厨师表情九宫格", "Keep the complete 3x3 chef grid, chef hat, apron, food props and expression rhythm; every cell must show the same adult Siberian forest cat. Recompose the grid with generous white outer margins and safe gutters so the entire left and right columns, ears, hats, faces, aprons and props remain fully visible with nothing touching or crossing the canvas edges.", "v02"],
+  ["fun-breed-expression-grid", "fun", "9e6a1f75-ae77-4a9b-a9ac-fd7a20c3408d.jpg", "corgi-dog", "portrait", "品种表情九宫格", "Keep the nine-cell expression and pose array, but replace every breed depiction with one identical adult pet."],
+  ["fun-bubble-cat", "fun", "5deeda1a-3bb9-4994-b381-6ce5d704541f.jpg", "cream-cat", "portrait", "气泡萌语", "Keep the cute illustration, paws, face framing and speech bubble; set the short bubble text to exactly '哎'."],
+  ["fun-scream-reaction", "fun", "1786368532819.png", "husky-dog", "portrait", "尖叫瞬间", "Keep the open-mouth surprised expression and speed-line sketch energy, but push the reaction farther: make both eyes noticeably larger and more unevenly startled, make the open mouth noticeably wider and taller, and add more loose simple hand-drawn motion marks, scratch lines and nervous doodles around the head. Preserve a friendly, appealing adult Husky face rather than horror or ugliness.", "v02"],
+  ["fun-comic-panels", "fun", "1786369082391.png", "tuxedo-cat", "portrait", "城堡巨型伙伴", "Keep the illuminated castle lake, starry blue night, giant sparkling dandelion-shaped pet head in the sky and smaller clothed pet in the foreground. Both depictions must be the exact same tuxedo cat identity with matching feline ears, muzzle and markings; no source dog or poodle may remain. Give both the giant sky face and the foreground cat a clearly visible happy smiling mouth, matching the cheerful expression in the effect reference. Preserve the scale contrast, reflections, outfit and composition, and remove every watermark or account mark.", "v03"],
+  ["fun-beach-caption", "fun", "1786369093259.png", "shiba-dog", "portrait", "海边三格字幕", "Keep the beach and the exact three-panel action and caption timing. Preserve bilingual Chinese-and-English subtitles in every panel. Render the three Chinese lines verbatim as '山的那边是什么--', '你不用告诉我--', and '我自己会去看'. Render their English lines verbatim as '-What\'s beyond the mountain?', '-You don\'t have to tell me', and 'I will go and see it myself'. The last Chinese line must be exactly '我自己会去看', never '我自己去看看'. Do not omit the English subtitles and do not add alternative wording.", "v02"],
+  ["fun-bunny-reaction", "fun", "1786369106856.png", "longhair-chihuahua-dog", "portrait", "情绪角色头像", "Keep the ornate white lace dress, wide lace bonnet, pearl details, pink flower arrangements, tea service, symmetrical front-facing pose and refined interior exactly as in the effect reference. Replace only the source dog identity with the exact adult long-coated Chihuahua identity. Preserve the Chihuahua's long silky facial coat, large feathered upright ears, petite mature proportions and calm direct gaze while matching the same polished photographic language.", "v02"],
+  ["fun-heart-comic", "fun", "1786369146856.png", "cream-cat", "portrait", "四格爱心漫画", "Keep the four-panel comic, centre heart and soft handwritten marks; use one consistent pet identity."],
+  ["fun-fisheye-closeup", "fun", "bb3a7964-f059-42f2-bb86-94ca19577549.jpg", "black-cat", "portrait", "鱼眼近脸", "Keep the extreme fisheye nose-and-mouth perspective and candid snap feeling without importing photographic facial texture. Match the effect reference's distinctive sharp upper eyelids: both upper lids form clean inward-descending angular lines that create a focused, slightly stern gaze while the lower lids stay natural. Do not use round, wide-open, soft or pleading eye contours. Remove the source platform badge, account number and every lower-corner watermark; leave that corner as natural background.", "v03"],
+  ["fun-handwritten-greeting", "fun", "fc5b8d09-bd2a-497e-a61e-b503b478166e.jpg", "corgi-dog", "portrait", "手写问候头像", "Keep the upward-looking playful illustration, handwritten greeting and small portrait inset; replace the dog identity only."],
+  ["travel-rome-dog-selfie", "travel", "1786368846261.png", "corgi-dog", "portrait", "罗马地标自拍", "Keep the close selfie, headscarf and landmark composition; preserve the landmark while removing any person identity."],
+  ["travel-great-wall-drink", "travel", "1786368865262.png", "husky-dog", "portrait", "长城举杯自拍", "Keep the first-person arm, drink prop and Great Wall context; adapt the paw contact naturally."],
+  ["travel-paris-dog-selfie", "travel", "1786368934169.png", "black-lab-dog", "portrait", "巴黎街景自拍", "Keep the city selfie, exact black sunglasses over both eyes, striped shirt, red neck scarf, outstretched selfie foreleg, pet-forward framing, Eiffel Tower placement and busy daylight background exactly as in the effect reference. Make the Labrador smile only a little more happily, with a relaxed wider open mouth. Brighten only the striped shirt and red neck scarf slightly so their whites, blues and reds look cleaner and more vivid. The sunglasses are mandatory and must remain correctly worn over both eyes; do not remove, shrink or replace them. Do not change the camera, crop, daylight, background, crowd, landmark or overall exposure.", "v03"],
+  ["travel-alpine-expedition", "travel", "1786368973628.png", "golden-dog", "portrait", "雪山探险大片", "Keep the large alpine environment, outdoor jacket and expedition mood; do not turn the adult dog into a puppy."],
+  ["travel-glass-summer", "travel", "5.png", "tuxedo-cat", "portrait", "透明杯夏日视角", "Keep the inside-the-glass perspective, straw contact, summer colour and wide-angle distortion."],
+  ["pet-milk-tea-shopkeeper", "career", "1786367423393.png", "black-cat", "portrait", "奶茶店主理人", "Keep the milk-tea counter, hat, shop display and service pose; adapt text to an original pet shop."],
+  ["pet-streetwear-editorial", "career", "1786367513696.png", "blue-british-cat", "portrait", "潮流街拍主理人", "Keep the sunglasses, pink hoodie, clean studio and fashion-editorial pose; make the sunglasses sit correctly on the eyes."],
+  ["pet-autumn-festival", "career", "1786367822183.png", "shiba-dog", "portrait", "秋日节庆写真", "Keep the pumpkin, wreath, harvest palette and seasonal portrait; preserve adult proportions."],
+  ["pet-forest-editorial", "career", "4e6fe13f-584d-47a8-9cfc-069e441d2e1b.jpg", "poodle-dog", "portrait", "森林棚拍主理人", "Keep the mossy forest set, grey clothing and editorial studio staging; add a clear action beyond a passive outfit swap."],
+  ["pet-monocle-editorial", "career", "7fa6574b-3f24-44cb-a07b-a9796163471e.jpg", "golden-dog", "portrait", "单片眼镜绅士", "Keep the orange studio, denim styling and monocle; preserve a friendly adult pet and a clear professional pose."],
+  ["action-giant-companion", "action", "1786369038890.png", "ragdoll-cat", "portrait", "巨型伙伴幻想", "Keep the original effect reference's giant-versus-small same-pet fantasy, exact cloud glow, frontal walking pose, reaching forepaw, tiny seated companion, scale contrast, palette and camera. Both depictions must be the same appealing adult seal-point Ragdoll from the identity reference, with the same cream long coat, seal mask and ears, blue eyes and broad fluffy face. Do not use any frozen master or previous candidate as a reference.", "v02"],
+  ["action-original-sci-fi-poster", "action", "6.png", "shepherd-dog", "portrait", "原创科幻海报", "Keep the double-exposure face, city depth, dramatic poster hierarchy and epic scale, but replace all known film/person/brand language with original pet-safe wording."],
+  ["character-outfit-grid", "character", "1786369014024.png", "husky-dog", "portrait", "穿搭动作设定九宫格", "Keep the complete 3x3 outfit, scarf, leaf prop and movement grid. All nine cells must show the exact same grey-and-white adult Husky with the same cap, blaze, blue eyes, ears and adult body; only pose, expression and clothing state may vary. No brown dog, white dog, different breed, cropped cell or missing pose.", "v03"],
+  ["character-product-blueprint", "character", "3.png", "corgi-dog", "portrait", "宠物产品设定蓝图", "Keep the complete portrait blueprint with the central prototype, front-side-top construction views, seam diagrams, material swatches, packaging and callouts. Show one complete natural adult Corgi wearing an original penguin-inspired pet hood and garment, with ears, hood tip, paws and garment hem all visible inside a generous 8% canvas margin. No cropped head, human face, human hands, human torso or simplified single mascot; every diagram must describe the same wearable pet garment.", "v04"],
+  ["character-snow-leopard", "character", "9a19d816-2ff7-48cd-8fb4-e7808ca8d590.jpg", "tuxedo-cat", "portrait", "雪豹幻想角色设定", "Use only the original effect reference for composition and character design. Keep its exact dense portrait sheet: one complete upright full-body view at left and the same three head studies at right. Preserve the character's long layered pale hairstyle in every view, including the sweeping fringe, side locks, cheek tufts and long back hair; the hair must remain visibly separate from the cat fur and fit the tuxedo-cat identity. Rebuild the facial features from the effect reference: preserve its exact large almond eye shape, upper-eyelid angle, brow rhythm, compact nose-and-muzzle construction, cheek silhouette, mouth curve and confident friendly expressions, translated into one consistent adult tuxedo cat with black crown, white blaze, white muzzle and green eyes. Preserve the layered outfit, jewellery, hand pose, proportions and spacing while converting hands into clean fur-covered paws. Do not fall back to a generic photographic cat face, bald cat head, ordinary pet portrait, frozen master or previous candidate. No cropped feet, missing view, watermark or source character identity.", "v06"],
+  ["character-white-tiger", "character", "9f8ebfc6-fb68-4b47-a7bb-625d105d4f12.jpg", "blue-british-cat", "portrait", "白虎多姿态设定", "Use only the original effect reference for composition and character design. Keep the complete portrait multi-view sheet with the full-body view at left and both large expression studies at right. Preserve the character's distinctive thick swept-back pale hairstyle in every view, including the central fringe, layered side spikes and high rear tufts; the hair must remain visible and structurally consistent above and between the cat ears. Rebuild the facial features from the effect reference: preserve its exact sharp almond eyes, heavy angled upper eyelids, brow line, small triangular nose, compact muzzle, smiling and winking mouth shapes, cheek-fur silhouette and playful confident expressions, translated into one consistent adult blue British Shorthair with a blue-grey coat, amber eyes and round sturdy face. Preserve every pose, peace-sign gesture, outfit layer, headband, armour and spacing while converting hands into clean fur-covered paws. Do not fall back to a generic photographic cat face, bald round cat head, ordinary pet portrait, frozen master or previous candidate. Fit every view fully inside the canvas; no cropped feet, missing view, watermark or source character identity.", "v05"],
+  ["character-mini-display", "character", "1786369051729.png", "shiba-dog", "portrait", "迷你搭档装备展示", "Keep the complete portrait desktop product-concept composition: one small manufactured Shiba figurine with clearly stylized model material standing on the transparent round acrylic display pedestal, matching illustrated box at left, the same 3D model on the modelling screen behind and the studio lamp. The figurine, box art and screen must share the exact adult red Shiba identity and miniature proportions. No live full-size dog, no paws on the desk outside the pedestal, no missing stand and no finished-product sales claim.", "v04"],
+  ["archive-career-poster", "archive", "17.png", "black-lab-dog", "portrait", "本宠高光生涯海报", "Keep the large portrait, highlight strip and full-body career-story hierarchy, but remove all celebrity, team, league and trademark identity."],
+  ["archive-memory-double-exposure", "archive", "18.png", "cream-cat", "portrait", "本宠记忆双曝", "Keep the side-profile double exposure and layered memory scenes, while making the wording clearly a pet life journal rather than memorial language."],
+  ["archive-dragon-atlas", "archive", "12.png", "dragon-li-cat", "portrait", "本宠龙纹图鉴", "Keep the parchment atlas, central species portrait, ability bars and bone/scale inset structure, but rewrite all facts as clearly fictional owner-entered traits."],
+  ["archive-fish-anatomy", "archive", "7.png", "blue-british-cat", "portrait", "本宠结构图谱", "Keep the central diagram, leader lines, data blocks and modular information hierarchy, but label it as playful fictional pet information, never medical fact. Recompose the entire atlas inside a generous safe margin so the full left and right information columns, ribbon ends, borders, labels and ornaments are completely visible and readable; nothing may be clipped by either side edge.", "v02"],
+  ["ink-silhouette", "art", "b1d8e78f-c2b5-4581-bc4c-1a5866992443.jpg", "black-lab-dog", "portrait", "直立情绪角色", "Keep the upright crossed-arm pose, oversized blue hoodie, beige shorts, white backdrop and loose hand-drawn storybook linework. Translate the black Labrador's face, fur and paws fully into the same rounded cartoon illustration language; no photographic face, realistic fur, human hands or hard anatomical detail. Remove the source watermark and account marks.", "v02"],
+  ["ink-fullbody-flight", "art", "e4cbfb45-aeb8-48d7-bed1-7a6400ebd4f1.jpg", "tuxedo-cat", "portrait", "立体情绪头像", "Keep the warm tan minimal studio, tiny centered full-body stance, soft floor shadow, simplified 3D forms and exact annoyed expression with lowered rounded brows and forward gaze. Translate that same cute assertive expression to one adult tuxedo cat without making it realistic, neutral, aggressive or kitten-like. Remove every watermark, platform badge and account number.", "v02"],
+  ["ink-brush-avatar", "art", "e7d5d895-7c06-479a-9f0c-22c13a81f1ae.jpg", "golden-dog", "portrait", "飞羽水墨全身像", "Keep the full-body ink-wash pose, upward gaze, blank paper space, floating feathers and dynamic raised tail. Preserve adult proportions and delicate broken ink edges; render the face as ink, never a photograph."],
+];
+
+export const expansionJobs = rows.map(([templateId, entryId, sourceFile, identityId, orientation, title, guard, version = "v01"]) => ({
+  templateId,
+  entryId,
+  title,
+  sourceFile,
+  effectReferencePath: path.join(EFFECT_ROOT, sourceFile),
+  identityId,
+  identity: identities[identityId],
+  orientation,
+  version,
+  guard
+}));
+
+export function relativeToRoot(file) {
+  return path.relative(ROOT, file).replaceAll("\\", "/");
+}
+
+export function buildExpansionPrompt(job) {
+  const output = expansionOutputSpecs[job.orientation];
+  const pet = job.identity;
+  return [
+    "Use case: internal self-owned template master production through multi-image identity-preserving edit.",
+    `Create an exact final ${output.ratio} composition at ${output.size} pixels.`,
+    "Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample.",
+    "Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions.",
+    "Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships.",
+    "Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy.",
+    `The replacement must be ${pet.breed} with ${pet.identity}. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like.`,
+    job.guard,
+    "Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures.",
+    "Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout.",
+    "This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image."
+  ].join(" ");
+}
+
+if (import.meta.url === `file://${process.argv[1]?.replaceAll("\\", "/")}`) {
+  console.log(JSON.stringify(expansionJobs.map((job) => ({
+    templateId: job.templateId,
+    entryId: job.entryId,
+    title: job.title,
+    sourceFile: job.sourceFile,
+    identityId: job.identityId,
+    orientation: job.orientation
+  })), null, 2));
+}

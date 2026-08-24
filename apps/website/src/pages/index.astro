@@ -1,0 +1,56 @@
+---
+/*
+ * 首页：11 区块（KittyPaw 的 10 个 + 第 11「作品展示」，规格第 6 章拍板加入）。
+ *
+ *   1 hero(视频)  2 信任条  3 玩法区  4 服务导航  5 服务详情A(图左)
+ *   6 服务详情B(图右)+2×2  7 流程  8 口碑  9 CTA  10 页脚(BaseLayout)  11 作品展示
+ *
+ * 第 5、6 区块图文左右互换必须保留（规格 1 章：避免连续分栏呆板的关键）。
+ * 区块顺序：11 在 7 之后、8 之前 —— 先给「真实产出长什么样」，再给评价。
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/home/Hero.astro";
+import TrustBar from "../components/home/TrustBar.astro";
+import Plays from "../components/home/Plays.astro";
+import Services from "../components/home/Services.astro";
+import PortraitDetail from "../components/home/PortraitDetail.astro";
+import MemorialDetail from "../components/home/MemorialDetail.astro";
+import Steps from "../components/home/Steps.astro";
+import Works from "../components/home/Works.astro";
+import Voices from "../components/home/Voices.astro";
+import Cta from "../components/home/Cta.astro";
+import { BRAND_NAME, SITE_DESCRIPTION, SITE_TAGLINE, SITE_URL } from "../config/site";
+
+/* 首页 <title> 单独写，不走「页面标题 · 品牌名」的格式（方案 7.1）*/
+const titleOverride = `${BRAND_NAME} · ${SITE_TAGLINE}`;
+
+const website = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: BRAND_NAME,
+  url: `${SITE_URL}/`,
+  description: SITE_DESCRIPTION,
+  inLanguage: "zh-CN",
+};
+---
+
+<BaseLayout
+  titleOverride={titleOverride}
+  description={SITE_DESCRIPTION}
+  ogType="website"
+  topbar="hero"
+  preloadHeroPoster
+  fabObservesHero
+  jsonLd={[website]}
+>
+  <Hero />
+  <TrustBar />
+  <Plays />
+  <Services />
+  <PortraitDetail />
+  <MemorialDetail />
+  <Steps />
+  <Works />
+  <Voices />
+  <Cta />
+</BaseLayout>

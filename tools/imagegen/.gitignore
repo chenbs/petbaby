@@ -1,0 +1,41 @@
+# 生图接口原始返回的 PNG 缓存（约 79MB：plugins 19MB + website 60MB）。
+# 只为「改裁切参数不必重新付费生成」而存在，属于本机构建缓存，不进版本控制。
+# 删掉它只会导致下次调整构图时重新调用接口，不影响任何已产出的素材。
+out/**/raw/
+
+# 已下架、淘汰素材只在 Git 中保留 JSON 审计元数据；图片字节不再版本化。
+out/.discarded/**/*.png
+out/.discarded/**/*.jpg
+out/.discarded/**/*.jpeg
+out/.discarded/**/*.webp
+out/reference-v1/retired-masters/*.png
+out/reference-v1/retired-masters/*.jpg
+out/reference-v1/retired-masters/*.jpeg
+out/reference-v1/retired-masters/*.webp
+
+# 凭据
+.env.imagegen
+
+# out 下除上述归档外的成品图要进版本控制，不要再加宽泛通配忽略：
+#   out/plugins/  被 apps/platform/src/plugins/registry.ts 按内容哈希引用，
+#                 新环境要靠它们跑 upload-samples.mjs 填充对象存储；
+#   out/styles/   会打进小程序包，作为 AI 风格/玩法选项的缩略图；
+#   out/model/    是所有 edits 调用的输入底图，缺了就无法复现任何一张成品；
+#   out/source/   宠物照片库，用于空态与示例位；
+#   out/website/  官网 22 张多品种素材，复制进 docs/website/prototype/assets/ 供原型引用；
+#   out/island/   宠物小岛素材（24 号文 7.4 的 7 张），upload-island.mjs 抠图后推对象存储。
+
+# 岛素材的候选图（pet-sample-1.png 等）。一个槽位生 3–4 张挑一张是既定做法
+# （24 号文第 0 章硬要求 3），落选的那几张没有留存价值，且单张约 1.8MB。
+# 定稿的那张已手工改名成裸名字（pet-sample.png），不受这条影响。
+out/island/*-[0-9].png
+out/island/*-[0-9].jpg
+
+# upload-island.mjs --keep 写出的抠好的 PNG。纯派生物：任何时候重跑脚本都能
+# 从裸名字的源图还原，存在的意义只是第 0b 步人眼看边缘（白胸兜与耳内绒毛）。
+# 推给端上的字节走对象存储，不从这里读。
+out/island/keyed/
+
+# 用户提供的风格参考图（《猫咪和汤》官方宣传插画）。是第三方素材，
+# 只作生成期的人工比对依据，不参与构建、不下发给端上，故不进版本控制。
+out/island/cankao*

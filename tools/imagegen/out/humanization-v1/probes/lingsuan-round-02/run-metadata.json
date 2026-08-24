@@ -1,0 +1,70 @@
+{
+  "purpose": "lingsuan-humanization-round-02-user-preview",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "generatedAt": "2026-08-19T06:28:00.357Z",
+  "requestOrder": [
+    "self-owned-human-master",
+    "private-derived-human-identity-card"
+  ],
+  "originalPetPhotoIncluded": false,
+  "status": "preview-pending-user-review",
+  "items": [
+    {
+      "id": "human-breezy-fence_tuxedo-cat_9x16_v02",
+      "title": "晴空微风 x 奶牛猫",
+      "status": "preview-pending-user-review",
+      "output": {
+        "path": "tools/imagegen/out/humanization-v1/probes/lingsuan-round-02/human-breezy-fence_tuxedo-cat_9x16_v02.png",
+        "sha256": "41ce8c66b7551a51b3585fa8a6c3dfbb01147d507ad21bc3c190b05feb9cf631",
+        "dimensions": {
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "metadataPath": "tools/imagegen/out/humanization-v1/probes/lingsuan-round-02/metadata/human-breezy-fence_tuxedo-cat_9x16_v02.json"
+    },
+    {
+      "id": "human-color-splash_parrot_9x16_v02",
+      "title": "跃彩笔触 x 鹦鹉",
+      "status": "preview-pending-user-review",
+      "output": {
+        "path": "tools/imagegen/out/humanization-v1/probes/lingsuan-round-02/human-color-splash_parrot_9x16_v02.png",
+        "sha256": "ffdcf599b224930abc24eb7dd4357c3a21dc104de989f79785a381694db46f56",
+        "dimensions": {
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "metadataPath": "tools/imagegen/out/humanization-v1/probes/lingsuan-round-02/metadata/human-color-splash_parrot_9x16_v02.json"
+    },
+    {
+      "id": "human-snow-scarf_husky-dog_9x16_v02",
+      "title": "风雪回眸 x 哈士奇",
+      "status": "preview-pending-user-review",
+      "output": {
+        "path": "tools/imagegen/out/humanization-v1/probes/lingsuan-round-02/human-snow-scarf_husky-dog_9x16_v02.png",
+        "sha256": "d08c0481663ac6173e44a0c062fe1e85aa170b3536e9afd5dba90d6166c71c9a",
+        "dimensions": {
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "metadataPath": "tools/imagegen/out/humanization-v1/probes/lingsuan-round-02/metadata/human-snow-scarf_husky-dog_9x16_v02.json"
+    },
+    {
+      "id": "human-tailored-suit_blue-british-cat_9x16_v02",
+      "title": "黑色裁缝 x 英短",
+      "status": "preview-pending-user-review",
+      "output": {
+        "path": "tools/imagegen/out/humanization-v1/probes/lingsuan-round-02/human-tailored-suit_blue-british-cat_9x16_v02.png",
+        "sha256": "0a8817177950887371eec95a91623c4c238accc38ecfb99c4aa2ba6cd8ddec18",
+        "dimensions": {
+          "width": 720,
+          "height": 1280
+        }
+      },
+      "metadataPath": "tools/imagegen/out/humanization-v1/probes/lingsuan-round-02/metadata/human-tailored-suit_blue-british-cat_9x16_v02.json"
+    }
+  ]
+}

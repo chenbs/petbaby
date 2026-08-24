@@ -1,0 +1,52 @@
+{
+  "templateId": "character-product-blueprint",
+  "entryId": "character",
+  "title": "宠物产品设定蓝图",
+  "sourceEffectFile": "apps/website/public/assets/example/3.png",
+  "status": "generated-pending-user-approval",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/3.png",
+      "sha256": "94943beb431e0bcbd009da87dd9fecac57dda390ac61beefcebd2d03d724c783"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "corgi-dog",
+      "species": "dog",
+      "breed": "adult Pembroke Welsh Corgi",
+      "path": "tools/imagegen/out/source/dog-corgi.jpg",
+      "sha256": "750c43038e21f8601be8b903889100c6b165d2b35cea3b7c0b55c0edce7ca9c2"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "landscape",
+  "requestedSize": "1280x720",
+  "outputSize": "1280x720",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 16x9 composition at 1280x720 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult Pembroke Welsh Corgi with tan-and-white coat, broad white blaze, white muzzle and chest, dark round eyes, upright ears, short legs and sturdy adult body. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the front-side-top views, material swatches, packaging and construction callouts, but create an original pet product concept. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a finished 1280x720 16:9 composition by editing Image 1 using Image 2 as the sole identity reference. Keep Image 1's composition, camera angle, crop, perspective, pose, action, expression, lighting, palette, medium, brushwork/line quality, texture, packaging-callout layout, swatches, construction diagrams, and all background elements exactly preserved. Replace the original central human/character subject and any small matching character depictions with a single coherent adult Pembroke Welsh Corgi identity based on Image 2: tan-and-white coat, broad white blaze, white muzzle and chest, dark round eyes, upright ears, short legs, sturdy adult body. Render the corgi in the same stylized visual language as Image 1, not as a pasted photo; integrate the face/fur/anatomy naturally into the illustration style. Preserve the exact front-view, side-view, top-down, frame-structure, seam-details, flat-position diagrams and the overall toy/product design presentation. Keep the same visual hierarchy and text-block placement, but replace any clearly brand/copyrighted/person-specific wording with short original pet-safe wording while maintaining the same blocks and style. Do not create new logos or signatures. Do not redesign the scene. Do not change the background, props, or product concept beyond the identity swap. Ensure correct adult dog anatomy with no extra limbs, paws, ears, eyes, or duplicated subjects, and keep the corgi friendly and appealing.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/expansion/candidates/character-product-blueprint_corgi-dog_16x9_v01.png",
+    "sha256": "01197302db14fef2bf92d27ea7d8545b1e354d40f42910342b8baa56d98e5681"
+  },
+  "review": {
+    "state": "pending-human-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generatedAt": "2026-08-17T16:12:59.279Z"
+}

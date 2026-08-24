@@ -1,0 +1,146 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+
+<view class="page page-flat">
+  <text class="eyebrow">PROFILES</text>
+  <view class="title">宠物档案</view>
+
+  <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
+  <t-notice wx:if="{{message}}" type="success" message="{{message}}" class="block-gap"></t-notice>
+
+  <t-skeleton wx:if="{{loading}}" type="list" count="3" class="block-gap"></t-skeleton>
+
+  <t-empty
+    wx:elif="{{!pets.length}}"
+    icon="pet"
+    title="还没有宠物档案"
+    description="做第一件作品时会顺手建好档案。"
+    action-text="去做一个"
+    anim="{{animType}}"
+    decor="{{decor}}"
+    bindaction="goCreate"
+  ></t-empty>
+
+  <view wx:else class="list">
+    <t-card wx:for="{{pets}}" wx:key="id" blur="{{blurOk}}" anim="{{animType}}">
+      <view class="pet">
+        <image wx:if="{{item.avatarUrl}}" class="pet-avatar" src="{{item.avatarUrl}}" mode="aspectFill" />
+        <view wx:else class="pet-avatar pet-avatar-blank">🐾</view>
+        <view class="pet-main">
+          <view class="row">
+            <view class="pet-name">{{item.name}}</view>
+            <t-tag wx:if="{{item.isDefault}}" tone="accent" size="mini" text="默认"></t-tag>
+          </view>
+          <!-- 方案 E 的留存钩子：陪伴天数放在名字下方，比种类信息更靠前 -->
+          <text wx:if="{{item.companionDays}}" class="companion">{{item.companionText}}</text>
+          <text class="small">{{item.speciesText}} · {{item.stageText}}</text>
+          <text wx:if="{{item.dateText}}" class="small">{{item.dateText}}</text>
+        </view>
+      </view>
+
+      <!-- 方案 E 的统计条：三个数字等分，是零成本的留存信息 -->
+      <view class="stats">
+        <view class="stat">
+          <view class="stat-value">{{item.counts.works}}</view>
+          <text class="stat-label">作品</text>
+        </view>
+        <view class="stat">
+          <view class="stat-value">{{item.counts.photos}}</view>
+          <text class="stat-label">照片</text>
+        </view>
+        <view class="stat">
+          <view class="stat-value">{{item.counts.memorials}}</view>
+          <text class="stat-label">纪念日</text>
+        </view>
+      </view>
+      <view class="pet-actions">
+        <t-button type="secondary" size="mini" anim="{{animType}}" data-id="{{item.id}}" bindtap="timeline">时间线</t-button>
+        <!--
+          小岛入口。**必须带 petId** —— 不带的话点非默认宠物会进到错的那只
+          （pages/timeline 已经踩过这一处，CLAUDE.md 记着）。
+
+          **memorial 形态不出现这个按钮**（22 号文 1.4 / 4.1 #11）：岛的核心机制是
+          亲密度日增与陪伴天数递增，对已离开的宠物递增天数是明确的冒犯。
+          服务端也拦（ISLAND_UNAVAILABLE_MEMORIAL），**两处都要** ——
+          只做端上隐藏则接口仍可调，只做服务端拦截则用户会看到入口点进去报错。
+        -->
+        <t-button wx:if="{{item.showIsland}}" type="ghost" size="mini" anim="{{animType}}" data-id="{{item.id}}" bindtap="island">小岛</t-button>
+        <!--
+          纪念空间入口挂在**这只宠物的上下文**里（改造项 L4）。
+
+          原先它只在「我的」页固定展示，与生命阶段无关 —— 于是 C9「纪念可达性」
+          对 senior 不成立，而那正是需要它的那一段。
+
+          只对 senior / memorial 出现，且**只改可达性不加推送**：
+          没有弹窗、没有引导、不主动提起。晚年阶段的用户如果需要它，
+          它就在那只宠物旁边；不需要的用户看不到它。
+        -->
+        <t-button wx:if="{{item.showMemorial}}" type="ghost" size="mini" anim="{{animType}}" data-id="{{item.id}}" bindtap="memorial">纪念空间</t-button>
+        <t-button type="ghost" size="mini" anim="{{animType}}" data-id="{{item.id}}" bindtap="edit">编辑</t-button>
+        <t-button wx:if="{{!item.isDefault}}" type="ghost" size="mini" anim="{{animType}}" data-id="{{item.id}}" bindtap="setDefault">设为默认</t-button>
+        <t-button type="ghost" size="mini" anim="{{animType}}" data-id="{{item.id}}" bindtap="askRemove">删除</t-button>
+      </view>
+    </t-card>
+  </view>
+</view>
+
+<!-- 编辑放进底部抽屉，避免表单把列表顶下去 -->
+<t-popup visible="{{!!editing}}" title="编辑档案" anim="{{animType}}" bindclose="cancel">
+  <view class="stack">
+    <view class="avatar-row">
+      <image wx:if="{{editing.avatarUrl}}" class="avatar" src="{{editing.avatarUrl}}" mode="aspectFill" />
+      <view wx:else class="avatar avatar-blank">🐾</view>
+      <t-button type="ghost" size="mini" anim="{{animType}}" bindtap="avatar">更换头像</t-button>
+    </view>
+
+    <t-field label="名字" value="{{editing.name}}" placeholder="宠物名字" maxlength="20" required bindchange="inputName"></t-field>
+    <!--
+      四个枚举改用 chip 平铺（选项数 3/3/2/3，都 ≤4）。
+      picker 要多一次弹层才能看全部选项，平铺能一眼比较。
+      日期本身仍是 picker —— 日历选择器没有平铺的等价形式。
+    -->
+    <view class="section-block">
+      <text class="sub-title">种类</text>
+      <view class="chips">
+        <view wx:for="{{speciesLabels}}" wx:key="*this" class="chip tappable anim-{{animType}} {{editSpeciesText === item ? 'chip-on' : ''}}" hover-class="chip-hover" data-index="{{index}}" bindtap="chooseSpecies">{{item}}</view>
+      </view>
+    </view>
+    <view class="section-block">
+      <text class="sub-title">性别</text>
+      <view class="chips">
+        <view wx:for="{{genderLabels}}" wx:key="*this" class="chip tappable anim-{{animType}} {{editGenderText === item ? 'chip-on' : ''}}" hover-class="chip-hover" data-index="{{index}}" bindtap="chooseGender">{{item}}</view>
+      </view>
+    </view>
+    <view class="section-block">
+      <text class="sub-title">日期类型</text>
+      <view class="chips">
+        <view wx:for="{{dateTypeLabels}}" wx:key="*this" class="chip tappable anim-{{animType}} {{editDateTypeText === item ? 'chip-on' : ''}}" hover-class="chip-hover" data-index="{{index}}" bindtap="chooseDateType">{{item}}</view>
+      </view>
+    </view>
+    <picker mode="date" value="{{editing.birthday}}" bindchange="chooseDate">
+      <t-field label="{{editDateTypeText}}" control="select" value="{{editing.birthday}}" placeholder="选填"></t-field>
+    </picker>
+    <view class="section-block">
+      <text class="sub-title">生命阶段</text>
+      <view class="chips">
+        <view wx:for="{{stageLabels}}" wx:key="*this" class="chip tappable anim-{{animType}} {{editStageText === item ? 'chip-on' : ''}}" hover-class="chip-hover" data-index="{{index}}" bindtap="chooseStage">{{item}}</view>
+      </view>
+      <text class="hint">切到「已离开」后，可以在纪念空间里为它建一个位置</text>
+    </view>
+  </view>
+
+  <view slot="footer" class="foot">
+    <t-button type="ghost" block anim="{{animType}}" bindtap="cancel">取消</t-button>
+    <t-button type="primary" block anim="{{animType}}" bindtap="save">保存</t-button>
+  </view>
+</t-popup>
+
+<t-dialog
+  visible="{{!!removeTarget}}"
+  title="删除档案？"
+  content="关联的照片和作品会一并隐藏，订单记录保留。此操作无法撤销。"
+  confirm-text="删除"
+  danger
+  anim="{{animType}}"
+  bindconfirm="confirmRemove"
+  bindcancel="cancelRemove"
+></t-dialog>

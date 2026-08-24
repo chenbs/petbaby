@@ -1,0 +1,86 @@
+.block-gap {
+  display: block;
+  margin-top: var(--space-4);
+}
+
+.list {
+  display: grid;
+  gap: var(--space-3);
+}
+
+/* 方案对比：两张并列卡，承载付费决策（需求 5.19-1） */
+.plans {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: 1fr 1fr;
+}
+
+.plan {
+  display: block;
+}
+
+.plan-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.plan-price {
+  margin: var(--space-2) 0;
+  color: var(--text-primary);
+  font-size: var(--font-h2);
+  font-weight: var(--title-weight);
+}
+
+.plan-benefits {
+  display: grid;
+  margin-top: var(--space-3);
+  gap: var(--space-1);
+}
+
+.benefit {
+  display: block;
+}
+
+.sub-main {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.sub-side {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/*
+ * 标准入口行：图标 + 标题 + 箭头。
+ * 手写的卡片外观必须带上 --shadow-card —— 本页同屏还有 t-card 渲染的会员/订阅/报告卡，
+ * 只有这一处没有投影会明显显扁，破坏方案 3.1 的层级一致性。
+ */
+.entry-row {
+  display: flex;
+  align-items: center;
+  padding: var(--space-4);
+  border: var(--border-highlight);
+  border-radius: var(--card-radius);
+  background: var(--card-background);
+  box-shadow: var(--shadow-card);
+  gap: var(--space-3);
+}
+
+.entry-icon {
+  font-size: var(--font-h2);
+}
+
+.entry-main {
+  display: grid;
+  flex: 1;
+  gap: var(--space-1);
+}
+
+.entry-arrow {
+  color: var(--text-secondary);
+  font-size: var(--font-h2);
+}

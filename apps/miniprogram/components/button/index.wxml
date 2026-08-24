@@ -1,0 +1,13 @@
+<view
+  class="btn btn-{{type}} btn-{{size}} {{block ? 'btn-block' : ''}} {{disabled || loading ? 'btn-off' : 'anim-' + anim}}"
+  hover-class="{{disabled || loading ? 'none' : 'btn-hover'}}"
+  hover-stay-time="80"
+  aria-role="button"
+  aria-disabled="{{disabled || loading}}"
+  aria-label="{{ariaLabel}}"
+  catchtap="handleTap"
+>
+  <view wx:if="{{loading}}" class="btn-spinner"></view>
+  <slot></slot>
+  <text wx:if="{{price && !loading}}" class="btn-price">{{price}}</text>
+</view>

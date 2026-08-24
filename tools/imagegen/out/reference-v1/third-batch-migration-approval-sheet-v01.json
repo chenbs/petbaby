@@ -1,0 +1,197 @@
+{
+  "purpose": "third-batch-runtime-migration-user-approval",
+  "generatedBy": "local-sharp-composite",
+  "modelCall": false,
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/third-batch-migration-approval-sheet-v01.png",
+    "width": 1860,
+    "height": 5650,
+    "sha256": "6456b8944da7c2b410df34a12c01596ebaf1cf19ea97f21ae6817a8a4eb8450c"
+  },
+  "items": [
+    {
+      "templateId": "original-magic-academy",
+      "files": [
+        {
+          "role": "FROZEN MASTER",
+          "path": "tools/imagegen/out/reference-v1/retired-masters/original-magic-academy_dragon-li-cat_9x16_v01.png",
+          "sha256": "6dfd8f50981e537748f18bd5b4ccdfaa8dfceff03338ab54055b8cc1ab117d4e",
+          "status": "approved-frozen-master"
+        },
+        {
+          "role": "CAT / DEVON-REX-CAT",
+          "path": "tools/imagegen/out/reference-v1/validation-third-batch/original-magic-academy_cat_devon-rex-cat_9x16_v02.png",
+          "sha256": "643ae77cad79b1ccaaa5394e1a919c8edf4fb5675013e89bb8d0776889bc66fe",
+          "status": "approved-runtime-validation"
+        },
+        {
+          "role": "DOG / SHIBA-DOG",
+          "path": "tools/imagegen/out/reference-v1/validation-third-batch/original-magic-academy_dog_shiba-dog_9x16_v02.png",
+          "sha256": "8fc8e8a5373d57387d186873b0f2e467d636f20c5477841439c499cec29231c0",
+          "status": "approved-runtime-validation"
+        }
+      ]
+    },
+    {
+      "templateId": "epic-ruins",
+      "files": [
+        {
+          "role": "FROZEN MASTER",
+          "path": "tools/imagegen/out/reference-v1/retired-masters/epic-ruins_german-shepherd-dog_9x16_v01.png",
+          "sha256": "6d450ed41c8876b08b651a5e2c7f1e78566d0c3682fc62fb2ab9ba4c8b3615ee",
+          "status": "approved-frozen-master"
+        },
+        {
+          "role": "CAT / MAINE-COON-CAT",
+          "path": "tools/imagegen/out/reference-v1/validation-third-batch/epic-ruins_cat_maine-coon-cat_9x16_v01.png",
+          "sha256": "3c1b6fbc134d0619cd41b63b2bf5024ba33e59c66644086af849acc2981545f7",
+          "status": "approved-runtime-validation"
+        },
+        {
+          "role": "DOG / HUSKY-DOG",
+          "path": "tools/imagegen/out/reference-v1/validation-third-batch/epic-ruins_dog_husky-dog_9x16_v01.png",
+          "sha256": "be77792d66883fc6abdb08e162989ed1e1c0fbe92b386fef9d87c7568d74d22e",
+          "status": "approved-runtime-validation"
+        }
+      ]
+    },
+    {
+      "templateId": "mini-companion",
+      "files": [
+        {
+          "role": "FROZEN MASTER",
+          "path": "tools/imagegen/out/reference-v1/retired-masters/mini-companion_abyssinian-cat_9x16_v03.png",
+          "sha256": "540845541503d1e126a5a47133e2a0f9279b376f8add19e0fdffff2c5becf52c",
+          "status": "approved-frozen-master"
+        },
+        {
+          "role": "CAT / RAGDOLL-CAT",
+          "path": "tools/imagegen/out/reference-v1/validation-third-batch/mini-companion_cat_ragdoll-cat_9x16_v01.png",
+          "sha256": "bdfc59dd89fa709dc964da899a46ebd620f4cc2240097592ee88f5a3c2bf2f7e",
+          "status": "approved-runtime-validation"
+        },
+        {
+          "role": "DOG / BLACK-LABRADOR-DOG",
+          "path": "tools/imagegen/out/reference-v1/validation-third-batch/mini-companion_dog_black-labrador-dog_9x16_v01.png",
+          "sha256": "083bcab10fde2520be26db7b6d31db1b5fdf55f080c180f6199200ac2c39c366",
+          "status": "approved-runtime-validation"
+        }
+      ]
+    },
+    {
+      "templateId": "adventure-rules",
+      "files": [
+        {
+          "role": "FROZEN MASTER",
+          "path": "tools/imagegen/out/reference-v1/masters/adventure-rules_corgi-dog_9x16_v04.webp",
+          "sha256": "c5b79e112180dfd00e806b0dcf8f0378a25bf90cf37f7eab7a6764b824dd2ca8",
+          "status": "approved-frozen-master"
+        },
+        {
+          "role": "CAT / BRITISH-SHORTHAIR-CAT",
+          "path": "tools/imagegen/out/reference-v1/validation-third-batch/adventure-rules_cat_british-shorthair-cat_9x16_v02.png",
+          "sha256": "9bdbea0bbd9a557f39fbe705eb565a67f14172fd9dc0a082e7c9e2e462303fb1",
+          "status": "approved-runtime-validation"
+        },
+        {
+          "role": "DOG / GOLDEN-RETRIEVER-DOG",
+          "path": "tools/imagegen/out/reference-v1/validation-third-batch/adventure-rules_dog_golden-retriever-dog_9x16_v03.png",
+          "status": "approved-runtime-validation",
+          "sha256": "a13e80c585537627e5c030fe29ddcbe294019a9875bbf1fd227ed8aa0bb1dde1"
+        }
+      ]
+    },
+    {
+      "templateId": "pet-life-journal",
+      "files": [
+        {
+          "role": "FROZEN MASTER",
+          "path": "tools/imagegen/out/reference-v1/masters/pet-life-journal_toy-poodle-dog_9x16_v01.webp",
+          "sha256": "d7a87fba5d3d2fe7af7724770c52690265b3aad1d849de88cfdbd53270544a6e",
+          "status": "approved-frozen-master"
+        },
+        {
+          "role": "CAT / TUXEDO-CAT",
+          "path": "tools/imagegen/out/reference-v1/validation-third-batch/pet-life-journal_cat_tuxedo-cat_9x16_v02.png",
+          "sha256": "b2f6f111844cab269f73c38c6fc23ed2d055927de4e7b4c8b2ef28fd94ec980b",
+          "status": "approved-runtime-validation"
+        },
+        {
+          "role": "DOG / CORGI-DOG",
+          "path": "tools/imagegen/out/reference-v1/validation-third-batch/pet-life-journal_dog_corgi-dog_9x16_v02.png",
+          "sha256": "f627b496ca1a170e32d73cc9f32026966a6d98400c5e52ba6435a846e036490f",
+          "status": "approved-runtime-validation"
+        }
+      ]
+    },
+    {
+      "templateId": "ink-portrait",
+      "files": [
+        {
+          "role": "FROZEN MASTER",
+          "path": "tools/imagegen/out/reference-v1/masters/ink-portrait_black-labrador-dog_9x16_reset-v03-reference-gaze-rerun-v01.webp",
+          "sha256": "050b7f7f346b6a26cd3725872cea643ce1bb0d4430a4dac9f7bddbb20d574893",
+          "status": "approved-frozen-master"
+        },
+        {
+          "role": "CAT / BLACK-CAT",
+          "path": "tools/imagegen/out/reference-v1/validation-third-batch/ink-portrait_cat_black-cat_9x16_v03.png",
+          "sha256": "9a92df4670e337688978690e73a6fa3142ae3fe65f21e2b86a692c28f688c79f",
+          "status": "approved-runtime-validation"
+        },
+        {
+          "role": "DOG / GERMAN-SHEPHERD-DOG",
+          "path": "tools/imagegen/out/reference-v1/validation-third-batch/ink-portrait_dog_german-shepherd-dog_9x16_v03.png",
+          "sha256": "5bd861e53ff5c71be957b9431d435b144821001055d1b7ad01f9f72fe705429b",
+          "status": "approved-runtime-validation"
+        }
+      ]
+    },
+    {
+      "templateId": "decorative-art-portrait",
+      "files": [
+        {
+          "role": "FROZEN MASTER",
+          "path": "tools/imagegen/out/reference-v1/masters/decorative-art-portrait_ragdoll-cat_9x16_v05.webp",
+          "sha256": "7113eeca312feb28ffec548830943be74aab8512db99316686b7700d1cc7a976",
+          "status": "approved-frozen-master"
+        },
+        {
+          "role": "CAT / ABYSSINIAN-CAT",
+          "path": "tools/imagegen/out/reference-v1/validation-third-batch/decorative-art-portrait_cat_abyssinian-cat_9x16_v03.png",
+          "sha256": "887ae535c70473612dd6dc684f890a5ce9833a0f84273b5781b49d32c0936ee2",
+          "status": "approved-runtime-validation"
+        },
+        {
+          "role": "DOG / TOY-POODLE-DOG",
+          "path": "tools/imagegen/out/reference-v1/validation-third-batch/decorative-art-portrait_dog_toy-poodle-dog_9x16_v03.png",
+          "sha256": "061ca5ee9ce0bfee542ac69605ea6bb4ebafdefb475a554b7dcd9eda33cc3e37",
+          "status": "approved-runtime-validation"
+        }
+      ]
+    }
+  ],
+  "status": "approved-by-user",
+  "approvedAt": "2026-08-17T00:00:00.000+08:00",
+  "review": {
+    "approved": [
+      "original-magic-academy_cat_devon-rex-cat",
+      "original-magic-academy_dog_shiba-dog",
+      "epic-ruins_cat_maine-coon-cat",
+      "epic-ruins_dog_husky-dog",
+      "mini-companion_cat_ragdoll-cat",
+      "mini-companion_dog_black-labrador-dog",
+      "adventure-rules_cat_british-shorthair-cat",
+      "pet-life-journal_cat_tuxedo-cat",
+      "pet-life-journal_dog_corgi-dog",
+      "ink-portrait_cat_black-cat",
+      "ink-portrait_dog_german-shepherd-dog",
+      "decorative-art-portrait_cat_abyssinian-cat",
+      "decorative-art-portrait_dog_toy-poodle-dog",
+      "adventure-rules_dog_golden-retriever-dog"
+    ],
+    "pendingUserApproval": [],
+    "generationBlockedByUpstream524": []
+  }
+}

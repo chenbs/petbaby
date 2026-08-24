@@ -1,0 +1,63 @@
+{
+  "templateId": "animal-rabbit-yokai",
+  "entryId": "action",
+  "title": "古风妖灵宠物",
+  "version": "stylebridge-v01",
+  "status": "generated-pending-user-approval",
+  "remediation": "shared-two-stage-style-bridge",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-08-13-8904-插画风格特效，古风，动漫风，3D，大师作品，超高清，动态，一只超萌的贱兔作男妖仔....png",
+      "sha256": "850e0ebef30be058c35e14087763032aa1fe76f95d7506ef45a62acd4abcd110"
+    },
+    {
+      "role": "self-owned-pet-identity-reference-for-guide-only",
+      "path": "tools/imagegen/out/source/cat-cream.jpg",
+      "sha256": "db5fc390f9cbf4f5ee0eee38850e28012a0953a98c148e7df5b354a539dab7e9"
+    },
+    {
+      "role": "pre-stylized-identity-guide-for-final-edit",
+      "path": "tools/imagegen/out/reference-v1/animal/style-guides/animal-rabbit-yokai_cream-cat_guide-v01.png",
+      "sha256": "f58cbe42f237d9557ab3fcbcdbcc9b31b7093fada0192376a48e37f8450e3c67"
+    }
+  ],
+  "finalEditInputOrder": [
+    "one-time-third-party-effect-reference",
+    "pre-stylized-identity-guide"
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "guide": {
+    "prompt": "Use case: style-transfer identity preprocessing for a reusable pet template pipeline. Image 1 is the sole authority for visual medium and stylization only: copy its brushwork, line language, pigment behavior, edge treatment, texture scale, shape simplification, facial abstraction, anatomical stylization, local contrast and degree of realism. Image 2 is the sole authority for pet identity only: preserve its adult breed, coat pattern, markings, ear shape, eye color, muzzle proportions and healthy mature body type. Create one clean centered subject study of the pet from Image 2, fully redrawn through Image 1's non-photographic visual language. Use a plain unobtrusive background and do not copy Image 1's scene, pose, costume, props, text or layout. The pet must look drawn, painted or sculpted by the same visual system as Image 1 before it enters the final scene. Replace literal fur strands with the reference's marks and shapes; replace photographic eyes, wet nose highlights, lens lighting and realistic facial volume with the reference's stylized equivalents. Keep the pet recognizable, appealing, adult and healthy. No puppy or kitten proportions, no photorealistic face, no studio-photo lighting, no shallow depth of field, no realistic fur microtexture, no text, no logo and no watermark. Identity: adult adult cream long-haired cat; pale cream long coat, soft cream points, blue eyes, pink nose, triangular ears, fluffy tail and healthy adult body. Return only the finished pre-stylized identity guide.",
+    "revisedPrompt": "Create a single clean centered subject study of the pet from the provided Image 2, redrawn entirely in the visual language of Image 1. Identity to preserve from Image 2 only: adult cream long-haired cat, pale cream coat with soft cream points, blue eyes, pink nose, triangular ears, fluffy tail, healthy mature body proportions, recognizable face and markings. Style to inherit from Image 1 only: ornate non-photographic fantasy illustration with sculpted/painted fur masses, stylized linework, dramatic but controlled edge treatment, layered pigment-like color behavior, high decorative detail translated into cat anatomy, elegant stylization, slightly sculptural rendering, appealing realism reduced to artful abstraction. Keep the cat centered and isolated on a plain unobtrusive background. No props, no costume, no jewelry, no text, no logo, no watermark, no scene elements, no copied pose from Image 1, no photorealism, no studio-photo lighting, no shallow depth of field, no micro-fur strands, no literal photographic eye reflections, no wet nose shine. Replace fur strands with the reference style’s marks and shapes; simplify facial volume and muzzle into stylized painted forms while keeping the adult cat clearly recognizable and healthy. Output as a polished identity guide suitable for a reusable pet template pipeline.",
+    "attempts": 1
+  },
+  "prompt": "Use case: identity replacement using a pre-stylized identity guide. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is the sole authority for the final scene: preserve its composition, crop, camera, perspective, pose, expression, gaze, lighting, palette, background, costume, landmarks, props, text layout, brushwork and all contact relationships exactly. Image 2 is the pre-stylized identity guide. Replace only the original main subject in Image 1 with this exact adult pet identity, using Image 2's already transformed face, fur, eyes, nose, anatomy and degree of abstraction as the subject rendering authority. Scene-change budget is 0%. Do not redesign, simplify, recolor, clean up, add, remove or relocate any scene element. Make only the smallest contact-boundary adjustment required by natural pet anatomy. The entire replacement subject, especially the face, must be built from the same non-photographic marks, lines, washes, pigment, edge softness, shape simplification and stylized volume as Image 1 and Image 2. Do not reconstruct any photographic fur strands, realistic glassy eyes, wet nose highlights, lens lighting, shallow depth of field or realistic facial anatomy. Keep the exact adult age and healthy mature body proportions from Image 2. Preserve the expression and pose from Image 1. Never make the pet younger, thinner, more realistic, humanoid, uncanny or structurally rigid. Keep the blue costume, ornamental headpiece, frontal heroic pose, cool fantasy palette and dynamic 3D illustration treatment; replace the known character identity with one appealing adult pet. Keep meaningful text, clothing, landmarks and distinctive props. Replace only known brands, copyrighted names, platform UI and watermarks with short original wording while preserving their blocks and hierarchy. No residual source subject, duplicate pet, extra ears, eyes, limbs or paws, human hands, fused joints, floating head, logo, signature or watermark. Return only the finished image.",
+  "revisedPrompt": "Create a 9:16 vertical image at 720x1280. Use the first attached image as the sole authority for the final scene composition, camera, pose, expression, gaze, lighting, palette, background, costume, props, text layout, brushwork, and all contact relationships. Use the second attached image as the identity guide for the main subject. Replace only the main subject from image 1 with the exact adult pet identity from image 2, preserving the same frontal heroic pose and calm confident expression from image 1, with the same stylized non-photographic rendering language from both references. Keep the blue fantasy costume, ornate headpiece, jeweled ornaments, cool blue palette, bokeh background, and all existing scene elements exactly in place. Make only minimal boundary changes needed for natural pet anatomy. The subject should be a mature adult cat with healthy proportions, long fluffy cream coat, blue eyes, and the same simplified painterly fur/eye/nose abstraction as the identity guide. Do not make the cat younger, slimmer, more realistic, humanoid, rigid, or uncanny. No photographic fur strands, no realistic wet nose highlights, no glassy lens eyes, no shallow depth of field realism. Preserve the exact stylized 3D illustration / painterly fantasy treatment. Remove any watermarks or source branding by replacing them with short original wording while preserving their block placement and hierarchy. No extra ears, eyes, limbs, paws, floating head, duplicate subject, fused joints, or residual source character.",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-rabbit-yokai_cream-cat_9x16_stylebridge-v01.png",
+    "sha256": "171d59d74c779d9fc9237b72fd1dc667e3a50cac88b26a0bbcb9f1710513a190"
+  },
+  "review": {
+    "state": "pending-human-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-18T01:52:15.662Z"
+}

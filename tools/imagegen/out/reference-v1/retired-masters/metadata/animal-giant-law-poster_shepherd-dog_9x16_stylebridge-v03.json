@@ -1,0 +1,154 @@
+{
+  "templateId": "animal-giant-law-poster",
+  "entryId": "action",
+  "title": "巨物法相海报",
+  "version": "stylebridge-v03",
+  "status": "approved-frozen-master",
+  "remediation": "shared-two-stage-style-bridge",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-07-11-4451-电影级，8K超高清，超广角仰拍，巨物恐惧，法天象地，至尊法相，人形巨神，身高万丈....png",
+      "sha256": "4027959ff35c4775359da43e729eab36e6775b2c95f28b060ffd491ef59eee01"
+    },
+    {
+      "role": "self-owned-pet-identity-reference-for-guide-only",
+      "path": "apps/website/public/assets/hero-shepherd.jpg",
+      "sha256": "f6c37419e96b12425034d2bdcb54cbde952709f37352f3748d67d3db71e937b4"
+    },
+    {
+      "role": "pre-stylized-identity-guide-for-final-edit",
+      "path": "tools/imagegen/out/reference-v1/animal/style-guides/animal-giant-law-poster_shepherd-dog_guide-v02.png",
+      "sha256": "de2f35fe04cc8fb1ba0b8a18db37c64f4fc81ae6a66de5f24da3203c1b741257"
+    }
+  ],
+  "finalEditInputOrder": [
+    "one-time-third-party-effect-reference",
+    "pre-stylized-identity-guide"
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "guide": {
+    "prompt": "Use case: source-subject design transfer for a reusable pet identity replacement pipeline. Image 1 is the sole authority for the replacement subject design. Copy the designated source subject's pose, action, expression, gaze, crop, silhouette rhythm, head-to-body proportion, facial abstraction, eye/nose/muzzle design, anatomical simplification, fur construction, ornament integration, line language, brushwork, pigment behavior, edge treatment, texture scale, local contrast and degree of realism. Image 2 supplies identity markers only: adult species and breed, coat colors, stable markings, ear type and eye color. Image 2 must not supply pose, expression, photographic facial construction, realistic muzzle volume, literal fur strands, lens lighting or camera depth. Create an isolated replacement-subject blueprint on a plain unobtrusive background. The replacement pet must already occupy Image 1's subject crop and reproduce Image 1's pose and expression before it enters the final scene. Do not copy the surrounding scene, text, watermark or unrelated background objects. Translate the new pet identity through Image 1's shape grammar, not through photographic anatomy. Preserve only enough breed structure to recognize the pet. Adult age means mature and healthy, not realistic: the adult pet may use the same enlarged eyes, shortened or simplified muzzle, rounded planes, graphic fur masses, mythical body treatment or painterly distortion as Image 1 without becoming a puppy or kitten. Every facial surface must be constructed from Image 1's visible marks and shapes. Replace glassy eyes, wet nose highlights, smooth three-dimensional muzzle shading, individual hair detail and photo lighting with Image 1's stylized equivalents. A face crop must read immediately as part of Image 1's artwork, never as a painted photograph of Image 2. Keep the result recognizable, appealing, adult and healthy. No generic realistic pet portrait, no studio-photo pose, no photorealistic face, no shallow depth of field, no realistic fur microtexture, no text, no logo and no watermark. Identity: adult adult German Shepherd; tan coat with defined black saddle and mask, brown eyes, tall upright ears, black muzzle and athletic adult build. Return only the finished pre-stylized identity guide.",
+    "revisedPrompt": "Create an isolated pre-stylized identity guide of an adult German Shepherd transformed through the shape grammar and visual language of a mythic, painterly source artwork: the dog must inherit the source image's dramatic forward-reaching pose, centered composition, intense direct gaze, enlarged heroic crop, and strong silhouette rhythm. Show the German Shepherd as mature and healthy, athletic and recognizable, with tan coat, defined black saddle and mask, black muzzle, brown eyes, and tall upright ears. Preserve only enough breed structure to read clearly as German Shepherd while translating the subject through stylized artwork, not photorealism. Use simplified facial planes, graphic muzzle construction, rounded yet strong anatomy, expressive line language, sculpted painterly fur masses instead of literal strands, and controlled edge variation. The front paw should extend toward the viewer in the same dramatic gesture as the source pose, while the head and shoulders occupy the same heroic framing. Keep the background plain, unobtrusive, and isolated with soft neutral warm-gray to pale gold tonal wash, no scenery, no text, no logo, no watermark, no props. Emphasize elegant brushwork, luminous pigment behavior, subtle edge glow, and layered tonal contrast, but avoid studio-photo realism, realistic lens effects, or shallow depth of field. The result should look like a clean identity blueprint for a reusable pet replacement pipeline: immediately readable as the same pose and energy as the source, but clearly a stylized adult German Shepherd subject.",
+    "attempts": 1
+  },
+  "prompt": "Use case: identity-preserve precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the current self-owned master and controls the replacement pet or owner identity unless the request explicitly changes the breed. Image 2 is the composition and effect reference. Use it only to correct the requested composition, pose, expression, gaze or visual treatment. Preserve every aspect that is not explicitly changed below, including the scene, camera, crop, palette, lighting, costume, props, spatial relationships and visual medium. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature. No extra subjects, duplicate anatomy, human hands on animals, malformed paws, text, logo, watermark or signature. Reduce the German Shepherd head and face substantially so the head occupies no more than about 12 percent of the image height. Reveal a far more monumental upright humanoid canine-deity body: very broad armored shoulders and chest, long powerful torso, two clear arms, narrow waist and vast robe, towering through the storm like Image 2. Preserve the recognizable German Shepherd face without turning the whole figure into a normal dog; body scale and human-like heroic silhouette must dominate. Keep the reaching foreground arm, cloud vortexes, lightning, golden backlight, tiny mountains and epic ant-scale camera. Return a 9:16 portrait composition.",
+  "revisedPrompt": "Create a 9:16 portrait, identity-preserving precise-object-edit of the first reference image, using the second reference only for overall composition and visual treatment. Preserve the same stormy cosmic-cloud scene, golden backlight, lightning, vortexing clouds, tiny mountain silhouettes, epic ant-scale camera perspective, and the reaching foreground arm. Transform the subject into a far more monumental upright humanoid canine-deity: a towering heroic silhouette with very broad armored shoulders and chest, a long powerful torso, narrow waist, two clear human-like arms, and a vast flowing robe. The German Shepherd face must remain recognizable, but greatly reduced in scale so the head occupies no more than about 12% of the image height; keep the erect ears and shepherd facial structure while ensuring the body scale dominates and the figure does NOT become a normal dog. Keep the front hand/arm reaching toward the viewer, with large expressive paws/claws, no malformed anatomy, no duplicate limbs. Preserve dramatic lighting, storm vortexes, radiating golden halo, and the same dark-gold palette and painterly cinematic style. Remove all platform badges, AI labels, account names, account numbers, logos, watermarks, and signatures. No extra subjects, no text, no logo, no watermark, no signature, no human hands on animals, no cropped duplicate anatomy.",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/remediation-20260819/master-candidates/animal-giant-law-poster_shepherd-dog_9x16_stylebridge-v03.png",
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/master-animal-giant-law-poster.png",
+    "sha256": "be3820242d4d4184d515da3f35ce7e01e47c445e268961563d501e472f7c8940"
+  },
+  "review": {
+    "state": "approved-by-user-request",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-19T14:10:00+08:00"
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-19T05:54:27.353Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/remediation-20260819/master-candidates/animal-giant-law-poster_shepherd-dog_9x16_stylebridge-v03.png",
+  "masterPath": "tools/imagegen/out/reference-v1/retired-masters/animal-giant-law-poster_shepherd-dog_9x16_stylebridge-v03.png",
+  "masterSha256": "be3820242d4d4184d515da3f35ce7e01e47c445e268961563d501e472f7c8940",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-19T14:10:00+08:00",
+    "note": "用户于 2026-08-19 明确要求按逐项意见返工并完成；候选已逐张目视复核后冻结为新版本。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/animal-giant-law-poster_shepherd-dog_9x16_stylebridge-v03.png",
+      "sha256": "be3820242d4d4184d515da3f35ce7e01e47c445e268961563d501e472f7c8940"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate",
+      "unapproved-candidate"
+    ]
+  },
+  "inputFidelity": "high",
+  "supersedes": {
+    "version": "stylebridge-v02",
+    "path": "tools/imagegen/out/reference-v1/retired-masters/animal-giant-law-poster_shepherd-dog_9x16_stylebridge-v02.png",
+    "sha256": "1bdd846a2e11b527e209a2982f71bac857726ec4c545c683eef44b8bd5367794",
+    "metadata": "tools/imagegen/out/reference-v1/retired-masters/metadata/animal-giant-law-poster_shepherd-dog_9x16_stylebridge-v02.json"
+  },
+  "remediationRequest": {
+    "task": "user-requested-frozen-master-remediation-2026-08-19",
+    "templateId": "animal-giant-law-poster",
+    "kind": "master",
+    "version": "stylebridge-v03",
+    "status": "approved-and-promoted",
+    "provider": "lingsuan",
+    "model": "gpt-image-2",
+    "endpoint": "/v1/images/edits",
+    "inputFidelity": "high",
+    "inputPolicy": {
+      "sequential": true,
+      "maxImages": 2,
+      "maxCombinedBytes": 1000000
+    },
+    "inputs": [
+      {
+        "role": "current-self-owned-master",
+        "path": ".tmp/master-remediation-20260819-inputs/animal-giant-law-poster-master.jpg",
+        "bytes": 160994,
+        "sha256": "fed6745e6f1e6d639feed4f50d3ca6ac1c76c55bb3e73c19d1401aa7146747ec"
+      },
+      {
+        "role": "effect-reference-composition-guide",
+        "path": ".tmp/master-remediation-20260819-inputs/animal-giant-law-poster-effect.jpg",
+        "bytes": 160823,
+        "sha256": "611c0451d0d4c79fdb2e343a050079fa65a88926690be81c00ffb8a9012b2ad7"
+      }
+    ],
+    "orientation": "portrait",
+    "requestedSize": "720x1280",
+    "output": {
+      "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/master-animal-giant-law-poster.png",
+      "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819/master-candidates/animal-giant-law-poster_shepherd-dog_9x16_stylebridge-v03.png",
+      "width": 720,
+      "height": 1280,
+      "sha256": "be3820242d4d4184d515da3f35ce7e01e47c445e268961563d501e472f7c8940"
+    },
+    "prompt": "Use case: identity-preserve precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the current self-owned master and controls the replacement pet or owner identity unless the request explicitly changes the breed. Image 2 is the composition and effect reference. Use it only to correct the requested composition, pose, expression, gaze or visual treatment. Preserve every aspect that is not explicitly changed below, including the scene, camera, crop, palette, lighting, costume, props, spatial relationships and visual medium. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature. No extra subjects, duplicate anatomy, human hands on animals, malformed paws, text, logo, watermark or signature. Reduce the German Shepherd head and face substantially so the head occupies no more than about 12 percent of the image height. Reveal a far more monumental upright humanoid canine-deity body: very broad armored shoulders and chest, long powerful torso, two clear arms, narrow waist and vast robe, towering through the storm like Image 2. Preserve the recognizable German Shepherd face without turning the whole figure into a normal dog; body scale and human-like heroic silhouette must dominate. Keep the reaching foreground arm, cloud vortexes, lightning, golden backlight, tiny mountains and epic ant-scale camera. Return a 9:16 portrait composition.",
+    "revisedPrompt": "Create a 9:16 portrait, identity-preserving precise-object-edit of the first reference image, using the second reference only for overall composition and visual treatment. Preserve the same stormy cosmic-cloud scene, golden backlight, lightning, vortexing clouds, tiny mountain silhouettes, epic ant-scale camera perspective, and the reaching foreground arm. Transform the subject into a far more monumental upright humanoid canine-deity: a towering heroic silhouette with very broad armored shoulders and chest, a long powerful torso, narrow waist, two clear human-like arms, and a vast flowing robe. The German Shepherd face must remain recognizable, but greatly reduced in scale so the head occupies no more than about 12% of the image height; keep the erect ears and shepherd facial structure while ensuring the body scale dominates and the figure does NOT become a normal dog. Keep the front hand/arm reaching toward the viewer, with large expressive paws/claws, no malformed anatomy, no duplicate limbs. Preserve dramatic lighting, storm vortexes, radiating golden halo, and the same dark-gold palette and painterly cinematic style. Remove all platform badges, AI labels, account names, account numbers, logos, watermarks, and signatures. No extra subjects, no text, no logo, no watermark, no signature, no human hands on animals, no cropped duplicate anatomy.",
+    "generatedAt": "2026-08-19T05:54:27.353Z",
+    "approvedAt": "2026-08-19T14:10:00+08:00"
+  },
+  "qualityBaseline": {
+    "required": [
+      "smaller face, much more monumental humanoid body and imposing upright divine-form silhouette",
+      "exact 720x1280 portrait output",
+      "clean finished image without platform UI, account IDs, logos, watermarks or signatures"
+    ],
+    "reject": [
+      "regression of the composition, expression, gaze, identity, texture or anatomy corrected by this remediation",
+      "extra subjects, duplicate or malformed anatomy, broken costume contacts, logo, watermark or signature"
+    ]
+  }
+}

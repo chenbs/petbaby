@@ -1,0 +1,16 @@
+<view class="chips" aria-role="radiogroup">
+  <view
+    wx:for="{{options}}"
+    wx:key="id"
+    class="chip {{picked.indexOf(item.id) >= 0 ? 'chip-on' : ''}} anim-{{anim}}"
+    data-id="{{item.id}}"
+    aria-role="radio"
+    aria-selected="{{picked.indexOf(item.id) >= 0}}"
+    hover-class="chip-hover"
+    hover-stay-time="80"
+    bindtap="handleTap"
+  >
+    <text class="chip-label">{{item.label}}</text>
+    <text wx:if="{{item.hint}}" class="chip-hint">{{item.hint}}</text>
+  </view>
+</view>

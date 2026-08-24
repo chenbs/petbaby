@@ -1,0 +1,110 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+
+<view class="page page-flat">
+  <text class="eyebrow">ISLAND AVATAR</text>
+  <view class="title">给它画一个小岛形象</view>
+  <text class="muted">用一张清晰的正脸照，生成住在小岛上的它。毛色、花纹和体型会保留下来。</text>
+
+  <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
+  <t-notice wx:if="{{message}}" type="{{messageType}}" message="{{message}}" class="block-gap"></t-notice>
+
+  <t-skeleton wx:if="{{loading}}" type="card" count="2" class="block-gap"></t-skeleton>
+
+  <!-- 没有可入岛的宠物：memorial 已在 js 里过滤，所以这里的空态说的是「还没建档」 -->
+  <t-empty
+    wx:elif="{{!pets.length}}"
+    icon="pet"
+    title="还没有可以入岛的宠物"
+    description="先建一个宠物档案，再回来给它画形象。"
+    action-text="去建档案"
+    anim="{{animType}}"
+    decor="{{decor}}"
+    bindaction="goPets"
+  ></t-empty>
+
+  <block wx:else>
+    <!-- 选宠物。>4 只走 picker 的判据在这里不适用：这是卡片列表不是枚举，横滑能看全 -->
+    <view wx:if="{{pets.length > 1}}" class="section">
+      <view class="section-title">选一只</view>
+      <view class="chips">
+        <view
+          wx:for="{{pets}}"
+          wx:key="id"
+          class="chip tappable anim-{{animType}} {{petId === item.id ? 'chip-on' : ''}}"
+          hover-class="chip-hover"
+          data-index="{{index}}"
+          bindtap="choosePet"
+        >{{item.name}}</view>
+      </view>
+    </view>
+
+    <!-- 生成前：选参考照 -->
+    <view wx:if="{{!run}}" class="section">
+      <view class="section-title">挑一张参考照</view>
+      <t-empty
+        wx:if="{{!photos.length}}"
+        icon="photo"
+        title="{{petName}}还没有照片"
+        description="形象要像它，所以必须有一张照片作参考。"
+        action-text="去上传照片"
+        anim="{{animType}}"
+        decor="{{decor}}"
+        bindaction="goPhotos"
+      ></t-empty>
+      <block wx:else>
+        <view class="shots">
+          <view
+            wx:for="{{photos}}"
+            wx:key="id"
+            class="shot {{photoId === item.id ? 'shot-on' : ''}}"
+            hover-class="shot-hover"
+            data-id="{{item.id}}"
+            bindtap="choosePhoto"
+          >
+            <image class="shot-image" src="{{item.url}}" mode="aspectFill" lazy-load />
+          </view>
+        </view>
+        <text class="hint">正脸、光线均匀的那张效果最好。</text>
+        <t-button type="ai" block anim="{{animType}}" loading="{{busy}}" class="block-gap" bindtap="submit">生成小岛形象</t-button>
+      </block>
+    </view>
+
+    <!-- 生成中 -->
+    <t-card wx:elif="{{run.status === 'queued' || run.status === 'processing'}}" blur="{{blurOk}}" anim="{{animType}}" class="block-gap">
+      <t-loading anim="{{animType}}" label="{{statusText}}"></t-loading>
+      <text class="muted center">大约 45 秒。可以先退出，稍后回来看。</text>
+    </t-card>
+
+    <!-- 失败 -->
+    <t-card wx:elif="{{run.status === 'failed'}}" blur="{{blurOk}}" anim="{{animType}}" class="block-gap">
+      <view class="sub-title">这次没有生成成功</view>
+      <text class="muted">额度已经返还，可以换一张照片再试。</text>
+      <t-button type="primary" block anim="{{animType}}" class="block-gap" bindtap="regenerate">再试一次</t-button>
+    </t-card>
+
+    <!-- 四选一。四张并排比较，与 pages/ai-run 同一版式 -->
+    <view wx:else class="section">
+      <view class="section-title">挑一个最像它的</view>
+      <view class="shots">
+        <view
+          wx:for="{{candidates}}"
+          wx:key="id"
+          class="shot {{selectedId === item.id ? 'shot-on' : ''}}"
+          hover-class="shot-hover"
+          data-id="{{item.id}}"
+          aria-role="radio"
+          aria-checked="{{selectedId === item.id}}"
+          bindtap="select"
+        >
+          <image class="shot-image" src="{{item.url}}" mode="aspectFit" lazy-load />
+          <view class="shot-foot">
+            <text class="small strong">0{{item.number}}</text>
+            <t-tag wx:if="{{selectedId === item.id}}" tone="success" size="mini" text="已选定"></t-tag>
+          </view>
+        </view>
+      </view>
+      <text class="hint">选定后它就住进小岛。不满意可以重新生成。</text>
+      <t-button type="secondary" block anim="{{animType}}" class="block-gap" bindtap="regenerate">换一组</t-button>
+    </view>
+  </block>
+</view>

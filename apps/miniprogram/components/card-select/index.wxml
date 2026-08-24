@@ -1,0 +1,23 @@
+<view class="picks picks-{{columns}}" aria-role="radiogroup">
+  <view
+    wx:for="{{options}}"
+    wx:key="id"
+    class="pick {{value === item.id ? 'pick-on' : ''}} anim-{{anim}}"
+    data-id="{{item.id}}"
+    aria-role="radio"
+    aria-selected="{{value === item.id}}"
+    hover-class="pick-hover"
+    hover-stay-time="80"
+    bindtap="handleTap"
+  >
+    <view wx:if="{{item.image}}" class="pick-shot">
+      <image class="pick-img" src="{{item.image}}" mode="aspectFill" lazy-load />
+      <view class="pick-veil"></view>
+    </view>
+    <view class="pick-meta">
+      <text class="pick-label">{{item.label}}</text>
+      <text wx:if="{{item.hint}}" class="pick-hint">{{item.hint}}</text>
+    </view>
+    <view wx:if="{{value === item.id}}" class="pick-tick"></view>
+  </view>
+</view>

@@ -1,0 +1,11 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "include": [".astro/types.d.ts", "**/*"],
+  "exclude": ["dist"],
+  "compilerOptions": {
+    // content.config.ts 的 schema 需要这两项（方案第 5 章）。strict 模板已给
+    // strictNullChecks，allowJs 用于 scripts/ 下的 .mjs 与 src/scripts/site.js。
+    "allowJs": true,
+    "strictNullChecks": true
+  }
+}

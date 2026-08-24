@@ -1,0 +1,94 @@
+/**
+ * 悬浮胶囊，四套主题统一形态（UI 重构方案 3.4）。
+ *
+ * 原先按主题分四种结构（cute 胶囊 / glass 毛玻璃 / light 贴底细线 / dark 贴底霓虹），
+ * 方案指出「贴底整条 + 色块高亮」是廉价感的主要来源，故统一为悬浮胶囊；
+ * 主题差异只保留材质（glass 的毛玻璃、dark 的霓虹微光），不再改结构。
+ *
+ * 选中态取消色块背景，改为「图标放大 + 主色 + 底部圆点」——
+ * 色块会在胶囊内切出第二个矩形，破坏胶囊的完整轮廓。
+ */
+.tabbar {
+  position: fixed;
+  right: var(--space-3);
+  bottom: calc(var(--space-2) + env(safe-area-inset-bottom));
+  left: var(--space-3);
+  z-index: 20;
+  display: flex;
+  box-sizing: border-box;
+  align-items: stretch;
+  border: var(--border-highlight);
+  border-radius: var(--radius-pill);
+  background: var(--card-background);
+  box-shadow: var(--shadow-float);
+  transition: background var(--dur-base) var(--ease-out);
+}
+
+.item {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-height: 108rpx;
+  padding: var(--space-2) 0;
+  color: var(--text-secondary);
+  transition: color var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
+}
+
+.item-glyph {
+  font-size: var(--font-h3);
+  line-height: 1;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.item-text {
+  font-size: var(--eyebrow-size);
+}
+
+/* 选中态：图标放大 + 主色 + 底部圆点，不用色块 */
+.item.active {
+  color: var(--primary);
+  font-weight: var(--fw-bold);
+}
+
+.item.active .item-glyph {
+  transform: scale(1.12);
+}
+
+.item.active::after {
+  position: absolute;
+  bottom: var(--space-1);
+  width: 8rpx;
+  height: 8rpx;
+  border-radius: 50%;
+  background: var(--primary);
+  content: "";
+}
+
+.item-hover.anim-bounce { transform: scale(.94); }
+.item-hover.anim-fade { opacity: .8; }
+.item-hover.anim-glow { color: var(--primary); }
+.item-hover.anim-neon { color: var(--primary); }
+
+/* glass：胶囊本体改半透明毛玻璃，透出页面渐变 */
+.tabbar-glass {
+  background: var(--surface);
+  backdrop-filter: blur(var(--card-blur));
+  -webkit-backdrop-filter: blur(var(--card-blur));
+}
+
+.tabbar-glass .item.active {
+  color: var(--secondary);
+}
+
+.tabbar-glass .item.active::after {
+  background: var(--secondary);
+}
+
+/* dark：选中图标带霓虹微光，与该皮肤的 neon 动效呼应 */
+.tabbar-dark .item.active .item-glyph {
+  text-shadow: 0 0 18rpx var(--ai-glow);
+}

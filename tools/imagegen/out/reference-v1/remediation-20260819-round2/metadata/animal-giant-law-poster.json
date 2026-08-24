@@ -1,0 +1,39 @@
+{
+  "task": "user-feedback-frozen-master-refinement-2026-08-19-round2",
+  "templateId": "animal-giant-law-poster",
+  "title": "巨物法相海报",
+  "kind": "master",
+  "version": "v04",
+  "status": "generated-pending-visual-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputFidelity": "high",
+  "inputPolicy": {
+    "sequential": true,
+    "imageCount": 1,
+    "maxImages": 1,
+    "longestEdge": 1200,
+    "jpegQuality": 82,
+    "maxCombinedBytes": 1000000
+  },
+  "input": {
+    "role": "current-self-owned-frozen-master-edit-target",
+    "originalPath": "tools/imagegen/out/reference-v1/retired-masters/animal-giant-law-poster_shepherd-dog_9x16_stylebridge-v03.png",
+    "preparedPath": ".tmp/master-remediation-20260819-round2-inputs/animal-giant-law-poster-current-master.jpg",
+    "bytes": 161909,
+    "sha256": "bb3027a201a3b1fab430eda49dcbd6deea3b73b93fd72cbeab96fa277392a555"
+  },
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "output": {
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819-round2/raw/animal-giant-law-poster.png",
+    "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819-round2/master-candidates/animal-giant-law-poster_shepherd-dog_9x16_stylebridge-v04.png",
+    "width": 720,
+    "height": 1280,
+    "sha256": "7008604a5b92ccca9abf2d21ce7f738a5b3fd1348c7024ce14bff8d6a953c223"
+  },
+  "prompt": "Use case: identity-preserve precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the current self-owned frozen master and the sole edit target. Make only the explicitly requested micro-adjustment and preserve every other visible detail, including subject identity, scene, camera, crop, pose, anatomy, costume, props, palette, lighting, depth, texture and visual medium. Keep the exact 9:16 portrait composition. No extra subjects, duplicate anatomy, malformed paws, text, logo, watermark or signature. Increase only the German Shepherd head, ears and muzzle by one subtle proportional step, approximately 10 to 12 percent, so the head fits the immense humanoid shoulders and torso naturally. The head must remain relatively small enough to preserve the monumental full-body scale, but must no longer look undersized or disconnected from the neck. Do not change the neck, shoulders, torso, extended paw, robe, body silhouette, low camera, background, lighting or framing.",
+  "revisedPrompt": "Edit the provided self-owned frozen-master candidate image with extreme identity preservation and minimal change. Keep the exact same 9:16 portrait composition, camera angle, framing, pose, lighting, background, robe, body silhouette, neck, shoulders, torso, extended paw, props, palette, texture, and visual medium. Make only one subtle proportional adjustment: increase the German Shepherd head, ears, and muzzle by approximately 10–12% so the head feels naturally integrated with the immense humanoid shoulders and torso, while still remaining relatively small enough to preserve the monumental full-body scale. Do not alter anything else. No extra subjects, no duplicate anatomy, no malformed paws, no text, no logo, no watermark, no signature.",
+  "generatedAt": "2026-08-19T07:01:47.565Z"
+}

@@ -1,0 +1,94 @@
+{
+  "templateId": "travel-glass-summer",
+  "entryId": "travel",
+  "title": "透明杯夏日视角",
+  "sourceEffectFile": "apps/website/public/assets/example/5.png",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/5.png",
+      "sha256": "1c9d67fc5e989a1bedb839c66abbebf844f9a4ed3f01552f260100a3f8247e9f"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "tuxedo-cat",
+      "species": "cat",
+      "breed": "adult black-and-white tuxedo cat",
+      "path": "tools/imagegen/out/source/cat-tuxedo.jpg",
+      "sha256": "c4b2ebaac7dd5d59fffd83a827d94fdc03e1befd3e1108f337de8ba5488a7d39"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult black-and-white tuxedo cat with black crown and ears, narrow white facial blaze, white muzzle and chest, pale green eyes, pink nose, black back and white front legs. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the inside-the-glass perspective, straw contact, summer colour and wide-angle distortion. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Edit the provided images into a single finished vertical poster. Use Image 1 as the exact composition, camera, crop, perspective, pose, action, lighting, color palette, background, props, and visual style reference. Preserve the inside-the-glass viewpoint, the green straw contact, the wide-angle distortion, the summer outdoor feel, the strawberry shaved-ice foreground, and the overall layout exactly.\n\nReplace the human subject in Image 1 with ONE coherent adult black-and-white tuxedo cat matching Image 2’s identity only: black crown and ears, narrow white facial blaze, white muzzle and chest, pale green eyes, pink nose, black back, white front legs. Keep the cat friendly, appealing, and natural, with the same expressive gaze and head position as the source composition. Render the cat fully in Image 1’s visual language so it feels native to the scene, not pasted in.\n\nDo not change the scene beyond the required identity replacement and the smallest anatomy/contact-boundary corrections needed for correct adult cat anatomy. Do not add extra ears, eyes, limbs, paws, or duplicate subjects. Do not redesign, beautify, age, juvenilize, thin, elongate, recolor, or clean up the background. Preserve all meaningful text, landmarks, clothing-like elements, and distinctive props unless a safe original wording replacement is needed for any recognizable branding or copyrighted text; if so, keep the same text blocks and visual hierarchy with short original pet-safe wording. No logos or signatures.\n\nDeliver as an exact 9:16 final composition at 720x1280 pixels.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/expansion/candidates/travel-glass-summer_tuxedo-cat_9x16_v01.png",
+    "sha256": "5ef716da4896c36d9a798a2e0e400f41ab8ca7ab8ca723eb22fdb2d70f7b3d76"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-20T12:00:00+08:00"
+  },
+  "generatedAt": "2026-08-17T16:11:51.553Z",
+  "version": "v01",
+  "candidatePath": "tools/imagegen/out/reference-v1/expansion/candidates/travel-glass-summer_tuxedo-cat_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/travel-glass-summer_tuxedo-cat_9x16_v01.webp",
+  "masterSha256": "a6f5669deade10ee71ab1d43b505f647c4d290cfba45743569f69f5cbd2e5017",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-20T12:00:00+08:00",
+    "note": "用户审阅 pending-masters-comparison 后明确表示除指定重做和删除项外，其余模板可以冻结。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/travel-glass-summer_tuxedo-cat_9x16_v01.webp",
+      "sha256": "a6f5669deade10ee71ab1d43b505f647c4d290cfba45743569f69f5cbd2e5017"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate",
+      "unapproved-candidate"
+    ]
+  },
+  "qualityBaseline": {
+    "required": [
+      "Keep the inside-the-glass perspective, straw contact, summer colour and wide-angle distortion.",
+      "exact 720x1280 portrait output",
+      "same approved composition, action, expression, lighting, palette, medium and text hierarchy"
+    ],
+    "reject": [
+      "scene redesign or missing distinctive layout details",
+      "juvenilized, malformed, duplicated or inconsistent pet anatomy",
+      "logo, platform UI, account ID, watermark or signature"
+    ]
+  }
+}

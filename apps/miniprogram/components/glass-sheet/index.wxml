@@ -1,0 +1,88 @@
+<wxs module="gesture" src="./index.wxs"></wxs>
+
+<view class="sheet-root">
+  <!-- 背景层：不随面板移动，图片与视频两条路径 -->
+  <video
+    wx:if="{{hasVideo}}"
+    class="sheet-media"
+    id="sheet-video"
+    src="{{backgroundVideo}}"
+    poster="{{poster}}"
+    object-fit="cover"
+    muted
+    loop
+    controls="{{false}}"
+    show-center-play-btn="{{false}}"
+    show-play-btn="{{false}}"
+    show-fullscreen-btn="{{false}}"
+    show-progress="{{false}}"
+    enable-progress-gesture="{{false}}"
+    autoplay="{{videoPlaying}}"
+    binderror="handleVideoError"
+  ></video>
+  <image
+    wx:elif="{{hasImage}}"
+    class="sheet-media"
+    src="{{backgroundImage}}"
+    mode="aspectFill"
+    binderror="handleImageError"
+  ></image>
+  <view wx:else class="sheet-media sheet-media-blank"></view>
+
+  <!-- 遮罩层：亮度联动的唯一实现，opacity 由 WXS 逐帧改 -->
+  <view class="sheet-scrim" style="opacity:{{initialScrim}}"></view>
+
+  <!-- 背景点击区：面板之外的区域 -->
+  <view class="sheet-hit" bindtap="handleBackgroundTap"></view>
+
+  <view class="sheet-overlay"><slot name="overlay"></slot></view>
+
+  <view
+    class="sheet-panel {{blur ? 'sheet-blur' : ''}}"
+    style="height:{{expandedPx}}px;transform:translateY({{initialOffset}}px);opacity:{{initialOpacity}}"
+  >
+    <view
+      class="sheet-grip"
+      data-geo="{{geo}}"
+      data-zone="grip"
+      catch:touchstart="{{gesture.start}}"
+      catch:touchmove="{{gesture.move}}"
+      catch:touchend="{{gesture.end}}"
+      catch:touchcancel="{{gesture.end}}"
+    >
+      <view
+        wx:if="{{!gestureDisabled}}"
+        class="sheet-handle hit-area tappable anim-{{anim}}"
+        aria-role="button"
+        aria-label="展开或收起详情"
+        bindtap="cycle"
+      >
+        <view class="sheet-handle-bar"></view>
+      </view>
+      <view wx:else class="sheet-handle-placeholder"></view>
+
+      <view wx:if="{{state === 'collapsed' && title}}" class="sheet-lead">{{title}}</view>
+      <view wx:else class="sheet-header"><slot name="header"></slot></view>
+    </view>
+
+    <scroll-view
+      class="sheet-scroll"
+      scroll-y="{{state !== 'collapsed'}}"
+      enable-flex
+      bindscroll="handleScroll"
+      data-geo="{{geo}}"
+      data-zone="content"
+      data-attop="{{atTop}}"
+      capture-bind:touchstart="{{gesture.start}}"
+      capture-bind:touchmove="{{gesture.move}}"
+      capture-bind:touchend="{{gesture.end}}"
+      capture-bind:touchcancel="{{gesture.end}}"
+    >
+      <view class="sheet-scroll-inner"><slot></slot></view>
+    </scroll-view>
+
+    <view class="sheet-actions" style="transform:translateY({{-initialOffset}}px)">
+      <slot name="actions"></slot>
+    </view>
+  </view>
+</view>

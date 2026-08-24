@@ -1,0 +1,64 @@
+{
+  "templateId": "leaping-cover",
+  "title": "腾空跳跃封面",
+  "entryId": "action",
+  "status": "master-candidate-pending-user-approval",
+  "subject": "border-collie",
+  "breed": "边境牧羊犬",
+  "revision": {
+    "version": "v06",
+    "supersedes": "leaping-cover_border-collie_9x16_v05.png",
+    "reviewFinding": "v04 偏厚重写实油画，v05 又过度转向线稿水彩；两者都未达到原参考的松散、蓬松、软萌数字印象派效果。",
+    "scope": "soft-airy-kawaii-digital-impressionist-full-regeneration"
+  },
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-soft-impressionist-effect-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/223c5d78-2ba2-49ff-b35e-8c247fd53b20.jpg",
+      "sha256": "ee04f9b8c5a48fe8ad768ec5d51fc5463093f437bf697899d1ee7821e6151a51"
+    },
+    {
+      "role": "pet-identity-only-reference",
+      "path": "apps/website/public/assets/work-border.jpg",
+      "sha256": "8862d1dc48584f73309eac0890afb3367759dd131c681de970976b52a561fc50"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: style-transfer with pet identity preservation. Create a vertical 9:16 soft impressionistic digital-painting pet action cover at exactly 720x1280 pixels from exactly two input images. Image 1 is the authoritative effect, composition, expression and style reference. Preserve its front-facing joyful leap, two large soft foreground paws, compact airborne body, completely closed happy crescent eyes, gentle open smile, small rounded nose, turquoise atmosphere, magenta-purple lower field, orange-yellow accents, loose colour blocks, light splashes and airy visual rhythm. Remove only its platform watermark and account ID. The target medium is soft impressionistic digital painting with a light expressive illustration finish: loose, airy and lively, with natural colour overlap, broad abstract colour fields and a few energetic paint splashes. The pet must feel fluffy, weightless and cotton-soft. Build all fur from many short, small, broken, feather-light brush dabs with low visual weight, soft blurred edges and abundant soft highlights. Let the outer fur dissolve gently into the coloured background. Hard anatomy and bony landmarks should be covered by soft fluffy fur. Use a cute, slightly exaggerated contemporary cartoon face: rounded cheeks, short soft muzzle, small rounded nose, gentle mouth curve and youthful appealing proportions. Reduce realistic structure and volume; prioritise sweetness, mood and softness. Facial brushwork must remain finer, lighter and softer than body brushwork. Use subtle layered digital colour, delicate broken marks and soft transitions rather than outlines or physical paint relief. Do not use thick impasto, heavy oil-paint texture, palette-knife ridges, canvas cracks, gritty pigment chunks, long strongly directional fur strokes, hard edges, sharp contour lines, strong sculptural volume, realistic anatomy emphasis, dramatic realistic lighting, photorealism, traditional oil painting, 3D rendering or physical-world material realism. Give the Border Collie an exceptionally soft lovable face. Both eyes are fully closed into round, soft upward smile curves buried slightly in fluffy facial fur; no eyeballs are visible. Keep the brow relaxed. Make the muzzle shorter, fuller and rounder than a realistic Border Collie. Make the nose small, softly painted and low-contrast. Keep the mouth open in a gentle happy smile with a bright coral tongue, tiny simplified teeth and naturally lifted mouth corners, never a realistic canine gape. Make the black-and-white facial coat feel like airy cotton. Use many short fragmented dark navy, charcoal, cream and warm-grey marks with soft feathered transitions. The white blaze, cheeks and chest should carry plentiful natural soft highlights without turning solid or heavy. Image 2 is identity-only. Preserve its breed, coat colour blocks, distinctive markings, eye colour and recognisable proportions, but do not copy its photographic lighting, realistic hair strands, lens detail, surface texture or anatomical hardness. Reinterpret every identity feature through Image 1's soft impressionistic digital-painting language. Keep one healthy, youthful, rounded and instantly lovable pet with correct limbs and no fused anatomy. Preserve from Image 2 the narrow white facial blaze, white muzzle and chest, black coat blocks, warm-brown eye identity even though the eyes are closed, black nose and semi-upright ears. Keep all four limbs readable but soften their structural definition beneath fluffy fur. No text, logo, platform mark, watermark or signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "prechecked-pending-user-approval",
+    "checks": {
+      "petIdentity": "pass",
+      "cuteness": "pass",
+      "effectComposition": "pass",
+      "airyShortBrushwork": "pass",
+      "fluffySoftEdges": "pass",
+      "reducedAnatomicalStructure": "pass",
+      "digitalImpressionistStyle": "pass",
+      "anatomy": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [
+      "边牧身份与黑白花色稳定，窄白鼻梁、白口鼻和半立耳可辨识。",
+      "面部已改为闭眼圆弧、短圆口鼻和柔和甜笑，整体年轻、亲和且可爱。",
+      "毛发以短碎轻笔触和虚化边缘呈现，白色高光蓬松，硬朗骨骼与写实体积感已明显降低。",
+      "腾空动作、前景双爪及青绿、洋红、橙黄抽象色场保留，未出现文字、水印或平台标识。"
+    ],
+    "finalApproval": "pending-user"
+  },
+  "generatedAt": "2026-08-13T10:36:25.399Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/leaping-cover_border-collie_9x16_v06.png",
+    "sha256": "14820b398bcdc993212334418c7ddcb7f23d294d016103951f421076047892e3"
+  }
+}

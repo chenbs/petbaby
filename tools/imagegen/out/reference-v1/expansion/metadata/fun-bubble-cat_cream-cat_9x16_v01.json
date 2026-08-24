@@ -1,0 +1,94 @@
+{
+  "templateId": "fun-bubble-cat",
+  "entryId": "fun",
+  "title": "气泡萌语",
+  "sourceEffectFile": "apps/website/public/assets/example/5deeda1a-3bb9-4994-b381-6ce5d704541f.jpg",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/5deeda1a-3bb9-4994-b381-6ce5d704541f.jpg",
+      "sha256": "64f91a5ea91a7596fc0feb96f823b5df49b11be9412e81f2915f5a617f9a8e8e"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "cream-cat",
+      "species": "cat",
+      "breed": "adult cream long-haired cat",
+      "path": "tools/imagegen/out/source/cat-cream.jpg",
+      "sha256": "db5fc390f9cbf4f5ee0eee38850e28012a0953a98c148e7df5b354a539dab7e9"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult cream long-haired cat with pale cream long coat, soft cream points, blue eyes, pink nose, triangular ears, fluffy tail and healthy adult body. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the cute illustration, paws, face framing and speech bubble; set the short bubble text to exactly '哎'. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create an exact vertical 9:16 composition at 720x1280 pixels, matching the provided cute illustration scene and layout as closely as possible. Preserve the original composition, crop, perspective, pose, expression, camera angle, lighting, pastel white/lilac palette, brushwork, line quality, fluffy texture, paws-up framing, and the speech bubble placement. Replace the subject with one coherent adult cream long-haired cat identity: pale cream long coat, soft cream points, blue eyes, pink nose, triangular ears, fluffy tail, healthy adult proportions. The cat should be friendly, appealing, and cute, with the same illustration style and expression transfer, not photographic. Keep the cat lying on its back with paws toward camera, fluffy chest framing the face, and the same overall chibi/anime-style look. Keep the speech bubble and set the text to exactly: '哎'. Preserve the plain soft indoor background, bedding, and radiator-like backdrop without redesign or cleanup. Do not add extra limbs, eyes, ears, hands, duplicate pets, or any human features. Maintain one coherent adult pet identity throughout. Keep the image soft, clean, pastel, and centered as in the reference.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/expansion/candidates/fun-bubble-cat_cream-cat_9x16_v01.png",
+    "sha256": "13efcbe8d3d204db063fbaa53bb72dbf4cd384d3e51fcd3741a8bb4978ca0b20"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-20T12:00:00+08:00"
+  },
+  "generatedAt": "2026-08-17T16:11:32.253Z",
+  "version": "v01",
+  "candidatePath": "tools/imagegen/out/reference-v1/expansion/candidates/fun-bubble-cat_cream-cat_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/fun-bubble-cat_cream-cat_9x16_v01.webp",
+  "masterSha256": "69710dea4cf2ab848a2eb93c6da50f87c9d5ee6ac93859f1fd45b946f064efa2",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-20T12:00:00+08:00",
+    "note": "用户审阅 pending-masters-comparison 后明确表示除指定重做和删除项外，其余模板可以冻结。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/fun-bubble-cat_cream-cat_9x16_v01.webp",
+      "sha256": "69710dea4cf2ab848a2eb93c6da50f87c9d5ee6ac93859f1fd45b946f064efa2"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate",
+      "unapproved-candidate"
+    ]
+  },
+  "qualityBaseline": {
+    "required": [
+      "Keep the cute illustration, paws, face framing and speech bubble; set the short bubble text to exactly '哎'.",
+      "exact 720x1280 portrait output",
+      "same approved composition, action, expression, lighting, palette, medium and text hierarchy"
+    ],
+    "reject": [
+      "scene redesign or missing distinctive layout details",
+      "juvenilized, malformed, duplicated or inconsistent pet anatomy",
+      "logo, platform UI, account ID, watermark or signature"
+    ]
+  }
+}

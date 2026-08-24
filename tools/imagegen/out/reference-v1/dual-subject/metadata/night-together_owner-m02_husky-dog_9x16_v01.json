@@ -1,0 +1,76 @@
+{
+  "templateId": "night-together",
+  "title": "夜间宠物合影",
+  "entryId": "together",
+  "version": "v01",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "requestOrder": [
+    "effect-reference",
+    "owner-identity",
+    "pet-identity"
+  ],
+  "inputs": [
+    {
+      "role": "third-party-effect-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/1786369158880.png",
+      "sha256": "082545b4f425a1f55ba4b49b8a8962b944e57d3ec39b1be2dbc99b91950ecc7f"
+    },
+    {
+      "role": "authorized-owner-identity-reference-internal-only",
+      "path": "tools/imagegen/out/source/boy-sample2.png",
+      "sha256": "4d121dd7a5d74e259da11db9db0573d49dae79d24bed9d7072bb0c821f2140b2"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "path": "tools/imagegen/out/source/dog-husky.jpg",
+      "sha256": "41280a50599eb23fa200e8851d1c6a12762398d62f868fe29e18c315eff87a8d"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "ownerPublicSampleAllowed": false,
+  "sceneChangeBudget": "0%",
+  "inputFidelity": "high",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "elapsedMs": 206436,
+  "prompt": "Use case: compositing and identity-preserve. Create a vertical 9:16 self-owned master candidate from exactly three input images. The final delivered asset will be exactly 720x1280 pixels. Image 1 is the effect reference and has highest priority for every non-identity visual decision. Keep a strict 0% scene-change budget: preserve its background, environment, camera position, lens, crop, composition, subject placement, action timing, expression, gaze, hand and paw placement, lighting, colour balance, medium, brushwork or photographic texture, clothing, landmarks, unique props and text layout. Change only the two subject identities and the minimum physical fit around their different bodies. Image 2 is the only owner identity reference. Preserve that exact adult person's face, facial proportions, hair, gender presentation and adult age. It contributes no pose, hand gesture, clothing, camera, scene, light or style. Image 3 is the only pet identity reference. Preserve that exact pet's species, breed, coat colours, markings, face, eye colour, ear shape, muzzle, fur length and healthy adult proportions. It contributes no pose, camera, scene, light or style. Never reuse either original subject identity from Image 1. Transfer Image 1's complete pose, gaze, facial expression, action, body direction, contact points, scale and visual treatment onto the two new identities from Images 2 and 3. Keep both new subjects recognisable, attractive and immediately likeable in a contemporary young aesthetic, without obvious age regression. Do not turn an adult owner into a child or an adult pet into a puppy or kitten. Do not make either subject gaunt, oddly thin, aged, uncanny or physically distorted. Exactly one owner and one pet. Never swap, merge, duplicate or blend their identities. No extra person, face, pet, head, hand, finger, paw, limb or tail. Keep all anatomy, contacts and occlusions physically coherent. Scene lock: the exact ordinary nighttime paved walkway, dark open surroundings, sparse ambient street lighting and unpolished real-life phone-photo atmosphere. Composition and action lock: the exact steep high-angle snapshot: the large pet sits on the left looking up with a cheerful open-mouth expression while the crouching owner stays on the right, looks up at the phone camera and makes the same V hand gesture; preserve their spacing, grounded shadows and believable scale. Visual treatment lock: the exact candid night smartphone photography, restrained colour, moderate sensor noise, clear recognisable faces, believable local flash or street light and no cinematic restaging. Preserve the grey hoodie, black trousers and casual shoes. Only adjust their fit to the new adult owner; do not redesign the outfit. Do not add captions, platform UI, logos, watermarks or signatures.",
+  "revisedPrompt": "Use case: compositing and identity-preserve. Create a vertical 9:16 self-owned master candidate from exactly three input images. The final delivered asset will be exactly 720x1280 pixels. Image 1 is the effect reference and has highest priority for every non-identity visual decision. Keep a strict 0% scene-change budget: preserve its background, environment, camera position, lens, crop, composition, subject placement, action timing, expression, gaze, hand and paw placement, lighting, colour balance, medium, brushwork or photographic texture, clothing, landmarks, unique props and text layout. Change only the two subject identities and the minimum physical fit around their different bodies. Image 2 is the only owner identity reference. Preserve that exact adult person's face, facial proportions, hair, gender presentation and adult age. It contributes no pose, hand gesture, clothing, camera, scene, light or style. Image 3 is the only pet identity reference. Preserve that exact pet's species, breed, coat colours, markings, face, eye colour, ear shape, muzzle, fur length and healthy adult proportions. It contributes no pose, camera, scene, light or style. Never reuse either original subject identity from Image 1. Transfer Image 1's complete pose, gaze, facial expression, action, body direction, contact points, scale and visual treatment onto the two new identities from Images 2 and 3. Keep both new subjects recognisable, attractive and immediately likeable in a contemporary young aesthetic, without obvious age regression. Do not turn an adult owner into a child or an adult pet into a puppy or kitten. Do not make either subject gaunt, oddly thin, aged, uncanny or physically distorted. Exactly one owner and one pet. Never swap, merge, duplicate or blend their identities. No extra person, face, pet, head, hand, finger, paw, limb or tail. Keep all anatomy, contacts and occlusions physically coherent. Scene lock: the exact ordinary nighttime paved walkway, dark open surroundings, sparse ambient street lighting and unpolished real-life phone-photo atmosphere. Composition and action lock: the exact steep high-angle snapshot: the large pet sits on the left looking up with a cheerful open-mouth expression while the crouching owner stays on the right, looks up at the phone camera and makes the same V hand gesture; preserve their spacing, grounded shadows and believable scale. Visual treatment lock: the exact candid night smartphone photography, restrained colour, moderate sensor noise, clear recognisable faces, believable local flash or street light and no cinematic restaging. Preserve the grey hoodie, black trousers and casual shoes. Only adjust their fit to the new adult owner; do not redesign the outfit. Do not add captions, platform UI, logos, watermarks or signatures.",
+  "automatedChecks": {
+    "dimensions": "pass",
+    "visualContent": "pass",
+    "inputCount": 3,
+    "inputRoleOrder": "pass"
+  },
+  "visualReview": {
+    "state": "approved-by-user",
+    "failureChecks": [
+      "owner-right-pet-left",
+      "high-angle-snapshot",
+      "owner-v-gesture",
+      "adult-large-pet",
+      "one-owner-one-pet"
+    ],
+    "approvedAt": "2026-08-17T00:00:00.000+08:00"
+  },
+  "generatedAt": "2026-08-17T08:11:18.604Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/dual-subject/candidates/night-together_owner-m02_husky-dog_9x16_v01.png",
+    "rawPath": "tools/imagegen/out/reference-v1/dual-subject/candidates/raw/night-together_owner-m02_husky-dog_9x16_v01.png",
+    "sha256": "fe94bde41133a245937ed3e4d2bf01aeab9e273f08d8b9d7485ae0adb6858edc"
+  },
+  "candidatePath": "tools/imagegen/out/reference-v1/dual-subject/candidates/night-together_owner-m02_husky-dog_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/night-together_owner-m02_husky-dog_9x16_v01.webp",
+  "masterSha256": "424aeb7d8e1aad7e4aa5e5e5d115419e9924f1eff515646c7c035ea6aff1d7c3",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-17T00:00:00.000+08:00",
+    "note": "四张双主体母版已由用户逐组查看并明确审批通过。"
+  },
+  "ownerSourcePhotoPublicSampleAllowed": false,
+  "approvedDerivedMasterPublicSampleAllowed": true
+}

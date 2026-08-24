@@ -1,0 +1,44 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+
+<view class="page page-flat">
+  <text class="eyebrow">APPEARANCE</text>
+  <view class="title">挑一套喜欢的外观</view>
+  <text class="muted">切换立即生效，选择会记住，不影响任何作品内容。</text>
+
+  <view class="theme-list section">
+    <view
+      wx:for="{{previews}}"
+      wx:key="id"
+      class="preview {{item.active ? 'preview-on' : ''}}"
+      style="{{item.style}}"
+      data-id="{{item.id}}"
+      aria-role="radio"
+      aria-checked="{{item.active}}"
+      hover-class="preview-hover"
+      bindtap="choose"
+    >
+      <!-- 卡内所有元素都吃自身 style 上的变量，因此呈现的是该主题的真实观感 -->
+      <view class="preview-inner">
+        <view class="preview-head">
+          <view class="preview-name">{{item.name}}</view>
+          <view wx:if="{{item.active}}" class="preview-check">使用中</view>
+        </view>
+        <text class="preview-desc">{{item.description}}</text>
+        <view class="preview-demo">
+          <view class="demo-card">
+            <view class="demo-line demo-line-title"></view>
+            <view class="demo-line"></view>
+            <view class="demo-line demo-line-short"></view>
+          </view>
+          <view class="demo-side">
+            <view class="demo-btn">解锁</view>
+            <view class="demo-btn demo-btn-ai">AI</view>
+            <view class="demo-tag">已完成</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <t-notice type="info" message="玻璃科技主题在部分安卓机型不支持毛玻璃，会自动退回不透明卡片，功能不受影响。"></t-notice>
+</view>

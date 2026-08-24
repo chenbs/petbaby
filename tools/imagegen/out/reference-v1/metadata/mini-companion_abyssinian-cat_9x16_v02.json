@@ -1,0 +1,59 @@
+{
+  "templateId": "mini-companion",
+  "title": "同宠大小分身",
+  "entryId": "character",
+  "status": "superseded-by-current-candidate",
+  "version": "v02",
+  "subject": "abyssinian-cat",
+  "breed": "成年阿比西尼亚猫",
+  "selectionRationale": "用阿比西尼亚猫验证同一身份的大小分身、护目镜反射和成套户外服装在横版中保持一致。",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-effect-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/1786369135481.png",
+      "sha256": "d7a6c5fc1bf7fbb460d9bd384512f4095d011e2063d9f3be0855f5fad7fd047b"
+    },
+    {
+      "role": "pet-identity-reference",
+      "path": "apps/website/public/assets/avatar-abyssinian.jpg",
+      "sha256": "8714ff092ab9b9e58a3c440eb16756b1149cd02c4050a8fb4f5f63b902184268"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "inputFidelity": "not-sent",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving effect replication. Asset type: internal self-owned pet template master, exact final canvas 720x1280 (9x16). Use exactly two input images. Image 1 is the third-party effect reference used only for this internal master-production pass. Image 2 is the sole pet identity reference. Replace only the principal animal or person subject in Image 1 with the exact pet from Image 2. Remove every residual face, hair, skin, hand, paw, limb, coat marking or silhouette from the original subject. Image 2 controls only pet identity: species, breed, coat, markings, ear shape, eye colour, actual age and natural healthy proportions. Image 1 controls every transferred visual detail: composition, crop, camera, perspective, subject position, pose, action, expression, gaze, lighting, palette, rendering medium, brushwork, line quality, texture, clothing, props, text layout and subject-to-scene contacts. Scene-change budget is 0%. Do not redesign, reinterpret, recolour, simplify, clean up or add background content. Translate the original pose, action and expression to correct animal anatomy with only the smallest contact-boundary adjustment required by the new species. Never create a human face, human skin, human hands or fingers. Keep paws anatomically natural and keep clothing and props physically attached. The replacement pet must be rendered completely in Image 1's medium and detail language, including its face, eyes, muzzle, ears and fur. Never paste a photographic pet face into an illustration or leave realistic photographic facial texture inside a painted scene. Do not copy Image 2's pose, expression, background, lighting or photographic rendering. Preserve the pet's adult age and natural breed proportions. Do not turn it into a puppy or kitten, enlarge the head or eyes, shorten the muzzle or body, or force a generic baby face. Keep it healthy, friendly and immediately appealing through the transferred expression and art direction, never skinny, gaunt, old, stern, aggressive, uncanny or strange. Keep the complete meaningful text, clothing, landmarks and distinctive props from Image 1 except for the explicit rights-safe text or emblem replacements stated below. Remove third-party platform watermarks, account IDs, signatures and unrelated brand marks. No new logo or watermark. The replacement identity is the exact adult ruddy Abyssinian cat from Image 2. Preserve the warm ruddy ticked coat, darker forehead markings, large upright ears, golden almond eyes, terracotta nose, elegant adult face and lean but healthy natural adult body. Preserve Image 1's exact vertical portrait composition and high-key white studio setup: slight diagonal floor line, large companion at left-front, miniature companion at right-rear, camera height, scale contrast, shadows and clean commercial outdoor-gear photography. Keep the same tall framing and extend only the existing seamless white field as needed to reach 9:16; do not rotate, widen or redesign it as a horizontal scene. Replace both Schnauzers with two scale versions of the exact same adult Abyssinian cat from Image 2. The two figures must read unmistakably as one identical pet duplicated at different sizes, with the same coat, facial structure, ears, eyes and adult age. The miniature is not a kitten. Preserve the exact seated poses, head tilt, calm confident expression, black jackets, purple chest harnesses, blue-framed mirrored ski goggles, toggles, seams and floor contacts. Fit the goggles around feline ears without hiding or deforming them. Expand only the existing seamless white studio field to fill the horizontal canvas; add no object or scenery. Keep exactly the requested pet identity throughout. Correct animal anatomy only: no duplicate or fused limbs, extra ears, warped eyes, malformed mouth, floating tail, broken garment boundaries or residual original subject.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "superseded-before-user-approval",
+    "checks": {
+      "petIdentity": "pass",
+      "adultAgeAndCuteness": "pass",
+      "poseExpressionAndAction": "pass",
+      "sceneComposition": "pass",
+      "faceAndMediumConsistency": "pass",
+      "anatomyAndContacts": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [
+      "大小两只的护目镜停在额头、没有覆盖眼睛，已由镜片对齐眼线并完整遮眼的候选替代。"
+    ],
+    "finalApproval": "not-applicable",
+    "precheckedAt": "2026-08-14T10:58:00.634Z"
+  },
+  "generatedAt": "2026-08-14T10:45:10.124Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/mini-companion_abyssinian-cat_9x16_v02.png",
+    "rawPath": "tools/imagegen/out/reference-v1/candidates/raw/mini-companion_abyssinian-cat_9x16_v02.png",
+    "sha256": "3777a50b842449b6a9bd9e6cbd58a5199b588ecab84fc55def41433d6830b4ec"
+  },
+  "replacedBy": "mini-companion_abyssinian-cat_9x16_v03"
+}

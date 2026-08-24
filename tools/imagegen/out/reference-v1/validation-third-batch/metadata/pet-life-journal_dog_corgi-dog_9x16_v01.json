@@ -1,0 +1,65 @@
+{
+  "jobId": "pet-life-journal_dog_corgi-dog",
+  "templateId": "pet-life-journal",
+  "title": "本宠生涯日记",
+  "status": "superseded-by-approved-revision",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/pet-life-journal_toy-poodle-dog_9x16_v01.webp",
+      "sha256": "d7a87fba5d3d2fe7af7724770c52690265b3aad1d849de88cfdbd53270544a6e"
+    },
+    {
+      "role": "new-pet-identity-reference",
+      "identityId": "corgi-dog",
+      "species": "dog",
+      "breed": "adult Pembroke Welsh Corgi",
+      "path": "tools/imagegen/out/source/dog-corgi.jpg",
+      "sha256": "750c43038e21f8601be8b903889100c6b165d2b35cea3b7c0b55c0edce7ca9c2"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving template transfer. Produce one exact 720x1280 vertical 9:16 runtime validation image from exactly two input images. Image 1 is our frozen self-owned production master. It is the sole authority for every non-identity detail: scene, composition, crop, camera, pose, action, expression, gaze, lighting, palette, rendering medium, brushwork, clothing, text, props and all physical contacts. No third-party effect reference is included. Image 2 is the sole new-pet identity reference. Change only the pet identity. Remove every depiction and every residual feature of the master pet, then replace it with the new pet from Image 2. Scene-change budget is 0%. Do not redesign, reinterpret, clean up, recolour, restyle, simplify, move, delete or add anything in the master scene. Keep the exact warm campus-at-sunset scene, old stone building, glowing windows, lawn, path, right-side tree, outdoor wooden table, open notebook, pen, laptop with a plain unbranded paw mark, green sweater, soft backlight, film warmth and all pastel hand-drawn annotations, arrows, stars, hearts and clouds. Replicate the master's lower-right seated study pose, gentle downward focused expression, head angle, green sweater and exact interactions with the notebook, pen, laptop and table. Keep natural connected animal forepaws at the contact points. Remove the master animal completely and leave no human face, hair, skin, arm, hand or finger. The replacement must be the exact adult Pembroke Welsh Corgi from Image 2. Preserve its tan-and-white coat, broad white blaze, white muzzle and chest, dark eyes, large upright ears, short legs and compact sturdy adult body. Image 2 controls only species, breed, coat colour and markings, ear shape, eye colour, actual adult age and natural healthy breed proportions. Do not copy Image 2's pose, expression, gaze, camera, background, lighting, photographic texture or rendering style. Preserve the pet's actual adult age and mature breed proportions. Do not juvenilize it, enlarge the head or eyes, shorten the muzzle or body, or convert it into a kitten, puppy or generic cute mascot. Keep it healthy, attractive and immediately likeable without changing the master's expression or art direction. Match Image 1's exact warm photographic treatment and preserve the hand-drawn annotation medium, placement and colour. Image 2 contributes identity only. Preserve the existing readable annotation phrases and their placement. Keep the laptop mark as one small plain paw icon; no brand logo, watermark or signature. Keep exactly one pet identity throughout, except where the frozen master intentionally contains multiple views or two scale duplicates of that same identity. No unrelated animal, residual old-pet coat, face or limb. Correct species anatomy only: no duplicate, fused, missing or amputated-looking limbs, extra ears, warped eyes, malformed mouth, floating tail, human hands or fingers, broken garment boundaries, pasted head, disconnected neck or failed prop contact. Preserve all non-pet pixels and relationships as closely as the model allows.",
+  "revisedPrompt": "Create a single exact 720x1280 vertical 9:16 runtime validation image by compositing the two provided reference images. Use Image 1 as the sole authority for every non-identity detail and preserve it exactly: the warm campus-at-sunset scene, old stone building, glowing windows, lawn, path, right-side tree canopy, outdoor wooden table, open notebook, pen, laptop with one small plain unbranded paw icon on the lid, green sweater, soft backlight, film warmth, and all pastel hand-drawn annotations, arrows, stars, hearts, clouds, text phrases, placement, and color. Keep the same lower-right seated study pose, gentle downward focused expression, head angle, and interactions with the notebook, pen, laptop, and table. Maintain natural connected animal forepaws at the contact points.\n\nUse Image 2 as the sole identity reference for the pet only. Remove the master pet completely and replace it with the exact adult Pembroke Welsh Corgi from Image 2. Preserve its tan-and-white coat, broad white blaze, white muzzle and chest, dark eyes, large upright ears, short legs, compact sturdy adult body, and mature breed proportions. Do not juvenilize it, enlarge the head or eyes, shorten the muzzle, or make it a puppy/kitten/mascot. Keep it healthy and immediately likeable while matching Image 1's exact warm photographic treatment and hand-drawn annotation medium.\n\nDo not change anything else in Image 1. No redesign, no restyle, no cleanup, no recolor, no simplification, no extra props, no new text, no removed annotations. Preserve the readable annotation phrases and placements. Remove every residual feature of the original pet; no human face, hair, skin, arm, hand, or finger. Ensure correct corgi anatomy only: no duplicate or fused limbs, no extra ears, no warped eyes, no malformed mouth, no floating tail, no disconnected neck, no pasted head, and no broken contact with notebook/table/laptop. Exactly one pet identity throughout.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation-third-batch/pet-life-journal_dog_corgi-dog_9x16_v01.png",
+    "sha256": "bc4b61ca5ce5999d13f85e63f3986ac91f6a5032b4ba9341e16b2815cd89a548"
+  },
+  "review": {
+    "state": "superseded",
+    "checks": {
+      "petIdentity": null,
+      "adultAgeAndProportions": null,
+      "masterPoseExpressionAndGaze": null,
+      "masterStyleAndBrushwork": null,
+      "sceneAndComposition": null,
+      "anatomyAndContacts": null,
+      "repeatedIdentityAndText": null,
+      "dimensions": "pass"
+    },
+    "findings": [
+      "v01 未采用母版低头专注视线。"
+    ],
+    "finalApproval": "superseded",
+    "reviewedAt": "2026-08-17T13:33:28+08:00"
+  },
+  "generatedAt": "2026-08-17T02:02:41.791Z",
+  "supersededBy": "tools/imagegen/out/reference-v1/validation-third-batch/pet-life-journal_dog_corgi-dog_9x16_v02.png"
+}

@@ -1,0 +1,55 @@
+{
+  "kind": "master-candidate",
+  "templateId": "dessert-shopkeeper",
+  "title": "甜品饮品主理人",
+  "status": "candidate-pending-stability-review",
+  "runtimeMasterUseAllowed": false,
+  "source": {
+    "role": "approved-dedicated-public-preview",
+    "path": "tools/imagegen/out/reference-v1/masters/dessert-shopkeeper_public-v02-master-v01.webp",
+    "sha256": "d72ec372bf8d06f12a0578ede90ecf3176011d6f0e0a55961035164108cd0c95",
+    "publicVersion": "public-v02",
+    "metadataPath": "tools/imagegen/out/reference-v1/public-previews/metadata/dessert-shopkeeper_public-v02.json",
+    "generationInputRole": "effect-reference-edit-target"
+  },
+  "currentFrozenMaster": {
+    "path": "tools/imagegen/out/reference-v1/retired-masters/dessert-shopkeeper_toy-poodle_9x16_v02.png",
+    "sha256": "d2efd6d0153a3f383aa87ecfff46bc29c628759cd64d0bec9f4fd22f7596d7c5",
+    "approvedAt": "2026-08-14T15:00:00+08:00"
+  },
+  "candidate": {
+    "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/candidates/dessert-shopkeeper_public-v02_master-candidate.png",
+    "sha256": "2116a4cd9edc9d446ec4c019edb8b212d6ddcb53eafe7a8bd73bc84e3331c1b9",
+    "byteIdenticalToPublicPreview": true,
+    "orientation": "portrait",
+    "size": "720x1280"
+  },
+  "apiInputDerivative": {
+    "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/api-inputs/dessert-shopkeeper_public-v02_master-candidate.jpg",
+    "sha256": "7b1a92227a3db84e35a01f30d873c2762924845e30cf6e77142b5cffc2fd28b0",
+    "format": "jpeg",
+    "quality": 82,
+    "width": 675,
+    "height": 1200,
+    "bytes": 105562,
+    "maxEdgeLimit": 1200,
+    "perFileByteLimit": 460000
+  },
+  "provenance": {
+    "originalEffectReferenceUsedForPublicPreview": true,
+    "frozenMasterUsedToGeneratePublicPreview": false,
+    "thirdPartyEffectReferenceAllowedAtRuntime": false
+  },
+  "productionPromptExtensionOnPromotion": "Keep the pet behind the strawberry cake, the pink shopkeeper outfit and bow, all surrounding strawberries, warm dessert-shop light and centered portrait framing.",
+  "review": {
+    "stabilityIdentities": [
+      "british-shorthair-cat",
+      "german-shepherd-dog",
+      "cream-longhair-cat"
+    ],
+    "expectedOutputs": 3,
+    "state": "pending-generation",
+    "finalApproval": "pending-user"
+  },
+  "preparedAt": "2026-08-20T06:36:58.812Z"
+}

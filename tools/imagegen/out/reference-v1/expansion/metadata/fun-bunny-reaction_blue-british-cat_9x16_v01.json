@@ -1,0 +1,56 @@
+{
+  "templateId": "fun-bunny-reaction",
+  "entryId": "fun",
+  "title": "情绪角色头像",
+  "sourceEffectFile": "apps/website/public/assets/example/1786369106856.png",
+  "status": "revision-required-by-user",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/1786369106856.png",
+      "sha256": "67c1b3eb546bf59bd4e7c30890ad031f5437c85d7453db2c2234391b79ecd674"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "blue-british-cat",
+      "species": "cat",
+      "breed": "adult blue British Shorthair cat",
+      "path": "tools/imagegen/out/source/cat-british.jpg",
+      "sha256": "ddbdfb39b6cb3c6dddbfdd01555cd2fea299cfa927f76a1e7248d581152e0364"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult blue British Shorthair cat with solid blue-grey coat, round broad face, amber eyes, small upright ears, plush dense fur, thick tail and sturdy adult body. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the simple blue outfit, bold silhouette and strong annoyed personality; replace the rabbit anatomy with a natural pet. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a 720x1280 vertical image, preserving the composition, camera, crop, perspective, pose, expression, gaze, lighting, palette, medium and all background details of Image 1 exactly. Replace the original subject in Image 1 with the exact adult pet identity from Image 2: an adult blue British Shorthair cat with a solid blue-grey coat, round broad face, amber eyes, small upright ears, plush dense fur, thick tail, sturdy adult body, and friendly but mildly annoyed expression. Keep the simple blue outfit / silhouette / overall body placement as in Image 1, but adapt it naturally to the cat anatomy without adding extra limbs, paws, eyes, ears, or human features. Render the cat in the same visual language as Image 1, not photographic pasted-in realism. Preserve all meaningful props, landmarks, teacup/table setting, flowers, lace, and background decor exactly as in Image 1. Do not redesign, beautify, recolor, simplify, or clean up the scene. Maintain a coherent single cat identity throughout. Keep the finished result as an exact 9:16 composition matching Image 1 with only the subject identity changed.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/expansion/candidates/fun-bunny-reaction_blue-british-cat_9x16_v01.png",
+    "sha256": "1c273431545d318e8a6c02db0f78e8473a76fcdf7cc9e36f589efbffa4ddc837"
+  },
+  "review": {
+    "state": "revision-required-by-user",
+    "finalApproval": "revision-required",
+    "findings": [
+      "用户要求按 pending-masters-comparison 逐项修正，并以 fun-bunny-reaction_longhair-chihuahua-dog_9x16_v02 作为下一版待审候选。"
+    ],
+    "reviewedAt": "2026-08-20T00:00:00+08:00"
+  },
+  "generatedAt": "2026-08-17T16:11:45.736Z",
+  "replacedBy": "fun-bunny-reaction_longhair-chihuahua-dog_9x16_v02"
+}

@@ -1,0 +1,108 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+
+<view class="page page-flat">
+  <!--
+    品牌区按 F（杂志封面）改造：期数式 kicker + 巨大标题 + 引文 + 一条细线收口。
+    F 只作用于这一屏定调区，下方表单仍是常规卡片 —— 方案明确 F 承载不了表单。
+    cute 用插画，light/dark 用文字标识，glass 用发光标识（需求 5.21-1）。
+  -->
+  <view class="brand brand-{{themeId}}">
+    <view wx:if="{{themeId === 'cute'}}" class="brand-mark">🐾</view>
+    <text class="brand-kicker">PET LAB</text>
+    <view class="brand-name">宠物造物局</view>
+    <text class="brand-quote">把它的照片，做成只属于它的作品。</text>
+    <view class="brand-rule"></view>
+  </view>
+
+  <t-notice wx:if="{{message}}" type="{{messageType}}" message="{{message}}" class="block-gap"></t-notice>
+
+  <block wx:if="{{authenticated}}">
+    <t-card blur="{{blurOk}}" anim="{{animType}}" class="block-gap">
+      <view class="sub-title">已登录</view>
+      <text class="muted">{{accountLabel}}</text>
+    </t-card>
+    <t-button type="primary" block anim="{{animType}}" class="block-gap" bindtap="goHome">返回首页</t-button>
+    <t-button type="danger" block anim="{{animType}}" class="block-gap" bindtap="logout">退出登录</t-button>
+  </block>
+
+  <block wx:elif="{{!enabled}}">
+    <t-notice type="info" message="当前环境未开启账号密码登录。" class="block-gap"></t-notice>
+    <t-card blur="{{blurOk}}" anim="{{animType}}" class="block-gap">
+      <view class="sub-title">用微信登录</view>
+      <text class="muted">回到首页时会自动用微信身份进入，无需账号密码。</text>
+      <t-button type="primary" block anim="{{animType}}" class="block-gap" bindtap="goHome">用微信身份进入</t-button>
+    </t-card>
+  </block>
+
+  <block wx:else>
+    <!-- 登录/注册分段控件，替代两个按钮（需求 5.21-2） -->
+    <view class="segment">
+      <view
+        class="segment-item tappable anim-{{animType}} {{mode === 'login' ? 'segment-on' : ''}}"
+        aria-role="button"
+        data-mode="login"
+        bindtap="switchMode"
+      >登录</view>
+      <view
+        class="segment-item tappable anim-{{animType}} {{mode === 'register' ? 'segment-on' : ''}}"
+        aria-role="button"
+        data-mode="register"
+        bindtap="switchMode"
+      >注册</view>
+    </view>
+
+    <t-card blur="{{blurOk}}" anim="{{animType}}" class="block-gap">
+      <view class="stack">
+        <t-field
+          label="账号"
+          value="{{accountName}}"
+          placeholder="字母开头，3-32 位"
+          maxlength="32"
+          data-field="accountName"
+          required
+          bindchange="input"
+        ></t-field>
+        <t-field
+          label="密码"
+          value="{{password}}"
+          password
+          placeholder="请输入密码"
+          help="{{mode === 'register' ? '至少 10 位，需同时包含字母和数字。' : ''}}"
+          maxlength="64"
+          data-field="password"
+          required
+          bindchange="input"
+        ></t-field>
+        <t-field
+          wx:if="{{mode === 'register'}}"
+          label="昵称"
+          value="{{displayName}}"
+          placeholder="选填，例如「小林」"
+          maxlength="20"
+          data-field="displayName"
+          bindchange="input"
+        ></t-field>
+        <t-field
+          wx:if="{{mode === 'register' && inviteRequired}}"
+          label="邀请码"
+          value="{{inviteCode}}"
+          placeholder="请输入邀请码"
+          help="当前为邀请制，邀请码由管理员发放。"
+          maxlength="32"
+          data-field="inviteCode"
+          required
+          bindchange="input"
+        ></t-field>
+      </view>
+    </t-card>
+
+    <t-button
+      type="primary"
+      block
+      anim="{{animType}}"
+      loading="{{busy}}"
+      class="block-gap"
+      bindtap="submit"
+    >{{mode === 'login' ? '登录' : '注册并登录'}}</t-button>
+  </block>
+</view>

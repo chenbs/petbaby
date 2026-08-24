@@ -1,0 +1,145 @@
+{
+  "templateId": "animal-glass-paw-portrait",
+  "entryId": "fun",
+  "title": "玻璃爪印特写",
+  "sourceEffectFile": "apps/website/public/assets/example/animal/jimeng-2026-06-30-9004-帮我生成图片：保持脸不变，水后时尚宠物写真，泰迪头部特写，极近距离拍摄，比熊神态....png",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-06-30-9004-帮我生成图片：保持脸不变，水后时尚宠物写真，泰迪头部特写，极近距离拍摄，比熊神态....png",
+      "sha256": "e3e0b523eb0e73be93626006871b7dbb9d55eff2b2489de308731b777cb665d9"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "black-cat",
+      "species": "cat",
+      "breed": "adult black domestic shorthair cat",
+      "path": "tools/imagegen/out/source/cat-black.jpg",
+      "sha256": "e9d04dac4cee2a7753bcdbcedce7961cf819ab40fc08e39331977ff15df0df17"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: identity-preserve precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the current self-owned master and controls the replacement pet or owner identity unless the request explicitly changes the breed. Image 2 is the composition and effect reference. Use it only to correct the requested composition, pose, expression, gaze or visual treatment. Preserve every aspect that is not explicitly changed below, including the scene, camera, crop, palette, lighting, costume, props, spatial relationships and visual medium. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature. No extra subjects, duplicate anatomy, human hands on animals, malformed paws, text, logo, watermark or signature. Replace the black cat with one irresistibly cute adult apricot Toy Poodle: round teddy-bear trim, dense curly apricot coat, round dark eyes, small black nose, compact muzzle and joyful open mouth. Keep both front paws pressed against the glass, aquarium fish, underwater surface, bubbles, close perspective and reflections. Preserve strong rippling water-caustic light projected across the poodle's forehead, cheeks and muzzle; those bright refracted streaks on the face are mandatory. Return a 9:16 portrait composition.",
+  "revisedPrompt": "Edit the provided composition into a 9:16 portrait while preserving the exact aquarium-through-glass scene, close perspective, underwater surface, bubbles, reflections, camera angle, lighting, palette, and spatial relationships from the reference. Replace the black cat with one irresistibly cute adult apricot Toy Poodle only: round teddy-bear trim, dense curly apricot coat, round dark eyes, small black nose, compact muzzle, joyful open mouth. Keep both front paws pressed against the glass, with natural canine paw anatomy only. Preserve the aquarium fish around the dog, the glass reflections, and the rippling water-caustic light streaks projected strongly across the poodle’s forehead, cheeks, and muzzle; these bright refracted face streaks are mandatory. Maintain the same realistic photographic medium and dramatic aquarium look. Remove any platform badge, AI label, account name, account number, watermark, logo, or signature. No extra subjects, no duplicate anatomy, no human hands, no malformed paws, no text.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/remediation-20260819/master-candidates/animal-glass-paw-portrait_toy-poodle-dog_9x16_v02.png",
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/master-animal-glass-paw-portrait.png",
+    "sha256": "e1cfc22523913545163d2e9ac0c2fd46efd400cd2e7c090d816a3e8064b1f19e"
+  },
+  "review": {
+    "state": "approved-by-user-request",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-19T14:10:00+08:00"
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-19T05:52:28.955Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/remediation-20260819/master-candidates/animal-glass-paw-portrait_toy-poodle-dog_9x16_v02.png",
+  "masterPath": "tools/imagegen/out/reference-v1/public-previews/animal-glass-paw-portrait_toy-poodle-dog_9x16_v02.webp",
+  "masterSha256": "6e0a57339333a8a7dfc6f83e9472da063386cd73e15f0208f79a3c18864d1f79",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-19T14:10:00+08:00",
+    "note": "用户于 2026-08-19 明确要求按逐项意见返工并完成；候选已逐张目视复核后冻结为新版本。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/public-previews/animal-glass-paw-portrait_toy-poodle-dog_9x16_v02.webp",
+      "sha256": "6e0a57339333a8a7dfc6f83e9472da063386cd73e15f0208f79a3c18864d1f79"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate",
+      "unapproved-candidate"
+    ]
+  },
+  "subject": "poodle-dog",
+  "breed": "成年玩具贵宾犬（泰迪）",
+  "version": "v02",
+  "supersedes": {
+    "path": "tools/imagegen/out/reference-v1/retired-masters/animal-glass-paw-portrait_black-cat_9x16_v01.png",
+    "sha256": "369a5503476f2dcab7952bb3fd8c7236fe6fc2d1f033b06ace229f887e440d8f",
+    "metadata": "tools/imagegen/out/reference-v1/retired-masters/metadata/animal-glass-paw-portrait_black-cat_9x16_v01.json"
+  },
+  "remediationRequest": {
+    "task": "user-requested-frozen-master-remediation-2026-08-19",
+    "templateId": "animal-glass-paw-portrait",
+    "kind": "master",
+    "version": "v02",
+    "status": "approved-and-promoted",
+    "provider": "lingsuan",
+    "model": "gpt-image-2",
+    "endpoint": "/v1/images/edits",
+    "inputFidelity": "high",
+    "inputPolicy": {
+      "sequential": true,
+      "maxImages": 2,
+      "maxCombinedBytes": 1000000
+    },
+    "inputs": [
+      {
+        "role": "current-self-owned-master",
+        "path": ".tmp/master-remediation-20260819-inputs/animal-glass-paw-portrait-master.jpg",
+        "bytes": 110750,
+        "sha256": "49142cf2fd4595bb704be8e9edf29a4b03c014653c61fe2b0f84e2af1de3867c"
+      },
+      {
+        "role": "effect-reference-composition-guide",
+        "path": ".tmp/master-remediation-20260819-inputs/animal-glass-paw-portrait-effect.jpg",
+        "bytes": 99688,
+        "sha256": "bd3077a47232a13d36f9bc93168c7c6897364916a2d364de288fb4b677a75c2e"
+      }
+    ],
+    "orientation": "portrait",
+    "requestedSize": "720x1280",
+    "output": {
+      "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/master-animal-glass-paw-portrait.png",
+      "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819/master-candidates/animal-glass-paw-portrait_toy-poodle-dog_9x16_v02.png",
+      "width": 720,
+      "height": 1280,
+      "sha256": "e1cfc22523913545163d2e9ac0c2fd46efd400cd2e7c090d816a3e8064b1f19e"
+    },
+    "prompt": "Use case: identity-preserve precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the current self-owned master and controls the replacement pet or owner identity unless the request explicitly changes the breed. Image 2 is the composition and effect reference. Use it only to correct the requested composition, pose, expression, gaze or visual treatment. Preserve every aspect that is not explicitly changed below, including the scene, camera, crop, palette, lighting, costume, props, spatial relationships and visual medium. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature. No extra subjects, duplicate anatomy, human hands on animals, malformed paws, text, logo, watermark or signature. Replace the black cat with one irresistibly cute adult apricot Toy Poodle: round teddy-bear trim, dense curly apricot coat, round dark eyes, small black nose, compact muzzle and joyful open mouth. Keep both front paws pressed against the glass, aquarium fish, underwater surface, bubbles, close perspective and reflections. Preserve strong rippling water-caustic light projected across the poodle's forehead, cheeks and muzzle; those bright refracted streaks on the face are mandatory. Return a 9:16 portrait composition.",
+    "revisedPrompt": "Edit the provided composition into a 9:16 portrait while preserving the exact aquarium-through-glass scene, close perspective, underwater surface, bubbles, reflections, camera angle, lighting, palette, and spatial relationships from the reference. Replace the black cat with one irresistibly cute adult apricot Toy Poodle only: round teddy-bear trim, dense curly apricot coat, round dark eyes, small black nose, compact muzzle, joyful open mouth. Keep both front paws pressed against the glass, with natural canine paw anatomy only. Preserve the aquarium fish around the dog, the glass reflections, and the rippling water-caustic light streaks projected strongly across the poodle’s forehead, cheeks, and muzzle; these bright refracted face streaks are mandatory. Maintain the same realistic photographic medium and dramatic aquarium look. Remove any platform badge, AI label, account name, account number, watermark, logo, or signature. No extra subjects, no duplicate anatomy, no human hands, no malformed paws, no text.",
+    "generatedAt": "2026-08-19T05:52:28.955Z",
+    "approvedAt": "2026-08-19T14:10:00+08:00"
+  },
+  "qualityBaseline": {
+    "required": [
+      "cute adult toy poodle identity with the face-crossing caustic light preserved through the water surface",
+      "exact 720x1280 portrait output",
+      "clean finished image without platform UI, account IDs, logos, watermarks or signatures"
+    ],
+    "reject": [
+      "regression of the composition, expression, gaze, identity, texture or anatomy corrected by this remediation",
+      "extra subjects, duplicate or malformed anatomy, broken costume contacts, logo, watermark or signature"
+    ]
+  }
+}

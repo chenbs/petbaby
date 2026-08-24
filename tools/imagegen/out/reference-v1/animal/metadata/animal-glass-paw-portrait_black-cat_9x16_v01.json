@@ -1,0 +1,81 @@
+{
+  "templateId": "animal-glass-paw-portrait",
+  "entryId": "fun",
+  "title": "玻璃爪印特写",
+  "sourceEffectFile": "apps/website/public/assets/example/animal/jimeng-2026-06-30-9004-帮我生成图片：保持脸不变，水后时尚宠物写真，泰迪头部特写，极近距离拍摄，比熊神态....png",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-06-30-9004-帮我生成图片：保持脸不变，水后时尚宠物写真，泰迪头部特写，极近距离拍摄，比熊神态....png",
+      "sha256": "e3e0b523eb0e73be93626006871b7dbb9d55eff2b2489de308731b777cb665d9"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "black-cat",
+      "species": "cat",
+      "breed": "adult black domestic shorthair cat",
+      "path": "tools/imagegen/out/source/cat-black.jpg",
+      "sha256": "e9d04dac4cee2a7753bcdbcedce7961cf819ab40fc08e39331977ff15df0df17"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a one-time third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every designated original animal, human-like creature or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult black domestic shorthair cat with solid glossy black coat, vivid green eyes, black nose, upright ears and a compact healthy adult body. Render the face, fur and anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration or turn a stylized scene into a realistic photo. Keep the pet appealing and healthy, never skinny, gaunt, uncanny, aggressive or puppy-like. Keep the underwater/glass close-up, paw contact against the transparent surface, distorted perspective, reflections and playful open-mouth expression; replace only the pet identity. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character or artist names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a single final vertical 9:16 image at 720x1280 pixels by editing the first reference image into a pet-identity-preserving replacement using the second reference image as identity guidance.\n\nPreserve the first image’s composition exactly: underwater/glass close-up, the same camera angle, crop, distorted perspective through transparent surface, reflections, bubbles, lighting, dark aquarium background, and the same paw contact against the glass. Keep the same playful open-mouth expression translated into a cat expression, with one coherent subject centered in frame. Do not redesign the scene, background, palette, props, or text layout. Keep all visual relationships and contact points from image 1.\n\nReplace the original animal with an adult black domestic shorthair cat only. The cat must have a solid glossy black coat, vivid green eyes, black nose, upright ears, and a compact healthy adult body. Keep the face, fur, anatomy, and render style fully consistent with image 1’s visual language—do not paste in a photographic cat head or make the scene more realistic than the source. Keep the cat appealing, healthy, and natural, with correct feline anatomy and no extra limbs, paws, ears, or eyes. Preserve the paw-to-glass contact and the underwater/glass distortion effects. Maintain the same overall pose, gaze direction, action, and close-up framing from image 1.\n\nKeep the same text blocks and hierarchy if any appear, but replace any brand/watermark-like markings with short original pet-safe wording only if unavoidable; do not add new logos or signatures. Preserve the scene as a faithful frozen-master candidate of the first image with only the subject identity changed to the black domestic shorthair cat from the second reference.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-glass-paw-portrait_black-cat_9x16_v01.png",
+    "sha256": "369a5503476f2dcab7952bb3fd8c7236fe6fc2d1f033b06ace229f887e440d8f"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-18T01:00:00+08:00"
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-17T16:37:11.371Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/animal/candidates/animal-glass-paw-portrait_black-cat_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/retired-masters/animal-glass-paw-portrait_black-cat_9x16_v01.png",
+  "masterSha256": "369a5503476f2dcab7952bb3fd8c7236fe6fc2d1f033b06ace229f887e440d8f",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-18T01:00:00+08:00",
+    "note": "用户确认本批次除七个待重做模板外，其余动物效果候选均通过并保存为母版。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/animal-glass-paw-portrait_black-cat_9x16_v01.png",
+      "sha256": "369a5503476f2dcab7952bb3fd8c7236fe6fc2d1f033b06ace229f887e440d8f"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "unapproved-candidate"
+    ]
+  }
+}

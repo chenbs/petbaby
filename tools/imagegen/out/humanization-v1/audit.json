@@ -1,0 +1,435 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-19T03:02:10.645Z",
+  "generatedBy": "local-sharp-audit",
+  "modelCall": false,
+  "promptVersion": "pet-human-identity-v1",
+  "counts": {
+    "templates": 12,
+    "identities": 12,
+    "comparisons": 1,
+    "rejected": 2
+  },
+  "automaticGates": {
+    "structure": "pass",
+    "pngReadable": "pass",
+    "minimumDimensions": "pass",
+    "portraitOrientation": "pass",
+    "masterCandidateAspectMatch": "pass",
+    "distinctIdentityCoverage": "pass",
+    "pendingReviewOnly": "pass",
+    "rejectedAssetsReplaced": "pass"
+  },
+  "manualGatesPending": [
+    "pet identity is recognizable to the owner",
+    "face and body remain completely human",
+    "master composition, pose, clothing, lighting and style are preserved",
+    "no visible watermark, malformed anatomy or accidental extra subject"
+  ],
+  "templates": [
+    {
+      "templateId": "human-breezy-fence",
+      "title": "晴空微风",
+      "subjectMode": "pet-human",
+      "status": "pending-review",
+      "version": "v01",
+      "identityId": "tuxedo-cat",
+      "master": {
+        "path": "tools/imagegen/out/humanization-v1/masters/candidates/human-breezy-fence_9x16_v01.png",
+        "bytes": 1969517,
+        "width": 941,
+        "height": 1672,
+        "sha256": "51fc7ba239c7ec44a5b45764f4d882d2fcd25df5efa1110ccf1adfa113ab6f6b"
+      },
+      "identity": {
+        "path": "tools/imagegen/out/humanization-v1/identity-cards/tuxedo-cat_v01.png",
+        "bytes": 1899776,
+        "width": 1254,
+        "height": 1254,
+        "sha256": "b20bad28a99aabcbb2a9633334f86402f1e105e0d35ba0d4eaf8585a639a31bd"
+      },
+      "candidate": {
+        "path": "tools/imagegen/out/humanization-v1/probes/two-stage/human-breezy-fence_tuxedo-cat_9x16_v01.png",
+        "bytes": 1979624,
+        "width": 941,
+        "height": 1672,
+        "sha256": "c4111290fe9ea5ffdb1cc2037e0a2546c6bf1344dca818b442064a18bb06a467"
+      }
+    },
+    {
+      "templateId": "human-color-splash",
+      "title": "跃彩笔触",
+      "subjectMode": "pet-human",
+      "status": "pending-review",
+      "version": "v01",
+      "identityId": "parrot",
+      "master": {
+        "path": "tools/imagegen/out/humanization-v1/masters/candidates/human-color-splash_9x16_v01.png",
+        "bytes": 2550771,
+        "width": 941,
+        "height": 1672,
+        "sha256": "927212c9e7896b06852f9e7dd0ee2de2bad188c4fb6dfc7c091a38763c73bee3"
+      },
+      "identity": {
+        "path": "tools/imagegen/out/humanization-v1/identity-cards/parrot_v01.png",
+        "bytes": 2120830,
+        "width": 1122,
+        "height": 1402,
+        "sha256": "6a112bce51f775a1447c5a84afc073e98f00e13bfcbc7535e236dbd37c33b7bc"
+      },
+      "candidate": {
+        "path": "tools/imagegen/out/humanization-v1/probes/two-stage/human-color-splash_parrot_9x16_v01.png",
+        "bytes": 2664327,
+        "width": 941,
+        "height": 1672,
+        "sha256": "ee1090ceccb1cd74e2c846bf3f8ad2ed6e0adea92f0da12adf164e37eb168074"
+      }
+    },
+    {
+      "templateId": "human-jade-garden",
+      "title": "翡翠花园",
+      "subjectMode": "pet-human",
+      "status": "pending-review",
+      "version": "v01",
+      "identityId": "rabbit",
+      "master": {
+        "path": "tools/imagegen/out/humanization-v1/masters/candidates/human-jade-garden_9x16_v01.png",
+        "bytes": 2243903,
+        "width": 941,
+        "height": 1672,
+        "sha256": "a0fc32747e0336559b2b91132e8247a0eeb481822ca0974d9cc2bb5c73ab8a45"
+      },
+      "identity": {
+        "path": "tools/imagegen/out/humanization-v1/identity-cards/rabbit_v01.png",
+        "bytes": 2222447,
+        "width": 1122,
+        "height": 1402,
+        "sha256": "0ec0d9ddac078f2fe97b3f780edf5f7c5e014f543b9a9cbc83f21346357f8657"
+      },
+      "candidate": {
+        "path": "tools/imagegen/out/humanization-v1/probes/two-stage/human-jade-garden_rabbit_9x16_v01.png",
+        "bytes": 2215076,
+        "width": 941,
+        "height": 1672,
+        "sha256": "50c9bdfcfc7b1a081a6b68428b1162d602c6ed9d2e74fa57cc9be095ecd21f5f"
+      }
+    },
+    {
+      "templateId": "human-moonlit-fantasy",
+      "title": "月夜蝶境",
+      "subjectMode": "pet-human",
+      "status": "pending-review",
+      "version": "v02",
+      "identityId": "ragdoll-cat",
+      "master": {
+        "path": "tools/imagegen/out/humanization-v1/masters/candidates/human-moonlit-fantasy_9x16_v02.png",
+        "bytes": 2500310,
+        "width": 941,
+        "height": 1672,
+        "sha256": "a95e2898e115849414d033f3059bc49b4c9945b17eb5273bafd03ebf5fad9b59"
+      },
+      "identity": {
+        "path": "tools/imagegen/out/humanization-v1/identity-cards/ragdoll-cat_v01.png",
+        "bytes": 2100951,
+        "width": 1086,
+        "height": 1448,
+        "sha256": "82a18172936e739e36a9dd015d71682e8d49736a002f0aab3af0bda9d03bc33a"
+      },
+      "candidate": {
+        "path": "tools/imagegen/out/humanization-v1/probes/two-stage/human-moonlit-fantasy_ragdoll-cat_9x16_v01.png",
+        "bytes": 2522719,
+        "width": 941,
+        "height": 1672,
+        "sha256": "de62d35fc8a446e8bbcd229f609562d2b1e8ba6d253c8be42a8e92a80d0b3582"
+      }
+    },
+    {
+      "templateId": "human-snow-scarf",
+      "title": "风雪回眸",
+      "subjectMode": "pet-human",
+      "status": "pending-review",
+      "version": "v01",
+      "identityId": "husky-dog",
+      "master": {
+        "path": "tools/imagegen/out/humanization-v1/masters/candidates/human-snow-scarf_9x16_v01.png",
+        "bytes": 2280917,
+        "width": 941,
+        "height": 1672,
+        "sha256": "c8a1d7a161e5b3bb624a15421289ac4b87f7bd9e439f856257a094d9846a0829"
+      },
+      "identity": {
+        "path": "tools/imagegen/out/humanization-v1/identity-cards/husky-dog_v01.png",
+        "bytes": 2023612,
+        "width": 1086,
+        "height": 1448,
+        "sha256": "c01d769385edd1a9c876f151b16b847baa776cfb3b95089821ad35a73d2d8f69"
+      },
+      "candidate": {
+        "path": "tools/imagegen/out/humanization-v1/probes/two-stage/human-snow-scarf_husky-dog_9x16_v01.png",
+        "bytes": 2155226,
+        "width": 941,
+        "height": 1672,
+        "sha256": "f02cc28b1b7496e1104ef66ab781fd89e2f3a77dd1a83cde74887ef26d9d1cc2"
+      }
+    },
+    {
+      "templateId": "human-hanfu-summer",
+      "title": "盛夏花朝",
+      "subjectMode": "pet-human",
+      "status": "pending-review",
+      "version": "v01",
+      "identityId": "corgi-dog",
+      "master": {
+        "path": "tools/imagegen/out/humanization-v1/masters/candidates/human-hanfu-summer_9x16_v01.png",
+        "bytes": 2335460,
+        "width": 941,
+        "height": 1672,
+        "sha256": "648d5de6e3d1225ed6efc9ca40922ec4f32d6a9d83926abbffa5437e2acc409d"
+      },
+      "identity": {
+        "path": "tools/imagegen/out/humanization-v1/identity-cards/corgi-dog_v01.png",
+        "bytes": 2077114,
+        "width": 1122,
+        "height": 1402,
+        "sha256": "afa9b26ee9b0fe5461c072d805e6a6faff2a9ceb5ad1cb3274b34a5d320365e3"
+      },
+      "candidate": {
+        "path": "tools/imagegen/out/humanization-v1/probes/two-stage/human-hanfu-summer_corgi-dog_9x16_v01.png",
+        "bytes": 2224951,
+        "width": 941,
+        "height": 1672,
+        "sha256": "71f7d77ae84cee550b8e290e576f1bf89c2a96dad0d24afccc154c0605bac8dd"
+      }
+    },
+    {
+      "templateId": "human-urban-collar",
+      "title": "暗影白领",
+      "subjectMode": "pet-human",
+      "status": "pending-review",
+      "version": "v01",
+      "identityId": "black-cat",
+      "master": {
+        "path": "tools/imagegen/out/humanization-v1/masters/candidates/human-urban-collar_9x16_v01.png",
+        "bytes": 1787851,
+        "width": 941,
+        "height": 1672,
+        "sha256": "32ef77a9598f7cd91b49f9c225eafb5eeaba6b0ec4e6d872e0448d6c3d893695"
+      },
+      "identity": {
+        "path": "tools/imagegen/out/humanization-v1/identity-cards/black-cat_v01.png",
+        "bytes": 2000669,
+        "width": 1086,
+        "height": 1448,
+        "sha256": "b1f07ae24bdafab4d18cf2e365ad8db7525d339c3e699521686856d4a55f1afa"
+      },
+      "candidate": {
+        "path": "tools/imagegen/out/humanization-v1/probes/two-stage/human-urban-collar_black-cat_9x16_v01.png",
+        "bytes": 1714428,
+        "width": 941,
+        "height": 1672,
+        "sha256": "6edde73fa4f939565427b46c2ee44c87ef797d18cbf51ff875965b095dbf9f19"
+      }
+    },
+    {
+      "templateId": "human-evening-blazer",
+      "title": "暖夜西装",
+      "subjectMode": "pet-human",
+      "status": "pending-review",
+      "version": "v01",
+      "identityId": "golden-dog",
+      "master": {
+        "path": "tools/imagegen/out/humanization-v1/masters/candidates/human-evening-blazer_9x16_v01.png",
+        "bytes": 1753157,
+        "width": 941,
+        "height": 1672,
+        "sha256": "c89b430f2cb9e235950877de45f15ab490ef614ab9ad74e8386c283e4bb7a62e"
+      },
+      "identity": {
+        "path": "tools/imagegen/out/humanization-v1/identity-cards/golden-dog_v01.png",
+        "bytes": 2165975,
+        "width": 1122,
+        "height": 1402,
+        "sha256": "e01403ae83a73f1c76c03e58bd6ccec7f833209fedf0ff9c9c0044e4f05a3a54"
+      },
+      "candidate": {
+        "path": "tools/imagegen/out/humanization-v1/probes/two-stage/human-evening-blazer_golden-dog_9x16_v01.png",
+        "bytes": 1664548,
+        "width": 941,
+        "height": 1672,
+        "sha256": "2a81235cd898af1f4c5c37ba792551a424ac8f0ccbf6ae2f2607dc9458b2452e"
+      }
+    },
+    {
+      "templateId": "human-flower-daylight",
+      "title": "樱光白昼",
+      "subjectMode": "pet-human",
+      "status": "pending-review",
+      "version": "v02",
+      "identityId": "hamster",
+      "master": {
+        "path": "tools/imagegen/out/humanization-v1/masters/candidates/human-flower-daylight_9x16_v02.png",
+        "bytes": 2046478,
+        "width": 941,
+        "height": 1672,
+        "sha256": "f801f53fc6a38ce5f34e261bce8dd20589b741cd24e9b583c8cbdb5aab79de8c"
+      },
+      "identity": {
+        "path": "tools/imagegen/out/humanization-v1/identity-cards/hamster_v01.png",
+        "bytes": 2113009,
+        "width": 1086,
+        "height": 1448,
+        "sha256": "d790593e09e1657dea8a5434761ab3e8d921f11993998042ea649cb303d7e5b2"
+      },
+      "candidate": {
+        "path": "tools/imagegen/out/humanization-v1/probes/two-stage/human-flower-daylight_hamster_9x16_v01.png",
+        "bytes": 2115656,
+        "width": 941,
+        "height": 1672,
+        "sha256": "dd2dc8825f5dabcb94107f86586b9251fd553fadc75db7b26d7b1bc2a42550b9"
+      }
+    },
+    {
+      "templateId": "human-black-tee",
+      "title": "黑衣证件感",
+      "subjectMode": "pet-human",
+      "status": "pending-review",
+      "version": "v01",
+      "identityId": "black-lab-dog",
+      "master": {
+        "path": "tools/imagegen/out/humanization-v1/masters/candidates/human-black-tee_9x16_v01.png",
+        "bytes": 1774836,
+        "width": 941,
+        "height": 1672,
+        "sha256": "8fbe2a6443c619caf55f3ad258b558069dd2a9aebd4ee375b5ae0e7db81b5c1d"
+      },
+      "identity": {
+        "path": "tools/imagegen/out/humanization-v1/identity-cards/black-lab-dog_v01.png",
+        "bytes": 2078726,
+        "width": 1122,
+        "height": 1402,
+        "sha256": "2664f94c6f260041d52fc5b9b816f1706e69bf99fa7870540e8582d414eea855"
+      },
+      "candidate": {
+        "path": "tools/imagegen/out/humanization-v1/probes/two-stage/human-black-tee_black-lab-dog_9x16_v01.png",
+        "bytes": 1791628,
+        "width": 941,
+        "height": 1672,
+        "sha256": "33467e87c8af787932381709840fa7a9d76bedbb02096e178d6fe4dc8d2988d2"
+      }
+    },
+    {
+      "templateId": "human-sunlit-short-hair",
+      "title": "日光短发",
+      "subjectMode": "pet-human",
+      "status": "pending-review",
+      "version": "v01",
+      "identityId": "poodle-dog",
+      "master": {
+        "path": "tools/imagegen/out/humanization-v1/masters/candidates/human-sunlit-short-hair_9x16_v01.png",
+        "bytes": 2049906,
+        "width": 941,
+        "height": 1672,
+        "sha256": "04d66a379f6ce3a621f194adcf7bbc4a5e28eb63ce6299b689302a1caa16d085"
+      },
+      "identity": {
+        "path": "tools/imagegen/out/humanization-v1/identity-cards/poodle-dog_v01.png",
+        "bytes": 2165723,
+        "width": 1254,
+        "height": 1254,
+        "sha256": "8d310f735270ffb9431a739b3a6663e534de7f673c969e436c40dd3bfdb69a8b"
+      },
+      "candidate": {
+        "path": "tools/imagegen/out/humanization-v1/probes/two-stage/human-sunlit-short-hair_poodle-dog_9x16_v01.png",
+        "bytes": 2043829,
+        "width": 941,
+        "height": 1672,
+        "sha256": "bdf6b67351324b8354ddf769cc15b88240dcaab553ee28727ed56b445bc146c5"
+      }
+    },
+    {
+      "templateId": "human-tailored-suit",
+      "title": "黑色裁缝",
+      "subjectMode": "pet-human",
+      "status": "pending-review",
+      "version": "v01",
+      "identityId": "blue-british-cat",
+      "master": {
+        "path": "tools/imagegen/out/humanization-v1/masters/candidates/human-tailored-suit_9x16_v01.png",
+        "bytes": 1740265,
+        "width": 941,
+        "height": 1672,
+        "sha256": "89dfb5bc412a0f6121e5cb435e6b7e06b3da5ac567efec061e429d8e5842640e"
+      },
+      "identity": {
+        "path": "tools/imagegen/out/humanization-v1/identity-cards/blue-british-cat_v01.png",
+        "bytes": 2372235,
+        "width": 1122,
+        "height": 1402,
+        "sha256": "264b40d8532a2702f59e539c4d224d53c194fadd823217315a4a87c1b3859ff2"
+      },
+      "candidate": {
+        "path": "tools/imagegen/out/humanization-v1/probes/two-stage/human-tailored-suit_blue-british-cat_9x16_v01.png",
+        "bytes": 1595975,
+        "width": 941,
+        "height": 1672,
+        "sha256": "f8c46e50a3a7f245224f5ae21ef3b1ea54dfeaa9e6f68cd56f38aa8c8a156992"
+      }
+    }
+  ],
+  "comparisons": [
+    {
+      "id": "breezy-fence-tuxedo-cat",
+      "conclusion": "two-stage",
+      "direct": {
+        "path": "tools/imagegen/out/humanization-v1/probes/comparison/human-breezy-fence_tuxedo-cat_direct_9x16_v01.png",
+        "bytes": 2123502,
+        "width": 941,
+        "height": 1672,
+        "sha256": "e11b7bd496fa9289d29e5b81c9c1294c73acbf63b1137f5c55ec4083b36d2ee7"
+      },
+      "twoStage": {
+        "path": "tools/imagegen/out/humanization-v1/probes/two-stage/human-breezy-fence_tuxedo-cat_9x16_v01.png",
+        "bytes": 1979624,
+        "width": 941,
+        "height": 1672,
+        "sha256": "c4111290fe9ea5ffdb1cc2037e0a2546c6bf1344dca818b442064a18bb06a467"
+      }
+    }
+  ],
+  "rejected": [
+    {
+      "reason": "safety-gate-revealing-wardrobe",
+      "source": {
+        "path": "tools/imagegen/out/humanization-v1/masters/candidates/human-moonlit-fantasy_9x16_v01.png",
+        "bytes": 2298013,
+        "width": 941,
+        "height": 1672,
+        "sha256": "a1d182c5f6819c5b3546c4b5cb851804b45246bf8fc1e00bbc2ed510d51a504e"
+      },
+      "replacement": {
+        "path": "tools/imagegen/out/humanization-v1/masters/candidates/human-moonlit-fantasy_9x16_v02.png",
+        "bytes": 2500310,
+        "width": 941,
+        "height": 1672,
+        "sha256": "a95e2898e115849414d033f3059bc49b4c9945b17eb5273bafd03ebf5fad9b59"
+      }
+    },
+    {
+      "reason": "visible-watermark",
+      "source": {
+        "path": "tools/imagegen/out/humanization-v1/masters/candidates/human-flower-daylight_9x16_v01.png",
+        "bytes": 2128926,
+        "width": 941,
+        "height": 1672,
+        "sha256": "80e5275214a432edebc74df665ba4b4d8c87df9281942a6b6a5d0ef70d0f917b"
+      },
+      "replacement": {
+        "path": "tools/imagegen/out/humanization-v1/masters/candidates/human-flower-daylight_9x16_v02.png",
+        "bytes": 2046478,
+        "width": 941,
+        "height": 1672,
+        "sha256": "f801f53fc6a38ce5f34e261bce8dd20589b741cd24e9b583c8cbdb5aab79de8c"
+      }
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+---
+/*
+ * 页脚：1.4fr 1fr 1fr 1fr 四栏 + 底部版权行。结构与原型一致，三处变化：
+ *   · 品牌名、栏目、法务链接从 src/config/site.ts 渲染（原型是手写）
+ *   · 用户协议/隐私政策不再指向 #home 死链，指向真页面
+ *   · 版权行右侧新增 ICP 备案占位（方案 11.1）
+ *
+ * 三栏用 nav 元素而非裸 div：它们是导航列表，包起来读屏才能当独立区块跳转。
+ * 标题用 h2 —— 在 footer 地标内 h2 是顶层，用 h3 会被读成上一个 h2 的下级内容。
+ */
+import { BRAND_NAME, FOOTER_COLUMNS, FOOTER_LEGAL_LINKS, ICP_RECORD } from "../config/site";
+---
+
+<footer class="footer">
+  <div class="container footer-grid">
+    <div>
+      <a class="brand brand-lg" href="/#home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-name" data-placeholder="brand-name">{BRAND_NAME}</span>
+      </a>
+      <p class="footer-desc">
+        把每一张宠物照片，变成值得留住的作品。图文、AI 肖像、视频与纪念，都在一个小程序里。
+      </p>
+    </div>
+    {
+      FOOTER_COLUMNS.map((column) => (
+        <nav aria-labelledby={column.id}>
+          <h2 class="footer-title" id={column.id}>{column.title}</h2>
+          <ul class="footer-links">
+            {column.links.map((link) => (
+              <li><a href={link.href}>{link.label}</a></li>
+            ))}
+          </ul>
+        </nav>
+      ))
+    }
+  </div>
+  <div class="container footer-bottom">
+    <p>© 2026 <span data-placeholder="brand-name">{BRAND_NAME}</span></p>
+    <div class="footer-legal">
+      {FOOTER_LEGAL_LINKS.map((link) => <a href={link.href}>{link.label}</a>)}
+      {/* 备案下来后替换成真实号码并链到 https://beian.miit.gov.cn/（方案 11.1）*/}
+      <span class="footer-icp" data-placeholder="icp-record">
+        {ICP_RECORD.href
+          ? <a href={ICP_RECORD.href} rel="noopener" target="_blank">{ICP_RECORD.text}</a>
+          : ICP_RECORD.text}
+      </span>
+    </div>
+  </div>
+</footer>

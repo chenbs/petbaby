@@ -1,0 +1,49 @@
+{
+  "templateId": "animal-ink-scratch-portrait",
+  "entryId": "art",
+  "title": "空气感素描肖像",
+  "version": "stylebridge-v05",
+  "status": "generated-pending-user-approval",
+  "remediation": "whole-subject-ink-medium-unification",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-06-21-1396-极简主义素描风格，空气感强，松散的细密长线条，精致的涂抹，形式多变，写意，细节敲....png",
+      "sha256": "9dc1e3ddf4e65a2fe78dd859b328c9ec93d5dddd75fdd550e59eff1bc642a749"
+    },
+    {
+      "role": "self-owned-generated-candidate-with-correct-identity",
+      "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-ink-scratch-portrait_black-lab-dog_9x16_stylebridge-v04.png",
+      "sha256": "04610110ca21230cce7b6b0691da8c0e9c89ea4a1c26b4bf4e5b586e388aed06"
+    }
+  ],
+  "rawPetIdentityIncluded": false,
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "prompt": "Use case: whole-subject medium unification for an identity-preserving ink portrait edit. Return the exact same 9x16 composition at 720x1280 pixels. Image 1 is the sole authority for traditional brush-ink medium, head pose, gaze, facial abstraction, eye-shape design, muzzle simplification, line economy, dry-brush texture, ink diffusion, paper-white gaps, edge disappearance and airy negative space. Image 2 is the sole authority for the already-correct adult black Labrador breed, black coat, floppy ears, healthy body mass, body silhouette, crop and placement. Preserve those identity and layout facts, but do not preserve Image 2's current head construction, round gentle gaze, realistic eyes, nose, muzzle volume or rendering material. Redraw the entire Labrador, including the complete head, forehead, ears, eyes, nose, muzzle, cheeks, neck, body, legs and tail, through one continuous Chinese brush-ink language. The head must visibly consist of variable-pressure calligraphic strokes, broad dry-brush marks, feathered ink edges, layered diluted washes, broken pigment and intentional paper-white gaps inside the facial planes. Copy Image 1's sharp, graphic and confident gaze: construct the Labrador eyes as narrow expressive almond-shaped ink outlines and dark brush masses with paper-white negative space, not round brown eyeballs and not glossy irises. Construct the broad Labrador nose and muzzle as simplified flat calligraphic shapes, a few broken contour strokes and dry-brush tonal blocks, never as a wet three-dimensional nose or smoothly modeled snout. Use fewer marks and stronger decisions on the head. Large white-paper gaps must visibly interrupt the forehead, cheeks and muzzle just as they do in Image 1. Remove glassy eyeballs, catchlights, wet nose reflections, smooth grayscale volume, photographic fur strands, realistic skin folds and polished digital-paint shading. The face must look hand-painted with the same brush and ink as the body, not like a realistic dog head pasted onto an ink silhouette. Keep the mature Labrador recognizable and handsome without changing its expression or anatomy. Preserve the white paper background, flowing tail stroke, airy smudges and all existing subject boundaries. No text, logo, signature, watermark, extra anatomy, duplicate subject or scene redesign. Return only the finished image.",
+  "revisedPrompt": "Create an identity-preserving ink portrait edit of the provided black Labrador, keeping the exact same 9:16 composition, crop, placement, body silhouette, and overall subject boundaries from the reference dog image. Unify the entire dog into one continuous Chinese brush-ink language while preserving the white paper background and airy negative space.\n\nUse the cat reference only as the authority for medium, brush behavior, line economy, eye design, abstraction, and ink handling: variable-pressure calligraphic strokes, broad dry-brush marks, feathered ink edges, layered diluted washes, broken pigment, intentional paper-white gaps, sharp graphic confidence, and areas where edges disappear into the paper.\n\nThe dog must remain clearly a mature black Labrador with floppy ears, healthy body mass, and the same seated pose and crop as the reference dog image, but redraw the entire head and body so it is not photographic or realistic. Rebuild the complete head, forehead, ears, eyes, nose, muzzle, cheeks, neck, torso, legs, paw forms, and tail using the same brush-ink language as the body.\n\nImportant facial treatment: construct the Labrador eyes as narrow expressive almond-shaped ink outlines with dark brush masses and paper-white negative space; do not use round realistic eyeballs, glossy irises, or catchlights. Simplify the nose and muzzle into flat calligraphic shapes, broken contour strokes, and dry-brush tonal blocks; avoid smooth 3D modeling, wet shine, realistic fur strands, or polished digital shading. Keep large white-paper gaps interrupting the forehead, cheeks, and muzzle so the face feels hand-painted and airy. The head should be made of confident, fewer-mark decisions, matching the expressive abstraction of the cat reference, while still reading as a handsome black Labrador.\n\nPreserve the flowing tail stroke, smoky ink smudges, and the original white paper atmosphere. No text, logo, signature, watermark, extra anatomy, duplicate subject, or scene redesign. Monochrome black ink on warm white paper, high contrast, elegant, minimal, expressive.",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "queue": {
+    "configuredConcurrency": 1,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-ink-scratch-portrait_black-lab-dog_9x16_stylebridge-v05.png",
+    "sha256": "a25520268692bc3e9a0a02765aee61fc1d5973de9e0afe04aa5d48f085d10455"
+  },
+  "review": {
+    "state": "pending-human-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-18T02:35:57.106Z"
+}

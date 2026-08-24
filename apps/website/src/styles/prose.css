@@ -1,0 +1,141 @@
+/*
+ * 文章正文排版。作用域限定在 .prose 容器内，**不改 site.css 一个字**。
+ *
+ * 为什么必须新增：实测 prototype/styles.css 完全没有正文排版样式 —— 没有
+ * h4/h5/blockquote/pre/code/table/ol/hr/strong/em，也没有 a:hover。它只服务
+ * 首页那 11 个区块。更麻烦的是两条全局重置会直接破坏文章正文：
+ *
+ *   ul { margin: 0; padding: 0; list-style: none; }   文章里的列表会没有符号
+ *   a  { color: inherit; text-decoration: none; }     正文链接会看不出是链接
+ *
+ * 取值一律引用 site.css 里已有的 CSS 变量（字号、字重、行高、色彩、间距都有），
+ * 不新造。这样文章页与首页是同一套视觉语言，且改主色只需改一处。
+ */
+
+.prose {
+  max-width: 34em;              /* 中文可读行宽上限 */
+  color: var(--text-secondary);
+  font-size: 16px;
+  line-height: var(--lh-body);
+}
+
+/* 段落与块级元素的垂直节奏 */
+.prose > * + * { margin-top: var(--space-4); }
+.prose > * + h2 { margin-top: var(--space-7); }
+.prose > * + h3 { margin-top: var(--space-6); }
+
+/* 标题：h1 由 title 生成，正文从 h2 起。复用既有字重/字距 token，不新造取值 */
+.prose h2 {
+  margin-bottom: var(--space-3);
+  color: var(--text-primary);
+  font-size: 1.375rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-tight);
+  line-height: var(--lh-h3);
+}
+.prose h3 {
+  margin-bottom: var(--space-2);
+  color: var(--text-primary);
+  font-size: 1.125rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-tight);
+  line-height: var(--lh-h3);
+}
+.prose h4 {
+  margin-bottom: var(--space-2);
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-h3);
+}
+.prose p { margin: 0; }
+
+/*
+ * 把全局重置在这个作用域内还原回来。列表符号必须有 —— 没有符号的列表在中文
+ * 正文里读起来就是几段没有关系的短句。
+ */
+.prose ul { margin: 0; padding-left: 1.5em; list-style: disc; }
+.prose ol { margin: 0; padding-left: 1.5em; list-style: decimal; }
+.prose li + li { margin-top: var(--space-2); }
+.prose li > ul, .prose li > ol { margin-top: var(--space-2); }
+
+/*
+ * 正文链接**要有下划线**：首页的链接都在按钮或卡片里、位置本身提示可点，
+ * 正文里的行内链接没有这个语境，只靠颜色区分对色觉障碍用户不友好。
+ */
+.prose a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  transition: color var(--dur-base) var(--ease);
+}
+.prose a:hover { color: var(--primary-hover); }
+
+.prose strong { color: var(--text-primary); font-weight: var(--fw-semibold); }
+.prose em { font-style: italic; }
+
+/* 引用：左侧主色细线，不用大引号 —— 那与「精致」的基调不合 */
+.prose blockquote {
+  margin: 0;
+  padding-left: var(--space-4);
+  border-left: 2px solid var(--primary);
+  color: var(--text-primary);
+}
+.prose blockquote p + p { margin-top: var(--space-3); }
+
+/* 行内代码与代码块 */
+.prose code {
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  background: var(--subtle);
+  color: var(--text-primary);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.875em;
+}
+.prose pre {
+  margin: 0;
+  overflow-x: auto;
+  padding: var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  background: var(--surface);
+  font-size: 13px;
+  line-height: var(--lh-sm);
+}
+/* 代码块内的 code 不要再叠一层底与内边距 */
+.prose pre code { padding: 0; border-radius: 0; background: none; font-size: inherit; }
+
+.prose hr { margin: var(--space-7) 0; border: 0; border-top: 1px solid var(--border); }
+
+/* 表格：横向可滚，窄屏不撑破容器 */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.prose th, .prose td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+.prose th { color: var(--text-primary); font-weight: var(--fw-semibold); }
+
+/*
+ * 正文配图。Astro 的 <Image /> 会自动加 width/height，height:auto 必须给 ——
+ * 只设 width 不设 height 时属性高度会生效、aspect-ratio 静默失效（原型的
+ * .media-frame img 踩过这个坑）。
+ */
+.prose img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-card);
+}
+.prose figure { margin: 0; }
+.prose figcaption {
+  margin-top: var(--space-2);
+  color: var(--text-tertiary);
+  font-size: 12px;
+  text-align: center;
+}

@@ -1,0 +1,168 @@
+{
+  "purpose": "third-batch-master-candidate-user-approval",
+  "generatedBy": "local-sharp-composite",
+  "modelCall": false,
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/third-batch-approval-sheet-v03.png",
+    "width": 1860,
+    "height": 5740,
+    "sha256": "69482021813ba4597a50a8733c24ad20421246eb7bb091f2a01043c4072a76f3"
+  },
+  "items": [
+    {
+      "templateId": "original-magic-academy",
+      "title": "原创魔法学院",
+      "version": "v01",
+      "files": [
+        {
+          "role": "EFFECT REFERENCE",
+          "path": "apps/website/public/assets/example/c228839a-db36-4deb-a485-40e0a0161715.jpg",
+          "sha256": "59b2e73c3925db6d00fcc16e3b98961e6bd63391ac3f52c8b872ee52901c0ab6"
+        },
+        {
+          "role": "PET IDENTITY / DRAGON-LI-CAT",
+          "path": "apps/website/public/assets/avatar-dragonli.jpg",
+          "sha256": "0f403599969b57f32aa314cf474ce4d57d28f48683e16ae9a032d73b94079732"
+        },
+        {
+          "role": "CANDIDATE V01",
+          "path": "tools/imagegen/out/reference-v1/candidates/original-magic-academy_dragon-li-cat_9x16_v01.png",
+          "sha256": "6dfd8f50981e537748f18bd5b4ccdfaa8dfceff03338ab54055b8cc1ab117d4e"
+        }
+      ]
+    },
+    {
+      "templateId": "epic-ruins",
+      "title": "史诗遗迹探险",
+      "version": "v01",
+      "files": [
+        {
+          "role": "EFFECT REFERENCE",
+          "path": "apps/website/public/assets/example/14.png",
+          "sha256": "eafe26c3203d9c83ed1831a13291b9d562ef4965d3d726fa1db70c8b8999e7a9"
+        },
+        {
+          "role": "PET IDENTITY / GERMAN-SHEPHERD-DOG",
+          "path": "apps/website/public/assets/hero-shepherd.jpg",
+          "sha256": "f6c37419e96b12425034d2bdcb54cbde952709f37352f3748d67d3db71e937b4"
+        },
+        {
+          "role": "CANDIDATE V01",
+          "path": "tools/imagegen/out/reference-v1/candidates/epic-ruins_german-shepherd-dog_9x16_v01.png",
+          "sha256": "6d450ed41c8876b08b651a5e2c7f1e78566d0c3682fc62fb2ab9ba4c8b3615ee"
+        }
+      ]
+    },
+    {
+      "templateId": "mini-companion",
+      "title": "同宠大小分身",
+      "version": "v03",
+      "files": [
+        {
+          "role": "EFFECT REFERENCE",
+          "path": "apps/website/public/assets/example/1786369135481.png",
+          "sha256": "d7a6c5fc1bf7fbb460d9bd384512f4095d011e2063d9f3be0855f5fad7fd047b"
+        },
+        {
+          "role": "PET IDENTITY / ABYSSINIAN-CAT",
+          "path": "apps/website/public/assets/avatar-abyssinian.jpg",
+          "sha256": "8714ff092ab9b9e58a3c440eb16756b1149cd02c4050a8fb4f5f63b902184268"
+        },
+        {
+          "role": "APPROVED MASTER V03",
+          "path": "tools/imagegen/out/reference-v1/candidates/mini-companion_abyssinian-cat_9x16_v03.png",
+          "sha256": "540845541503d1e126a5a47133e2a0f9279b376f8add19e0fdffff2c5becf52c"
+        }
+      ]
+    },
+    {
+      "templateId": "adventure-rules",
+      "title": "冒险生存法则",
+      "version": "v04",
+      "files": [
+        {
+          "role": "EFFECT REFERENCE",
+          "path": "apps/website/public/assets/example/11.png",
+          "sha256": "f8fcdf6db1262681e333b6a584f1ea9956bfd773312777ced9a4c0e468126d3d"
+        },
+        {
+          "role": "PET IDENTITY / CORGI-DOG",
+          "path": "tools/imagegen/out/source/dog-corgi.jpg",
+          "sha256": "750c43038e21f8601be8b903889100c6b165d2b35cea3b7c0b55c0edce7ca9c2"
+        },
+        {
+          "role": "APPROVED MASTER V04",
+          "path": "tools/imagegen/out/reference-v1/candidates/adventure-rules_corgi-dog_9x16_v04.png",
+          "sha256": "73791550e9d3eacd321343f6603ab1e4aaf1f6f453b32dff0310a80f4bc56cdf"
+        }
+      ]
+    },
+    {
+      "templateId": "pet-life-journal",
+      "title": "本宠生涯日记",
+      "version": "v01",
+      "files": [
+        {
+          "role": "EFFECT REFERENCE",
+          "path": "apps/website/public/assets/example/10.png",
+          "sha256": "3a8f51ff6814fbc880e23c125c01693a78b7b7b2d749d16d9f0e4aef61fafc86"
+        },
+        {
+          "role": "PET IDENTITY / TOY-POODLE-DOG",
+          "path": "apps/website/public/assets/avatar-poodle.jpg",
+          "sha256": "e15fca17074b5c58cd5d477051ecc00c2d27116ad3f364211f3c350e1e69de2d"
+        },
+        {
+          "role": "CANDIDATE V01",
+          "path": "tools/imagegen/out/reference-v1/candidates/pet-life-journal_toy-poodle-dog_9x16_v01.png",
+          "sha256": "872a072cf5973e13a37a69baf8aee2abc5912e6dea371036d689af7bf854b182"
+        }
+      ]
+    },
+    {
+      "templateId": "ink-portrait",
+      "title": "黑白水墨肖像",
+      "version": "reset-v08",
+      "files": [
+        {
+          "role": "EFFECT REFERENCE",
+          "path": "apps/website/public/assets/example/b983ec71-2f88-4c23-97f2-c0f0cb75bac1.jpg",
+          "sha256": "47d1f1377a40e3201d4c65a48fa55185118291de7564bda787ded2959c36df3d"
+        },
+        {
+          "role": "DERIVED PET IDENTITY GUIDE / BLACK-LABRADOR-DOG",
+          "path": "tools/imagegen/out/reference-v1/identity-guides/ink-portrait_black-labrador-dog_cartoon-identity_reset-v10.png",
+          "sha256": "4d68c7c65833ab5483f45f2aa578736b9fcb488845252e5ae4c8cd28dc469ee2"
+        },
+        {
+          "role": "CANDIDATE RESET-V08",
+          "path": "tools/imagegen/out/reference-v1/candidates/ink-portrait_black-labrador-dog_9x16_reset-v08.png",
+          "sha256": "62eb42693004662910771eaa57810cf6f6fd9965956b1dea1eaf8f75d0c1713e"
+        }
+      ]
+    },
+    {
+      "templateId": "decorative-art-portrait",
+      "title": "装饰艺术肖像",
+      "version": "v05",
+      "files": [
+        {
+          "role": "EFFECT REFERENCE",
+          "path": "apps/website/public/assets/example/08bd1d4d-e149-4670-9867-b288ef488aaa.jpg",
+          "sha256": "b257fa2fc85d27d42077b164f6a8d1e6e5878df02916f0887788094e62a8d6a4"
+        },
+        {
+          "role": "DERIVED PET IDENTITY GUIDE / RAGDOLL-CAT",
+          "path": "tools/imagegen/out/reference-v1/identity-guides/decorative-art-portrait_ragdoll-cat_flat-guide_v01.png",
+          "sha256": "9c1c394cd95d45a64f6132fe642ab75311e53dc77c7de16cc9de6510f5f97cb5"
+        },
+        {
+          "role": "APPROVED MASTER V05",
+          "path": "tools/imagegen/out/reference-v1/candidates/decorative-art-portrait_ragdoll-cat_9x16_v05.png",
+          "sha256": "c946913d1aa19592364f4e494f473ecfb62ea4f376d83524ecf3663cbf0201b1"
+        }
+      ]
+    }
+  ]
+}

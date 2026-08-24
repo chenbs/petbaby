@@ -1,0 +1,94 @@
+{
+  "templateId": "archive-career-poster",
+  "entryId": "archive",
+  "title": "本宠高光生涯海报",
+  "sourceEffectFile": "apps/website/public/assets/example/17.png",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/17.png",
+      "sha256": "31bb4d8d8f30bbf524ad7791e4945150f5cf4957c1ef3dc71cddaa0759a0eaa8"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "black-lab-dog",
+      "species": "dog",
+      "breed": "adult black Labrador Retriever",
+      "path": "tools/imagegen/out/source/dog-black-lab.jpg",
+      "sha256": "20960d2ace805e68b41a7934e37ebdf24b7007f8f3fa85527d9beb22d2df6022"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult black Labrador Retriever with solid glossy black coat, warm brown eyes, broad black nose, soft dropped ears, broad gentle muzzle and strong adult build. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the large portrait, highlight strip and full-body career-story hierarchy, but remove all celebrity, team, league and trademark identity. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a vertical 9:16 poster composition at 720x1280 pixels inspired by a dramatic mixed-media sports portrait. Use the first image as the exact composition, crop, perspective, action, lighting, palette, brushwork, texture, text-block hierarchy, and background structure reference. Replace the human subject and all human/celebrity identity with one coherent adult black Labrador Retriever identity from the second image. The dog must be an adult, friendly, appealing black Labrador with a solid glossy black coat, warm brown eyes, broad black nose, soft dropped ears, broad gentle muzzle, and strong adult build. Preserve the original poster's visual language: large close-up portrait in the upper half, smaller full-body standing figure in the lower half, ink-splatter watercolor/ink-wash treatment, Chinese calligraphy-like vertical text on the left and right, red seal stamp style marks, mountain/temple landscape elements, smoky monochrome background, and the same general hierarchy and placement of text blocks and scene elements. Remove all celebrity, team, league, brand, and trademark identity; replace with short original pet-safe wording in the same approximate text positions and hierarchy without creating logos or signatures. Keep the overall composition and background unchanged in spirit, with no redesign or beautification. Ensure the full-body lower figure is a black Labrador standing in the same pose and wardrobe-like silhouette translated into a subtle, pet-safe sports uniform motif if needed, while maintaining the mixed-media look and correct canine anatomy. No extra ears, eyes, limbs, paws, or duplicate pets. Render the dog’s face and fur in the same painterly style as the poster, not photographic cutout style.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/expansion/candidates/archive-career-poster_black-lab-dog_9x16_v01.png",
+    "sha256": "c6bcc262b0b37ad6d9e3029128a7df341083c53c1b5c975c3168b0520a273619"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-20T12:00:00+08:00"
+  },
+  "generatedAt": "2026-08-17T16:12:45.651Z",
+  "version": "v01",
+  "candidatePath": "tools/imagegen/out/reference-v1/expansion/candidates/archive-career-poster_black-lab-dog_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/archive-career-poster_black-lab-dog_9x16_v01.webp",
+  "masterSha256": "29c191ad266ffbf81edb12d673e1fa075ab35287c138bc1f6bd6ea504c59f4d5",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-20T12:00:00+08:00",
+    "note": "用户审阅 pending-masters-comparison 后明确表示除指定重做和删除项外，其余模板可以冻结。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/archive-career-poster_black-lab-dog_9x16_v01.webp",
+      "sha256": "29c191ad266ffbf81edb12d673e1fa075ab35287c138bc1f6bd6ea504c59f4d5"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate",
+      "unapproved-candidate"
+    ]
+  },
+  "qualityBaseline": {
+    "required": [
+      "Keep the large portrait, highlight strip and full-body career-story hierarchy, but remove all celebrity, team, league and trademark identity.",
+      "exact 720x1280 portrait output",
+      "same approved composition, action, expression, lighting, palette, medium and text hierarchy"
+    ],
+    "reject": [
+      "scene redesign or missing distinctive layout details",
+      "juvenilized, malformed, duplicated or inconsistent pet anatomy",
+      "logo, platform UI, account ID, watermark or signature"
+    ]
+  }
+}

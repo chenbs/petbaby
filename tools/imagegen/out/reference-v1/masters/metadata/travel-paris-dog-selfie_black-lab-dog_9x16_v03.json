@@ -1,0 +1,91 @@
+{
+  "templateId": "travel-paris-dog-selfie",
+  "entryId": "travel",
+  "title": "巴黎街景自拍",
+  "version": "v03",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "sourceEffectFile": "apps/website/public/assets/example/1786368934169.png",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/1786368934169.png",
+      "sha256": "2979342fce6b3b15d4e7f7f3323e93a61e4904a265fe7212bbc4129a3207a2c9",
+      "requestPath": ".tmp/pending-remediation-20260820-inputs/travel-paris-dog-selfie-effect.jpg",
+      "requestBytes": 70280
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "black-lab-dog",
+      "species": "dog",
+      "breed": "adult black Labrador Retriever",
+      "path": "tools/imagegen/out/source/dog-black-lab.jpg",
+      "sha256": "20960d2ace805e68b41a7934e37ebdf24b7007f8f3fa85527d9beb22d2df6022",
+      "requestPath": ".tmp/pending-remediation-20260820-inputs/travel-paris-dog-selfie-identity.jpg",
+      "requestBytes": 103940
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "inputPolicy": {
+    "maxImages": 2,
+    "maxLongestEdge": 1200,
+    "jpegQuality": 82,
+    "combinedBytesBelow": 1048576,
+    "serial": true
+  },
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be adult black Labrador Retriever with solid glossy black coat, warm brown eyes, broad black nose, soft dropped ears, broad gentle muzzle and strong adult build. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the city selfie, exact black sunglasses over both eyes, striped shirt, red neck scarf, outstretched selfie foreleg, pet-forward framing, Eiffel Tower placement and busy daylight background exactly as in the effect reference. Make the Labrador smile only a little more happily, with a relaxed wider open mouth. Brighten only the striped shirt and red neck scarf slightly so their whites, blues and reds look cleaner and more vivid. The sunglasses are mandatory and must remain correctly worn over both eyes; do not remove, shrink or replace them. Do not change the camera, crop, daylight, background, crowd, landmark or overall exposure. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a vertical 9:16 final composition, 720x1280 px, based on the provided references. Use Image 1 as the exact composition/style reference and Image 2 as the sole identity reference. Preserve Image 1 exactly: same selfie framing, same camera angle, same crop, same perspective, same daytime daylight, same Eiffel Tower placement, same busy Paris crowd/background, same overall exposure, same striped shirt, same red neck scarf, same black sunglasses worn correctly over both eyes, same outstretched selfie foreleg, same pet-forward close framing. Replace the original subject identity with a single adult black Labrador Retriever from Image 2, keeping the dog adult, healthy, and proportionate with a solid glossy black coat, warm brown eyes, broad black nose, soft dropped ears, broad gentle muzzle, strong adult build. Render the Labrador in Image 1's visual language, not as a pasted photo: match the illustration/photo style, lighting, texture, and line quality of Image 1. Keep the expression friendly and appealing with a slightly happier look and a relaxed wider open mouth, but do not make it puppy-like, gaunt, stern, aggressive, uncanny, or overly stylized. Keep the black sunglasses mandatory and properly worn. Slightly brighten the white, blue, and red areas of the striped shirt and scarf so they appear cleaner and more vivid, but do not redesign or simplify anything else. Do not change the background, crowd, landmark, clothing layout, or camera. No extra ears, eyes, limbs, paws, hands, floating heads, fused joints, duplicate pets, residual human features, or broken clothing boundaries. Maintain one coherent adult pet identity throughout.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/pending-remediation-20260820/candidates/travel-paris-dog-selfie_black-lab-dog_9x16_v03.png",
+    "rawPath": "tools/imagegen/out/reference-v1/pending-remediation-20260820/raw/travel-paris-dog-selfie_black-lab-dog_9x16_v03.png",
+    "sha256": "67dba0eaced6954c3598c30854c0b061a8a2461f25d61fe6b7e6130208ab428b"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "checks": {
+      "dimensions": "pass",
+      "inputContract": "pass",
+      "visualAcceptance": "pending-user"
+    },
+    "findings": [],
+    "approvedAt": "2026-08-20T14:00:00+08:00"
+  },
+  "generatedAt": "2026-08-20T02:04:40.624Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/pending-remediation-20260820/candidates/travel-paris-dog-selfie_black-lab-dog_9x16_v03.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/travel-paris-dog-selfie_black-lab-dog_9x16_v03.webp",
+  "masterSha256": "52e868ef3f8a48ff9c25867fe0cde91731671f065f23fb856424346d205c0231",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-20T14:00:00+08:00",
+    "note": "用户明确确认 pending-masters-comparison.png 全部审核通过并要求冻结母版。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/travel-paris-dog-selfie_black-lab-dog_9x16_v03.webp",
+      "sha256": "52e868ef3f8a48ff9c25867fe0cde91731671f065f23fb856424346d205c0231"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-candidate",
+      "unapproved-candidate"
+    ]
+  }
+}

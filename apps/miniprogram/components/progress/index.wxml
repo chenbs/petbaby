@@ -1,0 +1,19 @@
+<view class="progress" aria-role="progressbar" aria-label="{{label || '进度'}}" aria-valuenow="{{safePercent}}">
+  <block wx:if="{{shape === 'ring'}}">
+    <view class="ring" style="{{ringStyle}}">
+      <view class="ring-hole">
+        <text class="ring-text">{{valueText || safePercent + '%'}}</text>
+        <text wx:if="{{label}}" class="ring-label">{{label}}</text>
+      </view>
+    </view>
+  </block>
+  <block wx:else>
+    <view wx:if="{{label || showValue}}" class="bar-head">
+      <text class="bar-label">{{label}}</text>
+      <text wx:if="{{showValue}}" class="bar-value">{{valueText || safePercent + '%'}}</text>
+    </view>
+    <view class="bar">
+      <view class="bar-fill bar-{{tone}}" style="width:{{safePercent}}%"></view>
+    </view>
+  </block>
+</view>

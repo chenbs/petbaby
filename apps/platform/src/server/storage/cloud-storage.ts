@@ -1,0 +1,14 @@
+﻿import "server-only";
+
+import { createHash,createHmac } from "node:crypto";import type { ObjectStorage,StoredObject } from "@/server/storage/types";import { AppError } from "@/server/errors";
+
+function hmac(key:Buffer|string,value:string){return createHmac("sha256",key).update(value).digest();}function hash(value:Uint8Array|string){return createHash("sha256").update(value).digest("hex");}
+export class ConfiguredCloudStorage implements ObjectStorage {
+  private config(){const endpoint=process.env.OSS_ENDPOINT;const accessKey=process.env.OSS_ACCESS_KEY_ID;const secret=process.env.OSS_ACCESS_KEY_SECRET;const region=process.env.STORAGE_REGION||"auto";if(!endpoint||!accessKey||!secret)throw new AppError("STORAGE_CONFIG_PENDING","对象存储配置尚未补齐",503);return{endpoint:endpoint.replace(/\/$/,""),accessKey,secret,region};}
+  private async request(method:string,key:string,body:Uint8Array<ArrayBufferLike>=new Uint8Array(),contentType="application/octet-stream"){const config=this.config();const base=new URL(config.endpoint);const path=`${base.pathname.replace(/\/$/,"")}/${key.split("/").map(encodeURIComponent).join("/")}`;const now=new Date();const amzDate=now.toISOString().replace(/[:-]|\.\d{3}/g,"");const date=amzDate.slice(0,8);const payloadHash=hash(body);const headers=`host:${base.host}\nx-amz-content-sha256:${payloadHash}\nx-amz-date:${amzDate}\n`;const signedHeaders="host;x-amz-content-sha256;x-amz-date";const canonical=`${method}\n${path}\n\n${headers}\n${signedHeaders}\n${payloadHash}`;const scope=`${date}/${config.region}/s3/aws4_request`;const stringToSign=`AWS4-HMAC-SHA256\n${amzDate}\n${scope}\n${hash(canonical)}`;const signingKey=hmac(hmac(hmac(hmac(`AWS4${config.secret}`,date),config.region),"s3"),"aws4_request");const signature=createHmac("sha256",signingKey).update(stringToSign).digest("hex");const authorization=`AWS4-HMAC-SHA256 Credential=${config.accessKey}/${scope}, SignedHeaders=${signedHeaders}, Signature=${signature}`;const response=await fetch(`${base.origin}${path}`,{method,headers:{Authorization:authorization,"x-amz-date":amzDate,"x-amz-content-sha256":payloadHash,...(method==="PUT"?{"Content-Type":contentType}:{})},body:method==="PUT"?new Blob([body.buffer.slice(body.byteOffset, body.byteOffset + body.byteLength) as ArrayBuffer],{type:contentType}):undefined});if(response.status===404)return null;if(!response.ok)throw new AppError("STORAGE_REQUEST_FAILED",`对象存储请求失败 ${response.status}`,502);return response;}
+  async put(key:string,body:Uint8Array,contentType:string){await this.request("PUT",key,body,contentType);}
+  async get(key:string):Promise<StoredObject|null>{const response=await this.request("GET",key);if(!response)return null;return{body:new Uint8Array(await response.arrayBuffer()),contentType:response.headers.get("content-type")||"application/octet-stream"};}
+  async delete(key:string){await this.request("DELETE",key);}
+}
+
+

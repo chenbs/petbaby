@@ -1,0 +1,67 @@
+{
+  "id": "animal-doodle-fisheye-chicken_cream-longhair-cat_stability-v01",
+  "templateId": "animal-doodle-fisheye-chicken",
+  "title": "鱼眼涂鸦表情",
+  "sequence": 29,
+  "identityId": "cream-longhair-cat",
+  "identityLabel": "长毛猫",
+  "species": "cat",
+  "breed": "cream long-haired cat",
+  "status": "generated-pending-human-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "requestPolicy": {
+    "concurrency": 1,
+    "outputsPerRequest": 1,
+    "inputCount": 2,
+    "combinedInputBytes": 192541,
+    "maxCombinedInputBytesExclusive": 1000000,
+    "maxInputEdge": 1200,
+    "comparisonSheetIncluded": false
+  },
+  "inputs": [
+    {
+      "role": "compressed-public-preview-master-candidate",
+      "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/api-inputs/animal-doodle-fisheye-chicken_public-v02_master-candidate.jpg",
+      "sha256": "a3aacc69e4cf9c6721f692e3e7f748f69763efdbc8fe18faedb8cdf7b25522b5",
+      "bytes": 87129,
+      "sourceCandidatePath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/candidates/animal-doodle-fisheye-chicken_public-v02_master-candidate.png",
+      "sourceCandidateSha256": "793b90dd35fa1fc86d230d0fe80899d5fcc61a0013d6306abf304f0b6aff6682"
+    },
+    {
+      "role": "compressed-pet-identity-reference",
+      "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/api-inputs/cream-longhair-cat.jpg",
+      "sha256": "5efb20f77e222564fc3d51c99c596895625f61b60e1bdfb8225fb820eaec9d1b",
+      "bytes": 105412,
+      "sourcePath": "tools/imagegen/out/source/cat-cream.jpg"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "prompt": "Use case: identity-preserving production-master stability validation. Create one vertical 9:16 image composed for an exact final size of 720x1280 pixels from exactly two input images. Image 1 is a proposed self-owned runtime master copied byte-for-byte from an approved public preview. It is the sole reference for composition, scene, pose, expression, styling, lighting, palette, clothing, props and text layout. Image 2 is the sole pet identity reference. Replace every animal depiction in Image 1 with the exact cream long-haired cat from Image 2. Preserve the target pet's pale cream long coat, soft cream points, blue eyes, pink nose, triangular ears, fluffy tail and full natural proportions. Image 2 controls identity and species; do not retain the sample animal's breed or facial structure from Image 1. The replacement must remain recognisably the same cat as Image 2 while naturally adopting Image 1's pose and expression. Preserve its real age and breed proportions; do not beautify, juvenilize, enlarge or shrink the head arbitrarily, or invent a generic cute face. Scene-change budget: 0%. Do not redesign, simplify, crop, recolour, relight, add, remove or move any background element, garment, prop, graphic mark or text. Make only the smallest local geometry adjustment needed for the replacement animal to fit the existing pose and clothing. Replace the chicken completely with the target pet while keeping exactly the public master's playful doodle language: a round fisheye body, huge slightly asymmetric comic eyes and a very thick irregular black hand-drawn contour. The red/orange crayon marks are fixed decorative graphics and must not follow the target pet's natural coat colour: retain two obvious pink-red cheek circles with small red freckles plus at least three broad, saturated red/orange zigzag or cross-hatched patches across the lower torso and sides, with roughly the same visual coverage and intensity as Image 1. These marks must be immediately visible at thumbnail size on every cat or dog. Preserve the clean off-white background. Translate identity only through ears, muzzle, eye colour, head silhouette and a few simplified coat-mark cues inside this crayon language. Use flat wax-crayon fills and broken strokes throughout. Do not render realistic fur, fine grey pencil texture, photographic volume, soft graphite shading or a conventional cute-pet illustration. Leave no beak, comb, wattle, wings, feathers, bird feet or other chicken anatomy. Keep all existing readable text unchanged. Add no new text, logo, signature, watermark or AI label. Avoid duplicate heads, extra eyes, extra ears, extra limbs, malformed paws, fused clothing, floating props and mixed-species anatomy.",
+  "revisedPrompt": "Create a single vertical 9:16 image at exact final size 720x1280 px using the two attached images as references. Use Image 1 as the exact composition/style/layout master and Image 2 as the sole identity reference for the pet.\n\nTask: replace the chicken in Image 1 entirely with the exact cream long-haired cat from Image 2 while preserving Image 1’s playful childlike crayon-doodle look. Keep the same pose, framing, expression, and overall silhouette logic from Image 1, but translate the animal into the cat identity from Image 2.\n\nMust preserve from Image 2: pale cream long coat, soft cream points, blue eyes, pink nose, triangular ears, fluffy tail, full natural proportions, real breed-age proportions, recognizable as the same cat. Do not beautify or juvenilize. Do not change head size arbitrarily. Do not create a generic cute face.\n\nMust preserve from Image 1: the exact off-white background, scene, pose, expression, clothing/props/text layout (if any), black thick irregular hand-drawn contour, flat wax-crayon fills, broken strokes, playful doodle language, and the decorative red/orange crayon treatment. Keep the image looking like a hand-drawn crayon illustration, not realistic fur, not photographic, not soft-shaded.\n\nImportant graphic requirements: keep two obvious pink-red cheek circles with small red freckles, and at least three broad saturated red/orange zigzag or cross-hatched patches across the lower torso and sides with roughly the same visual coverage and intensity as Image 1. These marks should remain immediately visible at thumbnail size. Translate identity only through ears, muzzle, eye color, head silhouette, and a few simplified coat-mark cues within the crayon language.\n\nRemove all chicken anatomy entirely: no beak, comb, wattle, wings, feathers, bird feet, or mixed-species anatomy. Replace with cat anatomy while maintaining the doodle style. Keep all existing readable text unchanged. Add no new text, logo, signature, watermark, or AI label.\n\nStrictly do not change or move background elements, garments, props, graphic marks, or text. Make only the smallest local geometry adjustments needed for the replacement animal to fit the existing pose. No duplicate heads, extra eyes, extra ears, extra limbs, malformed paws, fused clothing, floating props, or mixed-species anatomy.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-doodle-fisheye-chicken/animal-doodle-fisheye-chicken_cream-longhair-cat_stability-v01.png",
+    "sha256": "4f019f7c4778d905b53d92a2eef3ae6327defe2a8afde52e16c9dc80e76d0227",
+    "size": "720x1280"
+  },
+  "rawOutputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-doodle-fisheye-chicken/raw/animal-doodle-fisheye-chicken_cream-longhair-cat_stability-v01.png",
+  "automatedChecks": {
+    "dimensions": "pass",
+    "visualContent": "pass",
+    "inputCount": "pass",
+    "inputBytes": "pass",
+    "requestSerial": "pass"
+  },
+  "humanChecks": {
+    "petIdentity": "pending",
+    "compositionAndCrop": "pending",
+    "poseExpressionAndGaze": "pending",
+    "clothingPropsAndText": "pending",
+    "styleAndPalette": "pending",
+    "anatomy": "pending"
+  },
+  "finalApproval": "pending-user",
+  "elapsedMs": 41230,
+  "generatedAt": "2026-08-20T06:38:48.587Z"
+}

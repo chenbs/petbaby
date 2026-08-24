@@ -1,0 +1,94 @@
+{
+  "templateId": "landmark-adventure",
+  "title": "环球地标与户外探险",
+  "entryId": "travel",
+  "status": "approved-frozen-master",
+  "subject": "abyssinian-cat",
+  "breed": "阿比西尼亚猫",
+  "selectionRationale": "验证地标、墨镜反射、伸爪自拍和短毛猫身份在同一强镜头中是否稳定。",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-effect-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/1786368804360.png",
+      "sha256": "672e7b94c1d37ec8902fbd7cc9e263cf308ebcfb17a958edc41d028af23404f3"
+    },
+    {
+      "role": "pet-identity-reference",
+      "path": "apps/website/public/assets/avatar-abyssinian.jpg",
+      "sha256": "8714ff092ab9b9e58a3c440eb16756b1149cd02c4050a8fb4f5f63b902184268"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving travel portrait. Create a vertical 9:16 high-fidelity pet travel selfie from exactly two input images, composed for an exact final size of 720x1280 pixels. Image 1 is the primary effect reference and scene base. Preserve its core composition, camera language, scene type, clothing, landmark, distinctive props, meaningful text layout and overall visual effect. Allow an optional scene-change budget of approximately 5% to 20%. You may naturally adjust only secondary details, colours, materials, small decorations or context-equivalent props when the adjustment clearly improves the result and belongs in the current scene. Match the original perspective, scale, lighting and visual style. This is not a quota: if no replacement is clearly better, keep the source scene unchanged. Do not redesign the environment or weaken its story. Preserve Image 1's bright Paris daytime setting, Eiffel Tower landmark in the rear left, close ultra-wide selfie perspective, extended foreground paw, black beret, round sunglasses with landmark reflections, red-and-white striped shirt, blue sky and cheerful tourist energy. The landmark may remain; do not imply sponsorship or brand cooperation. Image 2 is the sole pet identity reference and overrides the animal shown in Image 1. Remove the original animal from Image 1 completely and replace it with the exact pet from Image 2. The replacement must look youthful, healthy, rounded and irresistibly cute at first glance, with soft full cheeks, friendly bright eyes and appealing contemporary proportions. Preserve recognisable breed anatomy and the identity markings stated below. Never make the pet skinny, elongated, angular, gaunt, stern, aggressive, strange, elderly-looking or uncanny. Keep exactly one pet identity and no unrelated animal. Correct anatomy only: no duplicate or fused limbs, extra ears, warped eyes, malformed mouth, human hands or broken clothing boundaries. No brand logo, known IP, platform UI, watermark or signature. Preserve the warm ruddy ticked coat, darker forehead markings, large upright ears, golden almond eyes, terracotta nose and elegant but healthy Abyssinian face from Image 2. Keep the same pet young and immediately lovable: soften the cheeks and expression without changing the breed into a round-faced breed. Use a small open happy smile, bright eyes visible naturally through lightly reflective lenses, and a plausible single front paw reaching toward the camera. Adapt the beret around the large ears and tailor the striped shirt without hiding the neck or coat identity. Retain the landmark, outfit and sunglasses; no new text, labels, platform interface or tourism logo.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "approved-by-user",
+    "checks": {
+      "petIdentity": "pass",
+      "cuteness": "pass",
+      "effectComposition": "pass",
+      "anatomy": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [],
+    "finalApproval": "approved",
+    "approvedAt": "2026-08-14T15:00:00+08:00"
+  },
+  "generatedAt": "2026-08-13T04:07:41.680Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/landmark-adventure_abyssinian-cat_9x16_v01.png",
+    "sha256": "a229b43854819d7d9457c7fca062792cb1f099c197a387f1b8ccbc8aba8e4ba9"
+  },
+  "candidatePath": "tools/imagegen/out/reference-v1/candidates/landmark-adventure_abyssinian-cat_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/landmark-adventure_abyssinian-cat_9x16_v01.webp",
+  "masterSha256": "61ebb97fa9a7b755c04526e247d161ec2a2e1e3ba19a41f0dea519bc1eaed1f9",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-14T15:00:00+08:00",
+    "note": "用户确认地标自拍候选通过并保存为环球地标与户外探险母版。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/landmark-adventure_abyssinian-cat_9x16_v01.webp",
+      "sha256": "61ebb97fa9a7b755c04526e247d161ec2a2e1e3ba19a41f0dea519bc1eaed1f9"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate",
+      "unapproved-candidate"
+    ]
+  },
+  "qualityBaseline": {
+    "required": [
+      "close ultra-wide travel selfie with one extended foreground paw",
+      "adult, healthy and immediately lovable Abyssinian identity with warm ruddy ticked coat",
+      "black beret, round reflective sunglasses and red-and-white striped shirt preserved",
+      "bright Paris daytime, Eiffel Tower rear-left, blue sky and cheerful tourist energy",
+      "exact 720x1280 portrait framing"
+    ],
+    "reject": [
+      "missing or replaced landmark, changed selfie perspective or unrelated background",
+      "skinny, gaunt, elderly, stern, aggressive, strange or kittenized pet",
+      "duplicate or fused limbs, malformed glasses, broken clothing or extra animal",
+      "brand logo, tourism sponsorship claim, watermark or signature"
+    ]
+  }
+}

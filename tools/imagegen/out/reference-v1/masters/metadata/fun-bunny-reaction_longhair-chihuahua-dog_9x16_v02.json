@@ -1,0 +1,91 @@
+{
+  "templateId": "fun-bunny-reaction",
+  "entryId": "fun",
+  "title": "情绪角色头像",
+  "version": "v02",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "sourceEffectFile": "apps/website/public/assets/example/1786369106856.png",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/1786369106856.png",
+      "sha256": "67c1b3eb546bf59bd4e7c30890ad031f5437c85d7453db2c2234391b79ecd674",
+      "requestPath": ".tmp/pending-remediation-20260820-inputs/fun-bunny-reaction-effect.jpg",
+      "requestBytes": 99331
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "longhair-chihuahua-dog",
+      "species": "dog",
+      "breed": "adult long-coated Chihuahua",
+      "path": "tools/imagegen/out/reference-v1/pending-remediation-20260820/identities/identity-longhair-chihuahua_v01.png",
+      "sha256": "d8607dd6b348dcfb64aa687ce35ecaa4d384bb6aaae3c56237662d279102e991",
+      "requestPath": ".tmp/pending-remediation-20260820-inputs/fun-bunny-reaction-identity.jpg",
+      "requestBytes": 49749
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "inputPolicy": {
+    "maxImages": 2,
+    "maxLongestEdge": 1200,
+    "jpegQuality": 82,
+    "combinedBytesBelow": 1048576,
+    "serial": true
+  },
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be adult long-coated Chihuahua with cream-and-tan long silky coat, large upright feathered ears, dark almond eyes, compact tapered muzzle, feathered chest and tail, and petite but clearly adult healthy proportions. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the simple blue outfit, bold silhouette and strong annoyed personality; replace the rabbit anatomy with the exact adult long-coated Chihuahua identity. Preserve the Chihuahua's long silky facial coat and large feathered upright ears while translating both completely into the same simple illustrated character language. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create an exact 9:16 vertical composition at 720x1280 pixels, using Image 1 as the locked composition/style reference and Image 2 as the sole identity reference. Preserve Image 1 exactly: same camera angle, crop, pose, framing, background, palette, lighting, ornate room, pink floral arrangements, tea set, tablecloth, white lace bonnet, white Victorian dress, and overall visual language. Replace the central subject’s identity with a single adult long-coated Chihuahua: cream-and-tan long silky coat, large upright feathered ears, dark almond eyes, compact tapered muzzle, feathered chest and tail, petite but clearly adult healthy proportions. Translate the Chihuahua completely into the same illustrated character language of Image 1; do not paste a photographic dog face. Keep the same strong, slightly annoyed but friendly personality and bold silhouette. Preserve all clothing, props, and scene details from Image 1 unless needed for anatomy contact boundaries. Do not change the background, do not beautify or redesign, do not add extra subjects, and do not introduce extra ears, eyes, limbs, or duplicate pets. The final image should look like a faithful subject-identity swap with zero scene change and exact composition preservation.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/pending-remediation-20260820/candidates/fun-bunny-reaction_longhair-chihuahua-dog_9x16_v02.png",
+    "rawPath": "tools/imagegen/out/reference-v1/pending-remediation-20260820/raw/fun-bunny-reaction_longhair-chihuahua-dog_9x16_v02.png",
+    "sha256": "8226d662655750107bacb3e702ce16e1c3cfe91b8e5f40c1c29a2175ad265a0b"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "checks": {
+      "dimensions": "pass",
+      "inputContract": "pass",
+      "visualAcceptance": "pending-user"
+    },
+    "findings": [],
+    "approvedAt": "2026-08-20T14:00:00+08:00"
+  },
+  "generatedAt": "2026-08-20T01:51:13.904Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/pending-remediation-20260820/candidates/fun-bunny-reaction_longhair-chihuahua-dog_9x16_v02.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/fun-bunny-reaction_longhair-chihuahua-dog_9x16_v02.webp",
+  "masterSha256": "90c37c30465402eae8a80e0fa9c0c90950495103a120b91d67614cbafa3f133c",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-20T14:00:00+08:00",
+    "note": "用户明确确认 pending-masters-comparison.png 全部审核通过并要求冻结母版。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/fun-bunny-reaction_longhair-chihuahua-dog_9x16_v02.webp",
+      "sha256": "90c37c30465402eae8a80e0fa9c0c90950495103a120b91d67614cbafa3f133c"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-candidate",
+      "unapproved-candidate"
+    ]
+  }
+}

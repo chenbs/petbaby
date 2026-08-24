@@ -1,0 +1,36 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+
+<view class="page page-flat page-read">
+  <t-skeleton wx:if="{{loading}}" type="card" count="2"></t-skeleton>
+
+  <t-empty
+    wx:elif="{{!item}}"
+    icon="pet"
+    title="打不开这个纪念空间"
+    description="这个纪念空间可能已关闭分享。"
+    anim="fade"
+  ></t-empty>
+
+  <block wx:else>
+    <!-- F 的封面式开篇：期数标识 + 巨大标题 + 副题 + 细线收口 -->
+    <text class="share-kicker">PETBABY MEMORIAL</text>
+    <view class="share-title">{{item.title}}</view>
+    <text class="share-pet">{{item.pet_name}}</text>
+    <view class="share-rule"></view>
+
+    <!-- 照片按原始比例纵向流，保留完整构图（需求 5.18-2）；F 下满版出血 -->
+    <view class="photo-flow">
+      <image
+        wx:for="{{photos}}"
+        wx:key="id"
+        class="photo"
+        src="{{item.url}}"
+        mode="widthFix"
+      ></image>
+    </view>
+
+    <text class="story">{{item.story}}</text>
+
+    <text class="small closing">这里不开放留言、排名或营销弹窗。</text>
+  </block>
+</view>

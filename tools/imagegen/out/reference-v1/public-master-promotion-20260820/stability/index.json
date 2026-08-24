@@ -1,0 +1,165 @@
+{
+  "status": "approved-by-user",
+  "provider": "lingsuan",
+  "requestPolicy": {
+    "provider": "lingsuan",
+    "endpoint": "/v1/images/edits",
+    "concurrency": 1,
+    "outputsPerRequest": 1,
+    "inputsPerRequest": 2,
+    "inputFormat": "jpeg",
+    "maxInputEdge": 1200,
+    "maxCombinedInputBytesExclusive": 1000000,
+    "comparisonSheetAsInput": false
+  },
+  "expectedTotal": 18,
+  "generatedTotal": 18,
+  "results": [
+    {
+      "templateId": "animal-car-window-westie",
+      "identityId": "british-shorthair-cat",
+      "id": "animal-car-window-westie_british-shorthair-cat_stability-v01",
+      "status": "generated",
+      "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-car-window-westie/animal-car-window-westie_british-shorthair-cat_stability-v01.png",
+      "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-car-window-westie/metadata/animal-car-window-westie_british-shorthair-cat_stability-v01.json"
+    },
+    {
+      "templateId": "animal-car-window-westie",
+      "identityId": "cream-longhair-cat",
+      "id": "animal-car-window-westie_cream-longhair-cat_stability-v01",
+      "status": "generated",
+      "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-car-window-westie/animal-car-window-westie_cream-longhair-cat_stability-v01.png",
+      "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-car-window-westie/metadata/animal-car-window-westie_cream-longhair-cat_stability-v01.json"
+    },
+    {
+      "templateId": "animal-car-window-westie",
+      "identityId": "german-shepherd-dog",
+      "id": "animal-car-window-westie_german-shepherd-dog_stability-v01",
+      "status": "generated",
+      "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-car-window-westie/animal-car-window-westie_german-shepherd-dog_stability-v01.png",
+      "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-car-window-westie/metadata/animal-car-window-westie_german-shepherd-dog_stability-v01.json"
+    },
+    {
+      "templateId": "animal-doodle-fisheye-chicken",
+      "identityId": "british-shorthair-cat",
+      "id": "animal-doodle-fisheye-chicken_british-shorthair-cat_stability-v01",
+      "status": "generated",
+      "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-doodle-fisheye-chicken/animal-doodle-fisheye-chicken_british-shorthair-cat_stability-v01.png",
+      "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-doodle-fisheye-chicken/metadata/animal-doodle-fisheye-chicken_british-shorthair-cat_stability-v01.json"
+    },
+    {
+      "templateId": "animal-doodle-fisheye-chicken",
+      "identityId": "cream-longhair-cat",
+      "id": "animal-doodle-fisheye-chicken_cream-longhair-cat_stability-v01",
+      "status": "generated",
+      "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-doodle-fisheye-chicken/animal-doodle-fisheye-chicken_cream-longhair-cat_stability-v01.png",
+      "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-doodle-fisheye-chicken/metadata/animal-doodle-fisheye-chicken_cream-longhair-cat_stability-v01.json"
+    },
+    {
+      "templateId": "animal-doodle-fisheye-chicken",
+      "identityId": "german-shepherd-dog",
+      "id": "animal-doodle-fisheye-chicken_german-shepherd-dog_stability-v01",
+      "status": "generated",
+      "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-doodle-fisheye-chicken/animal-doodle-fisheye-chicken_german-shepherd-dog_stability-v01.png",
+      "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-doodle-fisheye-chicken/metadata/animal-doodle-fisheye-chicken_german-shepherd-dog_stability-v01.json"
+    },
+    {
+      "templateId": "animal-giant-city-companion",
+      "identityId": "british-shorthair-cat",
+      "id": "animal-giant-city-companion_british-shorthair-cat_stability-v01",
+      "status": "generated",
+      "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-giant-city-companion/animal-giant-city-companion_british-shorthair-cat_stability-v01.png",
+      "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-giant-city-companion/metadata/animal-giant-city-companion_british-shorthair-cat_stability-v01.json"
+    },
+    {
+      "templateId": "animal-giant-city-companion",
+      "identityId": "cream-longhair-cat",
+      "id": "animal-giant-city-companion_cream-longhair-cat_stability-v01",
+      "status": "generated",
+      "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-giant-city-companion/animal-giant-city-companion_cream-longhair-cat_stability-v01.png",
+      "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-giant-city-companion/metadata/animal-giant-city-companion_cream-longhair-cat_stability-v01.json"
+    },
+    {
+      "templateId": "animal-giant-city-companion",
+      "identityId": "german-shepherd-dog",
+      "id": "animal-giant-city-companion_german-shepherd-dog_stability-v01",
+      "status": "generated",
+      "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-giant-city-companion/animal-giant-city-companion_german-shepherd-dog_stability-v01.png",
+      "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-giant-city-companion/metadata/animal-giant-city-companion_german-shepherd-dog_stability-v01.json"
+    },
+    {
+      "templateId": "dessert-shopkeeper",
+      "identityId": "british-shorthair-cat",
+      "id": "dessert-shopkeeper_british-shorthair-cat_stability-v01",
+      "status": "generated",
+      "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/dessert-shopkeeper/dessert-shopkeeper_british-shorthair-cat_stability-v01.png",
+      "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/dessert-shopkeeper/metadata/dessert-shopkeeper_british-shorthair-cat_stability-v01.json"
+    },
+    {
+      "templateId": "dessert-shopkeeper",
+      "identityId": "cream-longhair-cat",
+      "id": "dessert-shopkeeper_cream-longhair-cat_stability-v01",
+      "status": "generated",
+      "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/dessert-shopkeeper/dessert-shopkeeper_cream-longhair-cat_stability-v01.png",
+      "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/dessert-shopkeeper/metadata/dessert-shopkeeper_cream-longhair-cat_stability-v01.json"
+    },
+    {
+      "templateId": "dessert-shopkeeper",
+      "identityId": "german-shepherd-dog",
+      "id": "dessert-shopkeeper_german-shepherd-dog_stability-v01",
+      "status": "generated",
+      "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/dessert-shopkeeper/dessert-shopkeeper_german-shepherd-dog_stability-v01.png",
+      "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/dessert-shopkeeper/metadata/dessert-shopkeeper_german-shepherd-dog_stability-v01.json"
+    },
+    {
+      "templateId": "original-magic-academy",
+      "identityId": "british-shorthair-cat",
+      "id": "original-magic-academy_british-shorthair-cat_stability-v01",
+      "status": "generated",
+      "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/original-magic-academy/original-magic-academy_british-shorthair-cat_stability-v01.png",
+      "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/original-magic-academy/metadata/original-magic-academy_british-shorthair-cat_stability-v01.json"
+    },
+    {
+      "templateId": "original-magic-academy",
+      "identityId": "cream-longhair-cat",
+      "id": "original-magic-academy_cream-longhair-cat_stability-v01",
+      "status": "generated",
+      "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/original-magic-academy/original-magic-academy_cream-longhair-cat_stability-v01.png",
+      "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/original-magic-academy/metadata/original-magic-academy_cream-longhair-cat_stability-v01.json"
+    },
+    {
+      "templateId": "original-magic-academy",
+      "identityId": "german-shepherd-dog",
+      "id": "original-magic-academy_german-shepherd-dog_stability-v01",
+      "status": "generated",
+      "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/original-magic-academy/original-magic-academy_german-shepherd-dog_stability-v01.png",
+      "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/original-magic-academy/metadata/original-magic-academy_german-shepherd-dog_stability-v01.json"
+    },
+    {
+      "templateId": "pet-milk-tea-shopkeeper",
+      "identityId": "british-shorthair-cat",
+      "id": "pet-milk-tea-shopkeeper_british-shorthair-cat_stability-v01",
+      "status": "generated",
+      "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/pet-milk-tea-shopkeeper/pet-milk-tea-shopkeeper_british-shorthair-cat_stability-v01.png",
+      "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/pet-milk-tea-shopkeeper/metadata/pet-milk-tea-shopkeeper_british-shorthair-cat_stability-v01.json"
+    },
+    {
+      "templateId": "pet-milk-tea-shopkeeper",
+      "identityId": "cream-longhair-cat",
+      "id": "pet-milk-tea-shopkeeper_cream-longhair-cat_stability-v01",
+      "status": "generated",
+      "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/pet-milk-tea-shopkeeper/pet-milk-tea-shopkeeper_cream-longhair-cat_stability-v01.png",
+      "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/pet-milk-tea-shopkeeper/metadata/pet-milk-tea-shopkeeper_cream-longhair-cat_stability-v01.json"
+    },
+    {
+      "templateId": "pet-milk-tea-shopkeeper",
+      "identityId": "german-shepherd-dog",
+      "id": "pet-milk-tea-shopkeeper_german-shepherd-dog_stability-v01",
+      "status": "generated",
+      "outputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/pet-milk-tea-shopkeeper/pet-milk-tea-shopkeeper_german-shepherd-dog_stability-v01.png",
+      "metadataPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/pet-milk-tea-shopkeeper/metadata/pet-milk-tea-shopkeeper_german-shepherd-dog_stability-v01.json"
+    }
+  ],
+  "updatedAt": "2026-08-20T06:38:48.596Z",
+  "approvedAt": "2026-08-20T06:57:35.480Z"
+}

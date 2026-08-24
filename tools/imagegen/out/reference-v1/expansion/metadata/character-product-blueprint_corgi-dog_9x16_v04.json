@@ -1,0 +1,94 @@
+{
+  "templateId": "character-product-blueprint",
+  "entryId": "character",
+  "title": "宠物产品设定蓝图",
+  "sourceEffectFile": "apps/website/public/assets/example/3.png",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/3.png",
+      "sha256": "94943beb431e0bcbd009da87dd9fecac57dda390ac61beefcebd2d03d724c783"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "corgi-dog",
+      "species": "dog",
+      "breed": "adult Pembroke Welsh Corgi",
+      "path": "tools/imagegen/out/source/dog-corgi.jpg",
+      "sha256": "750c43038e21f8601be8b903889100c6b165d2b35cea3b7c0b55c0edce7ca9c2"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be adult Pembroke Welsh Corgi with tan-and-white coat, broad white blaze, white muzzle and chest, dark round eyes, upright ears, short legs and sturdy adult body. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the complete portrait blueprint with the central prototype, front-side-top construction views, seam diagrams, material swatches, packaging and callouts. Show one complete natural adult Corgi wearing an original penguin-inspired pet hood and garment, with ears, hood tip, paws and garment hem all visible inside a generous 8% canvas margin. No cropped head, human face, human hands, human torso or simplified single mascot; every diagram must describe the same wearable pet garment. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a clean vertical 9:16 product-sheet style composition based on the attached references, with an exact frozen-master layout similar to a pet garment design board. Use the first attached image only as the composition/style reference, and use the second attached image only as the sole identity reference. Replace the original human character everywhere with one coherent adult Pembroke Welsh Corgi identity: tan-and-white coat, broad white blaze, white muzzle and chest, dark round eyes, upright ears, short legs, sturdy adult body, friendly appealing expression. Preserve the first image’s blueprint-like arrangement, camera angle, crop, perspective, pose, lighting, palette, medium, line quality, brushwork, texture, packaging/mockup feel, diagram callouts, seam details, frame-structure sketches, top/front/side views, flat pattern, material swatches, and all contact relationships. Keep the same wearable concept, but adapt it into a pet garment: a penguin-inspired hood and body suit for the corgi, with ears, hood tip, paws, and garment hem clearly visible inside a generous 8% canvas margin. Show one complete natural adult corgi wearing the garment, no cropped head, no human features, no extra limbs, no duplicate pets, no malformed anatomy. Render the corgi in the same illustration language as the reference board rather than as a pasted photo. Do not redesign or beautify the background; keep the overall template and diagram blueprint intact. Replace any branded or copyrighted wording with short original pet-safe wording while preserving text block positions and hierarchy. Make the final image look like a polished design sheet / instruction board with technical labels, swatches, and callouts, in a playful premium toy-design aesthetic, crisp and high detail, white studio background, balanced margins, finished print-ready appearance.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/expansion/candidates/character-product-blueprint_corgi-dog_9x16_v04.png",
+    "sha256": "79f730aa8de5b680d8b91c8cb11fafa0529af9ede1bee0432617a780b60293ca"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-20T12:00:00+08:00"
+  },
+  "generatedAt": "2026-08-18T07:24:42.187Z",
+  "version": "v04",
+  "candidatePath": "tools/imagegen/out/reference-v1/expansion/candidates/character-product-blueprint_corgi-dog_9x16_v04.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/character-product-blueprint_corgi-dog_9x16_v04.webp",
+  "masterSha256": "bb078b77ea8a0411e77cb61f754cd24506edd02b5405659c578e32d855994889",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-20T12:00:00+08:00",
+    "note": "用户审阅 pending-masters-comparison 后明确表示除指定重做和删除项外，其余模板可以冻结。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/character-product-blueprint_corgi-dog_9x16_v04.webp",
+      "sha256": "bb078b77ea8a0411e77cb61f754cd24506edd02b5405659c578e32d855994889"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate",
+      "unapproved-candidate"
+    ]
+  },
+  "qualityBaseline": {
+    "required": [
+      "Keep the complete portrait blueprint with the central prototype, front-side-top construction views, seam diagrams, material swatches, packaging and callouts. Show one complete natural adult Corgi wearing an original penguin-inspired pet hood and garment, with ears, hood tip, paws and garment hem all visible inside a generous 8% canvas margin. No cropped head, human face, human hands, human torso or simplified single mascot; every diagram must describe the same wearable pet garment.",
+      "exact 720x1280 portrait output",
+      "same approved composition, action, expression, lighting, palette, medium and text hierarchy"
+    ],
+    "reject": [
+      "scene redesign or missing distinctive layout details",
+      "juvenilized, malformed, duplicated or inconsistent pet anatomy",
+      "logo, platform UI, account ID, watermark or signature"
+    ]
+  }
+}

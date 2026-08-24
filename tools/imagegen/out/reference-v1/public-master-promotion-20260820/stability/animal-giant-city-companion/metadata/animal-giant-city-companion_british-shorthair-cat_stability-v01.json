@@ -1,0 +1,67 @@
+{
+  "id": "animal-giant-city-companion_british-shorthair-cat_stability-v01",
+  "templateId": "animal-giant-city-companion",
+  "title": "巨型城市伙伴",
+  "sequence": 28,
+  "identityId": "british-shorthair-cat",
+  "identityLabel": "短毛猫",
+  "species": "cat",
+  "breed": "blue British Shorthair cat",
+  "status": "generated-pending-human-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "requestPolicy": {
+    "concurrency": 1,
+    "outputsPerRequest": 1,
+    "inputCount": 2,
+    "combinedInputBytes": 311708,
+    "maxCombinedInputBytesExclusive": 1000000,
+    "maxInputEdge": 1200,
+    "comparisonSheetIncluded": false
+  },
+  "inputs": [
+    {
+      "role": "compressed-public-preview-master-candidate",
+      "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/api-inputs/animal-giant-city-companion_public-v02_master-candidate.jpg",
+      "sha256": "717b2b96dde2841fa1f3dc3c7c740f5a123b42567c152e5795b93dc6d1e3fd20",
+      "bytes": 162431,
+      "sourceCandidatePath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/candidates/animal-giant-city-companion_public-v02_master-candidate.png",
+      "sourceCandidateSha256": "2ec2dd21111659654174719fccdcbe70be520c25ca41ca3814e882bd6e520fb8"
+    },
+    {
+      "role": "compressed-pet-identity-reference",
+      "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/api-inputs/british-shorthair-cat.jpg",
+      "sha256": "7e7576e87460bfab6b4b9fd7a75733238348f9b39ddd1ee9f71b41836094fc59",
+      "bytes": 149277,
+      "sourcePath": "tools/imagegen/out/source/cat-british.jpg"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "prompt": "Use case: identity-preserving production-master stability validation. Create one vertical 9:16 image composed for an exact final size of 720x1280 pixels from exactly two input images. Image 1 is a proposed self-owned runtime master copied byte-for-byte from an approved public preview. It is the sole reference for composition, scene, pose, expression, styling, lighting, palette, clothing, props and text layout. Image 2 is the sole pet identity reference. Replace every animal depiction in Image 1 with the exact blue British Shorthair cat from Image 2. Preserve the target pet's solid blue-grey plush short coat, round broad face, amber eyes, small upright ears and sturdy natural proportions. Image 2 controls identity and species; do not retain the sample animal's breed or facial structure from Image 1. The replacement must remain recognisably the same cat as Image 2 while naturally adopting Image 1's pose and expression. Preserve its real age and breed proportions; do not beautify, juvenilize, enlarge or shrink the head arbitrarily, or invent a generic cute face. Scene-change budget: 0%. Do not redesign, simplify, crop, recolour, relight, add, remove or move any background element, garment, prop, graphic mark or text. Make only the smallest local geometry adjustment needed for the replacement animal to fit the existing pose and clothing. Keep the monumental pet scale among skyscrapers and traffic. Both eyes must stay directed downward toward the tiny people and cars, never toward the camera. Keep all existing readable text unchanged. Add no new text, logo, signature, watermark or AI label. Avoid duplicate heads, extra eyes, extra ears, extra limbs, malformed paws, fused clothing, floating props and mixed-species anatomy.",
+  "revisedPrompt": "Create a single vertical 9:16 image at exact final size 720x1280 pixels using exactly two source images: Source Image 1 is the city street giant-cat scene and must be preserved in composition, scene, pose, expression, styling, lighting, palette, clothing, props, text layout, and all background elements with 0% scene change; Source Image 2 is the sole pet identity reference. Replace the animal in Source Image 1 with the exact cat identity from Source Image 2: a blue British Shorthair with solid blue-grey plush short coat, round broad face, amber eyes, small upright ears, sturdy natural proportions, and a realistic adult cat body. Preserve the cat’s true breed and age characteristics; do not beautify, juvenilize, alter breed traits, enlarge or shrink the head arbitrarily, or invent a generic cute face. The cat must remain recognizably the same cat as Source Image 2 while adopting the giant pose and downward-looking expression from Source Image 1. Keep both eyes directed downward toward the tiny people and cars, not toward the camera. Maintain the monumental scale among skyscrapers and traffic. Make only the smallest local geometry adjustments necessary for the replacement cat to fit the existing pose. Do not add, remove, move, recolor, relight, crop, redesign, simplify, or change any background element, garment, prop, graphic mark, or text. Keep all readable text unchanged. No new text, logos, signatures, watermarks, or AI labels. Avoid duplicate heads, extra eyes, extra ears, extra limbs, malformed paws, fused anatomy, floating props, and mixed-species anatomy.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-giant-city-companion/animal-giant-city-companion_british-shorthair-cat_stability-v01.png",
+    "sha256": "478dc0d2f4dcdaed5acb165fda699aba5fd0a9c1c8d7e3bc82a4e1cfccdc66c8",
+    "size": "720x1280"
+  },
+  "rawOutputPath": "tools/imagegen/out/reference-v1/public-master-promotion-20260820/stability/animal-giant-city-companion/raw/animal-giant-city-companion_british-shorthair-cat_stability-v01.png",
+  "automatedChecks": {
+    "dimensions": "pass",
+    "visualContent": "pass",
+    "inputCount": "pass",
+    "inputBytes": "pass",
+    "requestSerial": "pass"
+  },
+  "humanChecks": {
+    "petIdentity": "pending",
+    "compositionAndCrop": "pending",
+    "poseExpressionAndGaze": "pending",
+    "clothingPropsAndText": "pending",
+    "styleAndPalette": "pending",
+    "anatomy": "pending"
+  },
+  "finalApproval": "pending-user",
+  "elapsedMs": 38554,
+  "generatedAt": "2026-08-20T06:18:46.049Z"
+}

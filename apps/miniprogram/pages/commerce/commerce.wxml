@@ -1,0 +1,191 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+
+<view class="page page-flat">
+  <text class="eyebrow">MEMBERSHIP</text>
+  <view class="title">会员与年度报告</view>
+
+  <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
+  <t-notice wx:if="{{message}}" type="success" message="{{message}}" class="block-gap"></t-notice>
+
+  <t-skeleton wx:if="{{loading}}" type="card" count="3" class="block-gap"></t-skeleton>
+
+  <block wx:else>
+    <!-- 当前会员状态 -->
+    <view wx:if="{{memberships.length}}" class="section">
+      <view class="section-title">我的会员</view>
+      <view class="list">
+        <t-card wx:for="{{memberships}}" wx:key="id" blur="{{blurOk}}" anim="{{animType}}">
+          <view class="row">
+            <view class="sub-title">{{item.planText}}</view>
+            <t-tag tone="{{item.statusTone}}" text="{{item.statusText}}"></t-tag>
+          </view>
+          <text wx:if="{{item.expiresText}}" class="small">{{item.expiresText}}</text>
+          <!--
+            权益逐条列出，代替原先的「本期额度 used/quota」进度条。
+            新权益不卖生成次数（迁移 0020 起 quota 恒为 0），那个进度条永远是 0/0。
+          -->
+          <view wx:if="{{item.benefitTexts.length}}" class="plan-benefits">
+            <text wx:for="{{item.benefitTexts}}" wx:for-item="benefit" wx:key="*this" class="small benefit">· {{benefit}}</text>
+          </view>
+          <text wx:if="{{item.remainingText}}" class="small">{{item.remainingText}}</text>
+        </t-card>
+      </view>
+    </view>
+
+    <!-- 方案对比卡（需求 5.19-1）。名称、价格、权益全部来自 /api/membership-plans -->
+    <view class="section">
+      <view class="section-title">选择方案</view>
+
+      <t-empty
+        wx:if="{{!plans.length}}"
+        icon="work"
+        title="会员正在调整"
+        description="套餐权益正在更新，稍后回来看看。"
+        anim="{{animType}}"
+        decor="{{decor}}"
+      ></t-empty>
+
+      <view wx:else class="plans">
+        <t-card
+          wx:for="{{plans}}"
+          wx:key="plan"
+          class="plan"
+          blur="{{blurOk}}"
+          anim="{{animType}}"
+        >
+          <view class="plan-head">
+            <text class="small strong">{{item.label}}</text>
+            <t-tag wx:if="{{item.badge}}" tone="accent" size="mini" text="{{item.badge}}"></t-tag>
+          </view>
+          <view class="plan-price">{{item.priceText}}</view>
+          <text wx:if="{{item.hint}}" class="small">{{item.hint}}</text>
+          <view class="plan-benefits">
+            <text wx:for="{{item.benefitTexts}}" wx:for-item="benefit" wx:key="*this" class="small benefit">· {{benefit}}</text>
+          </view>
+          <t-button
+            type="{{item.period === 'year' ? 'primary' : 'secondary'}}"
+            block
+            anim="{{animType}}"
+            loading="{{buyingPlan === item.plan}}"
+            class="block-gap"
+            data-plan="{{item.plan}}"
+            bindtap="member"
+          >开通</t-button>
+        </t-card>
+      </view>
+    </view>
+
+    <!-- 订阅提醒 -->
+    <view class="section">
+      <view class="section-title">纪念日提醒</view>
+
+      <t-empty
+        wx:if="{{!subscriptions.length}}"
+        icon="pet"
+        title="还没有订阅提醒"
+        description="订阅后，我们会在它的生日前提醒你。"
+        action-text="订阅生日提醒"
+        anim="{{animType}}"
+        decor="{{decor}}"
+        bindaction="remind"
+      ></t-empty>
+
+      <block wx:else>
+        <view class="list">
+          <t-card wx:for="{{subscriptions}}" wx:key="id" blur="{{blurOk}}" anim="{{animType}}">
+            <view class="row">
+              <view class="sub-main">
+                <view class="sub-title">{{item.eventText}}</view>
+                <text wx:if="{{item.scheduledText}}" class="small">{{item.scheduledText}}</text>
+              </view>
+              <view class="sub-side">
+                <t-tag tone="{{item.statusTone}}" size="mini" text="{{item.statusText}}"></t-tag>
+                <t-button
+                  wx:if="{{item.cancellable}}"
+                  type="danger"
+                  size="mini"
+                  anim="{{animType}}"
+                  data-id="{{item.id}}"
+                  bindtap="askCancel"
+                >退订</t-button>
+              </view>
+            </view>
+          </t-card>
+        </view>
+        <t-button type="ghost" block anim="{{animType}}" class="block-gap" bindtap="remind">再订阅一个提醒</t-button>
+      </block>
+
+      <!--
+        「去年今日」的推送授权（E2）。常驻而不是「已订阅就隐藏」——
+        微信订阅消息是一次授权一次下发，推过一次就要重新授权。
+      -->
+      <t-button type="ghost" block anim="{{animType}}" class="block-gap" bindtap="remindOnThisDay">开启「去年今日」提醒</t-button>
+      <text class="hint">微信的服务通知按次授权，每次授权只推送一条。</text>
+    </view>
+
+    <!-- 年度报告 -->
+    <view class="section">
+      <view class="section-title">年度报告</view>
+
+      <t-empty
+        wx:if="{{!reports.length}}"
+        icon="work"
+        title="还没有年度报告"
+        description="生成一份，回看这一年和它的每件作品。"
+        action-text="生成今年的报告"
+        anim="{{animType}}"
+        decor="{{decor}}"
+        bindaction="report"
+      ></t-empty>
+
+      <block wx:else>
+        <view class="list">
+          <t-card wx:for="{{reports}}" wx:key="id" blur="{{blurOk}}" anim="{{animType}}">
+            <view class="row">
+              <view class="sub-title">{{item.year}} 年度报告</view>
+              <t-tag tone="{{item.locked ? 'warning' : 'success'}}" size="mini" text="{{item.locked ? '预览版' : '高清版'}}"></t-tag>
+            </view>
+            <!--
+              按钮不写「支付」：会员的 annualReport 权益命中时服务端直接解锁、
+              不产生订单（M4），写「支付」会承诺一次并不发生的付款。
+            -->
+            <t-button
+              wx:if="{{item.locked}}"
+              type="ai"
+              block
+              anim="{{animType}}"
+              loading="{{unlockingId === item.id}}"
+              class="block-gap"
+              data-id="{{item.id}}"
+              bindtap="unlock"
+            >解锁高清版</t-button>
+          </t-card>
+        </view>
+        <t-button type="ghost" block anim="{{animType}}" class="block-gap" bindtap="report">生成今年的报告</t-button>
+      </block>
+    </view>
+
+    <!-- 实体纪念品入口行（需求 5.19-5） -->
+    <view class="section">
+      <view class="entry-row tappable anim-{{animType}}" aria-role="button" bindtap="goPhysical">
+        <view class="entry-icon">📦</view>
+        <view class="entry-main">
+          <view class="sub-title">实体纪念品订单</view>
+          <text class="small">把已解锁的作品印出来，寄到家里。</text>
+        </view>
+        <view class="entry-arrow">›</view>
+      </view>
+    </view>
+  </block>
+</view>
+
+<t-dialog
+  visible="{{!!cancelTarget}}"
+  title="退订这个提醒？"
+  content="退订后不会再收到该纪念日的服务通知，你可以随时重新订阅。"
+  confirm-text="确认退订"
+  danger
+  anim="{{animType}}"
+  bindconfirm="confirmCancel"
+  bindcancel="closeCancel"
+></t-dialog>

@@ -1,0 +1,48 @@
+{
+  "task": "user-feedback-frozen-master-refinement-2026-08-19-round4",
+  "templateId": "mini-companion",
+  "title": "同宠大小分身",
+  "kind": "master",
+  "version": "v07",
+  "status": "generated-pending-visual-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputFidelity": "high",
+  "inputPolicy": {
+    "sequential": true,
+    "imageCount": 2,
+    "maxImages": 2,
+    "longestEdge": 1200,
+    "jpegQuality": 82,
+    "maxCombinedBytes": 1000000
+  },
+  "inputs": [
+    {
+      "role": "self-owned-abyssinian-identity-outfit-and-scale-reference",
+      "originalPath": "tools/imagegen/out/reference-v1/remediation-20260819-round3/master-candidates/mini-companion_abyssinian-cat_9x16_v06.png",
+      "preparedPath": ".tmp/master-remediation-20260819-round4-inputs/mini-companion-1.jpg",
+      "bytes": 71870,
+      "sha256": "6b998d29205763a482d1749625f9b44bb11293434c8f0fb674d8f4b93746a972"
+    },
+    {
+      "role": "effect-reference-camera-composition-and-black-floor-line-guide-only",
+      "originalPath": "tools/imagegen/out/reference-v1/remediation-20260819-round4/inputs/mini-companion-effect-reference-user.png",
+      "preparedPath": ".tmp/master-remediation-20260819-round4-inputs/mini-companion-2.jpg",
+      "bytes": 47347,
+      "sha256": "67246dbb98fdd87d124d5f49bff25dba1e61e8bc547e16d3d34db0a3532c2d06"
+    }
+  ],
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "output": {
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819-round4/raw/mini-companion.png",
+    "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819-round4/master-candidates/mini-companion_abyssinian-cat_9x16_v07.png",
+    "width": 720,
+    "height": 1280,
+    "sha256": "f388570d26dfa926ec0cede8cc5307578d89daedb33326b15d893857df5cb9c0"
+  },
+  "prompt": "Use case: identity-preserve precise-object-edit and composition transfer. Asset type: self-owned runtime frozen-master candidate. Image 1 is the sole authority for both subjects: reproduce the same two identical adult Abyssinian cats, warm ruddy coat, anatomy, mirrored blue goggles, black jackets, purple harnesses, and large-left/small-right scale relationship. Do not copy the Schnauzer dogs, grey-white fur, breed, faces or paws from Image 2. Image 2 is the strict authority only for camera and composition: recreate its strong oblique low-angle camera looking diagonally upward, slight Dutch tilt, sloping white floor plane, large subject leaning dynamically through perspective, smaller duplicate behind at right, and the clearly visible continuous black diagonal floor seam running behind the subjects toward the right edge. The camera viewpoint must remain diagonally upward from below. Do not turn the image into a frontal eye-level or top-down photograph. Independently from the low camera, adjust only the cats' line of sight to a natural level forward gaze: their head and muzzle axes are neutral and horizontal relative to their bodies, looking straight ahead rather than lifting their chins or looking upward. The cats do not look up with the camera. Both goggles must remain centred over and fully cover both eyes. Both cats must remain the same adult identity at different scales; the small duplicate must not become a kitten. Preserve complete paws, coherent seated anatomy, the large cat's left foreleg set wider toward the left, clean white studio, exact 9:16 portrait crop and commercial photographic finish. The black diagonal floor seam is mandatory and must not be removed, faded, hidden or replaced by a grey shadow. No extra subjects, dog traits, text, logo, watermark or signature.",
+  "revisedPrompt": "Create a commercial studio photograph in exact 9:16 portrait crop on a clean white seamless background, using Image 1 as the sole authority for the subjects’ identity and styling, and Image 2 only for camera/composition. Recreate the same two identical adult Abyssinian cats from Image 1: warm ruddy coat, correct Abyssinian anatomy, mirrored blue goggles fully centered over and covering both eyes, black jackets, purple harnesses, seated pose, complete paws, coherent adult body proportions, and the same large-left / small-right scale relationship. The smaller cat must remain an adult duplicate, not a kitten. Preserve the large cat’s left foreleg set wider toward the left. Both cats should have neutral horizontal head and muzzle axes with a natural level forward gaze; do not have them looking up with the camera. Use Image 2 only for the camera and layout: a strong oblique low-angle viewpoint looking diagonally upward, slight Dutch tilt, large subject leaning dynamically through perspective, smaller duplicate behind at right, and a clearly visible continuous black diagonal floor seam running behind the subjects toward the right edge. The camera must remain diagonally upward from below, not frontal and not top-down. Keep the white studio floor plane sloping as in Image 2. Preserve a crisp photographic finish. Absolutely no dog traits, no Schnauzer features, no grey-white fur, no dog faces or paws, no extra subjects, no text, logo, watermark, or signature. The black diagonal floor seam is mandatory and must remain visible, continuous, and black.",
+  "generatedAt": "2026-08-19T08:56:57.526Z"
+}

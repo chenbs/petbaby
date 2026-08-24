@@ -1,0 +1,84 @@
+{
+  "templateId": "ink-portrait",
+  "title": "黑白水墨肖像",
+  "entryId": "art",
+  "status": "rejected-by-user",
+  "version": "v10",
+  "subject": "black-labrador-dog",
+  "breed": "成年黑色拉布拉多寻回犬",
+  "selectionRationale": "实际画面为黑白动态笔刷犬头像；用黑色拉布拉多验证深色毛发在水墨负空间中仍保留五官与轮廓。",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-candidate-edit-target",
+      "path": "tools/imagegen/out/reference-v1/candidates/ink-portrait_black-labrador-dog_9x16_v08.png",
+      "sha256": "3d8ef9a4d7f798554b96dd5aba253698966fe5f66247d5c4ea4ca3dfe497c552"
+    },
+    {
+      "role": "third-party-effect-reference-style-only",
+      "path": "apps/website/public/assets/example/b983ec71-2f88-4c23-97f2-c0f0cb75bac1.jpg",
+      "sha256": "47d1f1377a40e3201d4c65a48fa55185118291de7564bda787ded2959c36df3d"
+    },
+    {
+      "role": "self-owned-pupil-tone-target-guide",
+      "path": "tools/imagegen/out/reference-v1/identity-guides/ink-portrait_black-labrador-dog_pupil-tone-guide_v10.png",
+      "sha256": "783f62215073568231c28565b543399304bdd045f1e586dc6bdce539c1b711a1"
+    }
+  ],
+  "mask": {
+    "role": "transparent-near-pupil-tone-edit-mask",
+    "path": "tools/imagegen/out/reference-v1/masks/ink-portrait_black-labrador-dog_pupil-tone_v10.png",
+    "sha256": "06e3a514b176a5fe29034d51f410de061ce0d3ba16a9095ede4dfbb5b74187a9"
+  },
+  "maskedComposite": {
+    "outsideMaskLockedToEditTarget": true,
+    "editTarget": "tools/imagegen/out/reference-v1/candidates/ink-portrait_black-labrador-dog_9x16_v08.png",
+    "method": "local-rgba-composite-after-lingsuan-edit",
+    "pixelAudit": {
+      "outsideChanged": 0,
+      "outsidePixels": 919632,
+      "insideChanged": 1544,
+      "insidePixels": 1968
+    }
+  },
+  "identityProvenance": {
+    "originalPetIdentityPath": "tools/imagegen/out/source/dog-black-lab.jpg",
+    "editGuide": "tools/imagegen/out/reference-v1/identity-guides/ink-portrait_black-labrador-dog_pupil-tone-guide_v10.png"
+  },
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "inputFidelity": "not-sent",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: precise-object-edit with a transparent regional mask. Asset type: internal self-owned pet template master, exact final canvas 720x1280 (9x16). Use exactly three input images. Image 1 is ink-portrait v08 and is the edit target. Image 2 is the third-party effect reference used only to confirm flat black-and-white ink language. Image 3 is a self-owned target guide showing the required lighter pupil tone; use only its pupil brightness and dry-paper texture, never its background or any other pixels. The transparent part of the mask is the only editable region. Change only the fill tone and dry-brush texture of the single near pupil inside the transparent mask. Preserve the pupil's exact size, position, leftward direction and sharp wedge-like silhouette. Keep the paper-white eye opening, upper and lower ink edges, angular brow, hidden far eye and every pixel-level decision outside the mask stable. Replace the current pitch-black solid pupil fill with the medium-dark charcoal-grey ink tone shown in Image 3. It must be visibly lighter than the surrounding pure-black upper eyelid and must not read as black. Keep it dark enough to anchor the gaze, but reveal subtle dry-brush paper grain and tiny irregular lighter ink breaks rather than a featureless black disk. The result must retain the same sharp, handsome, athletic and self-possessed expression. The edited pupil must remain one flat hand-painted ink shape with abrupt broken edges. No circular iris ring, glossy catchlight, wet eye surface, glass highlight, eyelid fold, tear line, orbital shading, spherical eyeball, realistic anatomy, smooth gradient or brown/blue colour. Do not enlarge, round, move or soften the pupil and do not change the eye or brow construction. No new text, logo, watermark, signature, colour, object or background change.",
+  "revisedPrompt": "Edit target image 1 (ink-portrait v08) into an exact 720x1280 vertical canvas. Use image 2 only as a style confirmation for flat black-and-white ink language. Use image 3 only as a guide for the near pupil’s lighter charcoal-grey tone and dry-paper texture; do not copy any other pixels from image 3.\n\nSTRICT EDIT SCOPE: only modify the single near pupil inside the transparent regional mask. Everything outside the mask must remain pixel-stable and unchanged.\n\nRequired change: replace the current pitch-black solid pupil fill with a medium-dark charcoal-grey ink tone matching the lighter pupil tone in image 3. Preserve exact pupil size, position, leftward direction, and sharp wedge-like silhouette. Keep the paper-white eye opening, upper and lower ink edges, angular brow, hidden far eye, and all other eye construction unchanged.\n\nTexture: keep the pupil as one flat hand-painted ink shape with abrupt broken edges, but reveal subtle dry-brush paper grain and tiny irregular lighter ink breaks. It must be visibly lighter than the surrounding pure-black upper eyelid and must not read as black.\n\nDo NOT add any circular iris ring, glossy catchlight, wet eye surface, glass highlight, eyelid fold, tear line, orbital shading, spherical eyeball, realistic anatomy, smooth gradient, or brown/blue color. Do not enlarge, round, move, or soften the pupil. No change to background, text, logo, watermark, signature, or any other object.",
+  "review": {
+    "state": "rejected-by-user",
+    "checks": {
+      "petIdentity": "pass",
+      "adultAgeAndCuteness": "pass",
+      "poseExpressionAndAction": "pass",
+      "sceneComposition": "pass",
+      "faceAndMediumConsistency": "pass",
+      "anatomyAndContacts": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [
+      "用户确认灰色瞳孔局部补丁效果奇怪，并指出固定坐标微调方向不可泛化；该版本不得进入母版。"
+    ],
+    "finalApproval": "rejected",
+    "precheckedAt": "2026-08-14T16:30:48.026Z"
+  },
+  "generatedAt": "2026-08-14T16:28:49.487Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/ink-portrait_black-labrador-dog_9x16_v10.png",
+    "rawPath": "tools/imagegen/out/reference-v1/candidates/raw/ink-portrait_black-labrador-dog_9x16_v10.png",
+    "sha256": "4e179c60703242788dd1abdcf9fca72074b6a2869d7a7e91d3a5c4d842610a86"
+  },
+  "replacedBy": "ink-portrait_black-labrador-dog_9x16_reset-v03"
+}

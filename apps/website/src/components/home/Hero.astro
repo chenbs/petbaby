@@ -1,0 +1,78 @@
+---
+/*
+ * 1. HERO：满屏视频 + 大标题 + CTA + 社群证明（规格 2 章）。
+ *
+ * 顶栏不在这里 —— 它由 BaseLayout 渲染（原型里它也在 hero 之外，只是靠
+ * position:absolute 浮在 hero 内）。
+ *
+ * 主标语按词切分成两行、每行 2 词。词数变化不用改 CSS：site.js 按下标算
+ * stagger delay（0.8 + i*0.18s）。
+ */
+const HEADLINE: string[][] = [
+  ["留住", "每一个"],
+  ["值得的", "瞬间"],
+];
+---
+
+<section class="hero" id="home">
+  {/*
+    视频：autoplay muted playsInline aria-hidden，初始 loop=false。
+    5 秒截断循环由 site.js 接管（规格 2.2）；poster 避免加载完成前黑屏。
+
+    preload 用 metadata 而非规格 8.1 的 auto：3.5MB 视频在 auto 下会与首屏图片
+    抢带宽，而 poster（103KB）已经能撑住首屏观感，视频边下边播即可。
+  */}
+  <video
+    class="hero-video"
+    data-hero-video
+    src="/assets/bg.mp4"
+    poster="/assets/bg-poster.jpg"
+    autoplay muted playsinline preload="metadata" aria-hidden="true"></video>
+
+  {/* 压暗遮罩：椭圆中心偏左 30%，正落在标题区（规格 2.3）*/}
+  <div class="hero-veil" aria-hidden="true"></div>
+
+  {/*
+    自定义光标（规格 2.7）。DOM 由 site.js 在满足条件时才插入 —— 只在桌面端
+    （有精确指针 + 视口 ≥1024px）且首屏在视野内启用，触屏与 reduced-motion 完全不建。
+  */}
+  <div class="hero-cursor-mount" data-cursor-mount aria-hidden="true"></div>
+
+  <div class="hero-inner">
+    <div class="hero-copy">
+      {/* 待提供：主标语。h1 需 2 行、每行 5–7 字（对应英文两行两词）*/}
+      <h1 class="hero-title" data-hero-title data-placeholder="headline">
+        {HEADLINE.map((line) => (
+          <span class="hero-line">{line.map((word) => <span class="word">{word}</span>)}</span>
+        ))}
+      </h1>
+      {/*
+        副标语：先给情绪落点，再交代做什么。仍是占位，等正式文案。
+      */}
+      <p class="hero-sub" data-hero-sub data-placeholder="subhead">
+        它记不住自己有多好看，所以这件事交给我们。
+        一张随手拍的照片，变成很久以后还想再看一遍的样子。
+      </p>
+    </div>
+
+    {/* 底部条：左主 CTA，右重叠头像 + 数字 + 说明（规格 2.6）*/}
+    <div class="hero-bar" data-hero-bar>
+      {/* 白底黑字：规格 4 章的主按钮原始口径，压在深色视频上对比度最高 */}
+      <a class="btn btn-on-dark btn-lg" href="#contact">
+        开始创作
+        <svg class="arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
+      </a>
+      <div class="hero-proof">
+        <div class="avatars">
+          <img src="/assets/hero-shiba.jpg" alt="" width="1200" height="1200" loading="eager" fetchpriority="high" decoding="async" />
+          <img src="/assets/hero-shepherd.jpg" alt="" width="1200" height="1200" loading="eager" fetchpriority="high" decoding="async" />
+          <img src="/assets/hero-devon.jpg" alt="" width="1200" height="1200" loading="eager" fetchpriority="high" decoding="async" />
+        </div>
+        <div class="proof-text">
+          <span class="proof-num">10 种玩法</span>
+          <span class="proof-label">从成长记录到安静的告别</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

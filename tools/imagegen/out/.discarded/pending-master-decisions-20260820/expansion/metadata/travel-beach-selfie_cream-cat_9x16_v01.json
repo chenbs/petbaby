@@ -1,0 +1,52 @@
+{
+  "templateId": "travel-beach-selfie",
+  "entryId": "travel",
+  "title": "海滩广角自拍",
+  "sourceEffectFile": "apps/website/public/assets/example/13.png",
+  "status": "generated-pending-user-approval",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/13.png",
+      "sha256": "709e94a0b2017aac6a85f1c817aa0d326bd1d8884e12695d2840d2329bc72147"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "cream-cat",
+      "species": "cat",
+      "breed": "adult cream long-haired cat",
+      "path": "tools/imagegen/out/source/cat-cream.jpg",
+      "sha256": "db5fc390f9cbf4f5ee0eee38850e28012a0953a98c148e7df5b354a539dab7e9"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult cream long-haired cat with pale cream long coat, soft cream points, blue eyes, pink nose, triangular ears, fluffy tail and healthy adult body. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the high-angle beach selfie, wide-angle face scale, sea and holiday styling; replace the human subject with the pet. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a vertical 9:16 final composition at 720x1280 pixels by performing a strict identity-preserving subject replacement using the provided references. Preserve the first reference image's composition, camera angle, crop, perspective, pose, expression, gaze direction, lighting, palette, medium, brushwork/texture, background, props, text layout, and overall beach selfie styling exactly. Replace the original human subject everywhere with a single coherent adult cream long-haired cat identity based on the second reference image: pale cream long coat, soft cream points, blue eyes, pink nose, triangular ears, fluffy tail, healthy adult body proportions. Keep the same high-angle wide-angle selfie feel, beach and holiday context, and the subject centered in the frame with one forepaw/arm-equivalent posed overhead to match the source pose as naturally as possible for a cat. Render the cat fully in the same visual language as the first image, not photoreal pasted-over, with matching style, lighting, and expression transferred from the source. Preserve all meaningful scene details from the first reference image; do not redesign or simplify the background. Correct only anatomy needed for a believable adult cat: no extra limbs, no human hands, no duplicate pets, no uncanny features. Replace any brand, watermark, or copyrighted text with short original pet-safe wording only if necessary, while preserving layout and hierarchy. Do not add new logos or signatures.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/expansion/candidates/travel-beach-selfie_cream-cat_9x16_v01.png",
+    "sha256": "068f71594c4b67b7a48d0184090eab9e922c1ab4225738bac53f38a621211a16"
+  },
+  "review": {
+    "state": "pending-human-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generatedAt": "2026-08-17T16:11:35.739Z"
+}

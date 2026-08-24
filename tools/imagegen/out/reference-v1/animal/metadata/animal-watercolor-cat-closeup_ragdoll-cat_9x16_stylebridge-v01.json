@@ -1,0 +1,63 @@
+{
+  "templateId": "animal-watercolor-cat-closeup",
+  "entryId": "art",
+  "title": "金箔水彩猫咪",
+  "version": "stylebridge-v01",
+  "status": "generated-pending-user-approval",
+  "remediation": "shared-two-stage-style-bridge",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-06-23-4902-手绘插画，金箔岩彩，古风写意，水墨油画交融流体笔触，大面积淡彩晕染，猫咪局部特写....png",
+      "sha256": "63688681892e1bd2d18f9bdf47b10b0fa5a7ee21423a66c8fc411b5ea782008f"
+    },
+    {
+      "role": "self-owned-pet-identity-reference-for-guide-only",
+      "path": "apps/website/public/assets/work-ragdoll.jpg",
+      "sha256": "cadd89cfd6150cb0c9560bffec9b7c5a7e80d7126032eb7ecab4933cb836ed9e"
+    },
+    {
+      "role": "pre-stylized-identity-guide-for-final-edit",
+      "path": "tools/imagegen/out/reference-v1/animal/style-guides/animal-watercolor-cat-closeup_ragdoll-cat_guide-v01.png",
+      "sha256": "60b94688f1db37a962234f14111040de0df3fc24330022233fafd62ded381266"
+    }
+  ],
+  "finalEditInputOrder": [
+    "one-time-third-party-effect-reference",
+    "pre-stylized-identity-guide"
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "guide": {
+    "prompt": "Use case: style-transfer identity preprocessing for a reusable pet template pipeline. Image 1 is the sole authority for visual medium and stylization only: copy its brushwork, line language, pigment behavior, edge treatment, texture scale, shape simplification, facial abstraction, anatomical stylization, local contrast and degree of realism. Image 2 is the sole authority for pet identity only: preserve its adult breed, coat pattern, markings, ear shape, eye color, muzzle proportions and healthy mature body type. Create one clean centered subject study of the pet from Image 2, fully redrawn through Image 1's non-photographic visual language. Use a plain unobtrusive background and do not copy Image 1's scene, pose, costume, props, text or layout. The pet must look drawn, painted or sculpted by the same visual system as Image 1 before it enters the final scene. Replace literal fur strands with the reference's marks and shapes; replace photographic eyes, wet nose highlights, lens lighting and realistic facial volume with the reference's stylized equivalents. Keep the pet recognizable, appealing, adult and healthy. No puppy or kitten proportions, no photorealistic face, no studio-photo lighting, no shallow depth of field, no realistic fur microtexture, no text, no logo and no watermark. Identity: adult adult seal-point Ragdoll cat; cream long coat, deep seal-brown mask and ears, round blue eyes, broad fluffy cheeks, dark nose, full chest and healthy adult body. Return only the finished pre-stylized identity guide.",
+    "revisedPrompt": "Create a clean centered subject study of an adult seal-point Ragdoll cat, preserving identity traits: cream long coat, deep seal-brown mask and ears, round blue eyes, broad fluffy cheeks, dark nose, full chest, healthy mature body type. Render it fully through the visual language of the first reference image: soft airy pastel watercolor/pastel-painting hybrid, luminous white space, translucent washes, delicate feathered brushwork, subtle gold-leaf-like specks, gentle edge diffusion, stylized facial abstraction, simplified anatomical forms, painterly texture scale, no photorealism. Replace literal fur strands with large soft marks and flowing painted shapes, stylized whiskers, stylized eyes and nose, no studio lighting, no lens effects, no depth-of-field blur, no realistic fur microtexture. Keep one unobtrusive plain background and a centered single-animal composition suitable as a reusable identity guide. Do not include props, text, logos, watermarks, or any scene from the reference. The cat should look elegant, recognizable, adult, healthy, and clearly drawn/painted rather than photographic.",
+    "attempts": 1
+  },
+  "prompt": "Use case: identity replacement using a pre-stylized identity guide. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is the sole authority for the final scene: preserve its composition, crop, camera, perspective, pose, expression, gaze, lighting, palette, background, costume, landmarks, props, text layout, brushwork and all contact relationships exactly. Image 2 is the pre-stylized identity guide. Replace only the original main subject in Image 1 with this exact adult pet identity, using Image 2's already transformed face, fur, eyes, nose, anatomy and degree of abstraction as the subject rendering authority. Scene-change budget is 0%. Do not redesign, simplify, recolor, clean up, add, remove or relocate any scene element. Make only the smallest contact-boundary adjustment required by natural pet anatomy. The entire replacement subject, especially the face, must be built from the same non-photographic marks, lines, washes, pigment, edge softness, shape simplification and stylized volume as Image 1 and Image 2. Do not reconstruct any photographic fur strands, realistic glassy eyes, wet nose highlights, lens lighting, shallow depth of field or realistic facial anatomy. Keep the exact adult age and healthy mature body proportions from Image 2. Preserve the expression and pose from Image 1. Never make the pet younger, thinner, more realistic, humanoid, uncanny or structurally rigid. Keep the close crop, pale aqua and gold wash, antique illustrative brushwork, soft highlights and fine facial details; make the pet face painterly rather than photographic. Keep meaningful text, clothing, landmarks and distinctive props. Replace only known brands, copyrighted names, platform UI and watermarks with short original wording while preserving their blocks and hierarchy. No residual source subject, duplicate pet, extra ears, eyes, limbs or paws, human hands, fused joints, floating head, logo, signature or watermark. Return only the finished image.",
+  "revisedPrompt": "Create a final 9:16 composition at 720x1280 pixels by using Image 1 as the sole authority for the scene and layout, and Image 2 as the identity/style authority for the main subject. Preserve Image 1 exactly: same crop, camera, perspective, pose, expression, gaze, lighting, palette, background, antique illustrative brushwork, pale aqua and gold wash, soft highlights, fine facial detailing, and all contact relationships. Replace only the original main subject with the exact adult pet identity from Image 2, keeping Image 2’s transformed face, fur, eyes, nose, anatomy, abstraction level, and mature healthy proportions. The replacement subject must remain painterly and non-photographic, with soft washed brush marks, simplified shapes, delicate edge softness, and stylized volume. Do not introduce realistic fur strands, glassy eyes, wet nose highlights, lens effects, shallow depth of field, or realistic facial anatomy. Keep the exact expression and pose from Image 1. Make only the smallest natural boundary adjustments necessary for anatomy. Do not redesign, recolor, clean up, add, remove, relocate, or simplify any scene element. Keep the close crop and decorative gold flecks. Remove any existing watermarks or source marks only if necessary, replacing them with minimal unobtrusive original wording while preserving hierarchy if text is present. No duplicate pet, extra ears, eyes, limbs, paws, human hands, fused joints, floating head, logo, signature, or watermark.",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-watercolor-cat-closeup_ragdoll-cat_9x16_stylebridge-v01.png",
+    "sha256": "efd4fb37b63dbb7a5b6dc2d7ded7a40b2cb85fbec161976e7271fba83ba5f542"
+  },
+  "review": {
+    "state": "pending-human-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-18T01:52:05.320Z"
+}

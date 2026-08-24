@@ -1,0 +1,45 @@
+{
+  "templateId": "roller-coaster",
+  "status": "approved-frozen-master",
+  "category": "动作剧情",
+  "subject": "corgi",
+  "breed": "柯基犬",
+  "selectionRationale": "验证高速动作、座舱接触、兴奋表情与短腿犬体型保持",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-effect-reference-internal-only",
+      "path": "apps/website/public/assets/example/1786368644435.png",
+      "sha256": "a6521c6d009a1939533465510d9723137ce3a3b27ce9d1b63f2bb8742d9d54f3"
+    },
+    {
+      "role": "pet-identity-reference",
+      "path": "tools/imagegen/out/source/dog-corgi.jpg",
+      "sha256": "750c43038e21f8601be8b903889100c6b165d2b35cea3b7c0b55c0edce7ca9c2"
+    }
+  ],
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing. Create a vertical 9:16 high-fidelity pet replacement based on both input images. Compose for an exact final size of 720x1280 pixels. Image 1 is the primary effect reference and scene base. Preserve its first-row roller-coaster composition, red car, black safety restraint, orange track loops, blue supports, bright sky, green park background, speed, wide-angle energy and joyful mid-ride story. Use an optional scene-change budget of approximately 5% to 20%. You may naturally adjust a few secondary clouds, distant trees, small car details, restraint material or track-side details only when the replacement improves coherence. Every change must belong in this outdoor roller-coaster scene and match its perspective, motion, scale and sunlight. Do not change the ride type, remove the looping track or add unrelated objects. If no replacement is clearly better, keep the original content unchanged. Remove the original Shiba Inu from Image 1 completely and replace it with the exact Pembroke Welsh Corgi from Image 2. Preserve the tan-and-white coat, broad white facial blaze, white muzzle and chest, large upright ears, dark round eyes, short legs and compact sturdy body. Make the same Corgi irresistibly cute and youthful at first glance: rounded plush cheeks, bright happy eyes, open joyful smile and healthy compact proportions. Keep the short-legged Corgi silhouette; never make it skinny, long-bodied in an unhealthy way, gaunt, stern, frightened or uncanny. Exactly one Corgi and no other animal. Keep both front paws naturally braced on the car edge and the restraint correctly crossing the body. No extra paws, fused limbs, broken seat, deformed mouth, human hands, platform UI, text, logo, watermark or signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "approved-by-user",
+    "score": null,
+    "findings": []
+  },
+  "generatedAt": "2026-08-12T11:10:50.189Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/candidates/roller-coaster_corgi_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/roller-coaster_corgi_9x16_v01.webp",
+  "masterSha256": "5b7a3eababd7da3e8cededad8f6e4beba4f254b0d5e2d43b323cf6bfdd392a48",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-13T00:00:00.000+08:00",
+    "note": "用户已审批通过；此后运行时仅使用自有母版和用户宠物身份图。"
+  }
+}

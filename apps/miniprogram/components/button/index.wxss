@@ -1,0 +1,102 @@
+.btn {
+  display: inline-flex;
+  min-height: 96rpx;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--button-radius);
+  font-size: var(--body-size);
+  font-weight: var(--fw-bold);
+  line-height: 1.3;
+  transition: transform var(--dur-fast) var(--ease-out), opacity var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.btn-block {
+  display: flex;
+  width: 100%;
+}
+
+.btn-mini {
+  min-height: 64rpx;
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--small-size);
+}
+
+.btn-primary {
+  background: var(--button-primary);
+  color: var(--button-primary-text);
+  box-shadow: var(--shadow-float);
+}
+
+/* 底部常驻转化按钮（方案 3.2）：比主按钮更高，价格右置 */
+.btn-cta {
+  min-height: 100rpx;
+  background: var(--button-primary);
+  color: var(--button-primary-text);
+  box-shadow: var(--shadow-float);
+}
+
+/* 价格用 .55 透明度：可见但不抢主文案，降低心理阻力 */
+.btn-price {
+  margin-left: var(--space-2);
+  font-size: var(--small-size);
+  font-weight: var(--fw-medium);
+  opacity: .55;
+}
+
+/* 次按钮：方案 3.2 要求描边无底色。保留 --button-secondary 让暗色皮肤仍有可点面 */
+.btn-secondary {
+  min-height: 88rpx;
+  border: var(--card-border);
+  background: var(--button-secondary);
+  color: var(--button-secondary-text);
+}
+
+.btn-ghost {
+  border: 2rpx solid var(--border);
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.btn-ai {
+  background: var(--ai-gradient);
+  color: var(--button-primary-text);
+  box-shadow: 0 8rpx 28rpx var(--ai-glow);
+}
+
+.btn-danger {
+  background: var(--error-surface);
+  color: var(--error);
+}
+
+.btn-off {
+  background: var(--button-disabled);
+  border-color: var(--disabled);
+  color: var(--text-secondary);
+  box-shadow: none;
+}
+
+/* 统一按压：缩放 + 阴影收紧，与 t-card 同一套规则 */
+.btn-hover {
+  transform: scale(.96);
+  box-shadow: var(--shadow-press);
+}
+
+.btn-hover.anim-fade { opacity: .82; }
+.btn-hover.anim-glow { box-shadow: 0 0 34rpx var(--ai-glow); }
+.btn-hover.anim-neon { box-shadow: 0 0 0 2rpx var(--primary), 0 0 30rpx var(--ai-glow); }
+
+.btn-spinner {
+  width: 28rpx;
+  height: 28rpx;
+  border: 4rpx solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: btn-spin 720ms linear infinite;
+}
+
+@keyframes btn-spin {
+  to { transform: rotate(360deg); }
+}

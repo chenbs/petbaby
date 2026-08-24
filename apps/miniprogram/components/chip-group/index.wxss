@@ -1,0 +1,59 @@
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/*
+ * chip 用全圆角 + 描边，选中态填主色。
+ * 不做 260rpx 定宽卡（原 .option 的写法）—— 纯文字选项撑不满那么大面积，
+ * 留白反而让「哪个是选项」变模糊。
+ */
+.chip {
+  display: inline-flex;
+  box-sizing: border-box;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-0);
+  min-height: 72rpx;
+  padding: var(--space-2) var(--space-3);
+  border: var(--card-border);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  transition: transform var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+
+.chip-label {
+  color: var(--text-primary);
+  font-size: var(--body-size);
+  font-weight: var(--fw-medium);
+}
+
+.chip-hint {
+  color: var(--text-secondary);
+  font-size: var(--eyebrow-size);
+}
+
+/* 选中态填主色：chip 面积小，仅靠描边变色辨识度不足 */
+.chip-on {
+  border-color: var(--primary);
+  background: var(--button-primary);
+}
+
+.chip-on .chip-label {
+  color: var(--button-primary-text);
+  font-weight: var(--fw-bold);
+}
+
+.chip-on .chip-hint {
+  color: var(--button-primary-text);
+  opacity: .7;
+}
+
+.chip-hover {
+  transform: scale(.96);
+}
+
+.chip-hover.anim-fade { opacity: .85; }
+.chip-hover.anim-glow { box-shadow: 0 0 24rpx var(--ai-glow); }
+.chip-hover.anim-neon { box-shadow: 0 0 0 2rpx var(--primary); }

@@ -1,0 +1,36 @@
+{
+  "task": "user-requested-frozen-master-remediation-2026-08-19",
+  "templateId": "animal-giant-city-companion",
+  "kind": "public",
+  "version": "public-v02",
+  "status": "generated-pending-visual-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputFidelity": "high",
+  "inputPolicy": {
+    "sequential": true,
+    "maxImages": 2,
+    "maxCombinedBytes": 1000000
+  },
+  "inputs": [
+    {
+      "role": "effect-reference-edit-target",
+      "path": ".tmp/master-remediation-20260819-inputs/animal-giant-city-companion-effect.jpg",
+      "bytes": 141340,
+      "sha256": "a8fc921e7b3c8f3137df81bcc18864d873be8f6036e746efaac57d929225e0b6"
+    }
+  ],
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "output": {
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/public-animal-giant-city-companion.png",
+    "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819/public-previews/animal-giant-city-companion_public-v02.png",
+    "width": 720,
+    "height": 1280,
+    "sha256": "2ec2dd21111659654174719fccdcbe70be520c25ca41ca3814e882bd6e520fb8"
+  },
+  "prompt": "Use case: precise-object-edit. Asset type: public Mini Program template preview. Image 1 is the effect-reference edit target and is the sole authority for composition, subject, camera, pose, lighting, medium and all details not explicitly changed below. Create a clean new public-facing rendition, not a collage or framed mockup. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature, reconstructing the covered area seamlessly. Do not add captions, borders, UI, logos, watermarks or signatures. Keep the same giant fluffy grey cat walking through the city canyon, scale, street traffic, pedestrians, buildings, daylight and low camera. Change only the cat's gaze so both eyes clearly look downward toward the small people and traffic directly below with focused curiosity; do not look at the camera. Return a 9:16 portrait composition.",
+  "revisedPrompt": "Create a clean public-facing 9:16 portrait image based on the provided reference scene. Preserve the same composition, subject, camera angle, scale, city canyon environment, daylight, street traffic, pedestrians, and buildings. Keep the giant fluffy grey cat walking through the city street between tall glass skyscrapers, with the same low-angle perspective and overall realism. Edit only the cat’s gaze: both eyes must clearly look downward toward the small people and traffic directly below with focused curiosity, and the cat must not look at the camera. Seamlessly remove every platform badge, AI-generated label, account name, account number, watermark, logo, signature, or any other UI/branding marks from the image, reconstructing those areas naturally. Do not add captions, borders, frames, UI, logos, or watermarks. Maintain a natural, realistic public-facing finished image.",
+  "generatedAt": "2026-08-19T05:46:04.333Z"
+}

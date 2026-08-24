@@ -1,0 +1,48 @@
+{
+  "jobId": "pet-character-sheet_dog_german-shepherd-dog",
+  "templateId": "pet-character-sheet",
+  "status": "generated-pending-joint-approval",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "sourceMaster": {
+    "role": "self-owned-frozen-master",
+    "path": "tools/imagegen/out/reference-v1/masters/pet-character-sheet_tuxedo-cat_16x9_v01.webp",
+    "sha256": "d10172f389dc86daead937b7de0e42d9317c44518ed24086c89d59351f31530b"
+  },
+  "petIdentityReference": {
+    "role": "new-pet-identity-reference",
+    "identityId": "german-shepherd-dog",
+    "species": "dog",
+    "breed": "German Shepherd",
+    "path": "apps/website/public/assets/hero-shepherd.jpg",
+    "sha256": "f6c37419e96b12425034d2bdcb54cbde952709f37352f3748d67d3db71e937b4"
+  },
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "landscape",
+  "requestedSize": "1280x720",
+  "outputSize": "1280x720",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving template transfer. Create a horizontal 16:9 high-fidelity pet replacement from exactly two input images, composed for an exact final size of 1280x720 pixels. Image 1 is a frozen self-owned production master created previously by our team. It is the sole composition, scene, styling and layout reference for this request. No third-party effect reference is included at runtime. Image 2 is the sole pet identity reference. Preserve Image 1's the clean white professional character-sheet structure: profile block on the left, front-side-back turnaround across the upper middle, six facial-expression portraits at upper right, clothing and accessory breakdown along the bottom, compact colour palette and one small forest-world vignette. Do not redesign the environment or turn it into a generic scene. Allow an optional scene-change budget of approximately 5% to 20%. You may naturally adjust only secondary scenery, small decorations, context-equivalent props, materials or colours when the adjustment clearly fits the current scene. Every adjustment must preserve the same semantics, perspective, scale, lighting and visual style. If no replacement is clearly better, keep the master unchanged. Never force changes merely to meet a percentage. Remove every depiction of the master pet from Image 1 and replace it with the exact German Shepherd from Image 2. Preserve the tan coat with a defined black saddle and mask, brown eyes, tall upright ears, black muzzle and athletic healthy German Shepherd build. Image 2 controls pet identity and overrides the sample pet shown in the master. The replacement dog must look youthful, healthy, rounded and irresistibly cute at first glance, with soft full cheeks, friendly bright eyes and appealing proportions for a young audience. Keep the recognisable breed anatomy. Never make the pet skinny, elongated, angular, gaunt, stern, aggressive, strange, elderly-looking or uncanny. Every repeated view must depict the exact same pet from Image 2. Keep accurate front, side and back views, six distinct friendly expressions, an equipped full-body view, outfit pieces and a coherent colour palette. Keep the padded explorer jacket, scarf, goggles, boots and waist pouch, adapted naturally to the new animal. Clothing may change colour or receive minor tailoring but must not hide identity markings. Keep the exact English headings 'CHARACTER SHEET', 'PROFILE', 'TURNAROUND', 'FACIAL EXPRESSIONS', 'ITEM & COSTUME', 'COLOR PALETTE', 'WORLD'. Replace the character name with the exact name supplied for this job. Omit optional tiny body copy rather than generating gibberish. The exact character name for this job must read 'ATLAS'. Adapt all repeated views to natural dog anatomy, never a humanoid body. Keep exactly one pet identity throughout the image and no unrelated animal. Correct anatomy only: no duplicate or fused limbs, extra ears, warped eyes, broken clothing boundaries or human hands. Preserve rather than delete meaningful clothing, landmarks, distinctive props and text layout from the master. No platform UI, brand logo, known IP, watermark or signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "pre-reviewed-pending-user-approval",
+    "checks": {
+      "petIdentity": "pass",
+      "cuteness": "pass",
+      "masterComposition": "pass",
+      "anatomy": "pass",
+      "text": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [],
+    "preReviewedAt": "2026-08-13T02:52:16.430Z",
+    "finalApproval": "pending-user"
+  },
+  "generatedAt": "2026-08-13T02:05:48.653Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation/pet-character-sheet_dog_german-shepherd-dog_16x9_v01.png",
+    "sha256": "d71b5cd6fb3799a434142804bf9ec76007d7c8ff1aed883fc0aea82d09882021"
+  }
+}

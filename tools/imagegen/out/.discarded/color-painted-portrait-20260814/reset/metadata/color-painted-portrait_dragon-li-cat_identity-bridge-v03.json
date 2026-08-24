@@ -1,0 +1,30 @@
+{
+  "assetId": "color-painted-portrait-dragon-li-identity-bridge-v03",
+  "status": "intermediate-control-asset",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "mode": "flat-identity-abstraction-bridge",
+  "inputs": [
+    {
+      "role": "adult-pet-identity-source",
+      "path": "apps/website/public/assets/avatar-dragonli.jpg",
+      "sha256": "0f403599969b57f32aa314cf474ce4d57d28f48683e16ae9a032d73b94079732"
+    },
+    {
+      "role": "face-pose-and-flat-brushwork-reference",
+      "path": "tools/imagegen/out/reference-v1/reset/bases/color-painted-portrait_dragon-li-cat_9x16_detail.png",
+      "sha256": "e22b0e006a7887b343ba7125fd138b7e647f1bf62cd05af3ede80cc6d84d74d9"
+    }
+  ],
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Task: create a flat non-photographic identity structure map for a later subject replacement, not a finished portrait. Image 1 controls only the adult Dragon Li identity: mature natural body proportions, feline head silhouette, ear shape, brown tabby colour blocks and stripe placement. Do not copy its photographic eyes, iris texture, nose, whiskers, lighting or dimensional facial shading. Image 2 is the sole authority for pose and painted abstraction: use its gentle head tilt, coordinated upward gaze, soft cheek and muzzle arrangement, broad matte brush shapes and sparse broken edges. Do not copy its dog identity or white coat. Create an adult Dragon Li cat identity map on a plain warm light-grey background. Keep the adult head, ears, chest and body silhouette recognizable, but intentionally flatten the face into two or three broad opaque paint regions. Eyes are only two small dark graphic brush marks with one tiny flat highlight; the nose is one small flat rounded mark; the mouth is one short soft curved brush line. These are placeholders, not rendered anatomy. Absolutely no volumetric face modelling, no gradients across the eyes or muzzle, no glossy eyeballs, no realistic irises, no wet nose, no whisker strands, no individual fur hairs, no skin texture, no photographic lighting, no 3D shading, no severe expression and no kitten proportions. No text, watermark, props or additional animal.",
+  "revisedPrompt": null,
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/reset/identity-bridges/color-painted-portrait_dragon-li-cat_identity-bridge-v03.png",
+    "sha256": "d29522da621f460b7a838aaf259b43b1ccb465d8da533038b4c9106e52eca08f"
+  },
+  "generatedAt": "2026-08-14T02:54:27.323Z"
+}

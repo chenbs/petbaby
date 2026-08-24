@@ -1,0 +1,36 @@
+{
+  "task": "user-requested-frozen-master-remediation-2026-08-19",
+  "templateId": "exaggerated-expression",
+  "kind": "public",
+  "version": "public-v01",
+  "status": "generated-pending-visual-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputFidelity": "high",
+  "inputPolicy": {
+    "sequential": true,
+    "maxImages": 2,
+    "maxCombinedBytes": 1000000
+  },
+  "inputs": [
+    {
+      "role": "effect-reference-edit-target",
+      "path": ".tmp/master-remediation-20260819-inputs/exaggerated-expression-effect.jpg",
+      "bytes": 41845,
+      "sha256": "b951515be79ad2764a8cc4ce2fb765c4910a9cf545a5fd50c8259dd8d32e7d3b"
+    }
+  ],
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "output": {
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/public-exaggerated-expression.png",
+    "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819/public-previews/exaggerated-expression_public-v01.png",
+    "width": 720,
+    "height": 1280,
+    "sha256": "0067b4a0d00bbaf3004c7f33f338d8b729aed23f53663bf77297df2252e4b67e"
+  },
+  "prompt": "Use case: precise-object-edit. Asset type: public Mini Program template preview. Image 1 is the effect-reference edit target and is the sole authority for composition, subject, camera, pose, lighting, medium and all details not explicitly changed below. Create a clean new public-facing rendition, not a collage or framed mockup. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature, reconstructing the covered area seamlessly. Do not add captions, borders, UI, logos, watermarks or signatures. Keep the exact exaggerated long-neck dog illustration, huge grin, wide eye, cream paper, rough black-and-brown hand-drawn strokes and framing unchanged. Return a 9:16 portrait composition.",
+  "revisedPrompt": "Create a clean public-facing portrait illustration in a 9:16 composition: an exaggerated long-neck dog with a huge grin and one wide eye, shown in the same pose and framing as a rough hand-drawn sketch on cream paper. Preserve the exact whimsical expression, the very long neck, the black-and-brown hand-drawn strokes, sketchy linework, and off-white paper texture. No UI, no labels, no badges, no captions, no borders, no logos, no signatures, no watermark. Simple isolated artwork only, with the dog occupying the right side of the frame and open cream negative space on the left, matching the reference composition.",
+  "generatedAt": "2026-08-19T05:44:10.462Z"
+}

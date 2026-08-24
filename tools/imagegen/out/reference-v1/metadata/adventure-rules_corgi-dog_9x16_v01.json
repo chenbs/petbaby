@@ -1,0 +1,58 @@
+{
+  "templateId": "adventure-rules",
+  "title": "冒险生存法则",
+  "entryId": "archive",
+  "status": "superseded-by-current-candidate",
+  "version": "v01",
+  "subject": "corgi-dog",
+  "breed": "成年彭布罗克威尔士柯基犬",
+  "selectionRationale": "用成年柯基验证复杂羊皮纸信息层级、中央探险装备、短腿体型和多个小插图中的同一身份。",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-effect-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/11.png",
+      "sha256": "f8fcdf6db1262681e333b6a584f1ea9956bfd773312777ced9a4c0e468126d3d"
+    },
+    {
+      "role": "pet-identity-reference",
+      "path": "tools/imagegen/out/source/dog-corgi.jpg",
+      "sha256": "750c43038e21f8601be8b903889100c6b165d2b35cea3b7c0b55c0edce7ca9c2"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving effect replication. Asset type: internal self-owned pet template master, exact final canvas 720x1280 (9x16). Use exactly two input images. Image 1 is the third-party effect reference used only for this internal master-production pass. Image 2 is the sole pet identity reference. Replace only the principal animal or person subject in Image 1 with the exact pet from Image 2. Remove every residual face, hair, skin, hand, paw, limb, coat marking or silhouette from the original subject. Image 2 controls only pet identity: species, breed, coat, markings, ear shape, eye colour, actual age and natural healthy proportions. Image 1 controls every transferred visual detail: composition, crop, camera, perspective, subject position, pose, action, expression, gaze, lighting, palette, rendering medium, brushwork, line quality, texture, clothing, props, text layout and subject-to-scene contacts. Scene-change budget is 0%. Do not redesign, reinterpret, recolour, simplify, clean up or add background content. Translate the original pose, action and expression to correct animal anatomy with only the smallest contact-boundary adjustment required by the new species. Never create a human face, human skin, human hands or fingers. Keep paws anatomically natural and keep clothing and props physically attached. The replacement pet must be rendered completely in Image 1's medium and detail language, including its face, eyes, muzzle, ears and fur. Never paste a photographic pet face into an illustration or leave realistic photographic facial texture inside a painted scene. Do not copy Image 2's pose, expression, background, lighting or photographic rendering. Preserve the pet's adult age and natural breed proportions. Do not turn it into a puppy or kitten, enlarge the head or eyes, shorten the muzzle or body, or force a generic baby face. Keep it healthy, friendly and immediately appealing through the transferred expression and art direction, never skinny, gaunt, old, stern, aggressive, uncanny or strange. Keep the complete meaningful text, clothing, landmarks and distinctive props from Image 1 except for the explicit rights-safe text or emblem replacements stated below. Remove third-party platform watermarks, account IDs, signatures and unrelated brand marks. No new logo or watermark. The replacement identity is the exact adult Pembroke Welsh Corgi from Image 2. Preserve the tan-and-white coat, broad white facial blaze, white muzzle and chest, dark eyes, large upright ears, short legs and compact sturdy adult body. Preserve Image 1's exact aged parchment infographic: oversized black-brush title at top, central full-body explorer, dense framed modules, hand-drawn maps, route arrows, circular diagrams, terrain cross-sections, equipment studies, bottom step-by-step strip, sepia-black ink palette, paper stains and antique field-manual linework. Replace the central human explorer and every small explorer depiction with the exact same adult Corgi from Image 2. Preserve the central crouched investigative posture, downward focused expression, woven field hat, layered dark travel clothing, scarf, backpack roll, straps, pouches and flashlight. Adapt contacts to natural paws and the Corgi's short sturdy adult anatomy; no human hands or humanoid legs. Keep the layout and all modules. Replace the main title with exactly '本宠探险法则'. Use these exact readable section headings in their existing locations: '一、冒险档案', '二、路线线索', '三、必备工具', '四、地形类型', '五、机关观察', '六、方向记录', '七、行动流程', '八、风险应对', '九、路线口诀', '十、地图分布', '十一、发现图鉴'. Keep body copy short, neutral and fictional; omit unreadable tiny copy rather than generating gibberish or safety claims. Keep exactly the requested pet identity throughout. Correct animal anatomy only: no duplicate or fused limbs, extra ears, warped eyes, malformed mouth, floating tail, broken garment boundaries or residual original subject.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "superseded-before-user-approval",
+    "checks": {
+      "petIdentity": "pending",
+      "adultAgeAndCuteness": "pending",
+      "poseExpressionAndAction": "pending",
+      "sceneComposition": "pending",
+      "faceAndMediumConsistency": "pending",
+      "anatomyAndContacts": "pending",
+      "textAndRights": "pending",
+      "dimensions": "pass"
+    },
+    "findings": [
+      "副标题仍残留原人类探险语义，已由宠物探险文字定向版替代。"
+    ],
+    "finalApproval": "not-applicable"
+  },
+  "generatedAt": "2026-08-14T10:19:06.126Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/adventure-rules_corgi-dog_9x16_v01.png",
+    "rawPath": "tools/imagegen/out/reference-v1/candidates/raw/adventure-rules_corgi-dog_9x16_v01.png",
+    "sha256": "9476372d57549bb4fee1a0bd849eed54743f02bbff35216e0f554e0aa9c41c3a"
+  },
+  "replacedBy": "adventure-rules_corgi-dog_9x16_v02"
+}

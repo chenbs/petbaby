@@ -1,0 +1,55 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+
+<view class="page page-flat">
+  <text class="eyebrow">ORDERS</text>
+  <view class="title">订单与退款</view>
+
+  <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
+
+  <t-skeleton wx:if="{{loading}}" type="list" count="3" class="block-gap"></t-skeleton>
+
+  <t-empty
+    wx:elif="{{!orders.length}}"
+    icon="order"
+    title="还没有订单"
+    description="解锁作品高清版后，订单会出现在这里。"
+    action-text="去看看玩法"
+    anim="{{animType}}"
+    decor="{{decor}}"
+    bindaction="goCreate"
+  ></t-empty>
+
+  <view wx:else class="list">
+    <t-card wx:for="{{orders}}" wx:key="id" blur="{{blurOk}}" anim="{{animType}}">
+      <view class="row">
+        <view class="order-main">
+          <view class="order-amount">{{item.amountText}}</view>
+          <text class="small">{{item.pluginId}}</text>
+          <text wx:if="{{item.refundedText}}" class="small">{{item.refundedText}}</text>
+        </view>
+        <t-tag tone="{{item.statusTone}}" text="{{item.statusText}}"></t-tag>
+      </view>
+      <t-button
+        wx:if="{{item.status === 'paid'}}"
+        type="ghost"
+        size="mini"
+        anim="{{animType}}"
+        loading="{{busy}}"
+        class="block-gap"
+        data-id="{{item.id}}"
+        bindtap="askRefund"
+      >申请退款</t-button>
+    </t-card>
+  </view>
+</view>
+
+<t-dialog
+  visible="{{!!refundTarget}}"
+  title="申请退款？"
+  content="因作品不满意申请退款，将退回订单金额的 50%。生成失败的订单会全额退款，无需手动申请。"
+  confirm-text="确认申请"
+  danger
+  anim="{{animType}}"
+  bindconfirm="confirmRefund"
+  bindcancel="cancelRefund"
+></t-dialog>

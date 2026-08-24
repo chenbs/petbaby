@@ -1,0 +1,53 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+
+<view class="page page-flat">
+  <text class="eyebrow">ISLAND DIARY</text>
+  <view class="title">小岛日记</view>
+  <text class="muted">每天一条，记下它在岛上的日子。</text>
+
+  <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
+
+  <!--
+    已经走过：里程碑 100/365/1000，只列已达成的（4.2）。
+    未达成的读作「还差 20 天」，那是 4.1 #7 禁掉的催促。
+
+    放在日记流之上、且**不受空状态影响**：新用户没有日记但可能已陪伴 100 天
+    （岛是后加的模块，档案早就在了），把它塞进 wx:else 分支会让那些人什么都看不到。
+  -->
+  <view wx:if="{{milestones.length}}" class="section">
+    <view class="section-title">已经走过</view>
+    <view class="stones">
+      <view wx:for="{{milestones}}" wx:key="day" class="stone">
+        <view class="stone-label">{{item.label}}</view>
+      </view>
+    </view>
+  </view>
+
+  <t-skeleton wx:if="{{loading}}" type="list" count="4" class="block-gap"></t-skeleton>
+
+  <t-empty
+    wx:elif="{{!entries.length}}"
+    icon="photo"
+    title="还没有日记"
+    description="进岛陪它待一会儿，今天的日记就会出现在这里。"
+    action-text="回到小岛"
+    anim="{{animType}}"
+    decor="{{decor}}"
+    bindaction="goIsland"
+  ></t-empty>
+
+  <view wx:else class="section">
+    <view class="line">
+      <view wx:for="{{entries}}" wx:key="id" class="entry">
+        <view class="entry-head">
+          <text class="entry-date">{{item.dateText}}</text>
+          <t-tag wx:if="{{item.kindLabel}}" tone="accent" size="mini" text="{{item.kindLabel}}"></t-tag>
+        </view>
+        <!-- 文案由服务端按模板拼好，端上不加工（4.2：模板可被门禁全量扫描） -->
+        <text class="entry-text">{{item.text}}</text>
+      </view>
+    </view>
+    <text wx:if="{{loadingMore}}" class="small center">正在翻上一页</text>
+    <text wx:elif="{{exhausted && entries.length > 6}}" class="small center">到这儿就是全部了</text>
+  </view>
+</view>

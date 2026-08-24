@@ -1,0 +1,63 @@
+{
+  "templateId": "animal-ink-scratch-portrait",
+  "entryId": "art",
+  "title": "空气感素描肖像",
+  "version": "stylebridge-v03",
+  "status": "generated-pending-user-approval",
+  "remediation": "shared-two-stage-style-bridge",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-06-21-1396-极简主义素描风格，空气感强，松散的细密长线条，精致的涂抹，形式多变，写意，细节敲....png",
+      "sha256": "9dc1e3ddf4e65a2fe78dd859b328c9ec93d5dddd75fdd550e59eff1bc642a749"
+    },
+    {
+      "role": "self-owned-pet-identity-reference-for-guide-only",
+      "path": "tools/imagegen/out/source/dog-black-lab.jpg",
+      "sha256": "20960d2ace805e68b41a7934e37ebdf24b7007f8f3fa85527d9beb22d2df6022"
+    },
+    {
+      "role": "pre-stylized-identity-guide-for-final-edit",
+      "path": "tools/imagegen/out/reference-v1/animal/style-guides/animal-ink-scratch-portrait_black-lab-dog_guide-v03.png",
+      "sha256": "0ea4f99608f9e865aa1d1dd586ab5c95f08f39b8d0e5b213de6c183a30020ad2"
+    }
+  ],
+  "finalEditInputOrder": [
+    "one-time-third-party-effect-reference",
+    "pre-stylized-identity-guide"
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "guide": {
+    "prompt": "Use case: source-subject design transfer for a reusable pet identity replacement pipeline. Image 1 is the sole authority for the replacement subject design. Copy the designated source subject's pose, action, expression, gaze, crop, silhouette rhythm, head-to-body proportion, facial abstraction, eye/nose/muzzle design, anatomical simplification, fur construction, ornament integration, line language, brushwork, pigment behavior, edge treatment, texture scale, local contrast and degree of realism. Image 2 supplies identity markers only: adult species and breed, coat colors, stable markings, ear type and eye color. Image 2 must not supply pose, expression, photographic facial construction, realistic muzzle volume, literal fur strands, lens lighting or camera depth. Create an isolated replacement-subject blueprint on a plain unobtrusive background. The replacement pet must already occupy Image 1's subject crop and reproduce Image 1's pose and expression before it enters the final scene. Do not copy the surrounding scene, text, watermark or unrelated background objects. Translate the new pet identity through Image 1's shape grammar, not through photographic anatomy. Preserve only enough breed structure to recognize the pet. Adult age means mature and healthy, not realistic: the adult pet may use the same enlarged eyes, shortened or simplified muzzle, rounded planes, graphic fur masses, mythical body treatment or painterly distortion as Image 1 without becoming a puppy or kitten. Every facial surface must be constructed from Image 1's visible marks and shapes. Replace glassy eyes, wet nose highlights, smooth three-dimensional muzzle shading, individual hair detail and photo lighting with Image 1's stylized equivalents. A face crop must read immediately as part of Image 1's artwork, never as a painted photograph of Image 2. Use one continuous subject-region contract. Both ears, the entire crown, forehead, cheeks, muzzle, neck and every other visible anatomical region belong to the replacement pet and must remain present and connected. Pale pigment, soft washes and broken edges may soften only the outer contour; they must never erase an ear or crown area, turn anatomy into background, or leave a background-shaped hole inside the head. Use one continuous medium contract. The head and every facial feature must use the same hand-made medium as the body. Do not place a realistically modeled head inside stylized marks. When Image 1 uses ink or watercolor, rebuild facial planes, eyes, nose, muzzle, ears and crown from visible brush-and-pigment shapes, paper gaps, dry-brush breaks, wash blooms and economical lines inside the features, not merely around the silhouette. Keep the result recognizable, appealing, adult and healthy. No generic realistic pet portrait, no studio-photo pose, no photorealistic face, no shallow depth of field, no realistic fur microtexture, no text, no logo and no watermark. Identity: adult adult black Labrador Retriever; solid glossy black coat, warm brown eyes, broad black nose, soft dropped ears, broad gentle muzzle and strong adult build. Return only the finished pre-stylized identity guide.",
+    "revisedPrompt": "Create an isolated pre-stylized identity guide of an adult black Labrador Retriever, using the provided cat ink-wash artwork as the sole authority for pose, crop, silhouette rhythm, facial abstraction, line language, brushwork, pigment behavior, edge treatment, texture scale, and realism level. Translate the Labrador identity markers only: adult black Labrador Retriever, solid glossy black coat, warm brown eyes, broad black nose, soft dropped ears, broad gentle muzzle, strong adult build. Rebuild the dog through the same hand-made ink-and-watercolor language as the reference: expressive brush masses, dry-brush breaks, wash blooms, paper gaps, economical contour lines, soft broken edges, and stylized fur clumps rather than photo-real fur strands. Match the reference composition and posture: the dog occupies a similar tall vertical crop, seated in a graceful curved pose with the body turned slightly away and the head facing forward toward the viewer, calm attentive expression, direct gaze, rounded shoulders, compact chest, tail sweeping in a loose curve. The face must be simplified and graphic, with the eyes, nose, muzzle, crown, cheeks, ears, and neck all built from visible ink marks and wash shapes, not photographic modeling. Preserve enough breed structure to read clearly as a Labrador, but keep the head stylized, adult, healthy, and appealing. Use a plain unobtrusive warm off-white paper background with no scene, no props, no text, no watermark, and no camera depth. Single subject only, centered, with the same evocative monochrome-and-gray ink portrait feeling as the source artwork, but clearly a black Labrador instead of a cat.",
+    "attempts": 1
+  },
+  "prompt": "Use case: identity replacement using a pre-stylized identity guide. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is the sole authority for the final scene: preserve its composition, crop, camera, perspective, pose, expression, gaze, lighting, palette, background, costume, landmarks, props, text layout, brushwork and all contact relationships exactly. Image 2 is the pre-stylized replacement-subject blueprint. Replace only the original main subject in Image 1 with this exact blueprint. Preserve Image 2's pose, expression, silhouette, face construction, fur marks, eyes, nose, anatomy, ornament treatment and degree of abstraction; do not reconstruct the pet from a generic breed or photographic prior. Scene-change budget is 0%. Do not redesign, simplify, recolor, clean up, add, remove or relocate any scene element. Make only the smallest contact-boundary adjustment required by natural pet anatomy. The entire replacement subject, especially the face, must be built from the same non-photographic marks, lines, washes, pigment, edge softness, shape simplification and stylized volume as Image 1 and Image 2. Do not reconstruct any photographic fur strands, realistic glassy eyes, wet nose highlights, lens lighting, shallow depth of field or realistic facial anatomy. Treat the replacement as one closed semantic subject region: both ears, the full crown, forehead, cheeks, muzzle and neck must remain connected pet anatomy. Do not interpret pale fur, translucent watercolor, paper-white highlights, ink gaps or soft edges as background removal. Every retained anatomical region must contain the same medium-specific marks as the rest of the subject. Keep the exact adult maturity and healthy body mass from Image 2 while retaining Image 1's stylized proportions. Never make the pet younger, thinner, more realistic, humanoid, uncanny or structurally rigid. Keep the minimalist long-line sketch, white negative space, loose smudging and elegant side-facing portrait; render the pet face entirely in the same ink language. Keep meaningful text, clothing, landmarks and distinctive props. Replace only known brands, copyrighted names, platform UI and watermarks with short original wording while preserving their blocks and hierarchy. No residual source subject, duplicate pet, extra ears, eyes, limbs or paws, human hands, fused joints, floating head, logo, signature or watermark. Return only the finished image.",
+  "revisedPrompt": "Edit the provided images into a final 9:16 composition at 720x1280. Use Image 1 as the sole authority for the scene: preserve its exact composition, crop, camera, perspective, pose, expression, gaze, lighting, palette, background, costume, landmarks, props, text layout, brushwork, and all contact relationships exactly. Replace only the original main subject in Image 1 with the pre-stylized replacement subject from Image 2. Preserve Image 2's pose, expression, silhouette, face construction, fur marks, eyes, nose, anatomy, ornament treatment, and degree of abstraction; do not reconstruct from a generic breed or photographic prior. Keep the adult maturity, healthy body mass, and stylized proportions. The replacement subject must remain fully non-photographic and ink-wash based, matching the same medium-specific marks, lines, washes, pigment, edge softness, shape simplification, loose smudging, and elegant long-line sketch language already present. Do not add realism, photoreal fur strands, glassy eyes, wet nose highlights, lens lighting, depth-of-field effects, or realistic facial anatomy. Treat the subject as one closed connected anatomy region including both ears, crown, forehead, cheeks, muzzle, and neck. Preserve all other scene elements exactly; make only the smallest natural boundary adjustment needed for the replacement anatomy. Keep any meaningful text, clothing, landmarks, and distinctive props; remove only any brands, copyrighted names, platform UI, and watermarks by replacing them with short original wording while preserving layout hierarchy. No redesign, no simplification, no recoloring, no cleanup, no added or removed elements, no duplicate subject, no extra ears/eyes/limbs/paws, no human hands, no fused joints, no floating head, no logo, no signature, no watermark. Return a finished image only.",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-ink-scratch-portrait_black-lab-dog_9x16_stylebridge-v03.png",
+    "sha256": "54f4f044f080d32272f99de41c6f10acbc6436845bf7d1d0bf771287656d0292"
+  },
+  "review": {
+    "state": "pending-human-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-18T02:27:57.980Z"
+}

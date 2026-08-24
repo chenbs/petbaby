@@ -1,0 +1,60 @@
+{
+  "purpose": "preview-only-direct-pet-to-human-transfer",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "modelCall": true,
+  "useCase": "identity-preserve",
+  "strategy": "single-stage-direct-human-master-plus-original-pet",
+  "status": "preview-pending-user-review",
+  "title": "风雪回眸 x 哈士奇（直接方案）",
+  "generatedAt": "2026-08-19T06:48:25.136Z",
+  "currentCallStage": 1,
+  "originalPetPhotoIncluded": true,
+  "humanIdentityCardIncluded": false,
+  "requestOrder": [
+    "self-owned-human-master",
+    "original-pet-photo"
+  ],
+  "inputs": {
+    "image1": {
+      "role": "self-owned-human-master",
+      "path": "tools/imagegen/out/humanization-v1/masters/candidates/human-snow-scarf_9x16_v01.png",
+      "sha256": "c8a1d7a161e5b3bb624a15421289ac4b87f7bd9e439f856257a094d9846a0829",
+      "dimensions": {
+        "width": 941,
+        "height": 1672
+      }
+    },
+    "image2": {
+      "role": "original-pet-photo",
+      "path": "tools/imagegen/out/source/dog-husky.jpg",
+      "sha256": "41280a50599eb23fa200e8851d1c6a12762398d62f868fe29e18c315eff87a8d",
+      "dimensions": {
+        "width": 1200,
+        "height": 1600
+      }
+    }
+  },
+  "request": {
+    "size": "720x1280",
+    "quality": "high",
+    "outputFormat": "png",
+    "inputFidelity": "high",
+    "prompt": "Use case: identity-preserve\nAsset type: preview-only direct pet-to-human identity transfer\nPrimary request: Create a new human facial identity for the adult human in Image 1, inferred directly from the original pet in Image 2. This is the single-stage direct method: human master plus original animal photo. Do not use or imagine an intermediate human identity card.\nInput images: Image 1 is the self-owned human master and the only authority for the final composition and all non-facial content. Image 2 is the original pet photo and is the sole identity inspiration, never a subject to paste into the result.\nPet identity to translate into natural human facial traits: adult grey-and-white Siberian Husky: ice-blue eyes, symmetrical grey cap and broad white blaze, long balanced face and calm intent side gaze.\nRequired identity change: Do not retain Image 1's original facial identity. Infer a recognizably different but fully natural adult human face directly from Image 2. Translate only the pet's eye color relationship, gaze, expression, face-width relationship, visual contrast and distinctive proportions into plausible human facial features.\nMaster invariants: Preserve Image 1 exactly outside the minimum facial identity change. Scene-change budget is 0%. Preserve its composition, camera, crop, complete adult human body, pose, gaze direction, expression intensity, hairstyle silhouette, clothing, accessories, scene, lighting, color, rendering medium, brushwork and texture.\nTemplate-specific invariants: Preserve the black scarf and coat, over-the-shoulder pose, snow scene and backlight.\nStrict human-only result: The output must contain exactly one complete, credible adult human and no visible animal. Convert every identity cue into normal human anatomy. No animal ears, beak, animal nose, muzzle, snout, fur, feathers, whiskers, tail, paws, claws, slit pupils or hybrid anatomy.\nAvoid: keeping the original human face unchanged, showing Image 2 or its background, adding an animal, costume animal traits, changed body or pose, changed clothing, changed hairstyle silhouette, changed scene, changed lighting, changed style, text, logo, watermark or malformed anatomy."
+  },
+  "providerOutput": {
+    "dimensions": {
+      "width": 940,
+      "height": 1672
+    },
+    "revisedPrompt": "Edit the provided human master image using the provided husky photo only as identity inspiration. Keep Image 1 exactly the same outside the face: same over-the-shoulder pose, same black scarf and coat, same snowy scene, same backlight, same camera angle/crop, same hairstyle silhouette, same expression intensity, same rendering style, same lighting, same body, same accessories. Replace the original human facial identity with a new natural adult human face directly inspired by Image 2’s husky: cool ice-blue eyes, a calm intent side gaze, symmetrical gray-toned facial contrast translated into human facial structure, a broader balanced face shape, and a clear central facial highlight/blaze-like light pattern expressed as realistic human complexion/shading. The result must be exactly one complete credible adult human, fully human anatomy only, no animal or hybrid traits, no ears, muzzle, snout, whiskers, fur, paws, claws, slit pupils, or costume elements. Preserve the original composition and atmosphere; only the minimum facial identity should change."
+  },
+  "output": {
+    "path": "tools/imagegen/out/humanization-v1/probes/lingsuan-direct-round-01/human-snow-scarf_husky-dog_direct_9x16_v01.png",
+    "sha256": "d5ea2765924a4a39963febea174052d5c5085d3d017f065e38b762d59530b25c",
+    "dimensions": {
+      "width": 720,
+      "height": 1280
+    }
+  }
+}

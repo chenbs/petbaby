@@ -1,0 +1,48 @@
+{
+  "task": "user-feedback-frozen-master-refinement-2026-08-19-round3",
+  "templateId": "fish-chase",
+  "title": "偷鱼大作战",
+  "kind": "master",
+  "version": "v04",
+  "status": "generated-pending-visual-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputFidelity": "high",
+  "inputPolicy": {
+    "sequential": true,
+    "imageCount": 2,
+    "maxImages": 2,
+    "longestEdge": 1200,
+    "jpegQuality": 82,
+    "maxCombinedBytes": 1000000
+  },
+  "inputs": [
+    {
+      "role": "round2-candidate-edit-target-with-approved-owner-expression",
+      "originalPath": "tools/imagegen/out/reference-v1/remediation-20260819-round2/master-candidates/fish-chase_owner-f01_tuxedo-cat_9x16_v03.png",
+      "preparedPath": ".tmp/master-remediation-20260819-round3-inputs/fish-chase-1.jpg",
+      "bytes": 154292,
+      "sha256": "dab8f75fae6a29bf9a3233a865cd7a94dc1a81857e25fdf8a5ef26cc05b6b7bc"
+    },
+    {
+      "role": "previous-master-eye-size-reference-only",
+      "originalPath": "tools/imagegen/out/reference-v1/retired-masters/fish-chase_owner-f01_tuxedo-cat_9x16_v02.png",
+      "preparedPath": ".tmp/master-remediation-20260819-round3-inputs/fish-chase-2.jpg",
+      "bytes": 148748,
+      "sha256": "b5f35813cdf6f67756bd2434cb0930e235d8de29a735b2b008a7db7806aa3b03"
+    }
+  ],
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "output": {
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819-round3/raw/fish-chase.png",
+    "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819-round3/master-candidates/fish-chase_owner-f01_tuxedo-cat_9x16_v04.png",
+    "width": 720,
+    "height": 1280,
+    "sha256": "f1bc1f394b524e677fd9284a5524ae16d9004c65ec466e62bcc88cf115aaac74"
+  },
+  "prompt": "Use case: identity-preserve precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the edit target and controls the entire output, including the improved natural forehead and softened brow tension of the woman. Image 2 is only a geometric reference for the exact large diameter of both cat eyes; do not copy its protruding eyeball depth or stronger forehead creases. Restore both tuxedo-cat eyes to the same very large round size seen in Image 2. Do not make the eyes smaller. Change only the eyeball depth and eyelid integration: recess both globes naturally into the sockets, wrap the eyelids around them, and remove the forward-popping, bead-like or bulging appearance. The cat must look endearingly startled and comical rather than ugly, uncanny or distressed; preserve its black-and-white identity, large pupils, fisheye facial width, nose, muzzle and grip on the fish. Preserve Image 1's woman exactly: natural smooth central forehead without visible veins or an excessive pinched frown, while still urgent, angry, open-mouthed and reaching forward. Keep the fish, extreme wide-angle composition, market street, flying paper, pigeons, lighting, crop and all other details unchanged. Keep the exact 9:16 portrait composition. No text, logo, watermark or signature.",
+  "revisedPrompt": "Edit Image 1 as the base and preserve its entire composition, camera perspective, crop, lighting, market street, flying paper, pigeons, fish, the woman’s pose and expression, and all other details unchanged. Use Image 2 only as a geometric reference for the cat’s eye diameter/size. Restore both tuxedo-cat eyes in Image 1 to the same very large round size seen in Image 2, but do not make the eyes smaller. Change only the eyeball depth and eyelid integration: recess both globes naturally into the sockets, wrap the eyelids around them, and remove the forward-popping, bead-like, bulging appearance. Keep the cat endearingly startled and comical, not ugly, uncanny, or distressed; preserve black-and-white identity, large pupils, fisheye facial width, nose, muzzle, whiskers, and grip on the fish. Preserve the woman exactly from Image 1 with a natural smooth central forehead, softened brow tension, no visible forehead veins, no excessive pinched frown, while still urgent, angry, open-mouthed, and reaching forward. Keep the exact 9:16 portrait composition. No text, logo, watermark, or signature.",
+  "generatedAt": "2026-08-19T07:43:16.934Z"
+}

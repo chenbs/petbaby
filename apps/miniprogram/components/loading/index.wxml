@@ -1,0 +1,23 @@
+<view class="loading loading-{{size}}" aria-role="progressbar" aria-label="{{label || '加载中'}}">
+  <!-- bounce：爪印逐个点亮 -->
+  <view wx:if="{{anim === 'bounce'}}" class="paws">
+    <view class="paw paw-1">🐾</view>
+    <view class="paw paw-2">🐾</view>
+    <view class="paw paw-3">🐾</view>
+  </view>
+  <!-- glow：光晕环旋转 -->
+  <view wx:elif="{{anim === 'glow'}}" class="ring">
+    <view class="ring-arc"></view>
+    <text wx:if="{{progress >= 0}}" class="ring-value">{{progress}}%</text>
+  </view>
+  <!-- neon：霓虹脉冲 -->
+  <view wx:elif="{{anim === 'neon'}}" class="pulse">
+    <view class="pulse-core"></view>
+    <text wx:if="{{progress >= 0}}" class="ring-value">{{progress}}%</text>
+  </view>
+  <!-- fade：细线进度，最克制 -->
+  <view wx:else class="line">
+    <view class="line-fill {{progress >= 0 ? '' : 'line-sweep'}}" style="{{progress >= 0 ? 'width:' + progress + '%' : ''}}"></view>
+  </view>
+  <text wx:if="{{label}}" class="loading-label">{{label}}</text>
+</view>

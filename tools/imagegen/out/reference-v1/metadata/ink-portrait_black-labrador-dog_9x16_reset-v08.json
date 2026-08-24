@@ -1,0 +1,65 @@
+{
+  "templateId": "ink-portrait",
+  "title": "黑白水墨肖像",
+  "entryId": "art",
+  "status": "superseded-by-approved-master",
+  "version": "reset-v08",
+  "subject": "black-labrador-dog",
+  "breed": "成年黑色拉布拉多寻回犬",
+  "selectionRationale": "实际画面为黑白动态笔刷犬头像；用黑色拉布拉多验证深色毛发在水墨负空间中仍保留五官与轮廓。",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-effect-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/b983ec71-2f88-4c23-97f2-c0f0cb75bac1.jpg",
+      "sha256": "47d1f1377a40e3201d4c65a48fa55185118291de7564bda787ded2959c36df3d"
+    },
+    {
+      "role": "derived-cartoonized-pet-identity-prototype",
+      "path": "tools/imagegen/out/reference-v1/identity-guides/ink-portrait_black-labrador-dog_cartoon-identity_reset-v10.png",
+      "sha256": "4d68c7c65833ab5483f45f2aa578736b9fcb488845252e5ae4c8cd28dc469ee2"
+    }
+  ],
+  "mask": null,
+  "maskedComposite": null,
+  "identityProvenance": {
+    "originalPetIdentityPath": "tools/imagegen/out/source/dog-black-lab.jpg",
+    "derivedIdentityReference": "tools/imagegen/out/reference-v1/identity-guides/ink-portrait_black-labrador-dog_cartoon-identity_reset-v10.png"
+  },
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "inputFidelity": "not-sent",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and cartoon-style identity imitation. Asset type: internal self-owned pet template master, exact final canvas 720x1280 (9x16). Use exactly two input images. Image 1 is the effect reference and controls the complete final artwork: off-white paper field, three-quarter left-facing canine bust, subject placement, crop, proud neck, closed mouth, negative-space balance, large black ink masses, restrained charcoal-grey wash, broken silhouette, dry-brush splatter, sparse ink flecks and tapered diagonal lower stroke. Preserve all of these without scene redesign. Image 2 is a self-owned cartoonized identity prototype derived from the original adult black Labrador before this final imitation pass. It controls the replacement pet's complete cartoon facial design and adult Labrador identity: dropped ears, broad mature muzzle, solid black coat, coherent hand-painted brow, compact near eye, simplified nose and healthy adult proportions. Image 2 contains no valid photographic surface to reconstruct. Replace only Image 1's pointed-ear dog with the exact cartoon adult black Labrador from Image 2. Copy Image 2's already-cartoonized face as a whole instead of rebuilding a realistic dog from anatomical assumptions. Keep the far eye hidden. Preserve Image 2's calm resolute leftward gaze: compact horizontal almond eye, upper eyelid and painted brow gently lowered toward the muzzle, narrow paper-white crescent and one controlled dark inner mark. The expression is handsome, courageous and self-possessed, never pleading, surprised, sad, angry or aggressive. Render every part of the Labrador, especially the eye, muzzle, nose, ears and fur, in Image 1's same expressive ink-watercolour cartoon medium. Use broad painterly forms, soft broken edges, warm paper-white negative space and sparse dry texture. The face must be visibly hand-drawn and cartoonized like the surrounding brushwork, not more realistic than the neck or splashes. Do not reintroduce anything removed during cartoonization: no photographic eyeball, iris texture, glass reflection, wet nose, realistic skull volume, continuous fur direction, individual hairs, coat gloss, studio lighting, smooth airbrushed gradients, charcoal realism or camera texture. Also avoid crude stencil blobs, flat vector shapes, cut-paper collage, disconnected facial patches, puppy proportions or chibi exaggeration. Keep exactly one complete adult Labrador with correct anatomy. Remove the original subject completely and remove platform watermark, account ID and signature. No text, logo, added object, extra frame, colour or background change. Scene-change budget is 0%.",
+  "revisedPrompt": "Create a 720x1280 vertical ink-and-watercolour cartoon illustration by compositing the two provided images. Use Image 1 as the complete style/composition reference: preserve the off-white paper field, three-quarter left-facing canine bust placement and crop, proud neck, closed mouth, negative-space balance, large black ink masses, restrained charcoal-grey wash, broken silhouette, dry-brush splatter, sparse ink flecks, and the tapered diagonal lower stroke. Do not redesign the scene, background, framing, palette, or composition.\n\nReplace Image 1’s pointed-ear dog entirely with the exact cartoon adult black Labrador identity from Image 2. Copy Image 2’s already-cartoonized face as a whole rather than reconstructing a realistic dog. Keep the far eye hidden. Preserve the calm, resolute leftward gaze: compact horizontal almond eye, upper eyelid and painted brow gently lowered toward the muzzle, narrow paper-white crescent with one controlled dark inner mark. Expression should be handsome, courageous, self-possessed, never pleading, surprised, sad, angry, or aggressive.\n\nRender the Labrador in the same expressive ink-watercolour medium as Image 1: broad painterly forms, soft broken edges, warm paper-white negative space, sparse dry texture. Make the face visibly hand-drawn and cartoonized like the surrounding brushwork, not more realistic than the neck or splashes. Keep exactly one complete adult Labrador with correct anatomy, broad mature muzzle, dropped ears, simplified nose, coherent hand-painted brow, and healthy adult proportions.\n\nDo not reintroduce photographic detail or realism: no photographic eyeball, iris texture, glass reflection, wet nose, realistic skull volume, continuous fur direction, individual hairs, coat gloss, studio lighting, smooth airbrushed gradients, charcoal realism, or camera texture. Avoid crude stencil blobs, flat vector shapes, cut-paper collage, disconnected facial patches, puppy proportions, or chibi exaggeration.\n\nRemove the original subject completely. Remove any watermark, account ID, signature, text, logo, or added object. Keep the background and paper tone unchanged. Scene-change budget is 0%.",
+  "review": {
+    "state": "superseded-before-user-approval",
+    "checks": {
+      "petIdentity": "pass",
+      "adultAgeAndCuteness": "pass",
+      "poseExpressionAndAction": "pass",
+      "sceneComposition": "pass",
+      "faceAndMediumConsistency": "pass",
+      "anatomyAndContacts": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [
+      "用户最终选择并冻结 reset-v03 reference-gaze rerun v01；reset-v08 不再是待审批候选。"
+    ],
+    "finalApproval": "not-selected",
+    "precheckedAt": "2026-08-15T14:40:05.609Z"
+  },
+  "generatedAt": "2026-08-15T14:38:20.875Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/ink-portrait_black-labrador-dog_9x16_reset-v08.png",
+    "rawPath": "tools/imagegen/out/reference-v1/candidates/raw/ink-portrait_black-labrador-dog_9x16_reset-v08.png",
+    "sha256": "62eb42693004662910771eaa57810cf6f6fd9965956b1dea1eaf8f75d0c1713e"
+  },
+  "replacedBy": "ink-portrait_black-labrador-dog_9x16_reset-v03-reference-gaze-rerun-v01"
+}

@@ -1,0 +1,62 @@
+{
+  "jobId": "mini-companion_dog_black-labrador-dog",
+  "templateId": "mini-companion",
+  "title": "同宠大小分身",
+  "status": "approved-runtime-validation",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/mini-companion_abyssinian-cat_9x16_v03.png",
+      "sha256": "540845541503d1e126a5a47133e2a0f9279b376f8add19e0fdffff2c5becf52c"
+    },
+    {
+      "role": "new-pet-identity-reference",
+      "identityId": "black-labrador-dog",
+      "species": "dog",
+      "breed": "adult black Labrador Retriever",
+      "path": "tools/imagegen/out/source/dog-black-lab.jpg",
+      "sha256": "20960d2ace805e68b41a7934e37ebdf24b7007f8f3fa85527d9beb22d2df6022"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving template transfer. Produce one exact 720x1280 vertical 9:16 runtime validation image from exactly two input images. Image 1 is our frozen self-owned production master. It is the sole authority for every non-identity detail: scene, composition, crop, camera, pose, action, expression, gaze, lighting, palette, rendering medium, brushwork, clothing, text, props and all physical contacts. No third-party effect reference is included. Image 2 is the sole new-pet identity reference. Change only the pet identity. Remove every depiction and every residual feature of the master pet, then replace it with the new pet from Image 2. Scene-change budget is 0%. Do not redesign, reinterpret, clean up, recolour, restyle, simplify, move, delete or add anything in the master scene. Keep the exact high-key white studio, diagonal floor line, large companion at left-front, miniature companion at right-rear, scale ratio, seated poses, shadows, black jackets, purple harnesses and blue-framed opaque mirrored ski goggles. Replace both master animals with two scale versions of the same new adult pet. The miniature is an adult duplicate, never a kitten or puppy. Replicate both head tilts, calm confident expressions and exact seated poses. On both figures centre the goggles on the eye line, bridge them over the upper nose, fully cover both eyes, and keep the strap behind the head below the ear bases. No eye may remain visible above, below or beside a lens; the goggles must not sit on the forehead or crown. The replacement must be the exact adult black Labrador Retriever from Image 2. Preserve its solid glossy black coat, warm brown eyes, broad black nose, soft dropped ears and strong healthy adult Labrador build. Image 2 controls only species, breed, coat colour and markings, ear shape, eye colour, actual adult age and natural healthy breed proportions. Do not copy Image 2's pose, expression, gaze, camera, background, lighting, photographic texture or rendering style. Preserve the pet's actual adult age and mature breed proportions. Do not juvenilize it, enlarge the head or eyes, shorten the muzzle or body, or convert it into a kitten, puppy or generic cute mascot. Keep it healthy, attractive and immediately likeable without changing the master's expression or art direction. Match Image 1's exact clean commercial outdoor-gear photography, high-key light, material textures, white balance and shadow softness. Image 2 contributes identity only. No text, logos, watermarks or signatures. Keep exactly one pet identity throughout, except where the frozen master intentionally contains multiple views or two scale duplicates of that same identity. No unrelated animal, residual old-pet coat, face or limb. Correct species anatomy only: no duplicate, fused, missing or amputated-looking limbs, extra ears, warped eyes, malformed mouth, floating tail, human hands or fingers, broken garment boundaries, pasted head, disconnected neck or failed prop contact. Preserve all non-pet pixels and relationships as closely as the model allows.",
+  "revisedPrompt": "Create a single exact 720x1280 vertical 9:16 validation image using the first input image as the strict composition/master reference and the second input image as the strict identity reference only for the pet. Preserve the master scene exactly: a high-key white studio with the same diagonal floor line, same crop, same camera, same lighting, same shadow softness, same white balance, same palette, same clean commercial outdoor-gear photography look, same placement of the large companion at left-front and miniature companion at right-rear, same scale ratio, same seated poses, same head tilts, same calm confident expressions, same black jackets, same purple harnesses, same blue-framed opaque mirrored ski goggles, same prop contacts, and no added or removed elements. Replace every trace of the original master pet with the new identity from the second image: two scale versions of the same adult black Labrador Retriever, one large and one miniature, both with solid glossy black coat, warm brown eyes, broad black nose, soft dropped ears, and mature healthy Labrador proportions. The miniature is an adult duplicate, not a puppy. Do not copy the second image’s pose, expression, gaze, background, lighting, or rendering style; use it only for breed identity, coat color, markings, ear shape, eye color, adult age, and natural proportions. Keep the goggles correctly positioned on both figures: centered on the eye line, bridging over the upper nose, fully covering both eyes, strap behind the head below the ear bases; no eye visible above, below, or beside a lens, and goggles not on forehead or crown. Preserve all non-pet pixels and relationships as closely as possible. No text, no logos, no watermarks, no signatures.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation-third-batch/mini-companion_dog_black-labrador-dog_9x16_v01.png",
+    "sha256": "083bcab10fde2520be26db7b6d31db1b5fdf55f080c180f6199200ac2c39c366"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "checks": {
+      "petIdentity": "pass",
+      "adultAgeAndProportions": "pass",
+      "masterPoseExpressionAndGaze": "pass",
+      "masterStyleAndBrushwork": "pass",
+      "sceneAndComposition": "pass",
+      "anatomyAndContacts": "pass",
+      "repeatedIdentityAndText": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [],
+    "finalApproval": "approved",
+    "approvedAt": "2026-08-17T12:22:43+08:00"
+  },
+  "generatedAt": "2026-08-17T02:02:10.953Z"
+}

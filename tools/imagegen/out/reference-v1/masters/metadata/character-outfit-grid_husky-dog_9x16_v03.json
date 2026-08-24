@@ -1,0 +1,94 @@
+{
+  "templateId": "character-outfit-grid",
+  "entryId": "character",
+  "title": "穿搭动作设定九宫格",
+  "sourceEffectFile": "apps/website/public/assets/example/1786369014024.png",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/1786369014024.png",
+      "sha256": "143e67eafb3baf366d65260458e83d3ca649664a111cc5bc14a044c87115d3c8"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "husky-dog",
+      "species": "dog",
+      "breed": "adult grey-and-white Siberian Husky",
+      "path": "tools/imagegen/out/source/dog-husky.jpg",
+      "sha256": "41280a50599eb23fa200e8851d1c6a12762398d62f868fe29e18c315eff87a8d"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be adult grey-and-white Siberian Husky with symmetrical grey cap, broad white blaze, white muzzle and chest, ice-blue eyes, upright ears and dense adult coat. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the complete 3x3 outfit, scarf, leaf prop and movement grid. All nine cells must show the exact same grey-and-white adult Husky with the same cap, blaze, blue eyes, ears and adult body; only pose, expression and clothing state may vary. No brown dog, white dog, different breed, cropped cell or missing pose. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create an exact 9:16 vertical composition at 720x1280 pixels, preserving the layout and visual language of Image 1: a 3x3 grid of nine dog portraits on a warm cream studio background, each cell matching the original pose, crop, framing, lighting, perspective, and props from Image 1. Replace every original dog in all nine cells with the same adult grey-and-white Siberian Husky identity from Image 2: symmetrical grey cap, broad white blaze, white muzzle and chest, ice-blue eyes, upright triangular ears, dense adult coat, healthy natural adult proportions. Keep the dog friendly and appealing, with the transferred expressions from Image 1, but render the face, fur, anatomy, and all details in Image 1's photographic studio style; do not paste a cutout or a generic husky face. Maintain the exact scene composition and contact relationships of Image 1, including the 3x3 grid arrangement, the scarf, leaf prop, cushion, coat, collar, headband, acorn prop, and all other existing accessories/poses as shown in each cell, adapted naturally to the husky anatomy. Preserve background color, spacing, shadows, and overall cleanliness exactly as in Image 1 with no redesign. Ensure all nine cells show the same adult husky identity with consistent markings, ears, blue eyes, coat, and body type; only pose, expression, and clothing state may vary per cell. Correct anatomy only, with no extra limbs, eyes, ears, or duplicate pets. Keep the result as a realistic, polished studio composite matching Image 1.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/expansion/candidates/character-outfit-grid_husky-dog_9x16_v03.png",
+    "sha256": "d4a17cdf6693a1ae8daa3c15690e8872112ae6406ae0041a993ed360b1ce15c1"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-20T12:00:00+08:00"
+  },
+  "generatedAt": "2026-08-18T07:24:15.115Z",
+  "version": "v03",
+  "candidatePath": "tools/imagegen/out/reference-v1/expansion/candidates/character-outfit-grid_husky-dog_9x16_v03.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/character-outfit-grid_husky-dog_9x16_v03.webp",
+  "masterSha256": "6dd9f9f41a8d451ba061e00015c32f77160f315b08654c0e374dbd80538caac4",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-20T12:00:00+08:00",
+    "note": "用户审阅 pending-masters-comparison 后明确表示除指定重做和删除项外，其余模板可以冻结。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/character-outfit-grid_husky-dog_9x16_v03.webp",
+      "sha256": "6dd9f9f41a8d451ba061e00015c32f77160f315b08654c0e374dbd80538caac4"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate",
+      "unapproved-candidate"
+    ]
+  },
+  "qualityBaseline": {
+    "required": [
+      "Keep the complete 3x3 outfit, scarf, leaf prop and movement grid. All nine cells must show the exact same grey-and-white adult Husky with the same cap, blaze, blue eyes, ears and adult body; only pose, expression and clothing state may vary. No brown dog, white dog, different breed, cropped cell or missing pose.",
+      "exact 720x1280 portrait output",
+      "same approved composition, action, expression, lighting, palette, medium and text hierarchy"
+    ],
+    "reject": [
+      "scene redesign or missing distinctive layout details",
+      "juvenilized, malformed, duplicated or inconsistent pet anatomy",
+      "logo, platform UI, account ID, watermark or signature"
+    ]
+  }
+}

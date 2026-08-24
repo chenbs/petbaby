@@ -1,0 +1,51 @@
+{
+  "jobId": "roller-coaster_dog_shiba-dog",
+  "templateId": "roller-coaster",
+  "status": "superseded-after-targeted-rerun",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "sourceMaster": {
+    "role": "self-owned-frozen-master",
+    "path": "tools/imagegen/out/reference-v1/masters/roller-coaster_corgi_9x16_v01.webp",
+    "sha256": "5b7a3eababd7da3e8cededad8f6e4beba4f254b0d5e2d43b323cf6bfdd392a48"
+  },
+  "petIdentityReference": {
+    "role": "new-pet-identity-reference",
+    "identityId": "shiba-dog",
+    "species": "dog",
+    "breed": "red Shiba Inu",
+    "path": "tools/imagegen/out/source/dog-shiba.jpg",
+    "sha256": "fbe7fcef9561979da3d66090d3e9f0bd693c1e1dbfa92820e7942d93a92d29a6"
+  },
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving template transfer. Create a vertical 9:16 high-fidelity pet replacement from exactly two input images, composed for an exact final size of 720x1280 pixels. Image 1 is a frozen self-owned production master created previously by our team. It is the sole composition, scene, styling and layout reference for this request. No third-party effect reference is included at runtime. Image 2 is the sole pet identity reference. Preserve Image 1's the first-row roller-coaster composition, red car, black safety restraint, orange looping track, blue supports, bright sky, green park background, wide-angle speed and joyful mid-ride story. Do not redesign the environment or turn it into a generic scene. Allow an optional scene-change budget of approximately 5% to 20%. You may naturally adjust only secondary scenery, small decorations, context-equivalent props, materials or colours when the adjustment clearly fits the current scene. Every adjustment must preserve the same semantics, perspective, scale, lighting and visual style. If no replacement is clearly better, keep the master unchanged. Never force changes merely to meet a percentage. Remove every depiction of the master pet from Image 1 and replace it with the exact red Shiba Inu from Image 2. Preserve the red-and-cream coat, cream cheeks and chest, dark almond eyes, triangular upright ears, curled tail and compact sturdy body. Image 2 controls pet identity and overrides the sample pet shown in the master. The replacement dog must look youthful, healthy, rounded and irresistibly cute at first glance, with soft full cheeks, friendly bright eyes and appealing proportions for a young audience. Keep the recognisable breed anatomy. Never make the pet skinny, elongated, angular, gaunt, stern, aggressive, strange, elderly-looking or uncanny. Keep both front paws naturally braced on the car edge and the restraint correctly crossing the body. Preserve the feeling of speed while keeping the face sharp. No clothing is required; keep the car and functional safety restraint intact. Do not add text, logos, platform UI, watermarks or signatures. Keep exactly one pet identity throughout the image and no unrelated animal. Correct anatomy only: no duplicate or fused limbs, extra ears, warped eyes, broken clothing boundaries or human hands. Preserve rather than delete meaningful clothing, landmarks, distinctive props and text layout from the master. No platform UI, brand logo, known IP, watermark or signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "superseded",
+    "checks": {
+      "petIdentity": "pass",
+      "cuteness": "pass",
+      "masterComposition": "needs-user-attention",
+      "anatomy": "pass",
+      "text": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [
+      "用户要求增加过山车兴奋感，已由 v02 定向重做替代。"
+    ],
+    "preReviewedAt": "2026-08-13T02:16:00.075Z",
+    "finalApproval": "rejected-for-calm-expression"
+  },
+  "generatedAt": "2026-08-13T02:03:01.020Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation/roller-coaster_dog_shiba-dog_9x16_v01.png",
+    "sha256": "67b53dfc3aaf62e22b422352da145d811d65ec69cd200e2d6ddeec386ed0c87a"
+  },
+  "supersededBy": "tools/imagegen/out/reference-v1/validation/roller-coaster_dog_shiba-dog_9x16_v02.png"
+}

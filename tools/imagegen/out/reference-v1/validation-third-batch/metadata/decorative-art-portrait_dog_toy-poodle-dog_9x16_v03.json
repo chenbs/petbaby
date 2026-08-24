@@ -1,0 +1,62 @@
+{
+  "jobId": "decorative-art-portrait_dog_toy-poodle-dog",
+  "templateId": "decorative-art-portrait",
+  "title": "装饰艺术肖像",
+  "status": "approved-runtime-validation",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/decorative-art-portrait_ragdoll-cat_9x16_v05.webp",
+      "sha256": "7113eeca312feb28ffec548830943be74aab8512db99316686b7700d1cc7a976"
+    },
+    {
+      "role": "new-pet-identity-reference",
+      "identityId": "toy-poodle-dog",
+      "species": "dog",
+      "breed": "adult apricot Toy Poodle",
+      "path": "apps/website/public/assets/avatar-poodle.jpg",
+      "sha256": "e15fca17074b5c58cd5d477051ecc00c2d27116ad3f364211f3c350e1e69de2d"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 4,
+    "localWorkerConcurrency": 4,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Edit Image 1 into one exact 720x1280 vertical runtime validation image using exactly two inputs. Image 1 is our frozen self-owned master and the edit target. Keep its exact crop, right-facing head angle, quiet gaze, bust scale, warm paper, border, negative space, shard placement rhythm and restrained paper-white, cream, translucent-grey and navy-black palette. No third-party effect reference is included. Scene-change budget is 0%. Replace only the animal identity with the exact adult adult apricot Toy Poodle from Image 2. Use Image 2 only to recognise the breed's outer silhouette, ears and coat-marking layout; do not render or copy its face, eyes, nose, fur texture, literal colour, lighting or photographic depth. Build the complete new head, eyes, brow, cheeks, muzzle, nose, ears, neck and chest only from the same few large flat angular navy, grey, cream and paper-gap fragments used by Image 1. The whole face must be visibly broken and abstract at first glance, with no continuous realistic animal face underneath. No detailed eyeballs, circular irises, catchlights, rounded wet nose, pencil drawing, tiny fur facets, continuous hair strands, smooth gradients, 3D skull volume, photography, tan, brown or orange wash, text, logo, watermark or signature. Keep the fragmented face coherent, mature, healthy and attractive.",
+  "revisedPrompt": "Create a single exact 720x1280 vertical abstract runtime-validation image based on Image 1 as the fixed composition and crop. Preserve Image 1 exactly: same bust scale, same right-facing head angle, same quiet gaze direction, same warm paper background, same border, same large negative space, same shard placement rhythm, same restrained palette of paper-white, cream, translucent-grey, and navy-black. Scene change must be 0%.\n\nReplace only the animal identity with an adult apricot Toy Poodle, using Image 2 only as breed reference for outer silhouette, ear shape, and coat-marking layout. Do not copy Image 2’s face, eyes, nose, fur texture, literal color, lighting, depth, or photographic realism.\n\nBuild the entire new head, eyes, brow, cheeks, muzzle, nose, ears, neck, and chest only from the same few large flat angular navy, grey, cream, and paper-gap fragments already present in Image 1. The face must remain visibly broken, abstract, and fragmentary at first glance, with no continuous realistic animal face beneath. Keep it mature, healthy, and attractive, but not cute-realistic.\n\nStrictly avoid detailed eyeballs, circular irises, catchlights, rounded wet nose, pencil drawing, tiny fur facets, continuous hair strands, smooth gradients, 3D skull volume, photography, tan, brown, or orange wash, text, logo, watermark, or signature. The apricot poodle identity should be implied only through the fragmented silhouette and coat geometry, while the rendering stays paper-cut abstract and minimal.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation-third-batch/decorative-art-portrait_dog_toy-poodle-dog_9x16_v03.png",
+    "sha256": "061ca5ee9ce0bfee542ac69605ea6bb4ebafdefb475a554b7dcd9eda33cc3e37"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "checks": {
+      "petIdentity": "pass",
+      "adultAgeAndProportions": "pass",
+      "masterPoseExpressionAndGaze": "pass",
+      "masterStyleAndBrushwork": "pass",
+      "sceneAndComposition": "pass",
+      "anatomyAndContacts": "pass",
+      "repeatedIdentityAndText": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [],
+    "finalApproval": "approved",
+    "approvedAt": "2026-08-17T12:22:43+08:00"
+  },
+  "generatedAt": "2026-08-17T02:38:57.923Z"
+}

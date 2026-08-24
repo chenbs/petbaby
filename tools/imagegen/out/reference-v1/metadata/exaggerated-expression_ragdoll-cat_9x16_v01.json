@@ -1,0 +1,52 @@
+{
+  "templateId": "exaggerated-expression",
+  "title": "夸张表情头像",
+  "entryId": "fun",
+  "status": "master-candidate-pending-user-approval",
+  "subject": "ragdoll-cat",
+  "breed": "布偶猫",
+  "selectionRationale": "用圆润布偶猫验证夸张表情能否保持可爱，而不继承原犬的凶相和瘦长脸。",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-effect-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/1786368480133.png",
+      "sha256": "02e42a61c50c456fa17edd95a1c52f5f132ce482e343ce37c595e7b407708330"
+    },
+    {
+      "role": "pet-identity-reference",
+      "path": "apps/website/public/assets/work-ragdoll.jpg",
+      "sha256": "cadd89cfd6150cb0c9560bffec9b7c5a7e80d7126032eb7ecab4933cb836ed9e"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving expression transfer. Create a vertical 9:16 polished close-up pet expression portrait from exactly two input images, composed for an exact final size of 720x1280 pixels. Image 1 is the primary effect reference and scene base. Preserve its core composition, camera language, scene type, clothing, landmark, distinctive props, meaningful text layout and overall visual effect. Allow an optional scene-change budget of approximately 5% to 20%. You may naturally adjust only secondary details, colours, materials, small decorations or context-equivalent props when the adjustment clearly improves the result and belongs in the current scene. Match the original perspective, scale, lighting and visual style. This is not a quota: if no replacement is clearly better, keep the source scene unchanged. Do not redesign the environment or weaken its story. Preserve Image 1's off-white paper background, energetic hand-painted sketch texture, extreme three-quarter close-up, raised brow, sideways upward glance and instantly readable mischievous comic timing. Preserve the unusual expressive mouth as the distinctive prop of the image, but adapt it to believable feline anatomy. Image 2 is the sole pet identity reference and overrides the animal shown in Image 1. Remove the original animal from Image 1 completely and replace it with the exact pet from Image 2. The replacement must look youthful, healthy, rounded and irresistibly cute at first glance, with soft full cheeks, friendly bright eyes and appealing contemporary proportions. Preserve recognisable breed anatomy and the identity markings stated below. Never make the pet skinny, elongated, angular, gaunt, stern, aggressive, strange, elderly-looking or uncanny. Keep exactly one pet identity and no unrelated animal. Correct anatomy only: no duplicate or fused limbs, extra ears, warped eyes, malformed mouth, human hands or broken clothing boundaries. No brand logo, known IP, platform UI, watermark or signature. Preserve the cream long coat, deep seal-brown mask and ears, round blue-grey eyes, broad fluffy cheeks, dark nose and soft full chest of the exact Ragdoll cat in Image 2. Give the cat a playful cheeky grin with one slightly raised eyebrow and a small glimpse of clean natural feline teeth. The emotion must read as clever, teasing and lovable, never predatory, vicious, frightening or distorted. Keep the muzzle short and plush rather than stretching it into the long dog muzzle from Image 1. No text is required. Keep the sparse paper backdrop and visible brush lines.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "prechecked-pending-user-approval",
+    "checks": {
+      "petIdentity": "pass",
+      "cuteness": "pass",
+      "effectComposition": "pass",
+      "anatomy": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [
+      "布偶猫身份与手绘近景稳定；夸张牙齿仍在可爱、完整的猫科解剖范围内。"
+    ],
+    "finalApproval": "pending-user"
+  },
+  "generatedAt": "2026-08-13T04:07:25.432Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/exaggerated-expression_ragdoll-cat_9x16_v01.png",
+    "sha256": "fc5adde6aab5521833bdcc7c09a1a670bc1f5089fcb712e4bcb4523c913084dd"
+  }
+}

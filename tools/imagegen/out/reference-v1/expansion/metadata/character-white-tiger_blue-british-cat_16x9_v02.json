@@ -1,0 +1,52 @@
+{
+  "templateId": "character-white-tiger",
+  "entryId": "character",
+  "title": "白虎多姿态设定",
+  "sourceEffectFile": "apps/website/public/assets/example/9f8ebfc6-fb68-4b47-a7bb-625d105d4f12.jpg",
+  "status": "generated-pending-user-approval",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/9f8ebfc6-fb68-4b47-a7bb-625d105d4f12.jpg",
+      "sha256": "6a3a0d6bf9b9ce45c5baaa2b282e12b20374e8a869abfc4ffddfb0e254ca31c6"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "blue-british-cat",
+      "species": "cat",
+      "breed": "adult blue British Shorthair cat",
+      "path": "tools/imagegen/out/source/cat-british.jpg",
+      "sha256": "ddbdfb39b6cb3c6dddbfdd01555cd2fea299cfa927f76a1e7248d581152e0364"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "landscape",
+  "requestedSize": "1280x720",
+  "outputSize": "1280x720",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 16x9 composition at 1280x720 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be adult blue British Shorthair cat with solid blue-grey coat, round broad face, amber eyes, small upright ears, plush dense fur, thick tail and sturdy adult body. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the complete landscape multi-view sheet with one full-body pose and all surrounding portrait, action and costume studies. Every view must be the same sturdy adult blue British Shorthair with identical blue-grey coat, amber eyes and round face, wearing one coherent original fantasy outfit while retaining natural feline anatomy. Do not crop away views, leave blank panels, retain humanoid hands or preserve source character marks; remove all watermarks. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a finished 16:9 composition at 1280x720 pixels. Use the first attached image as the exact layout/composition/style reference and the second attached image as the sole identity reference. Rebuild the full multi-view character sheet in the same positions and framing as the reference sheet: one full-body pose on the left, a close-up bust portrait at top right, and another close-up/action bust at bottom right, with all panels intact and no cropping. Replace the original humanoid character with one coherent adult blue British Shorthair cat identity in every view: solid blue-grey coat, round broad face, amber eyes, small upright ears, plush dense fur, thick tail, sturdy adult body, natural feline anatomy. Preserve the reference image’s visual language exactly: same composition, perspective, crop, pose language, expression energy, lighting, palette, line quality, brushwork, costume design feel, props placement, and sheet organization. Keep the same fantasy outfit language adapted naturally for a cat body, with one consistent original outfit across all views. Maintain friendly, appealing expressions transferred from the reference, never generic or uncanny. Keep the background plain and unchanged in tone and cleanliness; do not redesign or beautify it. Remove all watermarks, platform UI, logos, and copyrighted names, replacing them with short original pet-safe wording while preserving the same text-block hierarchy and placement. Ensure correct feline anatomy only: no human hands, no extra limbs, no duplicate pets, no broken joints, no residual source character parts. The result should look like the original sheet redrawn as an adult blue British Shorthair cat character sheet, not a photographic pet pasted into illustration.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/expansion/candidates/character-white-tiger_blue-british-cat_16x9_v02.png",
+    "sha256": "b64adca99a6aba1946bc123a6195a85a2f4887b944f265a0a806fede1c1d10f1"
+  },
+  "review": {
+    "state": "pending-human-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generatedAt": "2026-08-18T07:13:05.278Z"
+}

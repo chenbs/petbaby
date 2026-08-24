@@ -1,0 +1,36 @@
+{
+  "task": "user-requested-frozen-master-remediation-2026-08-19",
+  "templateId": "leaping-cover",
+  "kind": "public",
+  "version": "public-v02",
+  "status": "generated-pending-visual-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputFidelity": "high",
+  "inputPolicy": {
+    "sequential": true,
+    "maxImages": 2,
+    "maxCombinedBytes": 1000000
+  },
+  "inputs": [
+    {
+      "role": "effect-reference-edit-target",
+      "path": ".tmp/master-remediation-20260819-inputs/leaping-cover-effect.jpg",
+      "bytes": 152841,
+      "sha256": "1381b5debb4ddc3173c610be274042a6b4c4401b1d21292857d8e7169241eea8"
+    }
+  ],
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "output": {
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/public-leaping-cover.png",
+    "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819/public-previews/leaping-cover_public-v02.png",
+    "width": 720,
+    "height": 1280,
+    "sha256": "5d1b6cd7255fadcd2e5649eeac19a805e90417903b2637a8c6a50902301591ff"
+  },
+  "prompt": "Use case: precise-object-edit. Asset type: public Mini Program template preview. Image 1 is the effect-reference edit target and is the sole authority for composition, subject, camera, pose, lighting, medium and all details not explicitly changed below. Create a clean new public-facing rendition, not a collage or framed mockup. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature, reconstructing the covered area seamlessly. Do not add captions, borders, UI, logos, watermarks or signatures. Change only the purple and magenta background paint strokes to vivid warm red paint. Keep the joyful airborne white dog, expression, paws, crop, perspective, thick impasto brushwork, and all teal, yellow, orange, white and other non-purple colors unchanged. Return a 9:16 portrait composition.",
+  "revisedPrompt": "Edit the provided image into a clean public-facing 9:16 portrait rendition. Preserve the exact composition, subject, camera angle, pose, expression, lighting, thick impasto brushwork, crop, and all non-purple colors. The joyful airborne white dog must remain unchanged. Repaint only the purple and magenta background paint strokes into vivid warm red paint, keeping their painterly texture and placement consistent. Remove every platform badge, AI-generated label, account name, account number, watermark, logo, and signature from the image, reconstructing the covered area seamlessly. Do not add any captions, borders, UI, logos, watermarks, or signatures.",
+  "generatedAt": "2026-08-19T05:43:16.853Z"
+}

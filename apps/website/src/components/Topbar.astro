@@ -1,0 +1,94 @@
+---
+/*
+ * 顶栏。两个变体（方案第 3 章）：
+ *
+ *   variant="hero"  —— 首页用。absolute 浮在 hero 内，白字白描边，带入场动画。
+ *                       与原型一个像素不差。
+ *   variant="solid" —— 文章/标签/法务/404 用。sticky、浅底、深字、无入场动画。
+ *                       这些页面没有 hero，照搬 hero 变体会得到浅底白字。
+ *
+ * solid 不是「与原型不一致」：原型只有首页，它是新页面类型必需的新增。
+ *
+ * 结构与原型同构 —— 一个按钮驱动两个面板（桌面 w-64 下拉 + 移动全屏），
+ * 共用一个开合状态，靠 CSS 断点决定谁可见。site.js 的第 ④ 块按
+ * data-menu-toggle / data-menu-desktop / data-menu-mobile 三个属性接管，
+ * 所以这些属性名不能改。
+ *
+ * `.topbar-actions` 是原型没有的一层包装：顶栏右侧现在有「扫码 + 菜单」两个
+ * 按钮（方案第 6 章的转化触点），而原型只有菜单一个、直接当 flex 子项。
+ * 它只做 flex 行，不引入任何视觉变化。
+ */
+import { BRAND_NAME, NAV_ITEMS } from "../config/site";
+import QrTrigger from "./QrTrigger.astro";
+
+interface Props {
+  variant?: "hero" | "solid";
+}
+
+const { variant = "hero" } = Astro.props;
+const isHero = variant === "hero";
+---
+
+<header class:list={["topbar", { "topbar-solid": !isHero }]} data-hero-topbar={isHero ? "" : null}>
+  <div class="topbar-inner">
+    <a class="brand" href="/#home">
+      <span class="brand-mark" aria-hidden="true"></span>
+      {/* 待提供：正式品牌名与 logo SVG（顶栏 26→40px、页脚 32px） */}
+      <span class="brand-name" data-placeholder="brand-name">{BRAND_NAME}</span>
+    </a>
+
+    {/*
+      导航没有内联链接 —— 与原站一致（实测其 SSR HTML：header 里只有 logo +
+      一个 aria-haspopup 的 Menu 按钮，所有断点都靠它开面板）。
+
+      菜单按钮驱动两个面板，共用一个开合状态，靠断点切换谁可见：
+        · md 及以上 → 顶栏右下的 w-64 下拉（.desktop-menu）
+        · md 以下   → 全屏从右滑入（.mobile-menu）
+    */}
+    <div class="topbar-actions">
+      <QrTrigger />
+
+      <div class="menu-wrap">
+        <button
+          type="button"
+          class="menu-btn"
+          data-menu-toggle
+          aria-expanded="false"
+          aria-haspopup="true"
+          aria-controls="site-menu"
+        >
+          <svg class="icon-menu" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+          <svg class="icon-close" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+          <span>菜单</span>
+        </button>
+
+        {/* 桌面下拉：absolute right-0 mt-3 w-64（规格 5 章）*/}
+        <nav class="desktop-menu" id="site-menu" data-menu-desktop aria-label="主导航" hidden>
+          <ul>
+            {NAV_ITEMS.map((item) => (
+              <li><a href={item.href}>{item.label}</a></li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
+
+{/* 移动菜单：全屏面板，从右滑入（规格 5 章）*/}
+<div class="mobile-menu" data-menu-mobile hidden>
+  {/* 顶部一行 logo + 关闭按钮，与原站移动分支一致 */}
+  <div class="mobile-menu-top">
+    <a class="brand" href="/#home">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-name" data-placeholder="brand-name">{BRAND_NAME}</span>
+    </a>
+    <button type="button" class="menu-close" data-menu-close aria-label="关闭菜单">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+    </button>
+  </div>
+  <nav class="mobile-menu-nav" aria-label="移动导航">
+    {NAV_ITEMS.map((item) => <a href={item.href}>{item.label}</a>)}
+  </nav>
+  <p class="mobile-menu-foot">© 2026 {BRAND_NAME}</p>
+</div>

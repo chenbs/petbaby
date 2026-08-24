@@ -1,0 +1,169 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+
+<view class="page page-tabbar">
+  <!--
+    第一屏是**宠物**而不是货架（改造项 E1）。
+    20 号文 2.2：情绪价值不是内容问题而是分发问题 —— 服务端 8 项能力全建成，
+    而原首页全文 0 处出现宠物或陪伴字样。玩法列表下移到第二屏。
+
+    没有宠物时整块不出现，退回原来的标语 Hero —— 空占位比不占位更差。
+  -->
+  <!--
+    主题切换入口在有宠物时移到这一行。原先它挂在标语 Hero 的右上角，
+    而那块 Hero 现在只在「没有宠物」时出现 —— 不挪的话老用户就再也找不到换肤入口。
+  -->
+  <view wx:if="{{pet}}" class="hero-top">
+    <text class="eyebrow">PET CREATIVE LAB</text>
+    <view class="hero-theme hit-area" aria-role="button" aria-label="切换外观主题" bindtap="openTheme">◑</view>
+  </view>
+
+  <t-card
+    wx:if="{{pet}}"
+    variant="hero"
+    clickable
+    blur="{{false}}"
+    anim="{{animType}}"
+    bindtap="openTimeline"
+  >
+    <view class="pet-media">
+      <image wx:if="{{pet.avatarUrl}}" class="pet-image" src="{{pet.avatarUrl}}" mode="aspectFill" lazy-load />
+      <!-- 没头像时给爪印占位：它标的是档案本身，不冒充产出（同 pages/me） -->
+      <view wx:else class="pet-image pet-image-blank">🐾</view>
+      <view class="pet-veil"></view>
+      <view class="pet-caption">
+        <text class="pet-days">{{pet.companionText}}</text>
+        <view class="pet-name">{{pet.name}}</view>
+        <text class="pet-hint">看看这一路 →</text>
+      </view>
+    </view>
+  </t-card>
+
+  <!--
+    今天刚达成的里程碑（E3）。**只在当天出现一次**：
+    里程碑是一个瞬间而不是一种状态，常驻会让它变成又一个货架标签。
+    已达成的历史里程碑在时间线页列出，那里才是回看的地方。
+  -->
+  <view wx:if="{{milestone}}" class="section">
+    <t-card blur="{{blurOk}}" anim="{{animType}}" clickable bindtap="openTimeline">
+      <view class="row">
+        <view class="stone-main">
+          <text class="eyebrow">今天</text>
+          <view class="sub-title">{{milestone}}</view>
+        </view>
+        <t-tag tone="accent" size="mini" text="里程碑"></t-tag>
+      </view>
+    </t-card>
+  </view>
+
+  <!--
+    去年今日（E4）。Web 首页早有这一块，小程序没有 —— 而小程序是主端。
+    命中才渲染，没命中整块静默隐藏，不写「今天没有回忆」。
+  -->
+  <view wx:if="{{onThisDay}}" class="section">
+    <t-card blur="{{blurOk}}" anim="{{animType}}" clickable bindtap="openOnThisDay">
+      <view class="memory">
+        <image class="memory-photo" src="{{onThisDay.photo.url}}" mode="aspectFill" lazy-load />
+        <view class="memory-copy">
+          <text class="eyebrow">{{onThisDay.eyebrow}}</text>
+          <view class="sub-title">{{onThisDay.petName}}的第 {{onThisDay.day}} 天</view>
+          <text class="small">{{onThisDay.date}} 拍下的<block wx:if="{{onThisDayMore}}">，还有另外 {{onThisDayMore}} 张</block>。</text>
+        </view>
+      </view>
+    </t-card>
+  </view>
+
+  <!-- 没有宠物时才出现的标语 Hero。有宠物时它的位置让给上面那块 -->
+  <view wx:if="{{!pet}}" class="hero hero-{{themeId}}">
+    <view class="hero-top">
+      <text class="eyebrow">PET CREATIVE LAB</text>
+      <view class="hero-theme hit-area" aria-role="button" aria-label="切换外观主题" bindtap="openTheme">◑</view>
+    </view>
+    <view class="title hero-title">让它的每张照片，<text class="accent">都有新身份。</text></view>
+    <text class="muted">选一个玩法，上传照片。一分钟后，带走一件只属于它的作品。</text>
+    <view wx:if="{{decor}}" class="seal">PET
+OK</view>
+  </view>
+
+  <view class="section">
+    <view class="section-title">今天想把它变成什么？</view>
+
+    <t-skeleton wx:if="{{loading}}" type="card" count="3"></t-skeleton>
+
+    <t-notice wx:elif="{{error}}" type="error" message="{{error}}"></t-notice>
+
+    <t-empty
+      wx:elif="{{!plugins.length}}"
+      icon="work"
+      title="玩法正在上架"
+      description="稍后回来看看，新的玩法马上就位。"
+      action-text="重新加载"
+      anim="{{animType}}"
+      decor="{{decor}}"
+      bindaction="load"
+    ></t-empty>
+
+    <block wx:else>
+      <!--
+        A 方向：Hero 16:10 一张大图打头，其余走 2 列 3:4 网格。
+        图就是广告 —— 用户此前看不到成品就被要求付钱，这是方案列为最致命的问题。
+        标题与价格压在渐变遮罩里，价格做成浮标。
+      -->
+      <t-card
+        wx:if="{{heroPlugin}}"
+        variant="hero"
+        clickable
+        blur="{{false}}"
+        anim="{{animType}}"
+        data-id="{{heroPlugin.id}}"
+        data-category="{{heroPlugin.category}}"
+        bindtap="start"
+      >
+        <view class="hero-media">
+          <image class="hero-image" src="{{heroPlugin.samples.heroUrl}}" mode="aspectFill" lazy-load />
+          <view class="hero-veil"></view>
+          <view class="hero-price">{{heroPlugin.pricing.unlockPrice ? '¥' + heroPlugin.pricing.unlockPrice : '免费'}}</view>
+          <view class="hero-caption">
+            <text class="hero-code">{{heroPlugin.code}} · 最多人做</text>
+            <view class="hero-name">{{heroPlugin.name}}</view>
+            <text class="hero-tagline">{{heroPlugin.tagline}}</text>
+          </view>
+        </view>
+      </t-card>
+
+      <view class="cards">
+        <t-card
+          wx:for="{{gridPlugins}}"
+          wx:key="id"
+          variant="{{item.samples.heroUrl ? 'grid' : 'variant'}}"
+          clickable
+          padded="{{!item.samples.heroUrl}}"
+          blur="{{blurOk}}"
+          anim="{{animType}}"
+          data-id="{{item.id}}"
+          data-category="{{item.category}}"
+          bindtap="start"
+        >
+          <!-- 有样例图走图卡；没有的仍用文字卡，不拿空底色冒充成品 -->
+          <view wx:if="{{item.samples.heroUrl}}" class="grid-media">
+            <image class="grid-image" src="{{item.samples.heroUrl}}" mode="aspectFill" lazy-load />
+            <view class="grid-veil"></view>
+            <view class="grid-price">{{item.pricing.unlockPrice ? '¥' + item.pricing.unlockPrice : '免费'}}</view>
+            <view class="grid-caption">
+              <view class="grid-name">{{item.name}}</view>
+              <text class="grid-code">{{item.code}}</text>
+            </view>
+          </view>
+          <block wx:else>
+            <view class="card-top">
+              <text class="small strong">{{item.code}}</text>
+              <t-tag tone="{{item.pricing.unlockPrice ? 'accent' : 'success'}}" size="mini" text="{{item.pricing.unlockPrice ? '¥' + item.pricing.unlockPrice : '免费'}}"></t-tag>
+            </view>
+            <view class="card-title">{{item.name}}</view>
+            <text class="muted">{{item.tagline}}</text>
+            <view class="card-foot">开始制作 →</view>
+          </block>
+        </t-card>
+      </view>
+    </block>
+  </view>
+</view>

@@ -1,0 +1,36 @@
+{
+  "task": "user-requested-frozen-master-remediation-2026-08-19",
+  "templateId": "animal-warrior-cat",
+  "kind": "master",
+  "version": "v02",
+  "status": "generated-pending-visual-review",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputFidelity": "high",
+  "inputPolicy": {
+    "sequential": true,
+    "maxImages": 2,
+    "maxCombinedBytes": 1000000
+  },
+  "inputs": [
+    {
+      "role": "current-self-owned-master",
+      "path": ".tmp/master-remediation-20260819-inputs/animal-warrior-cat-master.jpg",
+      "bytes": 126856,
+      "sha256": "62ab09eae0ba519d200a2aeeb1a2653c965be40e68748f9ababbf4001a78a3dc"
+    }
+  ],
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "output": {
+    "rawPath": "tools/imagegen/out/reference-v1/remediation-20260819/raw/master-animal-warrior-cat.png",
+    "finalPath": "tools/imagegen/out/reference-v1/remediation-20260819/master-candidates/animal-warrior-cat_abyssinian-cat_9x16_v02.png",
+    "width": 720,
+    "height": 1280,
+    "sha256": "7da5e503d3a031d77ec2ea61410f9ef48e9825c34facbad1db9950c4433e78b8"
+  },
+  "prompt": "Use case: identity-preserve precise-object-edit. Asset type: self-owned runtime frozen-master candidate. Image 1 is the current self-owned master and controls the replacement pet or owner identity unless the request explicitly changes the breed. Image 2 is the composition and effect reference. Use it only to correct the requested composition, pose, expression, gaze or visual treatment. Preserve every aspect that is not explicitly changed below, including the scene, camera, crop, palette, lighting, costume, props, spatial relationships and visual medium. Remove every platform badge, AI-generated label, account name, account number, watermark, logo and signature. No extra subjects, duplicate anatomy, human hands on animals, malformed paws, text, logo, watermark or signature. Brighten the current master moderately: lift the cat's face, eyes, mask engravings, blue robe and foreground sleeve by about one stop while retaining highlights, shadows, contrast and cinematic depth. Do not change the Abyssinian identity, pose, sword, mask, costume, crop, background or warm-cool color relationship. Return a 9:16 portrait composition.",
+  "revisedPrompt": "Edit the provided image of the Abyssinian cat warrior, preserving identity and everything not explicitly changed. Keep the same pose, sword, mask, costume, crop, background, camera angle, cinematic lighting, and warm-cool color relationship. Make only a moderate exposure lift of about one stop on the cat’s face, eyes, mask engravings, blue robe, and foreground sleeve while retaining highlights, shadows, contrast, and depth. Remove any platform badges, AI labels, account names/numbers, watermarks, logos, and signatures. No extra subjects, no duplicate anatomy, no human hands on the animal, no malformed paws, no text. Maintain a realistic, high-detail portrait in a 9:16 composition.",
+  "generatedAt": "2026-08-19T05:52:56.804Z"
+}

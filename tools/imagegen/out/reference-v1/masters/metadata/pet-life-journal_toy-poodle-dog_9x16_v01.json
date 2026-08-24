@@ -1,0 +1,99 @@
+{
+  "templateId": "pet-life-journal",
+  "title": "本宠生涯日记",
+  "entryId": "archive",
+  "status": "approved-frozen-master",
+  "version": "v01",
+  "subject": "toy-poodle-dog",
+  "breed": "成年杏色玩具贵宾犬",
+  "selectionRationale": "用成年贵宾犬验证真实校园生活叙事、桌面交互、手写边注和可爱度，同时避免变成幼犬。",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-effect-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/10.png",
+      "sha256": "3a8f51ff6814fbc880e23c125c01693a78b7b7b2d749d16d9f0e4aef61fafc86"
+    },
+    {
+      "role": "pet-identity-reference",
+      "path": "apps/website/public/assets/avatar-poodle.jpg",
+      "sha256": "e15fca17074b5c58cd5d477051ecc00c2d27116ad3f364211f3c350e1e69de2d"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving effect replication. Asset type: internal self-owned pet template master, exact final canvas 720x1280 (9x16). Use exactly two input images. Image 1 is the third-party effect reference used only for this internal master-production pass. Image 2 is the sole pet identity reference. Replace only the principal animal or person subject in Image 1 with the exact pet from Image 2. Remove every residual face, hair, skin, hand, paw, limb, coat marking or silhouette from the original subject. Image 2 controls only pet identity: species, breed, coat, markings, ear shape, eye colour, actual age and natural healthy proportions. Image 1 controls every transferred visual detail: composition, crop, camera, perspective, subject position, pose, action, expression, gaze, lighting, palette, rendering medium, brushwork, line quality, texture, clothing, props, text layout and subject-to-scene contacts. Scene-change budget is 0%. Do not redesign, reinterpret, recolour, simplify, clean up or add background content. Translate the original pose, action and expression to correct animal anatomy with only the smallest contact-boundary adjustment required by the new species. Never create a human face, human skin, human hands or fingers. Keep paws anatomically natural and keep clothing and props physically attached. The replacement pet must be rendered completely in Image 1's medium and detail language, including its face, eyes, muzzle, ears and fur. Never paste a photographic pet face into an illustration or leave realistic photographic facial texture inside a painted scene. Do not copy Image 2's pose, expression, background, lighting or photographic rendering. Preserve the pet's adult age and natural breed proportions. Do not turn it into a puppy or kitten, enlarge the head or eyes, shorten the muzzle or body, or force a generic baby face. Keep it healthy, friendly and immediately appealing through the transferred expression and art direction, never skinny, gaunt, old, stern, aggressive, uncanny or strange. Keep the complete meaningful text, clothing, landmarks and distinctive props from Image 1 except for the explicit rights-safe text or emblem replacements stated below. Remove third-party platform watermarks, account IDs, signatures and unrelated brand marks. No new logo or watermark. The replacement identity is the exact adult apricot Toy Poodle from Image 2. Preserve the warm apricot tight-curled coat, round dark eyes, small black nose, rounded muzzle, floppy curly ears and compact healthy adult body. Preserve Image 1's exact warm campus-at-sunset photograph: old stone university building, glowing windows, lawn and path, large tree framing the right edge, outdoor wooden table, open notebook, pen, laptop, soft backlight, film-like warmth and hand-drawn pastel annotations distributed around the subject. Replace only the seated young woman with the exact adult Toy Poodle from Image 2. Keep the same lower-right seated position, gentle downward focused expression and study interaction. One natural front paw rests by the open notebook and pen while the other is beside the laptop; no human arms, hands, hair or clothing remain. Keep the laptop, notebook, pen and table in their exact relationships. Replace the laptop brand mark with one small plain paw icon in the same location and size. Preserve the annotation style, arrows, stars, hearts, clouds and placement. Keep or set the readable annotation phrases to exactly: 'soft mornings', 'new day, new goals', 'study mode', 'good things take time', 'a little progress every day', 'focus time', 'snack later?', 'you got this!', 'PET LIFE JOURNAL'. Do not add other long copy. Keep exactly the requested pet identity throughout. Correct animal anatomy only: no duplicate or fused limbs, extra ears, warped eyes, malformed mouth, floating tail, broken garment boundaries or residual original subject.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "approved-by-user",
+    "checks": {
+      "petIdentity": "pass",
+      "adultAgeAndCuteness": "pass",
+      "poseExpressionAndAction": "pass",
+      "sceneComposition": "pass",
+      "faceAndMediumConsistency": "pass",
+      "anatomyAndContacts": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [],
+    "finalApproval": "approved",
+    "precheckedAt": "2026-08-15T14:40:05.608Z",
+    "approvedAt": "2026-08-17T09:47:48+08:00"
+  },
+  "generatedAt": "2026-08-14T10:18:47.798Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/pet-life-journal_toy-poodle-dog_9x16_v01.png",
+    "rawPath": "tools/imagegen/out/reference-v1/candidates/raw/pet-life-journal_toy-poodle-dog_9x16_v01.png",
+    "sha256": "872a072cf5973e13a37a69baf8aee2abc5912e6dea371036d689af7bf854b182"
+  },
+  "candidatePath": "tools/imagegen/out/reference-v1/candidates/pet-life-journal_toy-poodle-dog_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/pet-life-journal_toy-poodle-dog_9x16_v01.webp",
+  "masterSha256": "d7a87fba5d3d2fe7af7724770c52690265b3aad1d849de88cfdbd53270544a6e",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-17T09:47:48+08:00",
+    "note": "用户通过第三批待审批总览中的本宠生涯日记 v01，并要求进入后续流程。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/pet-life-journal_toy-poodle-dog_9x16_v01.webp",
+      "sha256": "d7a87fba5d3d2fe7af7724770c52690265b3aad1d849de88cfdbd53270544a6e"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate",
+      "unapproved-candidate"
+    ]
+  },
+  "qualityBaseline": {
+    "required": [
+      "one healthy adult apricot Toy Poodle with stable curly coat, dark eyes and mature compact proportions",
+      "natural seated study interaction with green sweater, notebook, pen, laptop and tabletop contacts intact",
+      "warm campus sunset, old stone building, lawn, path, tree frame and hand-drawn journal annotations",
+      "plain paw laptop emblem, readable key annotation layout and exact 720x1280 portrait framing"
+    ],
+    "reject": [
+      "residual woman, human face, hair, skin, hands or fingers anywhere in the composition",
+      "puppy or plush-toy proportions, oversized head or eyes, malformed paws, floating pen or broken sweater",
+      "copied laptop brand mark, platform watermark, account ID, unrelated brand text or signature",
+      "changed campus, sunset, table composition, annotation rhythm, crop or warm film-like palette"
+    ]
+  }
+}

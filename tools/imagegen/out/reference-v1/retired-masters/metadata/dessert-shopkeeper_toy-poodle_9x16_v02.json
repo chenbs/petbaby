@@ -1,0 +1,104 @@
+{
+  "templateId": "dessert-shopkeeper",
+  "title": "甜品饮品主理人",
+  "entryId": "career",
+  "status": "approved-frozen-master",
+  "subject": "toy-poodle",
+  "breed": "玩具贵宾犬",
+  "revision": {
+    "version": "v02",
+    "sourceVersion": "v01",
+    "reviewFinding": "v01 左上招牌含疑似错误英文；画面、宠物身份、可爱度和解剖均保留。",
+    "scope": "targeted-fix"
+  },
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "previous-master-candidate-edit-target",
+      "path": "tools/imagegen/out/reference-v1/candidates/dessert-shopkeeper_toy-poodle_9x16_v01.png",
+      "sha256": "588ac55353b9ab91161fa495fd0695b15eba129990eefc25378d9a57fa42811f"
+    },
+    {
+      "role": "pet-identity-reference",
+      "path": "apps/website/public/assets/avatar-poodle.jpg",
+      "sha256": "e15fca17074b5c58cd5d477051ecc00c2d27116ad3f364211f3c350e1e69de2d"
+    }
+  ],
+  "upstreamEffectReference": {
+    "role": "third-party-effect-reference-internal-master-production-only",
+    "path": "apps/website/public/assets/example/1786367409484.png",
+    "sha256": "9831ea4cba433e7936949314142c54cb645a36636bf81e01adbfdb070eb03eb3"
+  },
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: text-localization with identity preservation. Produce a vertical 9:16 master candidate at exactly 720x1280 pixels from exactly two input images. Image 1 is the edit target. Keep its camera, crop, pink strawberry patisserie, lighting, depth of field, Toy Poodle pose and identity, face, eyes, curls, cake hat, lace bow, flowers, strawberries, cakes, glass cloche, basket, counter, cake server and every other visible detail unchanged. Change only the text on the upper-left framed wall sign. Replace its current heading with the single exact uppercase word 'STRAWBERRY', spelled S-T-R-A-W-B-E-R-R-Y. The final sign must visibly and accurately read STRAWBERRY. Use a clean elegant dark-pink serif style that naturally matches the existing sign. Remove any incorrect letters or extra heading words from that sign. Tiny ornamental lines below it may be omitted if they cannot be rendered accurately. Image 2 is the identity reference for verification. Preserve the same warm apricot Toy Poodle with tight curls, round dark eyes, small black nose, rounded teddy-bear muzzle, floppy curly ears and compact youthful build. Do not replace, restyle or reshape the pet. This is a single targeted text correction, not a scene redesign. No other scene changes are required. Keep exactly one pet. No new text elsewhere, no gibberish, brand, logo, watermark, signature, human hand, extra limb or fused object.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "approved-by-user",
+    "checks": {
+      "petIdentity": "pass",
+      "cuteness": "pass",
+      "effectComposition": "pass",
+      "anatomy": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [],
+    "finalApproval": "approved",
+    "approvedAt": "2026-08-14T15:00:00+08:00"
+  },
+  "generatedAt": "2026-08-13T04:14:21.982Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/dessert-shopkeeper_toy-poodle_9x16_v02.png",
+    "sha256": "d2efd6d0153a3f383aa87ecfff46bc29c628759cd64d0bec9f4fd22f7596d7c5"
+  },
+  "candidatePath": "tools/imagegen/out/reference-v1/candidates/dessert-shopkeeper_toy-poodle_9x16_v02.png",
+  "masterPath": "tools/imagegen/out/reference-v1/retired-masters/dessert-shopkeeper_toy-poodle_9x16_v02.png",
+  "masterSha256": "d2efd6d0153a3f383aa87ecfff46bc29c628759cd64d0bec9f4fd22f7596d7c5",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-14T15:00:00+08:00",
+    "note": "用户确认甜品主理人 v02 候选通过并保存为母版。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/dessert-shopkeeper_toy-poodle_9x16_v02.png",
+      "sha256": "d2efd6d0153a3f383aa87ecfff46bc29c628759cd64d0bec9f4fd22f7596d7c5"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate",
+      "unapproved-candidate"
+    ]
+  },
+  "qualityBaseline": {
+    "required": [
+      "pink strawberry patisserie, warm light, shallow depth of field and original counter composition preserved",
+      "adult, healthy and cute apricot Toy Poodle with tight curls, round eyes and teddy-bear muzzle",
+      "cake hat, lace bow, flowers, strawberries, cakes, glass cloche, basket and cake server preserved",
+      "upper-left framed sign visibly and accurately reads STRAWBERRY",
+      "exact 720x1280 portrait framing"
+    ],
+    "reject": [
+      "scene redesign, removed dessert props, changed pose or unrelated animal",
+      "skinny, gaunt, elderly, stern, aggressive, strange or over-kittenized pet",
+      "gibberish text, extra sign, brand logo, watermark or signature",
+      "duplicate limbs, fused objects, malformed hat, bow or cake boundary"
+    ]
+  }
+}

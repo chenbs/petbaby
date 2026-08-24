@@ -1,0 +1,69 @@
+{
+  "templateId": "exaggerated-expression",
+  "title": "夸张表情头像",
+  "entryId": "fun",
+  "status": "approved-frozen-master",
+  "subject": "ragdoll-cat",
+  "breed": "布偶猫",
+  "revision": {
+    "version": "v02",
+    "supersedes": "exaggerated-expression_ragdoll-cat_9x16_v01.png",
+    "reviewFinding": "v01 仍是写实毛发叠加轻笔触，整体手绘感不足。",
+    "scope": "full-image-hand-drawn-style-transfer"
+  },
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-effect-and-hand-drawn-medium-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/1786368480133.png",
+      "sha256": "02e42a61c50c456fa17edd95a1c52f5f132ce482e343ce37c595e7b407708330"
+    },
+    {
+      "role": "pet-identity-only-reference",
+      "path": "apps/website/public/assets/work-ragdoll.jpg",
+      "sha256": "cadd89cfd6150cb0c9560bffec9b7c5a7e80d7126032eb7ecab4933cb836ed9e"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: style-transfer with pet identity preservation. Create a vertical 9:16 hand-drawn comic pet expression portrait at exactly 720x1280 pixels from exactly two input images. Image 1 is the primary effect, expression, line-work and physical-medium reference. Preserve its extreme three-quarter close-up, tilted head, raised eyebrow, sideways upward glance, open cheeky grin, sparse warm off-white paper and mischievous comic timing. Replace the Doberman completely with the Ragdoll cat from Image 2. The entire cat must look unmistakably hand drawn, not like a photograph with a painterly filter. Construct the silhouette, ears, cheeks, mask, muzzle, mouth, teeth and chest using visible imperfect ink contours, broken sketch lines, broad dry-brush strokes, flat painted colour blocks, cross-hatching and exposed paper gaps matching Image 1. Simplify long fur into large directional tufts and graphic brush shapes; do not render individual realistic hairs. Rebuild the face in the same graphic medium. Draw the blue-grey eyes as simplified illustrated shapes with hand-painted pupils and only small flat highlights. Draw the dark nose, lips, gums and teeth as matte ink-and-paint forms with uneven handmade edges. No glassy photographic eyeballs, wet realistic nose, realistic dental enamel, smooth skin shading or camera-resolved whiskers. Image 2 is identity-only. Preserve the cream long coat, deep seal-brown mask and ears, blue-grey eyes, broad fluffy cheeks, dark nose and full chest of the same Ragdoll cat, but translate every feature into Image 1's line-and-brush language. Do not copy Image 2's photographic lighting, fur microtexture, lens detail or realistic surface rendering. Keep the cat youthful, rounded and instantly lovable. The grin should be teasing and funny, with a small readable row of simplified feline teeth, never vicious, uncanny or distorted. Reject photorealism, semi-photorealistic fur, digital airbrush realism, 3D rendering, glossy organs, photo cut-out edges, text, logo, watermark and signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "approved-by-user",
+    "checks": {
+      "petIdentity": "pass",
+      "cuteness": "pass",
+      "effectComposition": "pass",
+      "subjectMediumConsistency": "pass",
+      "faceMediumConsistency": "pass",
+      "anatomy": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [
+      "布偶猫全身已由明显线稿、干刷、色块和纸张留白构成；眼鼻、嘴部、牙齿与长毛均为手绘形式，不再是写实毛发叠加滤镜。"
+    ],
+    "finalApproval": "approved",
+    "approvedAt": "2026-08-13T00:00:00.000+08:00"
+  },
+  "generatedAt": "2026-08-13T07:16:40.453Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/exaggerated-expression_ragdoll-cat_9x16_v02.png",
+    "sha256": "c8b1e59406f6fc88e7976cad20f24024c4eb939a73fc4169152ef342e072512b"
+  },
+  "candidatePath": "tools/imagegen/out/reference-v1/candidates/exaggerated-expression_ragdoll-cat_9x16_v02.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/exaggerated-expression_ragdoll-cat_9x16_v02.png",
+  "masterSha256": "c8b1e59406f6fc88e7976cad20f24024c4eb939a73fc4169152ef342e072512b",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-13T00:00:00.000+08:00",
+    "note": "用户确认 01 夸张表情头像效果通过并要求保存母版。运行时仅使用自有母版和用户宠物身份图。"
+  }
+}

@@ -1,0 +1,55 @@
+@import "../shared.wxss";
+
+.mask {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--page-padding);
+  /* --mask 由 textPrimary 降透明度派生：亮色主题得到深遮罩，暗色主题得到浅遮罩 */
+  background: var(--mask);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: mask-in var(--transition-duration) var(--transition-easing);
+}
+
+@keyframes mask-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.dialog {
+  display: grid;
+  width: 100%;
+  max-width: 620rpx;
+  box-sizing: border-box;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border: var(--card-border);
+  border-radius: var(--card-radius);
+  background: var(--card-background);
+  box-shadow: var(--shadow-float);
+  animation: dialog-in var(--dur-slow) var(--ease-out);
+}
+
+@keyframes dialog-in {
+  from { opacity: 0; transform: translateY(24rpx) scale(.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.dialog-title {
+  color: var(--text-primary);
+  font-size: var(--font-h3);
+  font-weight: var(--fw-bold);
+}
+
+.dialog-actions {
+  display: flex;
+  margin-top: var(--space-2);
+  gap: var(--space-3);
+}

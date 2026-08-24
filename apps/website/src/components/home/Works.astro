@@ -1,0 +1,77 @@
+---
+/*
+ * 11. 作品展示区：7 格风格缩略带（摩奇）+ 11 品种瀑布流。
+ *
+ * 编号 11 是内容映射表的序号（规格 6 章新增区块），位置刻意放在流程之后、
+ * 口碑之前 —— 先给「真实产出长什么样」，再给评价，说服链条才顺。
+ *
+ * 缩略带全部是同一只样板宠物摩奇：并列比较的槽位必须锁定主体（规格 10.1），
+ * 换宠物用户比较的就是宠物而不是风格。瀑布流反过来，一品种一张。
+ *
+ * 瀑布流不给 stagger（偏离 ⑩）：CSS columns 下 DOM 顺序与视觉列不对应，
+ * 按 nth-child 给延迟会错峰错到别的列上，所以这里不传 data-delay。
+ */
+const STRIP = [
+  { src: "/assets/style-warm-film.jpg", alt: "暖调胶片风格的摩奇", caption: "暖调胶片" },
+  { src: "/assets/style-paper-cut.jpg", alt: "纸艺拼贴风格的摩奇", caption: "纸艺拼贴" },
+  { src: "/assets/style-studio.jpg", alt: "克制影棚风格的摩奇", caption: "克制影棚" },
+  { src: "/assets/style-fantasy.jpg", alt: "轻幻想风格的摩奇", caption: "轻幻想" },
+  { src: "/assets/play-portrait.jpg", alt: "肖像封面玩法的摩奇", caption: "肖像封面" },
+  { src: "/assets/play-storybook.jpg", alt: "绘本主角玩法的摩奇", caption: "绘本主角" },
+  { src: "/assets/play-magazine.jpg", alt: "杂志大片玩法的摩奇", caption: "杂志大片" },
+];
+
+/* 混比例是刻意的 —— 等高图会让瀑布流退化成规整网格 */
+const WORKS = [
+  { src: "/assets/work-ragdoll.jpg", alt: "布偶猫的暖调胶片风格成品", w: 900, h: 1200, name: "布偶猫", meta: "暖调胶片" },
+  { src: "/assets/work-devon.jpg", alt: "德文卷毛猫的杂志大片风格成品", w: 1600, h: 1200, name: "德文卷毛猫", meta: "杂志大片" },
+  { src: "/assets/work-maine.jpg", alt: "缅因猫的克制影棚风格成品", w: 1200, h: 1200, name: "缅因猫", meta: "克制影棚" },
+  { src: "/assets/work-abyssinian.jpg", alt: "阿比西尼亚猫的轻幻想风格成品", w: 900, h: 1200, name: "阿比西尼亚猫", meta: "轻幻想" },
+  { src: "/assets/work-dragonli.jpg", alt: "田园狸花猫的纸艺拼贴风格成品", w: 900, h: 1200, name: "田园狸花猫", meta: "纸艺拼贴" },
+  { src: "/assets/work-golden.jpg", alt: "金毛犬的肖像封面风格成品", w: 900, h: 1200, name: "金毛犬", meta: "肖像封面" },
+  { src: "/assets/work-poodle.jpg", alt: "泰迪的绘本主角风格成品", w: 1200, h: 1200, name: "泰迪", meta: "绘本主角" },
+  { src: "/assets/work-border.jpg", alt: "边境牧羊犬的暖调胶片风格成品", w: 900, h: 1200, name: "边境牧羊犬", meta: "暖调胶片" },
+  { src: "/assets/work-shepherd.jpg", alt: "德国牧羊犬的克制影棚风格成品", w: 1600, h: 1200, name: "德国牧羊犬", meta: "克制影棚" },
+  { src: "/assets/work-shiba.jpg", alt: "柴犬的纸艺拼贴风格成品", w: 900, h: 1200, name: "柴犬", meta: "纸艺拼贴" },
+  { src: "/assets/work-mixed.jpg", alt: "中华田园犬的肖像封面风格成品", w: 900, h: 1200, name: "中华田园犬", meta: "肖像封面" },
+];
+---
+
+<section class="band section" id="works">
+  <div class="container">
+    <div class="section-head split reveal">
+      <div>
+        <p class="eyebrow">真实产出</p>
+        <h2 class="h2 h2-sm">同一只猫<br />七种风格</h2>
+      </div>
+      <p class="section-note">
+        下面这七张全部由同一只样板宠物「摩奇」生成 —— 换了宠物，
+        比较的就是宠物而不是风格。
+      </p>
+    </div>
+
+    <div class="thumb-strip reveal">
+      {
+        STRIP.map((item) => (
+          <figure><span class="thumb-image"><img src={item.src} alt={item.alt} width="900" height="1200" loading="lazy" decoding="async" /></span><figcaption>{item.caption}</figcaption></figure>
+        ))
+      }
+    </div>
+
+    <div class="works-divider reveal">
+      <h3 class="h3">十一个品种，各来一张</h3>
+      <p class="body-text">长毛短毛、大型小型、纯种土猫土狗都试过。全部是真实生成结果，没有占位图。</p>
+    </div>
+
+    <div class="masonry">
+      {
+        WORKS.map((work) => (
+          <figure class="work-card reveal">
+            <img src={work.src} alt={work.alt} width={work.w} height={work.h} loading="lazy" decoding="async" />
+            <figcaption><span class="work-name">{work.name}</span><span class="work-meta">{work.meta}</span></figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,18 @@
+<view wx:if="{{visible}}" class="mask" catchtouchmove="noop" bindtap="handleClose">
+  <view class="sheet" catchtap="noop">
+    <view wx:if="{{title}}" class="sheet-title">{{title}}</view>
+    <view
+      wx:for="{{actions}}"
+      wx:key="key"
+      class="action {{item.danger ? 'action-danger' : ''}} {{item.disabled ? 'action-off' : ''}}"
+      data-index="{{index}}"
+      aria-role="button"
+      hover-class="{{item.disabled ? 'none' : 'action-hover'}}"
+      catchtap="handleSelect"
+    >
+      <view class="action-label">{{item.label}}</view>
+      <text wx:if="{{item.description}}" class="small">{{item.description}}</text>
+    </view>
+    <view class="action action-cancel" aria-role="button" catchtap="handleClose">取消</view>
+  </view>
+</view>

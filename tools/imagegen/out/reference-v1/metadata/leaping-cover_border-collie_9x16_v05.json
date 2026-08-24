@@ -1,0 +1,65 @@
+{
+  "templateId": "leaping-cover",
+  "title": "腾空跳跃封面",
+  "entryId": "action",
+  "status": "master-candidate-pending-user-approval",
+  "subject": "border-collie",
+  "breed": "边境牧羊犬",
+  "revision": {
+    "version": "v05",
+    "supersedes": "leaping-cover_border-collie_9x16_v04.png",
+    "reviewFinding": "v04 已消除照片式眼鼻，但面部厚涂颗粒过大，不够线条化、细腻和卡通可爱。",
+    "scope": "fine-watercolor-cartoon-face-style-transfer"
+  },
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "previous-master-candidate-edit-target",
+      "path": "tools/imagegen/out/reference-v1/candidates/leaping-cover_border-collie_9x16_v04.png",
+      "sha256": "07642dbd79383fe8d040c01b94f094c1b8fb013c6bcdb4fbb1b52233564c8568"
+    },
+    {
+      "role": "third-party-watercolor-cartoon-effect-reference-internal-master-production-only",
+      "path": "apps/website/public/assets/example/223c5d78-2ba2-49ff-b35e-8c247fd53b20.jpg",
+      "sha256": "ee04f9b8c5a48fe8ad768ec5d51fc5463093f437bf697899d1ee7821e6151a51"
+    },
+    {
+      "role": "pet-identity-only-reference",
+      "path": "apps/website/public/assets/work-border.jpg",
+      "sha256": "8862d1dc48584f73309eac0890afb3367759dd131c681de970976b52a561fc50"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: precise face-style edit with pet identity preservation. Create a vertical 9:16 illustrated pet action cover at exactly 720x1280 pixels from exactly three input images. Image 1 is the edit target. Preserve its exact airborne pose, composition, body size, four limbs, foreground paws, body markings, turquoise field, magenta-purple lower strokes, orange-yellow accents and every part below the neck. The body, action and scene are approved and must not be redesigned. Image 2 is the authoritative effect reference for facial delicacy, joyful expression and illustration language. Study its soft refined face, happy curved eyes, short rounded muzzle, youthful charm, controlled line accents and colourful painted atmosphere. Do not copy its original breed or watermark. Repaint the complete face as delicate contemporary watercolour-and-ink illustration, not thick impasto and not a physical realistic animal portrait. Use fine tapered ink contours, small controlled fur-line groups, translucent watercolour washes, soft colour blooms, subtle paper grain and clean cel-like shadow shapes. Keep facial detail fine-grained and refined at close viewing. Use a slightly cartooned, manga-like facial design: rounder cheeks, a shorter softer muzzle, clear appealing eye shapes, simplified planes and a friendly youthful expression. Preserve breed identity without preserving photographic realism. The eyes, nose and mouth must be drawn illustration forms. Use clean linework and a few flat watercolour values; avoid spherical glass depth, wet reflections, pores, realistic lens highlights and sculpted 3D shading. Strictly avoid coarse pigment chunks, palette-knife ridges on the face, canvas relief, cracked paint, gritty granulation, thick oil paint, photoreal fur, camera-resolved whiskers, realistic-world lighting, airbrushed 3D rendering or a pasted photo face. For the Border Collie, draw two friendly curved smiling eyes with fine dark-brown ink lines and a very light warm-brown watercolour shadow; keep them expressive rather than blank. Draw the nose as a small simplified matte blue-charcoal shape with a thin uneven ink contour. Draw the open smile, tongue and a few teeth as clean coral, cream and charcoal watercolour shapes with delicate line edges, no wet photographic mouth. Image 3 is identity-only. Preserve the narrow white facial blaze, white muzzle, black mask, warm-brown eye identity, semi-upright ears and compact youthful Border Collie proportions. Convert all facial coat boundaries into fine ink-and-watercolour marks; do not import photographic texture. Increase cuteness without becoming infantile: slightly fuller cheeks, shorter muzzle, cheerful smile, relaxed brows and balanced ears. Blend the fine watercolour face naturally into the approved painted neck using a narrow transition band of smaller strokes. Keep exactly one dog with correct anatomy. No text, logo, platform mark, watermark or signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "prechecked-pending-user-approval",
+    "checks": {
+      "petIdentity": "pass",
+      "cuteness": "pass",
+      "effectComposition": "pass",
+      "faceLineDelicacy": "pass",
+      "watercolorCartoonStyle": "pass",
+      "physicalRealismReduction": "pass",
+      "anatomy": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [
+      "面部由细线、短排线和轻薄水彩色块构成，颗粒度较 v04 明显降低；眯笑眼、短圆口鼻和明快表情增强了卡通感与可爱度。"
+    ],
+    "finalApproval": "pending-user"
+  },
+  "generatedAt": "2026-08-13T10:16:24.676Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/candidates/leaping-cover_border-collie_9x16_v05.png",
+    "sha256": "c5aef7a3eab2c2fd8129256a3a23cba753b0e143f4d899b17a2a37a28d0d3839"
+  }
+}

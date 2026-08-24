@@ -1,0 +1,63 @@
+.skeleton {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.skeleton-grid {
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+}
+
+.skeleton-list .sk-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/*
+ * 骨架色改用 --skeleton-base（方案 2.7）：原先取 --divider 会随分割线一起调，
+ * 而分割线要够明显、骨架屏要够安静，两者需求相反。
+ * 该 token 由文字主色降透明度派生，因此暗色主题下不会出现比底色更亮的白斑。
+ */
+.sk-shimmer {
+  background: var(--skeleton-base);
+  animation: sk-breathe 1.4s ease-in-out infinite;
+}
+
+@keyframes sk-breathe {
+  0%, 100% { opacity: .55; }
+  50% { opacity: 1; }
+}
+
+/* 与 t-card 的 grid/hero 卡型同圆角，加载完成时不出现圆角跳变 */
+.sk-block {
+  height: 220rpx;
+  border-radius: var(--radius-md);
+}
+
+.sk-tile {
+  aspect-ratio: 1;
+  border-radius: var(--radius-sm);
+}
+
+.sk-avatar {
+  width: 96rpx;
+  height: 96rpx;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.sk-lines {
+  display: grid;
+  flex: 1;
+  gap: var(--space-2);
+}
+
+.sk-line {
+  height: 26rpx;
+  border-radius: var(--radius-pill);
+}
+
+.sk-line-short {
+  width: 55%;
+}

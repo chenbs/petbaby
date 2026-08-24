@@ -1,0 +1,187 @@
+/*
+ * 岛首屏的 HUD 样式。
+ *
+ * **零硬编码，全走 token**（门禁 17 = 既有第 3 项，作用到分包页面）：
+ * Canvas 内像素不受 token 约束，但 HUD 是 WXML，必须走变量。
+ * 唯一的例外是岛自己的内容变量 `--island-*`，由 island/hud-vars.js 内联注入 ——
+ * 与 `--scene-*`（互动纪念场景）同一处理：内容属性不进主题体系。
+ */
+.island {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.scene {
+  display: block;
+}
+
+/* ---------- 顶部一行 ---------- */
+.hud-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  padding-left: var(--page-padding);
+  padding-right: var(--page-padding);
+}
+
+/*
+ * 奶白底板。**不是可选项**（2.5.1 实算：16 种昼夜×天气组合下无任何单一字色全域达标）。
+ * 门禁 16 既校验合成后对比度、也断言这个类存在 —— 防它被「优化」掉。
+ */
+.plate {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  max-width: 100%;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+  background: var(--island-plate);
+  box-shadow: var(--shadow-card);
+}
+
+.plate-note {
+  border-radius: var(--radius-lg);
+  background: var(--island-plate-solid);
+}
+
+.plate-name {
+  color: var(--island-ink);
+  font-size: var(--body-size);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-tight);
+}
+
+.plate-dot,
+.plate-days {
+  color: var(--island-ink-soft);
+  font-size: var(--small-size);
+  line-height: var(--lh-sm);
+}
+
+.plate-weather {
+  color: var(--island-ink);
+  font-size: var(--small-size);
+  font-weight: var(--fw-medium);
+}
+
+/* ---------- 覆盖层的说明与提示 ---------- */
+.hud-note,
+.hud-hint,
+.hud-bag {
+  position: absolute;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  padding-left: var(--page-padding);
+  padding-right: var(--page-padding);
+}
+
+.hud-note {
+  top: var(--space-8);
+}
+
+/* 提示落在动作条上方：那里视线正好经过，且不挡宠物 */
+.hud-hint {
+  bottom: var(--space-8);
+}
+
+.hud-bag {
+  bottom: calc(var(--space-8) + var(--space-6));
+}
+
+.bag-item {
+  margin-right: var(--space-3);
+  color: var(--island-ink);
+  font-size: var(--small-size);
+}
+
+.hud-error {
+  position: absolute;
+  top: var(--space-8);
+  left: var(--page-padding);
+  right: var(--page-padding);
+}
+
+/* ---------- 右下悬浮按钮 ---------- */
+.fab {
+  position: absolute;
+  right: var(--page-padding);
+  bottom: calc(var(--space-8) + var(--space-7));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  background: var(--island-plate-solid);
+  box-shadow: var(--shadow-float);
+}
+
+.fab-hover {
+  box-shadow: var(--shadow-press);
+}
+
+.fab-glyph {
+  color: var(--island-ink);
+  font-size: var(--font-h3);
+}
+
+/* ---------- 底部动作条 ---------- */
+.hud-actions {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--space-5) + env(safe-area-inset-bottom));
+  display: flex;
+  justify-content: center;
+  padding-left: var(--page-padding);
+  padding-right: var(--page-padding);
+}
+
+.dock {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--island-plate-solid);
+  box-shadow: var(--shadow-float);
+}
+
+/*
+ * 每个动作 ≥88rpx 命中（.hit-area 提供下限，与 Canvas 热区同一口径）。
+ * 胶囊而非拟物木牌：后者是重度手游语言，与既有 token 体系无法共存（诊断 7）。
+ */
+.dock-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-0);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+}
+
+.dock-hover {
+  opacity: .85;
+}
+
+.dock-label {
+  color: var(--island-ink);
+  font-size: var(--body-size);
+  font-weight: var(--fw-medium);
+}
+
+/*
+ * 剩余次数。**这不是体力值** —— 它没有回复机制、不可付费恢复、用完的措辞是
+ * 「今天的草丛都看过了」（见 index.js 的 limitHintOf）。显示剩余数是为了让用户
+ * 知道还能玩几下，而不是制造消耗感，所以字号压到最小、不加进度条（4.1 #5）。
+ */
+.dock-left {
+  color: var(--island-ink-soft);
+  font-size: var(--eyebrow-size);
+}

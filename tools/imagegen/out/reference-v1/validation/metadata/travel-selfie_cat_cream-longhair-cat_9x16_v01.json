@@ -1,0 +1,48 @@
+{
+  "jobId": "travel-selfie_cat_cream-longhair-cat",
+  "templateId": "travel-selfie",
+  "status": "generated-pending-joint-approval",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "sourceMaster": {
+    "role": "self-owned-frozen-master",
+    "path": "tools/imagegen/out/reference-v1/masters/travel-selfie_devon-kitten_9x16_v05.webp",
+    "sha256": "7cddcdca2c12a8c89b95720bb1876a3bb5302ca85a410171a8e1f667d975b723"
+  },
+  "petIdentityReference": {
+    "role": "new-pet-identity-reference",
+    "identityId": "cream-longhair-cat",
+    "species": "cat",
+    "breed": "cream long-haired cat",
+    "path": "tools/imagegen/out/source/cat-cream.jpg",
+    "sha256": "db5fc390f9cbf4f5ee0eee38850e28012a0953a98c148e7df5b354a539dab7e9"
+  },
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving template transfer. Create a vertical 9:16 high-fidelity pet replacement from exactly two input images, composed for an exact final size of 720x1280 pixels. Image 1 is a frozen self-owned production master created previously by our team. It is the sole composition, scene, styling and layout reference for this request. No third-party effect reference is included at runtime. Image 2 is the sole pet identity reference. Preserve Image 1's the close ultra-wide tropical island travel-selfie composition, foreground selfie-paw perspective, happy holiday story, distant volcano, temple-like landmark, turquoise water, straw hat, flowers and colourful floral shirt. Do not redesign the environment or turn it into a generic scene. Allow an optional scene-change budget of approximately 5% to 20%. You may naturally adjust only secondary scenery, small decorations, context-equivalent props, materials or colours when the adjustment clearly fits the current scene. Every adjustment must preserve the same semantics, perspective, scale, lighting and visual style. If no replacement is clearly better, keep the master unchanged. Never force changes merely to meet a percentage. Remove every depiction of the master pet from Image 1 and replace it with the exact cream long-haired cat from Image 2. Preserve the pale cream long coat, soft cream points, blue eyes, pink nose, triangular ears, fluffy tail and full healthy body. Image 2 controls pet identity and overrides the sample pet shown in the master. The replacement cat must look youthful, healthy, rounded and irresistibly cute at first glance, with soft full cheeks, friendly bright eyes and appealing proportions for a young audience. Keep the recognisable breed anatomy. Never make the pet skinny, elongated, angular, gaunt, stern, aggressive, strange, elderly-looking or uncanny. Preserve the believable selfie action: one front paw extends toward the camera while the other remains naturally connected to the body. Keep the landmark readable behind the pet. Keep the straw hat, flowers and floral shirt. They may receive small fit or colour adjustments for the new pet but must not disappear. No new text is required. Preserve any incidental scene text only when it remains short, legible and appropriate. Keep exactly one pet identity throughout the image and no unrelated animal. Correct anatomy only: no duplicate or fused limbs, extra ears, warped eyes, broken clothing boundaries or human hands. Preserve rather than delete meaningful clothing, landmarks, distinctive props and text layout from the master. No platform UI, brand logo, known IP, watermark or signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "pre-reviewed-pending-user-approval",
+    "checks": {
+      "petIdentity": "pass",
+      "cuteness": "pass",
+      "masterComposition": "pass",
+      "anatomy": "pass",
+      "text": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [],
+    "preReviewedAt": "2026-08-13T02:52:16.680Z",
+    "finalApproval": "pending-user"
+  },
+  "generatedAt": "2026-08-13T02:07:43.240Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation/travel-selfie_cat_cream-longhair-cat_9x16_v01.png",
+    "sha256": "ab190e2721690cfc24dfce3db9e7aafaee2147ad5553052c343932c489954e6d"
+  }
+}

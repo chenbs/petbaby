@@ -1,0 +1,19 @@
+<!--
+  插画改为纯 CSS 单色线条（UI 重构方案 3.6：禁 emoji）。
+  不走 SVG —— .wxss 不能外链 SVG；内嵌 data URI 里的色值既过不了零硬编码门禁，
+  也无法跟随主题变化。纯 CSS 图形吃 currentColor，四套皮肤自动适配。
+  每个图形由 3 个空 view 拼出，具体形状见 index.wxss。
+-->
+<view class="empty">
+  <view class="empty-art empty-art-{{icon}} {{clay ? 'empty-art-on-clay' : ''}}">
+    <!-- 黏土底座放在 .empty-art 内部：它已是 position:relative，可直接 inset:0 对齐 -->
+    <view wx:if="{{clay}}" class="empty-plinth"></view>
+    <view class="empty-part empty-part-a"></view>
+    <view class="empty-part empty-part-b"></view>
+    <view class="empty-part empty-part-c"></view>
+    <view wx:if="{{decor}}" class="empty-dots"></view>
+  </view>
+  <view class="empty-title">{{title}}</view>
+  <text wx:if="{{description}}" class="muted center">{{description}}</text>
+  <t-button wx:if="{{actionText}}" type="primary" anim="{{anim}}" bindtap="handleAction">{{actionText}}</t-button>
+</view>

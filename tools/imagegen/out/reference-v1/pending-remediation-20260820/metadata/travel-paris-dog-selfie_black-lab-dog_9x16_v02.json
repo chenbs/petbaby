@@ -1,0 +1,66 @@
+{
+  "templateId": "travel-paris-dog-selfie",
+  "entryId": "travel",
+  "title": "巴黎街景自拍",
+  "version": "v02",
+  "status": "revision-required-by-user",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "sourceEffectFile": "apps/website/public/assets/example/1786368934169.png",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/1786368934169.png",
+      "sha256": "2979342fce6b3b15d4e7f7f3323e93a61e4904a265fe7212bbc4129a3207a2c9",
+      "requestPath": ".tmp/pending-remediation-20260820-inputs/travel-paris-dog-selfie-effect.jpg",
+      "requestBytes": 70280
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "black-lab-dog",
+      "species": "dog",
+      "breed": "adult black Labrador Retriever",
+      "path": "tools/imagegen/out/source/dog-black-lab.jpg",
+      "sha256": "20960d2ace805e68b41a7934e37ebdf24b7007f8f3fa85527d9beb22d2df6022",
+      "requestPath": ".tmp/pending-remediation-20260820-inputs/travel-paris-dog-selfie-identity.jpg",
+      "requestBytes": 103940
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "inputPolicy": {
+    "maxImages": 2,
+    "maxLongestEdge": 1200,
+    "jpegQuality": 82,
+    "combinedBytesBelow": 1048576,
+    "serial": true
+  },
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be adult black Labrador Retriever with solid glossy black coat, warm brown eyes, broad black nose, soft dropped ears, broad gentle muzzle and strong adult build. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the city selfie, striped shirt and pet-forward framing; use a rights-safe generic landmark treatment. Make the Labrador smile only a little more happily, with a relaxed wider open mouth and friendly eyes. Brighten the striped shirt and red neck scarf slightly so their whites, blues and reds look cleaner and more vivid, without changing the daylight, background or overall exposure. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a single vertical 9:16 image, exact 720x1280 composition. Use the FIRST attached image as the composition/style reference and preserve its selfie framing, pose, camera perspective, background, lighting, colors, clothing, props, and overall scene exactly. Replace the human subject in the first image with the exact adult black Labrador Retriever identity from the SECOND attached image: solid glossy black coat, warm brown eyes, broad black nose, soft dropped ears, broad gentle muzzle, strong adult build. Keep the same selfie action and pet-forward framing, with the dog holding the camera/arm position implied by the first image. Match the first image's visual language, rendering the Labrador as if naturally part of the original photographed scene, not pasted in. Make the expression friendly and appealing, with a relaxed slightly wider open mouth and friendly eyes, only subtly happier than the first image. Preserve the striped shirt and red neck scarf from the first image, but brighten them slightly so the whites, blues, and reds look cleaner and more vivid without changing exposure, daylight, or background. Keep the city sightseeing setting and landmark composition, with a rights-safe generic landmark treatment matching the first image’s structure and placement. Do not redesign or beautify the background. No extra animals, no extra limbs, no human hands, no duplicate subjects, no uncanny anatomy. Preserve all meaningful layout and contact relationships from the first image. Return a polished final image only.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/pending-remediation-20260820/candidates/travel-paris-dog-selfie_black-lab-dog_9x16_v02.png",
+    "rawPath": "tools/imagegen/out/reference-v1/pending-remediation-20260820/raw/travel-paris-dog-selfie_black-lab-dog_9x16_v02.png",
+    "sha256": "99dfbc8a81a5109d78162752ba8be98f2e1f8571820269e8eb150a90318f5d56"
+  },
+  "review": {
+    "state": "revision-required-by-user",
+    "finalApproval": "revision-required",
+    "checks": {
+      "dimensions": "pass",
+      "inputContract": "pass",
+      "visualAcceptance": "pending-user"
+    },
+    "findings": [
+      "用户要求按 pending-masters-comparison 逐项修正，并以 travel-paris-dog-selfie_black-lab-dog_9x16_v03 作为下一版待审候选。"
+    ],
+    "reviewedAt": "2026-08-20T00:00:00+08:00"
+  },
+  "generatedAt": "2026-08-20T01:52:34.434Z",
+  "replacedBy": "travel-paris-dog-selfie_black-lab-dog_9x16_v03"
+}

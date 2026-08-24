@@ -1,0 +1,26 @@
+{
+  "templateId": "pet-barista",
+  "status": "direction-preview",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "third-party-effect-reference-internal-only",
+      "path": "apps/website/public/assets/example/1786367434575.png",
+      "sha256": "be3d89cfda9d0350c8df3e7c2135b92256a28006eca9cb8360c342414040ccd8"
+    },
+    {
+      "role": "pet-identity-reference",
+      "path": "apps/website/public/assets/hero-shiba.jpg",
+      "sha256": "7145a7ce0e93b73b16129b8f74a465050c02d82799a349a265e73cf6c15c012a"
+    }
+  ],
+  "inputFidelity": "high",
+  "requestedSize": "1200x1600",
+  "outputSize": "1200x1600",
+  "quality": "high",
+  "prompt": "Use case: compositing. Create a vertical 3:4 high-fidelity pet replacement based on both input images. Image 1 is the primary effect reference and scene base. Preserve its cosy coffee-shop layout, left window, warm side lighting, wooden shelves, chalkboard menu, coffee cup and latte art, saucer, coffee beans, cookies, glass bottle, dried flowers, bow tie, beige apron, tabletop arrangement and calm barista portrait composition as closely as possible. Do not redesign or remove Image 1's environment, clothing, menu board, coffee, cookies or distinctive props. Only make small changes needed to fit the new pet naturally; the apron and bow tie may remain unchanged, change colour or receive minor tailoring. Remove the original grey cat from Image 1 completely and replace it with the red Shiba Inu from Image 2. Preserve the Shiba's red-and-cream coat, cream cheeks and chest, triangular ears, dark eyes and recognisable breed identity. Render the Shiba as a very cute youthful companion with a round plush face, full soft cheeks, compact sturdy body, bright gentle eyes, a subtle friendly smile and a warm approachable expression. It must feel lovable to a young audience at first glance, never stern, old-fashioned, skinny, long-bodied, gaunt, aggressive, gloomy or uncanny. Keep exactly one Shiba Inu and no other animal. Preserve the seated barista pose and the front paw resting naturally beside the coffee setup. Correct anatomy only: no duplicate paws, fused limbs, extra ears, warped eyes or broken apron boundaries. Retain clear coffee-related text rather than deleting all text. The chalkboard heading must read exactly 'COFFEE' with a short plausible menu below: 'AMERICANO', 'LATTE', 'CAPPUCCINO', 'MOCHA'. Change the apron wording to exactly 'SHIBA BREW'. All visible lettering must be legible and correctly spelled; omit tiny secondary copy rather than generating gibberish. No platform UI, watermark or signature.",
+  "revisedPrompt": null,
+  "generatedAt": "2026-08-12T09:42:12.710Z"
+}

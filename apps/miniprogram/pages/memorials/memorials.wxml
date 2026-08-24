@@ -1,0 +1,116 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+
+<view class="page page-flat page-memorial">
+  <text class="eyebrow">MEMORIAL</text>
+  <view class="title">纪念空间</view>
+  <text class="muted">一个安静的位置，留给已经离开的它。</text>
+
+  <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
+  <t-notice wx:if="{{message}}" type="success" message="{{message}}" class="block-gap"></t-notice>
+
+  <!-- 创建入口与列表分离：表单收进底部抽屉（需求 5.17-2） -->
+  <t-button type="secondary" block anim="{{animType}}" class="block-gap" bindtap="openForm">新建纪念空间</t-button>
+
+  <t-skeleton wx:if="{{loading}}" type="list" count="2" class="block-gap"></t-skeleton>
+
+  <t-empty
+    wx:elif="{{!items.length}}"
+    icon="pet"
+    title="还没有纪念空间"
+    description="可以为它建一个位置，把照片和故事放在一起。"
+    action-text="新建纪念空间"
+    anim="fade"
+    bindaction="openForm"
+  ></t-empty>
+
+  <!--
+    方案 E 的时间轴形态：左侧节点与竖线串起纪念空间，右侧是内容卡。
+    这一页的性质是叙事与回溯，时间轴比等价卡片列表更贴合。
+  -->
+  <view wx:else class="timeline">
+    <view wx:for="{{items}}" wx:key="id" class="node">
+      <view class="node-rail">
+        <view class="node-dot"></view>
+        <view class="node-line"></view>
+      </view>
+
+      <view class="node-body">
+        <view class="node-date">
+          <text class="node-date-text">{{item.dateText}}</text>
+          <!-- 过去式、不递增：截止日在 JS 侧固定为离开日期 -->
+          <text wx:if="{{item.companionText}}" class="node-days">{{item.companionText}}</text>
+        </view>
+
+        <t-card blur="{{blurOk}}" anim="fade">
+          <view class="row">
+            <view class="memorial-main">
+              <view class="sub-title">{{item.title}}</view>
+              <text class="small">{{item.themeText}} · {{item.petName || '未关联宠物'}}</text>
+            </view>
+            <view class="memorial-more hit-area" aria-role="button" aria-label="更多操作" data-id="{{item.id}}" bindtap="openMore">⋯</view>
+          </view>
+
+          <view class="memorial-tags">
+            <t-tag tone="{{item.lifecycleTone}}" size="mini" text="{{item.lifecycleText}}"></t-tag>
+            <t-tag tone="neutral" size="mini" text="{{item.visibilityText}}"></t-tag>
+          </view>
+
+          <t-button
+            type="ghost"
+            size="mini"
+            anim="fade"
+            class="block-gap"
+            data-id="{{item.id}}"
+            bindtap="openProducts"
+          >生成纪念物</t-button>
+        </t-card>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 新建表单 -->
+<t-popup visible="{{formOpen}}" title="新建纪念空间" anim="fade" bindclose="closeForm">
+  <view class="stack">
+    <picker range="{{petLabels}}" bindchange="choosePet">
+      <t-field label="宠物" control="select" value="{{petName}}" placeholder="请选择"></t-field>
+    </picker>
+    <t-field label="空间标题" value="{{title}}" placeholder="例如：给豆豆的一封信" maxlength="40" show-count required bindchange="onTitle"></t-field>
+    <t-field label="故事" control="textarea" value="{{story}}" placeholder="想对它说的话" maxlength="600" show-count bindchange="onStory"></t-field>
+
+    <view wx:if="{{photos.length}}" class="stack-tight">
+      <text class="small">选择照片（{{selected.length}}/9）</text>
+      <t-photo-grid
+        photos="{{photos}}"
+        selected-ids="{{selected}}"
+        max="9"
+        anim="fade"
+        bindtoggle="togglePhoto"
+      ></t-photo-grid>
+    </view>
+    <text wx:else class="small">这只宠物还没有照片，可以先只写故事。</text>
+  </view>
+
+  <view slot="footer" class="foot">
+    <t-button type="ghost" block anim="fade" bindtap="closeForm">取消</t-button>
+    <t-button type="primary" block anim="fade" loading="{{creating}}" disabled="{{!petId || !title}}" bindtap="create">创建</t-button>
+  </view>
+</t-popup>
+
+<!-- 衍生品：三项收进操作面板（需求 5.17-4） -->
+<t-action-sheet
+  visible="{{productsFor !== ''}}"
+  title="生成纪念物"
+  actions="{{productActions}}"
+  bindselect="chooseProduct"
+  bindclose="closeProducts"
+></t-action-sheet>
+
+<!-- 更多菜单：隐藏 / 恢复 -->
+<t-action-sheet
+  visible="{{moreFor !== ''}}"
+  title="空间操作"
+  actions="{{moreActions}}"
+  bindselect="chooseMore"
+  bindclose="closeMore"
+></t-action-sheet>

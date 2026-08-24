@@ -1,0 +1,81 @@
+{
+  "templateId": "animal-giant-city-companion",
+  "entryId": "action",
+  "title": "巨型城市伙伴",
+  "sourceEffectFile": "apps/website/public/assets/example/animal/jimeng-2026-06-06-2771-超现实，一只巨大的猫咪在楼宇间穿行，最高的楼只有猫的一半身高。猫咪好奇的看着行驶....png",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-06-06-2771-超现实，一只巨大的猫咪在楼宇间穿行，最高的楼只有猫的一半身高。猫咪好奇的看着行驶....png",
+      "sha256": "1da32ad0e14c87b695e6494ce4d293653db84297ea6b0298360768151e1b878b"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "ragdoll-cat",
+      "species": "cat",
+      "breed": "adult seal-point Ragdoll cat",
+      "path": "apps/website/public/assets/work-ragdoll.jpg",
+      "sha256": "cadd89cfd6150cb0c9560bffec9b7c5a7e80d7126032eb7ecab4933cb836ed9e"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a one-time third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every designated original animal, human-like creature or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult seal-point Ragdoll cat with cream long coat, deep seal-brown mask and ears, round blue eyes, broad fluffy cheeks, dark nose, full chest and healthy adult body. Render the face, fur and anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration or turn a stylized scene into a realistic photo. Keep the pet appealing and healthy, never skinny, gaunt, uncanny, aggressive or puppy-like. Keep the giant scale, city canyon, curious gaze, street traffic, low-angle perspective and atmospheric realism; replace only the giant cat identity. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character or artist names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a final vertical 9:16 image at 720x1280 pixels by editing the provided first reference image into a single coherent scene while preserving its exact composition, camera angle, crop, perspective, giant-scale city canyon setting, low-angle street view, atmospheric realism, traffic, pedestrians, lighting, palette, and all existing text/layout/props as much as possible. Replace the original giant cat subject with the adult self-owned pet identity from the second reference: an adult seal-point Ragdoll cat with a cream long coat, deep seal-brown mask and ears, round blue eyes, broad fluffy cheeks, dark nose, full chest, and healthy adult proportions. Keep one coherent adult pet identity throughout. Preserve the first image’s visual language exactly: same pose, gaze direction, expression, framing, scale, contact relationships with buildings and street, and the same cinematic realism. Match fur, face, and anatomy to the first image’s rendering style rather than a pasted photo look. Keep the city environment unchanged except for only the minimal anatomy-consistent replacement of the subject. Remove or replace any visible branded/watermark-like marks with simple neutral original wording if needed, without introducing new logos or signatures. Ensure no extra limbs, eyes, ears, paws, human hands, or duplicated pets. The final image should look like the same scene with the giant adult seal-point Ragdoll cat seamlessly integrated.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-giant-city-companion_ragdoll-cat_9x16_v01.png",
+    "sha256": "667482821819e62b3235efa04484236af3370e936f3d443b2853d96ec0449182"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-18T01:00:00+08:00"
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-17T16:37:17.039Z",
+  "candidatePath": "tools/imagegen/out/reference-v1/animal/candidates/animal-giant-city-companion_ragdoll-cat_9x16_v01.png",
+  "masterPath": "tools/imagegen/out/reference-v1/retired-masters/animal-giant-city-companion_ragdoll-cat_9x16_v01.png",
+  "masterSha256": "667482821819e62b3235efa04484236af3370e936f3d443b2853d96ec0449182",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-18T01:00:00+08:00",
+    "note": "用户确认本批次除七个待重做模板外，其余动物效果候选均通过并保存为母版。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/animal-giant-city-companion_ragdoll-cat_9x16_v01.png",
+      "sha256": "667482821819e62b3235efa04484236af3370e936f3d443b2853d96ec0449182"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "unapproved-candidate"
+    ]
+  }
+}

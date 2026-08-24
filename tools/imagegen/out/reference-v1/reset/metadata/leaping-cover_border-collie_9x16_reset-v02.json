@@ -1,0 +1,105 @@
+{
+  "templateId": "leaping-cover",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "mode": "subject-only-masked-replacement",
+  "inputs": [
+    {
+      "role": "immutable-effect-base",
+      "path": "tools/imagegen/out/reference-v1/reset/bases/leaping-cover_border-collie_9x16_base.png",
+      "sha256": "389793b4e899e03b60ed09d95250a337630f19c9b310abbe1d134c582d5dc8c4"
+    },
+    {
+      "role": "effect-face-and-brushwork-detail",
+      "path": "tools/imagegen/out/reference-v1/reset/bases/leaping-cover_border-collie_9x16_detail.png",
+      "sha256": "fc65c44dfd17a2815ea798c35b0835167406f8df4848a547796fddc9e6dfe7ca"
+    },
+    {
+      "role": "pet-identity-only",
+      "path": "apps/website/public/assets/work-border.jpg",
+      "sha256": "8862d1dc48584f73309eac0890afb3367759dd131c681de970976b52a561fc50"
+    },
+    {
+      "role": "edit-mask",
+      "path": "tools/imagegen/out/reference-v1/reset/masks/leaping-cover_border-collie_9x16_mask.png",
+      "sha256": "1fbd714c0d11e7240df4a0616f2ea92d7d9bbb587c5604477e4f68b1f9d87517"
+    }
+  ],
+  "inputFidelity": "provider-default",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Task: subject-only identity replacement, not image redesign and not style transfer. Image 1 is the immutable base image and the sole authority for every visible detail except animal identity: canvas, crop, composition, background, paint marks, palette, saturation, contrast, lighting, pose, airborne action, expression, closed smiling eyes, open mouth and tongue, foreshortening, paw placement, facial treatment, fur treatment, edge quality and texture. Image 2 is a detail crop from Image 1 and reinforces the exact painted face, expression and brushwork that must be retained. Replace only the original animal identity in Image 1 with the exact adult Border Collie from Image 3. Image 3 controls only species, breed, black-and-white coat markings, ear shape, eye colour, actual adult age and natural Border Collie proportions. Do not copy Image 3's photographic lighting, background, pose, expression, fur detail, facial rendering or realism. Transfer Image 1's exact joyous leaping pose, expression, painted facial treatment, painted fur treatment and all other visual details onto the new identity. Preserve adult proportions; do not turn the dog into a puppy and do not enlarge the head, eyes or cheeks. Change no background, scene, composition, palette or brushwork. Remove only the platform watermark and account ID. Exactly one animal; no added text, objects or anatomy changes.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "approvedAt": "2026-08-14T10:02:56+08:00",
+    "findings": []
+  },
+  "generatedAt": "2026-08-14T01:28:21.665Z",
+  "backgroundLock": {
+    "method": "lingsuan-transparent-edit-mask",
+    "exactPixelLock": false,
+    "reason": "The provider semantically respects the mask but re-encodes the full canvas; pixel-for-pixel compositing creates visible fur-edge seams.",
+    "acceptance": "No semantic, compositional, palette or scene-content change outside the replacement subject."
+  },
+  "postprocessedAt": "2026-08-14T01:30:56.080Z",
+  "sourceResetId": "05",
+  "title": "腾空跳跃封面",
+  "candidatePath": "tools/imagegen/out/reference-v1/reset/candidates/leaping-cover_border-collie_9x16_reset-v02.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/leaping-cover_border-collie_9x16_reset-v02.png",
+  "masterSha256": "79150ee5c11c29962c19d93bd101708d5f417ee1514b3bffe8f8efd4bff90935",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-14T10:02:56+08:00",
+    "note": "用户确认 05 reset-v02 效果很好并要求保存母版；后续产出不得低于该画风与完成度基线。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/leaping-cover_border-collie_9x16_reset-v02.png",
+      "sha256": "79150ee5c11c29962c19d93bd101708d5f417ee1514b3bffe8f8efd4bff90935"
+    },
+    "image2": {
+      "role": "master-face-and-brushwork-detail",
+      "path": "tools/imagegen/out/reference-v1/masters/details/leaping-cover_face-brushwork_reset-v02.png",
+      "sha256": "d568c2a75a7b0ea39e1d8993a23db92a7492cddc2d5f649206acf58b9d070757"
+    },
+    "image3": {
+      "role": "user-pet-identity-only"
+    },
+    "mask": {
+      "role": "subject-edit-mask",
+      "path": "tools/imagegen/out/reference-v1/masters/masks/leaping-cover_subject_reset-v02.png",
+      "sha256": "1fbd714c0d11e7240df4a0616f2ea92d7d9bbb587c5604477e4f68b1f9d87517"
+    },
+    "inputFidelity": "provider-default",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate"
+    ]
+  },
+  "qualityBaseline": {
+    "level": "approved-reference-standard",
+    "required": [
+      "joyful head-on airborne action and exact foreshortened paw composition",
+      "closed-eye painted crescents and a fully hand-painted nose, mouth and tongue",
+      "loose expressive digital-impressionist brushwork across face, fur and background",
+      "adult breed proportions without beautification or juvenilization",
+      "clean energetic colour field without scene redesign"
+    ],
+    "reject": [
+      "photographic face, glossy photo-real nose or camera-resolved fur strands",
+      "generic puppy face, enlarged eyes, oversized head or shortened juvenile muzzle",
+      "changed pose, expression, crop, palette, background content or paint language",
+      "mixed-media pasted subject, hard cutout halo, watermark or account ID"
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "desc": "Petbaby sitemap",
+  "rules": [{ "action": "allow", "page": "*" }]
+}

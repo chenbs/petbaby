@@ -1,0 +1,54 @@
+{
+  "jobId": "exaggerated-expression_cat_british-shorthair-cat",
+  "templateId": "exaggerated-expression",
+  "title": "夸张表情头像",
+  "status": "approved-runtime-validation",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/exaggerated-expression_ragdoll-cat_9x16_v02.png",
+      "sha256": "c8b1e59406f6fc88e7976cad20f24024c4eb939a73fc4169152ef342e072512b"
+    },
+    {
+      "role": "new-pet-identity-reference",
+      "identityId": "british-shorthair-cat",
+      "species": "cat",
+      "breed": "adult blue British Shorthair cat",
+      "path": "tools/imagegen/out/source/cat-british.jpg",
+      "sha256": "ddbdfb39b6cb3c6dddbfdd01555cd2fea299cfa927f76a1e7248d581152e0364"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Create one exact 720x1280 vertical runtime validation image from exactly two inputs. Image 1 is our frozen self-owned master and controls every non-identity detail: scene, crop, camera, pose, action, expression, gaze, lighting, palette, medium, brushwork, clothing, text and props. Image 2 controls only the new pet's breed, coat, markings, ears, eye colour, adult age and natural proportions. No third-party effect reference is included. Replace only the master pet with the exact adult blue British Shorthair cat from Image 2, preserving its solid blue-grey coat, broad round adult face, amber eyes, small upright ears, plush dense fur, thick tail and sturdy natural body. Remove the old pet completely. Do not copy Image 2's pose, expression, background, lighting or photographic rendering. Keep the off-white paper background, extreme close portrait crop, tilted head, oversized silly eyes, broad toothy grin, asymmetrical comic energy and chest filling the lower frame. Replicate the master's exact head tilt, gaze direction, eye openness, eyebrow energy, mouth opening, grin curve and visible small teeth. The expression must remain funny and lovable, never aggressive or frightening. Every part of the replacement pet, especially the face, eyes, nose, mouth, teeth and fur, must use the master's hand-drawn dry-brush illustration: loose black contour lines, scratchy broken strokes, flat painterly colour blocks and visible paper gaps. Image 2 must not introduce photographic fur, glassy realistic eyes, smooth 3D shading or a pasted photo face. No clothing or added prop. Keep the image free of text, logos, watermarks and signatures. Scene-change budget 0%. Keep one adult pet. No juvenization, generic cute redesign, residual old-pet parts, extra limbs or ears, malformed face, human hands, broken contacts, logo, watermark or signature.",
+  "revisedPrompt": "Create one exact 720x1280 vertical runtime validation image from exactly two inputs. Image 1 is our frozen self-owned master and controls every non-identity detail: scene, crop, camera, pose, action, expression, gaze, lighting, palette, medium, brushwork, clothing, text and props. Image 2 controls only the new pet's breed, coat, markings, ears, eye colour, adult age and natural proportions. No third-party effect reference is included. Replace only the master pet with the exact adult blue British Shorthair cat from Image 2, preserving its solid blue-grey coat, broad round adult face, amber eyes, small upright ears, plush dense fur, thick tail and sturdy natural body. Remove the old pet completely. Do not copy Image 2's pose, expression, background, lighting or photographic rendering. Keep the off-white paper background, extreme close portrait crop, tilted head, oversized silly eyes, broad toothy grin, asymmetrical comic energy and chest filling the lower frame. Replicate the master's exact head tilt, gaze direction, eye openness, eyebrow energy, mouth opening, grin curve and visible small teeth. The expression must remain funny and lovable, never aggressive or frightening. Every part of the replacement pet, especially the face, eyes, nose, mouth, teeth and fur, must use the master's hand-drawn dry-brush illustration: loose black contour lines, scratchy broken strokes, flat painterly colour blocks and visible paper gaps. Image 2 must not introduce photographic fur, glassy realistic eyes, smooth 3D shading or a pasted photo face. No clothing or added prop. Keep the image free of text, logos, watermarks and signatures. Scene-change budget 0%. Keep one adult pet. No juvenization, generic cute redesign, residual old-pet parts, extra limbs or ears, malformed face, human hands, broken contacts, logo, watermark or signature.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation-second-batch/exaggerated-expression_cat_british-shorthair-cat_9x16_v01.png",
+    "sha256": "83281cbd054d9f5ac235d4f1ca25ee6aae361bb34d06ae0f0073d0605d7f91f3"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "checks": {
+      "petIdentity": "pass",
+      "adultAgeAndProportions": "pass",
+      "masterPoseAndExpression": "pass",
+      "masterStyleAndBrushwork": "pass",
+      "sceneAndComposition": "pass",
+      "anatomyAndContacts": "pass",
+      "textAndRights": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [],
+    "finalApproval": "approved",
+    "approvedAt": "2026-08-14T17:57:02+08:00"
+  },
+  "generatedAt": "2026-08-14T08:02:50.439Z"
+}

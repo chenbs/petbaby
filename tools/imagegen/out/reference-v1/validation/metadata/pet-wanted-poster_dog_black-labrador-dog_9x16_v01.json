@@ -1,0 +1,48 @@
+{
+  "jobId": "pet-wanted-poster_dog_black-labrador-dog",
+  "templateId": "pet-wanted-poster",
+  "status": "generated-pending-joint-approval",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "sourceMaster": {
+    "role": "self-owned-frozen-master",
+    "path": "tools/imagegen/out/reference-v1/masters/pet-wanted-poster_golden-retriever_9x16_v01.webp",
+    "sha256": "0171c933caae51a451bdf9fb43f5721f3935f73daa5bca91469e84ef2088beee"
+  },
+  "petIdentityReference": {
+    "role": "new-pet-identity-reference",
+    "identityId": "black-labrador-dog",
+    "species": "dog",
+    "breed": "black Labrador Retriever",
+    "path": "tools/imagegen/out/source/dog-black-lab.jpg",
+    "sha256": "20960d2ace805e68b41a7934e37ebdf24b7007f8f3fa85527d9beb22d2df6022"
+  },
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving template transfer. Create a vertical 9:16 high-fidelity pet replacement from exactly two input images, composed for an exact final size of 720x1280 pixels. Image 1 is a frozen self-owned production master created previously by our team. It is the sole composition, scene, styling and layout reference for this request. No third-party effect reference is included at runtime. Image 2 is the sole pet identity reference. Preserve Image 1's the front-facing humorous mugshot composition, white height-chart background, navy measurement lines and numbers, orange prison shirt, two paws holding a dark rectangular placard, direct eye contact and playful deadpan comedy. Do not redesign the environment or turn it into a generic scene. Allow an optional scene-change budget of approximately 5% to 20%. You may naturally adjust only secondary scenery, small decorations, context-equivalent props, materials or colours when the adjustment clearly fits the current scene. Every adjustment must preserve the same semantics, perspective, scale, lighting and visual style. If no replacement is clearly better, keep the master unchanged. Never force changes merely to meet a percentage. Remove every depiction of the master pet from Image 1 and replace it with the exact black Labrador Retriever from Image 2. Preserve the solid glossy black coat, warm brown eyes, broad black nose, soft dropped ears and strong healthy Labrador build. Image 2 controls pet identity and overrides the sample pet shown in the master. The replacement dog must look youthful, healthy, rounded and irresistibly cute at first glance, with soft full cheeks, friendly bright eyes and appealing proportions for a young audience. Keep the recognisable breed anatomy. Never make the pet skinny, elongated, angular, gaunt, stern, aggressive, strange, elderly-looking or uncanny. Both front paws must grip the two sides of the placard naturally. Keep the subject centred and front-facing. Keep the orange prison shirt. It may receive minor tailoring or a slight colour-tone adjustment for the new pet. Keep the placard and set its exact Chinese text to '偷吃零食'. Keep the height-chart numbers readable and plausible. Do not delete the existing text structure; omit optional tiny copy rather than generating gibberish. Keep exactly one pet identity throughout the image and no unrelated animal. Correct anatomy only: no duplicate or fused limbs, extra ears, warped eyes, broken clothing boundaries or human hands. Preserve rather than delete meaningful clothing, landmarks, distinctive props and text layout from the master. No platform UI, brand logo, known IP, watermark or signature.",
+  "revisedPrompt": null,
+  "review": {
+    "state": "pre-reviewed-pending-user-approval",
+    "checks": {
+      "petIdentity": "pass",
+      "cuteness": "pass",
+      "masterComposition": "pass",
+      "anatomy": "pass",
+      "text": "pass",
+      "dimensions": "pass"
+    },
+    "findings": [],
+    "preReviewedAt": "2026-08-13T02:52:16.572Z",
+    "finalApproval": "pending-user"
+  },
+  "generatedAt": "2026-08-13T02:03:46.220Z",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation/pet-wanted-poster_dog_black-labrador-dog_9x16_v01.png",
+    "sha256": "9e07af9cd0b6afa9ecdb84539db6d627d81e2eeae0d938925ba379a6e5ac17d2"
+  }
+}

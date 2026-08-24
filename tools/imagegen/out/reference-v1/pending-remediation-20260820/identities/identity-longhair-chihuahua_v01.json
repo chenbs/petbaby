@@ -1,0 +1,15 @@
+{
+  "purpose": "self-owned-pet-identity-reference",
+  "identityId": "longhair-chihuahua-dog",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/generations",
+  "prompt": "Use case: photorealistic-natural pet identity reference for a self-owned image template. Create one appealing adult cream-and-tan long-coated Chihuahua in a clean neutral studio portrait. The dog has a long silky coat, large upright feathered ears, dark almond eyes, compact tapered muzzle, feathered chest and tail, petite but clearly mature healthy proportions. Show a clear front three-quarter view with the complete head, both full ears, chest, forelegs and enough body to establish adult proportions. Calm confident closed-mouth expression. Soft even daylight, pale warm-grey seamless background, realistic natural coat and color, no costume, bow, prop, text, logo, watermark, frame, human or other animal. Clearly adult and breed-accurate, never puppy-like, chibi, apple-headed caricature, oversized-eyed, long-muzzled, Papillon or Pomeranian. Exact portrait output 720x1280.",
+  "revisedPrompt": "Photorealistic natural pet identity reference portrait of one adult cream-and-tan long-coated Chihuahua, clean neutral studio setup. The dog is breed-accurate and clearly mature, healthy, petite but not puppy-like. Show a front three-quarter view with the complete head, both full upright feathered ears, chest, forelegs, and enough body to establish adult proportions. Long silky coat, feathered chest and tail, compact tapered muzzle, dark almond-shaped eyes, calm confident closed-mouth expression. Soft even daylight, pale warm-grey seamless background, realistic natural coat texture and color. No costume, no bow, no prop, no text, no logo, no watermark, no frame, no humans, no other animals. Avoid caricature traits: not chibi, not apple-headed, not oversized-eyed, not long-muzzled, not Papillon, not Pomeranian. Vertical portrait composition, exact 720x1280 output.",
+  "requestedSize": "720x1280",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/pending-remediation-20260820/identities/identity-longhair-chihuahua_v01.png",
+    "sha256": "d8607dd6b348dcfb64aa687ce35ecaa4d384bb6aaae3c56237662d279102e991"
+  },
+  "generatedAt": "2026-08-20T01:47:34.142Z"
+}

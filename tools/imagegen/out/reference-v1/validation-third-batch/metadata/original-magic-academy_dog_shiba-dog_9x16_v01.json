@@ -1,0 +1,65 @@
+{
+  "jobId": "original-magic-academy_dog_shiba-dog",
+  "templateId": "original-magic-academy",
+  "title": "原创魔法学院",
+  "status": "superseded-by-pending-revision",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/retired-masters/original-magic-academy_dragon-li-cat_9x16_v01.png",
+      "sha256": "6dfd8f50981e537748f18bd5b4ccdfaa8dfceff03338ab54055b8cc1ab117d4e"
+    },
+    {
+      "role": "new-pet-identity-reference",
+      "identityId": "shiba-dog",
+      "species": "dog",
+      "breed": "adult red Shiba Inu",
+      "path": "tools/imagegen/out/source/dog-shiba.jpg",
+      "sha256": "fbe7fcef9561979da3d66090d3e9f0bd693c1e1dbfa92820e7942d93a92d29a6"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: compositing and identity-preserving template transfer. Produce one exact 720x1280 vertical 9:16 runtime validation image from exactly two input images. Image 1 is our frozen self-owned production master. It is the sole authority for every non-identity detail: scene, composition, crop, camera, pose, action, expression, gaze, lighting, palette, rendering medium, brushwork, clothing, text, props and all physical contacts. No third-party effect reference is included. Image 2 is the sole new-pet identity reference. Change only the pet identity. Remove every depiction and every residual feature of the master pet, then replace it with the new pet from Image 2. Scene-change budget is 0%. Do not redesign, reinterpret, clean up, recolour, restyle, simplify, move, delete or add anything in the master scene. Keep the exact warm stone magic classroom, arched leaded window, dark wood potion counter, steaming black cauldron, potion bottles, seated lower-left composition, black robe, green striped scarf, silver trim, floor reflection and original four-point-star-and-paw academy crest. Replicate the master's complete seated three-quarter pose, front-paw placement, tail silhouette, direct calm gaze, facial expression and adult body scale. Refit only the robe openings around the new ears, neck, shoulders and forelegs. Keep the crest original and unchanged; do not introduce any known school name, crest, letter or franchise symbol. The replacement must be the exact adult red Shiba Inu from Image 2. Preserve its red-and-cream coat, cream cheeks and chest, dark almond eyes, triangular upright ears, curled tail and compact sturdy adult body. Image 2 controls only species, breed, coat colour and markings, ear shape, eye colour, actual adult age and natural healthy breed proportions. Do not copy Image 2's pose, expression, gaze, camera, background, lighting, photographic texture or rendering style. Preserve the pet's actual adult age and mature breed proportions. Do not juvenilize it, enlarge the head or eyes, shorten the muzzle or body, or convert it into a kitten, puppy or generic cute mascot. Keep it healthy, attractive and immediately likeable without changing the master's expression or art direction. Match Image 1's exact polished cinematic photography, warm light, depth of field, surface texture and colour balance. Image 2 contributes no background, pose, light or photographic treatment. Do not add text, brand marks, watermarks or signatures. Keep exactly one pet identity throughout, except where the frozen master intentionally contains multiple views or two scale duplicates of that same identity. No unrelated animal, residual old-pet coat, face or limb. Correct species anatomy only: no duplicate, fused, missing or amputated-looking limbs, extra ears, warped eyes, malformed mouth, floating tail, human hands or fingers, broken garment boundaries, pasted head, disconnected neck or failed prop contact. Preserve all non-pet pixels and relationships as closely as the model allows.",
+  "revisedPrompt": "Create a single exact 720x1280 vertical 9:16 image by compositing and identity-preserving template transfer using the first input image as the frozen production master and the second input image as the sole identity reference. Preserve the master scene, composition, crop, camera, pose, expression, gaze, lighting, palette, rendering style, clothing, props, texturing, floor reflection, potion counter, steaming cauldron, bottles, window, classroom architecture, black robe, green striped scarf, silver trim, and the original four-point-star-and-paw academy crest exactly. Change only the pet identity: remove every trace of the master cat and replace it with the exact adult red Shiba Inu from image 2, with red-and-cream coat, cream cheeks and chest, dark almond eyes, triangular upright ears, curled tail, compact sturdy adult proportions, natural healthy breed anatomy, and a calm direct gaze matching the master’s expression. Refit the robe openings only as needed around the Shiba Inu’s ears, neck, shoulders, and forelegs, without altering the robe design. Keep the Shiba Inu seated in the exact lower-left three-quarter pose of the master, with the same front-paw placement, tail silhouette placement, and body scale. Do not juvenilize or stylize; preserve adult age and breed proportions. Do not add any text, symbols, watermarks, or signatures. Ensure no residual cat features remain, and no extra limbs, warped anatomy, or broken garment boundaries.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/validation-third-batch/original-magic-academy_dog_shiba-dog_9x16_v01.png",
+    "sha256": "968cb6f72220594c4b07ff3c9c246a03a5d9ed5f3ebd18a54670cf31a41c7e26"
+  },
+  "review": {
+    "state": "superseded",
+    "checks": {
+      "petIdentity": null,
+      "adultAgeAndProportions": null,
+      "masterPoseExpressionAndGaze": null,
+      "masterStyleAndBrushwork": null,
+      "sceneAndComposition": null,
+      "anatomyAndContacts": null,
+      "repeatedIdentityAndText": null,
+      "dimensions": "pass"
+    },
+    "findings": [
+      "用户认为 v01 坐姿呆板且略显驼背，已生成挺拔坐姿 v02 待审批。"
+    ],
+    "finalApproval": "superseded",
+    "reviewedAt": "2026-08-17T13:33:28+08:00"
+  },
+  "generatedAt": "2026-08-17T02:02:15.831Z",
+  "supersededBy": "tools/imagegen/out/reference-v1/validation-third-batch/original-magic-academy_dog_shiba-dog_9x16_v02.png"
+}

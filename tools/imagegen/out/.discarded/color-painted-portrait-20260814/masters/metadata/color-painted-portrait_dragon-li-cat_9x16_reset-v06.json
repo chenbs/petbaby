@@ -1,0 +1,131 @@
+{
+  "templateId": "color-painted-portrait",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "mode": "localized-face-rendering-refinement-from-v04",
+  "sourceCandidate": {
+    "role": "v04-cute-direction-base",
+    "path": "tools/imagegen/out/reference-v1/reset/candidates/color-painted-portrait_dragon-li-cat_9x16_reset-v04.png",
+    "sha256": "fcc3ea773d7385ca654ab92665f09e669612df6df11087efcb9e72dae3104437"
+  },
+  "inputs": [
+    {
+      "role": "v04-immutable-edit-target",
+      "path": "tools/imagegen/out/reference-v1/reset/candidates/color-painted-portrait_dragon-li-cat_9x16_reset-v04.png",
+      "sha256": "fcc3ea773d7385ca654ab92665f09e669612df6df11087efcb9e72dae3104437"
+    },
+    {
+      "role": "effect-face-and-brushwork-detail-only",
+      "path": "tools/imagegen/out/reference-v1/reset/bases/color-painted-portrait_dragon-li-cat_9x16_detail.png",
+      "sha256": "e22b0e006a7887b343ba7125fd138b7e647f1bf62cd05af3ede80cc6d84d74d9"
+    },
+    {
+      "role": "soft-localized-face-mask",
+      "path": "tools/imagegen/out/reference-v1/reset/masks/color-painted-portrait_dragon-li-cat_9x16_face-only-v04.png",
+      "sha256": "0fb83b2da9292ee4336cf21c9e8ade767241218d057dc90700c68025a2d2dfb6",
+      "bounds": {
+        "centreX": 375,
+        "centreY": 452,
+        "radiusX": 195,
+        "radiusY": 168,
+        "featherStart": 0.78
+      }
+    }
+  ],
+  "excludedInputs": [
+    "original-pet-identity-photo",
+    "identity-bridge-v01",
+    "identity-bridge-v02",
+    "identity-bridge-v03",
+    "reset-v05"
+  ],
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Task: make one localized facial rendering refinement to Image 1 inside the supplied soft face mask. Do not redesign, replace or regenerate the animal. Image 1 is the exact approved direction and immutable authority for identity and composition. Preserve its adult Dragon Li cat, breed, coat colours, stripe placement, head silhouette, ear shape, head tilt, eye size and placement, coordinated upward gaze, sweet appealing expression, cheek and muzzle proportions, nose and mouth positions, mature body proportions, pose, subject scale, body brushwork, background, palette, saturation and every detail outside the masked facial area. Image 2 is used only for the hand-painted treatment of facial surfaces. Inside the mask, gently move Image 1's existing eyes, nose, muzzle and short whisker area away from photographic rendering toward Image 2's refined loose digital-impressionist paint: visible short soft brush marks, slightly broken edges, simplified value transitions and the same painterly language as the surrounding fur. Keep Image 1's exact cute facial geometry and expression. Do not change the size, position, angle or spacing of either eye. Keep both eyes aimed at the same upward point, but replace camera-like iris depth, spherical eyeball volume and glossy reflections with dark softly painted eye shapes and one restrained matte brush highlight each. Keep the exact nose size and location, but make it a small rounded matte painted form without wet shine. Keep the exact muzzle outline and gentle mouth, but express its volume through a few soft broken brush marks rather than smooth anatomical modelling. Reduce resolved individual whiskers to a few short integrated painted suggestions. This is a subtle medium adjustment, not flattening. Retain the mature, finely painted, softly dimensional quality of Image 1. Do not turn the face into a sticker, vector graphic, primitive flat icon, children's drawing, chibi mascot or black-dot face. Do not simplify the tabby identity or erase its facial markings. No realistic iris texture, glassy eyeballs, wet nose, smooth photographic skin or muzzle gradients, individual fur strands, long wire-like whiskers, pores, 3D render, airbrushed face or pasted mixed-media face. No change to facial proportions, cuteness, age, expression, anatomy, pose, ears, head outline, body, background, composition, colours, text or objects. Exactly one animal.",
+  "revisedPrompt": null,
+  "backgroundLock": {
+    "method": "lingsuan-soft-localized-face-mask",
+    "exactPixelLock": false,
+    "localHardComposite": false,
+    "sceneChangeBudget": "0%",
+    "acceptance": "Only facial rendering may change; facial geometry, subject, body and scene remain semantically unchanged."
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "approvedAt": "2026-08-14T11:35:12+08:00",
+    "findings": []
+  },
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/reset/candidates/color-painted-portrait_dragon-li-cat_9x16_reset-v06.png",
+    "sha256": "d2025879057a7a8a7c6ba76692b7c78130de887cd6e9dd28017e0706c8b194a2"
+  },
+  "generatedAt": "2026-08-14T03:05:28.274Z",
+  "sourceResetId": "06",
+  "title": "彩色绘画肖像",
+  "candidatePath": "tools/imagegen/out/reference-v1/reset/candidates/color-painted-portrait_dragon-li-cat_9x16_reset-v06.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/color-painted-portrait_dragon-li-cat_9x16_reset-v06.png",
+  "masterSha256": "d2025879057a7a8a7c6ba76692b7c78130de887cd6e9dd28017e0706c8b194a2",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-14T11:35:12+08:00",
+    "note": "用户最终选择 reset-v06 保存为彩色绘画肖像母版；reset-v07 不采用。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/color-painted-portrait_dragon-li-cat_9x16_reset-v06.png",
+      "sha256": "d2025879057a7a8a7c6ba76692b7c78130de887cd6e9dd28017e0706c8b194a2"
+    },
+    "image2": {
+      "role": "master-face-and-brushwork-detail",
+      "path": "tools/imagegen/out/reference-v1/masters/details/color-painted-portrait_face-brushwork_reset-v06.png",
+      "sha256": "1f5beb92cf74acdf08bfde1446f2bf0e90d9d2b53b2aab52dae5d988275f7e49"
+    },
+    "image3": {
+      "role": "user-pet-identity-only"
+    },
+    "mask": {
+      "role": "subject-edit-mask",
+      "path": "tools/imagegen/out/reference-v1/masters/masks/color-painted-portrait_subject_reset-v06.png",
+      "sha256": "a3247060227b25208f9472cf0259b9ba1db564b11a62d52f64ceb88fbb7b4310"
+    },
+    "faceControlMask": {
+      "role": "optional-face-refinement-mask",
+      "path": "tools/imagegen/out/reference-v1/masters/masks/color-painted-portrait_face-only_reset-v06.png",
+      "sha256": "0fb83b2da9292ee4336cf21c9e8ade767241218d057dc90700c68025a2d2dfb6"
+    },
+    "inputFidelity": "provider-default",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "identity-bridge",
+      "reset-v07",
+      "previous-failed-candidate"
+    ]
+  },
+  "qualityBaseline": {
+    "level": "approved-reference-standard",
+    "required": [
+      "adult pet identity with natural mature proportions",
+      "sweet coordinated upward gaze and the approved reset-v06 facial geometry",
+      "refined loose digital-impressionist brushwork across face, fur and scene",
+      "matte painted eyes, nose and muzzle without photographic surface rendering",
+      "exact seated pose, crop, orange-yellow-teal palette and abstract background"
+    ],
+    "reject": [
+      "photographic iris, glassy eyeball, wet nose or smooth anatomical muzzle shading",
+      "juvenilization, enlarged eyes, shortened muzzle or rounded kitten proportions",
+      "flat sticker, vector, primitive icon or children's drawing treatment",
+      "changed pose, expression, crop, palette, background content or paint language",
+      "mixed-media pasted face, hard cutout seam, watermark or account ID"
+    ]
+  },
+  "runtimeThirdPartyEffectReferenceIncluded": false
+}

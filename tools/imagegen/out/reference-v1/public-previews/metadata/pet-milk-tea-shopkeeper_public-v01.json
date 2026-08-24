@@ -1,0 +1,55 @@
+{
+  "kind": "public-preview",
+  "templateId": "pet-milk-tea-shopkeeper",
+  "title": "奶茶店主理人",
+  "version": "public-v01",
+  "status": "approved-public-preview",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-public-effect-edit-target",
+      "path": "apps/website/public/assets/example/1786367423393.png",
+      "sha256": "1009214ebc240b447bec04eebccee9b2cd41a25c0a4986f499388263253db2ea",
+      "requestPath": ".tmp/pending-remediation-20260820-inputs/pet-milk-tea-shopkeeper-public-effect.jpg",
+      "requestBytes": 46266
+    }
+  ],
+  "runtimeMasterUseAllowed": false,
+  "publicUseAllowed": true,
+  "inputPolicy": {
+    "maxImages": 1,
+    "maxLongestEdge": 1200,
+    "jpegQuality": 82,
+    "combinedBytesBelow": 1048576,
+    "serial": true
+  },
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "prompt": "Use case: precise-object-edit for a public mini-program preview image. Image 1 is the edit target and sole visual authority. Recreate the same milk-tea shop photograph with the exact same orange-and-white adult cat identity, face, gaze, hat, apron, bow, front paw placement, counter, drinks, flowers, lighting, warm palette, camera and depth of field. Remove only platform watermarks, account IDs, creator signatures and corner badges if present, replacing those pixels with seamless natural scene content. Preserve the in-scene generic 'MILK TEA' shop sign and ordinary milk-tea cup/menu lettering; those are scene details, not watermarks. Adapt the canvas to exact 720x1280 portrait framing by extending or gently recomposing the existing shop background as needed. Keep the complete cat, both ears, hat, visible paws, foreground drinks and main flower arrangement fully inside frame. Do not crop, replace or redesign any subject or prop. No new text, logo, watermark, account mark, extra animal, extra limb or changed product styling. Return only the finished public preview.",
+  "revisedPrompt": "Edit the provided milk-tea shop photograph as a precise object-preserving restoration for a public mini-program preview image. Use the image as the sole visual authority. Keep the exact same orange-and-white adult cat identity and expression, face, gaze, hat, apron, bow, front paw placement, counter, drinks, flowers, warm lighting, color palette, camera angle, and depth of field. Preserve the in-scene generic 'MILK TEA' shop sign and ordinary milk-tea cup/menu lettering as part of the scene. Remove only any platform watermarks, account IDs, creator signatures, or corner badges if present, by replacing those pixels with seamless natural background/content. Adapt the composition to a clean 720x1280 portrait framing, extending the existing shop background naturally as needed, while keeping the complete cat, both ears, hat, visible paws, foreground drinks, and main flower arrangement fully inside frame. Do not crop, replace, redesign, or stylize any subject or prop. No new text, no extra logos, no watermark, no account mark, no extra animal, no extra limb, and no changed product styling. Photorealistic, seamless, natural-looking edit.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/pending-remediation-20260820/public-previews/pet-milk-tea-shopkeeper_public-v01.png",
+    "rawPath": "tools/imagegen/out/reference-v1/pending-remediation-20260820/public-previews/raw/pet-milk-tea-shopkeeper_public-v01.png",
+    "sha256": "39b95473a40b28d1b0767fa82f5637c57135df0603f73d14cc2a13bb54ab8dbd"
+  },
+  "review": {
+    "state": "approved-by-user-request",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-20T12:00:00+08:00"
+  },
+  "generatedAt": "2026-08-20T02:00:28.075Z",
+  "publicPath": "tools/imagegen/out/reference-v1/masters/pet-milk-tea-shopkeeper_public-v01-master-v01.webp",
+  "publicSha256": "c88f2aafc907b1772f7c909f71835e1f6c15eba5913478ba89bdf305881cbeaf",
+  "approvedAt": "2026-08-20T12:00:00+08:00",
+  "approval": {
+    "state": "approved-for-mini-program-display",
+    "approvedBy": "user-request",
+    "approvedAt": "2026-08-20T12:00:00+08:00"
+  },
+  "masterSha256": "c88f2aafc907b1772f7c909f71835e1f6c15eba5913478ba89bdf305881cbeaf",
+  "currentFrozenMasterPath": "tools/imagegen/out/reference-v1/masters/pet-milk-tea-shopkeeper_public-v01-master-v01.webp",
+  "currentFrozenMasterVersion": "public-v01-master-v01"
+}

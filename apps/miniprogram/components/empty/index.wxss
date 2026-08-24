@@ -1,0 +1,194 @@
+@import "../shared.wxss";
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-6) var(--space-4);
+  text-align: center;
+}
+
+/*
+ * 画框 240×240rpx（方案 3.6）。去掉原先的虚线圆容器 —— 方案要求单色线条、克制，
+ * 容器边框会与线条图形抢注意力。color 定在这里，子元素统一吃 currentColor。
+ */
+.empty-art {
+  position: relative;
+  width: 240rpx;
+  height: 240rpx;
+  margin-bottom: var(--space-2);
+  color: var(--text-secondary);
+  opacity: .55;
+}
+
+.empty-part {
+  position: absolute;
+  box-sizing: border-box;
+  border-color: currentColor;
+  border-style: solid;
+}
+
+/* ── paw：默认。宽椭圆掌垫 + 两个脚趾 ───────────────────────────────── */
+.empty-art-paw .empty-part-a {
+  bottom: 40rpx;
+  left: 60rpx;
+  width: 120rpx;
+  height: 96rpx;
+  border-width: 3rpx;
+  border-radius: var(--radius-pad);
+}
+
+.empty-art-paw .empty-part-b,
+.empty-art-paw .empty-part-c {
+  top: 52rpx;
+  width: 42rpx;
+  height: 50rpx;
+  border-width: 3rpx;
+  border-radius: 50%;
+}
+
+.empty-art-paw .empty-part-b { left: 52rpx; }
+.empty-art-paw .empty-part-c { right: 52rpx; }
+
+/* ── photo：相框 + 山线 + 太阳点 ─────────────────────────────────────── */
+.empty-art-photo .empty-part-a {
+  top: 48rpx;
+  left: 24rpx;
+  width: 192rpx;
+  height: 144rpx;
+  border-width: 3rpx;
+  border-radius: var(--radius-sm);
+}
+
+/* 山线：只留左上、右上两条边再转 45°，得到一个 △ 的两条斜边 */
+.empty-art-photo .empty-part-b {
+  bottom: 62rpx;
+  left: 62rpx;
+  width: 78rpx;
+  height: 78rpx;
+  border-width: 3rpx 0 0 3rpx;
+  transform: rotate(45deg);
+}
+
+.empty-art-photo .empty-part-c {
+  top: 74rpx;
+  right: 54rpx;
+  width: 26rpx;
+  height: 26rpx;
+  border-width: 3rpx;
+  border-radius: 50%;
+}
+
+/* ── order：票据 + 两条文字线 ────────────────────────────────────────── */
+.empty-art-order .empty-part-a {
+  top: 32rpx;
+  left: 48rpx;
+  width: 144rpx;
+  height: 176rpx;
+  border-width: 3rpx;
+  border-radius: var(--radius-xs);
+}
+
+.empty-art-order .empty-part-b,
+.empty-art-order .empty-part-c {
+  left: 76rpx;
+  height: 0;
+  border-width: 3rpx 0 0 0;
+}
+
+.empty-art-order .empty-part-b { top: 88rpx; width: 88rpx; }
+.empty-art-order .empty-part-c { top: 128rpx; width: 56rpx; }
+
+/* ── work：四角星火花，两个旋转的圆角折线交叉 ────────────────────────── */
+.empty-art-work .empty-part-a,
+.empty-art-work .empty-part-b {
+  top: 84rpx;
+  left: 84rpx;
+  width: 72rpx;
+  height: 72rpx;
+  border-width: 3rpx 0 0 3rpx;
+  border-radius: 100% 0 0 0;
+}
+
+.empty-art-work .empty-part-a { transform: rotate(45deg); }
+.empty-art-work .empty-part-b { transform: rotate(225deg); }
+
+/* 小火花：右上角的次级星点，打破单一图形的呆板 */
+.empty-art-work .empty-part-c {
+  top: 48rpx;
+  right: 44rpx;
+  width: 28rpx;
+  height: 28rpx;
+  border-width: 3rpx 0 0 3rpx;
+  border-radius: 100% 0 0 0;
+  transform: rotate(45deg);
+}
+
+/* ── pet：猫头 + 两只三角耳 ──────────────────────────────────────────── */
+.empty-art-pet .empty-part-a {
+  bottom: 44rpx;
+  left: 56rpx;
+  width: 128rpx;
+  height: 116rpx;
+  border-width: 3rpx;
+  border-radius: var(--radius-head);
+}
+
+.empty-art-pet .empty-part-b,
+.empty-art-pet .empty-part-c {
+  top: 52rpx;
+  width: 46rpx;
+  height: 46rpx;
+  border-width: 3rpx 3rpx 0 0;
+  transform: rotate(-45deg);
+}
+
+.empty-art-pet .empty-part-b { left: 62rpx; }
+.empty-art-pet .empty-part-c { right: 62rpx; }
+
+/* cute 主题的装饰点；其他主题页面不传 decor，保持克制 */
+.empty-dots {
+  position: absolute;
+  right: 16rpx;
+  bottom: 24rpx;
+  width: 24rpx;
+  height: 24rpx;
+  border-radius: 50%;
+  background: var(--secondary);
+}
+
+/*
+ * 黏土底座（方案 J「只抽取质感层」）。
+ *
+ * 与 .empty-art 同尺寸并绝对定位到其后方，靠黏土四层阴影造出凸起感。
+ * 无描边：J 的厚度来自内高光 + 内阴影 + 双层外投影，加边框反而会压平。
+ * 只在页面显式传 clay 时出现，默认空态仍是方案 3.6 的克制线条。
+ */
+.empty-plinth {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: var(--radius-clay);
+  background: var(--card-background);
+  box-shadow: inset 0 -10rpx 20rpx var(--clay-highlight), var(--shadow-clay-body);
+}
+
+/*
+ * 底座出现时线条要压在它上面。.empty-part 是绝对定位且写在 .empty-plinth 之后，
+ * 本就在其上层，这里只把整体不透明度提回来 —— 底座已提供足够对比，
+ * 不再需要靠淡化退让给成品图。
+ */
+.empty-art-on-clay {
+  opacity: .8;
+}
+
+.empty-title {
+  color: var(--text-primary);
+  font-size: var(--font-h3);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-tight);
+  line-height: var(--lh-h3);
+}

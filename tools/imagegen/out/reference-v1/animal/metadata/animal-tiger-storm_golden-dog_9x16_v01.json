@@ -1,0 +1,53 @@
+{
+  "templateId": "animal-tiger-storm",
+  "entryId": "action",
+  "title": "风暴巨兽概念",
+  "sourceEffectFile": "apps/website/public/assets/example/animal/jimeng-2026-08-06-7301-【正向提示词】 史诗级巨物恐惧症概念艺术图，电影级构图，蚂蚁视角，超现实主义。 ....png",
+  "status": "generated-pending-user-approval",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-08-06-7301-【正向提示词】 史诗级巨物恐惧症概念艺术图，电影级构图，蚂蚁视角，超现实主义。 ....png",
+      "sha256": "7d3a4508e69d9080bd8adba26ae6032e79f319910d20bfd4f6d8f601bdc6a935"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "golden-dog",
+      "species": "dog",
+      "breed": "adult Golden Retriever",
+      "path": "tools/imagegen/out/source/dog-golden.jpg",
+      "sha256": "1b6348ce4f6cd1d12f4c93d5f2a8a5c21847e0ce9bc43e4326c1ee89f7a89eef"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a one-time third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every designated original animal, human-like creature or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be an adult adult Golden Retriever with warm golden coat, floppy feathered ears, dark friendly eyes, broad soft muzzle and strong healthy adult build. Render the face, fur and anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration or turn a stylized scene into a realistic photo. Keep the pet appealing and healthy, never skinny, gaunt, uncanny, aggressive or puppy-like. Keep the ant-scale viewpoint, storm clouds, lightning, central colossal silhouette and cinematic concept-art hierarchy; replace the tiger identity with a natural adult pet, not a humanoid monster. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character or artist names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a single finished vertical image at exact 9:16 composition, 720x1280. Use Image 1 as the full visual reference for composition, camera angle, crop, perspective, action, pose, expression, gaze direction, stormy atmosphere, lightning placement, cinematic concept-art hierarchy, palette, lighting, line quality, texture, and overall style. Use Image 2 only as the identity reference for the subject, and replace the tiger in Image 1 with one coherent adult Golden Retriever. The retriever must be healthy, natural, adult, and anatomically correct: warm golden coat, floppy feathered ears, dark friendly eyes, broad soft muzzle, strong adult build, thick neck, full chest, natural canine proportions, no puppy look, no human traits, no extra limbs or eyes. Render the dog fully in Image 1’s dramatic visual language, not as a pasted photo. Preserve the colossal scale, central hero framing, storm clouds, lightning arcs, windblown fur, dark cinematic mood, and all background structure and debris exactly in the spirit of Image 1. Do not redesign or beautify the background. Keep the same contact relationships and scene layout, only changing the subject identity and the smallest anatomy details needed for a correct adult dog. Remove any source watermarks or brand text and replace them with clean, minimal original placeholder text only if needed, without introducing any logos or signatures. The final image should feel like a dramatic fantasy concept-art poster featuring a giant adult Golden Retriever under lightning, maintaining Image 1’s composition and energy precisely.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-tiger-storm_golden-dog_9x16_v01.png",
+    "sha256": "a008a66cbf48a7c411780bf4156054fde74c4fe26878e414bae4ce65008fa90a"
+  },
+  "review": {
+    "state": "pending-human-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-17T16:37:38.176Z"
+}

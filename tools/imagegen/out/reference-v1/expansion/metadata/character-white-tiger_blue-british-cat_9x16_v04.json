@@ -1,0 +1,94 @@
+{
+  "templateId": "character-white-tiger",
+  "entryId": "character",
+  "title": "白虎多姿态设定",
+  "sourceEffectFile": "apps/website/public/assets/example/9f8ebfc6-fb68-4b47-a7bb-625d105d4f12.jpg",
+  "status": "approved-frozen-master",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/9f8ebfc6-fb68-4b47-a7bb-625d105d4f12.jpg",
+      "sha256": "6a3a0d6bf9b9ce45c5baaa2b282e12b20374e8a869abfc4ffddfb0e254ca31c6"
+    },
+    {
+      "role": "self-owned-pet-identity-reference",
+      "identityId": "blue-british-cat",
+      "species": "cat",
+      "breed": "adult blue British Shorthair cat",
+      "path": "tools/imagegen/out/source/cat-british.jpg",
+      "sha256": "ddbdfb39b6cb3c6dddbfdd01555cd2fea299cfa927f76a1e7248d581152e0364"
+    }
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "inputFidelity": "high",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "quality": "high",
+  "prompt": "Use case: internal self-owned template master production through multi-image identity-preserving edit. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is a third-party effect reference used only in this controlled offline production request. Image 2 is the sole self-owned pet identity reference. Never expose Image 1 at runtime or in a public sample. Replace every original human, animal or character subject in Image 1 with the exact adult pet identity from Image 2. Image 2 controls only species, breed, coat, markings, ears, eyes, actual age and healthy natural proportions. Image 1 controls every transferred visual detail: composition, camera, crop, perspective, action, pose, expression, gaze, lighting, palette, medium, line quality, brushwork, texture, clothing, landmarks, props, text layout and contact relationships. Preserve Image 1 exactly. Scene-change budget is 0%. Do not redesign, simplify, beautify, juvenilize, thin, elongate, age, recolour or clean up the background. Change only the designated subject identity and the smallest contact-boundary detail required for correct pet anatomy. The replacement must be adult blue British Shorthair cat with solid blue-grey coat, round broad face, amber eyes, small upright ears, plush dense fur, thick tail and sturdy adult body. Render the face, fur and all anatomy completely in Image 1's visual language; do not paste a photographic pet face into an illustration. Keep the pet friendly and appealing through the transferred expression, never generic, skinny, gaunt, stern, aggressive, uncanny or puppy-like. Keep the complete portrait multi-view sheet with one full-body adult blue British Shorthair from ears through four paws and tail plus all surrounding portrait, action and costume studies. Fit every view fully inside the canvas. All views share the identical blue-grey coat, amber eyes, round face and coherent original fantasy outfit while preserving the source pose and gesture. No cropped feet, missing view, source character mark or watermark. Keep all meaningful text, clothing, landmarks and distinctive props unless a rights-safe replacement is explicitly required. Replace known people, teams, brands, platform UI, watermarks and copyrighted character names with short original pet-safe wording while preserving the same text blocks and visual hierarchy. Do not generate new logos or signatures. Correct anatomy only: no extra ears, eyes, limbs, paws, fingers, fused joints, human hands, floating heads, broken clothing boundaries, residual source subject or duplicate pets. Keep one coherent adult pet identity throughout. This is a self-owned frozen-master candidate, not a runtime request. Return only the finished image.",
+  "revisedPrompt": "Create a clean 9:16 vertical character reference sheet at 720x1280 pixels, matching the composition of the provided source layout: a beige/cream paper-like background with one large full-body figure on the left and two bust portraits on the right, plus a second larger bust portrait at the lower right, all fitting fully inside the canvas with generous margins. The entire sheet should depict ONE coherent adult blue British Shorthair cat identity: solid blue-grey coat, round broad face, amber eyes, small upright ears, plush dense fur, thick tail, sturdy adult body. The cat should be rendered in the exact same fantasy-anime illustration language as the source: stylized linework, soft cel shading, crisp outlines, warm neutral palette, decorative costume details, and friendly expressive face.\n\nPreserve the original source composition, camera angle, crop, pose, gesture, and visual hierarchy: \n- Left side: full-body cat character in a confident standing pose, one paw raised in a peace sign, wearing the same fantasy outfit structure as the source (turtleneck top, shoulder armor, belt, shorts, boots, tail visible), but adapted to the cat anatomy.\n- Top right: close bust portrait with a smiling expression and slightly open mouth.\n- Bottom right: close bust portrait with a wink and peace sign gesture, same outfit motif.\n- Keep the proportions and placement of the three studies similar to the source sheet.\n\nThe outfit should remain coherent across all views: maroon headband with gold ornament, dark blue/gray turtleneck, brown leather straps, shoulder armor, shorts, gloves/gauntlets, boots, and fantasy accessories. Maintain the transferred pose and expression from the source, but ensure correct adult cat anatomy only: no human hands, no extra limbs, no extra eyes, no broken joints, no floating heads, no duplicated subjects, no cropped feet, no missing tail, no juvenile proportions.\n\nKeep the face and fur fully stylized in the same drawn language as the source; do not make it photorealistic. Friendly appealing expression, not stern or aggressive. Preserve the source lighting and neutral soft studio feel. Preserve the background exactly as a simple plain paper/cream backdrop with no redesign.\n\nReplace all watermarks, platform names, and source-specific text with small neutral pet-safe placeholder text blocks that preserve the same visual weight and placement hierarchy, without using any real brand names or logos. Do not add new logos or signatures.\n\nFinal image should look like a polished frozen-master character sheet, fully self-contained, with one adult blue British Shorthair cat identity consistently present in all views.",
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/expansion/candidates/character-white-tiger_blue-british-cat_9x16_v04.png",
+    "sha256": "87e65e2dec16893797564dcbdbff626348e52e2d88428cff1c2cfdb134dc4fa9"
+  },
+  "review": {
+    "state": "approved-by-user",
+    "finalApproval": "approved",
+    "findings": [],
+    "approvedAt": "2026-08-20T12:00:00+08:00"
+  },
+  "generatedAt": "2026-08-18T07:24:47.546Z",
+  "version": "v04",
+  "candidatePath": "tools/imagegen/out/reference-v1/expansion/candidates/character-white-tiger_blue-british-cat_9x16_v04.png",
+  "masterPath": "tools/imagegen/out/reference-v1/masters/character-white-tiger_blue-british-cat_9x16_v04.webp",
+  "masterSha256": "1223945670fee696dce29c615ffc64beeeab1eaa64bf23c82d068c3c8dc6b4a9",
+  "approval": {
+    "state": "approved-and-frozen",
+    "approvedBy": "user",
+    "approvedAt": "2026-08-20T12:00:00+08:00",
+    "note": "用户审阅 pending-masters-comparison 后明确表示除指定重做和删除项外，其余模板可以冻结。"
+  },
+  "runtimeReferenceContract": {
+    "endpoint": "/v1/images/edits",
+    "provider": "lingsuan",
+    "image1": {
+      "role": "self-owned-frozen-master",
+      "path": "tools/imagegen/out/reference-v1/masters/character-white-tiger_blue-british-cat_9x16_v04.webp",
+      "sha256": "1223945670fee696dce29c615ffc64beeeab1eaa64bf23c82d068c3c8dc6b4a9"
+    },
+    "image2": {
+      "role": "user-pet-identity-only"
+    },
+    "inputFidelity": "high",
+    "sceneChangeBudget": "0%",
+    "excludes": [
+      "third-party-effect-reference",
+      "previous-failed-candidate",
+      "unapproved-candidate"
+    ]
+  },
+  "qualityBaseline": {
+    "required": [
+      "Keep the complete portrait multi-view sheet with one full-body adult blue British Shorthair from ears through four paws and tail plus all surrounding portrait, action and costume studies. Fit every view fully inside the canvas. All views share the identical blue-grey coat, amber eyes, round face and coherent original fantasy outfit while preserving the source pose and gesture. No cropped feet, missing view, source character mark or watermark.",
+      "exact 720x1280 portrait output",
+      "same approved composition, action, expression, lighting, palette, medium and text hierarchy"
+    ],
+    "reject": [
+      "scene redesign or missing distinctive layout details",
+      "juvenilized, malformed, duplicated or inconsistent pet anatomy",
+      "logo, platform UI, account ID, watermark or signature"
+    ]
+  }
+}

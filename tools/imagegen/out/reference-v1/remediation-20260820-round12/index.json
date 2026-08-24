@@ -1,0 +1,18 @@
+{
+  "status": "pending-user-review",
+  "provider": "lingsuan",
+  "generatedAt": "2026-08-20T03:03:38.964Z",
+  "templateIds": [
+    "action-giant-companion",
+    "character-snow-leopard",
+    "character-white-tiger"
+  ],
+  "sourcePolicy": "original-effect-reference-plus-self-owned-pet-identity-only",
+  "forbiddenInputs": [
+    "frozen-master",
+    "public-preview",
+    "previous-candidate",
+    "comparison-sheet",
+    "contact-sheet"
+  ]
+}

@@ -1,0 +1,42 @@
+---
+/* 文章列表的卡片。列表页与标签页共用。 */
+import { Image } from "astro:assets";
+import { formatDate, type Post } from "../lib/posts";
+
+interface Props {
+  post: Post;
+  /** 首屏那几张不 lazy —— 列表页顶部的卡片是首屏内容。 */
+  eager?: boolean;
+}
+
+const { post, eager = false } = Astro.props;
+const { data } = post;
+---
+
+<article class="post-card">
+  <a href={`/blog/${post.id}/`}>
+    {
+      data.cover && (
+        <div class="post-cover">
+          {/* Image 组件自动带 width/height 与多档尺寸，防 CLS */}
+          <Image
+            src={data.cover}
+            alt={data.coverAlt ?? ""}
+            widths={[400, 800]}
+            sizes="(min-width: 1024px) 360px, (min-width: 640px) 50vw, 100vw"
+            loading={eager ? "eager" : "lazy"}
+            decoding="async"
+          />
+        </div>
+      )
+    }
+    <div class="post-body">
+      <h3 class="h3">{data.title}</h3>
+      <p class="post-excerpt">{data.description}</p>
+      <p class="post-meta">
+        <time datetime={data.publishedAt.toISOString()}>{formatDate(data.publishedAt)}</time>
+        {data.tags.length > 0 && <span>· {data.tags.join(" · ")}</span>}
+      </p>
+    </div>
+  </a>
+</article>

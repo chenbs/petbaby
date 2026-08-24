@@ -1,0 +1,63 @@
+{
+  "templateId": "animal-ink-scratch-portrait",
+  "entryId": "art",
+  "title": "空气感素描肖像",
+  "version": "stylebridge-v01",
+  "status": "generated-pending-user-approval",
+  "remediation": "shared-two-stage-style-bridge",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "endpoint": "/v1/images/edits",
+  "inputs": [
+    {
+      "role": "one-time-third-party-effect-reference",
+      "path": "apps/website/public/assets/example/animal/jimeng-2026-06-21-1396-极简主义素描风格，空气感强，松散的细密长线条，精致的涂抹，形式多变，写意，细节敲....png",
+      "sha256": "9dc1e3ddf4e65a2fe78dd859b328c9ec93d5dddd75fdd550e59eff1bc642a749"
+    },
+    {
+      "role": "self-owned-pet-identity-reference-for-guide-only",
+      "path": "tools/imagegen/out/source/dog-black-lab.jpg",
+      "sha256": "20960d2ace805e68b41a7934e37ebdf24b7007f8f3fa85527d9beb22d2df6022"
+    },
+    {
+      "role": "pre-stylized-identity-guide-for-final-edit",
+      "path": "tools/imagegen/out/reference-v1/animal/style-guides/animal-ink-scratch-portrait_black-lab-dog_guide-v01.png",
+      "sha256": "1e130b6c4ab1c05617eea989eae635d2f762918cd442d34584cdbc10cbdc428b"
+    }
+  ],
+  "finalEditInputOrder": [
+    "one-time-third-party-effect-reference",
+    "pre-stylized-identity-guide"
+  ],
+  "runtimeThirdPartyEffectReferenceIncluded": false,
+  "sceneChangeBudget": "0%",
+  "maskIncluded": false,
+  "coordinatePatchIncluded": false,
+  "guide": {
+    "prompt": "Use case: style-transfer identity preprocessing for a reusable pet template pipeline. Image 1 is the sole authority for visual medium and stylization only: copy its brushwork, line language, pigment behavior, edge treatment, texture scale, shape simplification, facial abstraction, anatomical stylization, local contrast and degree of realism. Image 2 is the sole authority for pet identity only: preserve its adult breed, coat pattern, markings, ear shape, eye color, muzzle proportions and healthy mature body type. Create one clean centered subject study of the pet from Image 2, fully redrawn through Image 1's non-photographic visual language. Use a plain unobtrusive background and do not copy Image 1's scene, pose, costume, props, text or layout. The pet must look drawn, painted or sculpted by the same visual system as Image 1 before it enters the final scene. Replace literal fur strands with the reference's marks and shapes; replace photographic eyes, wet nose highlights, lens lighting and realistic facial volume with the reference's stylized equivalents. Keep the pet recognizable, appealing, adult and healthy. No puppy or kitten proportions, no photorealistic face, no studio-photo lighting, no shallow depth of field, no realistic fur microtexture, no text, no logo and no watermark. Identity: adult adult black Labrador Retriever; solid glossy black coat, warm brown eyes, broad black nose, soft dropped ears, broad gentle muzzle and strong adult build. Return only the finished pre-stylized identity guide.",
+    "revisedPrompt": "Create a clean centered subject study of an adult black Labrador Retriever, fully redrawn in a monochrome ink-and-wash / brush painting visual language inspired by a loose expressive sumi-e animal portrait: visible brushwork, calligraphic line language, ink bleed, soft washes, dry-brush edges, simplified shapes, stylized facial abstraction, high-contrast dark massing with delicate whisker lines, and painterly negative space. Identity must read clearly as an adult healthy black Labrador: solid glossy black coat, warm brown eyes, broad black nose, soft dropped ears, broad gentle muzzle, strong mature body type. Keep the dog recognizable and appealing, with no puppy proportions and no photorealism. Replace literal fur strands with expressive marks and shapes; replace realistic eye rendering and nose highlights with stylized painted equivalents; avoid lens lighting, studio-photo look, shallow depth of field, and micro-fur texture. Center the subject on a plain unobtrusive warm off-white background, isolated and clean, with no scene, props, costume, text, logo, or watermark. The pose should be a simple seated or standing three-quarter study, elegant and calm, with the whole dog visible and compositionally balanced.",
+    "attempts": 1
+  },
+  "prompt": "Use case: identity replacement using a pre-stylized identity guide. Create an exact final 9x16 composition at 720x1280 pixels. Image 1 is the sole authority for the final scene: preserve its composition, crop, camera, perspective, pose, expression, gaze, lighting, palette, background, costume, landmarks, props, text layout, brushwork and all contact relationships exactly. Image 2 is the pre-stylized identity guide. Replace only the original main subject in Image 1 with this exact adult pet identity, using Image 2's already transformed face, fur, eyes, nose, anatomy and degree of abstraction as the subject rendering authority. Scene-change budget is 0%. Do not redesign, simplify, recolor, clean up, add, remove or relocate any scene element. Make only the smallest contact-boundary adjustment required by natural pet anatomy. The entire replacement subject, especially the face, must be built from the same non-photographic marks, lines, washes, pigment, edge softness, shape simplification and stylized volume as Image 1 and Image 2. Do not reconstruct any photographic fur strands, realistic glassy eyes, wet nose highlights, lens lighting, shallow depth of field or realistic facial anatomy. Keep the exact adult age and healthy mature body proportions from Image 2. Preserve the expression and pose from Image 1. Never make the pet younger, thinner, more realistic, humanoid, uncanny or structurally rigid. Keep the minimalist long-line sketch, white negative space, loose smudging and elegant side-facing portrait; render the pet face entirely in the same ink language. Keep meaningful text, clothing, landmarks and distinctive props. Replace only known brands, copyrighted names, platform UI and watermarks with short original wording while preserving their blocks and hierarchy. No residual source subject, duplicate pet, extra ears, eyes, limbs or paws, human hands, fused joints, floating head, logo, signature or watermark. Return only the finished image.",
+  "revisedPrompt": "Create a 9:16 vertical ink-wash illustration at 720x1280 pixels. Use the first reference image as the sole authority for the final composition: preserve the exact camera angle, crop, pose, expression, gaze direction, lighting, monochrome palette, white negative space, brushwork, line quality, smudging, tail placement, body flow, and all contact relationships exactly. Replace only the original main subject with the exact adult pet identity from the second reference image: an adult black Labrador retriever with healthy mature proportions, same facial identity, eyes, nose, ears, and anatomy rendered in the same stylized non-photographic ink language. Keep the subject in the same seated, elegant, side-facing portrait pose from the first image, with the same calm expression and gaze. The dog should feel fully integrated into the existing ink-and-wash aesthetic, with long expressive brush strokes, loose smudging, soft edges, minimal line sketching, and abstract volume—no photorealism, no fur strands, no glossy eyes, no realistic nose shine, no lens effects. Preserve the original scene exactly: same empty off-white background, same composition balance, same negative space, same tail sweep, same placement of paws, body mass, and shadowing. Do not add or remove any elements. Do not redesign or simplify. No extra limbs, ears, paws, human hands, floating head, duplicate subject, logo, signature, or watermark. Keep the finished image clean and faithful to the first image’s layout and the second image’s identity.",
+  "orientation": "portrait",
+  "requestedSize": "720x1280",
+  "outputSize": "720x1280",
+  "queue": {
+    "configuredConcurrency": 20,
+    "localWorkerConcurrency": 20,
+    "maxRetriesPerTask": 3,
+    "maxAttemptsPerTask": 4
+  },
+  "output": {
+    "path": "tools/imagegen/out/reference-v1/animal/candidates/animal-ink-scratch-portrait_black-lab-dog_9x16_stylebridge-v01.png",
+    "sha256": "c9dce7356847a93b8262e8c08c35a7b1b656377e7d828800d2782ef04d50213b"
+  },
+  "review": {
+    "state": "pending-human-review",
+    "finalApproval": "pending-user",
+    "findings": []
+  },
+  "generationAttempts": 1,
+  "generatedAt": "2026-08-18T01:52:09.483Z"
+}

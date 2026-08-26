@@ -52,6 +52,19 @@
 
 容器内已包含 Node.js 22、pnpm、FFmpeg 6，**宿主机不需要装 Node.js**。
 
+### 1.2.1 Docker 数据根目录必须使用本地文件系统
+
+PostgreSQL 和对象命名卷要求 Docker 的 `DockerRootDir` 位于本地 ext4 或 xfs 文件系统。不要把 `/var/lib/docker`（或 `docker info` 显示的其他根目录）放在 NFS、CIFS/SMB、`fuse` 等网络或用户态文件系统上。Docker 在首次挂载命名卷时会复制扩展属性；NFS 不能写入 `system.nfs4_acl` 时会出现 `failed to copy xattrs`，容器甚至不会创建。
+
+部署前检查：
+
+```bash
+docker info --format '{{.DockerRootDir}}'
+findmnt -T "$(docker info --format '{{.DockerRootDir}}')" -o FSTYPE,SOURCE,TARGET
+```
+
+如果输出为 `nfs`/`nfs4`/`cifs` 或其他非本地类型，请先停 Docker，将数据根目录迁移到本地 SSD（例如 `/var/lib/docker-local`），再启动并确认 `DockerRootDir` 已改变。迁移前必须备份并保留旧目录，确认容器和卷均正常后再清理旧目录；不要为绕过错误直接执行 `docker compose down -v`，该命令会同时删除对象存储卷。
+
 ### 1.3 网络与域名
 
 | 项目       | 要求                                                     |

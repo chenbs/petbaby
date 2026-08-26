@@ -32,6 +32,25 @@ require_docker() {
   docker info >/dev/null 2>&1 || fail "当前用户无法访问 Docker daemon，请使用 sudo 或执行 usermod -aG docker \$USER 后重新登录"
 }
 
+check_docker_storage() {
+  docker_root=$(docker info --format '{{.DockerRootDir}}' 2>/dev/null || true)
+  [ -n "$docker_root" ] || { warn "无法读取 DockerRootDir，跳过文件系统兼容性检查"; return 0; }
+
+  fs_type=""
+  if command -v findmnt >/dev/null 2>&1; then
+    fs_type=$(findmnt -T "$docker_root" -n -o FSTYPE 2>/dev/null | awk 'NF { print $1; exit }' || true)
+  fi
+  if [ -z "$fs_type" ] && command -v stat >/dev/null 2>&1; then
+    fs_type=$(stat -f -c %T "$docker_root" 2>/dev/null || true)
+  fi
+
+  case "$fs_type" in
+    nfs|nfs4|cifs|smb*|9p|fuse*|glusterfs|ceph|lustre|afs|davfs)
+      fail "Docker 数据根目录 $docker_root 位于 $fs_type 文件系统；Docker 创建命名卷会复制 system.nfs4_acl 而失败。请将 Docker data-root 迁移到本地 ext4/xfs 后重试（见 docs/delivery/02-deployment-guide.md）。"
+      ;;
+  esac
+}
+
 check_host_compatibility() {
   if [ -r /etc/centos-release ] && grep -qE 'release 7\.' /etc/centos-release; then
     warn "检测到 CentOS 7（已于 2024-06-30 结束生命周期）。仅建议用于临时测试机，不建议承载正式生产。"

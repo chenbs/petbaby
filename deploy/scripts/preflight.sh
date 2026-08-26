@@ -9,6 +9,7 @@ resolve_mode "${1:-}"
 require_env_file
 require_docker
 check_host_compatibility
+check_docker_storage
 
 NODE_BASE_IMAGE=$(env_value NODE_BASE_IMAGE)
 POSTGRES_IMAGE=$(env_value POSTGRES_IMAGE)

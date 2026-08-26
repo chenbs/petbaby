@@ -1,7 +1,5 @@
 import "server-only";
 
-import petHumanEffectPromptRecords from "@/server/pet-human-effect-prompts.json";
-
 export type ImageTemplateSubjectMode = "pet" | "owner-pet" | "pet-human";
 export type ImageTemplateOrientation = "portrait" | "landscape";
 export type ImageTemplateStatus = "live" | "pending-master" | "pending-review";
@@ -18,19 +16,23 @@ export type ImageTemplateDefinition = {
   status: ImageTemplateStatus;
   masterStorageKey?: string;
   sampleStorageKey?: string;
-  effectPrompt?: string;
 };
 
-type PetHumanEffectPromptRecord = { id: string; prompt: string };
-
-const petHumanEffectPrompts = new Map<string, string>();
-for (const record of petHumanEffectPromptRecords as PetHumanEffectPromptRecord[]) {
-  const id = record.id.trim();
-  const prompt = record.prompt.trim();
-  if (!id || !prompt) throw new Error("PET_HUMAN_EFFECT_PROMPT_INVALID");
-  if (petHumanEffectPrompts.has(id)) throw new Error(`PET_HUMAN_EFFECT_PROMPT_DUPLICATE:${id}`);
-  petHumanEffectPrompts.set(id, prompt);
-}
+const petHumanPrompt = [
+  "1、以图二作为主要视觉参考，参考权重约 50%。",
+  "最大程度保持图二的：整体场景与构图、环境与空间关系、主体动作与姿态、整体色调与光影氛围、美术风格与表现形式、画面质感、细节丰富度、精细程度与完成度。",
+  "生成结果应整体呈现出与图二高度一致的视觉世界与艺术表现，不要改变图二原有的场景设计、环境色彩、构图逻辑和整体风格。",
+  "允许在不破坏图二整体视觉统一性的前提下，对人物进行适度重新设计，包括：五官颜色、头发颜色与造型、装饰元素、装饰颜色与形状、服饰款式、服饰颜色及相关配饰。",
+  "2、提取图一动物主体的核心视觉特征，参考权重约 50%，并将这些动物特征转换为自然的人类视觉语言，融入图二的人物主体设计。",
+  "重点提取：眼睛特征、脸部特征、口鼻区域特征、整体配色、神态与气质、毛发质感、毛发颜色、纹理特征及具有辨识度的视觉细节。",
+  "将提取出的动物特征抽象、转译并人类化表达，应用于图二人物的：五官与五官配色、发型与头发颜色、服饰颜色、服饰设计、配饰与装饰元素、帽子、簪子、耳钉、手表、手链、戒指、领带及其他细节配件。",
+  "必须遵循以下原则：",
+  "不得直接将动物的耳朵、鼻子、眼睛、嘴巴、爪子、毛发结构等动物器官原样移植到人物身上。",
+  "禁止改变图二人物原有五官形状与基本结构。",
+  "禁止改变图二原有场景颜色与整体环境色调。",
+  "最终效果应呈现为：",
+  "图二人物仍然是完整、自然、协调的人类角色，仅在五官颜色、服饰、装饰品和气质层面能够明显感受到图一动物的特征。",
+].join("\n");
 
 const templatePromptExtensions: Partial<Record<string, readonly string[]>> = {
   "dessert-shopkeeper": [
@@ -206,17 +208,10 @@ const registeredTemplates: ImageTemplateDefinition[] = [
 ];
 
 const templates = registeredTemplates.map((template) => {
-  const effectPrompt = template.subjectMode === "pet-human"
-    ? petHumanEffectPrompts.get(template.templateId)
-    : undefined;
-  const resolved = effectPrompt ? { ...template, effectPrompt } : template;
-  if (template.status !== "live" || !template.masterStorageKey) return resolved;
-  if (template.subjectMode === "pet-human" && !effectPrompt) {
-    throw new Error(`PET_HUMAN_EFFECT_PROMPT_MISSING:${template.templateId}`);
-  }
+  if (template.status !== "live" || !template.masterStorageKey) return template;
   const masterFilename = template.masterStorageKey.slice("samples/image-templates/".length);
   return {
-    ...resolved,
+    ...template,
     // 宠物人化的新方案明确要求同一张自有效果图同时用于展示和图二参考。
     sampleStorageKey: template.subjectMode === "pet-human"
       ? template.masterStorageKey
@@ -253,20 +248,7 @@ export function imageTemplateSupportsReroll(template: ImageTemplateDefinition) {
 export function buildImageTemplatePrompt(template: ImageTemplateDefinition, rerollReason?: ImageTemplateRerollReason) {
   if (template.subjectMode === "pet-human") {
     if (rerollReason) throw new Error("PET_HUMAN_REROLL_NOT_SUPPORTED");
-    const effectPrompt = template.effectPrompt?.trim();
-    if (!effectPrompt) throw new Error(`PET_HUMAN_EFFECT_PROMPT_MISSING:${template.templateId}`);
-    return [
-      "1、参考图二生成新图，图二参考占比重80%，要尽可能保持图二的场景、色调、服饰、动作、风格、画质、细腻程度。允许修改眼睛、头发、装饰。",
-      "2、以下提示词占比重10%：",
-      `   - 【${effectPrompt}】。`,
-      "3、以下提示词占比重10%，允许按照提取的特征修改眼睛颜色、头发颜色等细节：",
-      "   - 【提取图一中动物的特征，眼睛、脸部、口鼻、颜色、神态、毛发等部分，把动物特征翻译成人类视觉语言生图。着重是眼睛颜色、毛发颜色。",
-      "      1. 眼睛：大小、形状、眼距、颜色、瞳孔、眼睑形态、眼神情绪 → 转换为对应的人类眼睛，而非复制动物眼。",
-      "      2. 附属特征转译（不可直接复制动物器官）：耳朵→发型轮廓、脸侧头发、饰品或服装结构；毛发→发型、发丝质感、服装材质；羽毛→发型、肩部装饰、服饰纹理；鳞片→饰品、服装纹理、局部材质；角→发型轮廓、头饰或服装结构。",
-      "      3. 颜色与材质：保留最核心的色彩关系、明暗关系与质感，自然对应到头发、皮肤。",
-      "      最终画面只允许一个完整、自然、可信的真人，不得出现动物、动物口鼻、毛脸、羽毛、爪子或任何混合解剖。】",
-      `输出尺寸严格为${template.size}。`,
-    ].join("\n");
+    return petHumanPrompt;
   }
   const shared = [
     "This is an identity replacement image edit, not a new scene design.",

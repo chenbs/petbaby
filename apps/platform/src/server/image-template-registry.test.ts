@@ -41,20 +41,21 @@ describe("image template registry", () => {
     expect(getImageTemplate("animal-ink-scratch-portrait", { includePending: true })).toBeUndefined();
   });
 
-  it("宠物人化模板保持待审批，并按效果图提示词生成两张且禁止重抽", () => {
+  it("宠物人化模板保持待审批，并使用固定提示词生成两张且禁止重抽", () => {
     const template = getImageTemplate("human-effect-01", { includePending: true });
+    const anotherTemplate = getImageTemplate("human-effect-02", { includePending: true });
     if (!template) throw new Error("human-effect-01 missing");
+    if (!anotherTemplate) throw new Error("human-effect-02 missing");
     expect(template).toMatchObject({ subjectMode: "pet-human", status: "pending-review", version: "v01" });
     expect(template.masterStorageKey).toBe("samples/image-templates/human-effect-01-a927e036d08d.webp");
     expect(template.sampleStorageKey).toBeUndefined();
     expect(getImageTemplate(template.templateId)).toBeUndefined();
-    expect(template.effectPrompt).toContain("中国绝色美女");
     const prompt = buildImageTemplatePrompt(template);
-    expect(prompt).toContain("参考图二生成新图，图二参考占比重80%，要尽可能保持图二的场景、色调、服饰、动作、风格、画质、细腻程度。");
-    expect(prompt).toContain("提取图一中动物的特征");
-    expect(prompt).toContain("最终画面只允许一个完整、自然、可信的真人");
-    expect(prompt).not.toContain("兽耳");
-    expect(prompt).not.toContain("尾巴");
+    expect(prompt).toContain("以图二作为主要视觉参考，参考权重约 50%");
+    expect(prompt).toContain("提取图一动物主体的核心视觉特征，参考权重约 50%");
+    expect(prompt).toContain("不得直接将动物的耳朵、鼻子、眼睛、嘴巴、爪子、毛发结构等动物器官原样移植到人物身上");
+    expect(prompt).toContain("图二人物仍然是完整、自然、协调的人类角色");
+    expect(buildImageTemplatePrompt(anotherTemplate)).toBe(prompt);
     expect(getImageTemplateCandidateCount(template)).toBe(2);
     expect(imageTemplateSupportsReroll(template)).toBe(false);
     expect(() => buildImageTemplatePrompt(template, "too-animal")).toThrow("PET_HUMAN_REROLL_NOT_SUPPORTED");

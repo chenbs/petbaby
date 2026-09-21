@@ -1,3 +1,4 @@
+const payment = require("../../services/payment");
 const api = require("../../services/api");
 const config = require("../../config");
 const { themedPage } = require("../../theme/page-mixin");
@@ -106,7 +107,7 @@ themedPage({
     api.request("/api/memberships", { method: "POST", data: { plan } })
       .then((item) => {
         const id = item.orderId || item.order_id;
-        return id ? api.request("/api/growth-orders/" + id + "/pay", { method: "POST" }) : item;
+        return id ? payment.pay("growth", id) : item;
       })
       .then(() => { this.setData({ buyingPlan: "", message: "会员已开通" }); this.load(); })
       .catch((error) => this.setData({ buyingPlan: "", error: error.message }));
@@ -180,7 +181,7 @@ themedPage({
     this.setData({ unlockingId: id, message: "", error: "" });
     api.request("/api/annual-reports/" + id, { method: "PATCH", data: { action: "unlock" } })
       .then((result) => {
-        if (result && result.id) return api.request("/api/growth-orders/" + result.id + "/pay", { method: "POST" }).then(() => "高清版已解锁");
+        if (result && result.id) return payment.pay("growth", result.id).then(() => "高清版已解锁");
         return result && result.viaEntitlement ? "已用会员权益解锁高清版" : "高清版已解锁";
       })
       .then((message) => { this.setData({ unlockingId: "", message }); this.load(); })

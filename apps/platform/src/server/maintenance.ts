@@ -1,7 +1,6 @@
 import "server-only";
 
 import { getDatabase } from "@/server/db/client";
-import { configuredIslandAssetCount, configuredIslandAssetPaths } from "@/server/island/assets";
 import { objectStorage } from "@/server/storage";
 
 export async function closeExpiredOrders() {
@@ -32,22 +31,11 @@ export async function healthSnapshot() {
     database.query<{ ok: number }>("SELECT 1 ok"),
     database.query<{ queued: number; stale: number }>("SELECT count(*) FILTER (WHERE status='queued')::int queued,count(*) FILTER (WHERE status='processing' AND locked_at < now()-interval '5 minutes')::int stale FROM generation_tasks"),
   ]);
-  /*
-   * 岛素材的配置张数。**不参与 `status` 判定** —— 素材清单为空是正式状态
-   * （素材由人工生成后回填 `ISLAND_ASSET_PATHS`，在那之前端上走「素材未就绪」路径，
-   * 功能可用），把它算进健康与否会让一个正常状态被报成 degraded。
-   *
-   * 暴露出来是为了让「漏灌」这件事有地方可查：素材不在镜像里，靠部署脚本灌进卷，
-   * 而漏灌时 `/api/plugins` 与本接口都正常、只有真去取字节才 404 ——
-   * 端上表现是大面积裂图且不报错。冒烟脚本读这个数逐张校验（`smoke-test.sh`）。
-   */
   return {
     status: db[0]?.ok === 1 && queue[0].stale === 0 ? "ok" : "degraded",
     database: db[0]?.ok === 1,
     queued: queue[0].queued,
     stale: queue[0].stale,
-    islandAssets: configuredIslandAssetCount(),
-    islandAssetPaths: configuredIslandAssetPaths(),
     timestamp: new Date().toISOString(),
   };
 }

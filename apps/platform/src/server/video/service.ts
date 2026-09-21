@@ -49,7 +49,7 @@ async function ensureCatalog() {
   const items = [
     ["template", "memory-film-v1", "温柔胶片", { duration: 15, canvas: "portrait" }],
     ["template", "memory-film-v2", "明亮日常", { duration: 15, canvas: "portrait" }],
-    ["font", "default", "PETBABY Sans", {}],
+    ["font", "default", "麻麻抱我 Sans", {}],
     ["bgm", "none", "无音乐", {}],
     ["bgm", "calm", "晚风", { frequency: 261 }],
     ["bgm", "bright", "晴天", { frequency: 523 }],

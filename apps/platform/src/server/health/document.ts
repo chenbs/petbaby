@@ -146,7 +146,7 @@ export function buildHealthDocumentSvg(input: HealthDocumentInput): string {
     ? textLines(sessionLines, 80, 1426, 40, 6)
     : `<text x="80" y="1426" font-family="sans-serif" font-size="26" fill="#6b7d73">还没有记录。</text>`}
 
-  <text x="80" y="${PAGE_HEIGHT - 60}" font-family="sans-serif" font-size="22" fill="#8b9992">由宠物造物局导出　内容来自你自己录入的记录　不替代执业兽医面诊</text>
+  <text x="80" y="${PAGE_HEIGHT - 60}" font-family="sans-serif" font-size="22" fill="#8b9992">由麻麻抱我导出　内容来自你自己录入的记录　不替代执业兽医面诊</text>
 </svg>`;
 }
 

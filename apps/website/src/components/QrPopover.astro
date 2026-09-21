@@ -34,7 +34,7 @@ const { id } = Astro.props;
       <circle cx="18" cy="9" r="1.7" />
     </svg>
     <QrImage size={MINIPROGRAM_QR.size} loading="lazy" />
-    <p class="qr-card-title">微信扫码开始创作</p>
-    <p class="qr-card-note">第一次创作不花钱</p>
+    <p class="qr-card-title">{MINIPROGRAM_QR.available ? "微信扫码开始创作" : "麻麻抱我，即将上线"}</p>
+    <p class="qr-card-note">{MINIPROGRAM_QR.available ? "具体服务以小程序内展示为准" : "先看看作品与创作指南"}</p>
   </div>
 </div>

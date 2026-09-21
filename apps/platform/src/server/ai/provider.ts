@@ -237,7 +237,7 @@ class LingsuanImageProvider implements ImageProvider {
   async generate(prompt: string, count: number, references?: ImageReferenceInput, options?: ImageGenerationOptions) {
     /*
      * `n=1` 迫使我们发 count 次请求。这里必须使用模块级共享队列，而不是每次
-     * `generate()` 各建一个工作池：同一进程内的 PL-10、岛立绘和并行任务会共享
+     * `generate()` 各建一个工作池：同一进程内的 PL-10和并行任务会共享
      * 同一组供应商槽位，环境变量即使误配为大于 20 也会被硬截断。
      *
      * 任一张失败仍整体抛错：PL-10 承诺的是「四选一」，只给两张属于降级交付，

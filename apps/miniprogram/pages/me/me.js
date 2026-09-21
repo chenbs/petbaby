@@ -55,13 +55,6 @@ themedPage({
    * navigateTo 对 tabBar 目标会直接失败且不报错到界面上 —— 表现是点了没反应。
    */
   openGrowth() { wx.switchTab({ url: "/pages/index/index" }); },
-  /**
-   * 宠物小岛。分包页面，路径以 `/island/` 开头（分包 root）。
-   *
-   * **不加第四个 tab**（22 号文 5.2）：tabBar 页面必须在主包内，主包余量不足 700KB。
-   * 所以入口只能是这一行 + 宠物档案的操作行。
-   */
-  openIsland() { wx.navigateTo({ url: "/island/index/index" }); },
   openMemorials() { wx.navigateTo({ url: "/pages/memorials/memorials" }); },
   openCommerce() { wx.navigateTo({ url: "/pages/commerce/commerce" }); },
   openLogin() { wx.navigateTo({ url: "/pages/login/login" }); },

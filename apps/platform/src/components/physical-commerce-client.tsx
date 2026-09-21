@@ -1,4 +1,5 @@
 "use client";
+import { payWebOrder, webPaymentEnabled, webPaymentNotice } from "@/lib/payment";
 
 import { useEffect, useState } from "react";
 
@@ -40,11 +41,11 @@ export function PhysicalCommerceClient() {
   async function create() {
     try {
       const order = await apiFetch<PhysicalOrder>("/api/physical-orders", { method: "POST", body: JSON.stringify({ workId, sku, address }) });
-      await apiFetch(`/api/physical-orders/${order.id}/pay`, { method: "POST" });
+      await payWebOrder("physical", order.id);
       setMessage(`已支付 ¥${Number(order.amount).toFixed(2)}，印刷文件正在质检`);
       await reload();
     } catch (error) { setMessage(error instanceof Error ? error.message : "下单失败"); }
   }
   const selected = skus.find((item) => item.code === sku);
-  return <><section className="panel"><div className="form-grid"><div className="field"><label htmlFor="physical-work">作品</label><select id="physical-work" value={workId} onChange={(event) => setWorkId(event.target.value)}>{works.map((work) => <option key={work.id} value={work.id}>{work.title}</option>)}</select></div><div className="field"><label htmlFor="physical-sku">商品规格</label><select id="physical-sku" value={sku} onChange={(event) => setSku(event.target.value)}>{skus.map((item) => <option key={item.code} value={item.code}>{item.name} · ¥{Number(item.amount).toFixed(2)}</option>)}</select></div>{Object.entries(address).map(([key, value]) => <div className="field" key={key}><label htmlFor={`address-${key}`}>{key}</label><input id={`address-${key}`} value={value} onChange={(event) => setAddress({ ...address, [key]: event.target.value })} /></div>)}</div><p className="privacy-note">会员的实体折扣在下单时自动生效，实付金额以订单为准。</p><button className="primary-button" onClick={create} disabled={!workId || !sku} type="button">{selected ? `创建订单并支付（${selected.name}）` : "创建订单并支付"}</button></section><div className="settings-list" style={{ marginTop: 20 }}>{orders.map((order) => <div key={order.id}><span><b>{order.sku}</b><small style={{ display: "block" }}>¥{Number(order.amount).toFixed(2)} · {order.status}</small></span><span>{order.tracking_no || "等待履约"}</span></div>)}</div>{message ? <div className="error-banner">{message}</div> : null}</>;
+  return <>{!webPaymentEnabled ? <p className="privacy-note">{webPaymentNotice}</p> : null}<section className="panel"><div className="form-grid"><div className="field"><label htmlFor="physical-work">作品</label><select id="physical-work" value={workId} onChange={(event) => setWorkId(event.target.value)}>{works.map((work) => <option key={work.id} value={work.id}>{work.title}</option>)}</select></div><div className="field"><label htmlFor="physical-sku">商品规格</label><select id="physical-sku" value={sku} onChange={(event) => setSku(event.target.value)}>{skus.map((item) => <option key={item.code} value={item.code}>{item.name} · ¥{Number(item.amount).toFixed(2)}</option>)}</select></div>{Object.entries(address).map(([key, value]) => <div className="field" key={key}><label htmlFor={`address-${key}`}>{key}</label><input id={`address-${key}`} value={value} onChange={(event) => setAddress({ ...address, [key]: event.target.value })} /></div>)}</div><p className="privacy-note">会员的实体折扣在下单时自动生效，实付金额以订单为准。</p><button className="primary-button" onClick={create} disabled={!webPaymentEnabled || !workId || !sku} type="button">{selected ? `创建订单并支付（${selected.name}）` : "创建订单并支付"}</button></section><div className="settings-list" style={{ marginTop: 20 }}>{orders.map((order) => <div key={order.id}><span><b>{order.sku}</b><small style={{ display: "block" }}>¥{Number(order.amount).toFixed(2)} · {order.status}</small></span><span>{order.tracking_no || "等待履约"}</span></div>)}</div>{message ? <div className="error-banner">{message}</div> : null}</>;
 }

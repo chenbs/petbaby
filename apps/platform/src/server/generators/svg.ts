@@ -35,7 +35,7 @@ function idCardPanel(input: GeneratorInput, type: string, x: number, y: number, 
   const labels: Record<string, string> = { identity: "居民身份证", passport: "宠物护照", household: "家庭户口本", vaccine: "疫苗接种证" };
   const photo = embeddedImage(input.photos[0].object);
   const title = labels[type] || labels.identity;
-  return `<g transform="translate(${x} ${y})"><rect width="${width}" height="${height}" rx="32" fill="#fff1b7" stroke="#14251c" stroke-width="5"/><rect width="${width}" height="100" rx="32" fill="#14251c"/><text x="36" y="65" fill="#fff" font-family="sans-serif" font-size="28" font-weight="700">PETBABY · ${title}</text><image href="${photo}" x="36" y="135" width="${width - 72}" height="${height - 310}" preserveAspectRatio="xMidYMid slice"/><text x="36" y="${height - 115}" fill="#216844" font-family="serif" font-size="44" font-weight="900">${escapeXml(input.pet.name)}</text><text x="36" y="${height - 65}" fill="#14251c" font-family="sans-serif" font-size="20">签发：${input.pet.species === "cat" ? "猫猫管理局" : "好朋友管理局"}</text></g>`;
+  return `<g transform="translate(${x} ${y})"><rect width="${width}" height="${height}" rx="32" fill="#fff1b7" stroke="#14251c" stroke-width="5"/><rect width="${width}" height="100" rx="32" fill="#14251c"/><text x="36" y="65" fill="#fff" font-family="sans-serif" font-size="28" font-weight="700">麻麻抱我 · ${title}</text><image href="${photo}" x="36" y="135" width="${width - 72}" height="${height - 310}" preserveAspectRatio="xMidYMid slice"/><text x="36" y="${height - 115}" fill="#216844" font-family="serif" font-size="44" font-weight="900">${escapeXml(input.pet.name)}</text><text x="36" y="${height - 65}" fill="#14251c" font-family="sans-serif" font-size="20">签发：${input.pet.species === "cat" ? "猫猫管理局" : "好朋友管理局"}</text></g>`;
 }
 
 export async function generateIdCard(input: GeneratorInput) {
@@ -62,7 +62,7 @@ export async function generateMoviePoster(input: GeneratorInput) {
     const x = composition === "ensemble" ? index * 360 : index ? 780 : 0;
     return `<image href="${embeddedImage(photo.object)}" x="${x}" y="0" width="${width}" height="1440" preserveAspectRatio="xMidYMid slice" opacity="${index ? 0.78 : 1}"/>`;
   }).join("");
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1440"><rect width="1080" height="1440" fill="${palette[0]}"/>${photos}<defs><linearGradient id="g" x2="0" y2="1"><stop offset="20%" stop-color="${palette[0]}" stop-opacity="0"/><stop offset="100%" stop-color="${palette[0]}" stop-opacity=".98"/></linearGradient></defs><rect width="1080" height="1440" fill="url(#g)"/><text x="64" y="1030" fill="${palette[1]}" font-family="serif" font-size="88" font-weight="900">${escapeXml(copy.title)}</text><text x="68" y="1100" fill="#fff" font-family="sans-serif" font-size="30">${escapeXml(copy.subtitle)}</text><text x="68" y="1190" fill="#fff" font-family="sans-serif" font-size="24">“${escapeXml(review)}”</text><text x="68" y="1320" fill="#fff" font-family="sans-serif" font-size="24" letter-spacing="8">NOW SHOWING · PETBABY PICTURES</text></svg>`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1440"><rect width="1080" height="1440" fill="${palette[0]}"/>${photos}<defs><linearGradient id="g" x2="0" y2="1"><stop offset="20%" stop-color="${palette[0]}" stop-opacity="0"/><stop offset="100%" stop-color="${palette[0]}" stop-opacity=".98"/></linearGradient></defs><rect width="1080" height="1440" fill="url(#g)"/><text x="64" y="1030" fill="${palette[1]}" font-family="serif" font-size="88" font-weight="900">${escapeXml(copy.title)}</text><text x="68" y="1100" fill="#fff" font-family="sans-serif" font-size="30">${escapeXml(copy.subtitle)}</text><text x="68" y="1190" fill="#fff" font-family="sans-serif" font-size="24">“${escapeXml(review)}”</text><text x="68" y="1320" fill="#fff" font-family="sans-serif" font-size="24" letter-spacing="8">麻麻抱我 · 作品</text></svg>`;
   return baseOutput(input, svg, copy.title, copy.subtitle);
 }
 
@@ -79,7 +79,7 @@ export async function generateTimeAlbum(input: GeneratorInput) {
     const caption = captions[index] || (index % 2 ? "一起发呆也很好" : "普通的一天，也在闪闪发光");
     return `<g transform="translate(${x} ${400 + index * 500}) rotate(${rotation})"><rect x="-15" y="-15" width="675" height="455" rx="22" fill="#fffef9"/><image href="${embeddedImage(photo.object)}" width="645" height="400" preserveAspectRatio="xMidYMid slice"/><text x="20" y="430" fill="#53645b" font-family="sans-serif" font-size="20">DAY ${String(index + 1).padStart(2, "0")} · ${escapeXml(caption)}</text></g>`;
   }).join("");
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}"><rect width="100%" height="100%" fill="${background}"/><text x="70" y="130" fill="#14251c" font-family="serif" font-size="76" font-weight="900">${escapeXml(copy.title)}</text><text x="72" y="195" fill="#53645b" font-family="sans-serif" font-size="28">${escapeXml(copy.subtitle)}</text><path d="M70 245h940" stroke="#216844" stroke-width="4"/>${photos}<text x="540" y="${height - 70}" text-anchor="middle" fill="#216844" font-family="sans-serif" font-size="22">PETBABY · TIME ALBUM</text></svg>`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}"><rect width="100%" height="100%" fill="${background}"/><text x="70" y="130" fill="#14251c" font-family="serif" font-size="76" font-weight="900">${escapeXml(copy.title)}</text><text x="72" y="195" fill="#53645b" font-family="sans-serif" font-size="28">${escapeXml(copy.subtitle)}</text><path d="M70 245h940" stroke="#216844" stroke-width="4"/>${photos}<text x="540" y="${height - 70}" text-anchor="middle" fill="#216844" font-family="sans-serif" font-size="22">麻麻抱我 · 时间相册</text></svg>`;
   const preview = await sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toBuffer();
   const output = baseOutput(input, svg, copy.title, copy.subtitle);
   output.files.push({ suffix: "png", body: new Uint8Array(preview), contentType: "image/png" });
@@ -125,7 +125,7 @@ export async function generateGrowthCompare(input: GeneratorInput) {
     <text x="70" y="178" fill="#53645b" font-family="sans-serif" font-size="26">${escapeXml(gapLine)}</text>
     ${panel(earliest, 70, earliestDay, dateOf(earliest.metadata.shotAt))}
     ${panel(latest, 550, latestDay, dateOf(latest.metadata.shotAt))}
-    <text x="540" y="1030" text-anchor="middle" fill="#216844" font-family="sans-serif" font-size="20" letter-spacing="4">PETBABY · GROWTH</text>
+    <text x="540" y="1030" text-anchor="middle" fill="#216844" font-family="sans-serif" font-size="20" letter-spacing="4">麻麻抱我 · 成长记录</text>
   </svg>`;
   const preview = await sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toBuffer();
   const output = baseOutput(input, svg, `${input.pet.name}的变化`, gapLine);

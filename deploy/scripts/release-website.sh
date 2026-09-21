@@ -35,6 +35,12 @@ else
 fi
 export SITE_URL
 
+for name in ICP_RECORD MINIPROGRAM_QR_AVAILABLE LEGAL_OPERATOR LEGAL_CONTACT LEGAL_ADDRESS LEGAL_PROCESSOR_DETAILS LEGAL_STORAGE_REGION LEGAL_APPROVED; do
+  value=$(printenv "$name" || true)
+  if [ -z "$value" ] && [ -f "$ENV_FILE" ]; then value=$(env_value "$name"); fi
+  export "$name=$value"
+done
+
 STARTED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 BEFORE=""
 
@@ -103,7 +109,10 @@ fi
 
 # 本仓库不是 pnpm workspace，一律 cd 进目录执行，不能用 --filter（方案 8 章）
 log "安装依赖并构建（SITE_URL=$SITE_URL）"
-( cd "$WEBSITE_DIR" && pnpm install --frozen-lockfile && pnpm build )
+( cd "$WEBSITE_DIR" && pnpm install --frozen-lockfile && pnpm check )
+if [ "$MODE" = "production" ]; then ( cd "$WEBSITE_DIR" && pnpm check:release ); fi
+( cd "$WEBSITE_DIR" && pnpm build )
+if [ "$MODE" = "production" ]; then ( cd "$WEBSITE_DIR" && pnpm check:release -- --dist ); fi
 
 [ -f "$WEBSITE_DIR/dist/index.html" ] || fail "构建产物里没有 index.html，构建可能失败了"
 

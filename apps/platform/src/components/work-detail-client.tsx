@@ -1,4 +1,5 @@
 "use client";
+import { payWebOrder, webPaymentEnabled, webPaymentNotice } from "@/lib/payment";
 
 import Link from "next/link";
 import { useState } from "react";
@@ -109,7 +110,7 @@ export function WorkDetailClient({ initialWork }: { initialWork: PublicWork }) {
     setBusy(true); setMessage("");
     try {
       const order = await apiFetch<{ id: string }>("/api/orders", { method: "POST", body: JSON.stringify({ workId: work.id, sku: `${work.pluginId}-single` }) });
-      const result = await apiFetch<{ work: PublicWork }>(`/api/orders/${order.id}/pay`, { method: "POST" });
+      const result = await payWebOrder<{ work: PublicWork }>("work", order.id);
       setWork(result.work);
       setMessage("已解锁高清无水印版本");
     } catch (error) { setMessage(error instanceof Error ? error.message : "解锁失败"); }
@@ -144,7 +145,7 @@ export function WorkDetailClient({ initialWork }: { initialWork: PublicWork }) {
         {pricing.tiered && pricing.accumulation ? <p className="privacy-note">已积累 {pricing.accumulation.photoCount} 张照片，跨度 {pricing.accumulation.spanDays} 天。</p> : null}
         {pricing.isMember && pricing.memberSaving > 0 ? <p className="privacy-note">会员价，比单买省 ¥{pricing.memberSaving}。</p> : null}
         {!pricing.isMember && nextTierCopy(pricing) ? <p className="privacy-note">{nextTierCopy(pricing)}</p> : null}
-        <button className="primary-button" disabled={busy} onClick={unlock} type="button">{busy ? "正在解锁…" : `支付 ¥${pricing.amount} 解锁高清无水印`}</button>
+        <button className="primary-button" disabled={!webPaymentEnabled || busy} onClick={unlock} type="button" title={!webPaymentEnabled ? webPaymentNotice : undefined}>{busy ? "正在解锁…" : `支付 ¥${pricing.amount} 解锁高清无水印`}</button>
       </section> : null}
       {versions.length > 1 ? <section className="panel" style={{ marginTop: 20 }}><b>历史版本</b><div className="button-row" style={{ marginTop: 12 }}>{versions.map((version) => <button className={version.version === work.version ? "primary-button" : "secondary-button"} disabled={busy || version.version === work.version} key={version.id} onClick={() => restore(version.id)} type="button">v{version.version} · {version.title}</button>)}</div></section> : null}
       <section className="panel" style={{ marginTop: 26 }}>

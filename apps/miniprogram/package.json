@@ -8,8 +8,5 @@
     "preview": "node scripts/ci.js preview",
     "upload": "node scripts/ci.js upload"
   },
-  "devDependencies": {
-    "miniprogram-ci": "2.1.31"
-  },
   "packageManager": "pnpm@10.13.1"
 }

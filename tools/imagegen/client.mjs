@@ -99,8 +99,7 @@ async function parse(response) {
  * @param background 传 `"transparent"` 要求直出带 alpha 的 PNG。**默认不传**。
  *        lingsuan 对该参数的表现与 packy 不同：**不报错，但也不生效** ——
  *        实测返回 200 且产物 `alpha=false`。所以调用方不能靠捕获 4xx 判断回落，
- *        必须**回读产物的 alpha 通道**（`generate.mjs` 的 islandJobs 已这样做），
- *        否则岛的立绘会拿到不透明底、抠图无从下手，最终变成一张贴纸。
+ *        必须**回读产物的 alpha 通道**确认透明背景。
  */
 export async function generate(config, { prompt, size = "1024x1024", quality = "high", outputFormat = "png", background = "", maxRetries = 3 }) {
   return requestQueue.run(() => attempt(async () => {

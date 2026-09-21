@@ -1,6 +1,6 @@
 # 待补填信息清单
 
-更新：2026-08-18 ｜ 用途：把「还缺什么、缺了会怎样、拿到后填哪里、怎么验证」集中成一张可勾选的表
+更新：2026-09-21 ｜ 用途：把「还缺什么、缺了会怎样、拿到后填哪里、怎么验证」集中成一张可勾选的表
 
 **本文件只记录状态，永不记录真实值。** 真实值只写进：测试机的 `deploy/.env.staging`、生产的 `deploy/.env.production` 或云密钥管理、`apps/miniprogram/config.local.js`、`apps/miniprogram/project.private.config.json`、仓库外的上传私钥文件。不要回填到本文档、提交到仓库、贴进聊天或打进日志。
 
@@ -14,9 +14,9 @@
 | ------------------ | ---------------------------------------- | ----------------- |
 | **A. 测试机部署（当前目标）** | 一个已备案域名 + DNS A 记录 + 一台装了 Docker 的 Linux | 域名已备案；密钥全部由脚本自动生成 |
 | **B. 小程序真机与体验版**   | 小程序 AppID、AppSecret、服务器域名登记、上传私钥、IP 白名单  | 全部待申请             |
-| **C. 正式生产上线**      | 普通微信支付凭据、虚拟支付开通与场景结论、S3 兼容对象存储、正式管理员 UUID、告警通道 | 全部待申请 |
+| **C. 正式生产上线**      | 普通微信支付凭据、虚拟支付开通与场景结论、腾讯云 COS、正式管理员 UUID、告警通道 | 全部待申请 |
 
-阶段 A **不需要**微信、支付、对象存储任何凭据。缺失项的降级行为见第 1 节。
+阶段 A **不需要**微信、支付、对象存储任何凭据。缺失项的降级行为见第 1 节。虚拟支付与 `growth_orders` 的代码改造已完成，表格中的支付项现在只表示外部签约、凭据和真实验收仍未完成。
 
 ---
 
@@ -45,21 +45,11 @@ Provider 一律**失败关闭**：不会静默降级到模拟支付或本地存�
 | 小程序 AppID                                | `project.private.config.json`、`WECHAT_APP_ID` | ☐ 待补 | 真机 `wx.login` 返回 code         |
 | 小程序 AppSecret                            | 仅后端 `WECHAT_APP_SECRET`                       | ☐ 待补 | `code2Session` 成功且日志不含 secret |
 | 服务器域名登记（request/uploadFile/downloadFile） | 公众平台「开发管理 → 开发设置」                             | ☐ 待补 | 真机不开调试也能请求                    |
-| **岛屿素材的 `downloadFile` 域名**（见下）           | 公众平台「开发管理 → 开发设置」的 downloadFile 合法域名           | ☐ 待补 | 真机不开调试也能拉到底图，岛不走「素材未就绪」路径      |
 | 小程序代码上传私钥                                | 仓库外文件，`MINIPROGRAM_PRIVATE_KEY_PATH`          | ☐ 待补 | `pnpm upload` 成功              |
 | 上传机器出口 IP 白名单                            | 公众平台「小程序代码上传」                                 | ☐ 待补 | 无 `not in whitelist` 报错       |
 | 用户隐私保护指引                                 | 公众平台「服务内容声明」                                  | ☐ 待补 | 审核不因隐私项被拒                     |
 | 服务类目                                     | 公众平台「基本设置」                                    | ☐ 待补 | 与实际功能一致                       |
 | 订阅消息模板 ID                                | `WECHAT_SUBSCRIBE_TEMPLATE_ID`                | ☐ 待补 | 授权后能收到一条提醒                    |
-
-**岛屿素材的下载域名**（`docs/product/22-宠物小岛游戏化方案.md` 5.3、9.4 待定项 6）：宠物小岛的场景素材**全部远程加载**（M1 约 1.6MB，M2 过 5MB，而主包上限 2MB），走 `wx.downloadFile` + 本地 LRU 缓存，因此需要一个 **`downloadFile` 合法域名**。
-
-- 若素材与 API 同域（当前实现：素材经 `/api/plugin-samples/samples/island/...` 出，URL 由服务端按 `PUBLIC_APP_URL` 补域名下发），**登记 request 域名的同时把同一域名加到 downloadFile 即可，不需要新域名**；
-- 若后续把素材挪到独立 CDN，那才是一个真正的新增外部依赖，需要单独备案与登记。
-
-缺这一项的表现**不是报错而是降级**：岛走「素材未就绪」路径（纯色底 + 立绘），画面可用但没有场景。所以真机验收时要专门确认底图拉到了，否则会误以为「本来就长这样」。
-
-**宠物立绘走同一个 `downloadFile` 域名，但它是私有对象**（2026-08-05 补）：立绘经 `/api/island/avatar-image/private/<userId>/island/...` 出，与场景素材同域，所以**不额外需要域名**。但它需要另一件事 —— `wx.downloadFile` **不会自动带 cookie 或 header**，端上必须显式送 `Authorization: Bearer`（已在 `island/scene/assets.js` 实现）。漏了的表现是「场景都出来了、只有宠物不见」，看起来像立绘没生成，实际是 401。
 
 ## 3. 微信支付与虚拟支付（仅生产需要）
 
@@ -100,12 +90,12 @@ Provider 一律**失败关闭**：不会静默降级到模拟支付或本地存�
 | 测试机对象存储                          | `OBJECT_STORAGE_PROVIDER=local`              | ☑ 无需准备 | 冒烟测试能读回 `/api/media/*`        |
 | 生产 PostgreSQL（建议托管实例）            | `DATABASE_URL`                               | ☐ 待补   | 重启与多实例数据一致                    |
 | 生产备份策略                           | 运维流程                                         | ☐ 待补   | 可恢复到 24 小时内                   |
-| S3 兼容 Endpoint / Bucket / Region | `OSS_ENDPOINT`、`OSS_BUCKET`、`STORAGE_REGION` | ☐ 待补   | 私有 Bucket，无匿名读取               |
+| 腾讯云 COS Bucket / Region | `OSS_BUCKET`、`STORAGE_REGION` | ☐ 待补   | 私有 Bucket，无匿名读取               |
 | 最小权限 AccessKey                   | `OSS_ACCESS_KEY_ID`、`OSS_ACCESS_KEY_SECRET`  | ☐ 待补   | 仅允许指定 Bucket 前缀读写删            |
 | CDN 域名                           | 反代 / CDN 配置                                  | ☐ 可选   | 分享首屏达标且私图不泄漏                  |
 | 生命周期规则                           | 云控制台                                         | ☐ 待补   | 免费作品 90 天自动清理                 |
 
-生产 `OSS_ENDPOINT` 必须是包含 Bucket 的完整 S3 兼容地址；Bucket 默认私有，凭据不得授予账户级管理权限。
+生产使用腾讯云 COS 私有 Bucket；若填写 `OSS_ENDPOINT`，必须是由 Bucket 与地域生成的完整 COS HTTPS 地址，凭据不得授予账户级管理权限。
 
 ## 6. 运营与告警
 

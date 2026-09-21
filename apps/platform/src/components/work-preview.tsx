@@ -8,7 +8,7 @@ export function WorkPreview({ work }: { work: PublicWork }) {
   const isPoster = work.pluginId === "pet-movie-poster";
   return (
     <article className={isPoster ? "work-preview poster-preview" : "work-preview id-preview"}>
-      <div className="preview-kicker">{work.plugin.code} · PETBABY ORIGINAL</div>
+      <div className="preview-kicker">{work.plugin.code} · 麻麻抱我原创</div>
       <div className="preview-photo">
         {work.assetKind === "video" && work.outputUrl
           ? <video controls playsInline poster={work.photo.url} src={work.outputUrl} />
@@ -29,7 +29,7 @@ export function WorkPreview({ work }: { work: PublicWork }) {
         <div><dt>签发</dt><dd>{work.authority}</dd></div>
       </dl>
       <div className="preview-seal" aria-hidden="true">已认证<br />GOOD PET</div>
-      {work.locked ? <div className="preview-watermark">免费预览 · PETBABY</div> : null}
+      {work.locked ? <div className="preview-watermark">免费预览 · 麻麻抱我</div> : null}
     </article>
   );
 }

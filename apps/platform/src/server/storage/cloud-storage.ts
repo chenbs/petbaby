@@ -10,5 +10,3 @@ export class ConfiguredCloudStorage implements ObjectStorage {
   async get(key:string):Promise<StoredObject|null>{const response=await this.request("GET",key);if(!response)return null;return{body:new Uint8Array(await response.arrayBuffer()),contentType:response.headers.get("content-type")||"application/octet-stream"};}
   async delete(key:string){await this.request("DELETE",key);}
 }
-
-

@@ -75,6 +75,7 @@ const VIEWPORTS = [
 async function shoot(page, url, viewport, file) {
   process.stdout.write(`    · ${viewport.name}px ${url} `);
   await page.setViewportSize({ width: viewport.width, height: viewport.height });
+  await page.mouse.move(0, 0);
   await page.goto(url, { waitUntil: "load", timeout: 30000 });
 
   /* 视频停掉并摘掉 src：3.5MB 且 autoplay，一直在流，两边不可能停在同一帧 */

@@ -6,17 +6,15 @@ import sharp from "sharp";
 import { PDFDocument } from "pdf-lib";
 import type { AiRun, InteractiveSession, Membership, VideoRender } from "@/domain/models";
 import { getDatabase } from "@/server/db/client";
+import { confirmOrderPayment, refundOrderPayment } from "@/server/payments/service";
 import { jsonIdArray, jsonObject, mapAiRoleInputs, mapOrder } from "@/server/db/rows";
 import { AppError } from "@/server/errors";
 import { generateWithFailover, type ImageReference } from "@/server/ai/provider";
-import { AI_LABEL_PLATE } from "@/domain/island-weather";
-import { ISLAND_AVATAR_PLUGIN_ID } from "@/server/island/avatar";
-import { cutoutSprite } from "@/server/island/cutout";
 import { applyAiLabel } from "@/server/media/ai-label";
 import { objectStorage } from "@/server/storage";
 import { decryptAddress, encryptAddress } from "@/server/commerce/address";
-import { claimEntitlement, entitlementBalance, grantPurchasedCredit, hasHealthExport, physicalDiscountRate } from "@/server/entitlements";
-import { HEALTH_ARCHIVE_KIND, HEALTH_ARCHIVE_PRICE } from "@/server/health-service";
+import { claimEntitlement, entitlementBalance, hasHealthExport, physicalDiscountRate } from "@/server/entitlements";
+import { HEALTH_ARCHIVE_PRICE } from "@/server/health-service";
 import { getRuntimePlugin } from "@/plugins/runtime";
 import { collectAnnualData } from "@/server/annual/aggregate";
 import { REPORT_PHOTOS, buildReportSvg, rasterizeReport, withPreviewWatermark } from "@/server/annual/report";
@@ -194,63 +192,23 @@ export async function processNextAiRun() {
   const row = rows[0]; if (!row) return null;
   const runId = String(row.id); const userId = String(row.user_id); const prompt = String(row.prompt);
   try {
-    /*
-     * 模板任务严格按角色加载全部参考图。单宠顺序是“冻结母版 → 宠物”，双主体
-     * 是“冻结母版 → 主人 → 宠物”，宠物人化是“宠物原图 → 自有效果图”。
-     * 任一对象缺失都明确失败，不能回落文生图。
-     * 岛立绘不是货架模板，继续只读取唯一的宠物身份图。
-     */
-    const isIslandAvatar = String(row.plugin_id) === ISLAND_AVATAR_PLUGIN_ID;
-    const templateInput = isIslandAvatar ? undefined : await loadTemplateReferences(row);
-    const [templateWidth, templateHeight] = templateInput ? templateInput.template.size.split("x").map(Number) : [0, 0];
-    const references = templateInput?.references || [await loadPetReference(userId, String(row.pet_id), jsonIdArray(row.photo_ids)[0] || "")];
-    const candidateCount = templateInput ? getImageTemplateCandidateCount(templateInput.template) : 4;
+        const templateInput = await loadTemplateReferences(row);
+    const [templateWidth, templateHeight] = templateInput.template.size.split("x").map(Number);
+    const references = templateInput.references;
+    const candidateCount = getImageTemplateCandidateCount(templateInput.template);
     const result = await generateWithFailover(
       prompt,
       candidateCount,
       providerCircuitOpen,
       recordProviderFailure,
       references,
-      templateInput ? { size: templateInput.template.size, quality: "high", inputFidelity: "high" } : undefined,
+      { size: templateInput.template.size, quality: "high", inputFidelity: "high" },
     );
     await clearProviderFailures(result.provider.name);
     const generationCost = Number(process.env.AI_IMAGE_COST || 0.08) * result.images.length;
-    /*
-     * **岛的立绘要先抠图再打标，两步都在这里做完**（22 号文 2.6）。
-     *
-     * 顺序不能反，而这正是原实现的缺陷所在：原先这里对所有 `ai_runs` 无条件打标，
-     * 而 `adoptAvatarCandidate` 又从 `outputKey`（已打标的字节）抠图并再打一次标。
-     * 深绿黑底衬的 `min(R,B)-G` 正好落进色键的羽化带 —— 实测标识框 4000 像素里
-     * 3658 个变成半透明、底衬色被去溢色改写；缩放到 1200×1600 后它落在
-     * y≈1330–1377，而第二个标识画在 y≈1504–1568，**两块并不重叠**。
-     * 表现是立绘右下方悬着一块半透明深色残影，下面才是真正的标识 ——
-     * 立绘要实时叠在浅色草地上，脏块会直接透出来。
-     *
-     * 这件事不报错：`cutoutSprite` 的判据全部通过（实测 `clearedPercent` 72.6%、
-     * `keyed: true`），残影落在羽化带里、不进 `residue` 计数，残留统计也是干净的。
-     *
-     * 抠图放在生成时而不是选定时，还顺带修好候选预览：**预览必须从已打标字节缩**
-     * （既有约定，否则免费预览没标识而正式版有，正好搞反），而抠图若留到选定时，
-     * 四选一页给用户看的就是一张品红底方图 —— 与入岛后的样子不是一回事。
-     */
-    const candidates = await Promise.all(result.images.map(async (image, index) => {
-      const normalized = templateInput
-        ? new Uint8Array(await sharp(Buffer.from(image.body)).resize(templateWidth, templateHeight, { fit: "cover" }).png().toBuffer())
-        : image.body;
-      const sprite = isIslandAvatar ? await cutoutSprite(normalized) : undefined;
-      /*
-       * AI 生成标识（《标识办法》第四、五条）。**必须叠在 outputKey 上，不只是预览上** ——
-       * outputKey 是用户付费后拿到的字节，而法条要求「提供下载、复制、导出功能时，
-       * 导出的文件也应当含有显式标识」。付费移除的只能是营销水印。
-       *
-       * 叠标识会把 SVG 光栅化成 PNG，所以扩展名在打标之后才能定。
-       *
-       * 岛用自己那组更深的底衬（`AI_LABEL_PLATE`）：岛的画面比作品图亮，
-       * 取值是照「纯白像素」这个最坏画面算的。
-       */
-      const labeled = sprite
-        ? await applyAiLabel(sprite.body, `${runId}-${index}`, AI_LABEL_PLATE)
-        : await applyAiLabel(normalized, `${runId}-${index}`);
+        const candidates = await Promise.all(result.images.map(async (image, index) => {
+      const normalized = new Uint8Array(await sharp(Buffer.from(image.body)).resize(templateWidth, templateHeight, { fit: "cover" }).png().toBuffer());
+            const labeled = await applyAiLabel(normalized, `${runId}-${index}`);
       const extension = "png";
       const outputKey = `private/${userId}/ai/${runId}-${index}.${extension}`;
       await objectStorage.put(outputKey, labeled, "image/png");
@@ -270,7 +228,7 @@ export async function processNextAiRun() {
       const markWidth = resized.info.width;
       const markHeight = resized.info.height;
       const preview = await sharp(resized.data)
-        .composite([{ input: Buffer.from(`<svg width="${markWidth}" height="${markHeight}"><text x="${Math.round(markWidth / 2)}" y="${markHeight - 40}" text-anchor="middle" font-size="28" fill="white">PETBABY · AI 预览</text></svg>`) }])
+        .composite([{ input: Buffer.from(`<svg width="${markWidth}" height="${markHeight}"><text x="${Math.round(markWidth / 2)}" y="${markHeight - 40}" text-anchor="middle" font-size="28" fill="white">麻麻抱我 · AI 预览</text></svg>`) }])
         .png()
         .toBuffer();
       await objectStorage.put(previewKey, new Uint8Array(preview), "image/png");
@@ -279,12 +237,6 @@ export async function processNextAiRun() {
         outputKey,
         previewKey,
         aiGenerated: true as const,
-        /*
-         * 抠图结果随候选存下来：`adoptAvatarCandidate` 要把 `keyed` 回给端上
-         * （false 说明模型没画品红底，可提示重画但不阻断），而抠图已经在这里做完了，
-         * 选定时不该为了拿这个数字再抠一遍。
-         */
-        ...(sprite ? { keyed: sprite.keyed, residuePercent: Number(sprite.residuePercent.toFixed(3)) } : {}),
       };
     }));
     const completed = await database.query("UPDATE ai_runs SET status='succeeded',provider=$2,model_version=$3,candidates=$4::jsonb,cost=cost+$5,locked_at=NULL WHERE id=$1 AND status='processing' RETURNING id", [runId, result.provider.name, result.provider.modelVersion, JSON.stringify(candidates), generationCost]);
@@ -328,7 +280,7 @@ export async function getAiRun(userId: string, id: string) {
 
 export async function selectAiCandidate(userId: string, id: string, candidateId: string) {
   const run = await getAiRun(userId, id);
-  assertNotIslandRun(run.pluginId, "选定");
+
   if (run.status !== "succeeded") throw new AppError("AI_NOT_READY", "AI 任务尚未完成", 409);
   const candidate = run.candidates.find((item) => item.id === candidateId);
   if (!candidate?.outputKey || !candidate.previewKey) throw new AppError("AI_CANDIDATE_NOT_FOUND", "AI 候选结果不存在", 404);
@@ -342,7 +294,7 @@ export async function selectAiCandidate(userId: string, id: string, candidateId:
   const workId = crypto.randomUUID(); const now = new Date(); const title = `${String(pets[0]?.name || "它")}的 AI 肖像`;
   const selectionLabel = run.roleInputs.subjectMode === "pet-human" ? "二选一" : "四选一";
   const subtitle = `AI 生成内容 · 已选中的${selectionLabel}结果`;
-  await database.query("INSERT INTO works (id,user_id,plugin_id,pet_id,photo_id,title,subtitle,serial_number,authority,output_key,preview_key,asset_kind,source_kind,source_id,locked,public,version,expires_at,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,'PETBABY AI STUDIO',$9,$10,'image','ai',$11,true,false,1,$12,$13)", [workId, userId, run.pluginId, run.petId, run.photoIds[0], title, subtitle, `AI-${id.slice(0, 8).toUpperCase()}`, candidate.outputKey, candidate.previewKey, id, new Date(Date.now() + 90 * 86400000), now]);
+  await database.query("INSERT INTO works (id,user_id,plugin_id,pet_id,photo_id,title,subtitle,serial_number,authority,output_key,preview_key,asset_kind,source_kind,source_id,locked,public,version,expires_at,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,'麻麻抱我 AI 工作室',$9,$10,'image','ai',$11,true,false,1,$12,$13)", [workId, userId, run.pluginId, run.petId, run.photoIds[0], title, subtitle, `AI-${id.slice(0, 8).toUpperCase()}`, candidate.outputKey, candidate.previewKey, id, new Date(Date.now() + 90 * 86400000), now]);
   await database.query("INSERT INTO work_versions (id,work_id,version,title,subtitle,output_key,preview_key,created_at) VALUES ($1,$2,1,$3,$4,$5,$6,$7)", [crypto.randomUUID(), workId, title, subtitle, candidate.outputKey, candidate.previewKey, now]);
   await database.query("UPDATE ai_runs SET selected_id=$3,work_id=$4 WHERE id=$1 AND user_id=$2", [id, userId, candidateId, workId]);
   await recordEvent(userId, "ai_candidate_selected", run.pluginId, "product", { runId: id, candidateId });
@@ -357,34 +309,9 @@ export async function unlockAiCandidate(userId: string, id: string) {
   return getAiRun(userId, id);
 }
 
-/**
- * 岛的立绘任务不能走通用 `ai-runs` 接口。
- *
- * 立绘复用 `ai_runs` 表但**不在 `registry.ts` 注册**（它不产出 `works`）。通用路由
- * 原先只按 `id + user_id` 查、不过滤 `plugin_id`，于是拿 runId 打
- * `PATCH /api/ai-runs/<id>` 带 candidateId 就会走 `selectAiCandidate`，
- * 建出一条 `plugin_id='island-avatar'` 的 `works` 行。而 `hydrateWork` 一律现查
- * manifest，查不到就抛 `WORK_INCOMPLETE` —— 那一行**打不开也删不掉**，
- * 且 `listWorks` 逐行 hydrate，**一条脏行会让整个作品列表 500**。
- * 已实证：select 静默成功、works 多出一行、`listWorks` 抛「作品关联数据不完整」。
- *
- * **拦在服务层而不是路由层**：岛自己的三条路由都带了 `AND plugin_id=$3`，
- * 而通用侧有五个入口（GET/PATCH 的三个 action、reroll），逐个路由加必漏改一处。
- */
-function assertNotIslandRun(pluginId: string, action: string) {
-  if (pluginId === ISLAND_AVATAR_PLUGIN_ID) {
-    throw new AppError("AI_RUN_NOT_FOUND", `小岛形象任务请在小岛里${action}`, 404);
-  }
-}
-
 export async function rerollAiRun(userId: string, id: string, reason: ImageTemplateRerollReason = "composition") {
   const run = await getAiRun(userId, id);
-  /*
-   * 岛的立绘也要拦：reroll 会清掉 `candidates` 并删除对象字节。
-   * `island_pets.avatar_key` 指向 `adoptAvatarCandidate` 另存的那份键，所以立绘不会裂，
-   * 但用户白掉一次立绘额度、岛内候选凭空消失，而两处都不报错。
-   */
-  assertNotIslandRun(run.pluginId, "重画");
+
   const template = run.roleInputs.templateId ? getImageTemplate(run.roleInputs.templateId) : undefined;
   if (!template) throw new AppError("IMAGE_TEMPLATE_UNAVAILABLE", "这个图片模板已下架，不能继续重抽", 409);
   if (!imageTemplateSupportsReroll(template)) throw new AppError("AI_REROLL_NOT_SUPPORTED", "宠物人化不支持重抽，请从两张候选中选择", 409);
@@ -398,15 +325,13 @@ export async function rerollAiRun(userId: string, id: string, reason: ImageTempl
 }
 
 export async function retryAiRun(userId: string, id: string) {
-  // `plugin_id <> ` 写进 SQL 而不是先查后判：这两个函数原本不读 pluginId，
-  // 多一次查询只为拿一个用来拒绝的值不值得，而条件写在 WHERE 里同样拦得住。
-  const rows = await (await getDatabase()).query("UPDATE ai_runs SET status='queued',error_code=NULL,retry_count=retry_count+1,available_at=now(),locked_at=NULL WHERE id=$1 AND user_id=$2 AND plugin_id<>$3 AND status='failed' AND retry_count<2 RETURNING id", [id, userId, ISLAND_AVATAR_PLUGIN_ID]);
+  const rows = await (await getDatabase()).query("UPDATE ai_runs SET status='queued',error_code=NULL,retry_count=retry_count+1,available_at=now(),locked_at=NULL WHERE id=$1 AND user_id=$2 AND status='failed' AND retry_count<2 RETURNING id", [id, userId]);
   if (!rows[0]) throw new AppError("AI_RETRY_LIMIT", "任务不可重试或重试次数已用完", 409);
   return getAiRun(userId, id);
 }
 
 export async function cancelAiRun(userId: string, id: string) {
-  const rows = await (await getDatabase()).query("UPDATE ai_runs SET status='cancelled',cancelled_at=now(),locked_at=NULL WHERE id=$1 AND user_id=$2 AND plugin_id<>$3 AND status IN ('queued','processing') RETURNING id", [id, userId, ISLAND_AVATAR_PLUGIN_ID]);
+  const rows = await (await getDatabase()).query("UPDATE ai_runs SET status='cancelled',cancelled_at=now(),locked_at=NULL WHERE id=$1 AND user_id=$2 AND status IN ('queued','processing') RETURNING id", [id, userId]);
   if (!rows[0]) throw new AppError("AI_NOT_CANCELLABLE", "当前任务不能取消", 409);
   return getAiRun(userId, id);
 }
@@ -686,7 +611,27 @@ export async function listSubscriptions(userId:string){return (await getDatabase
 export async function cancelSubscription(userId:string,id:string){const rows=await (await getDatabase()).query("UPDATE message_subscriptions SET status='unsubscribed',revoked_at=now() WHERE id=$1 AND user_id=$2 AND status NOT IN ('unsubscribed','sent') RETURNING *",[id,userId]);if(!rows[0])throw new AppError("SUBSCRIPTION_NOT_FOUND","订阅记录不存在或已结束",404);return rows[0];}
 export async function listPhysicalOrders(userId:string){return (await getDatabase()).query("SELECT * FROM physical_orders WHERE user_id=$1 ORDER BY created_at DESC",[userId]);}
 export async function updatePhysicalOrderAddress(userId: string, id: string, input: unknown) { const address = addressSchema.parse(input); const rows = await (await getDatabase()).query("UPDATE physical_orders SET address=$3::jsonb,address_ciphertext=$4 WHERE id=$1 AND user_id=$2 AND status='pending' RETURNING *", [id, userId, JSON.stringify(address), encryptAddress(address)]); if (!rows[0]) throw new AppError("PHYSICAL_ORDER_NOT_EDITABLE", "订单已进入履约，无法修改地址", 409); return rows[0]; }
-export async function payPhysicalOrder(userId:string,id:string){const database=await getDatabase();const rows=await database.query("SELECT p.*,w.output_key FROM physical_orders p JOIN works w ON w.id=p.work_id WHERE p.id=$1 AND p.user_id=$2 AND p.status='pending'",[id,userId]);const row=rows[0];if(!row)throw new AppError("PHYSICAL_ORDER_NOT_PAYABLE","实体订单不存在或已支付",409);if(process.env.NODE_ENV==="production"&&!process.env.PHYSICAL_PAYMENT_PROVIDER)throw new AppError("PHYSICAL_PAYMENT_PROVIDER_PENDING","实体商品支付供应商尚未配置",503);const object=await objectStorage.get(String(row.output_key));if(!object)throw new AppError("PRINT_SOURCE_NOT_FOUND","印刷源文件不存在",404);const png=await sharp(Buffer.from(object.body)).resize(2480,3508,{fit:"contain",background:"white"}).png().toBuffer();const metadata=await sharp(png).metadata();const pdf=await PDFDocument.create();const page=pdf.addPage([595.28,841.89]);const image=await pdf.embedPng(png);page.drawImage(image,{x:0,y:0,width:595.28,height:841.89});const pdfBody=await pdf.save();const key=`private/${userId}/physical-orders/${id}.pdf`;await objectStorage.put(key,pdfBody,"application/pdf");const qc={width:metadata.width||0,height:metadata.height||0,dpi:300,colorSpace:metadata.space||"srgb",passed:(metadata.width||0)>=2480&&(metadata.height||0)>=3508};const providerOrderId=`${process.env.PHYSICAL_PAYMENT_PROVIDER||"local"}-${id}`;const paid=await database.query("UPDATE physical_orders SET status='paid',paid_at=now(),provider_order_id=$3,print_pdf_key=$4,qc_report=$5::jsonb WHERE id=$1 AND user_id=$2 RETURNING *",[id,userId,providerOrderId,key,JSON.stringify(qc)]);return paid[0];}
+export async function payPhysicalOrder(userId: string, id: string) {
+  await confirmOrderPayment(userId, "physical", id, true);
+  return preparePhysicalPrint(userId, id);
+}
+
+export async function processPaidPhysicalOrders() {
+  const rows = await (await getDatabase()).query("SELECT id,user_id FROM physical_orders WHERE status='paid' AND print_pdf_key IS NULL ORDER BY paid_at LIMIT 5");
+  let failed = 0;
+  for (const row of rows) {
+    try { await preparePhysicalPrint(String(row.user_id), String(row.id)); } catch { failed += 1; }
+  }
+  return { processed: rows.length - failed, failed };
+}
+
+export async function preparePhysicalPrint(userId: string, id: string) {
+  const database = await getDatabase();
+  const rows = await database.query("SELECT p.*,w.output_key FROM physical_orders p JOIN works w ON w.id=p.work_id WHERE p.id=$1 AND p.user_id=$2 AND p.status IN (\'paid\',\'producing\')",[id,userId]);
+  const row = rows[0];
+  if (!row) throw new AppError("PHYSICAL_ORDER_UNPAID", "订单尚未到账，不能制作印刷文件", 409);
+  if (row.print_pdf_key) return row;
+  const object=await objectStorage.get(String(row.output_key));if(!object)throw new AppError("PRINT_SOURCE_NOT_FOUND","印刷源文件不存在",404);const png=await sharp(Buffer.from(object.body)).resize(2480,3508,{fit:"contain",background:"white"}).png().toBuffer();const metadata=await sharp(png).metadata();const pdf=await PDFDocument.create();const page=pdf.addPage([595.28,841.89]);const image=await pdf.embedPng(png);page.drawImage(image,{x:0,y:0,width:595.28,height:841.89});const pdfBody=await pdf.save();const key=`private/${userId}/physical-orders/${id}.pdf`;await objectStorage.put(key,pdfBody,"application/pdf");const qc={width:metadata.width||0,height:metadata.height||0,dpi:300,colorSpace:metadata.space||"srgb",passed:(metadata.width||0)>=2480&&(metadata.height||0)>=3508};await database.query("UPDATE physical_orders SET print_pdf_key=$2,qc_report=$3::jsonb WHERE id=$1 AND status IN (\'paid\',\'producing\')",[id,key,JSON.stringify(qc)]);return (await database.query("SELECT * FROM physical_orders WHERE id=$1",[id]))[0];}
 export async function updatePhysicalOrderStatus(
   id: string,
   status: "paid" | "producing" | "shipped" | "completed" | "cancelled" | "after_sale" | "refunded",
@@ -760,21 +705,22 @@ export async function listMemberships(userId:string){
   }));
 }
 export async function resetMembershipQuotas(now = new Date()) { const rows = await (await getDatabase()).query("UPDATE memberships SET used=0,quota_reset_at=$1 + interval '30 days' WHERE status='active' AND expires_at>$1 AND (quota_reset_at IS NULL OR quota_reset_at<= $1) RETURNING id,user_id", [now]); return rows.length; }
-export async function recordMembershipRenewal(userId:string,id:string,input:unknown){const data=z.object({succeeded:z.boolean()}).parse(input);const rows=await (await getDatabase()).query("UPDATE memberships SET status=$3,renewal_attempts=CASE WHEN $4 THEN 0 ELSE renewal_attempts+1 END,status_updated_at=now(),expires_at=CASE WHEN $4 THEN now()+interval '30 days' ELSE expires_at END WHERE id=$1 AND user_id=$2 AND status IN ('active','past_due') RETURNING *",[id,userId,data.succeeded?"active":"past_due",data.succeeded]);if(!rows[0])throw new AppError("MEMBERSHIP_NOT_FOUND","会员记录不存在",404);return rows[0];}
+export async function recordMembershipRenewal() {
+  throw new AppError("MEMBERSHIP_RENEWAL_REQUIRES_ORDER", "续费需要重新下单并完成支付", 409);
+}
 export async function expirePastDueMemberships(now=new Date()){const rows=await (await getDatabase()).query("UPDATE memberships SET status='expired',quota=0,used=0,status_updated_at=$1 WHERE status='past_due' AND status_updated_at<$1-interval '3 days' RETURNING id",[now]);return rows.length;}
-export async function refundMembership(userId:string,id:string){const rows=await (await getDatabase()).query("UPDATE memberships SET status='expired',quota=0,used=0,status_updated_at=now() WHERE id=$1 AND user_id=$2 AND status IN ('active','past_due') RETURNING *",[id,userId]);if(!rows[0])throw new AppError("MEMBERSHIP_NOT_REFUNDABLE","会员记录不可退款",409);return rows[0];}
+export async function refundMembership(userId: string, id: string) {
+  const rows = await (await getDatabase()).query("SELECT order_id FROM memberships WHERE id=$1 AND user_id=$2", [id,userId]);
+  if (!rows[0]?.order_id) throw new AppError("MEMBERSHIP_NOT_REFUNDABLE", "会员记录不可退款", 409);
+  return refundOrderPayment(userId, "growth", String(rows[0].order_id));
+}
 export async function listAnnualReports(userId:string){return (await getDatabase()).query("SELECT * FROM annual_reports WHERE user_id=$1 ORDER BY year DESC",[userId]);}
 export async function unlockAnnualReport(userId:string,id:string){return createAnnualReportUnlockOrder(userId,id);}
 export async function shareAnnualReport(userId:string,id:string){const current=await(await getDatabase()).query("SELECT locked FROM annual_reports WHERE id=$1 AND user_id=$2",[id,userId]);if(!current[0])throw new AppError("REPORT_NOT_FOUND","年度报告不存在",404);if(current[0].locked)throw new AppError("REPORT_LOCKED","请先解锁年度报告",409);const token=crypto.randomUUID().replaceAll("-","");await (await getDatabase()).query("UPDATE annual_reports SET share_token=$3,revoked_at=NULL WHERE id=$1 AND user_id=$2",[id,userId,token]);return{token};}
 export async function revokeAnnualReport(userId:string,id:string){const rows=await (await getDatabase()).query("UPDATE annual_reports SET share_token=NULL,revoked_at=now() WHERE id=$1 AND user_id=$2 RETURNING *",[id,userId]);if(!rows[0])throw new AppError("REPORT_NOT_FOUND","年度报告不存在",404);return rows[0];}
-export async function payGrowthOrder(userId: string, id: string) { const database = await getDatabase(); const rows = await database.query("SELECT * FROM growth_orders WHERE id=$1 AND user_id=$2", [id, userId]); const order = rows[0]; if (!order) throw new AppError("GROWTH_ORDER_NOT_FOUND", "权益订单不存在", 404); if (order.status === "paid") return order; if (order.status !== "pending") throw new AppError("GROWTH_ORDER_NOT_PAYABLE", "权益订单当前不能支付", 409); if (process.env.NODE_ENV === "production" && !process.env.PAYMENT_PROVIDER) throw new AppError("PAYMENT_ADAPTER_REQUIRED", "生产环境未配置支付供应商", 503); await database.query("UPDATE growth_orders SET status='paid',paid_at=now(),updated_at=now() WHERE id=$1", [id]); if (String(order.kind) === "membership") { /* COALESCE 不能省：会员权益在迁移 0020 重做后不再含 monthlyQuota（会员不卖次数），`->>` 返回 NULL、`::int` 得 NULL，而 memberships.quota 是 NOT NULL —— 会让付款后激活直接报错。且这条只在真实支付路径触发（payOrder 的模拟支付在生产被拒），本地不容易发现。 */ await database.query("UPDATE memberships SET status='active',quota=COALESCE((entitlements->>'monthlyQuota')::int,0),used=0,status_updated_at=now() WHERE id=$1 AND user_id=$2", [order.resource_id, userId]); await database.query("INSERT INTO entitlement_ledger (id,user_id,membership_id,order_id,kind,units,status,reason,created_at) VALUES ($1,$2,$3,$4,'membership',1,'granted','membership payment',$5)", [crypto.randomUUID(), userId, order.resource_id, id, new Date()]); } else if (String(order.kind) === "annual_report") await database.query("UPDATE annual_reports SET locked=false WHERE id=$1 AND user_id=$2", [order.resource_id, userId]);
-  /*
-   * 健康档案单买（L1）：付款后发一张凭据，导出时核销。
-   * 不在这里直接生成文件 —— 付款与产出之间要有可追溯的凭据，
-   * 否则付了款而生成失败就无处申诉。
-   */
-  else if (String(order.kind) === "health_archive") await grantPurchasedCredit(userId, HEALTH_ARCHIVE_KIND, id, "单次购买健康档案导出");
-  return (await database.query("SELECT * FROM growth_orders WHERE id=$1", [id]))[0]; }
+export async function payGrowthOrder(userId: string, id: string) {
+  return confirmOrderPayment(userId, "growth", id, true);
+}
 export async function listGrowthOrders(userId: string) { return (await getDatabase()).query("SELECT * FROM growth_orders WHERE user_id=$1 ORDER BY created_at DESC", [userId]); }
 /** 年度报告高清版单买价。会员权益命中时不走这个价（见下）。 */
 export const ANNUAL_REPORT_UNLOCK_PRICE = 19.9;
@@ -824,7 +770,7 @@ export async function createAnnualReportUnlockOrder(userId: string, id: string) 
    * 会员权益兑付。核销成功才解锁 —— claimEntitlement 内部已判余量，
    * 返回 false 时一律回落到付费路径，不能「先解锁再记账」。
    */
-  if (await claimEntitlement(userId, "annualReport", `年度报告 ${report.year} 高清版解锁`)) {
+  if (await claimEntitlement(userId, "annualReport", `年度报告 ${report.year} 高清版解锁`, id)) {
     await database.query("UPDATE annual_reports SET locked=false WHERE id=$1 AND user_id=$2", [id, userId]);
     return { unlocked: true, viaEntitlement: true };
   }

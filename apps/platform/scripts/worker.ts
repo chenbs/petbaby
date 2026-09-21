@@ -5,6 +5,8 @@ import { processNextVideo } from "../src/server/video/ffmpeg";
 import { expirePastDueMemberships, processNextAiRun, resetMembershipQuotas, scheduleAllUpcomingReminders } from "../src/server/growth-service";
 import { runHealthReminders } from "../src/server/health/reminders";
 import { scheduleAllOnThisDay } from "../src/server/timeline-service";
+import { reconcilePayments } from "../src/server/payments/service";
+import { processPaidPhysicalOrders } from "../src/server/growth-service";
 
 const interval = Number(process.env.WORKER_POLL_INTERVAL_MS || 1_000);
 
@@ -37,6 +39,9 @@ async function loop() {
     const [generation, video, ai] = await Promise.all([runNextTask(), processNextVideo(), processNextAiRun()]);
     if (Date.now() - maintenanceAt > 60_000) {
       maintenanceAt = Date.now();
+      const payments = await reconcilePayments();
+      if (payments.failed) await sendOperationalAlert("支付对账需要检查", payments);
+      await processPaidPhysicalOrders();
       const [health] = await Promise.all([healthSnapshot(), closeExpiredOrders(), cleanupExpiredContent(), processDueMessages(), resetMembershipQuotas(), expirePastDueMemberships(), scheduleAllUpcomingReminders()]);
       if (health.status !== "ok" || health.queued > 100) await sendOperationalAlert("Petbaby worker degraded", health);
     }

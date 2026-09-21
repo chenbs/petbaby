@@ -16,16 +16,14 @@
 import { mkdir, writeFile, readFile, access } from "node:fs/promises";
 import path from "node:path";
 import { loadEnv, generate, edit } from "./client.mjs";
-import { fit, pad, hasAlpha } from "./crop.mjs";
-import { MODEL_PET, MODEL_PET_SHOTS, SOURCE_PETS, AI_STYLES, AI_PLAYS, PLUGIN_HEROES, WEBSITE_SHOTS, ISLAND_ASSETS, sourcePrompt, stylePrompt, heroPrompt, websitePrompt, islandPrompt } from "./prompts.mjs";
+import { fit } from "./crop.mjs";
+import { MODEL_PET, MODEL_PET_SHOTS, SOURCE_PETS, AI_STYLES, AI_PLAYS, PLUGIN_HEROES, WEBSITE_SHOTS, sourcePrompt, stylePrompt, heroPrompt, websitePrompt } from "./prompts.mjs";
 
 const OUT = path.resolve(import.meta.dirname, "out");
 const args = process.argv.slice(2);
 const target = args.find((item) => !item.startsWith("--")) || "all";
 const force = args.includes("--force");
 const concurrency = Math.max(1, Math.min(20, Number((args.find((item) => item.startsWith("--concurrency=")) || "").split("=")[1]) || 1));
-/** 每个槽位生几张候选。只 island 分组用（24 号文要求 3–4 张挑一张）。 */
-const variants = Number((args.find((item) => item.startsWith("--variants=")) || "").split("=")[1]) || 3;
 
 /**
  * 各比例对应的请求 size。
@@ -93,7 +91,6 @@ function sourceJobs() {
   return { dir, jobs };
 }
 
-/** 历史对比样板猫的多场景：仅供旧版风格对比兼容，不代表小岛卡通摩奇。 */
 function modelJobs() {
   const dir = path.join(OUT, "model");
   const jobs = MODEL_PET_SHOTS.map((shot) => ({
@@ -182,105 +179,10 @@ function websiteJobs() {
   };
 }
 
-/**
- * 宠物小岛素材（`24-宠物小岛素材清单.md`）。
- *
- * 与其他分组的三处不同：
- *   ① **一次生 N 张候选而不是 1 张**（`--variants=N`，默认 3）。24 号文第 0 章硬要求 3：
- *      「这套画风的一致性靠挑选保证，不靠反复微调提示词」。产物落 `<key>-1.png` …，
- *      挑中的那张由人**手工改名**成裸名字 —— 不自动选，因为挑哪张是审美判断。
- *   ② **透明底优先直出**（`background: "transparent"`），拿不到 alpha 时回落品红。
- *      判据是**回读产物的 alpha 通道**而不是捕获 4xx —— lingsuan 对该参数
- *      「不报错也不生效」（实测 200 + `alpha=false`），只看异常永远不会回落，
- *      于是立绘拿到不透明底、抠图无从下手，最终变成一张贴纸。
- *      回落发生时打印告警，因为那意味着后续要多一道色键抠图。
- *   ③ 透明素材走 `pad()` 而非 `fit()`：立绘要求全身不裁切（24 号文 2.4 验收标准）。
- *
- * raw 缓存同 plugins/website：单张约 45 秒且计费。但**候选图不进 raw**——
- * 每张候选本就是独立的一次生成，缓存它等于把「多生几张挑」变成「永远是这几张」。
- */
-function islandJobs() {
-  const dir = path.join(OUT, "island");
-  const jobs = [];
-  for (const asset of ISLAND_ASSETS) {
-    for (let index = 1; index <= variants; index += 1) {
-      jobs.push({
-        label: `island/${asset.key}-${index}`,
-        file: path.join(dir, `${asset.key}-${index}.${asset.transparent ? "png" : "jpg"}`),
-        run: async (config) => {
-          const size = SIZES[asset.ratio];
-          /*
-           * **从已定稿的底图派生（图生图）**，不走文生图。
-           *
-           * 判据是画风一致性：入口卡与进岛后的画面紧挨着看（点卡片即进岛），
-           * 而同一句风格提示词两次调用的笔触、描边粗细、色相都会漂移 ——
-           * 这批素材的验收判据是人眼比对，靠文字复述风格拿不到「同一个地方」。
-           * 从底图派生等于把风格交给参考图而不是提示词。
-           *
-           * 底图缺失时**直接失败而不是回落文生图**：静默回落会产出一张风格接近但
-           * 不同源的卡图，而那种偏差只有把两张并排看才发现 —— 宁可报错。
-           */
-          if (asset.fromScene) {
-            const scene = path.join(dir, "scene-yard.png");
-            if (!await exists(scene)) {
-              throw new Error(`${asset.key} 需要图生图，但缺少参考底图 ${scene} —— 底图定稿后再跑这一张`);
-            }
-            /*
-             * `inputFidelity: "high"` 要求保住参考图的主体特征。lingsuan 的
-             * `gpt-image-2` 接受该参数（`client.mjs` 已记录 packy 会以 400 拒绝），
-             * 而这里正是它该用的场合：我们要的就是「同一个院子」。
-             */
-            const result = await edit(config, {
-              imagePath: scene,
-              prompt: islandPrompt(asset),
-              size,
-              quality: "high",
-              outputFormat: "png",
-              inputFidelity: "high"
-            });
-            return fit(result.buffer, asset.ratio, { anchor: asset.anchor ?? 0.5 });
-          }
-          if (asset.transparent) {
-            /*
-             * 两种失败方式都要接住：
-             *   ① 模型以 4xx 拒绝 `background=transparent`（packy 的表现）
-             *   ② 返 200 却不给 alpha（lingsuan 的表现，实测 `alpha=false`）
-             * ② 才是危险的那个 —— 只 try/catch 的话它静默通过，抠图阶段面对一张
-             * 不透明的图无从下手，端上表现是立绘带一块底色方块。
-             */
-            let transparentBuffer = null;
-            try {
-              const result = await generate(config, { prompt: islandPrompt(asset), size, quality: "high", outputFormat: "png", background: "transparent" });
-              if (await hasAlpha(result.buffer)) transparentBuffer = result.buffer;
-              else console.warn(`  [提示] ${asset.key}-${index} 接口接受 background=transparent 但产物无 alpha，回落品红底`);
-            } catch (error) {
-              if (!error.fatal) throw error;
-              console.warn(`  [提示] ${asset.key}-${index} 模型拒绝 background=transparent（${error.message.slice(0, 80)}），回落品红底`);
-            }
-            if (transparentBuffer) return pad(transparentBuffer, asset.ratio);
-            // 回落时才把品红写进提示词：与 transparent 那句互斥，见 islandPrompt
-            const result = await generate(config, { prompt: islandPrompt(asset, { magenta: true }), size, quality: "high", outputFormat: "png" });
-            /*
-             * 品红图**不能走 pad()**：那个函数按 `fit: "contain"` 补透明边，
-             * 而这张图的背景是品红实色 —— 补出来的透明边会在后续色键抠图时
-             * 与品红区域分属两种「背景」，边缘留下一圈半透明品红。
-             * 保持原始画幅交给 upload-island.mjs 抠完再定比例。
-             */
-            return result.buffer;
-          }
-          const result = await generate(config, { prompt: islandPrompt(asset), size, quality: "high" });
-          return fit(result.buffer, asset.ratio, { anchor: asset.anchor ?? 0.5 });
-        }
-      });
-    }
-  }
-  return { dir, jobs };
-}
-
-const GROUPS = { source: sourceJobs, model: modelJobs, styles: styleJobs, plugins: pluginJobs, website: websiteJobs, island: islandJobs };
-// website / island 不进 all：都是专用批次且有计费，要显式点名才跑。
+const GROUPS = { source: sourceJobs, model: modelJobs, styles: styleJobs, plugins: pluginJobs, website: websiteJobs };
+// website 不进 all：都是专用批次且有计费，要显式点名才跑。
 const order = target === "all" ? ["source", "model", "styles", "plugins"] : [target];
-if (order.some((name) => !GROUPS[name])) throw new Error(`未知分组 ${target}，可选：source / model / styles / plugins / website / island / all`);
+if (order.some((name) => !GROUPS[name])) throw new Error(`未知分组 ${target}，可选：source / model / styles / plugins / website / all`);
 
 const config = await loadEnv();
 const allFailures = [];

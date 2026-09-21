@@ -1,0 +1,8 @@
+{
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "generatedAt": "2026-09-21T15:15:32.142Z",
+  "prompt": "Use case: ads-marketing. Create an exceptionally beautiful image for a contemporary premium pet photography and memories website. Art direction: playful fashion editorial, exquisite detail, clean sculptural composition, luminous soft daylight, rich but restrained pastel colours, tactile materials, delightful personality. Prioritise aesthetic impact over literal app-output realism. The pet must look alive, sweet and naturally expressive, with believable anatomy and finely resolved fur. No human body, no human hands, no extra limbs, no stock-photo props clutter, no sepia filter, no brown vintage room, no app interface, no watermark, no logos. No lettering unless explicitly specified. Full bleed, no outer border. Portrait of one adorable orange-and-white shorthair cat with a white muzzle, white chest, amber eyes, a pink nose and softly rounded cheeks, dozing on a powder-blue linen cushion beside an open window, soft buttery sunlight, one tiny yellow flower. Contemporary analogue editorial photograph, very fine film grain, luminous cream and blue palette, no sepia cast. Intended final composition 900:1200; keep face, ears and important artwork comfortably within the central safe area for a small crop.",
+  "reference": null,
+  "sha256": "a9fb0794a7f1c430e805897358f35e10a6c3a56efe962d21771c78529183013c"
+}

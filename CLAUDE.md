@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-宠物照片创意内容平台。仓库同时包含产品文档与可运行实现：`apps/platform`（Next.js 16 App Router，承载 Web/H5/REST API/管理后台/Worker）、`apps/miniprogram`（微信原生小程序，26 页：主包 23 + `island` 分包 3）与 `apps/website`（Astro 7 静态官网，独立域名）。
+宠物照片创意内容平台。仓库同时包含产品文档与可运行实现：`apps/platform`（Next.js 16 App Router，承载 Web/H5/REST API/管理后台/Worker）、`apps/miniprogram`（微信原生小程序）与 `apps/website`（Astro 7 静态官网，独立域名）。
 
 `AGENTS.md` 是本仓库的贡献规范（目录职责、编码风格、提交与安全要求），本文件只补充架构性、跨文件才能看懂的部分，不重复其内容。
 
@@ -95,57 +95,17 @@ await Promise.all([enforceRateLimit(...), assertGenerationCircuit()]);
 - `theme/tokens.js` —— `TOKEN_SPEC` 是 57 个 token 的键名+类型真源。新增 token 必须先登记在此，四套皮肤缺键或类型不符时 validate 失败。**与主题无关的常量放 `CONSTANT_VARS`**（`--radius-pill`、`--glass-easing`、`--glass-blur-degraded`），只在 `app.wxss` 的 `page{}` 声明一次——注入串有 2KB 硬门禁，`glass` 主题曾因此超限。
 - `theme/index.js` —— `THEMES` 清单（`cute` 默认 / `glass` / `light` / `dark`）+ `resolveTokens()`（缺键回落默认主题同名键，`blurSupported=false` 时叠加皮肤的 `degrade`）。加皮肤只改这一个数组。
 - `theme/manager.js` —— 单例，`init()` 在 `app.js` 的 `onLaunch` **早于任何网络请求**调用以避免首屏闪变。切换只走内存 + `wx.setStorageSync` + 订阅广播，不发请求。`detectBlurSupport()` 按平台/基础库推断 `backdrop-filter`（Android 需基础库 2.10+ 且系统 ≥10），结果缓存，不逐帧检测。
-- `theme/page-mixin.js` —— 26 页全部接入（含 `island` 分包 3 页），注入变量串并在 `onShow` 用 `wx.setNavigationBarColor` 同步导航栏（没用 `<navigation-bar>` 组件，它需要基础库 2.29.2，与 2.9.0 下限冲突）。
+- `theme/page-mixin.js` —— 所有页面全部接入，注入变量串并在 `onShow` 用 `wx.setNavigationBarColor` 同步导航栏（没用 `<navigation-bar>` 组件，它需要基础库 2.29.2，与 2.19.2 下限冲突）。
 
-变量注入靠 `page-meta`，所以**基础库下限是 2.9.0**（`project.config.json` 的 `libVersion`）。低版本不白屏，退化成 `app.wxss` 的 `var()` 兜底 + `cute` 外观。
+变量注入靠 `page-meta`，但虚拟支付要求更高版本，所以**基础库下限是 2.19.2**（`project.config.json` 的 `libVersion`）。低版本显示升级提示，其他页面仍由 `app.wxss` 的 `var()` 兜底接管。
 
 `components/glass-sheet/` 是沉浸式玻璃面板，接入 `pages/work` 和 `pages/ai-run`。**拖动期间零 `setData`**：位移、遮罩、`actions` 反向平移全在 `index.wxs` 里改样式，逻辑层只在手指抬起时收到一次 `onGestureEnd`。面板内的文本层级类（`glass-title` 等）放在 `app.wxss` 而非组件 `.wxss`，因为 slot 内容归页面作用域。
 
-`scripts/validate.js` 十项（编号 1–10，另有 7b）：每页 4 文件齐备、JSON 可解析、零硬编码扫描、token 完整性与类型、文字对比度、玻璃面板双极对比度、注入串体积、黏土内高光跟随卡面明暗（7b）、`var()` 引用的变量确有来源、**组件在同页 `usingComponents` 注册**、**WXML 标签闭合**。最后三项管的都是「静默失效」类错误：无来源的 `var()` 只是不生效，漏注册的组件被当未知节点丢掉、页面少一块但不报错，标签失衡要等开发者工具打开才现形。`pnpm validate` 末尾还会跑 `node --test`（陪伴天数、岛的昼夜天气对照、命中表、帧循环与素材缓存）；准确页数与用例数只看 `docs/README.md`「当前状态」。当前没有 GitHub Actions 工作流，这条门禁必须在每次相关改动和发布前手工执行，恢复 CI 后再将它接回自动关卡。
+`scripts/validate.js` 十项（编号 1–10，另有 7b）：每页 4 文件齐备、JSON 可解析、零硬编码扫描、token 完整性与类型、文字对比度、玻璃面板双极对比度、注入串体积、黏土内高光跟随卡面明暗（7b）、`var()` 引用的变量确有来源、**组件在同页 `usingComponents` 注册**、**WXML 标签闭合**。最后三项管的都是「静默失效」类错误：无来源的 `var()` 只是不生效，漏注册的组件被当未知节点丢掉、页面少一块但不报错，标签失衡要等开发者工具打开才现形。`pnpm validate` 末尾还会跑 `node --test`（陪伴天数）；准确页数与用例数只看 `docs/README.md`「当前状态」。当前没有 GitHub Actions 工作流，这条门禁必须在每次相关改动和发布前手工执行，恢复 CI 后再将它接回自动关卡。
 
-**测试脚本带 `--test-concurrency=1`，且装 `global` 替身的文件必须在 `test.after()` 里还原。** `global.wx` 是进程级的而 `node --test` 默认并发跑文件，两个文件各自 `installWx()` 会互相覆盖 —— 表现是**单跑全过、合跑随机失败**，且失败信息指向渲染逻辑而完全不提替身（实测挂在「雨转雪两档粒子」与「窗户暖光淡入」两例）。两道防线都要：只加串行是把问题掩盖掉，谁把并发调回来就又随机红。理由见 22 号文 11.11。场景化配色走 `theme/scene-presets.js` 的 `.scene-*` 内联注入，与全局主题 token 刻意隔离。
+**测试脚本带 `--test-concurrency=1`，且装 `global` 替身的文件必须在 `test.after()` 里还原。** `global.wx` 是进程级的而 `node --test` 默认并发跑文件，两个文件各自 `installWx()` 会互相覆盖 —— 表现是**单跑全过、合跑随机失败**，且失败信息可能不提替身。两道防线都要：只加串行是把问题掩盖掉，谁把并发调回来就又随机红。场景化配色走 `theme/scene-presets.js` 的 `.scene-*` 内联注入，与全局主题 token 刻意隔离。
 
 **门禁的页面清单是 `app.pages ∪ subPackages[].pages`。** 只遍历 `app.pages` 会让分包页面完全不进第 1 项（四文件齐备）与第 9 项（组件注册）—— 而这两项管的正是「不报错但页面少一块」。两种键名都要认（微信同时接受 `subPackages` 与 `subpackages`）。第 8 / 10 项本已全目录递归，不受影响。
-
-另有岛专属门禁 **16 / 17**（`docs/product/22-宠物小岛游戏化方案.md` 9.2）：16 校验 HUD 底板**合成后**的文字对比度并断言底板存在，17 断言岛内 `.wxss` 确实进了第 3 项的扫描范围（不重复扫描，只查覆盖）。文案类门禁 11–15 的扫描对象是服务端的日记模板与物品表，应随模板进 vitest，不在这里。
-
-**门禁 16 遍历的是 `island/hud-vars.js` 的 `ISLAND_TEXT_ON_PLATE`（字色 × 底板的组合表），不是单一字色。** 只算主文字色会漏掉半透明的次级文字 —— `--island-ink-soft` 曾以 @0.7 通过门禁而实测只有 4.23:1（夜+晴压在树丛色上）。**半透明文字必须先与底板合成再算比值**，当成实色算得出的数字虚高。加字色或底板必须同步登记进那张表，`uncoveredVars()` 会正面断言这件事（漏登记 = 那个变量的对比度从来没被算过）。
-
-### 宠物小岛（第一个留存型模块，方案见 `docs/product/22-宠物小岛游戏化方案.md`）
-
-小程序侧在 `apps/miniprogram/island/`，**走分包**（主包余量不足 700KB）。**入口只能是卡片/按钮，不能加第四个 tab** —— tabBar 页面必须在主包内。当前挂「我的」页与宠物档案操作行，后者**必须带 `petId`**（不带的话点非默认宠物会看到错的那只）。**`petId` 两端都要接**：端上拼进 query 只是一半，`getIslandSnapshot` 也必须读它并传给 `loadIslandPet`（服务端此前静默丢弃这个参数，M1 被 `MAX_ISLAND_PETS = 1` 遮住，M2 会立刻必现）。取「优先项」语义而非过滤条件 —— 传进来的宠物没入岛时应回落到岛上那只，硬过滤会让快照变成「岛上没有宠物」。
-
-**`memorial` 宠物不进岛，服务端拦 + 端上过滤两处都要**：只做端上隐藏则接口仍可调，只做服务端拦截则用户会看到入口点进去报错。理由与健康线同源——岛的核心机制是亲密度日增与陪伴天数递增，对已离开的宠物递增天数是明确的冒犯。端上那一半在 `island/service.js` 的 `selectablePets` 与 `pages/pets` 的 `showIsland`。
-
-**昼夜与天气的真源是 `apps/platform/src/domain/island-weather.ts`**，端上 `island/scene/ambient.js` 是同一算法的第二份（TS 在小程序 require 不了，与 `services/companion.js` 对 `domain/companion.ts` 同一关系）。**漂移的表现是「画面在下雨、日记说晴天」**，所以 `scripts/island-ambient.test.js` 读 TS 源文件抽取每一个色值、不透明度、粒子数与段边界逐个比对，改一边不改另一边门禁直接失败。哈希实现本身也是口径的一部分，不能换。
-
-**「两份实现必须一致」的地方，一致性本身要有门禁 —— 注释拦不住任何人。** 当前四对成对实现都有比对测试：`island-weather.ts`↔`ambient.js`、`companion.ts`↔`companion.js`（后者原先只有一句注释在要求，2026-08-06 补，见 22 号文 11.13）、`cutout.ts`↔`upload-island.mjs`、以及**抠图与打标的顺序**（跨 `growth-service.ts` 与 `island/avatar.ts` 的时序约定，由 `avatar.test.ts` 的逐像素用例钉住，见 26 号文缺陷 1）。做法一律是**读对面的源文件正则抽值再逐个断言**，而不是各写一份期望值 —— 写死期望值的话改了真源这边照样通过，而两边已经不一致了。**再添第五对时同步加比对测试。**
-
-**岛的立绘：抠图必须在打标之前，且只打一次标。** 两步都在 `processNextAiRun` 完成（岛的 run 走 `cutoutSprite` → `applyAiLabel(AI_LABEL_PLATE)`），`adoptAvatarCandidate` 只把字节另存到岛的键下。**先打标再抠图会让标识底衬被色键当前景处理成半透明脏块留在图上** —— 实测标识框 4000 像素里 3658 个变半透明，且缩放后残影与真标识不重叠（y≈1330 对 y≈1504），而立绘要实时叠在浅色草地上。这件事**全程不报错**：抠图判据（`clearedPercent` 72.6%、`keyed: true`）与残留统计都是干净的，因为脏块落在羽化带里不进 `residue` 计数。另：`processNextAiRun` 的预览水印 SVG 必须按缩放后的真实尺寸生成，写死 640×640 会让非正方形产物（立绘是 3:4）直接抛 `Image to composite must have same dimensions or smaller`。
-
-**岛的立绘任务复用 `ai_runs` 但不能走通用 `/api/ai-runs/*`。** `island-avatar` 刻意不在 `registry.ts` 注册，所以一旦通用侧的 `selectAiCandidate` 建出 `plugin_id='island-avatar'` 的 `works` 行，`hydrateWork` 现查 manifest 查不到就抛 `WORK_INCOMPLETE` —— **那行打不开也删不掉，且 `listWorks` 逐行 hydrate，一条脏行让整个作品列表 500**（与「archived manifest 不能删」同一故障模式，从另一头进来）。拦在**服务层**：`selectAiCandidate`/`rerollAiRun` 走 `assertNotIslandRun()`，`retryAiRun`/`cancelAiRun` 在 SQL 加 `AND plugin_id<>$3`。通用侧有五个入口，逐个路由加必漏改一处。
-
-**叠加层是普通 alpha（`source-over`），不是色乘**，顺序固定**先昼夜再天气**。方案正文 2.5 与 24 号文第 4 章写的「色乘」是错的：2.5.1 的实算表只在 alpha 下复现得出（雨+夜 0.485；按 multiply 得 0.435，整表都对不上）。alpha 叠加不满足交换律，反序同样对不上。依据见 22 号文 11.2。
-
-**HUD 顶部一行必须有奶白底板。** 16 种昼夜×天气组合下**没有任何单一字色能全域达标** —— 最暗的「雨+夜」深色字 3.23:1、白字 4.13:1 双双不达标。底板把文字与场景明度解耦，门禁 16 同时钉住它的存在（防被「优化」掉）。底板色走 `island/hud-vars.js` 的 `--island-*` 内联注入（内容属性，与 `--scene-*` 分前缀）；其余 HUD 元件全走既有 token，**岛不新增 UI 元件体系**。**这层奶白底板与 AI 标识的深色底衬用途相反、不可共用**：后者要压住白猫/雪地/阳光高光这类最亮画面。
-
-**Canvas 只画场景，HUD 是覆盖其上的 WXML。** Canvas 内像素不受 token 约束，但 HUD 是 WXML 必须走 token。三条帧循环约束：帧率上限 **30fps**（低端安卓是基准机型）、**静止即停帧**、**天气档不适用停帧**（雨雪粒子是唯一持续跑帧的图层，帧预算靠上限 + 粒子数降级守，页面 `onHide` 时 `setIdle(false)` 关掉）。**计时一律 `Date.now()`，刻意忽略 rAF 时间戳** —— 两者原点不同，混用会让过渡动画瞬间跳完，且只在真机上出现。
-
-**Canvas 内没有节点，热区必须自己维护**（`island/scene/layout.js`），每个 ≥88 设计单位、单屏 ≤8 个，宠物排在物件之前（重叠时用户想点的几乎总是宠物）。底图**一律底边对齐**：草地与物件落点因此完整，缺口只落在天空，而天空是唯一能用代码渐变补出来的区域。锚点**逐键合并**不整体替换 —— 少一个键会让站位变 undefined，宠物直接消失。
-
-**素材全部远程加载 + LRU 本地缓存，LRU 必须真删**（`removeSavedFile`，不能只从索引抹掉：只写不删的话超配额后 `saveFile` 静默失败，表现是「素材突然不再更新」）。服务端下发绝对 URL，端上把以 `/` 开头的挑出来丢掉——那种值小程序会当主包内本地文件找，必然裂图且不报错。**「素材未就绪」是方案要求的正式路径不是临时兜底**（弱网首屏永远走它的一部分）：纯色底 + 立绘，**不画占位色块**（抽象色块是方案点名的违例）。
-
-**缓存命中要同时比对 url，不能只看键名。** 场景素材的键带内容哈希（换图必换键）所以只看键是安全的，但**立绘的键是端上写死的 `pet-avatar`**，而它的地址每次重画都变（键里带 `runId`）—— 只看键名的话用户重画形象后画面永远是旧那只，**杀掉小程序重进也一样**（`saveFile` 是持久缓存），只有系统清缓存或被 LRU 淘汰才解开。内存层（`decoded`）与磁盘层（索引）**两道都要比**，漏了前者后者不会被问到。
-
-**岛素材的字节不在镜像里，且必须经 `upload-island.mjs` 处理后才能灌。** `out/island/` 里是人工投放的原图（品红底、尺寸未裁），直接灌等于给端上一张带品红背景的图；`--keep` 写的 `keyed/` 只有需要 alpha 的那几张且被 gitignore。正确做法是 `node tools/imagegen/upload-island.mjs --stage tools/imagegen/out/island/staged`（按对象键布局摆好），`seed-samples.sh` 再整目录拷进卷。漏灌的表现与玩法样例图一致：接口全正常、只有取字节 404、端上大面积裂图且不报错 —— 所以 `/api/health` 下发 `islandAssets`/`islandAssetPaths`，`smoke-test.sh` 逐张校验。**清单读 `/api/health` 不读 `/api/island`**：后者要鉴权，冒烟脚本无会话读它只会拿到 401，于是「取不到地址」被当成「没配素材」静默通过。
-
-**单张立绘只能做整体变换**：呼吸、浮动、挤压拉伸。**不做眨眼和转头** —— 眨眼要闭眼图或眼睛坐标，转头要另一个角度的图（那是多次生成，一致性拿不到）。生命感靠**代码绘制的情绪粒子**补，零素材且比眨眼更能读出情绪。近景是**同一张立绘放大裁切**，不是另一个角度。
-
-**允许乐观动画，不允许乐观数据**（服务端权威）：点草丛立刻播粒子，但**掉落物等服务端返回才进库存显示**；额度与亲密度只能由服务端算。**到达每日上限的措辞决定它是不是体力值机制** —— 说「今天的草丛都看过了」而不是「体力耗尽」，实现在 `island/index/index.js` 的 `limitHintOf`。
-
-**服务端 `/api/island/*` 已实现（9 条路由），两侧已对接。** 端上原按 5.5 契约猜字段名，对接时修了四处对不上的地方，逐条见 22 号文 11.10 —— 共同特征是**不报错**（日期整列空白、轮询 URL 里是 `undefined`、照片列全裂、只有宠物不见）。改岛的接口形状时先看那一节。
-
-**M1 编码已全部完成并经两轮复核**（第 0/0b/2–8 步），7 张素材、manifest 与七组锚点也已回填。剩下的都不是写岛的业务代码：类目自查与 M0 提审、`downloadFile` 域名登记、部署灌图和真机验收。**「现在该做什么」只看 `docs/product/25-宠物小岛待完成清单.md`**（它取代了 22 号文 11.12）。改岛代码前另看两处：第二轮复核的 6 处静默失效缺陷与修法在 `docs/product/26-宠物小岛缺陷修复记录.md`，第 7/8 步的复核结论在 22 号文 11.13。
 
 ### UI 重构约定（2026-07 拍板，方案见 `docs/ui-refactor/`）
 
@@ -161,7 +121,7 @@ await Promise.all([enforceRateLimit(...), assertGenerationCircuit()]);
 
 **生图工具链在 `tools/imagegen/`**（`client.mjs` lingsuan 客户端 / `prompts.mjs` 提示词库 / `crop.mjs` 按方案 2.5 比例裁切 / `generate.mjs` 断点续跑 / `upload-samples.mjs` 推存储并打印 manifest 片段）。**本仓库的图片生成与图片编辑默认使用 lingsuan API**，不要先走内置生图工具再临时切换。凭据是 `LINGSUAN_IMAGE_BASE_URL` / `LINGSUAN_IMAGE_API_KEY` / `LINGSUAN_IMAGE_MODEL`，与运行时 provider 同名但**来源不同**：工具链读**仓库根目录的 `.env.imagegen`**（进程环境变量优先），运行时读 `apps/platform/.env*`。`.env.imagegen` 被根 `.gitignore` 的 `.env.*` 覆盖，不进版本控制。
 
-**生图接口 2026-08-06 从 packy 换到 lingsuan（`https://lingsuan.top`，OpenAI images 兼容）**，四处实测差异都在代码里有对应处理，换回去或再换站时逐条复核：① 默认返回 **url 而非 b64_json**，且**下载主机与 API 主机不同**（`img.junliai.org`）—— 出网白名单要放两个域名，只放 API 域名的症状是「生成成功、取字节全失败」；② `response_format` 接口**接受**（packy 不接受），但仍不传，默认 url 形态省内存；③ `size` **只对方形生效**（`1600x1000` 实测返回 `2048x1376`），所以 `crop.mjs` 的本地裁切不能省；④ `background=transparent` **返 200 但不生效**（产物 `alpha=false`），packy 是 4xx 拒绝 —— 所以 `generate.mjs` 的品红回落判据是**回读产物 alpha**（`crop.mjs` 的 `hasAlpha`）而不是捕获异常，只 try/catch 的话岛的立绘会静默拿到不透明底、抠图无从下手。单张实测 46–62 秒（`quality=low`），比 packy 慢，超时默认已提到 180s。
+**生图接口 2026-08-06 从 packy 换到 lingsuan（`https://lingsuan.top`，OpenAI images 兼容）**，四处实测差异都在代码里有对应处理，换回去或再换站时逐条复核：① 默认返回 **url 而非 b64_json**，且**下载主机与 API 主机不同**（`img.junliai.org`）—— 出网白名单要放两个域名，只放 API 域名的症状是「生成成功、取字节全失败」；② `response_format` 接口**接受**（packy 不接受），但仍不传，默认 url 形态省内存；③ `size` **只对方形生效**（`1600x1000` 实测返回 `2048x1376`），所以 `crop.mjs` 的本地裁切不能省；④ `background=transparent` 返 200 但可能不生效，使用透明素材时须回读 alpha 通道。单张实测 46–62 秒（`quality=low`），比 packy 慢，超时默认已提到 180s。
 
 **图片玩法现在是模板货架，不再是旧的玩法/风格/气质预设组合。** `server/image-template-registry.ts` 是已登记入口、模板状态、尺寸、主体模式和运行时提示词的单一事实源；只有 `status="live"` 且有 `masterStorageKey` 的模板才由 `/api/image-templates` 下发。当前登记 9 个入口，但 `human` 下的 V2 模板全部 `pending-review`，所以公开 API 仍只返回 8 个入口。单宠运行时输入固定为「冻结母版 → 宠物身份图」，人宠模板固定为「冻结母版 → 主人身份图 → 宠物身份图」；缺任一角色或母版必须明确失败，不能静默回落文生图。主人照片走迁移 `0025` 与 `owner-photo-service.ts` 独立存储，上传必须确认本人授权，读取/删除/账户清理都校验归属。
 
@@ -273,9 +233,9 @@ Playwright 只有 `tests/e2e/main-flow.spec.ts` 两个用例：完整生成→�
 
 ## 文档索引
 
-`docs/README.md` 是总索引，也是**页数/路由数/迁移号/用例数这类会漂移的计数的唯一权威处**。`docs/product/01-roadmap.md` 为治理计划，`docs/product/07-functional-backlog.md` 为唯一的功能待办来源（不要往里混部署或凭据类任务；当前唯一待办是虚拟支付合规与 `growth_orders` 支付缺陷），`docs/operations/05-release-checklist.md` 是发布门禁，`docs/operations/04-external-prerequisites.md` 记录仍需外部提供的凭据。
+`docs/README.md` 是总索引，也是**页数/路由数/迁移号/用例数这类会漂移的计数的唯一权威处**。`docs/product/01-roadmap.md` 为治理计划，`docs/product/07-functional-backlog.md` 为唯一的功能待办来源（不要往里混部署或凭据类任务；支付合规代码已完成，剩余是外部签约和发布门禁），`docs/operations/05-release-checklist.md` 是发布门禁，`docs/operations/04-external-prerequisites.md` 记录仍需外部提供的凭据。
 
-**两份盘点文档互补不重叠**：`docs/product/21-小程序功能点清单.md` 按 `app.json` 顺序维护小程序功能点编号（`MP-<页序>.<项序>`，编号稳定不重排，是逐项改动的进度依据；附录 B 记着「服务端已建但小程序无调用方」的接口，以及反向的「小程序已建但服务端未实现」——岛的 `/api/island/*` 已补齐，两侧已对接）；`docs/product/15-功能入口清单.md` 管 Web 页面、9 个后台、REST 路由、玩法 manifest 与 Worker 轮次。准确计数只看 `docs/README.md`。改小程序看前者，改 Web/后台/接口看后者。
+**两份盘点文档互补不重叠**：`docs/product/21-小程序功能点清单.md` 按 `app.json` 顺序维护小程序功能点编号（`MP-<页序>.<项序>`，编号稳定不重排，是逐项改动的进度依据；附录 B 记着「服务端已建但小程序无调用方」的接口，以及反向的「小程序已建但服务端未实现」）；`docs/product/15-功能入口清单.md` 管 Web 页面、9 个后台、REST 路由、玩法 manifest 与 Worker 轮次。准确计数只看 `docs/README.md`。改小程序看前者，改 Web/后台/接口看后者。
 
 `docs/product/17-产品改造方案.md`（批次 1–3）与 `20-功能改造方案-第二轮.md`（四批）是已完成的改造方案，偏离分别记在 20 号文 11.4 与 11.6；`19-验收文档.md` 记着验收结果与三个「只有真跑才发现」的缺陷。图片玩法的研究、原始矩阵、重构、animal 扩展和宠物人化审批依次看 `27`～`31` 号文。阶段一至三与后台批次 K 的逐批完成记录已归档清理，需要历史口径查 Git 历史。
 

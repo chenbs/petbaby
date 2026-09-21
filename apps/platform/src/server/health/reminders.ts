@@ -127,7 +127,7 @@ async function remindCareDue(now: Date, limit: number): Promise<HealthReminder[]
  * 「异常」是评价性判断，而我们没有资格给正常范围。
  * 文案直接复用 `notableWeightNote`，与页面上的那句逐字一致。
  */
-async function remindWeightChange(limit: number): Promise<HealthReminder[]> {
+async function remindWeightChange(now: Date, limit: number): Promise<HealthReminder[]> {
   const database = await getDatabase();
   /*
    * 只看最近有称重的宠物。取每只最近两条 —— 趋势只需要这两个点，
@@ -137,15 +137,15 @@ async function remindWeightChange(limit: number): Promise<HealthReminder[]> {
     `SELECT DISTINCT p.id,p.user_id,p.name
        FROM pets p JOIN pet_weight_records w ON w.pet_id = p.id
       WHERE p.deleted_at IS NULL AND p.life_stage <> 'memorial'
-        AND w.measured_on >= (CURRENT_DATE - 30)
+        AND w.measured_on BETWEEN ($2::date - 30) AND $2::date
       LIMIT $1`,
-    [limit],
+    [limit, asDateString(now)],
   );
   const sent: HealthReminder[] = [];
   for (const pet of pets) {
     const rows = await database.query<{ id: string; weight_grams: number; measured_on: unknown }>(
-      "SELECT id,weight_grams,measured_on FROM pet_weight_records WHERE pet_id=$1 ORDER BY measured_on DESC LIMIT 2",
-      [pet.id],
+      "SELECT id,weight_grams,measured_on FROM pet_weight_records WHERE pet_id=$1 AND measured_on <= $2::date ORDER BY measured_on DESC LIMIT 2",
+      [pet.id, asDateString(now)],
     );
     const trend = computeWeightTrend(rows.map((row) => ({ weightGrams: Number(row.weight_grams), measuredOn: asDateString(row.measured_on) })));
     const note = notableWeightNote(trend);
@@ -219,7 +219,7 @@ async function remindSeniorCheckup(now: Date, limit: number): Promise<HealthRemi
 export async function runHealthReminders(now = new Date()) {
   const care = await remindCareDue(now, MAX_PER_RUN);
   const remaining = Math.max(0, MAX_PER_RUN - care.length);
-  const weight = remaining ? await remindWeightChange(remaining) : [];
+  const weight = remaining ? await remindWeightChange(now, remaining) : [];
   const senior = remaining - weight.length > 0 ? await remindSeniorCheckup(now, remaining - weight.length) : [];
   return { care: care.length, weight: weight.length, senior: senior.length, total: care.length + weight.length + senior.length };
 }

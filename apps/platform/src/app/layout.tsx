@@ -5,7 +5,7 @@ import { BottomNav } from "@/components/bottom-nav";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "宠物造物局",
+  title: "麻麻抱我",
   description: "上传宠物照片，一分钟生成值得晒、值得珍藏的作品。",
   icons: { icon: "/icon.svg" },
 };

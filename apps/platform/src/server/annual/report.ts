@@ -85,7 +85,7 @@ export function buildReportSvg(input: ReportInput) {
   const body: string[] = [];
 
   // ── 封面 ──────────────────────────────────────────────
-  body.push(`<text x="80" y="130" fill="${PALETTE.accent}" font-family="sans-serif" font-size="34" letter-spacing="6">PETBABY · ${year}</text>`);
+  body.push(`<text x="80" y="130" fill="${PALETTE.accent}" font-family="sans-serif" font-size="34" letter-spacing="6">麻麻抱我 · ${year}</text>`);
   body.push(`<text x="80" y="250" fill="${PALETTE.ink}" font-family="serif" font-size="82">${escapeXml(`${petName}的 ${year}`)}</text>`);
   /*
    * 陪伴天数是这份报告里最不可替代的一个数：它只属于这个用户。
@@ -152,7 +152,7 @@ export function buildReportSvg(input: ReportInput) {
 export function withPreviewWatermark(svg: string) {
   const height = Number(/height="(\d+)"/.exec(svg)?.[1] || 1920);
   const band = Math.round(height * 0.42);
-  return svg.replace("</svg>", `<g opacity=".82"><rect x="80" y="${band}" width="920" height="120" rx="20" fill="${PALETTE.ink}"/><text x="540" y="${band + 76}" text-anchor="middle" font-size="38" fill="#fff" font-family="sans-serif">PETBABY 免费预览 · 解锁高清版</text></g></svg>`);
+  return svg.replace("</svg>", `<g opacity=".82"><rect x="80" y="${band}" width="920" height="120" rx="20" fill="${PALETTE.ink}"/><text x="540" y="${band + 76}" text-anchor="middle" font-size="38" fill="#fff" font-family="sans-serif">麻麻抱我免费预览 · 解锁高清版</text></g></svg>`);
 }
 
 /** 长图转 PNG。SVG 直接下发时微信内置浏览器与部分客户端渲染不一致 */

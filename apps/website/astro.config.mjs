@@ -2,15 +2,7 @@
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 
-/*
- * 独立官网（docs/website/02-独立官网实施方案.md）。纯静态输出，无 Node 运行时。
- *
- * site 是 {{SITE_URL}} 占位（收口清单第 9 项）。**不给则 sitemap 完全不输出**，
- * 所以不能真写成 "{{SITE_URL}}" —— 那不是合法 URL，canonical 与 sitemap 会一起坏。
- * 取值与 src/config/site.ts 的 SITE_URL 同源：环境变量 SITE_URL 优先，
- * 否则用 example 占位域名。收口时改环境变量或改那一处默认值。
- */
-const SITE_URL = process.env.SITE_URL || "https://petbaby.example.com";
+const SITE_URL = process.env.SITE_URL || "https://www.babykitty.cn";
 
 export default defineConfig({
   site: SITE_URL,
@@ -32,7 +24,7 @@ export default defineConfig({
   integrations: [
     sitemap({
       // 草稿文章不进构建（详情页根本不生成），这里只需排掉 404。
-      filter: (page) => !page.includes("/404"),
+      filter: (page) => !page.includes("/404") && (!page.includes("/legal/") || (process.env.LEGAL_APPROVED === "true" && Boolean(process.env.LEGAL_OPERATOR && process.env.LEGAL_CONTACT && process.env.LEGAL_ADDRESS))),
       /*
        * 实测这一版 @astrojs/sitemap 会读 trailingSlash，输出已带斜杠。
        * 仍显式收口一遍：canonical 与 sitemap 逐字一致是硬要求，

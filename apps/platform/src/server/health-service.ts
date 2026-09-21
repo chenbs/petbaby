@@ -3,8 +3,8 @@ import "server-only";
 import { z } from "zod";
 
 import { computeWeightTrend, notableWeightNote } from "@/domain/weight-trend";
-import { getDatabase } from "@/server/db/client";
-import { claimEntitlement, consumePurchasedCredit, hasHealthExport } from "@/server/entitlements";
+import { getDatabase, inTransaction } from "@/server/db/client";
+import { claimEntitlement, claimHealthExport, entitlementBalance, hasHealthExport, purchasedCreditBalance } from "@/server/entitlements";
 import { AppError } from "@/server/errors";
 import { buildHealthDocumentSvg, renderHealthDocumentPdf } from "@/server/health/document";
 import { selectTriageProvider } from "@/server/health/provider";
@@ -313,10 +313,10 @@ export async function createHealthDocument(userId: string, petId: string, option
      * 会员无限导出；非会员回落到单买凭据（一张凭据换一次导出）。
      * 顺序是「先看会员再消耗凭据」—— 反过来会让会员白白用掉一张已买的凭据。
      */
-    if (!(await hasHealthExport(userId)) && !(await consumePurchasedCredit(userId, HEALTH_ARCHIVE_KIND, `导出${String(pet.name)}的健康档案`))) {
+    if (!(await hasHealthExport(userId)) && (await purchasedCreditBalance(userId, HEALTH_ARCHIVE_KIND)) <= 0) {
       throw new AppError("HEALTH_EXPORT_REQUIRES_ENTITLEMENT", `导出健康档案需要会员权益，或单次购买 ¥${HEALTH_ARCHIVE_PRICE}`, 402);
     }
-  } else if (!(await claimEntitlement(userId, "annualHealthReport", `${year} 年度健康记录`))) {
+  } else if ((await entitlementBalance(userId, "annualHealthReport")) <= 0) {
     throw new AppError("HEALTH_ANNUAL_REQUIRES_ENTITLEMENT", "年度健康记录需要会员权益", 402);
   }
 
@@ -360,18 +360,27 @@ export async function createHealthDocument(userId: string, petId: string, option
   const key = `private/${userId}/health/${kind}-${petId}-${id}.pdf`;
   await objectStorage.put(key, await renderHealthDocumentPdf(svg), "application/pdf");
   const summary = { weights: weights.length, care: care.length, sessions: sessions.length, petName: String(pet.name) };
-  await database.query(
+  try {
+    await inTransaction(async (transaction) => {
+      const granted = kind === "archive" ? await claimHealthExport(userId, id) : await claimEntitlement(userId, "annualHealthReport", `${year} 年度健康记录`, id);
+      if (!granted) throw new AppError("HEALTH_EXPORT_REQUIRES_ENTITLEMENT", "导出权益已被使用，请重新购买", 402);
+  await transaction.query(
     "INSERT INTO health_documents (id,user_id,pet_id,kind,year,output_key,summary,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7::jsonb,$8)",
     [id, userId, petId, kind, year || null, key, JSON.stringify(summary), new Date()],
   );
+    });
+  } catch (error) {
+    await objectStorage.delete(key);
+    throw error;
+  }
   return { id, petId, kind, year, createdAt: new Date().toISOString(), ...summary };
 }
 
 export async function listHealthDocuments(userId: string, petId?: string) {
   const database = await getDatabase();
   const rows = petId
-    ? await database.query("SELECT id,pet_id,kind,year,summary,created_at FROM health_documents WHERE user_id=$1 AND pet_id=$2 ORDER BY created_at DESC LIMIT 50", [userId, petId])
-    : await database.query("SELECT id,pet_id,kind,year,summary,created_at FROM health_documents WHERE user_id=$1 ORDER BY created_at DESC LIMIT 50", [userId]);
+    ? await database.query("SELECT id,pet_id,kind,year,summary,created_at FROM health_documents WHERE revoked_at IS NULL AND user_id=$1 AND pet_id=$2 ORDER BY created_at DESC LIMIT 50", [userId, petId])
+    : await database.query("SELECT id,pet_id,kind,year,summary,created_at FROM health_documents WHERE revoked_at IS NULL AND user_id=$1 ORDER BY created_at DESC LIMIT 50", [userId]);
   return rows.map((row) => ({
     id: String(row.id),
     petId: String(row.pet_id),
@@ -390,7 +399,7 @@ export async function listHealthDocuments(userId: string, petId?: string) {
  */
 export async function getHealthDocumentFile(userId: string, id: string) {
   const database = await getDatabase();
-  const rows = await database.query("SELECT output_key,kind,year FROM health_documents WHERE id=$1 AND user_id=$2", [id, userId]);
+  const rows = await database.query("SELECT output_key,kind,year FROM health_documents WHERE id=$1 AND user_id=$2 AND revoked_at IS NULL", [id, userId]);
   if (!rows[0]) throw new AppError("HEALTH_DOCUMENT_NOT_FOUND", "健康档案不存在", 404);
   const key = String(rows[0].output_key);
   // 越权兜底：key 必须落在这个用户的私有前缀下。

@@ -1,0 +1,8 @@
+{
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "generatedAt": "2026-09-21T15:24:16.545Z",
+  "prompt": "Use case: ads-marketing. Create an exceptionally beautiful image for a contemporary premium pet photography and memories website. Art direction: playful fashion editorial, exquisite detail, clean sculptural composition, luminous soft daylight, rich but restrained pastel colours, tactile materials, delightful personality. Prioritise aesthetic impact over literal app-output realism. The pet must look alive, sweet and naturally expressive, with believable anatomy and finely resolved fur. No human body, no human hands, no extra limbs, no stock-photo props clutter, no sepia filter, no brown vintage room, no app interface, no watermark, no logos. No lettering unless explicitly specified. Full bleed, no outer border. High-fashion magazine cover photograph starring the same cat: one adorable orange-and-white shorthair cat with a white muzzle, white chest, amber eyes, a pink nose and softly rounded cheeks, lying elegantly across a lilac curved plinth, wearing a cherry red silk ribbon, eyes toward camera, pale butter-yellow seamless background, extraordinary beauty lighting. A single oversized dark-red masthead reads MUSE at the top. No other lettering, no watermark. Portrait format. Intended final composition 900:1200; keep face, ears and important artwork comfortably within the central safe area for a small crop.",
+  "reference": "style-warm-film",
+  "sha256": "bcda994a2190d44a981ec657fb1beb71e855753319f986ccd8e4f72a4a9e953d"
+}

@@ -65,12 +65,12 @@ export async function processTask(task: ReturnType<typeof mapTask>) {
     if (!previewSource) throw new Error("PREVIEW_SOURCE_NOT_FOUND");
     let previewBody: Uint8Array;
     if (previewSource.contentType === "image/svg+xml") {
-      previewBody = new TextEncoder().encode(new TextDecoder().decode(previewSource.body).replace("</svg>", '<g opacity=".62"><rect x="40" y="205" width="520" height="64" rx="12" fill="#14251c"/><text x="60" y="248" fill="#ffffff" font-size="30">PETBABY 免费预览 · 小程序码</text></g></svg>'));
+      previewBody = new TextEncoder().encode(new TextDecoder().decode(previewSource.body).replace("</svg>", '<g opacity=".62"><rect x="40" y="205" width="520" height="64" rx="12" fill="#14251c"/><text x="60" y="248" fill="#ffffff" font-size="30">麻麻抱我免费预览 · 小程序码</text></g></svg>'));
     } else {
       const metadata = await sharp(Buffer.from(previewSource.body)).metadata();
       const width = metadata.width || 1080;
       const height = metadata.height || 1440;
-      const mark = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}"><g opacity=".62" transform="translate(40 80)"><rect width="${Math.min(700, width - 80)}" height="76" rx="14" fill="#14251c"/><text x="24" y="49" fill="#fff" font-family="sans-serif" font-size="30">PETBABY 免费预览 · 小程序码</text><rect x="${Math.min(610, width - 170)}" y="10" width="56" height="56" fill="#fff"/><path d="M${Math.min(618, width - 162)} 18h16v16h-16zm24 0h16v16h-16zm-24 24h16v16h-16zm24 0h8v8h-8z" fill="#14251c"/></g></svg>`;
+      const mark = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}"><g opacity=".62" transform="translate(40 80)"><rect width="${Math.min(700, width - 80)}" height="76" rx="14" fill="#14251c"/><text x="24" y="49" fill="#fff" font-family="sans-serif" font-size="30">麻麻抱我免费预览 · 小程序码</text><rect x="${Math.min(610, width - 170)}" y="10" width="56" height="56" fill="#fff"/><path d="M${Math.min(618, width - 162)} 18h16v16h-16zm24 0h16v16h-16zm-24 24h16v16h-16zm24 0h8v8h-8z" fill="#14251c"/></g></svg>`;
       previewBody = new Uint8Array(await sharp(Buffer.from(previewSource.body)).composite([{ input: Buffer.from(mark), gravity: "northwest" }]).png().toBuffer());
     }
     const previewKey = `private/${task.userId}/works/${task.id}-preview.${previewSource.suffix}`;

@@ -90,36 +90,6 @@ done < "$IMAGE_ASSET_MANIFEST"
 [ "$template_count" = "76" ] || fail "冻结母版数量错误：$template_count/76"
 [ "$preview_count" = "76" ] || fail "公开展示图数量错误：$preview_count/76"
 
-# 宠物小岛素材（22 号文 5.3、24 号文 7.4）。
-#
-# **不能像上面那样按裸文件名 + 内容哈希直接灌**：岛素材要先抠品红底、按槽位裁切，
-# 而那两步只有 tools/imagegen/upload-island.mjs 会做 —— out/island/ 里躺的是人工
-# 投放的原图（品红底、尺寸未裁），直接灌进去等于给端上一张带品红背景的图。
-# 而且需要 alpha 的槽位输出 PNG，上面的 put() 写死 .jpg + image/jpeg 也不对。
-#
-# 所以约定：在有 sharp 的机器上先跑
-#   node tools/imagegen/upload-island.mjs --stage tools/imagegen/out/island/staged
-# 它会按最终对象键布局（samples/island/<名字>-<哈希>.<ext> + .meta）摆好文件，
-# 这里整目录拷进暂存区即可。缺这一步时只提示不失败：素材清单为空是正式状态，
-# 端上走「素材未就绪」路径（纯色底 + 立绘），功能可用。
-ISLAND_STAGED="$REPO_DIR/tools/imagegen/out/island/staged/samples/island"
-if [ -d "$ISLAND_STAGED" ]; then
-  mkdir -p "$STAGE_DIR/samples/island"
-  island_count=0
-  for file in "$ISLAND_STAGED"/*; do
-    [ -f "$file" ] || continue
-    cp "$file" "$STAGE_DIR/samples/island/"
-    # .meta 旁文件不计入张数，它是每张图的伴生文件
-    case "$file" in *.meta) ;; *) island_count=$((island_count + 1)) ;; esac
-  done
-  log "岛素材 $island_count 张已并入暂存目录"
-else
-  warn "未找到 $ISLAND_STAGED —— 岛素材不会被灌入。"
-  echo "        素材到齐后请在有 sharp 的机器上执行：" >&2
-  echo "        node tools/imagegen/upload-island.mjs --stage tools/imagegen/out/island/staged" >&2
-  echo "        （清单为空是正式状态，端上走「素材未就绪」路径，不影响其余功能）" >&2
-fi
-
 log "已在暂存目录摆好 $count 张插件样例图、$template_count 张冻结母版和 $preview_count 张公开展示图，开始写入 object-data 卷"
 # 目标目录必须先建：应用只在写对象时才 mkdir，全新机器上 samples/ 还不存在，
 # 而 docker cp 到不存在的目录会直接失败。
@@ -138,8 +108,6 @@ docker cp "$STAGE_DIR/samples/." "$WEB_CONTAINER:/app/.data/objects/samples/"
 docker exec -u root "$WEB_CONTAINER" chown -R nextjs:nodejs /app/.data/objects/samples
 
 log "完成。抽查一张："
-# 只挑普通文件：samples/ 下现在还有 island/ 子目录（岛素材），
-# 挑中目录会让下面的 ls -l 与 curl 提示都指向一个不存在的对象键。
 SAMPLE=$(find "$STAGE_DIR/samples" -maxdepth 1 -type f ! -name '*.meta' -exec basename {} \; | head -1)
 docker exec "$WEB_CONTAINER" sh -c "ls -l /app/.data/objects/samples/$SAMPLE"
 echo

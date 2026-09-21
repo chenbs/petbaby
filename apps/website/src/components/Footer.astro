@@ -15,8 +15,8 @@ import { BRAND_NAME, FOOTER_COLUMNS, FOOTER_LEGAL_LINKS, ICP_RECORD } from "../c
   <div class="container footer-grid">
     <div>
       <a class="brand brand-lg" href="/#home">
-        <span class="brand-mark" aria-hidden="true"></span>
-        <span class="brand-name" data-placeholder="brand-name">{BRAND_NAME}</span>
+        <img class="brand-mark" src="/assets/brand-logo.webp" alt="" width="160" height="160" loading="lazy" decoding="async" />
+        <span class="brand-name">{BRAND_NAME}</span>
       </a>
       <p class="footer-desc">
         把每一张宠物照片，变成值得留住的作品。图文、AI 肖像、视频与纪念，都在一个小程序里。
@@ -36,7 +36,7 @@ import { BRAND_NAME, FOOTER_COLUMNS, FOOTER_LEGAL_LINKS, ICP_RECORD } from "../c
     }
   </div>
   <div class="container footer-bottom">
-    <p>© 2026 <span data-placeholder="brand-name">{BRAND_NAME}</span></p>
+    <p>© 2026 <span>{BRAND_NAME}</span></p>
     <div class="footer-legal">
       {FOOTER_LEGAL_LINKS.map((link) => <a href={link.href}>{link.label}</a>)}
       {/* 备案下来后替换成真实号码并链到 https://beian.miit.gov.cn/（方案 11.1）*/}

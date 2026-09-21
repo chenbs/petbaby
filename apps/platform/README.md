@@ -1,4 +1,4 @@
-# Petbaby Platform
+# 麻麻抱我平台
 
 移动端优先的 Next.js 单体应用，包含 Web/H5、REST API、PostgreSQL/PGlite、图片/视频生成 Worker、支付、对象存储和运营后台。
 

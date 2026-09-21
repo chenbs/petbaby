@@ -15,22 +15,22 @@ interface Props {
 const { id = "contact" } = Astro.props;
 ---
 
-<section class="band section" id={id}>
+<section class="band section ed-contact" id={id}>
   <div class="container">
     <div class="cta-panel reveal">
       <div class="cta-sheen" aria-hidden="true"></div>
       <div class="cta-grid">
         <div>
-          <p class="eyebrow">开始使用</p>
-          <h2 class="h2 h2-mid">现在就给它拍一张</h2>
-          <p class="body-text lead">微信扫码进入小程序，第一次创作不花钱。</p>
-          <p class="cta-note">已有 10 种玩法可选，图文类 1 分钟起，视频类 3 分钟起。</p>
+          <p class="eyebrow">LET'S MAKE A LITTLE MEMORY</p>
+          <h2 class="h2 h2-mid">把我最可爱的样子，<br />留下来吧。</h2>
+          <p class="body-text lead">{MINIPROGRAM_QR.available ? "打开微信，扫码进入小程序。从一张照片开始，把我的陪伴留得更久一点。" : "小程序正在准备上线。先收藏一份灵感，等我们一起留下第一张作品。"}</p>
+          <p class="cta-note">图文创作、AI 肖像与陪伴短片，具体开放服务及费用以小程序内展示为准。</p>
         </div>
         <div class="qr-box">
           {/* 待提供：真实小程序码。缺图时是虚线占位框，不是色块（规格 7.4）*/}
           <QrImage size={MINIPROGRAM_QR.size} loading="lazy" />
           <p class="qr-note">
-            {MINIPROGRAM_QR.available ? "微信扫码开始创作" : "正式站换成真实小程序码"}
+            {MINIPROGRAM_QR.available ? "微信扫码开始创作" : "上线后开放扫码入口"}
           </p>
         </div>
       </div>

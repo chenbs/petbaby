@@ -17,7 +17,6 @@ vi.mock("@/server/image-template-registry", async (importOriginal) => {
     status: "live" as const,
     masterStorageKey: "samples/image-templates/test-pet-human.png",
     sampleStorageKey: "samples/image-templates/test-pet-human.png",
-    effectPrompt: "测试效果图专属人物与场景描述",
   };
   return {
     ...actual,
@@ -83,8 +82,9 @@ describe("pet-human effect-reference generation", () => {
     const references = generateWithFailoverMock.mock.calls[0][4] as ImageReference[];
     expect(generateWithFailoverMock.mock.calls[0][1]).toBe(2);
     expect(references.map((item) => item.filename)).toEqual(["pet-identity.png", "effect-reference.png"]);
-    expect(String(generateWithFailoverMock.mock.calls[0][0])).toContain("测试效果图专属人物与场景描述");
-    expect(String(generateWithFailoverMock.mock.calls[0][0])).toContain("最终画面只允许一个完整、自然、可信的真人");
+    expect(String(generateWithFailoverMock.mock.calls[0][0])).toContain("以图二作为主要视觉参考，参考权重约 50%");
+    expect(String(generateWithFailoverMock.mock.calls[0][0])).toContain("提取图一动物主体的核心视觉特征，参考权重约 50%");
+    expect(String(generateWithFailoverMock.mock.calls[0][0])).toContain("图二人物仍然是完整、自然、协调的人类角色");
 
     const ready = await getAiRun(USER, run.id);
     expect(ready.candidates).toHaveLength(2);

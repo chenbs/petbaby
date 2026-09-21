@@ -2,7 +2,7 @@
 
 <view class="page page-tabbar">
   <text class="eyebrow">ACCOUNT</text>
-  <view class="title">我的宠物造物局</view>
+  <view class="title">我的麻麻抱我</view>
 
   <t-skeleton wx:if="{{loading}}" type="card" count="2"></t-skeleton>
 
@@ -92,17 +92,6 @@
         <!-- 健康助手：分诊 + 记录，不是问诊。副标题要说清边界。 -->
         <view class="entry" hover-class="entry-hover" bindtap="openHealth">
           <view class="entry-text"><view class="entry-name">健康助手</view><text class="small">要不要去医院、去之前准备什么</text></view>
-          <text class="entry-arrow">›</text>
-        </view>
-        <!--
-          宠物小岛。**入口是卡片/按钮，不是第四个 tab**（22 号文 5.2）：
-          tabBar 页面必须在主包内，而主包余量不足 700KB，撑不住岛首页。
-          是否升 tab 留到 M3 后按留存数据再定。
-
-          名字叫「小岛」而不是「游戏」—— 1.1 的安全区判据把入口措辞也算在内。
-        -->
-        <view class="entry" hover-class="entry-hover" bindtap="openIsland">
-          <view class="entry-text"><view class="entry-name">宠物小岛</view><text class="small">它在小岛上的日子</text></view>
           <text class="entry-arrow">›</text>
         </view>
         <!-- 指首页的玩法货架（X2 删掉了中间那层「选择创作方式」页） -->

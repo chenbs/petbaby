@@ -13,7 +13,7 @@
 
   <block wx:else>
     <!-- F 的封面式开篇：期数标识 + 巨大标题 + 副题 + 细线收口 -->
-    <text class="share-kicker">PETBABY MEMORIAL</text>
+    <text class="share-kicker">麻麻抱我 · 纪念空间</text>
     <view class="share-title">{{item.title}}</view>
     <text class="share-pet">{{item.pet_name}}</text>
     <view class="share-rule"></view>

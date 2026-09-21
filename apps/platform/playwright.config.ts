@@ -16,7 +16,15 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "cross-env DATABASE_URL=memory:// next dev --hostname 127.0.0.1 --port 3100",
+    command: process.env.E2E_DATABASE_URL
+      ? 'concurrently --kill-others "next dev --hostname 127.0.0.1 --port 3100" "node --conditions=react-server --import tsx scripts/worker.ts"'
+      : "next dev --hostname 127.0.0.1 --port 3100",
+    env: {
+      DATABASE_URL: process.env.E2E_DATABASE_URL || "memory://",
+      OBJECT_STORAGE_PROVIDER: "local",
+      LOCAL_STORAGE_DIR: process.env.E2E_DATABASE_URL ? ".data/e2e-postgres-objects" : ".data/e2e-memory-objects",
+      PAYMENT_PROVIDER: "development",
+    },
     url: "http://127.0.0.1:3100",
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

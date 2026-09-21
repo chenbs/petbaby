@@ -13,22 +13,6 @@ function localDateString(offsetDays) {
   return `${target.getFullYear()}-${pad(target.getMonth() + 1)}-${pad(target.getDate())}`;
 }
 
-/*
- * ------------------------------------------------------------------ *
- * 与服务端 `domain/companion.ts` 的一致性
- *
- * `services/companion.js` 是那份 TS 的端上对照实现（小程序 require 不了 TS），
- * 关系与 `island/scene/ambient.js` 对 `domain/island-weather.ts` 完全一样。
- * 那一对靠 `island-ambient.test.js` 读 TS 源文件比对来防漂移，**这一对原先只有
- * 一句「必须逐字一致」的注释** —— 而注释拦不住任何人。
- *
- * 漂移的表现是同一个第 365 天在小程序里叫「第 365 天」、在时间线/日记里叫
- * 「一起过了一年」，或者纪念册显示 742 天而小程序显示 743：**两个数字都说得通，
- * 用户无法判断哪个是对的，我们也无法解释。** 22 号文第 8 步的完成判据正是
- * 「与 companion.ts 天数逐日一致」，所以这件事该由门禁证明而不是靠自觉。
- * ------------------------------------------------------------------ *
- */
-
 const TS_PATH = path.resolve(__dirname, "../../platform/src/domain/companion.ts");
 const tsSource = fs.existsSync(TS_PATH) ? fs.readFileSync(TS_PATH, "utf8") : "";
 

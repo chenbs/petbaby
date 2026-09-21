@@ -18,7 +18,7 @@
  */
 import type { APIRoute } from "astro";
 import { getCollection } from "astro:content";
-import { BRAND_NAME, SITE_URL } from "../config/site";
+import { BRAND_NAME, SITE_DESCRIPTION, SITE_URL } from "../config/site";
 
 export const GET: APIRoute = async () => {
   // 只列草稿之外的文章，且最多 10 篇 —— 主干而非完整清单
@@ -28,27 +28,26 @@ export const GET: APIRoute = async () => {
 
   const body = `# ${BRAND_NAME}
 
-> 上传一张宠物日常照片，几分钟拿到身份证、电影海报、时光画册与 AI 肖像。
-> 图文创作、AI 肖像、视频短片、纪念空间共 10 种玩法，在微信小程序内完成。
+> ${SITE_DESCRIPTION}
 
 ## 主要页面
-- [首页](${SITE_URL}/): 玩法总览与真实成品展示
+- [首页](${SITE_URL}/): 玩法介绍与 AI 创意示例
 - [文章](${SITE_URL}/blog/): 玩法教程、拍照技巧、产品设计取舍
 - [用户协议](${SITE_URL}/legal/terms/)
 - [隐私政策](${SITE_URL}/legal/privacy/)
 
 ## 玩法
-- 宠物身份证: 正脸照 1 张生成证件卡，约 1 分钟
+- 宠物身份证: 正脸照 1 张生成证件卡
 - 宠物电影海报: 日常照 1–3 张排成主视觉海报
 - 宠物时光画册: 照片 6–20 张装订成长图与 PDF
-- AI 宠物肖像: 四种风格预设一次出四张候选
+- AI 宠物肖像: 从已上线模板中选择效果，候选数量与重试规则以玩法为准
 - 星尘纪念: 纪念册、纪念视频、纪念页、成长对比图
 ${posts.length ? `
 ## 最近文章
 ${posts.map((post) => `- [${post.data.title}](${SITE_URL}/blog/${post.id}/): ${post.data.description}`).join("\n")}
 ` : ""}
 ## 说明
-- 照片仅用于生成，可随时删除
+- 照片用于用户选择的档案、创作与分享服务，个人信息处理详见隐私政策
 - 纪念空间的陪伴天数是过去式且不递增（「陪伴了 N 天」）
 - 官网不直接售卖，价格在微信小程序内
 `;

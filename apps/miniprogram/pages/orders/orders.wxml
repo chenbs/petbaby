@@ -24,11 +24,13 @@
       <view class="row">
         <view class="order-main">
           <view class="order-amount">{{item.amountText}}</view>
-          <text class="small">{{item.pluginId}}</text>
+          <text class="small">{{item.sku}}</text>
           <text wx:if="{{item.refundedText}}" class="small">{{item.refundedText}}</text>
         </view>
         <t-tag tone="{{item.statusTone}}" text="{{item.statusText}}"></t-tag>
       </view>
+      <t-button wx:if="{{item.status === 'pending'}}" type="ai" size="mini" anim="{{animType}}" loading="{{busy}}" class="block-gap" data-id="{{item.id}}" bindtap="pay">继续付款</t-button>
+      <t-button wx:if="{{item.status === 'pending' || item.status === 'refunding'}}" type="ghost" size="mini" anim="{{animType}}" class="block-gap" data-id="{{item.id}}" bindtap="refreshOrder">刷新到账状态</t-button>
       <t-button
         wx:if="{{item.status === 'paid'}}"
         type="ghost"
@@ -46,7 +48,7 @@
 <t-dialog
   visible="{{!!refundTarget}}"
   title="申请退款？"
-  content="因作品不满意申请退款，将退回订单金额的 50%。生成失败的订单会全额退款，无需手动申请。"
+  content="{{refundDescription}}"
   confirm-text="确认申请"
   danger
   anim="{{animType}}"

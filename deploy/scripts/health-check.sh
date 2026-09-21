@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 # 轮询 /api/health，要求 status=ok。
 # 用法：./deploy/scripts/health-check.sh [staging|production]
-#   或   ./deploy/scripts/health-check.sh https://petbaby.example.com
+#   或   ./deploy/scripts/health-check.sh https://app.babykitty.cn
 set -eu
 
 . "$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)/lib.sh"

@@ -79,6 +79,13 @@ for (const file of htmlFiles) {
     if (!await resolveTarget(url.pathname)) fail(`${rel}: 死链 ${href}`);
   }
 
+  for (const match of html.matchAll(/\bsrcset="([^"]+)"/g)) {
+    for (const candidate of match[1].split(",")) {
+      const resource = candidate.trim().split(/\s+/)[0];
+      if (!resource.startsWith("/") || !await exists(path.join(DIST, decodeURIComponent(resource)))) fail(`${rel}: srcset 资源缺失 ${resource}`);
+    }
+  }
+
   // ② 资源引用
   const assetPatterns = [
     /<img\b[^>]*?\bsrc="([^"]+)"/g,

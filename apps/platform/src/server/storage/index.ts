@@ -3,14 +3,17 @@ import "server-only";
 import { isRealProduction } from "@/server/runtime-mode";
 import { LocalObjectStorage } from "@/server/storage/local-storage";
 import { ConfiguredCloudStorage } from "@/server/storage/cloud-storage";
+import { CosObjectStorage } from "@/server/storage/cos-storage";
+import { AppError } from "@/server/errors";
 import type { ObjectStorage } from "@/server/storage/types";
 
-// OSS/COS adapters implement the same contract once credentials are supplied.
-// `OBJECT_STORAGE_PROVIDER=local` 只在开发和 staging 生效；正式生产回落到云适配器（缺凭据时按 503 失败）。
 export function selectObjectStorage(): ObjectStorage {
   const provider = process.env.OBJECT_STORAGE_PROVIDER?.trim().toLowerCase();
-  if (provider === "local") return isRealProduction() ? new ConfiguredCloudStorage() : new LocalObjectStorage();
-  if (provider || process.env.NODE_ENV === "production") return new ConfiguredCloudStorage();
+  if (provider === "cos") return new CosObjectStorage();
+  if (provider === "s3") return new ConfiguredCloudStorage();
+  if (provider === "local") return isRealProduction() ? new CosObjectStorage() : new LocalObjectStorage();
+  if (provider) throw new AppError("STORAGE_CONFIG_INVALID", "不支持的对象存储服务", 503);
+  if (process.env.NODE_ENV === "production") return new CosObjectStorage();
   return new LocalObjectStorage();
 }
 

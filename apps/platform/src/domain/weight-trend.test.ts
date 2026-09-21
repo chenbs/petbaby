@@ -14,14 +14,6 @@ import { computeWeightTrend, formatWeight, notableWeightNote } from "@/domain/we
  * 将来有人想加一句「体重偏高」，那条用例会先失败。
  */
 
-/*
- * 评价性词汇。出现任何一个都说明越过了「事实陈述」的边界。
- *
- * **清单已提到 `domain/copy-guard.json` 共用**（2026-08-05，宠物小岛门禁 11）：
- * 岛的文案门禁要扫同一份词表，而 22 号文 9.2 明确要求「复用已有的评价词清单，
- * 不新造一份（两份必然漂移）」。搬家时逐字保留，这条守卫的行为没有变化。
- */
-
 describe("体重趋势：只陈述事实", () => {
   it("没有记录时返回 undefined，由调用方隐藏整块", () => {
     expect(computeWeightTrend([])).toBeUndefined();

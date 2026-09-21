@@ -106,7 +106,7 @@ async function processAnnualFilm(row: Record<string, unknown>, database: Awaited
   if (existing[0]) {
     await database.query("UPDATE works SET title=$2,subtitle=$3,output_key=$4,preview_key=$5,locked=true,public=false,share_token=NULL,version=$6,photo_id=$7,deleted_at=NULL WHERE id=$1", [workId, title, subtitle, key, previewKey, version, photoId]);
   } else {
-    await database.query("INSERT INTO works (id,user_id,plugin_id,pet_id,photo_id,title,subtitle,serial_number,authority,output_key,preview_key,asset_kind,source_kind,source_id,locked,public,version,created_at) VALUES ($1,$2,'pl-19',$3,$4,$5,$6,$7,'PETBABY ANNUAL STUDIO',$8,$9,'video','report',$10,true,false,1,$11)", [workId, userId, config.petId || aggregate.petId, photoId, title, subtitle, `ANN-${renderId.slice(0, 8).toUpperCase()}`, key, previewKey, sourceId, createdAt]);
+    await database.query("INSERT INTO works (id,user_id,plugin_id,pet_id,photo_id,title,subtitle,serial_number,authority,output_key,preview_key,asset_kind,source_kind,source_id,locked,public,version,created_at) VALUES ($1,$2,'pl-19',$3,$4,$5,$6,$7,'麻麻抱我 · 年度工作室',$8,$9,'video','report',$10,true,false,1,$11)", [workId, userId, config.petId || aggregate.petId, photoId, title, subtitle, `ANN-${renderId.slice(0, 8).toUpperCase()}`, key, previewKey, sourceId, createdAt]);
   }
   await database.query("INSERT INTO work_versions (id,work_id,version,title,subtitle,output_key,preview_key,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)", [crypto.randomUUID(), workId, version, title, subtitle, key, previewKey, createdAt]);
   await database.query("UPDATE video_renders SET status='ready',progress=100,output_key=$2,preview_key=$3,work_id=$4,error_code=NULL,locked_at=NULL WHERE id=$1", [renderId, key, previewKey, workId]);
@@ -139,7 +139,7 @@ export async function processNextVideo() {
     const photoKeys = [...new Set(orderedKeys)].slice(0, MAX_PHOTOS);
     if (photoKeys.some((key) => !key.startsWith(`private/${String(row.user_id)}/`))) throw new Error("VIDEO_ASSET_NOT_ALLOWED");
     if (config.bgm && !["none", "calm", "bright"].includes(config.bgm)) throw new Error("VIDEO_BGM_NOT_ALLOWED");
-    const caption = Array.isArray(config.captions) && config.captions.length ? String(config.captions[0]).replace(/[:\\'\"]+/g, " ").slice(0, 80) : "PETBABY";
+    const caption = Array.isArray(config.captions) && config.captions.length ? String(config.captions[0]).replace(/[:\\'\"]+/g, " ").slice(0, 80) : "麻麻抱我";
     const normalized: string[] = [];
     for (let index = 0; index < photoKeys.length; index += 1) {
       const object = await objectStorage.get(photoKeys[index]);
@@ -170,7 +170,7 @@ export async function processNextVideo() {
       const subtitle = String(config.snapshot?.copy || `${totalSeconds} 秒互动页导出`).slice(0, 160);
       if (!existing[0]) {
         const createdAt = new Date();
-        await database.query("INSERT INTO works (id,user_id,plugin_id,pet_id,photo_id,title,subtitle,serial_number,authority,output_key,preview_key,asset_kind,source_kind,source_id,locked,public,version,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,'PETBABY INTERACTIVE STUDIO',$9,$10,'video','interactive',$11,false,false,1,$12)", [workId, row.user_id, row.plugin_id, config.petId, config.photoId, title, subtitle, `H5-${String(row.id).slice(0, 8).toUpperCase()}`, key, typeof config.cover === "string" ? config.cover : null, config.interactiveSessionId, createdAt]);
+        await database.query("INSERT INTO works (id,user_id,plugin_id,pet_id,photo_id,title,subtitle,serial_number,authority,output_key,preview_key,asset_kind,source_kind,source_id,locked,public,version,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,'麻麻抱我 · 互动工作室',$9,$10,'video','interactive',$11,false,false,1,$12)", [workId, row.user_id, row.plugin_id, config.petId, config.photoId, title, subtitle, `H5-${String(row.id).slice(0, 8).toUpperCase()}`, key, typeof config.cover === "string" ? config.cover : null, config.interactiveSessionId, createdAt]);
         await database.query("INSERT INTO work_versions (id,work_id,version,title,subtitle,output_key,preview_key,created_at) VALUES ($1,$2,1,$3,$4,$5,$6,$7)", [crypto.randomUUID(), workId, title, subtitle, key, typeof config.cover === "string" ? config.cover : null, createdAt]);
       } else {
         const version = Number(existing[0].version || 1) + 1; const createdAt = new Date();
@@ -192,7 +192,7 @@ export async function processNextVideo() {
       // 副标题写实际时长。时长可选之后「15 秒可编辑宠物短片」对 10/30 秒的片子是错的。
       const subtitle = `${totalSeconds} 秒可编辑宠物短片`;
       if (existing[0]) await database.query("UPDATE works SET title=$2,subtitle=$3,output_key=$4,preview_key=$5,locked=true,public=false,share_token=NULL,version=$6,photo_id=$7,deleted_at=NULL WHERE id=$1", [workId, title, subtitle, key, previewKey, version, photoIds[0]]);
-      else await database.query("INSERT INTO works (id,user_id,plugin_id,pet_id,photo_id,title,subtitle,serial_number,authority,output_key,preview_key,asset_kind,source_kind,source_id,locked,public,version,created_at) VALUES ($1,$2,'pl-19',$3,$4,$5,$6,$7,'PETBABY VIDEO STUDIO',$8,$9,'video','video',$10,true,false,1,$11)", [workId, row.user_id, project.pet_id, photoIds[0], title, subtitle, `VID-${String(row.id).slice(0, 8).toUpperCase()}`, key, previewKey, config.projectId, createdAt]);
+      else await database.query("INSERT INTO works (id,user_id,plugin_id,pet_id,photo_id,title,subtitle,serial_number,authority,output_key,preview_key,asset_kind,source_kind,source_id,locked,public,version,created_at) VALUES ($1,$2,'pl-19',$3,$4,$5,$6,$7,'麻麻抱我 · 视频工作室',$8,$9,'video','video',$10,true,false,1,$11)", [workId, row.user_id, project.pet_id, photoIds[0], title, subtitle, `VID-${String(row.id).slice(0, 8).toUpperCase()}`, key, previewKey, config.projectId, createdAt]);
       await database.query("INSERT INTO work_versions (id,work_id,version,title,subtitle,output_key,preview_key,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)", [crypto.randomUUID(), workId, version, title, subtitle, key, previewKey, createdAt]);
       await database.query("UPDATE video_projects SET status='preview_ready',work_id=$2,updated_at=now() WHERE id=$1", [config.projectId, workId]);
     }

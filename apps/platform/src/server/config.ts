@@ -15,7 +15,7 @@ export function inspectConfiguration(): { environment: string; mode: RuntimeMode
     { key: "WORKER_SECRET", required: hosted, configured: Boolean(process.env.WORKER_SECRET && process.env.WORKER_SECRET.length >= 32), hint: "至少 32 位随机字符串，用于 internal/* 接口" },
     { key: "DATABASE_URL", required: hosted, configured: Boolean(process.env.DATABASE_URL?.startsWith("postgres")), hint: "PostgreSQL 连接串，禁止 PGlite" },
     { key: "PUBLIC_APP_URL", required: hosted, configured: Boolean(process.env.PUBLIC_APP_URL?.startsWith("https://")), hint: "HTTPS H5 地址" },
-    { key: "OBJECT_STORAGE_PROVIDER", required: hosted, configured: Boolean(process.env.OBJECT_STORAGE_PROVIDER), hint: "生产填 s3；staging 可填 local" },
+    { key: "OBJECT_STORAGE_PROVIDER", required: hosted, configured: Boolean(process.env.OBJECT_STORAGE_PROVIDER), hint: "生产填 cos；staging 可填 local" },
     { key: "ADDRESS_ENCRYPTION_KEY", required: hosted, configured: Boolean(process.env.ADDRESS_ENCRYPTION_KEY), hint: "实体订单地址加密密钥" },
     { key: "ADMIN_USER_IDS", required: production, configured: Boolean(process.env.ADMIN_USER_IDS), hint: "管理员 UUID 白名单，未配置时后台返回 404" },
     { key: "WECHAT_APP_ID", required: production, configured: Boolean(process.env.WECHAT_APP_ID), hint: "微信小程序 AppID" },

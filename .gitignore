@@ -39,5 +39,6 @@ tools/imagegen/out/reference-v1/dual-subject/review/*-stability-review.png
 
 # Logs and OS files
 *.log
+/gui-sock-*
 .DS_Store
 Thumbs.db

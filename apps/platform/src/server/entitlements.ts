@@ -1,6 +1,6 @@
 import "server-only";
 
-import { getDatabase } from "@/server/db/client";
+import { getDatabase, inTransaction } from "@/server/db/client";
 
 /*
  * 会员权益判定。
@@ -123,17 +123,17 @@ export async function grantPurchasedCredit(userId: string, kind: string, orderId
  * 看有没有影响到」的写法：`UPDATE ... WHERE id = (SELECT ... LIMIT 1)` 是
  * 原子的，两个并发请求不会核销同一行。
  */
-export async function consumePurchasedCredit(userId: string, kind: string, reason: string): Promise<boolean> {
+export async function consumePurchasedCredit(userId: string, kind: string, reason: string, resourceId?: string): Promise<boolean> {
   const database = await getDatabase();
   const rows = await database.query(
-    `UPDATE entitlement_ledger SET status='consumed', reason=$3
-      WHERE id = (
+    `UPDATE entitlement_ledger SET status='consumed', reason=$3, resource_id=$4
+      WHERE status='granted' AND id = (
         SELECT id FROM entitlement_ledger
          WHERE user_id=$1 AND kind=$2 AND status='granted' AND membership_id IS NULL
          ORDER BY created_at LIMIT 1
       )
       RETURNING id`,
-    [userId, kind, reason],
+    [userId, kind, reason, resourceId || null],
   );
   return Boolean(rows[0]);
 }
@@ -155,14 +155,28 @@ export async function purchasedCreditBalance(userId: string, kind: string): Prom
  *
  * @param reason 写进账本的人类可读原因，出现在后台，要能定位到具体资源
  */
-export async function claimEntitlement(userId: string, kind: CountedEntitlement, reason: string): Promise<boolean> {
+export async function claimEntitlement(userId: string, kind: CountedEntitlement, reason: string, resourceId?: string): Promise<boolean> {
+  return inTransaction(async (database) => {
+  await database.query("SELECT id FROM memberships WHERE user_id=$1 AND status='active' ORDER BY id FOR UPDATE", [userId]);
   const membership = await activeMembership(userId);
   if (!membership) return false;
   if ((await entitlementBalance(userId, kind)) <= 0) return false;
-  const database = await getDatabase();
   await database.query(
-    "INSERT INTO entitlement_ledger (id,user_id,membership_id,kind,units,status,reason,created_at) VALUES ($1,$2,$3,$4,1,'consumed',$5,$6)",
-    [crypto.randomUUID(), userId, membership.id, COUNTED_KINDS[kind], reason, new Date()],
+    "INSERT INTO entitlement_ledger (id,user_id,membership_id,kind,units,status,reason,created_at,resource_id) VALUES ($1,$2,$3,$4,1,'consumed',$5,$6,$7)",
+    [crypto.randomUUID(), userId, membership.id, COUNTED_KINDS[kind], reason, new Date(), resourceId || null],
   );
   return true;
+  });
+}
+
+export async function claimHealthExport(userId: string, resourceId: string): Promise<boolean> {
+  return inTransaction(async (database) => {
+    await database.query("SELECT id FROM memberships WHERE user_id=$1 AND status='active' ORDER BY id FOR UPDATE", [userId]);
+    const membership = await activeMembership(userId);
+    if (membership?.entitlements.healthExportUnlimited) {
+      await database.query("INSERT INTO entitlement_ledger (id,user_id,membership_id,kind,units,status,reason,created_at,resource_id) VALUES ($1,$2,$3,'health_archive',1,'consumed','会员健康档案导出',now(),$4)", [crypto.randomUUID(), userId, membership.id, resourceId]);
+      return true;
+    }
+    return consumePurchasedCredit(userId, "health_archive", "单次健康档案导出", resourceId);
+  });
 }

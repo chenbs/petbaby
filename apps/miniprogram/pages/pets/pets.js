@@ -52,16 +52,7 @@ themedPage({
              * 对 senior 不成立 —— 而那正是需要它的那一段。
              * **只改可达性不加推送**：陪伴中的宠物旁边不出现这个按钮。
              */
-            showMemorial: pet.lifeStage === "senior" || pet.lifeStage === "memorial",
-            /*
-             * 小岛入口。**memorial 不进岛**（22 号文 1.4 / 4.1 #11）：
-             * 岛的核心机制是「亲密度日增、陪伴天数往上涨」，对已离开的宠物
-             * 递增天数是明确的冒犯。纪念形态的对应能力是纪念空间，不是岛。
-             *
-             * 与 showMemorial 恰好互补但**不是取反** —— senior 两个按钮都有：
-             * 晚年的宠物既能进岛，也该能到得了纪念空间。
-             */
-            showIsland: pet.lifeStage !== "memorial"
+            showMemorial: pet.lifeStage === "senior" || pet.lifeStage === "memorial"
           });
         })
       }))
@@ -76,14 +67,7 @@ themedPage({
   timeline(event) {
     wx.navigateTo({ url: "/pages/timeline/timeline?petId=" + encodeURIComponent(event.currentTarget.dataset.id) });
   },
-  /**
-   * 宠物小岛。**必须带 petId** —— 不带的话点非默认宠物会看到错的那只
-   * （pages/timeline 踩过同一处）。分包页面，路径以分包 root `/island/` 开头。
-   */
-  island(event) {
-    wx.navigateTo({ url: "/island/index/index?petId=" + encodeURIComponent(event.currentTarget.dataset.id) });
-  },
-  /** 纪念空间。只在 senior / memorial 的宠物上出现（L4），不主动推送 */
+    /** 纪念空间。只在 senior / memorial 的宠物上出现（L4），不主动推送 */
   memorial(event) {
     wx.navigateTo({ url: "/pages/memorials/memorials?petId=" + encodeURIComponent(event.currentTarget.dataset.id) });
   },

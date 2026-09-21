@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { ConfiguredCloudStorage } from "@/server/storage/cloud-storage";
+import { CosObjectStorage } from "@/server/storage/cos-storage";
 import { LocalObjectStorage } from "@/server/storage/local-storage";
 import { inspectImage, selectObjectStorage } from "@/server/storage";
 
@@ -24,9 +25,9 @@ describe("object storage selection", () => {
     vi.stubEnv("NODE_ENV", "production");
     vi.stubEnv("APP_ENV", "production");
     vi.stubEnv("OBJECT_STORAGE_PROVIDER", "local");
-    expect(selectObjectStorage()).toBeInstanceOf(ConfiguredCloudStorage);
+    expect(selectObjectStorage()).toBeInstanceOf(CosObjectStorage);
     vi.stubEnv("OBJECT_STORAGE_PROVIDER", "");
-    expect(selectObjectStorage()).toBeInstanceOf(ConfiguredCloudStorage);
+    expect(selectObjectStorage()).toBeInstanceOf(CosObjectStorage);
     vi.stubEnv("OBJECT_STORAGE_PROVIDER", "s3");
     expect(selectObjectStorage()).toBeInstanceOf(ConfiguredCloudStorage);
   });

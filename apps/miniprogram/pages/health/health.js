@@ -1,4 +1,5 @@
 const api = require("../../services/api");
+const payment = require("../../services/payment");
 const config = require("../../config");
 const { themedPage } = require("../../theme/page-mixin");
 
@@ -224,7 +225,16 @@ themedPage({
     this.setData({ documentBusy: true, documentHint: "", error: "" });
     api.request("/api/health-documents", { method: "POST", data: { petId: pet.id } })
       .then(() => { this.setData({ documentBusy: false, documentHint: "已导出，可以下载带去医院。" }); this.loadDocuments(pet.id); })
-      .catch((error) => this.setData({ documentBusy: false, documentHint: error.message || "导出失败" }));
+      .catch((error) => this.setData({ documentBusy: false, canBuyDocument: error.code === "HEALTH_EXPORT_REQUIRES_ENTITLEMENT", documentHint: error.message || "导出失败" }));
+  },
+
+  buyDocument() {
+    if (this.data.documentBusy) return;
+    this.setData({ documentBusy: true });
+    api.request("/api/health-documents/orders", { method: "POST" })
+      .then((order) => payment.pay("growth", order.id))
+      .then(() => { this.setData({ documentBusy: false, canBuyDocument: false }); this.exportDocument(); })
+      .catch((error) => this.setData({ documentBusy: false, documentHint: error.message }));
   },
 
   /** 下载 PDF 并交给系统打开。健康档案不可分享，只能本人下载。 */

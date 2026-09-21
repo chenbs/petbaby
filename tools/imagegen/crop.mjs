@@ -45,56 +45,6 @@ export async function hasUsableVisualContent(input) {
   return stats.entropy > 0.05 && dynamicRange > 8;
 }
 
-/**
- * 按比例**留白装入**而不是裁切，多出来的边补全透明。
- *
- * 透明抠图素材（岛的立绘与物件）不能走 `fit()`：那个函数按目标比例求最大内接矩形后
- * 居中裁切，而立绘的验收标准是「全身完整不裁切，四周留出余量」（`24` 号文 2.4）——
- * 接口返回约 4:5 而目标是 3:4，裁切会削掉耳尖或爪子，正是要避免的。
- *
- * 补的边是**透明**而非白色：这批图后续要叠在场景上，白边会成为一圈可见的白框。
- *
- * @param {Buffer} input 原图（须已带 alpha，否则补的边在 JPG 下会变黑）
- * @param {keyof RATIOS} ratio 目标比例
- */
-export async function pad(input, ratio) {
-  const spec = RATIOS[ratio];
-  if (!spec) throw new Error(`未知比例 ${ratio}`);
-  return sharp(input, { failOn: "error" })
-    .resize(spec.width, spec.height, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
-    .png({ compressionLevel: 9 })
-    .toBuffer();
-}
-
-/**
- * 图里是否有**有效**的 alpha —— 存在任何明显非不透明的像素。
- *
- * `metadata().hasAlpha` 单独不够用：PNG 带四通道但整层填满 255 时它也为真，
- * 而那正是接口「接受 `background=transparent` 却不生效」时的产物形态
- * （lingsuan 实测返 200、`hasAlpha=false`；换个模型也可能给出全不透明的 RGBA）。
- * 只看元数据会让透明底的失败静默通过，抠图阶段才发现底是实色。
- *
- * 阈值取 250 而非 255：PNG 编码在极端像素上有振铃（`upload-island.mjs` 的品红
- * 四角实测同一现象），要求严格等于 255 会把编码噪声当成透明。
- * 与 `server/island/cutout.ts` 的 `hasUsableAlpha` 同一口径。
- */
-export async function hasAlpha(input) {
-  const image = sharp(input, { failOn: "error" });
-  const meta = await image.metadata();
-  if (!meta.hasAlpha) return false;
-  const { data, info } = await sharp(input, { failOn: "error" }).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
-  for (let offset = info.channels - 1; offset < data.length; offset += info.channels) {
-    if (data[offset] < 250) return true;
-  }
-  return false;
-}
-
-/**
- * @param {Buffer} input 原图
- * @param {keyof RATIOS} ratio 目标比例
- * @param {{ anchor?: number, format?: "png"|"jpeg", quality?: number }} options
- *        anchor 0=顶部 0.5=居中，默认 1/3（宠物头部通常在上部）
- */
 export async function fit(input, ratio, options = {}) {
   const spec = RATIOS[ratio];
   if (!spec) throw new Error(`未知比例 ${ratio}`);

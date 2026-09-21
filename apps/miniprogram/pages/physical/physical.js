@@ -1,3 +1,4 @@
+const payment = require("../../services/payment");
 const api = require("../../services/api");
 const { themedPage } = require("../../theme/page-mixin");
 
@@ -97,7 +98,7 @@ themedPage({
   create() {
     this.setData({ confirming: false, submitting: true, message: "", error: "" });
     api.request("/api/physical-orders", { method: "POST", data: { workId: this.data.workId, sku: "art-print-a4", address: this.data.address } })
-      .then((order) => api.request("/api/physical-orders/" + order.id + "/pay", { method: "POST" }))
+      .then((order) => payment.pay("physical", order.id))
       .then(() => {
         this.setData({ submitting: false, message: "下单成功，我们会尽快安排制作" });
         this.load();

@@ -1,4 +1,5 @@
 "use client";
+import { payWebOrder, webPaymentEnabled, webPaymentNotice } from "@/lib/payment";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -299,7 +300,7 @@ export function CreateFlow({ plugin }: { plugin: PluginManifest }) {
        * 端上还在按 documentType 拼那个 SKU，走到这条分支必然 422。
        */
       const order = await apiFetch<Order>("/api/orders", { method: "POST", body: JSON.stringify({ workId: work.id, sku: `${plugin.id}-single` }) });
-      const result = await apiFetch<{ order: Order; work: PublicWork }>(`/api/orders/${order.id}/pay`, { method: "POST" });
+      const result = await payWebOrder<{ order: Order; work: PublicWork }>("work", order.id);
       setWork(result.work);
     } catch (paymentError) {
       setError(paymentError instanceof Error ? paymentError.message : "解锁失败");
@@ -385,7 +386,7 @@ export function CreateFlow({ plugin }: { plugin: PluginManifest }) {
         写在这里会让一个 80 张照片的用户看到 ¥19.9 却被收 ¥49。
         pricing 未取到时回落 manifest 价，好过不显示价格。
       */}
-      {stage === "preview" && work ? <section><WorkPreview work={work} /><div className="preview-actions"><div className="price-line"><span>{work.locked ? (pricing && pricing.tiered && pricing.specTier ? `${TIER_NAME[pricing.specTier]}版 · ${pricing.label}` : plugin.pricing.label) : "已解锁高清版本"}</span><strong>{work.locked ? `¥${pricing && !pricing.free ? pricing.amount : plugin.pricing.unlockPrice}` : "✓"}</strong></div>{work.locked && pricing?.memberSaving ? <p className="privacy-note">会员价，比单买省 ¥{pricing.memberSaving}</p> : null}{work.locked ? <button className="primary-button" disabled={busy} onClick={unlock} type="button">{busy ? "正在解锁…" : "支付并去水印"}</button> : <div className="button-row"><Link className="secondary-button" href="/works">去作品库</Link><button className="primary-button" disabled={busy} onClick={share} type="button">生成分享页</button></div>}{sharePath ? <Link className="primary-button" href={sharePath}>打开分享页</Link> : null}</div></section> : null}
+      {stage === "preview" && work ? <section><WorkPreview work={work} /><div className="preview-actions"><div className="price-line"><span>{work.locked ? (pricing && pricing.tiered && pricing.specTier ? `${TIER_NAME[pricing.specTier]}版 · ${pricing.label}` : plugin.pricing.label) : "已解锁高清版本"}</span><strong>{work.locked ? `¥${pricing && !pricing.free ? pricing.amount : plugin.pricing.unlockPrice}` : "✓"}</strong></div>{work.locked && pricing?.memberSaving ? <p className="privacy-note">会员价，比单买省 ¥{pricing.memberSaving}</p> : null}{work.locked ? <button className="primary-button" disabled={!webPaymentEnabled || busy} onClick={unlock} type="button" title={!webPaymentEnabled ? webPaymentNotice : undefined}>{busy ? "正在解锁…" : "支付并去水印"}</button> : <div className="button-row"><Link className="secondary-button" href="/works">去作品库</Link><button className="primary-button" disabled={busy} onClick={share} type="button">生成分享页</button></div>}{sharePath ? <Link className="primary-button" href={sharePath}>打开分享页</Link> : null}</div></section> : null}
     </main>
   );
 }

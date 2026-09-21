@@ -24,15 +24,9 @@
     "pages/login/login",
     "pages/theme/theme"
   ],
-  "subPackages": [
-    {
-      "root": "island",
-      "pages": ["index/index", "avatar/avatar", "diary/diary"]
-    }
-  ],
   "lazyCodeLoading": "requiredComponents",
   "window": {
-    "navigationBarTitleText": "宠物造物局",
+    "navigationBarTitleText": "麻麻抱我",
     "navigationBarBackgroundColor": "#fff8f2",
     "navigationBarTextStyle": "black",
     "backgroundColor": "#fff8f2"

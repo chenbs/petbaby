@@ -35,37 +35,4 @@ echo "  样例图 $total 张，失败 $bad 张"
 [ "$bad" = "0" ] || { echo "[fail] 有样例图取不到字节，请执行 deploy/scripts/seed-samples.sh" >&2; exit 1; }
 '
 
-# 岛素材同理，且必须单独查：它们不在 /api/plugins 的输出里（那是玩法 manifest），
-# 而是由 /api/island 按 PUBLIC_APP_URL 下发。漏灌的表现与样例图一致 ——
-# 接口全部正常，只有取字节时 404，端上大面积裂图且不报错。
-#
-# **清单为空不算失败**：素材由人工生成后回填 assets.ts，在那之前端上走
-# 「素材未就绪」路径（纯色底 + 立绘），功能可用。所以这里只在「配了但取不到」时报错。
-log "校验宠物小岛素材可下发"
-compose run --rm --no-deps -T --entrypoint sh web -c '
-set -eu
-# 清单与张数都从 /api/health 读：它是公开路由，而 /api/island 要鉴权
-# —— 无会话读那条只会拿到 401，「取不到地址」会被当成「没配素材」静默通过。
-health=$(wget -qO- http://web:3000/api/health)
-count=$(printf "%s" "$health" | tr "," "\n" | grep -o "\"islandAssets\":[0-9]*" | grep -o "[0-9]*$" || echo 0)
-if [ "${count:-0}" = "0" ]; then
-  echo "  岛素材清单为空 —— 素材尚未回填 assets.ts，端上走「素材未就绪」路径（不是故障）"
-  exit 0
-fi
-echo "  /api/health 报告已配置 $count 张岛素材，逐张取字节校验"
-urls=$(printf "%s" "$health" | tr "," "\n" | grep -o "/api/plugin-samples/samples/island/[^\"]*" | sort -u || true)
-if [ -z "$urls" ]; then
-  echo "[fail] /api/health 说配了 $count 张，却没给出任何路径 —— 检查 configuredIslandAssetPaths" >&2
-  exit 1
-fi
-total=0; bad=0
-for path in $urls; do
-  total=$((total + 1))
-  if wget -q -O /dev/null "http://web:3000$path"; then :; else
-    echo "  ✗ 取不到 $path" >&2; bad=$((bad + 1))
-  fi
-done
-echo "  岛素材 $total 张，失败 $bad 张"
-[ "$bad" = "0" ] || { echo "[fail] 有岛素材取不到字节，请执行 deploy/scripts/seed-samples.sh" >&2; exit 1; }
-'
 log "冒烟测试结束"

@@ -128,7 +128,7 @@ function coverSvg(input: AlbumInput, palette: Palette, cover?: AlbumPhoto) {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${PAGE_WIDTH}" height="${PAGE_HEIGHT}">
     <rect width="${PAGE_WIDTH}" height="${PAGE_HEIGHT}" fill="${palette.paper}"/>
     <defs><clipPath id="coverClip"><rect x="170" y="470" width="900" height="760" rx="12"/></clipPath></defs>
-    <text x="170" y="230" fill="${palette.muted}" font-family="sans-serif" font-size="24" letter-spacing="6">PETBABY · 纪念册</text>
+    <text x="170" y="230" fill="${palette.muted}" font-family="sans-serif" font-size="24" letter-spacing="6">麻麻抱我 · 纪念册</text>
     <text x="170" y="340" fill="${palette.ink}" font-family="serif" font-size="76">${escapeXml(input.petName)}</text>
     <text x="170" y="400" fill="${palette.accent}" font-family="serif" font-size="34">${escapeXml(input.title)}</text>
     ${cover ? `<image href="${dataUri(cover)}" x="170" y="470" width="900" height="760" preserveAspectRatio="xMidYMid slice" clip-path="url(#coverClip)"/>` : ""}
@@ -205,7 +205,7 @@ function closingSvg(input: AlbumInput, palette: Palette) {
     <rect width="${PAGE_WIDTH}" height="${PAGE_HEIGHT}" fill="${palette.paper}"/>
     <text x="${PAGE_WIDTH / 2}" y="${PAGE_HEIGHT / 2 - 30}" text-anchor="middle" fill="${palette.ink}" font-family="serif" font-size="42">${escapeXml(fact)}</text>
     <text x="${PAGE_WIDTH / 2}" y="${PAGE_HEIGHT / 2 + 40}" text-anchor="middle" fill="${palette.muted}" font-family="serif" font-size="26">${escapeXml(input.photos.length)} 张照片收在这里</text>
-    <text x="${PAGE_WIDTH / 2}" y="${PAGE_HEIGHT - 150}" text-anchor="middle" fill="${palette.muted}" font-family="sans-serif" font-size="20" letter-spacing="4">PETBABY · MEMORIAL ALBUM</text>
+    <text x="${PAGE_WIDTH / 2}" y="${PAGE_HEIGHT - 150}" text-anchor="middle" fill="${palette.muted}" font-family="sans-serif" font-size="20" letter-spacing="4">麻麻抱我 · 纪念册</text>
   </svg>`;
 }
 
@@ -218,7 +218,7 @@ export async function renderMemorialAlbum(input: AlbumInput): Promise<Uint8Array
   const pages = buildPages(input);
   const pdf = await PDFDocument.create();
   pdf.setTitle(`${input.petName} · ${input.title}`);
-  pdf.setProducer("PETBABY");
+  pdf.setProducer("麻麻抱我");
   for (const svg of pages) {
     const png = await rasterize(svg);
     const image = await pdf.embedPng(png);

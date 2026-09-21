@@ -1,3 +1,4 @@
+const payment = require("../../services/payment");
 const api = require("../../services/api");
 const config = require("../../config");
 const { themedPage } = require("../../theme/page-mixin");
@@ -84,11 +85,7 @@ themedPage({ immersive: true }, {
     const work = this.data.work;
     if (!work) return;
     this.setData({ busy: true, error: "" });
-    api.request("/api/orders", { method: "POST", data: { workId: work.id, sku: work.pluginId + "-single" } }).then((order) => api.request("/api/orders/" + order.id + "/prepare", { method: "POST" }).then((prepared) => ({ order, prepared }))).then((result) => {
-      const params = result.prepared.clientParams;
-      if (params.mode === "development") return api.request("/api/orders/" + result.order.id + "/pay", { method: "POST" });
-      return new Promise((resolve, reject) => wx.requestPayment(Object.assign({}, params, { success: resolve, fail: reject })));
-    }).then(() => { this.setData({ busy: false }); this.reload(); }).catch((error) => this.setData({ error: error.message || error.errMsg, busy: false }));
+    api.request("/api/orders", { method: "POST", data: { workId: work.id, sku: work.pluginId + "-single" } }).then((order) => payment.pay("work", order.id)).then(() => { this.setData({ busy: false }); this.reload(); }).catch((error) => this.setData({ error: error.message || error.errMsg, busy: false }));
   },
   saveImage() { const work = this.data.work; if (!work || work.locked) return wx.showToast({ title: "请先解锁", icon: "none" }); this.setData({ busy: true }); wx.downloadFile({ url: config.apiBaseUrl + "/api/works/" + work.id + "/download?format=image", header: { authorization: "Bearer " + wx.getStorageSync("petbaby_session") }, success: (result) => wx.saveImageToPhotosAlbum({ filePath: result.tempFilePath, success: () => wx.showToast({ title: "已保存" }) }), complete: () => this.setData({ busy: false }) }); },
   downloadVideo() { const work = this.data.work; if (!work) return; this.setData({ busy: true }); wx.downloadFile({ url: config.apiBaseUrl + "/api/works/" + work.id + "/download?format=video", header: { authorization: "Bearer " + wx.getStorageSync("petbaby_session") }, success: (result) => wx.saveVideoToPhotosAlbum({ filePath: result.tempFilePath, success: () => wx.showToast({ title: "视频已保存" }) }), complete: () => this.setData({ busy: false }) }); },
@@ -103,5 +100,5 @@ themedPage({ immersive: true }, {
       .catch((error) => this.setData({ error: error.message }));
   },
   restore(event) { api.request("/api/works/" + this.workId + "/versions", { method: "POST", data: { versionId: event.currentTarget.dataset.id } }).then(() => { wx.showToast({ title: "版本已恢复" }); this.reload(); }); },
-  onShareAppMessage() { return { title: this.data.work ? this.data.work.title : "宠物造物局", path: "/pages/work/work?id=" + this.workId }; }
+  onShareAppMessage() { return { title: this.data.work ? this.data.work.title : "麻麻抱我", path: "/pages/work/work?id=" + this.workId }; }
 });

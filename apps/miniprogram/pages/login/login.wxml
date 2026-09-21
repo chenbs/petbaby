@@ -9,7 +9,7 @@
   <view class="brand brand-{{themeId}}">
     <view wx:if="{{themeId === 'cute'}}" class="brand-mark">🐾</view>
     <text class="brand-kicker">PET LAB</text>
-    <view class="brand-name">宠物造物局</view>
+    <view class="brand-name">麻麻抱我</view>
     <text class="brand-quote">把它的照片，做成只属于它的作品。</text>
     <view class="brand-rule"></view>
   </view>

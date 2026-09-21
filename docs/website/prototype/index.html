@@ -16,7 +16,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>宠物星尘 · 官网静态原型</title>
+<title>麻麻抱我 · 官网静态原型</title>
 <meta name="description" content="把每一张宠物照片，变成值得留住的作品。" />
 <!--
   favicon 用内联 SVG，不引外部文件：待提供正式 logo（第 9 章第 3 项）之前，
@@ -30,6 +30,7 @@
 -->
 <link rel="preload" as="image" href="assets/bg-poster.jpg" fetchpriority="high" />
 <link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="brand-additions.css" />
 </head>
 <body>
 
@@ -37,9 +38,9 @@
 <header class="topbar" data-hero-topbar>
   <div class="topbar-inner">
     <a class="brand" href="#home">
-      <span class="brand-mark" aria-hidden="true"></span>
+      <img class="brand-mark" src="assets/brand-logo.webp" alt="" width="160" height="160" loading="eager" decoding="async" />
       <!-- 待提供：正式品牌名与 logo SVG（顶栏 26→40px、页脚 32px） -->
-      <span class="brand-name" data-placeholder="brand-name">宠物星尘</span>
+      <span class="brand-name" data-placeholder="brand-name">麻麻抱我</span>
     </a>
 
     <!--
@@ -78,8 +79,8 @@
   <!-- 顶部一行 logo + 关闭按钮，与原站移动分支一致 -->
   <div class="mobile-menu-top">
     <a class="brand" href="#home">
-      <span class="brand-mark" aria-hidden="true"></span>
-      <span class="brand-name" data-placeholder="brand-name">宠物星尘</span>
+      <img class="brand-mark" src="assets/brand-logo.webp" alt="" width="160" height="160" loading="eager" decoding="async" />
+      <span class="brand-name" data-placeholder="brand-name">麻麻抱我</span>
     </a>
     <button type="button" class="menu-close" data-menu-close aria-label="关闭菜单">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
@@ -94,7 +95,7 @@
     <a href="#memorial">星尘纪念</a>
     <a href="#contact">联系我们</a>
   </nav>
-  <p class="mobile-menu-foot">© 2026 宠物星尘 · 静态原型</p>
+  <p class="mobile-menu-foot">© 2026 麻麻抱我 · 静态原型</p>
 </div>
 
 <!-- ══ 1. HERO：满屏视频 + 大标题 + CTA + 社群证明 ════════════════════════ -->
@@ -128,8 +129,8 @@
     <div class="hero-copy">
       <!-- 待提供：主标语。h1 需 2 行、每行 5–7 字（对应英文两行两词） -->
       <h1 class="hero-title" data-hero-title data-placeholder="headline">
-        <span class="hero-line"><span class="word">留住</span><span class="word">每一个</span></span>
-        <span class="hero-line"><span class="word">值得的</span><span class="word">瞬间</span></span>
+        <span class="hero-line"><span class="word">把日常</span><span class="word">抱进</span></span>
+        <span class="hero-line"><span class="word">每一段</span><span class="word">回忆里</span></span>
       </h1>
       <!--
         副标语：先给情绪落点，再交代做什么。
@@ -138,8 +139,8 @@
         功能收成一句带过。仍是占位，等正式文案。
       -->
       <p class="hero-sub" data-hero-sub data-placeholder="subhead">
-        它记不住自己有多好看，所以这件事交给我们。
-        一张随手拍的照片，变成很久以后还想再看一遍的样子。
+        它陪你度过的平常一天，也值得被好好记住。
+        从手机里的照片开始，做一张作品，留一段只属于你们的回忆。
       </p>
     </div>
 
@@ -152,13 +153,13 @@
       </a>
       <div class="hero-proof">
         <div class="avatars">
-          <img src="assets/hero-shiba.jpg" alt="" width="1200" height="1200" loading="eager" fetchpriority="high" decoding="async" />
-          <img src="assets/hero-shepherd.jpg" alt="" width="1200" height="1200" loading="eager" fetchpriority="high" decoding="async" />
-          <img src="assets/hero-devon.jpg" alt="" width="1200" height="1200" loading="eager" fetchpriority="high" decoding="async" />
+          <picture><source media="(max-width: 1279px)" type="image/webp" srcset="assets/hero-shiba-160.webp 160w, assets/hero-shiba-320.webp 320w, assets/hero-shiba-640.webp 640w, assets/hero-shiba-960.webp 960w" sizes="48px" /><img src="assets/hero-shiba.jpg" alt="" width="1200" height="1200" loading="eager" fetchpriority="high" decoding="async" /></picture>
+          <picture><source media="(max-width: 1279px)" type="image/webp" srcset="assets/hero-shepherd-160.webp 160w, assets/hero-shepherd-320.webp 320w, assets/hero-shepherd-640.webp 640w, assets/hero-shepherd-960.webp 960w" sizes="48px" /><img src="assets/hero-shepherd.jpg" alt="" width="1200" height="1200" loading="eager" fetchpriority="high" decoding="async" /></picture>
+          <picture><source media="(max-width: 1279px)" type="image/webp" srcset="assets/hero-devon-160.webp 160w, assets/hero-devon-320.webp 320w, assets/hero-devon-640.webp 640w, assets/hero-devon-960.webp 960w" sizes="48px" /><img src="assets/hero-devon.jpg" alt="" width="1200" height="1200" loading="eager" fetchpriority="high" decoding="async" /></picture>
         </div>
         <div class="proof-text">
-          <span class="proof-num">10 种玩法</span>
-          <span class="proof-label">从成长记录到安静的告别</span>
+          <span class="proof-num">每一刻都值得</span>
+          <span class="proof-label">图文 · AI 创作 · 视频 · 纪念</span>
         </div>
       </div>
     </div>
@@ -173,19 +174,19 @@
         <svg viewBox="0 0 24 24"><path d="M12 7v5l3.5 2M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z" /></svg>
       </span>
       <!-- 待确认：「三分钟」这个数字是否成立 -->
-      <span data-placeholder="trust-timing">一张照片，三分钟出片</span>
+      <span data-placeholder="trust-timing">选择照片，查看生成进度</span>
     </div>
     <div class="trust-item reveal" data-delay="1">
       <span class="trust-icon" aria-hidden="true">
         <svg viewBox="0 0 24 24"><path d="M4 5h7v6H4zM13 5h7v6h-7zM4 13h7v6H4zM13 13h7v6h-7z" /></svg>
       </span>
-      <span>10 种玩法，图文 · AI · 视频 · 纪念</span>
+      <span>图文 · AI · 视频 · 纪念</span>
     </div>
     <div class="trust-item reveal" data-delay="2">
       <span class="trust-icon" aria-hidden="true">
         <svg viewBox="0 0 24 24"><path d="M19 11V8a7 7 0 0 0-14 0v3M4 11h16v10H4z" /></svg>
       </span>
-      <span>照片仅用于生成，可随时删除</span>
+      <span>照片由你管理，分享由你决定</span>
     </div>
   </div>
 </section>
@@ -207,14 +208,14 @@
     <div class="grid-3 play-grid">
       <article class="play-card reveal">
         <div class="play-media">
-          <img src="assets/play-id-card.jpg" alt="宠物身份证成品：一张平摊在桌面的证件卡" width="1600" height="1200" loading="lazy" decoding="async" />
+          <picture><source media="(max-width: 1279px)" type="image/webp" srcset="assets/play-id-card-160.webp 160w, assets/play-id-card-320.webp 320w, assets/play-id-card-640.webp 640w, assets/play-id-card-960.webp 960w" sizes="(max-width: 639px) 90vw, (max-width: 1023px) 44vw, 30vw" /><img src="assets/play-id-card.jpg" alt="宠物身份证成品：一张平摊在桌面的证件卡" width="1600" height="1200" loading="lazy" decoding="async" /></picture>
           <!-- 徽标写玩法类别，不写 PL-01 这类内部编号 —— 访客不认 -->
           <span class="badge">图文创作</span>
         </div>
         <div class="play-body">
           <h3 class="h3">宠物身份证</h3>
           <p class="body-text">姓名、生日、品种与陪伴天数排成一张证件卡，可存图也可印出来。</p>
-          <p class="play-meta">正脸照 1 张 · 约 1 分钟</p>
+          <p class="play-meta">正脸照 1 张 · 图文排版</p>
           <a class="link-arrow" href="#contact">去创作
             <svg class="arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
           </a>
@@ -223,13 +224,13 @@
 
       <article class="play-card reveal" data-delay="1">
         <div class="play-media">
-          <img src="assets/play-poster.jpg" alt="宠物电影海报成品：贴在墙上的竖版纸质海报" width="1600" height="1200" loading="lazy" decoding="async" />
+          <picture><source media="(max-width: 1279px)" type="image/webp" srcset="assets/play-poster-160.webp 160w, assets/play-poster-320.webp 320w, assets/play-poster-640.webp 640w, assets/play-poster-960.webp 960w" sizes="(max-width: 639px) 90vw, (max-width: 1023px) 44vw, 30vw" /><img src="assets/play-poster.jpg" alt="宠物电影海报成品：贴在墙上的竖版纸质海报" width="1600" height="1200" loading="lazy" decoding="async" /></picture>
           <span class="badge">图文创作</span>
         </div>
         <div class="play-body">
           <h3 class="h3">宠物电影海报</h3>
           <p class="body-text">把一张抓拍排成主视觉海报，片名、短评与质感一并给到。</p>
-          <p class="play-meta">日常照 1–3 张 · 约 2 分钟</p>
+          <p class="play-meta">日常照 1–3 张 · 图文排版</p>
           <a class="link-arrow" href="#contact">去创作
             <svg class="arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
           </a>
@@ -238,13 +239,13 @@
 
       <article class="play-card reveal" data-delay="2">
         <div class="play-media">
-          <img src="assets/play-album.jpg" alt="宠物时光画册成品：摊开在木桌上的相册跨页" width="1600" height="1200" loading="lazy" decoding="async" />
+          <picture><source media="(max-width: 1279px)" type="image/webp" srcset="assets/play-album-160.webp 160w, assets/play-album-320.webp 320w, assets/play-album-640.webp 640w, assets/play-album-960.webp 960w" sizes="(max-width: 639px) 90vw, (max-width: 1023px) 44vw, 30vw" /><img src="assets/play-album.jpg" alt="宠物时光画册成品：摊开在木桌上的相册跨页" width="1600" height="1200" loading="lazy" decoding="async" /></picture>
           <span class="badge">图文创作</span>
         </div>
         <div class="play-body">
           <h3 class="h3">宠物时光画册</h3>
           <p class="body-text">从相册里挑几张，装订成手机长图与可打印的纪念 PDF。</p>
-          <p class="play-meta">照片 6–20 张 · 约 3 分钟</p>
+          <p class="play-meta">照片 6–20 张 · 支持 PDF</p>
           <a class="link-arrow" href="#contact">去创作
             <svg class="arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
           </a>
@@ -282,7 +283,7 @@
           <svg viewBox="0 0 24 24"><path d="M12 3l2.2 5.6L20 10l-5.8 1.4L12 17l-2.2-5.6L4 10l5.8-1.4z" /></svg>
         </span>
         <h3 class="h3">AI 肖像</h3>
-        <p class="body-text">四种气质预设一次出四张候选，挑中意的那张继续放大。风格是选的，不是描述的。</p>
+        <p class="body-text">先看效果示例，再选已上线模板。用宠物照片生成候选，挑中意的作品保存。</p>
         <span class="link-arrow">看 AI 肖像
           <svg class="arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
         </span>
@@ -293,7 +294,7 @@
           <svg viewBox="0 0 24 24"><path d="M4 6h11l5 4-5 4H4zM4 18h9" /></svg>
         </span>
         <h3 class="h3">视频短片</h3>
-        <p class="body-text">照片、字幕与音乐剪成 10 / 20 / 30 秒竖屏短片，先预览再决定要不要高清。</p>
+        <p class="body-text">把照片、字幕与音乐整理成竖屏短片。支持预览，时长与导出规格以创作页展示为准。</p>
         <span class="link-arrow">看视频玩法
           <svg class="arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
         </span>
@@ -312,19 +313,19 @@
     </div>
     <div class="reveal" data-delay="1">
       <p class="eyebrow">AI 宠物肖像</p>
-      <h2 class="h2 h2-mid">四张候选<br />只留下最像它的一张</h2>
+      <h2 class="h2 h2-mid">选一幅喜欢的画面<br />让它成为主角</h2>
       <p class="body-text lead">
-        一次生成四张，不是一张。风格从四个预设里选，不用写提示词 ——
-        挑中意的那张再放大，其余直接丢掉。
+        从效果示例中选择模板，再上传宠物照片。生成结果可能存在差异，
+        你可以先查看候选，再决定保存哪一张。无需编写提示词。
       </p>
       <ul class="feature-list">
-        <li><span class="dot" aria-hidden="true"></span><strong>暖调胶片</strong>：颗粒与琥珀色偏，像九十年代的傻瓜机</li>
-        <li><span class="dot" aria-hidden="true"></span><strong>纸艺拼贴</strong>：撕边卡纸层叠，平面形状带软投影</li>
-        <li><span class="dot" aria-hidden="true"></span><strong>克制影棚</strong>：中性灰背景，单只柔光箱，不放道具</li>
-        <li><span class="dot" aria-hidden="true"></span><strong>轻幻想</strong>：浮动光点与柔光，暮色调不刺眼</li>
+        <li><span class="dot" aria-hidden="true"></span><strong>先看效果</strong>：从已上线的模板货架选择喜欢的画面</li>
+        <li><span class="dot" aria-hidden="true"></span><strong>保留特征</strong>：清晰、无遮挡的宠物照片更适合创作</li>
+        <li><span class="dot" aria-hidden="true"></span><strong>挑选候选</strong>：候选数量与可重试次数以所选玩法为准</li>
+        <li><span class="dot" aria-hidden="true"></span><strong>安心分享</strong>：AI 作品带有生成标识，分享前由你确认</li>
       </ul>
       <a class="btn btn-primary" href="#works">
-        看四种风格的实拍对比
+        看看创意风格示例
         <svg class="arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
       </a>
     </div>
@@ -397,153 +398,100 @@
       <div class="step reveal" data-delay="2">
         <span class="step-num">03</span>
         <h3 class="h3">挑一个玩法出片</h3>
-        <p class="body-text">几分钟拿到成品，存图、分享，或者印成实物寄到家。</p>
+        <p class="body-text">查看生成进度，完成后预览、保存或分享；制作时间因玩法和排队情况而异。</p>
       </div>
     </div>
   </div>
 </section>
 
 <!--
-  ══ 11. 作品展示区：7 格风格缩略带（摩奇）+ 11 品种瀑布流 ════════════════
+  ══ 11. 作品展示区：7 格风格缩略带（橘白样板猫）+ 11 品种瀑布流 ════════════════
 
   编号 11 是内容映射表的序号（规格 6 章新增区块），位置刻意放在流程之后、
   口碑之前 —— 先给「真实产出长什么样」，再给评价，说服链条才顺。
 
-  缩略带全部是同一只样板宠物摩奇：并列比较的槽位必须锁定主体（规格 10.1），
+  缩略带全部是同一只样板宠物橘白样板猫：并列比较的槽位必须锁定主体（规格 10.1），
   换宠物用户比较的就是宠物而不是风格。瀑布流反过来，一品种一张。
 -->
 <section class="band section" id="works">
   <div class="container">
     <div class="section-head split reveal">
       <div>
-        <p class="eyebrow">真实产出</p>
+        <p class="eyebrow">AI 创意示例</p>
         <h2 class="h2 h2-sm">同一只猫<br />七种风格</h2>
       </div>
       <p class="section-note">
-        下面这七张全部由同一只样板宠物「摩奇」生成 —— 换了宠物，
+        下面这七张全部由同一只样板宠物「橘白样板猫」生成 —— 换了宠物，
         比较的就是宠物而不是风格。
       </p>
     </div>
 
     <div class="thumb-strip reveal">
-      <figure><span class="thumb-image"><img src="assets/style-warm-film.jpg" alt="暖调胶片风格的摩奇" width="900" height="1200" loading="lazy" decoding="async" /></span><figcaption>暖调胶片</figcaption></figure>
-      <figure><span class="thumb-image"><img src="assets/style-paper-cut.jpg" alt="纸艺拼贴风格的摩奇" width="900" height="1200" loading="lazy" decoding="async" /></span><figcaption>纸艺拼贴</figcaption></figure>
-      <figure><span class="thumb-image"><img src="assets/style-studio.jpg" alt="克制影棚风格的摩奇" width="900" height="1200" loading="lazy" decoding="async" /></span><figcaption>克制影棚</figcaption></figure>
-      <figure><span class="thumb-image"><img src="assets/style-fantasy.jpg" alt="轻幻想风格的摩奇" width="900" height="1200" loading="lazy" decoding="async" /></span><figcaption>轻幻想</figcaption></figure>
-      <figure><span class="thumb-image"><img src="assets/play-portrait.jpg" alt="肖像封面玩法的摩奇" width="900" height="1200" loading="lazy" decoding="async" /></span><figcaption>肖像封面</figcaption></figure>
-      <figure><span class="thumb-image"><img src="assets/play-storybook.jpg" alt="绘本主角玩法的摩奇" width="900" height="1200" loading="lazy" decoding="async" /></span><figcaption>绘本主角</figcaption></figure>
-      <figure><span class="thumb-image"><img src="assets/play-magazine.jpg" alt="杂志大片玩法的摩奇" width="900" height="1200" loading="lazy" decoding="async" /></span><figcaption>杂志大片</figcaption></figure>
+      <figure><span class="thumb-image"><picture><source media="(max-width: 1279px)" type="image/webp" srcset="assets/style-warm-film-160.webp 160w, assets/style-warm-film-320.webp 320w, assets/style-warm-film-640.webp 640w" sizes="(max-width: 767px) 45vw, (max-width: 1279px) 22vw, 150px" /><img src="assets/style-warm-film.jpg" alt="暖调胶片风格的橘白样板猫" width="900" height="1200" loading="lazy" decoding="async" /></picture></span><figcaption>暖调胶片</figcaption></figure>
+      <figure><span class="thumb-image"><picture><source media="(max-width: 1279px)" type="image/webp" srcset="assets/style-paper-cut-160.webp 160w, assets/style-paper-cut-320.webp 320w, assets/style-paper-cut-640.webp 640w" sizes="(max-width: 767px) 45vw, (max-width: 1279px) 22vw, 150px" /><img src="assets/style-paper-cut.jpg" alt="纸艺拼贴风格的橘白样板猫" width="900" height="1200" loading="lazy" decoding="async" /></picture></span><figcaption>纸艺拼贴</figcaption></figure>
+      <figure><span class="thumb-image"><picture><source media="(max-width: 1279px)" type="image/webp" srcset="assets/style-studio-160.webp 160w, assets/style-studio-320.webp 320w, assets/style-studio-640.webp 640w" sizes="(max-width: 767px) 45vw, (max-width: 1279px) 22vw, 150px" /><img src="assets/style-studio.jpg" alt="克制影棚风格的橘白样板猫" width="900" height="1200" loading="lazy" decoding="async" /></picture></span><figcaption>克制影棚</figcaption></figure>
+      <figure><span class="thumb-image"><picture><source media="(max-width: 1279px)" type="image/webp" srcset="assets/style-fantasy-160.webp 160w, assets/style-fantasy-320.webp 320w, assets/style-fantasy-640.webp 640w" sizes="(max-width: 767px) 45vw, (max-width: 1279px) 22vw, 150px" /><img src="assets/style-fantasy.jpg" alt="轻幻想风格的橘白样板猫" width="900" height="1200" loading="lazy" decoding="async" /></picture></span><figcaption>轻幻想</figcaption></figure>
+      <figure><span class="thumb-image"><picture><source media="(max-width: 1279px)" type="image/webp" srcset="assets/play-portrait-160.webp 160w, assets/play-portrait-320.webp 320w, assets/play-portrait-640.webp 640w" sizes="(max-width: 767px) 45vw, (max-width: 1279px) 22vw, 150px" /><img src="assets/play-portrait.jpg" alt="肖像封面玩法的橘白样板猫" width="900" height="1200" loading="lazy" decoding="async" /></picture></span><figcaption>肖像封面</figcaption></figure>
+      <figure><span class="thumb-image"><picture><source media="(max-width: 1279px)" type="image/webp" srcset="assets/play-storybook-160.webp 160w, assets/play-storybook-320.webp 320w, assets/play-storybook-640.webp 640w" sizes="(max-width: 767px) 45vw, (max-width: 1279px) 22vw, 150px" /><img src="assets/play-storybook.jpg" alt="绘本主角玩法的橘白样板猫" width="900" height="1200" loading="lazy" decoding="async" /></picture></span><figcaption>绘本主角</figcaption></figure>
+      <figure><span class="thumb-image"><picture><source media="(max-width: 1279px)" type="image/webp" srcset="assets/play-magazine-160.webp 160w, assets/play-magazine-320.webp 320w, assets/play-magazine-640.webp 640w" sizes="(max-width: 767px) 45vw, (max-width: 1279px) 22vw, 150px" /><img src="assets/play-magazine.jpg" alt="杂志大片玩法的橘白样板猫" width="900" height="1200" loading="lazy" decoding="async" /></picture></span><figcaption>杂志大片</figcaption></figure>
     </div>
 
     <div class="works-divider reveal">
       <h3 class="h3">十一个品种，各来一张</h3>
-      <p class="body-text">长毛短毛、大型小型、纯种土猫土狗都试过。全部是真实生成结果，没有占位图。</p>
+      <p class="body-text">长毛短毛、大型小型、纯种土猫土狗都试过。以下为 AI 生成示例，实际可选模板以小程序内已上线内容为准。</p>
     </div>
 
     <!-- 瀑布流：CSS columns。混比例是刻意的 —— 等高图会退化成规整网格 -->
     <div class="masonry">
       <figure class="work-card reveal">
-        <img src="assets/work-ragdoll.jpg" alt="布偶猫的暖调胶片风格成品" width="900" height="1200" loading="lazy" decoding="async" />
+        <picture><source media="(max-width: 1279px)" type="image/webp" srcset="assets/work-ragdoll-160.webp 160w, assets/work-ragdoll-320.webp 320w, assets/work-ragdoll-640.webp 640w" sizes="(max-width: 767px) 90vw, (max-width: 955px) 45vw, (max-width: 1279px) 30vw, 370px" /><img src="assets/work-ragdoll.jpg" alt="布偶猫的暖调胶片风格成品" width="900" height="1200" loading="lazy" decoding="async" /></picture>
         <figcaption><span class="work-name">布偶猫</span><span class="work-meta">暖调胶片</span></figcaption>
       </figure>
       <figure class="work-card reveal">
-        <img src="assets/work-devon.jpg" alt="德文卷毛猫的杂志大片风格成品" width="1600" height="1200" loading="lazy" decoding="async" />
+        <picture><source media="(max-width: 1279px)" type="image/webp" srcset="assets/work-devon-160.webp 160w, assets/work-devon-320.webp 320w, assets/work-devon-640.webp 640w, assets/work-devon-960.webp 960w" sizes="(max-width: 767px) 90vw, (max-width: 955px) 45vw, (max-width: 1279px) 30vw, 370px" /><img src="assets/work-devon.jpg" alt="德文卷毛猫的杂志大片风格成品" width="1600" height="1200" loading="lazy" decoding="async" /></picture>
         <figcaption><span class="work-name">德文卷毛猫</span><span class="work-meta">杂志大片</span></figcaption>
       </figure>
       <figure class="work-card reveal">
-        <img src="assets/work-maine.jpg" alt="缅因猫的克制影棚风格成品" width="1200" height="1200" loading="lazy" decoding="async" />
+        <picture><source media="(max-width: 1279px)" type="image/webp" srcset="assets/work-maine-160.webp 160w, assets/work-maine-320.webp 320w, assets/work-maine-640.webp 640w, assets/work-maine-960.webp 960w" sizes="(max-width: 767px) 90vw, (max-width: 955px) 45vw, (max-width: 1279px) 30vw, 370px" /><img src="assets/work-maine.jpg" alt="缅因猫的克制影棚风格成品" width="1200" height="1200" loading="lazy" decoding="async" /></picture>
         <figcaption><span class="work-name">缅因猫</span><span class="work-meta">克制影棚</span></figcaption>
       </figure>
       <figure class="work-card reveal">
-        <img src="assets/work-abyssinian.jpg" alt="阿比西尼亚猫的轻幻想风格成品" width="900" height="1200" loading="lazy" decoding="async" />
+        <picture><source media="(max-width: 1279px)" type="image/webp" srcset="assets/work-abyssinian-160.webp 160w, assets/work-abyssinian-320.webp 320w, assets/work-abyssinian-640.webp 640w" sizes="(max-width: 767px) 90vw, (max-width: 955px) 45vw, (max-width: 1279px) 30vw, 370px" /><img src="assets/work-abyssinian.jpg" alt="阿比西尼亚猫的轻幻想风格成品" width="900" height="1200" loading="lazy" decoding="async" /></picture>
         <figcaption><span class="work-name">阿比西尼亚猫</span><span class="work-meta">轻幻想</span></figcaption>
       </figure>
       <figure class="work-card reveal">
-        <img src="assets/work-dragonli.jpg" alt="田园狸花猫的纸艺拼贴风格成品" width="900" height="1200" loading="lazy" decoding="async" />
+        <picture><source media="(max-width: 1279px)" type="image/webp" srcset="assets/work-dragonli-160.webp 160w, assets/work-dragonli-320.webp 320w, assets/work-dragonli-640.webp 640w" sizes="(max-width: 767px) 90vw, (max-width: 955px) 45vw, (max-width: 1279px) 30vw, 370px" /><img src="assets/work-dragonli.jpg" alt="田园狸花猫的纸艺拼贴风格成品" width="900" height="1200" loading="lazy" decoding="async" /></picture>
         <figcaption><span class="work-name">田园狸花猫</span><span class="work-meta">纸艺拼贴</span></figcaption>
       </figure>
       <figure class="work-card reveal">
-        <img src="assets/work-golden.jpg" alt="金毛犬的肖像封面风格成品" width="900" height="1200" loading="lazy" decoding="async" />
+        <picture><source media="(max-width: 1279px)" type="image/webp" srcset="assets/work-golden-160.webp 160w, assets/work-golden-320.webp 320w, assets/work-golden-640.webp 640w" sizes="(max-width: 767px) 90vw, (max-width: 955px) 45vw, (max-width: 1279px) 30vw, 370px" /><img src="assets/work-golden.jpg" alt="金毛犬的肖像封面风格成品" width="900" height="1200" loading="lazy" decoding="async" /></picture>
         <figcaption><span class="work-name">金毛犬</span><span class="work-meta">肖像封面</span></figcaption>
       </figure>
       <figure class="work-card reveal">
-        <img src="assets/work-poodle.jpg" alt="泰迪的绘本主角风格成品" width="1200" height="1200" loading="lazy" decoding="async" />
+        <picture><source media="(max-width: 1279px)" type="image/webp" srcset="assets/work-poodle-160.webp 160w, assets/work-poodle-320.webp 320w, assets/work-poodle-640.webp 640w, assets/work-poodle-960.webp 960w" sizes="(max-width: 767px) 90vw, (max-width: 955px) 45vw, (max-width: 1279px) 30vw, 370px" /><img src="assets/work-poodle.jpg" alt="泰迪的绘本主角风格成品" width="1200" height="1200" loading="lazy" decoding="async" /></picture>
         <figcaption><span class="work-name">泰迪</span><span class="work-meta">绘本主角</span></figcaption>
       </figure>
       <figure class="work-card reveal">
-        <img src="assets/work-border.jpg" alt="边境牧羊犬的暖调胶片风格成品" width="900" height="1200" loading="lazy" decoding="async" />
+        <picture><source media="(max-width: 1279px)" type="image/webp" srcset="assets/work-border-160.webp 160w, assets/work-border-320.webp 320w, assets/work-border-640.webp 640w" sizes="(max-width: 767px) 90vw, (max-width: 955px) 45vw, (max-width: 1279px) 30vw, 370px" /><img src="assets/work-border.jpg" alt="边境牧羊犬的暖调胶片风格成品" width="900" height="1200" loading="lazy" decoding="async" /></picture>
         <figcaption><span class="work-name">边境牧羊犬</span><span class="work-meta">暖调胶片</span></figcaption>
       </figure>
       <figure class="work-card reveal">
-        <img src="assets/work-shepherd.jpg" alt="德国牧羊犬的克制影棚风格成品" width="1600" height="1200" loading="lazy" decoding="async" />
+        <picture><source media="(max-width: 1279px)" type="image/webp" srcset="assets/work-shepherd-160.webp 160w, assets/work-shepherd-320.webp 320w, assets/work-shepherd-640.webp 640w, assets/work-shepherd-960.webp 960w" sizes="(max-width: 767px) 90vw, (max-width: 955px) 45vw, (max-width: 1279px) 30vw, 370px" /><img src="assets/work-shepherd.jpg" alt="德国牧羊犬的克制影棚风格成品" width="1600" height="1200" loading="lazy" decoding="async" /></picture>
         <figcaption><span class="work-name">德国牧羊犬</span><span class="work-meta">克制影棚</span></figcaption>
       </figure>
       <figure class="work-card reveal">
-        <img src="assets/work-shiba.jpg" alt="柴犬的纸艺拼贴风格成品" width="900" height="1200" loading="lazy" decoding="async" />
+        <picture><source media="(max-width: 1279px)" type="image/webp" srcset="assets/work-shiba-160.webp 160w, assets/work-shiba-320.webp 320w, assets/work-shiba-640.webp 640w" sizes="(max-width: 767px) 90vw, (max-width: 955px) 45vw, (max-width: 1279px) 30vw, 370px" /><img src="assets/work-shiba.jpg" alt="柴犬的纸艺拼贴风格成品" width="900" height="1200" loading="lazy" decoding="async" /></picture>
         <figcaption><span class="work-name">柴犬</span><span class="work-meta">纸艺拼贴</span></figcaption>
       </figure>
       <figure class="work-card reveal">
-        <img src="assets/work-mixed.jpg" alt="中华田园犬的肖像封面风格成品" width="900" height="1200" loading="lazy" decoding="async" />
+        <picture><source media="(max-width: 1279px)" type="image/webp" srcset="assets/work-mixed-160.webp 160w, assets/work-mixed-320.webp 320w, assets/work-mixed-640.webp 640w" sizes="(max-width: 767px) 90vw, (max-width: 955px) 45vw, (max-width: 1279px) 30vw, 370px" /><img src="assets/work-mixed.jpg" alt="中华田园犬的肖像封面风格成品" width="900" height="1200" loading="lazy" decoding="async" /></picture>
         <figcaption><span class="work-name">中华田园犬</span><span class="work-meta">肖像封面</span></figcaption>
       </figure>
     </div>
   </div>
 </section>
 
-<!--
-  ══ 8. 口碑区：3 条引语卡 ══════════════════════════════════════════════
 
-  待提供：真实用户评价。规格 6 章明确「没有真实评价就不要编造 —— 合规风险」，
-  因此这里的三条是**结构占位**，文案取自产品自身的设计取舍（不是虚构的用户口吻），
-  署名一律写「示意」。正式上线前必须替换成真实评价，或整块删掉。
--->
-<section class="section" id="voices">
-  <div class="container">
-    <div class="section-head reveal">
-      <p class="eyebrow">我们在意的事</p>
-      <h2 class="h2 h2-sm">三个不肯将就的决定</h2>
-      <p class="section-note wide" data-placeholder="testimonials">
-        此处结构对应用户评价区。目前没有可公开引用的真实评价，先放我们自己的三条设计取舍
-        —— 不编造用户口吻。拿到真实评价后原位替换。
-      </p>
-    </div>
-
-    <div class="grid-3 quote-grid">
-      <blockquote class="quote-card reveal">
-        <p class="quote-text">纪念空间的陪伴天数停在告别那天，用过去式说「陪伴了 N 天」。天数继续往上跳，对这些用户是冒犯。</p>
-        <figcaption class="quote-foot">
-          <img src="assets/avatar-dragonli.jpg" alt="" width="1200" height="1200" loading="lazy" decoding="async" />
-          <span>
-            <span class="quote-name" data-placeholder="testimonial-name">产品设计取舍</span>
-            <span class="quote-meta">示意 · 非用户评价</span>
-          </span>
-        </figcaption>
-      </blockquote>
-
-      <blockquote class="quote-card reveal" data-delay="1">
-        <p class="quote-text">风格对比图必须是同一只样板宠物。换了宠物，用户比较的就是宠物而不是风格 —— 这条比省一次生成更重要。</p>
-        <figcaption class="quote-foot">
-          <img src="assets/avatar-poodle.jpg" alt="" width="1200" height="1200" loading="lazy" decoding="async" />
-          <span>
-            <span class="quote-name" data-placeholder="testimonial-name">素材口径</span>
-            <span class="quote-meta">示意 · 非用户评价</span>
-          </span>
-        </figcaption>
-      </blockquote>
-
-      <blockquote class="quote-card reveal" data-delay="2">
-        <p class="quote-text">缺样例图时只留文字，不画占位色块。抽象色块挂在展示位上，比留空更糟。</p>
-        <figcaption class="quote-foot">
-          <img src="assets/avatar-abyssinian.jpg" alt="" width="1200" height="1200" loading="lazy" decoding="async" />
-          <span>
-            <span class="quote-name" data-placeholder="testimonial-name">展示原则</span>
-            <span class="quote-meta">示意 · 非用户评价</span>
-          </span>
-        </figcaption>
-      </blockquote>
-    </div>
-  </div>
-</section>
 
 <!-- ══ 9. CTA：大圆角面板 + 小程序码 ═════════════════════════════════════ -->
 <section class="band section" id="contact">
@@ -554,15 +502,15 @@
         <div>
           <p class="eyebrow">开始使用</p>
           <h2 class="h2 h2-mid">现在就给它拍一张</h2>
-          <p class="body-text lead">微信扫码进入小程序，第一次创作不花钱。</p>
-          <p class="cta-note">已有 10 种玩法可选，图文类 1 分钟起，视频类 3 分钟起。</p>
+          <p class="body-text lead">小程序正在准备上线，先看看这里的作品和创作指南。</p>
+          <p class="cta-note">图文创作、AI 肖像与陪伴短片，具体开放服务及费用以小程序内展示为准。</p>
         </div>
         <div class="qr-box">
           <!-- 待提供：真实小程序码。原型是虚线占位框 -->
           <div class="qr-frame" data-placeholder="miniprogram-qr" role="img" aria-label="小程序码占位">
-            <span class="qr-hint">小程序码<br />待提供</span>
+            <span class="qr-hint">微信小程序<br />即将上线</span>
           </div>
-          <p class="qr-note">正式站换成真实小程序码</p>
+          <p class="qr-note">上线后开放扫码入口</p>
         </div>
       </div>
     </div>
@@ -574,8 +522,8 @@
   <div class="container footer-grid">
     <div>
       <a class="brand brand-lg" href="#home">
-        <span class="brand-mark" aria-hidden="true"></span>
-        <span class="brand-name" data-placeholder="brand-name">宠物星尘</span>
+        <img class="brand-mark" src="assets/brand-logo.webp" alt="" width="160" height="160" loading="eager" decoding="async" />
+        <span class="brand-name" data-placeholder="brand-name">麻麻抱我</span>
       </a>
       <p class="footer-desc">
         把每一张宠物照片，变成值得留住的作品。图文、AI 肖像、视频与纪念，都在一个小程序里。
@@ -617,7 +565,7 @@
     </nav>
   </div>
   <div class="container footer-bottom">
-    <p>© 2026 <span data-placeholder="brand-name">宠物星尘</span> · 静态原型，非线上内容</p>
+    <p>© 2026 <span data-placeholder="brand-name">麻麻抱我</span> · 静态原型，非线上内容</p>
     <div class="footer-legal">
       <a href="#home">隐私</a>
       <a href="#home">条款</a>

@@ -32,9 +32,8 @@ const isHero = variant === "hero";
 <header class:list={["topbar", { "topbar-solid": !isHero }]} data-hero-topbar={isHero ? "" : null}>
   <div class="topbar-inner">
     <a class="brand" href="/#home">
-      <span class="brand-mark" aria-hidden="true"></span>
-      {/* 待提供：正式品牌名与 logo SVG（顶栏 26→40px、页脚 32px） */}
-      <span class="brand-name" data-placeholder="brand-name">{BRAND_NAME}</span>
+      <img class="brand-mark" src="/assets/brand-logo.webp" alt="" width="160" height="160" loading="eager" decoding="async" />
+      <span class="brand-name">{BRAND_NAME}</span>
     </a>
 
     {/*
@@ -45,6 +44,11 @@ const isHero = variant === "hero";
         · md 及以上 → 顶栏右下的 w-64 下拉（.desktop-menu）
         · md 以下   → 全屏从右滑入（.mobile-menu）
     */}
+    {isHero && <nav class="editorial-nav" aria-label="快捷导航">
+      <a href="/#works">作品集</a>
+      <a href="/#how">如何创作</a>
+      <a href="/blog/">灵感手记</a>
+    </nav>}
     <div class="topbar-actions">
       <QrTrigger />
 
@@ -80,8 +84,8 @@ const isHero = variant === "hero";
   {/* 顶部一行 logo + 关闭按钮，与原站移动分支一致 */}
   <div class="mobile-menu-top">
     <a class="brand" href="/#home">
-      <span class="brand-mark" aria-hidden="true"></span>
-      <span class="brand-name" data-placeholder="brand-name">{BRAND_NAME}</span>
+      <img class="brand-mark" src="/assets/brand-logo.webp" alt="" width="160" height="160" loading="eager" decoding="async" />
+      <span class="brand-name">{BRAND_NAME}</span>
     </a>
     <button type="button" class="menu-close" data-menu-close aria-label="关闭菜单">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>

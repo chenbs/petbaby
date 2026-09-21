@@ -1,0 +1,8 @@
+{
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "generatedAt": "2026-09-21T15:12:21.710Z",
+  "prompt": "Use case: ads-marketing. Create an exceptionally beautiful image for a contemporary premium pet photography and memories website. Art direction: playful fashion editorial, exquisite detail, clean sculptural composition, luminous soft daylight, rich but restrained pastel colours, tactile materials, delightful personality. Prioritise aesthetic impact over literal app-output realism. The pet must look alive, sweet and naturally expressive, with believable anatomy and finely resolved fur. No human body, no human hands, no extra limbs, no stock-photo props clutter, no sepia filter, no brown vintage room, no app interface, no watermark, no logos. No lettering unless explicitly specified. Full bleed, no outer border. A ravishing fine-art editorial pet portrait, landscape format: fluffy white Persian cat wearing a sculptural pale pink organza collar, sitting regally beside a single oversized red poppy on a cobalt blue seamless studio background. Fur and organza translucency exquisitely detailed, large amber eyes, sophisticated colour contrast and beautiful soft directional light. Not a picture of a framed painting: fill the image with the actual artwork. No text. Intended final composition 1600:1200; keep face, ears and important artwork comfortably within the central safe area for a small crop.",
+  "reference": null,
+  "sha256": "b2ad8ef559573d52cf1c5e80f0126dce0d285ef1420ca382a01eac5dc915632d"
+}

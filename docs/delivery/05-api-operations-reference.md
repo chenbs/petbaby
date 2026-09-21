@@ -16,7 +16,6 @@
 | AI、模板与互动 | `/api/ai-runs/*`、`/api/image-templates`、`/api/image-templates/[id]/sample`、`/api/interactive-sessions/*`、`/api/interactive-share/*` | 共登记 9 个入口 / 116 个条目（76 live / 40 pending-review）；公开接口只下发 live 模板。普通模板样图读取 `sampleStorageKey`、生成读取 `masterStorageKey`；宠物人化上线后两者指向同一自有效果图对象。普通模板支持四选一和重抽；宠物人化固定二选一且不支持重抽。V2 图片、提示词和计划对象键已登记，尚未取得发布批准或上传对象 |
 | 视频与纪念 | `/api/video-catalog`、`/api/video-projects/*`、`/api/video-renders/*`、`/api/annual-films`、`/api/memorials/*`、`/api/memorial-share/*` | 视频项目/渲染/高清解锁与纪念空间/三类产物/分享；`POST /api/annual-films` 建叙事型年度视频（`year` + 可选 `durationSeconds` 10/20/30） |
 | 复购与商业 | `/api/subscriptions/*`、`/api/addresses/*`、`/api/physical-skus`、`/api/physical-orders/*`、`/api/memberships/*`、`/api/growth-orders/*`、`/api/annual-reports/*`、`/api/annual-report-share/*` | 订阅、实体履约、会员权益和年度报告完整接口 |
-| 宠物小岛 | `GET/POST /api/island`、`POST /api/island/pets`、`POST /api/island/actions`、`GET /api/island/diary`、`/api/island/avatar*`（4 条） | 岛快照（含素材绝对 URL 与底图坐标）、宠物入岛、**单一互动端点**（`gather`/`feed`/`pet` 不拆三条 —— 拆开等于把门禁复制三份）、日记翻阅、立绘生成与选定。**`memorial` 宠物一律拒绝**（`ISLAND_UNAVAILABLE_MEMORIAL`），端上列表也过滤，两处都要；额度与亲密度**只由服务端算**，落 `island_daily_actions` 且与做图/健康额度互不影响；产出**不进 `works`**（岛的产出是状态而非作品，无 share_token 无定价）。互动限频走独立 scope `island_action`、**不进 `assertGenerationCircuit`**（边际成本≈0）；立绘走 `island_avatar` 并**必须进熔断**（它是 `image-api`，与其他 AI 图共享成本池） |
 | 管理后台 | `/api/admin/dashboard`、`/api/admin/audit`、`/api/admin/users`、`/api/admin/config`、`/api/admin/plugins/*`、`/api/admin/experiments/*`、`/api/admin/experiments/metrics`、`/api/admin/interactive`、`/api/admin/video`、`/api/admin/memorials`、`/api/admin/business`、`/api/admin/operations`、`/api/admin/physical-orders/*` | 驾驶舱、统一审计、用户状态、配置版本、赛马指标、任务恢复、分享关闭、履约、权益和报告运营 |
 
 所有用户写接口要求登录会话、可信客户端头和用户数据归属。管理接口生产环境要求 `ADMIN_USER_IDS`。支付通知使用微信平台签名，不使用用户会话。
@@ -46,11 +45,13 @@ DATABASE_URL="postgresql://..." pnpm db:migrate
 
 容器部署时由 `deploy/scripts/deploy.sh` 里的 `migrate` 服务自动执行，迁移失败不会更新应用容器。
 
-迁移程序读取 `drizzle/` 下全部 `0000_name.sql` 格式文件，当前范围为 `0000`～`0026`，按名称顺序执行并写入 `schema_migrations`。迁移应向前兼容；回滚应用时不删除新增字段。
+迁移程序读取 `drizzle/` 下全部 `0000_name.sql` 格式文件，当前范围为 `0000`～`0029`，按名称顺序执行并写入 `schema_migrations`。迁移应向前兼容；回滚应用时不删除新增字段。
 
 > PGlite 路径（本地开发与 E2E）不走这个程序，而是执行 `src/server/db/client.ts` 里**硬编码列出**的迁移清单。新增迁移必须同时更新 `drizzle/`、`client.ts` 的清单和 `resetDatabaseForTest()`。
 
-迁移 `0024`～`0026` 的作用（改动这些表前先读，避免重复建列）：
+近期业务迁移的作用（改动这些表前先读，避免重复建列）：
+
+已退役功能的历史迁移和前向清理迁移仍随迁移程序执行，但不再属于业务接口或操作入口，故不在下表展开。
 
 | 迁移 | 新增内容 |
 | --- | --- |
@@ -63,9 +64,10 @@ DATABASE_URL="postgresql://..." pnpm db:migrate
 | `0021_membership_honest_entitlements.sql` | 套餐 v3 ¥69 只留可兑付权益（`tierUnlock` / `annualReport` / `physicalDiscount`），v2 与月度转 inactive；`message_subscriptions.status_updated_at` |
 | `0022_health_care_and_reminders.sql` | `pet_care_records`、`health_reminders`、`health_documents`（提示去重靠 `(pet_id, kind, subject_key)` 唯一约束，`subject_key` 必须带变化量否则续期后永不再提示） |
 | `0023_membership_health_entitlements.sql` | 套餐 v4 ¥128，加回两项健康权益；v3 转 inactive，已购用户按快照履约 |
-| `0024_pet_island.sql` | 宠物小岛状态、库存、摆放、互动、日记和立绘资产字段 |
 | `0025_owner_photos_and_ai_roles.sql` | 独立 `owner_photos` 私有表；`ai_runs.role_inputs` 保存母版、主人和宠物的职责映射 |
 | `0026_pet_human_identities.sql` | `pet_human_identities` 私有人形身份缓存；唯一键为 `(user_id, pet_id, source_photo_id, prompt_version)`，状态为 `generating` / `ready` / `failed` |
+| `0028_payment_transactions.sql` | 支付事务、退款、iOS 退款问询与微信 session 密文表；支付订单唯一约束与对账索引 |
+| `0029_entitlement_delivery_reference.sql` | 权益台账交付资源引用与健康档案撤回时间，支持退款回收 |
 
 `0014_password_auth.sql` 新增 `users.account_name`、`password_hash`、`password_updated_at` 和 `lower(account_name)` 上的部分唯一索引，用于账号密码登录。
 

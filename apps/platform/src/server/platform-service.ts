@@ -19,9 +19,8 @@ import { getDatabase } from "@/server/db/client";
 import { mapOrder, mapPet, mapPhoto, mapTask, mapWork } from "@/server/db/rows";
 import { hasTierUnlock } from "@/server/entitlements";
 import { AppError } from "@/server/errors";
-import { paymentProvider } from "@/server/payments/provider";
+import { confirmOrderPayment, prepareOrderPayment, refundOrderPayment } from "@/server/payments/service";
 import { deletePetHumanIdentities } from "@/server/pet-human-identity-service";
-import { isRealProduction } from "@/server/runtime-mode";
 import { objectStorage } from "@/server/storage";
 import { runWorkerUntilIdle } from "@/server/worker/generation-worker";
 
@@ -487,64 +486,18 @@ export async function createOrder(userId: string, workId: string, requestedSku?:
   return mapOrder(rows[0]);
 }
 
-export async function preparePayment(userId: string, orderId: string) {
-  const database = await getDatabase();
-  const rows = await database.query("SELECT * FROM orders WHERE id=$1", [orderId]);
-  const order = belongsToUser(rows[0] ? mapOrder(rows[0]) : undefined, userId);
-  if (order.status !== "pending") throw new AppError("ORDER_NOT_PAYABLE", "当前订单不能支付");
-  return paymentProvider.create(order);
+export async function preparePayment(userId: string, orderId: string, client: "web" | "miniprogram" = "web") {
+  return prepareOrderPayment(userId, "work", orderId, client);
 }
 
 export async function payOrder(userId: string, id: string) {
-  if (isRealProduction()) throw new AppError("PAYMENT_ADAPTER_REQUIRED", "生产环境未配置微信支付，已拒绝模拟解锁", 503);
-  const database = await getDatabase();
-  const rows = await database.query("SELECT * FROM orders WHERE id = $1", [id]);
-  const order = belongsToUser(rows[0] ? mapOrder(rows[0]) : undefined, userId);
-  if (order.status === "paid") return { order, work: await getWork(userId, order.workId) };
-  if (order.status !== "pending") throw new AppError("ORDER_NOT_PAYABLE", "当前订单不能支付");
-  const paidAt = new Date();
-  await database.query("UPDATE orders SET status = 'paid', paid_at = $2 WHERE id = $1 AND status = 'pending'", [id, paidAt]);
-  await database.query("UPDATE works SET locked = false WHERE id = $1", [order.workId]);
-  await database.query("UPDATE ai_runs SET selected_unlocked=true WHERE work_id=$1", [order.workId]);
-  await database.query("UPDATE video_projects SET status='ready',updated_at=now() WHERE work_id=$1", [order.workId]);
-  await database.query("UPDATE video_renders SET status='ready' WHERE work_id=$1 AND status='preview_ready'", [order.workId]);
-  await recordEvent(userId, "paid", order.pluginId);
-  const updated = await database.query("SELECT * FROM orders WHERE id = $1", [id]);
-  return { order: mapOrder(updated[0]), work: await getWork(userId, order.workId) };
+  const row = await confirmOrderPayment(userId, "work", id, true);
+  const order = mapOrder(row);
+  return { order, work: await getWork(userId, order.workId) };
 }
 
 export async function requestRefund(userId: string, orderId: string, reason: "generation_failed" | "dissatisfied") {
-  const database = await getDatabase();
-  const rows = await database.query("SELECT * FROM orders WHERE id=$1", [orderId]);
-  const order = belongsToUser(rows[0] ? mapOrder(rows[0]) : undefined, userId);
-  if (order.status !== "paid" && order.status !== "refunded") throw new AppError("ORDER_NOT_REFUNDABLE", "当前订单不能退款");
-  if (reason === "dissatisfied") {
-    const used = await database.query("SELECT id FROM refunds WHERE user_id=$1 AND reason='dissatisfied' AND status IN ('pending','succeeded')", [userId]);
-    if (used.length) throw new AppError("DISSATISFIED_REFUND_USED", "每位用户仅有一次效果不满意退款机会", 409);
-  }
-  const amount = reason === "generation_failed" ? order.amount : Math.round(order.amount * 50) / 100;
-  const remaining = Math.max(0, order.amount - order.refundedAmount);
-  const refundAmount = Math.min(amount, remaining);
-  if (refundAmount <= 0) throw new AppError("ALREADY_REFUNDED", "订单已完成退款", 409);
-  const refundId = crypto.randomUUID();
-  await database.query("INSERT INTO refunds (id,user_id,order_id,amount,reason,status,created_at) VALUES ($1,$2,$3,$4,$5,'pending',$6)", [refundId, userId, orderId, refundAmount, reason, new Date()]);
-  try {
-    await paymentProvider.refund(order, refundAmount, reason);
-    const total = order.refundedAmount + refundAmount;
-    const status = total >= order.amount ? "refunded" : "paid";
-    await database.query("UPDATE refunds SET status='succeeded',completed_at=now() WHERE id=$1", [refundId]);
-    await database.query("UPDATE orders SET status=$2,refunded_amount=$3,refund_reason=$4 WHERE id=$1", [orderId, status, total, reason]);
-    if (status === "refunded") {
-      await database.query("UPDATE works SET locked=true,public=false,share_token=NULL,share_expires_at=NULL,share_access_code_hash=NULL WHERE id=$1", [order.workId]);
-      await database.query("UPDATE ai_runs SET selected_unlocked=false WHERE work_id=$1", [order.workId]);
-      await database.query("UPDATE video_projects SET status='preview_ready',updated_at=now() WHERE work_id=$1", [order.workId]);
-      await database.query("UPDATE video_renders SET status='preview_ready' WHERE work_id=$1 AND status='ready'", [order.workId]);
-    }
-    return { id: refundId, amount: refundAmount, status: "succeeded" as const };
-  } catch (error) {
-    await database.query("UPDATE refunds SET status='failed',completed_at=now() WHERE id=$1", [refundId]);
-    throw error;
-  }
+  return refundOrderPayment(userId, "work", orderId, reason);
 }
 
 export async function listOrders(userId: string) {
@@ -639,4 +592,3 @@ export async function getDashboard(userId: string) {
 export function canRegenerate(work: Work, at = new Date()) {
   return at.getTime() - new Date(work.createdAt).getTime() <= DAY_MS;
 }
-

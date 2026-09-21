@@ -50,6 +50,11 @@
 | `WECHAT_MCH_PRIVATE_KEY` | PEM 私钥；换行可写为 `\n` |
 | `WECHAT_PLATFORM_PUBLIC_KEY` | 支付通知验签公钥 |
 | `WECHAT_PAY_NOTIFY_URL`、`WECHAT_REFUND_NOTIFY_URL` | 公网 HTTPS 回调 |
+| `WECHAT_PLATFORM_SERIAL` | 微信支付平台证书序列号；通知验签必须与此值一致 |
+| `WECHAT_VIRTUAL_OFFER_ID`、`WECHAT_VIRTUAL_APP_KEY`、`WECHAT_VIRTUAL_SANDBOX_APP_KEY` | 虚拟支付商品配置中的 Offer 与现网/沙箱 AppKey；按环境选用 |
+| `WECHAT_VIRTUAL_PRODUCTS` | JSON 商品映射，键为 `sku:分`，值为微信后台已上架 `productId` |
+| `WECHAT_SESSION_ENCRYPTION_KEY` | 32 字节 Base64，用于服务端加密保存微信 `session_key` |
+| `WECHAT_MESSAGE_TOKEN`、`WECHAT_MESSAGE_AES_KEY` | 虚拟支付消息推送安全模式 Token 与 EncodingAESKey |
 | `WECHAT_SUBSCRIBE_TEMPLATE_ID` | 订阅消息模板 ID |
 | `PHYSICAL_PAYMENT_PROVIDER` | 实体订单支付适配器；未配置时生产拒绝模拟支付 |
 
@@ -59,12 +64,12 @@
 
 | 变量 | 说明 |
 | --- | --- |
-| `OBJECT_STORAGE_PROVIDER` | 生产设 `s3`；`local` 只在 `APP_ENV=staging` 或本地开发生效，正式生产会被强制回落到云适配器 |
+| `OBJECT_STORAGE_PROVIDER` | 生产设 `cos`；`local` 只在 `APP_ENV=staging` 或本地开发生效，正式生产会被强制回落到云适配器 |
 | `LOCAL_STORAGE_DIR` | 本地磁盘存储根目录；容器内为 `/app/.data/objects`，挂在共享命名卷上供 web 与 worker 同时读写 |
-| `OSS_ENDPOINT` | S3 兼容的完整 Bucket Endpoint，必须包含 Bucket 主机或路径 |
-| `OSS_BUCKET` | Bucket 名，用于配置核对 |
+| `OSS_ENDPOINT` | COS 可留空，由 Bucket 与地域生成 HTTPS 地址；填写时必须与该地址完全一致，禁止填公共 CDN |
+| `OSS_BUCKET` | 固定为 `babykitty-user-one-1252454114`，私有读、私有写 |
 | `OSS_ACCESS_KEY_ID`、`OSS_ACCESS_KEY_SECRET` | 最小权限凭据 |
-| `STORAGE_REGION` | S3 签名 Region，默认 `auto` |
+| `STORAGE_REGION` | 腾讯云 COS 地域（例如 `ap-guangzhou`），必须与桶实际地域一致 |
 
 Bucket 必须默认私有，凭据仅允许指定 Bucket 的读写删除；不要授予账户级管理权限。测试机用本地磁盘时，照片和成品在 Docker 卷 `petbaby-staging_object-data` 里，`down -v` 会一并删除。
 
@@ -76,13 +81,13 @@ Bucket 必须默认私有，凭据仅允许指定 Bucket 的读写删除；不�
 
 **正式生产（`NODE_ENV=production` 且未设 `APP_ENV=staging`）缺凭据时不再回落占位图**，而是以 `AI_PROVIDER_CONFIG_PENDING`（503）失败 —— 纯色块不是可交付的产物，用户为它付了钱。开发与测试机仍回落本地占位图以便跑通链路。
 
-只有 PL-10（AI 肖像）与岛的立绘走 lingsuan；PL-01/02/03、PL-20、PL-23 是确定性 SVG 排版，PL-19/21 走 ffmpeg，都不调用大模型。
+只有 PL-10（AI 肖像）走 lingsuan；PL-01/02/03、PL-20、PL-23 是确定性 SVG 排版，PL-19/21 走 ffmpeg，都不调用大模型。
 
 | 变量 | 默认值 / 说明 |
 | --- | --- |
 | `LINGSUAN_IMAGE_BASE_URL`、`LINGSUAN_IMAGE_API_KEY` | lingsuan 图像接口（OpenAI images 兼容），当前主通道；两项齐备才生效。BASE_URL 为 `https://lingsuan.top` |
 | `LINGSUAN_IMAGE_MODEL` | 默认 `gpt-image-2` |
-| `LINGSUAN_IMAGE_CONCURRENCY` | lingsuan 进程内共享请求队列并发数，默认 20，硬限制为 1～20；PL-10、岛立绘和同进程内的其他生成调用合计不超过该值 |
+| `LINGSUAN_IMAGE_CONCURRENCY` | lingsuan 进程内共享请求队列并发数，默认 20，硬限制为 1～20；PL-10和同进程内的其他生成调用合计不超过该值 |
 | `LINGSUAN_IMAGE_SIZE`、`LINGSUAN_IMAGE_QUALITY` | 默认 `1024x1024` / `high`。size **只对方形生效**：实测 `1600x1000` 返回 `2048x1376` |
 | `LINGSUAN_IMAGE_INPUT_FIDELITY` | 图生图时要求保住主体特征。**默认留空**：接口接受该参数（packy 时代会 400），但「接受」不等于有效，产物是否更贴主体未验证过，开之前要人眼比对一批 |
 | `LINGSUAN_IMAGE_TIMEOUT_MS` | 单张请求超时，默认 180000。实测 `quality=low` 已需 46–62 秒，high 更久，勿低于 120000 |

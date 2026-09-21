@@ -1,6 +1,39 @@
 import "server-only";
-import { createDecipheriv,createVerify } from "node:crypto";import { getDatabase } from "@/server/db/client";import { AppError } from "@/server/errors";
+import { createDecipheriv } from "node:crypto";
+import { z } from "zod";
+import { getDatabase } from "@/server/db/client";
+import { AppError } from "@/server/errors";
+import { requiredPaymentConfig } from "./config";
+import { applyPaymentConfirmation, completeRefund } from "./service";
+import { verifyWechatSignature, verifyWechatTransaction } from "./wechat-provider";
+import type { Payment } from "./types";
 
-function verifySignature(request:Request,body:string){const timestamp=request.headers.get("Wechatpay-Timestamp");const nonce=request.headers.get("Wechatpay-Nonce");const signature=request.headers.get("Wechatpay-Signature");const publicKey=process.env.WECHAT_PLATFORM_PUBLIC_KEY?.replaceAll("\\n","\n");if(!timestamp||!nonce||!signature||!publicKey)throw new AppError("WECHAT_SIGNATURE_CONFIG_PENDING","微信支付验签配置不完整",503);const verifier=createVerify("RSA-SHA256");verifier.update(`${timestamp}\n${nonce}\n${body}\n`);if(!verifier.verify(publicKey,signature,"base64"))throw new AppError("WECHAT_SIGNATURE_INVALID","微信支付通知验签失败",401);}
-function decrypt(resource:{ciphertext:string;nonce:string;associated_data?:string}){const key=process.env.WECHAT_PAY_KEY;if(!key||Buffer.byteLength(key)!==32)throw new AppError("WECHAT_PAY_KEY_INVALID","API v3 Key 必须为 32 字节",503);const encrypted=Buffer.from(resource.ciphertext,"base64");const authTag=encrypted.subarray(encrypted.length-16);const decipher=createDecipheriv("aes-256-gcm",Buffer.from(key),Buffer.from(resource.nonce));decipher.setAuthTag(authTag);if(resource.associated_data)decipher.setAAD(Buffer.from(resource.associated_data));return JSON.parse(Buffer.concat([decipher.update(encrypted.subarray(0,-16)),decipher.final()]).toString("utf8")) as Record<string,unknown>;}
-export async function handleWechatNotification(request:Request){const body=await request.text();verifySignature(request,body);const envelope=JSON.parse(body) as {event_type:string;resource:{ciphertext:string;nonce:string;associated_data?:string}};const payload=decrypt(envelope.resource);if(envelope.event_type!=="TRANSACTION.SUCCESS")return{accepted:true,ignored:true};const outTradeNo=String(payload.out_trade_no||"");const database=await getDatabase();const rows=await database.query("SELECT * FROM orders WHERE replace(id::text,'-','')=$1",[outTradeNo]);if(!rows[0])throw new AppError("ORDER_NOT_FOUND","支付订单不存在",404);if(String(rows[0].status)==="paid")return{accepted:true,idempotent:true};await database.query("UPDATE orders SET status='paid',paid_at=now() WHERE id=$1 AND status='pending'",[rows[0].id]);await database.query("UPDATE works SET locked=false WHERE id=$1",[rows[0].work_id]);await database.query("UPDATE ai_runs SET selected_unlocked=true WHERE work_id=$1",[rows[0].work_id]);await database.query("INSERT INTO events (id,user_id,plugin_id,name,created_at) VALUES ($1,$2,$3,'paid',$4)",[crypto.randomUUID(),rows[0].user_id,rows[0].plugin_id,new Date()]);return{accepted:true};}
+const envelopeSchema = z.object({ event_type: z.string(), resource: z.object({ algorithm: z.literal("AEAD_AES_256_GCM"), ciphertext: z.string().max(100000), nonce: z.string(), associated_data: z.string().optional() }) });
+
+export async function handleWechatNotification(request: Request) {
+  const body = await request.text();
+  if (body.length > 100000) throw new AppError("NOTIFICATION_TOO_LARGE", "通知过大", 413);
+  verifyWechatSignature(request.headers, body);
+  const envelope = envelopeSchema.parse(JSON.parse(body));
+  const key = Buffer.from(requiredPaymentConfig("WECHAT_PAY_KEY"));
+  if (key.length !== 32) throw new AppError("WECHAT_PAY_KEY_INVALID", "API v3 Key 必须为 32 字节", 503);
+  const encrypted = Buffer.from(envelope.resource.ciphertext, "base64");
+  const decipher = createDecipheriv("aes-256-gcm", key, Buffer.from(envelope.resource.nonce));
+  decipher.setAuthTag(encrypted.subarray(-16));
+  if (envelope.resource.associated_data) decipher.setAAD(Buffer.from(envelope.resource.associated_data));
+  const payload: unknown = JSON.parse(Buffer.concat([decipher.update(encrypted.subarray(0,-16)),decipher.final()]).toString("utf8"));
+  const database = await getDatabase();
+  if (envelope.event_type === "TRANSACTION.SUCCESS") {
+    const data = z.object({ out_trade_no: z.string() }).parse(payload);
+    const payment = (await database.query<Payment>("SELECT * FROM payment_transactions WHERE out_trade_no=$1 AND provider=\'wechat\'", [data.out_trade_no]))[0];
+    if (!payment) throw new AppError("PAYMENT_NOT_FOUND", "支付记录不存在", 404);
+    await applyPaymentConfirmation(payment.id, verifyWechatTransaction(payment, payload));
+  } else if (envelope.event_type.startsWith("REFUND.")) {
+    const data = z.object({ mchid: z.string(), out_refund_no: z.string() }).parse(payload);
+    if (data.mchid !== requiredPaymentConfig("WECHAT_MCH_ID")) throw new AppError("PAYMENT_MISMATCH", "退款商户不匹配", 409);
+    const refund = (await database.query("SELECT r.id FROM payment_refunds r JOIN payment_transactions p ON p.id=r.payment_id WHERE r.out_refund_no=$1 AND p.provider=\'wechat\'", [data.out_refund_no]))[0];
+    if (!refund) throw new AppError("REFUND_NOT_FOUND", "退款记录不存在", 404);
+    await completeRefund(String(refund.id));
+  }
+  return { accepted: true };
+}

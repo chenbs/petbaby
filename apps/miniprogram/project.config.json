@@ -3,7 +3,7 @@
   "projectname": "petbaby-miniprogram",
   "compileType": "miniprogram",
   "miniprogramRoot": "./",
-  "libVersion": "2.9.0",
+  "libVersion": "2.19.2",
   "setting": {
     "es6": true,
     "enhance": true,

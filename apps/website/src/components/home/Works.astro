@@ -1,77 +1,73 @@
 ---
-/*
- * 11. 作品展示区：7 格风格缩略带（摩奇）+ 11 品种瀑布流。
- *
- * 编号 11 是内容映射表的序号（规格 6 章新增区块），位置刻意放在流程之后、
- * 口碑之前 —— 先给「真实产出长什么样」，再给评价，说服链条才顺。
- *
- * 缩略带全部是同一只样板宠物摩奇：并列比较的槽位必须锁定主体（规格 10.1），
- * 换宠物用户比较的就是宠物而不是风格。瀑布流反过来，一品种一张。
- *
- * 瀑布流不给 stagger（偏离 ⑩）：CSS columns 下 DOM 顺序与视觉列不对应，
- * 按 nth-child 给延迟会错峰错到别的列上，所以这里不传 data-delay。
- */
-const STRIP = [
-  { src: "/assets/style-warm-film.jpg", alt: "暖调胶片风格的摩奇", caption: "暖调胶片" },
-  { src: "/assets/style-paper-cut.jpg", alt: "纸艺拼贴风格的摩奇", caption: "纸艺拼贴" },
-  { src: "/assets/style-studio.jpg", alt: "克制影棚风格的摩奇", caption: "克制影棚" },
-  { src: "/assets/style-fantasy.jpg", alt: "轻幻想风格的摩奇", caption: "轻幻想" },
-  { src: "/assets/play-portrait.jpg", alt: "肖像封面玩法的摩奇", caption: "肖像封面" },
-  { src: "/assets/play-storybook.jpg", alt: "绘本主角玩法的摩奇", caption: "绘本主角" },
-  { src: "/assets/play-magazine.jpg", alt: "杂志大片玩法的摩奇", caption: "杂志大片" },
+import ResponsiveImage from "../ResponsiveImage.astro";
+const styles = [
+  { image: "style-warm-film", name: "日光胶片", alt: "日光与蓝天里的橘白猫胶片摄影" },
+  { image: "style-paper-cut", name: "纸上奇遇", alt: "彩色纸艺花园中的橘白猫" },
+  { image: "style-studio", name: "影棚肖像", alt: "粉蓝影棚里橘白猫的艺术肖像" },
+  { image: "style-fantasy", name: "云端来信", alt: "梦幻云朵和月亮中的橘白猫" },
+  { image: "play-portrait", name: "画中缪斯", alt: "橘白猫的当代绘画肖像" },
+  { image: "play-storybook", name: "绘本主角", alt: "橘白猫在绘本花园里探险" },
+  { image: "play-magazine", name: "封面明星", alt: "橘白猫的 MUSE 时尚杂志封面" },
 ];
-
-/* 混比例是刻意的 —— 等高图会让瀑布流退化成规整网格 */
-const WORKS = [
-  { src: "/assets/work-ragdoll.jpg", alt: "布偶猫的暖调胶片风格成品", w: 900, h: 1200, name: "布偶猫", meta: "暖调胶片" },
-  { src: "/assets/work-devon.jpg", alt: "德文卷毛猫的杂志大片风格成品", w: 1600, h: 1200, name: "德文卷毛猫", meta: "杂志大片" },
-  { src: "/assets/work-maine.jpg", alt: "缅因猫的克制影棚风格成品", w: 1200, h: 1200, name: "缅因猫", meta: "克制影棚" },
-  { src: "/assets/work-abyssinian.jpg", alt: "阿比西尼亚猫的轻幻想风格成品", w: 900, h: 1200, name: "阿比西尼亚猫", meta: "轻幻想" },
-  { src: "/assets/work-dragonli.jpg", alt: "田园狸花猫的纸艺拼贴风格成品", w: 900, h: 1200, name: "田园狸花猫", meta: "纸艺拼贴" },
-  { src: "/assets/work-golden.jpg", alt: "金毛犬的肖像封面风格成品", w: 900, h: 1200, name: "金毛犬", meta: "肖像封面" },
-  { src: "/assets/work-poodle.jpg", alt: "泰迪的绘本主角风格成品", w: 1200, h: 1200, name: "泰迪", meta: "绘本主角" },
-  { src: "/assets/work-border.jpg", alt: "边境牧羊犬的暖调胶片风格成品", w: 900, h: 1200, name: "边境牧羊犬", meta: "暖调胶片" },
-  { src: "/assets/work-shepherd.jpg", alt: "德国牧羊犬的克制影棚风格成品", w: 1600, h: 1200, name: "德国牧羊犬", meta: "克制影棚" },
-  { src: "/assets/work-shiba.jpg", alt: "柴犬的纸艺拼贴风格成品", w: 900, h: 1200, name: "柴犬", meta: "纸艺拼贴" },
-  { src: "/assets/work-mixed.jpg", alt: "中华田园犬的肖像封面风格成品", w: 900, h: 1200, name: "中华田园犬", meta: "肖像封面" },
+const works = [
+  { image: "work-ragdoll", w: 900, h: 1200, name: "布偶猫", mood: "蓝色的温柔", category: "cat" },
+  { image: "work-golden", w: 900, h: 1200, name: "金毛犬", mood: "阳光是我的偏爱", category: "dog" },
+  { image: "work-devon", w: 1600, h: 1200, name: "德文卷毛猫", mood: "小小的时髦精", category: "cat" },
+  { image: "work-maine", w: 1200, h: 1200, name: "缅因猫", mood: "温柔的巨人", category: "cat" },
+  { image: "work-poodle", w: 1200, h: 1200, name: "泰迪", mood: "像一颗棉花糖", category: "dog" },
+  { image: "work-border", w: 900, h: 1200, name: "边境牧羊犬", mood: "眼里有星星", category: "dog" },
+  { image: "work-abyssinian", w: 900, h: 1200, name: "阿比西尼亚猫", mood: "风里的小精灵", category: "cat" },
+  { image: "work-dragonli", w: 900, h: 1200, name: "田园狸花猫", mood: "身边的宝藏", category: "cat" },
+  { image: "work-shepherd", w: 1600, h: 1200, name: "德国牧羊犬", mood: "可靠又可爱", category: "dog" },
+  { image: "work-shiba", w: 900, h: 1200, name: "柴犬", mood: "把笑容交给你", category: "dog" },
+  { image: "work-mixed", w: 900, h: 1200, name: "中华田园犬", mood: "独一无二的我", category: "dog" },
 ];
 ---
-
-<section class="band section" id="works">
-  <div class="container">
-    <div class="section-head split reveal">
-      <div>
-        <p class="eyebrow">真实产出</p>
-        <h2 class="h2 h2-sm">同一只猫<br />七种风格</h2>
+<section class="ed-section ed-works" id="works">
+  <div class="ed-container">
+    <div class="ed-section-head">
+      <div><p class="ed-kicker">03 / THE LITTLE MUSE COLLECTION</p><h2>我的可爱，<br />不止一种打开方式。</h2></div>
+      <p class="ed-section-note">同一只橘白猫，七场小小的梦。<br />今天，想把我留在哪个世界？</p>
+    </div>
+    <div class="ed-style-strip" role="region" aria-label="七种创意风格，可横向滚动" tabindex="0">
+      {styles.map((style, index) => <figure><div><ResponsiveImage src={`/assets/${style.image}.jpg`} alt={style.alt} width={900} height={1200} sizes="(max-width: 767px) 56vw, 240px" /></div><figcaption><span>{style.name}</span><span>0{index + 1}</span></figcaption></figure>)}
+    </div>
+    <div class="ed-gallery-head">
+      <div><p class="ed-kicker">EVERY LITTLE FACE, A LITTLE MASTERPIECE</p><h3>每一张小脸，都值得被偏爱。</h3></div>
+      <div class="ed-filters" role="group" aria-label="按宠物类型筛选作品" hidden data-gallery-filters>
+        <button type="button" aria-pressed="true" data-filter="all" aria-controls="pet-gallery">全部</button>
+        <button type="button" aria-pressed="false" data-filter="cat" aria-controls="pet-gallery">猫咪</button>
+        <button type="button" aria-pressed="false" data-filter="dog" aria-controls="pet-gallery">狗狗</button>
       </div>
-      <p class="section-note">
-        下面这七张全部由同一只样板宠物「摩奇」生成 —— 换了宠物，
-        比较的就是宠物而不是风格。
-      </p>
     </div>
-
-    <div class="thumb-strip reveal">
-      {
-        STRIP.map((item) => (
-          <figure><span class="thumb-image"><img src={item.src} alt={item.alt} width="900" height="1200" loading="lazy" decoding="async" /></span><figcaption>{item.caption}</figcaption></figure>
-        ))
-      }
+    <p class="ed-gallery-status" aria-live="polite" data-gallery-status>11 位可爱主角 · AI 创意示例</p>
+    <div class="ed-gallery" id="pet-gallery">
+      {works.map((work) => <figure class="ed-work" data-category={work.category}>
+        <div class="ed-work-image"><ResponsiveImage src={`/assets/${work.image}.jpg`} alt={work.name + "艺术摄影示例：" + work.mood} width={work.w} height={work.h} sizes="(max-width: 767px) 44vw, 30vw" /></div>
+        <figcaption><span>{work.name}</span><span>{work.mood}</span></figcaption>
+      </figure>)}
     </div>
-
-    <div class="works-divider reveal">
-      <h3 class="h3">十一个品种，各来一张</h3>
-      <p class="body-text">长毛短毛、大型小型、纯种土猫土狗都试过。全部是真实生成结果，没有占位图。</p>
-    </div>
-
-    <div class="masonry">
-      {
-        WORKS.map((work) => (
-          <figure class="work-card reveal">
-            <img src={work.src} alt={work.alt} width={work.w} height={work.h} loading="lazy" decoding="async" />
-            <figcaption><span class="work-name">{work.name}</span><span class="work-meta">{work.meta}</span></figcaption>
-          </figure>
-        ))
-      }
-    </div>
+    <p class="ed-fineprint ed-gallery-note">这些画面是关于可爱的创意想象，由 AI 生成；实际可选模板与成品效果以小程序内展示为准。</p>
   </div>
 </section>
+<script>
+  const filters = document.querySelector<HTMLElement>("[data-gallery-filters]");
+  const cards = document.querySelectorAll<HTMLElement>("[data-category]");
+  const status = document.querySelector<HTMLElement>("[data-gallery-status]");
+  if (filters && status) {
+    filters.hidden = false;
+    filters.querySelectorAll<HTMLButtonElement>("[data-filter]").forEach((button) => {
+      button.addEventListener("click", () => {
+        filters.querySelectorAll<HTMLButtonElement>("[data-filter]").forEach((filter) => {
+          filter.setAttribute("aria-pressed", String(filter === button));
+        });
+        let visible = 0;
+        cards.forEach((card) => {
+          card.hidden = button.dataset.filter !== "all" && card.dataset.category !== button.dataset.filter;
+          if (!card.hidden) visible += 1;
+        });
+        status.textContent = `${visible} 位可爱主角 · AI 创意示例`;
+      });
+    });
+  }
+</script>

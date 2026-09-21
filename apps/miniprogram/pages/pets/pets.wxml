@@ -55,16 +55,6 @@
       <view class="pet-actions">
         <t-button type="secondary" size="mini" anim="{{animType}}" data-id="{{item.id}}" bindtap="timeline">时间线</t-button>
         <!--
-          小岛入口。**必须带 petId** —— 不带的话点非默认宠物会进到错的那只
-          （pages/timeline 已经踩过这一处，CLAUDE.md 记着）。
-
-          **memorial 形态不出现这个按钮**（22 号文 1.4 / 4.1 #11）：岛的核心机制是
-          亲密度日增与陪伴天数递增，对已离开的宠物递增天数是明确的冒犯。
-          服务端也拦（ISLAND_UNAVAILABLE_MEMORIAL），**两处都要** ——
-          只做端上隐藏则接口仍可调，只做服务端拦截则用户会看到入口点进去报错。
-        -->
-        <t-button wx:if="{{item.showIsland}}" type="ghost" size="mini" anim="{{animType}}" data-id="{{item.id}}" bindtap="island">小岛</t-button>
-        <!--
           纪念空间入口挂在**这只宠物的上下文**里（改造项 L4）。
 
           原先它只在「我的」页固定展示，与生命阶段无关 —— 于是 C9「纪念可达性」

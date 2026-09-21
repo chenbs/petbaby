@@ -93,6 +93,7 @@ for (const viewport of [{ width: 390, height: 844 }, { width: 1440, height: 900 
       .filter((img) => !img.getAttribute("width") || !img.getAttribute("height")).length,
     total: document.querySelectorAll("img").length,
     lazy: document.querySelectorAll('img[loading="lazy"]').length,
+    nonLazyOutsideHero: Array.from(document.querySelectorAll("img")).filter((image) => !image.closest(".hero, .topbar, .mobile-menu") && image.loading !== "lazy").length,
     deadLinks: document.querySelectorAll('a[href="#home"]').length,
     nav: document.querySelectorAll(".desktop-menu a").length,
     mobileNav: document.querySelectorAll(".mobile-menu-nav a").length,
@@ -100,7 +101,7 @@ for (const viewport of [{ width: 390, height: 844 }, { width: 1440, height: 900 
   const tag = `${viewport.width}px`;
   ok(`${tag} CLS 为 0`, info.cls === 0, `实测 ${info.cls}`);
   ok(`${tag} 全部图片带固有尺寸`, info.noDim === 0, `${info.total} 张，缺尺寸 ${info.noDim} 张`);
-  ok(`${tag} 首屏外的图 lazy`, info.lazy === info.total - 3, `${info.lazy}/${info.total} lazy（hero 三头像 eager）`);
+  ok(`${tag} 首屏外的图 lazy`, info.nonLazyOutsideHero === 0, `${info.lazy}/${info.total} lazy（首屏头像和品牌 Logo eager）`);
   ok(`${tag} h1 唯一`, info.h1 === 1);
   ok(`${tag} 页脚不再有 #home 死链`, info.deadLinks === 0);
   ok(`${tag} 两个菜单从同一数组渲染`, info.nav === info.mobileNav && info.nav === 8, `各 ${info.nav} 项`);
@@ -129,7 +130,7 @@ group("小程序码三触点（方案第 6 章 / 第 13 章第 2 步）");
    */
   await page.goto(`${BASE}/`, { waitUntil: "load" });
   const order = [];
-  for (let i = 0; i < 4; i += 1) {
+  for (let i = 0; i < 7; i += 1) {
     await page.keyboard.press("Tab");
     order.push(await page.evaluate(() => document.activeElement.className || document.activeElement.tagName));
   }
@@ -296,17 +297,16 @@ group("solid 顶栏对比度（方案第 3 章的实算值复核）");
 group("法务页与 404（方案 11.1 / 第 13 章第 5 步）");
 {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
-  for (const [route, placeholder, count] of [["/legal/terms/", "legal-terms", 7], ["/legal/privacy/", "legal-privacy", 8]]) {
+  for (const [route, count] of [["/legal/terms/", 7], ["/legal/privacy/", 8]]) {
     await page.goto(`${BASE}${route}`, { waitUntil: "load" });
     const notice = await page.evaluate(() => {
       const el = document.querySelector(".notice-draft");
       return el ? { text: el.textContent.replace(/\s+/g, " ").trim(), border: getComputedStyle(el).borderTopColor } : null;
     });
-    ok(`${route} 未定稿提示条醒目`, /尚未定稿/.test(notice?.text ?? "") && notice?.border === "rgb(196, 51, 92)");
-    ok(`${route} 章节骨架 ${count} 节`,
+    ok(`${route} 待确认版本明确说明未生效`, /尚未正式生效/.test(notice?.text ?? "") && notice?.border === "rgb(196, 51, 92)");
+    ok(`${route} 完整条款 ${count} 节`,
       await page.evaluate(() => document.querySelectorAll(".legal-section").length) === count);
-    ok(`${route} 有 data-placeholder 便于 grep`,
-      await page.evaluate((name) => Boolean(document.querySelector(`[data-placeholder="${name}"]`)), placeholder));
+    ok(`${route} 每节有实质正文`, await page.evaluate(() => Array.from(document.querySelectorAll(".legal-section")).every((section) => section.querySelectorAll("p").length >= 1 && section.textContent.length > 80 && !section.textContent.includes("待补充"))));
   }
   await page.goto(`${BASE}/404.html`, { waitUntil: "load" });
   ok("404 给回首页与文章的出口",

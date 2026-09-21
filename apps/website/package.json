@@ -9,18 +9,19 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "node scripts/prepare-assets.mjs && astro build",
     "preview": "astro preview",
     "check": "astro check",
     "check:links": "node scripts/check-links.mjs",
+    "check:release": "node scripts/check-release.mjs",
     "check:pixels": "node scripts/pixel-diff.mjs",
     "verify": "node scripts/verify.mjs"
   },
   "dependencies": {
     "@astrojs/rss": "4.0.19",
-    "@astrojs/sitemap": "3.7.3",
-    "astro": "7.1.6",
-    "sharp": "0.35.3"
+    "@astrojs/sitemap": "3.7.4",
+    "astro": "7.3.3",
+    "sharp": "0.35.4"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",

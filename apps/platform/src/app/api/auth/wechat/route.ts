@@ -4,6 +4,7 @@ import { z } from "zod";
 import { assertTrustedMutation } from "@/server/auth/request-guard";
 import { setSession } from "@/server/auth/session";
 import { exchangeWechatCode } from "@/server/auth/wechat";
+import { storeWechatSession } from "@/server/auth/wechat-session";
 import { getDatabase } from "@/server/db/client";
 import { routeError } from "@/server/errors";
 
@@ -20,6 +21,7 @@ export async function POST(request: Request) {
     if (!existing.length) {
       await database.query("INSERT INTO users (id, wechat_openid, created_at) VALUES ($1, $2, $3)", [userId, identity.openid, new Date()]);
     }
+    await storeWechatSession(userId, identity.session_key);
     const sessionToken = await setSession(userId);
     return NextResponse.json({ data: { userId, sessionToken } });
   } catch (error) {

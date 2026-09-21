@@ -1,0 +1,8 @@
+{
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "generatedAt": "2026-09-21T15:27:25.074Z",
+  "prompt": "Use case: ads-marketing. Create an exceptionally beautiful image for a contemporary premium pet photography and memories website. Art direction: playful fashion editorial, exquisite detail, clean sculptural composition, luminous soft daylight, rich but restrained pastel colours, tactile materials, delightful personality. Prioritise aesthetic impact over literal app-output realism. The pet must look alive, sweet and naturally expressive, with believable anatomy and finely resolved fur. No human body, no human hands, no extra limbs, no stock-photo props clutter, no sepia filter, no brown vintage room, no app interface, no watermark, no logos. No lettering unless explicitly specified. Full bleed, no outer border. A slender elegant ruddy Abyssinian cat looking around an oversized sculptural pale pink calla lily, lavender backdrop, pale yellow diffuse light. Fine-art surreal botanical fashion photography, beautiful amber eyes and sculptural large ears, clean composition, no text. Intended final composition 900:1200; keep face, ears and important artwork comfortably within the central safe area for a small crop.",
+  "reference": null,
+  "sha256": "32a1e2d8ea56c1d023a713b0a126c70ac4e23bbcb5cb22dceeb4f03bd11f79cb"
+}

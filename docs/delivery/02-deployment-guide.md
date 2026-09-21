@@ -16,7 +16,7 @@
 | 编排文件                   | `deploy/compose.staging.yaml` | `deploy/compose.production.yaml`    |
 | `NODE_ENV` / `APP_ENV` | `production` / `staging`      | `production` / 不设置                  |
 | 登录方式                   | 账号密码注册登录 + 微信登录（补齐 AppID 后）   | 微信登录为主                              |
-| 对象存储                   | **服务器本地磁盘**（Docker 命名卷）       | 必须 S3 兼容云存储，缺凭据直接 503               |
+| 对象存储                   | **服务器本地磁盘**（Docker 命名卷）       | 必须腾讯云 COS，缺凭据直接 503               |
 | 支付                     | 模拟支付（可走通解锁流程，不产生真实交易）         | 必须微信支付 v3                           |
 | HTTPS                  | 宿主机 Nginx + Certbot/云证书       | 宿主机 Nginx / 云负载均衡                   |
 | 反向代理                   | 宿主机 Nginx → `127.0.0.1:3000`  | 宿主机 Nginx → `127.0.0.1:3000` / 云 LB |
@@ -381,7 +381,7 @@ sudo nginx -t
 1. **生成 `deploy/.env.staging`**（权限 600，不进版本库）：写入域名，随机生成数据库密码、`SESSION_SECRET`、`WORKER_SECRET`、`ADDRESS_ENCRYPTION_KEY` 和一个 6 字节的**注册邀请码**。
 2. **预检**：环境变量完整性、占位值、密钥长度、DNS 解析、编排文件语法；80/443 由宿主机 Nginx 占用属于正常状态。
 3. **构建镜像**并启动 PostgreSQL。
-4. **执行数据库迁移**（当前 `0000` → `0026`，失败则不更新应用容器）。
+4. **执行数据库迁移**（当前 `0000` → `0029`，失败则不更新应用容器）。
 5. **启动 web / worker**，等待 web 进入 `healthy`；宿主机 Nginx 不由 Docker 编排管理。
 6. **灌样例图**（`seed-samples.sh`）：把 `tools/imagegen/out/` 下的入口图与风格对比图按内容哈希写进 `object-data` 卷。**这一步不能省** —— 素材不在镜像里（构建上下文是 `apps/platform`，素材在仓库根的 `tools/imagegen/`），漏掉的表现是首页 Hero、玩法网格、AI 风格选项全部裂图，而 `/api/plugins` 仍返回 200（manifest 里只是路径字符串），健康检查也照样通过。
 7. **健康检查** `https://<域名>/api/health`。
@@ -431,7 +431,7 @@ cp config.local.example.js config.local.js
 
 然后用微信开发者工具导入 `apps/miniprogram/`。**没有 AppID 也能调试**：选「测试号」或游客模式，在开发者工具的「详情 → 本地设置」里勾选「不校验合法域名」，即可访问测试机。小程序内在「我的 → 登录与退出」用账号密码登录（`wx.login` 在没有 AppID/AppSecret 时会失败，代码已做兜底，不会覆盖账号密码会话）。
 
-调试基础库**不要低于 2.9.0**：CSS 变量靠 `page-meta` 注入，低版本不白屏但会退化成 `app.wxss` 的兜底值与 `cute` 外观，四套皮肤看不出差别。
+调试基础库**不要低于 2.19.2**：虚拟支付能力要求该版本；支付入口对低版本显示升级提示，其他页面仍由 `app.wxss` 的兜底值接管并保持可用。
 
 **真机验证前必须先登记 `downloadFile` 域名。** 样例图与成品图都由 `<image src>` 直接取远端字节，走的是 downloadFile 通道而非 request；开发者工具勾了「不校验合法域名」不受影响，真机上没登记就是整片裂图，且**不抛任何错误**。登记入口见 `docs/operations/04-external-prerequisites.md` 的「服务器域名登记」。
 
@@ -567,7 +567,7 @@ cp deploy/.env.production.example deploy/.env.production
 chmod 600 deploy/.env.production
 # 按 04-environment-reference.md 逐项填写；确认：
 #   APP_ENV 不设置（或不是 staging）
-#   OBJECT_STORAGE_PROVIDER=s3 且 OSS_* 全部填写
+#   OBJECT_STORAGE_PROVIDER=cos 且 OSS_* 全部填写
 #   PAYMENT_PROVIDER=wechat 且商户凭据齐全
 #   PASSWORD_AUTH_ENABLED=false（只保留微信登录）
 #   ADMIN_USER_IDS 填正式管理员 UUID
@@ -613,7 +613,7 @@ curl -I http://127.0.0.1:3000/api/health
 curl -fsS https://petbaby.example.com/api/health
 ```
 
-生产还必须补齐（`preflight.sh production` 会逐项拦截）：微信 AppID/AppSecret、商户号、API v3 Key、证书序列号、商户私钥、平台公钥、支付与退款回调、OSS Endpoint/Bucket/Region/AccessKey。发布门禁见 [`../operations/05-release-checklist.md`](../operations/05-release-checklist.md)。
+生产还必须补齐（`preflight.sh production` 会逐项拦截）：微信 AppID/AppSecret、商户号、API v3 Key、证书序列号、商户私钥、平台公钥、支付与退款回调、COS Bucket/Region/AccessKey。发布门禁见 [`../operations/05-release-checklist.md`](../operations/05-release-checklist.md)。
 
 **staging 和 production 的密钥必须各自独立**，不要把测试机的 `SESSION_SECRET`、数据库密码或加密密钥搬到生产。
 
@@ -632,6 +632,6 @@ curl -fsS https://petbaby.example.com/api/health
 | 部署脚本                  | `deploy/scripts/*.sh`                                                                    |
 | 主链路冒烟测试               | `apps/platform/scripts/smoke.ts`                                                         |
 | 应用镜像定义                | `apps/platform/Dockerfile`                                                               |
-| 数据库迁移                 | `apps/platform/drizzle/0000_*.sql` … `0026_pet_human_identities.sql`                    |
+| 数据库迁移                 | `apps/platform/drizzle/0000_*.sql` … `0029_entitlement_delivery_reference.sql`          |
 | 官网产物与发布               | `apps/website/`，发布走 `deploy/scripts/release-website.sh`（见 `docs/website/03-独立官网实现说明.md`） |
 | 本地开发用编排               | 仓库根 `compose.yaml`（**只用于本地，密码是硬编码占位值**）                                                  |

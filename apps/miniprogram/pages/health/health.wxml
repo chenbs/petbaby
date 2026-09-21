@@ -173,6 +173,7 @@
       </view>
 
       <t-button type="ghost" block anim="{{animType}}" loading="{{documentBusy}}" class="block-gap" bindtap="exportDocument">导出健康档案</t-button>
+      <t-button wx:if="{{canBuyDocument}}" type="ai" block anim="{{animType}}" loading="{{documentBusy}}" class="block-gap" bindtap="buyDocument">购买一次导出</t-button>
       <text wx:if="{{documentHint}}" class="hint">{{documentHint}}</text>
     </t-card>
 

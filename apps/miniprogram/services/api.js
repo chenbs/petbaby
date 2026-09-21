@@ -16,7 +16,12 @@ function request(path, options) {
       header: Object.assign({ "content-type": "application/json", "x-petbaby-client": "miniprogram" }, sessionHeader(), settings.header || {}),
       success(response) {
         if (response.statusCode >= 200 && response.statusCode < 300) resolve(response.data.data);
-        else reject(new Error((response.data && response.data.error && response.data.error.message) || "请求失败"));
+        else {
+          const detail = response.data && response.data.error;
+          const error = new Error((detail && detail.message) || "请求失败");
+          error.code = detail && detail.code;
+          reject(error);
+        }
       },
       fail: reject
     });

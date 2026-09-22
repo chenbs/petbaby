@@ -20,6 +20,7 @@ interface Props {
   /** 完整覆盖 <title>，首页用。 */
   titleOverride?: string;
   description: string;
+  keywords?: readonly string[];
   /** og:type，首页 website、文章 article。 */
   ogType?: "website" | "article";
   /** 文章封面等页面级社交图（站内绝对路径或完整 URL）。 */
@@ -34,6 +35,7 @@ const {
   title,
   titleOverride,
   description,
+  keywords = [],
   ogType = "website",
   image,
   jsonLd = [],
@@ -58,6 +60,7 @@ const socialImageUrl = socialImage ? new URL(socialImage, SITE_URL).href : null;
 
 <title>{pageTitle}</title>
 <meta name="description" content={description} />
+{!noindex && keywords.length > 0 && <meta name="keywords" content={keywords.join(",")} />}
 {canonical && <link rel="canonical" href={canonical} />}
 {noindex && <meta name="robots" content="noindex, follow" />}
 

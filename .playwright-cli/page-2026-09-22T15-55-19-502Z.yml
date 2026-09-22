@@ -1,0 +1,206 @@
+- generic [active] [ref=f1e1]:
+  - banner [ref=f1e2]:
+    - generic [ref=f1e3]:
+      - link "麻麻抱我" [ref=f1e4] [cursor=pointer]:
+        - /url: /#home
+      - button "菜单" [ref=f1e8] [cursor=pointer]
+  - generic [ref=f1e13]:
+    - generic [ref=f1e14]:
+      - heading "把我留在 珍贵的爱里" [level=1] [ref=f1e15]:
+        - generic [ref=f1e16]: 把我留在
+        - generic [ref=f1e18]: 珍贵的爱里
+      - paragraph [ref=f1e20]: 我不是只有今天在陪你 那些一起度过的平常一天，也值得被好好记住 打开小程序，把我最爱你的样子留下来陪你
+    - generic [ref=f1e21]:
+      - generic [ref=f1e22]:
+        - link "微信扫码" [ref=f1e23] [cursor=pointer]:
+          - /url: "#contact"
+        - generic "扫码打开小程序" [ref=f1e26]:
+          - img "小程序码占位" [ref=f1e27]:
+            - generic [ref=f1e28]: 微信小程序即将上线
+      - generic [ref=f1e34]:
+        - generic [ref=f1e35]: 把最可爱的我留下
+        - generic [ref=f1e36]: 档案 · AI 创作 · 视频 · 纪念
+  - generic [ref=f1e38]:
+    - generic [ref=f1e39]:
+      - paragraph [ref=f1e40]: 小程序功能
+      - heading "从记录我， 到把我变成作品" [level=2] [ref=f1e41]: 从记录我，到把我变成作品
+      - paragraph [ref=f1e42]: 麻麻抱我是宠物照片创作与陪伴记录微信小程序。从一张照片开始，制作图文、AI 肖像与短片，记录成长，珍藏陪伴。
+    - generic [ref=f1e43]:
+      - img "可爱猫咪从彩色宠物档案卡窗口探出头" [ref=f1e46]
+      - generic [ref=f1e47]:
+        - paragraph [ref=f1e48]: 01 · 记录宠物
+        - heading "给我建档， 收好日常" [level=3] [ref=f1e49]:
+          - generic [ref=f1e50]: 给我建档，
+          - generic [ref=f1e51]: 收好日常
+        - paragraph [ref=f1e52]: 为我建档、整理照片，记录相伴的每一天。家里有多只宠物，也能各自记录、随时切换。
+        - generic [ref=f1e53]: 档案 · 照片库 · 陪伴记录
+    - generic [ref=f1e54]:
+      - article [ref=f1e55]:
+        - img "戴着披风的柯基骑着彩色玩具火箭飞过云朵" [ref=f1e58]
+        - generic [ref=f1e59]:
+          - paragraph [ref=f1e60]: 02 · 图文作品
+          - heading "做身份证、 海报和画册" [level=3] [ref=f1e61]:
+            - generic [ref=f1e62]: 做身份证、
+            - generic [ref=f1e63]: 海报和画册
+          - paragraph [ref=f1e64]: 选玩法、放入我的照片，做成专属身份证、海报或画册，保存下来，也能分享给朋友。
+          - generic [ref=f1e65]: 身份证 · 海报 · 画册
+      - article [ref=f1e66]:
+        - img "戴花朵太阳镜、穿蓝色造型服的黑白猫咪" [ref=f1e69]
+        - generic [ref=f1e70]:
+          - paragraph [ref=f1e71]: 03 · AI 创意工坊
+          - heading "挑个新造型， 让我当主角" [level=3] [ref=f1e72]:
+            - generic [ref=f1e73]: 挑个新造型，
+            - generic [ref=f1e74]: 让我当主角
+          - paragraph [ref=f1e75]: 选好模板，上传我的照片，生成四张 AI 创意图片。挑一张喜欢的，保存或分享。
+          - generic [ref=f1e76]: AI 图片 · 四选一 · 保存分享
+      - article [ref=f1e77]:
+        - generic [ref=f1e78]:
+          - img "受贵宾犬气质启发的自然人类角色肖像" [ref=f1e80]
+          - generic [ref=f1e81]: 新玩法
+        - generic [ref=f1e82]:
+          - paragraph [ref=f1e83]: 04 · 如果我是人
+          - heading "看看我 变成人的模样" [level=3] [ref=f1e84]:
+            - generic [ref=f1e85]: 看看我
+            - generic [ref=f1e86]: 变成人的模样
+          - paragraph [ref=f1e87]: 上传我的照片，让 AI 根据毛色、神态和气质生成人物形象。两张候选，选出最像我的那张。
+          - generic [ref=f1e88]: 宠物人化 · 两张候选 · 先看再选
+      - article [ref=f1e89]:
+        - img "金毛犬在彩色阳光房间里向镜头跑来" [ref=f1e92]
+        - generic [ref=f1e93]:
+          - paragraph [ref=f1e94]: 05 · 互动与短片
+          - heading "做互动场景， 做陪伴短片" [level=3] [ref=f1e95]:
+            - generic [ref=f1e96]: 做互动场景，
+            - generic [ref=f1e97]: 做陪伴短片
+          - paragraph [ref=f1e98]: 用我的照片做互动场景，轻点收集星尘；或配上字幕和音乐，做成 10、20 或 30 秒短片。
+          - generic [ref=f1e99]: 互动页面 · 短片 · 分享
+      - article [ref=f1e100]:
+        - img "同一只猫咪在四季场景中记录成长" [ref=f1e103]
+        - generic [ref=f1e104]:
+          - paragraph [ref=f1e105]: 06 · 成长记录
+          - heading "按时间， 翻看我的成长" [level=3] [ref=f1e106]:
+            - generic [ref=f1e107]: 按时间，
+            - generic [ref=f1e108]: 翻看我的成长
+          - paragraph [ref=f1e109]: 按年份翻看照片与成长里程碑，也能从时间线发起年度短片，留住这一年的陪伴。
+          - generic [ref=f1e110]: 时间线 · 里程碑 · 年度短片
+      - article [ref=f1e111]:
+        - img "猫咪站在彩色体重秤旁的宠物健康记录场景" [ref=f1e114]
+        - generic [ref=f1e115]:
+          - paragraph [ref=f1e116]: 07 · 健康助手
+          - heading "记体重， 提醒疫苗和驱虫" [level=3] [ref=f1e117]:
+            - generic [ref=f1e118]: 记体重，
+            - generic [ref=f1e119]: 提醒疫苗和驱虫
+          - paragraph [ref=f1e120]: 记录我的症状和体重，接收疫苗、驱虫提醒，导出健康档案。仅作辅助记录与分流，不替代兽医诊断。
+          - generic [ref=f1e121]: 症状分流 · 体重 · 健康档案
+      - article [ref=f1e122]:
+        - img "彩色宠物画册和相片组成的会员与实体纪念品场景" [ref=f1e125]
+        - generic [ref=f1e126]:
+          - paragraph [ref=f1e127]: 08 · 会员与实体
+          - heading "享会员权益， 定制纪念品" [level=3] [ref=f1e128]:
+            - generic [ref=f1e129]: 享会员权益，
+            - generic [ref=f1e130]: 定制纪念品
+          - paragraph [ref=f1e131]: 使用会员权益，生成年度报告、解锁高清作品，也能把喜欢的作品做成实体纪念品。
+          - generic [ref=f1e132]: 会员 · 年度报告 · 实体纪念品
+      - article [ref=f1e133]:
+        - img "明亮的彩色影棚里，奶油色小狗抱着星星软枕，温柔地望向镜头" [ref=f1e136]
+        - generic [ref=f1e137]:
+          - paragraph [ref=f1e138]: 09 · 纪念空间
+          - heading "建一个纪念空间， 珍藏我们的故事" [level=3] [ref=f1e139]:
+            - generic [ref=f1e140]: 建一个纪念空间，
+            - generic [ref=f1e141]: 珍藏我们的故事
+          - paragraph [ref=f1e142]: 收好照片、写下故事，做成纪念册、纪念视频或星尘页。想我的时候，就回来看看。
+          - generic [ref=f1e143]: 纪念册 · 纪念视频 · 星尘页
+  - generic [ref=f1e145]:
+    - generic [ref=f1e146]:
+      - paragraph [ref=f1e147]: 怎么用
+      - heading "三步，就有一张成品" [level=2] [ref=f1e148]
+    - generic [ref=f1e149]:
+      - generic [ref=f1e150]:
+        - generic [ref=f1e151]: "01"
+        - heading "先把我记下来" [level=3] [ref=f1e152]
+        - paragraph [ref=f1e153]: 建档、上传照片，陪伴天数、照片和成长节点都有自己的位置。
+      - generic [ref=f1e154]:
+        - generic [ref=f1e155]: "02"
+        - heading "挑一个想试的玩法" [level=3] [ref=f1e156]
+        - paragraph [ref=f1e157]: 图文、AI、如果我是人、互动、短片和纪念空间，都从手机里的照片开始。
+      - generic [ref=f1e158]:
+        - generic [ref=f1e159]: "03"
+        - heading "选中喜欢的那一张" [level=3] [ref=f1e160]
+        - paragraph [ref=f1e161]: 查看候选和生成进度，完成后保存、分享，或继续做下一件作品。
+  - generic [ref=f1e165]:
+    - generic [ref=f1e166]:
+      - paragraph [ref=f1e167]: 开始使用
+      - heading "现在就给我拍一张" [level=2] [ref=f1e168]
+      - paragraph [ref=f1e169]: 小程序正在准备上线，先看看这里的作品和创作指南。
+      - paragraph [ref=f1e170]: 图文创作、AI 肖像与陪伴短片，具体开放服务及费用以小程序内展示为准。
+    - generic [ref=f1e171]:
+      - img "小程序码占位" [ref=f1e172]:
+        - generic [ref=f1e173]: 微信小程序即将上线
+      - paragraph [ref=f1e174]: 上线后开放扫码入口
+  - contentinfo [ref=f1e175]:
+    - generic [ref=f1e176]:
+      - generic [ref=f1e177]:
+        - link "麻麻抱我" [ref=f1e178] [cursor=pointer]:
+          - /url: /#home
+        - paragraph [ref=f1e180]: 把每一张宠物照片，变成值得留住的作品。图文、AI 肖像、视频与纪念，都在一个小程序里。
+      - navigation [ref=f1e181]:
+        - heading "玩法" [level=2] [ref=f1e182]
+        - list [ref=f1e183]:
+          - listitem [ref=f1e184]:
+            - link "宠物身份证" [ref=f1e185] [cursor=pointer]:
+              - /url: /#plays
+          - listitem [ref=f1e186]:
+            - link "宠物电影海报" [ref=f1e187] [cursor=pointer]:
+              - /url: /#plays
+          - listitem [ref=f1e188]:
+            - link "宠物时光画册" [ref=f1e189] [cursor=pointer]:
+              - /url: /#plays
+          - listitem [ref=f1e190]:
+            - link "AI 宠物肖像" [ref=f1e191] [cursor=pointer]:
+              - /url: /#portrait
+          - listitem [ref=f1e192]:
+            - link "宠物记忆短片" [ref=f1e193] [cursor=pointer]:
+              - /url: /#services
+      - navigation [ref=f1e194]:
+        - heading "纪念" [level=2] [ref=f1e195]
+        - list [ref=f1e196]:
+          - listitem [ref=f1e197]:
+            - link "纪念册" [ref=f1e198] [cursor=pointer]:
+              - /url: /#memorial
+          - listitem [ref=f1e199]:
+            - link "纪念视频" [ref=f1e200] [cursor=pointer]:
+              - /url: /#memorial
+          - listitem [ref=f1e201]:
+            - link "星尘纪念页" [ref=f1e202] [cursor=pointer]:
+              - /url: /#memorial
+          - listitem [ref=f1e203]:
+            - link "成长对比图" [ref=f1e204] [cursor=pointer]:
+              - /url: /#memorial
+      - navigation [ref=f1e205]:
+        - heading "关于" [level=2] [ref=f1e206]
+        - list [ref=f1e207]:
+          - listitem [ref=f1e208]:
+            - link "产品介绍" [ref=f1e209] [cursor=pointer]:
+              - /url: /#home
+          - listitem [ref=f1e210]:
+            - link "作品展示" [ref=f1e211] [cursor=pointer]:
+              - /url: /#works
+          - listitem [ref=f1e212]:
+            - link "文章" [ref=f1e213] [cursor=pointer]:
+              - /url: /blog/
+          - listitem [ref=f1e214]:
+            - link "联系我们" [ref=f1e215] [cursor=pointer]:
+              - /url: /#contact
+          - listitem [ref=f1e216]:
+            - link "用户协议" [ref=f1e217] [cursor=pointer]:
+              - /url: /legal/terms/
+          - listitem [ref=f1e218]:
+            - link "隐私政策" [ref=f1e219] [cursor=pointer]:
+              - /url: /legal/privacy/
+    - generic [ref=f1e220]:
+      - paragraph [ref=f1e221]: © 2026 麻麻抱我
+      - generic [ref=f1e222]:
+        - link "隐私" [ref=f1e223] [cursor=pointer]:
+          - /url: /legal/privacy/
+        - link "条款" [ref=f1e224] [cursor=pointer]:
+          - /url: /legal/terms/
+        - generic [ref=f1e225]: 备案办理中

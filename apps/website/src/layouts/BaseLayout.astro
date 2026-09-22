@@ -27,6 +27,7 @@ interface Props {
   title?: string;
   titleOverride?: string;
   description: string;
+  keywords?: readonly string[];
   ogType?: "website" | "article";
   image?: string;
   jsonLd?: Array<Record<string, unknown>>;
@@ -43,6 +44,7 @@ const {
   title,
   titleOverride,
   description,
+  keywords,
   ogType,
   image,
   jsonLd = [],
@@ -81,6 +83,7 @@ const organization = {
   title={title}
   titleOverride={titleOverride}
   description={description}
+  keywords={keywords}
   ogType={ogType}
   image={image}
   jsonLd={[organization, ...jsonLd]}

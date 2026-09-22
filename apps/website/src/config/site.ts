@@ -2,10 +2,21 @@ export const BRAND_NAME = "麻麻抱我";
 
 export const SITE_URL = (import.meta.env.SITE_URL || "https://www.babykitty.cn").replace(/\/+$/, "");
 
-export const SITE_TAGLINE = "把日常，抱进回忆里。";
+export const SITE_TAGLINE = "宠物AI照片创作、宠物人化与陪伴记录小程序";
 
 export const SITE_DESCRIPTION =
-  "在麻麻抱我，整理宠物照片，制作图文作品、AI 创意肖像与陪伴短片，记录成长，也温柔地珍藏回忆。具体可用服务以微信小程序内展示为准。";
+  "麻麻抱我是宠物照片创作与陪伴记录微信小程序，支持宠物身份证、海报、画册、AI宠物肖像和「如果我是人」宠物人化，还可制作互动短片、记录成长、创建纪念空间。从一张照片开始，保存和分享专属作品。具体开放功能与费用以小程序内展示为准。";
+
+export const SITE_KEYWORDS = [
+  BRAND_NAME,
+  "宠物照片创作",
+  "AI宠物肖像",
+  "宠物人化",
+  "如果我是人",
+  "宠物身份证",
+  "宠物成长记录",
+  "宠物纪念空间",
+] as const;
 
 export const NAV_ITEMS: ReadonlyArray<{ label: string; href: string }> = [
   { label: "首页", href: "/#home" },

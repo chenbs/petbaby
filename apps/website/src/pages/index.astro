@@ -4,10 +4,10 @@ import Hero from "../components/home/Hero.astro";
 import FeatureGallery from "../components/home/FeatureGallery.astro";
 import Steps from "../components/home/Steps.astro";
 import Cta from "../components/home/Cta.astro";
-import { BRAND_NAME, SITE_DESCRIPTION, SITE_TAGLINE, SITE_URL } from "../config/site";
+import { BRAND_NAME, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_TAGLINE, SITE_URL } from "../config/site";
 
 /* 首页 <title> 单独写，不走「页面标题 · 品牌名」的格式（方案 7.1）*/
-const titleOverride = `${BRAND_NAME} · ${SITE_TAGLINE}`;
+const titleOverride = `${BRAND_NAME}官网｜${SITE_TAGLINE}`;
 
 const website = {
   "@context": "https://schema.org",
@@ -22,6 +22,7 @@ const website = {
 <BaseLayout
   titleOverride={titleOverride}
   description={SITE_DESCRIPTION}
+  keywords={SITE_KEYWORDS}
   ogType="website"
   topbar="hero"
   preloadHeroPoster

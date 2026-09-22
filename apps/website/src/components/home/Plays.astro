@@ -1,26 +1,71 @@
 ---
+/*
+ * 3. 玩法区：3 卡网格，标题左说明右。
+ *
+ * play-grid：640 两列 → 1024 三列（原站 sm:2 lg:3，比其他三处多一档两列态）。
+ * 徽标写玩法类别，不写 PL-01 这类内部编号 —— 访客不认（偏离 ④）。
+ */
 import ResponsiveImage from "../ResponsiveImage.astro";
-const plays = [
-  { image: "play-id-card", title: "给我的可爱，一个名字。", name: "宠物身份证", body: "名字、生日和小小个性，装进一张属于我的专属名片。", alt: "粉蓝背景上的橘白猫宠物身份证艺术示例" },
-  { image: "play-poster", title: "这一次，我是主角。", name: "宠物电影海报", body: "一张随手拍，也能变成值得贴在墙上的主角海报。", alt: "珊瑚色场景中的宠物电影海报艺术示例" },
-  { image: "play-album", title: "把我们的日子，慢慢翻。", name: "宠物时光画册", body: "把散落的照片排成一册，让普通的小事也有自己的页码。", alt: "明亮自然光下摊开的宠物时光画册艺术示例" },
+
+const PLAYS = [
+  {
+    image: "/assets/play-id-card.jpg",
+    alt: "宠物身份证成品：一张平摊在桌面的证件卡",
+    badge: "图文创作",
+    title: "宠物身份证",
+    body: "姓名、生日、品种与陪伴天数排成一张证件卡，可存图也可印出来。",
+    meta: "正脸照 1 张 · 图文排版",
+  },
+  {
+    image: "/assets/play-poster.jpg",
+    alt: "宠物电影海报成品：贴在墙上的竖版纸质海报",
+    badge: "图文创作",
+    title: "宠物电影海报",
+    body: "把一张抓拍排成主视觉海报，片名、短评与质感一并给到。",
+    meta: "日常照 1–3 张 · 图文排版",
+  },
+  {
+    image: "/assets/play-album.jpg",
+    alt: "宠物时光画册成品：摊开在木桌上的相册跨页",
+    badge: "图文创作",
+    title: "宠物时光画册",
+    body: "从相册里挑几张，装订成手机长图与可打印的纪念 PDF。",
+    meta: "照片 6–20 张 · 支持 PDF",
+  },
 ];
 ---
-<section class="ed-section" id="plays">
-  <div class="ed-container">
-    <div class="ed-section-head">
-      <div><p class="ed-kicker">01 / EVERYDAY, EXTRAORDINARY</p><h2>平常的我，<br />也可以很不平常。</h2></div>
-      <p class="ed-section-note">不必等一个特别的日子。<br />打哈欠、发呆、望向你的瞬间，<br />都值得拥有一张好看的作品。</p>
+
+<section class="section" id="plays">
+  <div class="container">
+    <div class="section-head split reveal">
+      <div>
+        <p class="eyebrow">核心玩法</p>
+        <h2 class="h2">为宠物而做<br />也为记得的人</h2>
+      </div>
+      <p class="section-note">
+        每种玩法都是一套完整的排版与配色，不是滤镜。选一个，上传照片，其余交给它。
+      </p>
     </div>
-    <div class="ed-play-grid">
-      {plays.map((play, index) => <article class="ed-play">
-        <a class="ed-image-link" href="#contact" aria-label={play.name + "，前往创作入口"}>
-          <ResponsiveImage src={`/assets/${play.image}.jpg`} alt={play.alt} width={1600} height={1200} sizes="(max-width: 767px) 90vw, 36vw" />
-          <span class="ed-image-arrow" aria-hidden="true">↗</span>
-        </a>
-        <div class="ed-card-label"><span>{play.name}</span><span>0{index + 1}</span></div>
-        <h3>{play.title}</h3><p>{play.body}</p>
-      </article>)}
+
+    <div class="grid-3 play-grid">
+      {
+        PLAYS.map((play, index) => (
+          <article class="play-card reveal" data-delay={index > 0 ? String(index) : null}>
+            <div class="play-media">
+              <ResponsiveImage src={play.image} alt={play.alt} width={1600} height={1200} />
+              <span class="badge">{play.badge}</span>
+            </div>
+            <div class="play-body">
+              <h3 class="h3">{play.title}</h3>
+              <p class="body-text">{play.body}</p>
+              <p class="play-meta">{play.meta}</p>
+              <a class="link-arrow" href="#contact">去创作
+                <svg class="arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
+              </a>
+            </div>
+          </article>
+        ))
+      }
     </div>
   </div>
 </section>

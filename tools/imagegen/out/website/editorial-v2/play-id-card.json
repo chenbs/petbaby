@@ -1,8 +1,0 @@
-{
-  "provider": "lingsuan",
-  "model": "gpt-image-2",
-  "generatedAt": "2026-09-21T15:10:41.731Z",
-  "prompt": "Use case: ads-marketing. Create an exceptionally beautiful image for a contemporary premium pet photography and memories website. Art direction: playful fashion editorial, exquisite detail, clean sculptural composition, luminous soft daylight, rich but restrained pastel colours, tactile materials, delightful personality. Prioritise aesthetic impact over literal app-output realism. The pet must look alive, sweet and naturally expressive, with believable anatomy and finely resolved fur. No human body, no human hands, no extra limbs, no stock-photo props clutter, no sepia filter, no brown vintage room, no app interface, no watermark, no logos. No lettering unless explicitly specified. Full bleed, no outer border. A beautifully art-directed premium pet identity-card mockup, landscape photograph. A single thick ivory identity card resting at a slight diagonal on a vibrant but soft coral-pink surface, with a cropped sky-blue paper corner and elegant shadow. The card prominently features a lovely orange-and-white cat passport portrait, a tiny paw symbol, minimal impeccably aligned burgundy editorial typography. Only the English words PET ID and MILO and a small 01. Luxurious embossed paper, restrained modern Swiss design, close composition with card filling most of frame. Intended final composition 1600:1200; keep face, ears and important artwork comfortably within the central safe area for a small crop.",
-  "reference": null,
-  "sha256": "5097a3536541e7a2940338f92962ed790c800921e947872a3bdc0aef1d2a6630"
-}

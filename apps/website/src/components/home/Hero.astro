@@ -1,34 +1,76 @@
 ---
+/*
+ * 1. HERO：满屏视频 + 大标题 + CTA + 社群证明（规格 2 章）。
+ *
+ * 顶栏不在这里 —— 它由 BaseLayout 渲染（原型里它也在 hero 之外，只是靠
+ * position:absolute 浮在 hero 内）。
+ *
+ * 主标语按词切分成两行、每行 2 词。词数变化不用改 CSS：site.js 按下标算
+ * stagger delay（0.8 + i*0.18s）。
+ */
 import ResponsiveImage from "../ResponsiveImage.astro";
+
+const HEADLINE: string[][] = [
+  ["把日常", "抱进"],
+  ["每一段", "回忆里"],
+];
 ---
-<section class="hero editorial-hero" id="home">
-  <div class="ed-container ed-hero-grid">
-    <div class="ed-hero-copy">
-      <p class="ed-kicker"><span class="ed-dot"></span> 麻麻抱我 · 一份来自我的小小心愿</p>
-      <h1>把我留在<br />每一段<span class="ed-title-accent">回忆</span>里<span class="ed-period">。</span></h1>
-      <p class="ed-hero-promise">让我的陪伴，不止今天。</p>
-      <p class="ed-hero-description">我陪你度过的平常一天，也值得被好好记住。<br class="ed-desktop-break" />从手机里的照片开始，打开小程序，<br class="ed-desktop-break" />把我最可爱的样子留下。</p>
-      <div class="ed-hero-actions">
-        <a class="ed-button" href="#contact">留下我的可爱 <span aria-hidden="true">↗</span></a>
-        <a class="ed-text-link" href="#works">先逛逛作品集 <span aria-hidden="true">↓</span></a>
-      </div>
-      <div class="ed-hero-signature">
-        <div class="ed-avatars">
-          <ResponsiveImage src="/assets/hero-shiba.jpg" alt="" width={1200} height={1200} sizes="40px" loading="eager" />
-          <ResponsiveImage src="/assets/hero-devon.jpg" alt="" width={1200} height={1200} sizes="40px" loading="eager" />
-          <ResponsiveImage src="/assets/hero-shepherd.jpg" alt="" width={1200} height={1200} sizes="40px" loading="eager" />
+
+<section class="hero" id="home">
+  {/*
+    视频：autoplay muted playsInline aria-hidden，初始 loop=false。
+    5 秒截断循环由 site.js 接管（规格 2.2）；poster 避免加载完成前黑屏。
+
+    preload 用 metadata 而非规格 8.1 的 auto：3.5MB 视频在 auto 下会与首屏图片
+    抢带宽，而 poster（103KB）已经能撑住首屏观感，视频边下边播即可。
+  */}
+  <video
+    class="hero-video"
+    data-hero-video
+    src="/assets/bg.mp4"
+    poster="/assets/bg-poster.jpg"
+    autoplay muted playsinline preload="metadata" aria-hidden="true"></video>
+
+  {/* 压暗遮罩：椭圆中心偏左 30%，正落在标题区（规格 2.3）*/}
+  <div class="hero-veil" aria-hidden="true"></div>
+
+  {/*
+    自定义光标（规格 2.7）。DOM 由 site.js 在满足条件时才插入 —— 只在桌面端
+    （有精确指针 + 视口 ≥1024px）且首屏在视野内启用，触屏与 reduced-motion 完全不建。
+  */}
+  <div class="hero-cursor-mount" data-cursor-mount aria-hidden="true"></div>
+
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <h1 class="hero-title" data-hero-title>
+        {HEADLINE.map((line) => (
+          <span class="hero-line">{line.map((word) => <span class="word">{word}</span>)}</span>
+        ))}
+      </h1>
+      <p class="hero-sub" data-hero-sub>
+        它陪你度过的平常一天，也值得被好好记住。
+        从手机里的照片开始，做一张作品，留一段只属于你们的回忆。
+      </p>
+    </div>
+
+    {/* 底部条：左主 CTA，右重叠头像 + 数字 + 说明（规格 2.6）*/}
+    <div class="hero-bar" data-hero-bar>
+      {/* 白底黑字：规格 4 章的主按钮原始口径，压在深色视频上对比度最高 */}
+      <a class="btn btn-on-dark btn-lg" href="#contact">
+        开始创作
+        <svg class="arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
+      </a>
+      <div class="hero-proof">
+        <div class="avatars">
+          <ResponsiveImage src="/assets/hero-shiba.jpg" alt="" width={1200} height={1200} sizes="48px" loading="eager" />
+          <ResponsiveImage src="/assets/hero-shepherd.jpg" alt="" width={1200} height={1200} sizes="48px" loading="eager" />
+          <ResponsiveImage src="/assets/hero-devon.jpg" alt="" width={1200} height={1200} sizes="48px" loading="eager" />
         </div>
-        <span>每一种可爱，都有自己的主角时刻。</span>
+        <div class="proof-text">
+          <span class="proof-num">每一刻都值得</span>
+          <span class="proof-label">图文 · AI 创作 · 视频 · 纪念</span>
+        </div>
       </div>
     </div>
-    <figure class="ed-hero-art">
-      <div class="ed-hero-photo">
-        <ResponsiveImage src="/assets/hero-editorial.jpg" alt="粉蓝光影里，一只蓝眼睛布偶猫趴在奶油黄色台座上看向你" width={1440} height={1800} sizes="(max-width: 767px) 90vw, 46vw" loading="eager" fetchpriority="high" />
-        <span class="ed-photo-label">THE LITTLE MUSE / 001</span>
-      </div>
-      <div class="ed-love-note"><span aria-hidden="true">✳</span><p>今天的我，<br />也要好好收藏。</p></div>
-      <figcaption><span>把平常一天，变成珍藏。</span><span>AI 创意示例</span></figcaption>
-    </figure>
   </div>
-  <div class="ed-container ed-hero-footer"><span>A LITTLE LOVE, KEPT FOREVER.</span><a href="#plays">往下看看我的可能 <span aria-hidden="true">↓</span></a></div>
 </section>

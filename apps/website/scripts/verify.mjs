@@ -130,7 +130,7 @@ group("小程序码三触点（方案第 6 章 / 第 13 章第 2 步）");
    */
   await page.goto(`${BASE}/`, { waitUntil: "load" });
   const order = [];
-  for (let i = 0; i < 7; i += 1) {
+  for (let i = 0; i < 4; i += 1) {
     await page.keyboard.press("Tab");
     order.push(await page.evaluate(() => document.activeElement.className || document.activeElement.tagName));
   }

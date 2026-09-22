@@ -37,7 +37,6 @@ interface Props {
   preloadHeroPoster?: boolean;
   /** 右下角小程序码悬浮按钮的显隐规则（方案 6.4）在首页要观察 hero 与 CTA 区。 */
   fabObservesHero?: boolean;
-  editorial?: boolean;
 }
 
 const {
@@ -51,7 +50,6 @@ const {
   topbar = "solid",
   preloadHeroPoster = false,
   fabObservesHero = false,
-  editorial = false,
 } = Astro.props;
 
 const organization = {
@@ -89,7 +87,7 @@ const organization = {
   noindex={noindex}
 />
 </head>
-<body class:list={[{ "editorial-home": editorial }]}>
+<body>
 
 <Topbar variant={topbar} />
 

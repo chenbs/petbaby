@@ -1,8 +1,0 @@
-{
-  "provider": "lingsuan",
-  "model": "gpt-image-2",
-  "generatedAt": "2026-09-21T15:11:14.201Z",
-  "prompt": "Use case: ads-marketing. Create an exceptionally beautiful image for a contemporary premium pet photography and memories website. Art direction: playful fashion editorial, exquisite detail, clean sculptural composition, luminous soft daylight, rich but restrained pastel colours, tactile materials, delightful personality. Prioritise aesthetic impact over literal app-output realism. The pet must look alive, sweet and naturally expressive, with believable anatomy and finely resolved fur. No human body, no human hands, no extra limbs, no stock-photo props clutter, no sepia filter, no brown vintage room, no app interface, no watermark, no logos. No lettering unless explicitly specified. Full bleed, no outer border. An extraordinary contemporary pet cinema-poster mockup, landscape photograph. A large vertical indigo-blue movie poster leaning against a pale lavender wall, filling frame. On the poster a golden retriever in a bright red scarf with wind in its fur, majestic low-angle portrait against a cinematic violet twilight sky and one tiny glowing star. Only large bold ivory typography LITTLE STAR. Sophisticated editorial layout, minimal silver metal clip, beautiful cool colour blocking and raking light. No room decoration. Intended final composition 1600:1200; keep face, ears and important artwork comfortably within the central safe area for a small crop.",
-  "reference": null,
-  "sha256": "c5e36a6fa748e6eda36743bc06c3719a2b0e3139138bbf9a4a09c250b603177c"
-}

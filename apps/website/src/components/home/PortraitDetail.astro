@@ -1,19 +1,41 @@
 ---
-import ResponsiveImage from "../ResponsiveImage.astro";
+/*
+ * 5. 服务详情 A：AI 肖像，图在左。
+ * 与第 6 区块的图文左右互换必须保留（规格 1 章：避免连续分栏呆板的关键）。
+ */
+const STYLES = [
+  { name: "先看效果", desc: "：从已上线的模板货架选择喜欢的画面" },
+  { name: "保留特征", desc: "：清晰、无遮挡的宠物照片更适合创作" },
+  { name: "挑选候选", desc: "：候选数量与可重试次数以所选玩法为准" },
+  { name: "安心分享", desc: "：AI 作品带有生成标识，分享前由你确认" },
+];
 ---
-<section class="ed-section ed-portrait" id="portrait">
-  <div class="ed-container ed-feature">
-    <figure class="ed-feature-image">
-      <ResponsiveImage src="/assets/detail-portrait.jpg" alt="柔和蓝色墙面上，装裱的宠物艺术肖像" width={1600} height={1200} sizes="(max-width: 767px) 90vw, 52vw" />
-      <figcaption>PORTRAIT OF A LITTLE SOUL / AI 艺术肖像</figcaption>
-    </figure>
-    <div class="ed-feature-copy">
-      <p class="ed-kicker">02 / MY OTHER LITTLE WORLDS</p>
-      <h2>换一个世界，<br />还是你爱的我。</h2>
-      <p>是画里的小小缪斯，是封面上的闪耀主角，<br class="ed-desktop-break" />也可以是梦里跑出来的奇妙伙伴。</p>
-      <p>选一幅心动的画面，上传我的照片。<br />让熟悉的小表情，遇见新的想象。</p>
-      <a class="ed-button ed-button-light" href="#works">替我选一个新模样 <span aria-hidden="true">↗</span></a>
-      <p class="ed-fineprint">以下为 AI 创意示例。实际模板与生成效果以小程序内展示为准。</p>
+
+<section class="section" id="portrait">
+  <div class="container split-media">
+    {/* order 反转在 CSS 里：md 以上图在左，移动端图在上 */}
+    <div class="media-frame reveal media-first">
+      <img src="/assets/detail-portrait.jpg" alt="AI 宠物肖像成品：装裱挂在墙上的绘画肖像" width="1600" height="1200" loading="lazy" decoding="async" />
+      <span class="badge badge-float">AI 肖像</span>
+    </div>
+    <div class="reveal" data-delay="1">
+      <p class="eyebrow">AI 宠物肖像</p>
+      <h2 class="h2 h2-mid">选一幅喜欢的画面<br />让它成为主角</h2>
+      <p class="body-text lead">
+        从效果示例中选择模板，再上传宠物照片。生成结果可能存在差异，
+        你可以先查看候选，再决定保存哪一张。无需编写提示词。
+      </p>
+      <ul class="feature-list">
+        {
+          STYLES.map((style) => (
+            <li><span class="dot" aria-hidden="true"></span><strong>{style.name}</strong>{style.desc}</li>
+          ))
+        }
+      </ul>
+      <a class="btn btn-primary" href="#works">
+        看看创意风格示例
+        <svg class="arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
+      </a>
     </div>
   </div>
 </section>

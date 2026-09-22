@@ -6,14 +6,13 @@ interface Props {
   height: number;
   sizes?: string;
   loading?: "eager" | "lazy";
-  fetchpriority?: "high" | "low" | "auto";
 }
 
-const { src, alt, width, height, sizes = "(max-width: 639px) 90vw, (max-width: 1023px) 44vw, 30vw", loading = "lazy", fetchpriority = "auto" } = Astro.props;
-const srcset = [160, 320, 640, 960, 1440].filter((size) => size <= width).map((size) => `${src.replace(/\.jpg$/, `-${size}.webp`)} ${size}w`).join(", ");
+const { src, alt, width, height, sizes = "(max-width: 639px) 90vw, (max-width: 1023px) 44vw, 30vw", loading = "lazy" } = Astro.props;
+const srcset = [160, 320, 640, 960].filter((size) => size <= width).map((size) => `${src.replace(/\.jpg$/, `-${size}.webp`)} ${size}w`).join(", ");
 ---
 
 <picture>
-  <source type="image/webp" srcset={srcset} sizes={sizes} />
-  <img src={src} alt={alt} width={width} height={height} loading={loading} fetchpriority={fetchpriority} decoding="async" />
+  <source media="(max-width: 1279px)" type="image/webp" srcset={srcset} sizes={sizes} />
+  <img src={src} alt={alt} width={width} height={height} loading={loading} decoding="async" />
 </picture>

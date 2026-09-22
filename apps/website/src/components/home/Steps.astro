@@ -1,13 +1,28 @@
 ---
-const steps = [
-  { number: "01", title: "认识一下我", body: "打开小程序，记下我的名字，建一个属于我们的小档案。" },
-  { number: "02", title: "挑一张你喜欢的我", body: "清晰、光线自然的日常照就很好，记得露出我的小脸。" },
-  { number: "03", title: "把可爱好好留下", body: "选一个喜欢的玩法，预览作品，再决定保存或分享。" },
+/* 7. 流程区：01/02/03 三栏，顶线分隔，无卡片。 */
+const STEPS = [
+  { num: "01", title: "建一个宠物档案", body: "名字、生日、品种。陪伴天数会自己往上走，纪念空间除外。" },
+  { num: "02", title: "上传日常照片", body: "手机随手拍就够。光线正常、脸别挡住，剩下的交给生成。" },
+  { num: "03", title: "挑一个玩法出片", body: "查看生成进度，完成后预览、保存或分享；制作时间因玩法和排队情况而异。" },
 ];
 ---
-<section class="ed-section ed-how" id="how">
-  <div class="ed-container">
-    <div class="ed-section-head"><div><p class="ed-kicker">A PHOTO IS ALL IT TAKES</p><h2>从你的相册，<br />到我们的珍藏。</h2></div><a class="ed-text-link" href="#contact">开始我们的第一张 <span aria-hidden="true">↗</span></a></div>
-    <ol class="ed-steps">{steps.map((step) => <li><span>{step.number}</span><h3>{step.title}</h3><p>{step.body}</p></li>)}</ol>
+
+<section class="section" id="how">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">怎么用</p>
+      <h2 class="h2 h2-sm">三步，就有一张成品</h2>
+    </div>
+    <div class="grid-3 steps">
+      {
+        STEPS.map((step, index) => (
+          <div class="step reveal" data-delay={index > 0 ? String(index) : null}>
+            <span class="step-num">{step.num}</span>
+            <h3 class="h3">{step.title}</h3>
+            <p class="body-text">{step.body}</p>
+          </div>
+        ))
+      }
+    </div>
   </div>
 </section>

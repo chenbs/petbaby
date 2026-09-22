@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1760" viewBox="0 0 1440 1760">
+  <defs>
+    <clipPath id="bHero"><rect x="0" y="0" width="1440" height="640"/></clipPath>
+    <clipPath id="bMain"><rect x="760" y="850" width="590" height="470" rx="3"/></clipPath>
+  </defs>
+  <rect width="1440" height="1760" fill="#fbfbf9"/>
+  <rect width="1440" height="640" fill="#1d252a"/>
+  <image href="../../../apps/website/public/assets/bg-poster.jpg" x="0" y="0" width="1440" height="640" preserveAspectRatio="xMidYMid slice" opacity=".62" clip-path="url(#bHero)"/>
+  <rect width="1440" height="640" fill="#101416" opacity=".35"/>
+  <text x="72" y="62" fill="#fff" font-size="25" font-family="Microsoft YaHei, sans-serif" font-weight="700">麻麻抱我</text>
+  <text x="1125" y="62" fill="#fff" font-size="18" font-family="Microsoft YaHei, sans-serif">作品　玩法　菜单</text>
+  <text x="72" y="344" fill="#fff" font-size="86" font-family="Microsoft YaHei, sans-serif" font-weight="700">让每一次记录</text>
+  <text x="72" y="440" fill="#fff" font-size="86" font-family="Microsoft YaHei, sans-serif" font-weight="700">都有成品感</text>
+  <text x="76" y="520" fill="#fff" opacity=".76" font-size="21" font-family="Microsoft YaHei, sans-serif">保留视频首屏，下面直接进入产品展示。</text>
+  <rect x="76" y="558" width="156" height="48" rx="24" fill="#c4335c"/>
+  <text x="107" y="589" fill="#fff" font-size="18" font-family="Microsoft YaHei, sans-serif" font-weight="700">开始创作　→</text>
+  <text x="76" y="752" fill="#c4335c" font-size="15" letter-spacing="3" font-family="Microsoft YaHei, sans-serif">PRODUCT GALLERY</text>
+  <text x="76" y="822" fill="#1e2426" font-size="54" font-family="Microsoft YaHei, sans-serif" font-weight="700">一张主图，讲清一种玩法</text>
+  <line x1="76" y1="856" x2="1364" y2="856" stroke="#d8d9d5"/>
+  <rect x="76" y="850" width="590" height="470" fill="#e2e5e1"/>
+  <image href="../../../apps/website/public/assets/detail-portrait.jpg" x="76" y="850" width="590" height="470" preserveAspectRatio="xMidYMid slice"/>
+  <rect x="760" y="850" width="590" height="470" fill="#e2e5e1"/>
+  <image href="../../../apps/website/public/assets/play-poster.jpg" x="760" y="850" width="590" height="470" preserveAspectRatio="xMidYMid slice" clip-path="url(#bMain)"/>
+  <rect x="76" y="1350" width="1274" height="1" fill="#d8d9d5"/>
+  <text x="76" y="1435" fill="#1e2426" font-size="34" font-family="Microsoft YaHei, sans-serif" font-weight="700">图文创作</text>
+  <text x="76" y="1482" fill="#7a7e7a" font-size="19" font-family="Microsoft YaHei, sans-serif">身份证、海报、画册，统一的设计系统，一次完成。</text>
+  <text x="760" y="1435" fill="#1e2426" font-size="34" font-family="Microsoft YaHei, sans-serif" font-weight="700">AI 肖像</text>
+  <text x="760" y="1482" fill="#7a7e7a" font-size="19" font-family="Microsoft YaHei, sans-serif">先看风格，再选作品；图片成为页面里的主角。</text>
+  <rect x="76" y="1570" width="1274" height="82" fill="#f0f1ee"/>
+  <text x="108" y="1621" fill="#555b58" font-size="18" font-family="Microsoft YaHei, sans-serif">02　大图比例统一　　03　标签克制　　04　留白负责高级感</text>
+  <text x="76" y="1730" fill="#7a7e7a" font-size="15" font-family="Microsoft YaHei, sans-serif">B｜品牌影棚：干净、成熟、产品感最强（推荐）</text>
+</svg>

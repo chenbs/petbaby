@@ -5,21 +5,21 @@
  * 顶栏不在这里 —— 它由 BaseLayout 渲染（原型里它也在 hero 之外，只是靠
  * position:absolute 浮在 hero 内）。
  *
- * 主标语按词切分成两行、每行 2 词。词数变化不用改 CSS：site.js 按下标算
+ * 主标语按词切分成两行。词数变化不用改 CSS：site.js 按下标算
  * stagger delay（0.8 + i*0.18s）。
  */
 import ResponsiveImage from "../ResponsiveImage.astro";
+import QrImage from "../QrImage.astro";
 
 const HEADLINE: string[][] = [
-  ["把日常", "抱进"],
-  ["每一段", "回忆里"],
+  ["把我留在"],
+  ["珍贵的爱里"],
 ];
 ---
 
 <section class="hero" id="home">
   {/*
-    视频：autoplay muted playsInline aria-hidden，初始 loop=false。
-    5 秒截断循环由 site.js 接管（规格 2.2）；poster 避免加载完成前黑屏。
+    视频：autoplay muted playsInline loop aria-hidden，首屏直接播放完整视频。
 
     preload 用 metadata 而非规格 8.1 的 auto：3.5MB 视频在 auto 下会与首屏图片
     抢带宽，而 poster（103KB）已经能撑住首屏观感，视频边下边播即可。
@@ -29,7 +29,7 @@ const HEADLINE: string[][] = [
     data-hero-video
     src="/assets/bg.mp4"
     poster="/assets/bg-poster.jpg"
-    autoplay muted playsinline preload="metadata" aria-hidden="true"></video>
+    autoplay muted playsinline loop preload="metadata" aria-hidden="true"></video>
 
   {/* 压暗遮罩：椭圆中心偏左 30%，正落在标题区（规格 2.3）*/}
   <div class="hero-veil" aria-hidden="true"></div>
@@ -48,27 +48,33 @@ const HEADLINE: string[][] = [
         ))}
       </h1>
       <p class="hero-sub" data-hero-sub>
-        它陪你度过的平常一天，也值得被好好记住。
-        从手机里的照片开始，做一张作品，留一段只属于你们的回忆。
+        <span>我不是只有今天在陪你</span><br />
+        <span>那些一起度过的平常一天，也值得被好好记住</span><br />
+        <span>打开小程序，把我最爱你的样子留下来陪你</span>
       </p>
     </div>
 
     {/* 底部条：左主 CTA，右重叠头像 + 数字 + 说明（规格 2.6）*/}
     <div class="hero-bar" data-hero-bar>
       {/* 白底黑字：规格 4 章的主按钮原始口径，压在深色视频上对比度最高 */}
-      <a class="btn btn-on-dark btn-lg" href="#contact">
-        开始创作
-        <svg class="arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
-      </a>
+      <div class="hero-cta-row">
+        <a class="btn btn-on-dark btn-lg" href="#contact">
+          微信扫码
+          <svg class="arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
+        </a>
+        <div class="hero-qr" aria-label="扫码打开小程序">
+          <QrImage size={64} loading="eager" />
+        </div>
+      </div>
       <div class="hero-proof">
         <div class="avatars">
-          <ResponsiveImage src="/assets/hero-shiba.jpg" alt="" width={1200} height={1200} sizes="48px" loading="eager" />
-          <ResponsiveImage src="/assets/hero-shepherd.jpg" alt="" width={1200} height={1200} sizes="48px" loading="eager" />
-          <ResponsiveImage src="/assets/hero-devon.jpg" alt="" width={1200} height={1200} sizes="48px" loading="eager" />
+          <ResponsiveImage src="/assets/website-v2-play-id-card.jpg" alt="" width={1600} height={1200} sizes="48px" loading="eager" />
+          <ResponsiveImage src="/assets/website-v2-human-v2.jpg" alt="" width={900} height={1200} sizes="48px" loading="eager" />
+          <ResponsiveImage src="/assets/website-v2-interactive.jpg" alt="" width={1600} height={1200} sizes="48px" loading="eager" />
         </div>
         <div class="proof-text">
-          <span class="proof-num">每一刻都值得</span>
-          <span class="proof-label">图文 · AI 创作 · 视频 · 纪念</span>
+          <span class="proof-num">把最可爱的我留下</span>
+          <span class="proof-label">档案 · AI 创作 · 视频 · 纪念</span>
         </div>
       </div>
     </div>

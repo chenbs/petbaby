@@ -1,0 +1,142 @@
+---
+import ResponsiveImage from "../ResponsiveImage.astro";
+
+const FEATURES = [
+  {
+    key: "record",
+    image: "/assets/website-v2-play-id-card.jpg",
+    alt: "可爱猫咪从彩色宠物档案卡窗口探出头",
+    eyebrow: "01 · 记录宠物",
+    title: "建一份档案，收好我的日常",
+    body: "为我建立档案、整理照片，看看我们已经相伴多少天。多宠家庭也能随时切换，找到各自的回忆。",
+    meta: "档案 · 照片库 · 陪伴记录",
+    featured: true,
+  },
+  {
+    key: "poster",
+    image: "/assets/website-v2-play-poster.jpg",
+    alt: "戴着披风的柯基骑着彩色玩具火箭飞过云朵",
+    eyebrow: "02 · 图文作品",
+    title: "用我的照片，做身份证、海报和画册",
+    body: "选一个喜欢的玩法，放入宠物照片，做成可以保存、分享的图文作品。",
+    meta: "身份证 · 海报 · 画册",
+  },
+  {
+    key: "ai",
+    image: "/assets/website-v2-ai.jpg",
+    alt: "戴花朵太阳镜、穿蓝色造型服的黑白猫咪",
+    eyebrow: "03 · AI 创意工坊",
+    title: "挑个新造型，让我当主角",
+    body: "选模板、放入宠物照片，AI 就能生成四张创意图片。挑一张最喜欢的，保存或分享。",
+    meta: "AI 图片 · 四选一 · 保存分享",
+  },
+  {
+    key: "human",
+    image: "/assets/website-v2-human-v2.jpg",
+    alt: "受贵宾犬气质启发的自然人类角色肖像",
+    eyebrow: "04 · 如果我是人",
+    title: "看看我变成人的模样",
+    body: "上传我的照片，让 AI 把我的毛色、神态和气质变成人物形象。一次生成两张，选出最有我神韵的那一张。",
+    meta: "宠物人化 · 两张候选 · 先看再选",
+    accent: true,
+  },
+  {
+    key: "video",
+    image: "/assets/website-v2-video.jpg",
+    alt: "金毛犬在彩色阳光房间里向镜头跑来",
+    eyebrow: "05 · 互动与短片",
+    title: "做互动场景，也能剪成短片",
+    body: "用照片创建可以轻点收集星尘的互动场景；也能选照片、配字幕和音乐，做成 10、20 或 30 秒的陪伴短片。",
+    meta: "互动页面 · 短片 · 分享",
+  },
+  {
+    key: "timeline",
+    image: "/assets/website-v2-timeline.jpg",
+    alt: "同一只猫咪在四季场景中记录成长",
+    eyebrow: "06 · 成长记录",
+    title: "按时间，翻看我的成长",
+    body: "按年份整理照片、里程碑和成长节点，还能从时间线发起年度短片。",
+    meta: "时间线 · 里程碑 · 年度短片",
+  },
+  {
+    key: "health",
+    image: "/assets/website-v2-health.jpg",
+    alt: "猫咪站在彩色体重秤旁的宠物健康记录场景",
+    eyebrow: "07 · 健康助手",
+    title: "记体重、疫苗和驱虫，不漏掉照顾",
+    body: "记录症状、体重、免疫与驱虫，接收提醒并导出健康档案。这里只做辅助记录与分流，不替代兽医诊断。",
+    meta: "症状分流 · 体重 · 健康档案",
+  },
+  {
+    key: "membership",
+    image: "/assets/website-v2-play-album.jpg",
+    alt: "彩色宠物画册和相片组成的会员与实体纪念品场景",
+    eyebrow: "08 · 会员与实体",
+    title: "收藏年度报告，定制实体纪念品",
+    body: "查看和使用会员权益，生成年度报告、解锁高清作品；也能把喜欢的作品做成实体纪念品。",
+    meta: "会员 · 年度报告 · 实体纪念品",
+  },
+  {
+    key: "memorial",
+    image: "/assets/website-v2-memorial-studio.jpg",
+    alt: "明亮的彩色影棚里，奶油色小狗抱着星星软枕，温柔地望向镜头",
+    eyebrow: "09 · 纪念空间",
+    title: "把照片和想念，放进专属纪念空间",
+    body: "写下我们的故事、收好珍贵照片，再做成纪念册、纪念视频或星尘页，随时回来看看我。",
+    meta: "纪念册 · 纪念视频 · 星尘页",
+  },
+];
+---
+
+<section class="feature-gallery section" id="features">
+  <div class="container">
+    <div class="section-head feature-gallery-head reveal">
+      <p class="eyebrow">小程序功能</p>
+      <h2 class="h2">从记录我，<br />到把我变成作品</h2>
+      <p class="section-note wide">一张照片可以开始很多种陪伴：先收好日常，再挑一种最想试试的方式。</p>
+    </div>
+
+    <div class="feature-featured reveal">
+      <div class="feature-featured-media">
+        <ResponsiveImage src={FEATURES[0].image} alt={FEATURES[0].alt} width={1600} height={1200} sizes="(max-width: 767px) 100vw, 58vw" />
+      </div>
+      <div class="feature-featured-copy">
+        <p class="feature-eyebrow">{FEATURES[0].eyebrow}</p>
+        <h3>{FEATURES[0].title}</h3>
+        <p>{FEATURES[0].body}</p>
+        <span class="feature-meta">{FEATURES[0].meta}</span>
+      </div>
+    </div>
+
+    <div class="feature-grid">
+      {FEATURES.slice(1).map((feature, index) => (
+        <article class:list={["feature-card", `feature-card-${feature.key}`, feature.accent && "feature-card-accent", "reveal"]} data-delay={index % 3 ? String(index % 3) : null}>
+          <div class="feature-card-media">
+            <ResponsiveImage
+              src={feature.image}
+              alt={feature.alt}
+              width={feature.key === "human" ? 900 : feature.key === "memorial" ? 1280 : 1600}
+              height={feature.key === "memorial" ? 720 : 1200}
+              sizes={feature.key === "human"
+                ? "(max-width: 767px) 100vw, 40vw"
+                : feature.key === "video"
+                  ? "(max-width: 1099px) 100vw, 67vw"
+                  : feature.key === "memorial"
+                    ? "100vw"
+                    : feature.key === "poster"
+                      ? "(max-width: 767px) 100vw, (max-width: 1099px) 50vw, 67vw"
+                      : "(max-width: 767px) 100vw, (max-width: 1099px) 50vw, 33vw"}
+            />
+            {feature.accent && <span class="feature-card-sticker">新玩法</span>}
+          </div>
+          <div class="feature-card-copy">
+            <p class="feature-eyebrow">{feature.eyebrow}</p>
+            <h3>{feature.title}</h3>
+            <p>{feature.body}</p>
+            <span class="feature-meta">{feature.meta}</span>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

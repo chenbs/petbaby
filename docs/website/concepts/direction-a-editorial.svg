@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1760" viewBox="0 0 1440 1760">
+  <defs>
+    <clipPath id="aHero"><rect x="0" y="0" width="1440" height="660"/></clipPath>
+    <clipPath id="aMain"><rect x="84" y="930" width="820" height="570" rx="2"/></clipPath>
+  </defs>
+  <rect width="1440" height="1760" fill="#f7f2ec"/>
+  <rect width="1440" height="660" fill="#293a43"/>
+  <image href="../../../apps/website/public/assets/bg-poster.jpg" x="0" y="0" width="1440" height="660" preserveAspectRatio="xMidYMid slice" opacity=".7" clip-path="url(#aHero)"/>
+  <rect width="1440" height="660" fill="#111b20" opacity=".35"/>
+  <text x="72" y="66" fill="#fff" font-size="25" font-family="Microsoft YaHei, sans-serif" font-weight="700">麻麻抱我</text>
+  <text x="1120" y="66" fill="#fff" font-size="18" font-family="Microsoft YaHei, sans-serif">扫码　菜单</text>
+  <text x="84" y="340" fill="#fff" font-size="82" font-family="Microsoft YaHei, sans-serif" font-weight="700">把日常抱进</text>
+  <text x="84" y="435" fill="#fff" font-size="82" font-family="Microsoft YaHei, sans-serif" font-weight="700">每一段回忆里</text>
+  <text x="88" y="516" fill="#fff" opacity=".78" font-size="22" font-family="Microsoft YaHei, sans-serif">首屏视频保留，下面用一张真正的大图接住情绪。</text>
+  <rect x="88" y="562" width="154" height="48" rx="24" fill="#fff"/>
+  <text x="118" y="593" fill="#302526" font-size="18" font-family="Microsoft YaHei, sans-serif" font-weight="700">开始创作　→</text>
+  <text x="84" y="766" fill="#aa6c63" font-size="16" letter-spacing="4" font-family="Microsoft YaHei, sans-serif">核心玩法</text>
+  <text x="84" y="842" fill="#302526" font-size="56" font-family="Microsoft YaHei, sans-serif" font-weight="700">先看一张成品，</text>
+  <text x="84" y="905" fill="#302526" font-size="56" font-family="Microsoft YaHei, sans-serif" font-weight="700">再决定怎么记录。</text>
+  <rect x="84" y="930" width="820" height="570" fill="#d6c5b6"/>
+  <image href="../../../apps/website/public/assets/play-album.jpg" x="84" y="930" width="820" height="570" preserveAspectRatio="xMidYMid slice" clip-path="url(#aMain)"/>
+  <rect x="940" y="930" width="410" height="570" fill="#fffaf6"/>
+  <text x="980" y="1006" fill="#aa6c63" font-size="15" letter-spacing="3" font-family="Microsoft YaHei, sans-serif">01 / 时光画册</text>
+  <text x="980" y="1088" fill="#302526" font-size="39" font-family="Microsoft YaHei, sans-serif" font-weight="700">把照片排成</text>
+  <text x="980" y="1138" fill="#302526" font-size="39" font-family="Microsoft YaHei, sans-serif" font-weight="700">一段故事</text>
+  <text x="980" y="1215" fill="#776866" font-size="19" font-family="Microsoft YaHei, sans-serif">大图优先，文案只做解释。</text>
+  <text x="980" y="1250" fill="#776866" font-size="19" font-family="Microsoft YaHei, sans-serif">不再把成品缩成卡片里的缩略图。</text>
+  <text x="980" y="1400" fill="#c4335c" font-size="18" font-family="Microsoft YaHei, sans-serif" font-weight="700">查看玩法　→</text>
+  <rect x="84" y="1560" width="400" height="130" fill="#e7d9cf"/>
+  <rect x="520" y="1560" width="400" height="130" fill="#e7d9cf"/>
+  <rect x="956" y="1560" width="394" height="130" fill="#e7d9cf"/>
+  <text x="106" y="1635" fill="#5c4745" font-size="20" font-family="Microsoft YaHei, sans-serif">宠物身份证　/　大图</text>
+  <text x="542" y="1635" fill="#5c4745" font-size="20" font-family="Microsoft YaHei, sans-serif">电影海报　/　大图</text>
+  <text x="978" y="1635" fill="#5c4745" font-size="20" font-family="Microsoft YaHei, sans-serif">AI 肖像　/　大图</text>
+  <text x="84" y="1730" fill="#8b7770" font-size="15" font-family="Microsoft YaHei, sans-serif">A｜编辑画廊：温暖、克制、内容先行</text>
+</svg>

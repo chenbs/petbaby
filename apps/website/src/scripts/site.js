@@ -1,6 +1,6 @@
 /*
  * 官网原型的全部脚本。四件事，互不依赖：
- *   ① hero 视频的 5 秒截断循环（规格 2.2）
+ *   ① hero 视频的完整循环播放
  *   ② hero 入场时间线（规格 2.5）
  *   ③ 滚动入场（规格 5 章，once + 提前 80px）
  *   ④ 移动菜单
@@ -16,43 +16,16 @@
 
   var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ══ ① hero 视频：5 秒截断循环 ═══════════════════════════════════════
+  /* ══ ① hero 视频：完整循环播放 ═══════════════════════════════════════
    *
-   * 进站看到的是「猫探头 → 抬头看壁虎」这 5 秒高潮片段在循环；完整 10 秒叙事
-   * 留给愿意交互的人（规格 2.2 明确这个取舍要保留）。
-   *
-   * 两处必须注意：
-   *   · currentTime = 0 后要显式 play()：Safari 上 seek 会暂停播放。
-   *   · 自动播放可能被浏览器拒绝（低电量模式、节流策略），所以挂一次性的
-   *     click/touchstart 兜底恢复播放 —— 这也顺带是「点击播完整片」的入口。
+   * 首屏直接播放完整视频，结束后从头循环；自动播放被浏览器拦截时，
+   * 保留一次点击/触摸兜底恢复播放。
    */
   var video = document.querySelector("[data-hero-video]");
-  var TRUNCATE_AT = 5;
 
   if (video) {
-    var expanded = false;   // 用户是否已交互，交互后放开到完整 10 秒
+    video.loop = true;
 
-    video.loop = false;     // 初始由 timeupdate 手动归零，不用原生 loop
-
-    video.addEventListener("timeupdate", function () {
-      if (expanded) return;
-      if (video.currentTime >= TRUNCATE_AT) {
-        video.currentTime = 0;
-        var replay = video.play();
-        if (replay && replay.catch) replay.catch(function () { /* 自动播放被拒，等用户交互 */ });
-      }
-    });
-
-    /*
-     * 「看完整片」与「解锁自动播放」拆成两件事，挂在不同阶段。
-     *
-     * expand 走冒泡阶段（window），所以菜单按钮的 stopPropagation 能挡住它 ——
-     * 点菜单不该被当成「我想看完整叙事」，规格 2.2 的取舍是截断循环留给没交互的人。
-     *
-     * 但自动播放解锁不能一起被挡掉：浏览器拒绝 autoplay 时（低电量模式等），
-     * 若用户第一次点的恰好是菜单按钮，视频就一直停着。因此 kick 走捕获阶段，
-     * 任何点击都能到，且只负责调 play()、不改 loop。
-     */
     var kick = function () {
       if (video.paused) {
         var p = video.play();
@@ -61,18 +34,6 @@
     };
     window.addEventListener("click", kick, { capture: true, once: true });
     window.addEventListener("touchstart", kick, { capture: true, once: true, passive: true });
-
-    var expand = function () {
-      if (expanded) return;
-      expanded = true;
-      video.loop = true;                       // 放开后交给原生循环
-      var resume = video.play();
-      if (resume && resume.catch) resume.catch(function () {});
-    };
-
-    // 冒泡阶段：可被 stopPropagation 拦下，这是刻意的（见上）
-    window.addEventListener("click", expand, { once: true });
-    window.addEventListener("touchstart", expand, { once: true, passive: true });
 
     /*
      * 离屏时暂停。规格 2.2 用 IntersectionObserver(threshold 0.15) 判断首屏是否在
@@ -266,7 +227,7 @@
      * 我们只有一个短语，孤立的 • 排在环上会被看成第二个圆心白点。
      * 也不留首尾空格 —— 空格会占掉一个字符位，让环出现一段空缺。
      */
-    var LABEL = "点击看完整片段";
+    var LABEL = "麻麻再抱我一次";
     var RADIUS = 32;
 
     // 逐字符排一圈。用 span 而非 canvas：字体与描边跟随 CSS，不必自己处理 DPR

@@ -1,13 +1,8 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Hero from "../components/home/Hero.astro";
-import TrustBar from "../components/home/TrustBar.astro";
-import Plays from "../components/home/Plays.astro";
-import Services from "../components/home/Services.astro";
-import PortraitDetail from "../components/home/PortraitDetail.astro";
-import MemorialDetail from "../components/home/MemorialDetail.astro";
+import FeatureGallery from "../components/home/FeatureGallery.astro";
 import Steps from "../components/home/Steps.astro";
-import Works from "../components/home/Works.astro";
 import Cta from "../components/home/Cta.astro";
 import { BRAND_NAME, SITE_DESCRIPTION, SITE_TAGLINE, SITE_URL } from "../config/site";
 
@@ -34,12 +29,8 @@ const website = {
   jsonLd={[website]}
 >
   <Hero />
-  <TrustBar />
-  <Plays />
-  <Services />
-  <PortraitDetail />
-  <MemorialDetail />
+  <FeatureGallery />
   <Steps />
-  <Works />
   <Cta />
+  <script src="../scripts/paw-cursor.ts"></script>
 </BaseLayout>

@@ -4,7 +4,7 @@
  *
  * 这里只放三类：
  *   ① 顶栏 solid 变体 —— 文章/标签/法务/404 没有 hero，照搬 hero 变体会得到浅底白字
- *   ② 小程序码三触点 —— 顶栏按钮、右下角悬浮、共用弹框（方案第 6 章）
+ *   ② 小程序码触点 —— 首屏 CTA、顶栏按钮、右下角悬浮与 CTA 面板（共用同一资源）
  *   ③ 新页面的版式骨架 —— 文章列表/详情/法务页的容器与页头
  *
  * 取值一律引用 site.css 已有的 CSS 变量，不新造。
@@ -71,7 +71,7 @@
  */
 .mobile-menu-nav a:nth-child(8) { transition-delay: .75s; }
 
-/* ══ 小程序码：三触点共用的弹框（方案 6.1）═══════════════════════════════
+/* ══ 小程序码：弹框与页面触点共用（方案 6.1）═══════════════════════════════
  *
  * 四层黏土（与纪念区图框同一套）。这是黏土的第 2 处，仍在根 CLAUDE.md 的
  * 3 处限额内 —— 再加之前先回看 UI 重构拍板全文。
@@ -486,3 +486,123 @@
 @media (min-width: 768px) { .avatars picture:not(:last-child) img { margin-right: -14px; } }
 @media (min-width: 1280px) { .avatars picture:not(:last-child) img { margin-right: -16px; } }
 @media (max-width: 767px) { .avatars picture:not(:last-child) img { margin-right: -8px; } }
+
+.hero-cta-row { display: flex; align-items: center; gap: var(--space-4); }
+.hero-cta-row .btn { flex: none; }
+.hero-qr { display: inline-flex; align-items: center; gap: var(--space-2); color: rgba(255,255,255,.9); font-size: 11px; line-height: var(--lh-sm); text-shadow: 0 1px 6px rgba(0,0,0,.45); }
+.hero-qr .qr-frame, .hero-qr .qr-image { width: 64px; height: 64px; border-radius: var(--radius-card); }
+.hero-qr .qr-frame { background: rgba(255,255,255,.94); color: var(--text-tertiary); font-size: 9px; text-shadow: none; }
+
+@media (max-width: 767px) {
+  .hero-cta-row { width: 100%; gap: var(--space-3); }
+  .hero-cta-row .btn { flex: 1; width: auto; min-width: 0; }
+}
+
+.hero-veil { opacity: calc(1 / 3); }
+
+.footer { background: var(--subtle); color: var(--text-secondary); border-top: 1px solid var(--border); }
+.footer .brand-name, .footer-title { color: var(--text-primary); }
+.footer .footer-grid { padding-top: var(--space-8); padding-bottom: var(--space-7); }
+.footer .footer-bottom { padding-top: var(--space-5); padding-bottom: var(--space-6); border-color: var(--border-strong); color: var(--text-secondary); }
+.footer-links a:hover, .footer-legal a:hover { color: var(--primary); }
+.footer-legal { flex-wrap: wrap; }
+
+.paw-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 25;
+  width: 34px;
+  height: 34px;
+  pointer-events: none;
+  opacity: 0;
+  color: #edaa9a;
+  filter: drop-shadow(0 1px 0 var(--card)) drop-shadow(0 2px 4px rgba(167, 92, 76, .28));
+  transition: opacity var(--dur-fast) var(--ease);
+}
+.paw-cursor.is-visible { opacity: .85; }
+.paw-cursor svg { display: block; width: 100%; height: 100%; fill: currentColor; transform: rotate(-18deg); transition: transform var(--dur-base) var(--ease-spring); }
+.paw-cursor.is-pressed svg { transform: rotate(-8deg) scale(.8); }
+.paw-cursor-active, .paw-cursor-active * { cursor: none !important; }
+
+@media (max-width: 767px) {
+  .footer .footer-grid { padding-top: var(--space-7); }
+}
+
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .paw-cursor { display: none; }
+}
+
+/* 首页 V2 功能画廊：大图负责吸引注意，文字负责解释能力边界。 */
+.feature-gallery { background: var(--surface); border-top: 1px solid var(--border); scroll-margin-top: 0; }
+.feature-gallery-head { max-width: 720px; }
+.feature-gallery-head .section-note { max-width: 34em; }
+.feature-featured {
+  display: grid;
+  gap: 0;
+  overflow: hidden;
+  margin-bottom: 24px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-panel);
+  background: var(--card);
+  transition: opacity var(--dur-reveal) var(--ease), transform var(--dur-base) var(--ease), box-shadow var(--dur-base) var(--ease);
+}
+.feature-featured-media { overflow: hidden; min-height: 300px; background: var(--subtle); }
+.feature-featured-media picture, .feature-featured-media img { display: block; width: 100%; height: 100%; }
+.feature-featured-media img { min-height: 300px; aspect-ratio: var(--ratio-cover); object-fit: cover; transition: transform var(--dur-slow) var(--ease); }
+.feature-featured-copy { display: flex; flex-direction: column; justify-content: center; padding: 32px 28px; }
+.feature-featured-copy h3, .feature-card-copy h3 { margin: 0; color: var(--text-primary); font-weight: var(--fw-bold); letter-spacing: var(--ls-tight); line-height: 1.2; }
+.feature-featured-copy h3 { font-size: clamp(1.8rem, 3.8vw, 3rem); }
+.feature-featured-copy p:not(.feature-eyebrow), .feature-card-copy p:not(.feature-eyebrow) { margin: 18px 0 0; color: var(--text-secondary); line-height: var(--lh-body); }
+.feature-eyebrow { margin: 0 0 12px; color: var(--primary); font-size: 12px; font-weight: var(--fw-semibold); letter-spacing: .14em; }
+.feature-meta { display: block; margin-top: 24px; color: var(--text-tertiary); font-size: 13px; }
+.feature-grid { display: grid; gap: 24px; }
+.feature-card { overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius-card); background: var(--card); transition: opacity var(--dur-reveal) var(--ease), transform var(--dur-base) var(--ease), box-shadow var(--dur-base) var(--ease); }
+.feature-card-media { position: relative; overflow: hidden; aspect-ratio: var(--ratio-cover); background: var(--subtle); }
+.feature-card-media picture, .feature-card-media img { display: block; width: 100%; height: 100%; }
+.feature-card-media img { object-fit: cover; transition: transform var(--dur-slow) var(--ease); }
+.feature-card-poster .feature-card-media img { object-position: 50% 8%; }
+.feature-card-human .feature-card-media { aspect-ratio: var(--ratio-card); }
+.feature-card-human .feature-card-media img { object-position: center top; }
+.feature-card-video .feature-card-media img { object-position: 50% 28%; }
+.feature-card-memorial .feature-card-media { aspect-ratio: 16 / 9; }
+.feature-card-copy { padding: 24px 24px 28px; }
+.feature-card-copy h3 { font-size: clamp(1.25rem, 2vw, 1.65rem); }
+.feature-card-sticker { position: absolute; top: 16px; left: 16px; padding: 7px 12px; border-radius: var(--radius-pill); background: var(--primary); color: var(--primary-text); font-size: 12px; font-weight: var(--fw-semibold); }
+.feature-card-accent { border-color: rgba(196, 51, 92, .35); }
+
+@media (hover: hover) and (pointer: fine) {
+  .feature-featured.is-in:hover, .feature-card.is-in:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); }
+  .feature-featured:hover .feature-featured-media img, .feature-card:hover .feature-card-media img { transform: scale(1.03); }
+}
+
+@media (min-width: 768px) {
+  .feature-featured { grid-template-columns: minmax(0, 1.35fr) minmax(280px, .65fr); }
+  .feature-featured-copy { padding: 48px 40px; }
+  .feature-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .feature-card-human, .feature-card-video, .feature-card-memorial { grid-column: 1 / -1; }
+  .feature-card-human { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); }
+  .feature-card-human .feature-card-copy { display: flex; flex-direction: column; justify-content: center; padding: var(--space-7); }
+  .feature-card-human .feature-card-copy h3 { max-width: 9em; font-size: clamp(1.75rem, 3vw, 2.75rem); }
+  .feature-card-human .feature-card-copy p:not(.feature-eyebrow) { max-width: 25em; }
+}
+
+@media (min-width: 1100px) {
+  .feature-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .feature-card-poster { grid-column: span 2; }
+  .feature-card-poster .feature-card-media { aspect-ratio: 16 / 9; }
+  .feature-card-video { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+  .feature-card-video .feature-card-media { aspect-ratio: var(--ratio-cover); }
+  .feature-card-video .feature-card-copy { display: flex; flex-direction: column; justify-content: center; padding: var(--space-6); }
+  .feature-card-video .feature-card-copy h3 { font-size: clamp(1.75rem, 2.5vw, 2.25rem); }
+}
+
+@media (max-width: 767px) {
+  .feature-featured-copy { padding: 28px 22px 32px; }
+  .feature-card-copy { padding: 22px 20px 24px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .feature-featured, .feature-card, .feature-featured-media img, .feature-card-media img { transition: none; }
+  .feature-featured.is-in:hover, .feature-card.is-in:hover, .feature-featured:hover .feature-featured-media img, .feature-card:hover .feature-card-media img { transform: none; }
+}

@@ -3,7 +3,7 @@ import path from "node:path";
 import sharp from "sharp";
 
 const assets = path.resolve(import.meta.dirname, "../public/assets");
-const names = (await readdir(assets)).filter((name) => /^(work-|style-|play-|hero-).+\.jpg$/.test(name));
+const names = (await readdir(assets)).filter((name) => /^(work-|style-|play-|hero-|website-v2-).+\.jpg$/.test(name));
 for (const name of names) {
   const source = path.join(assets, name);
   for (const width of [160, 320, 640, 960]) {

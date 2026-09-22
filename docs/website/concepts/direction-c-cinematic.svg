@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1760" viewBox="0 0 1440 1760">
+  <defs>
+    <clipPath id="cHero"><rect x="0" y="0" width="1440" height="650"/></clipPath>
+    <clipPath id="cWide"><rect x="72" y="900" width="1296" height="520"/></clipPath>
+  </defs>
+  <rect width="1440" height="1760" fill="#13181d"/>
+  <rect width="1440" height="650" fill="#26333b"/>
+  <image href="../../../apps/website/public/assets/bg-poster.jpg" x="0" y="0" width="1440" height="650" preserveAspectRatio="xMidYMid slice" opacity=".58" clip-path="url(#cHero)"/>
+  <rect width="1440" height="650" fill="#0b1014" opacity=".4"/>
+  <text x="72" y="62" fill="#fff" font-size="25" font-family="Microsoft YaHei, sans-serif" font-weight="700">麻麻抱我</text>
+  <text x="1120" y="62" fill="#fff" font-size="18" font-family="Microsoft YaHei, sans-serif">作品　关于　菜单</text>
+  <text x="72" y="350" fill="#fff" font-size="88" font-family="Microsoft YaHei, sans-serif" font-weight="700">把它留在</text>
+  <text x="72" y="450" fill="#fff" font-size="88" font-family="Microsoft YaHei, sans-serif" font-weight="700">时间里</text>
+  <text x="76" y="530" fill="#fff" opacity=".7" font-size="21" font-family="Microsoft YaHei, sans-serif">视频保留，作品区进入沉浸式观看。</text>
+  <rect x="76" y="566" width="156" height="48" rx="24" fill="#fff"/>
+  <text x="107" y="597" fill="#161c20" font-size="18" font-family="Microsoft YaHei, sans-serif" font-weight="700">开始创作　→</text>
+  <text x="72" y="760" fill="#8cabb8" font-size="15" letter-spacing="3" font-family="Microsoft YaHei, sans-serif">SELECTED WORKS</text>
+  <text x="72" y="832" fill="#fff" font-size="55" font-family="Microsoft YaHei, sans-serif" font-weight="700">每一张，都值得被看见</text>
+  <image href="../../../apps/website/public/assets/play-poster.jpg" x="72" y="900" width="1296" height="520" preserveAspectRatio="xMidYMid slice" clip-path="url(#cWide)"/>
+  <rect x="72" y="900" width="1296" height="520" fill="#071016" opacity=".18"/>
+  <text x="112" y="1320" fill="#fff" font-size="18" font-family="Microsoft YaHei, sans-serif">PET POSTER / 01</text>
+  <text x="72" y="1530" fill="#fff" font-size="34" font-family="Microsoft YaHei, sans-serif" font-weight="700">从照片到一段只属于你们的影像</text>
+  <text x="72" y="1580" fill="#aeb9bd" font-size="19" font-family="Microsoft YaHei, sans-serif">全宽大图、低饱和色、少量文字，先让作品说话。</text>
+  <line x1="72" y1="1640" x2="1368" y2="1640" stroke="#3b474c"/>
+  <text x="72" y="1705" fill="#8cabb8" font-size="15" font-family="Microsoft YaHei, sans-serif">C｜沉浸影院：高级、克制，但整体更偏影像品牌</text>
+</svg>

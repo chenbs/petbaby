@@ -150,9 +150,9 @@
       };
 
       new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) { heroVisible = entry.isIntersecting; });
+        entries.forEach(function (entry) { heroVisible = entry.isIntersecting && entry.intersectionRatio > 0; });
         sync();
-      }, { threshold: 0 }).observe(hero);
+      }, { threshold: 0.001 }).observe(hero);
 
       if (cta) {
         new IntersectionObserver(function (entries) {

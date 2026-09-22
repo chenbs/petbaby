@@ -3,7 +3,7 @@
  *
  * 查五组，都是「只有真在浏览器里跑才能验」的东西：
  *   ① 首屏性能：CLS、图片固有尺寸与 lazy 比例、h1 唯一、页脚不再有死链
- *   ② 小程序码三触点：hover/click 双轨、键盘可达、IO 显隐规则、reduced-motion
+ *   ② 小程序码触点：hover/click 双轨、键盘可达、IO 显隐规则、reduced-motion
  *   ③ 文章正文：列表符号、行内链接下划线、表格/引用样式、标题层级
  *   ④ solid 顶栏在浅底上的实测对比度
  *   ⑤ 法务页的未定稿提示条与章节骨架
@@ -108,8 +108,8 @@ for (const viewport of [{ width: 390, height: 844 }, { width: 1440, height: 900 
   await page.close();
 }
 
-// ── ② 小程序码三触点 ────────────────────────────────────────────────────────
-group("小程序码三触点（方案第 6 章 / 第 13 章第 2 步）");
+// ── ② 小程序码触点 ─────────────────────────────────────────────────────────
+group("小程序码触点（方案第 6 章 / 第 13 章第 2 步）");
 {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   page.on("pageerror", (error) => ok(`页面无脚本报错`, false, error.message));
@@ -150,13 +150,13 @@ group("小程序码三触点（方案第 6 章 / 第 13 章第 2 步）");
     String(await page.evaluate(() => document.activeElement.className)).includes("qr-trigger"));
 
   ok("hero 内不显示悬浮按钮", !await fabVisible(page));
-  await jump(page, "plays");
+  await jump(page, "features");
   await page.waitForTimeout(500);
   ok("滚过 hero 后淡入", await fabVisible(page));
   await jump(page, "contact");
   await page.waitForTimeout(500);
   ok("滚到 CTA 区淡出（那里已有更大的码）", !await fabVisible(page));
-  await jump(page, "works");
+  await jump(page, "features");
   await page.waitForTimeout(500);
   ok("离开 CTA 区又显示", await fabVisible(page));
   await page.close();
@@ -166,7 +166,7 @@ group("小程序码三触点（方案第 6 章 / 第 13 章第 2 步）");
   const page = await context.newPage();
   await page.goto(`${BASE}/`, { waitUntil: "load" });
   ok("移动端隐藏顶栏扫码按钮（顶栏放不下第三个元素）", !await page.isVisible(".topbar .qr-trigger"));
-  await jump(page, "plays");
+  await jump(page, "features");
   await page.waitForTimeout(600);
   await page.tap(".qr-fab-btn");
   await page.waitForTimeout(400);
@@ -321,8 +321,8 @@ group("法务页与 404（方案 11.1 / 第 13 章第 5 步）");
 group("产物断言");
 {
   const home = await readFile(path.join(DIST, "index.html"), "utf8");
-  ok("小程序码缺图时三处都是虚线占位框",
-    (home.match(/data-placeholder="miniprogram-qr"/g) || []).length === 3);
+  ok("小程序码缺图时四处都是虚线占位框",
+    (home.match(/data-placeholder="miniprogram-qr"/g) || []).length === 4);
   ok("两个弹框实例（顶栏 + 悬浮；CTA 面板的码常显，不需要弹框）",
     (home.match(/class="qr-pop" id="/g) || []).length === 2);
 

@@ -1,4 +1,5 @@
 const api = require("../../services/api");
+const { clearRecordDrafts } = require("../../services/photo-upload-session");
 const { themedPage } = require("../../theme/page-mixin");
 
 themedPage({
@@ -38,6 +39,7 @@ themedPage({
   },
   logout() {
     api.request("/api/auth/logout", { method: "POST" }).catch(() => undefined).then(() => {
+      clearRecordDrafts();
       wx.removeStorageSync("petbaby_session");
       wx.removeStorageSync("petbaby_session_source");
       getApp().globalData.loggedIn = false;

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 
 import { requireUserId } from "@/server/auth/session";
 import { routeError } from "@/server/errors";
@@ -15,7 +16,8 @@ import { findOnThisDay, onThisDayConsentState } from "@/server/timeline-service"
 export async function GET(request: Request) {
   try {
     const userId = await requireUserId(request);
-    const [matches, consent] = await Promise.all([findOnThisDay(userId), onThisDayConsentState(userId)]);
+    const petId = z.string().uuid().optional().parse(new URL(request.url).searchParams.get("petId") || undefined);
+    const [matches, consent] = await Promise.all([findOnThisDay(userId, new Date(), petId), onThisDayConsentState(userId)]);
     return NextResponse.json({ data: { matches, pushConsented: consent.consented } });
   } catch (error) { return routeError(error); }
 }

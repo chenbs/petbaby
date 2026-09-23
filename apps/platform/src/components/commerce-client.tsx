@@ -35,7 +35,7 @@ export function CommerceClient(){
    * 只入队不轮询：叙事视频是四段 filtergraph 而队列并发是 1，渲染要几十秒到几分钟，
    * 让用户停在这一页等是错的。完成后作品会进作品库。
    */
-  async function film(){setBusyPlan("film");setMessage("");try{const created=await apiFetch<{shots?:number}>("/api/annual-films",{method:"POST",body:JSON.stringify({year:new Date().getFullYear(),durationSeconds:20})});setMessage(`年度短片已开始渲染${created?.shots?`，用了 ${created.shots} 张照片`:""}。完成后会出现在作品库里。`);}catch(error){setMessage(error instanceof Error?error.message:"年度短片生成失败");}finally{setBusyPlan("");}}
+  async function film(){setBusyPlan("film");setMessage("");try{const created=await apiFetch<{shots?:number;petName:string}>("/api/annual-films",{method:"POST",body:JSON.stringify({year:new Date().getFullYear(),durationSeconds:20})});setMessage(`已为 ${created.petName} 开始渲染年度短片${created?.shots?`，用了 ${created.shots} 张照片`:""}。完成后会出现在作品库里。`);}catch(error){setMessage(error instanceof Error?error.message:"年度短片生成失败");}finally{setBusyPlan("");}}
   /*
    * 年报解锁可能**不产生订单**：会员的 annualReport 权益命中时服务端直接解锁
    * 并返回 `{unlocked:true}`（M4）。所以这里必须判 result.id 存在才去支付 ——

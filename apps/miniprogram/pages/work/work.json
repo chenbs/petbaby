@@ -1,7 +1,6 @@
 {
   "navigationBarTitleText": "作品详情",
   "navigationStyle": "custom",
-  "enableShareAppMessage": true,
   "usingComponents": {
     "t-glass-sheet": "../../components/glass-sheet/index",
     "t-navbar": "../../components/navbar/index",

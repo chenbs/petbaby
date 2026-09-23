@@ -3,6 +3,7 @@
 <view class="page page-flat">
   <text class="eyebrow">PROFILES</text>
   <view class="title">宠物档案</view>
+  <t-button class="block-gap" type="primary" anim="{{animType}}" bindtap="newPet">新建宠物档案</t-button>
 
   <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
   <t-notice wx:if="{{message}}" type="success" message="{{message}}" class="block-gap"></t-notice>
@@ -13,8 +14,8 @@
     wx:elif="{{!pets.length}}"
     icon="pet"
     title="还没有宠物档案"
-    description="做第一件作品时会顺手建好档案。"
-    action-text="去做一个"
+    description="先给它一个名字，收好第一张照片。"
+    action-text="新建档案"
     anim="{{animType}}"
     decor="{{decor}}"
     bindaction="goCreate"
@@ -53,6 +54,7 @@
         </view>
       </view>
       <view class="pet-actions">
+        <t-button type="primary" size="mini" anim="{{animType}}" data-id="{{item.id}}" bindtap="record">收好照片</t-button>
         <t-button type="secondary" size="mini" anim="{{animType}}" data-id="{{item.id}}" bindtap="timeline">时间线</t-button>
         <!--
           纪念空间入口挂在**这只宠物的上下文**里（改造项 L4）。
@@ -74,9 +76,9 @@
 </view>
 
 <!-- 编辑放进底部抽屉，避免表单把列表顶下去 -->
-<t-popup visible="{{!!editing}}" title="编辑档案" anim="{{animType}}" bindclose="cancel">
+<t-popup visible="{{!!editing}}" title="{{editing.id ? '编辑档案' : '新建宠物档案'}}" anim="{{animType}}" bindclose="cancel">
   <view class="stack">
-    <view class="avatar-row">
+    <view wx:if="{{editing.id}}" class="avatar-row">
       <image wx:if="{{editing.avatarUrl}}" class="avatar" src="{{editing.avatarUrl}}" mode="aspectFill" />
       <view wx:else class="avatar avatar-blank">🐾</view>
       <t-button type="ghost" size="mini" anim="{{animType}}" bindtap="avatar">更换头像</t-button>
@@ -120,7 +122,7 @@
 
   <view slot="footer" class="foot">
     <t-button type="ghost" block anim="{{animType}}" bindtap="cancel">取消</t-button>
-    <t-button type="primary" block anim="{{animType}}" bindtap="save">保存</t-button>
+    <t-button type="primary" block anim="{{animType}}" disabled="{{saving}}" bindtap="save">{{saving ? '正在保存' : '保存档案'}}</t-button>
   </view>
 </t-popup>
 

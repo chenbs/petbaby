@@ -1,3 +1,4 @@
+const { displayMediaTree } = require("../../services/photo-files");
 const api = require("../../services/api");
 const companion = require("../../services/companion");
 const { themedPage } = require("../../theme/page-mixin");
@@ -24,7 +25,7 @@ themedPage({
    * 不该因为它拉不到就挡住额度和入口列表这些真正的功能。
    */
   loadHero() {
-    api.request("/api/pets")
+    api.request("/api/pets").then(displayMediaTree)
       .then((pets) => {
         const pet = (pets || []).find((item) => item.isDefault) || (pets || [])[0];
         if (!pet) return this.setData({ hero: null });
@@ -43,6 +44,7 @@ themedPage({
   openOrders() { wx.navigateTo({ url: "/pages/orders/orders" }); },
   openPets() { wx.navigateTo({ url: "/pages/pets/pets" }); },
   openPhotos() { wx.navigateTo({ url: "/pages/photos/photos" }); },
+  record() { const pet = this.data.hero; wx.navigateTo({ url: "/pages/photos/photos?mode=record&entry=me" + (pet ? "&petId=" + pet.id : "") }); },
   openHealth() { wx.navigateTo({ url: "/pages/health/health" }); },
   openAccount() { wx.navigateTo({ url: "/pages/account/account" }); },
   /*

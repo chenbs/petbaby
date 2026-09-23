@@ -1,3 +1,4 @@
+const { displayMediaTree } = require("../../services/photo-files");
 const api = require("../../services/api");
 const payment = require("../../services/payment");
 const config = require("../../config");
@@ -110,7 +111,7 @@ themedPage({
   async load() {
     this.setData({ loading: true, error: "" });
     try {
-      const pets = await api.request("/api/pets");
+      const pets = await api.request("/api/pets").then(displayMediaTree);
       // 已离开的宠物不进入健康功能（红线 10）。
       const active = (pets || []).filter((pet) => pet.lifeStage !== "memorial");
       const index = Math.min(this.data.petIndex, Math.max(0, active.length - 1));
@@ -134,7 +135,7 @@ themedPage({
    * 拉不到不该挡住分诊本身 —— 那是这一页的主功能。
    */
   loadWeights(petId) {
-    api.request("/api/pets/" + petId + "/weights")
+    api.request("/api/pets/" + petId + "/weights").then(displayMediaTree)
       .then((result) => {
         const records = (result && result.records) || [];
         this.setData({
@@ -159,7 +160,7 @@ themedPage({
    */
   loadCare(petId) {
     const today = todayString();
-    api.request("/api/pets/" + petId + "/care")
+    api.request("/api/pets/" + petId + "/care").then(displayMediaTree)
       .then((records) => this.setData({
         careRecords: (records || []).map((item) => Object.assign({}, item, {
           kindText: (CARE_KINDS.filter((kind) => kind.value === item.kind)[0] || {}).label || item.kind,
@@ -185,7 +186,7 @@ themedPage({
     this.setData({ careBusy: true, error: "" });
     const data = { kind: CARE_KINDS[this.data.careKindIndex].value, label, performedOn: this.data.careDate };
     if (this.data.careDueDate) data.dueOn = this.data.careDueDate;
-    api.request("/api/pets/" + pet.id + "/care", { method: "POST", data })
+    api.request("/api/pets/" + pet.id + "/care", { method: "POST", data }).then(displayMediaTree)
       .then(() => { this.setData({ careBusy: false, careLabel: "", careDueDate: "" }); this.loadCare(pet.id); })
       .catch((error) => this.setData({ careBusy: false, error: error.message || "保存失败" }));
   },
@@ -195,7 +196,7 @@ themedPage({
     const pet = this.data.pets[this.data.petIndex];
     const id = event.currentTarget.dataset.id;
     if (!pet || !id) return;
-    api.request("/api/pets/" + pet.id + "/care/" + id, { method: "DELETE" })
+    api.request("/api/pets/" + pet.id + "/care/" + id, { method: "DELETE" }).then(displayMediaTree)
       .then(() => this.loadCare(pet.id))
       .catch((error) => this.setData({ error: error.message || "删除失败" }));
   },
@@ -265,7 +266,7 @@ themedPage({
     api.request("/api/pets/" + pet.id + "/weights", {
       method: "POST",
       data: { weightGrams: Math.round(kilograms * 1000), measuredOn: this.data.weightDate },
-    })
+    }).then(displayMediaTree)
       .then(() => { this.setData({ weightBusy: false, weightInput: "" }); this.loadWeights(pet.id); })
       .catch((error) => this.setData({ weightBusy: false, error: error.message || "保存失败" }));
   },

@@ -1,6 +1,7 @@
 {
-  "navigationBarTitleText": "玩法",
+  "navigationBarTitleText": "陪伴",
   "usingComponents": {
+    "t-button": "../../components/button/index",
     "t-card": "../../components/card/index",
     "t-tag": "../../components/tag/index",
     "t-notice": "../../components/notice/index",

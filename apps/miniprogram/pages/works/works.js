@@ -1,3 +1,4 @@
+const { displayMediaTree } = require("../../services/photo-files");
 const api = require("../../services/api");
 const { themedPage } = require("../../theme/page-mixin");
 
@@ -19,7 +20,7 @@ themedPage({
   },
   load() {
     this.setData({ loading: true, error: "" });
-    Promise.all([api.request("/api/works"), api.request("/api/generations"), api.request("/api/pets"), api.request("/api/plugins")]).then((result) => {
+    Promise.all([api.request("/api/works").then(displayMediaTree), api.request("/api/generations").then(displayMediaTree), api.request("/api/pets").then(displayMediaTree), api.request("/api/plugins")]).then((result) => {
       this.allWorks = result[0]; this.allTasks = result[1];
       this.setData({
         pets: result[2],

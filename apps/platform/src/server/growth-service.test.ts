@@ -4,7 +4,7 @@ import { getDatabase, resetDatabaseForTest } from "@/server/db/client";
 import { createAiRun, getAiRun, processNextAiRun, selectAiCandidate, unlockAiCandidate, createInteractiveSession, appendInteractiveEvent, listInteractiveEvents, scheduleUpcomingReminders, createPhysicalOrder, createAnnualReport, payPhysicalOrder, createExperiment, updateExperiment, rollbackExperiment, updatePhysicalOrderStatus } from "@/server/growth-service";
 import { decryptAddress } from "@/server/commerce/address";
 import { objectStorage } from "@/server/storage";
-import { payOrder } from "@/server/platform-service";
+import { payOrder, deletePhoto } from "@/server/platform-service";
 import { listRuntimePlugins } from "@/plugins/runtime";
 
 const USER = "00000000-0000-4000-8000-00000000000c";
@@ -20,7 +20,7 @@ describe("stage two growth services", () => {
     await database.query("INSERT INTO users (id,created_at) VALUES ($1,now())", [USER]);
     await database.query("INSERT INTO pets (id,user_id,name,species,gender,date_type,life_stage,is_default,created_at) VALUES ($1,$2,'Milo','cat','unknown','birthday','active',true,now())", [PET, USER]);
     await database.query("INSERT INTO photos (id,user_id,pet_id,filename,mime_type,size,storage_key,position,quality,created_at) VALUES ($1,$2,$3,'milo.png','image/png',1,$4,0,'clear',now())", [PHOTO, USER, PET, `private/${USER}/photos/milo.png`]);
-    await objectStorage.put(`private/${USER}/photos/milo.png`, new TextEncoder().encode("photo"), "image/png");
+    await objectStorage.put(`private/${USER}/photos/milo.png`, Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAADUlEQVQImWP4////fwAJ+wP9CNHoHgAAAABJRU5ErkJggg==", "base64"), "image/png");
     await objectStorage.put(MASTER_KEY, new TextEncoder().encode("owned-master"), "image/webp");
   });
 
@@ -31,7 +31,9 @@ describe("stage two growth services", () => {
     expect((await processNextAiRun())?.status).toBe("succeeded");
     const ready = await getAiRun(USER, run.id);
     expect(ready.candidates).toHaveLength(4);
-    await selectAiCandidate(USER, run.id, ready.candidates[0].id);
+    const selected = await Promise.all([selectAiCandidate(USER, run.id, ready.candidates[0].id), selectAiCandidate(USER, run.id, ready.candidates[0].id)]);
+    expect(selected[0].workId).toBe(selected[1].workId);
+    expect(await (await getDatabase()).query("SELECT id FROM works WHERE source_id=$1", [run.id])).toHaveLength(1);
     const pending = await unlockAiCandidate(USER, run.id);
     expect(pending.order?.status).toBe("pending");
     await payOrder(USER, String(pending.order?.id));
@@ -45,12 +47,22 @@ describe("stage two growth services", () => {
     expect((await getAiRun(USER, run.id)).errorCode).toBe("必需参考图不存在，请重新选择或联系运营补齐母版");
   });
 
+  it("候选完成后删除原照，不能再创建引用该照片的新作品", async () => {
+    const run = await createAiRun(USER, { pluginId: "pl-10", petId: PET, photoIds: [PHOTO], idempotencyKey: "deleted-ai-source" });
+    await processNextAiRun();
+    const ready = await getAiRun(USER, run.id);
+    await deletePhoto(USER, PHOTO);
+    await expect(selectAiCandidate(USER, run.id, ready.candidates[0].id)).rejects.toMatchObject({ code: "PHOTO_PET_MISMATCH" });
+    expect(await (await getDatabase()).query("SELECT id FROM works WHERE source_id=$1", [run.id])).toHaveLength(0);
+  });
+
   it("records interactive events and schedules a reminder seven days ahead", async () => {
     const session = await createInteractiveSession(USER, { pluginId: "pl-15", petId: PET, photoIds: [PHOTO], snapshot: { title: "Milo 的星尘", copy: "一起生活的闪光时刻", theme: "stardust" } });
     await appendInteractiveEvent(USER, session.id, { name: "stardust_collected", payload: { count: 1 } });
     expect(await listInteractiveEvents(USER, session.id)).toHaveLength(1);
     const database = await getDatabase();
     await database.query("UPDATE pets SET birthday='2026-12-25' WHERE id=$1", [PET]);
+    await database.query("INSERT INTO message_subscriptions (id,user_id,pet_id,event_type,status,consented_at,created_at) VALUES ($1,$2,$3,'birthday','active',now(),now())", [crypto.randomUUID(), USER, PET]);
     const scheduled = await scheduleUpcomingReminders(USER, new Date("2026-07-20T00:00:00Z"));
     expect(scheduled[0].scheduledAt).toContain("2026-12-18");
   });

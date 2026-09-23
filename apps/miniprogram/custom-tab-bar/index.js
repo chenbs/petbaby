@@ -11,7 +11,7 @@ Component({
     themeId: "cute",
     animType: "fade",
     items: [
-      { pagePath: "/pages/index/index", text: "玩法", glyph: "✦" },
+      { pagePath: "/pages/index/index", text: "陪伴", glyph: "✦" },
       { pagePath: "/pages/works/works", text: "作品", glyph: "◈" },
       { pagePath: "/pages/me/me", text: "我的", glyph: "◉" }
     ]

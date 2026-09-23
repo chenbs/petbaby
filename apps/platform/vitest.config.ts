@@ -9,6 +9,11 @@ export default defineConfig({
     },
   },
   test: {
+    // 未显式指定隔离库时使用内存库，避免 reset helper 触碰日常开发数据。
+    env: {
+      DATABASE_URL: process.env.DATABASE_URL || "memory://",
+      LOCAL_STORAGE_DIR: process.env.LOCAL_STORAGE_DIR || ".data/test-objects",
+    },
     environment: "node",
     fileParallelism: false,
     include: ["src/**/*.test.ts"],
@@ -39,6 +44,8 @@ export default defineConfig({
         "src/plugins/**/*.ts",
         "src/server/errors.ts",
         "src/server/platform-service.ts",
+        "src/server/photo-library-service.ts",
+        "src/server/object-cleanup.ts",
         "src/server/growth-service.ts",
         "src/server/payments/**/*.ts",
         "src/server/auth/request-guard.ts",

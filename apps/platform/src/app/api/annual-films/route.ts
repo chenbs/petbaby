@@ -5,13 +5,22 @@ import { assertTrustedMutation } from "@/server/auth/request-guard";
 import { requireUserId } from "@/server/auth/session";
 import { routeError } from "@/server/errors";
 import { clientAddress, enforceRateLimit } from "@/server/risk/controls";
-import { createAnnualFilm } from "@/server/video/annual-film";
+import { createAnnualFilm, previewAnnualFilm } from "@/server/video/annual-film";
 
 const bodySchema = z.object({
+  petId: z.string().uuid().optional(),
+  photoIds: z.array(z.string().uuid()).min(1).max(12).optional(),
   year: z.number().int().min(2000).max(2100),
   /** 总时长三档，见 domain/video-duration.ts */
   durationSeconds: z.union([z.literal(10), z.literal(20), z.literal(30)]).optional(),
 });
+
+export async function GET(request: Request) {
+  try {
+    const query = z.object({ petId: z.string().uuid(), year: z.coerce.number().int().min(2000).max(2100), durationSeconds: z.coerce.number().refine((value) => [10, 20, 30].includes(value)).optional() }).parse(Object.fromEntries(new URL(request.url).searchParams));
+    return NextResponse.json({ data: await previewAnnualFilm(await requireUserId(request), query) }, { headers: { "Cache-Control": "private, no-store" } });
+  } catch (error) { return routeError(error); }
+}
 
 export async function POST(request: Request) {
   try {

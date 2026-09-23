@@ -12,7 +12,7 @@ import { getDatabase } from "@/server/db/client";
  */
 export async function processDueMessages(limit = 20) {
   const database = await getDatabase();
-  const rows = await database.query("SELECT * FROM message_subscriptions WHERE status IN ('active','scheduled') AND scheduled_at IS NOT NULL AND scheduled_at<=now() ORDER BY scheduled_at LIMIT $1", [limit]);
+  const rows = await database.query("SELECT s.* FROM message_subscriptions s JOIN users u ON u.id=s.user_id LEFT JOIN pets p ON p.id=s.pet_id WHERE s.status IN ('active','scheduled') AND s.revoked_at IS NULL AND u.deleted_at IS NULL AND (s.pet_id IS NULL OR (p.deleted_at IS NULL AND p.life_stage<>'memorial')) AND (s.event_type NOT IN ('birthday','got_home','on_this_day') OR p.id IS NOT NULL) AND s.scheduled_at IS NOT NULL AND s.scheduled_at<=now() ORDER BY s.scheduled_at LIMIT $1", [limit]);
   const results: Array<{ id: string; status: string }> = [];
   for (const row of rows) {
     const attempts = Number(row.attempts || 0) + 1;

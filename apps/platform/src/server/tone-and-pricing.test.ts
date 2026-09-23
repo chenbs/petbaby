@@ -16,7 +16,7 @@ import { runWorkerUntilIdle } from "@/server/worker/generation-worker";
 
 const USER = "00000000-0000-4000-8000-0000000000e1";
 const PNG = Uint8Array.from(
-  Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9Z1ZQAAAAASUVORK5CYII=", "base64"),
+  Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAADElEQVQImWP4v5QBAARLAaVqE1cAAAAAAElFTkSuQmCC", "base64"),
 );
 
 async function seed() {

@@ -1,127 +1,97 @@
 const api = require("../../services/api");
+const { recordSession } = require("../../services/record-events");
 const { themedPage } = require("../../theme/page-mixin");
-const { daysSince, anchorOf, companionText } = require("../../services/companion");
-
-/**
- * 成长时间线。
- *
- * 「第几天」由服务端算好下发（`/api/pets/[id]/timeline`），端上不重算 ——
- * 服务端的口径来自 `src/domain/companion.ts`，与本页顶部的陪伴天数
- * 同一套规则。两边各算一次就会出现「顶部写第 743 天、列表里那张写第 742 天」。
- *
- * 起算日语义要说清：有生日说「出生后第 N 天」，只有到家日说「到家后」，
- * 两者都没有就只能从建档日算，那时不该假装知道更早的事。
- */
-
+const { companionText } = require("../../services/companion");
+const { displayMediaTree } = require("../../services/photo-files");
+const SOURCES = { manual: "你设置的日期", exif: "照片里的拍摄时间", upload: "按上传时间记录" };
+const TAGS = { today: "今天的样子", first: "第一次", walk: "散步", birthday: "生日", learned: "学会了", keep: "只是想留着" };
 const ANCHOR_LABEL = { birthday: "出生", got_home: "到家", created: "建档" };
-
-/**
- * 叙事年度视频的时长档（改造项 E5）。
- *
- * 三档口径的单一事实来源在服务端 `domain/video-duration.ts`，这里是端上副本 ——
- * 小程序拿不到那个模块。服务端 `normalizeDuration` 会把非法值归一，
- * 所以端上多一档少一档不会出错，只会让用户选不到。
- */
-const FILM_DURATIONS = [10, 20, 30];
-
-/** 可选年份：今年与去年。更早的年份用户大概不会在这个入口找 */
-function filmYearOptions() {
-  const year = new Date().getFullYear();
-  return [year, year - 1];
-}
 
 themedPage({
   data: {
-    pets: [], petId: "", petText: "",
-    anchorLabel: "", companion: "", totalDays: 0,
-    groups: [], milestones: [],
-    loading: true, error: "", empty: false,
-    // E5：叙事年度视频入口
-    filmYears: filmYearOptions(),
-    filmYear: filmYearOptions()[0],
-    filmDurations: FILM_DURATIONS,
-    filmDuration: FILM_DURATIONS[1],
-    filmBusy: false,
-    filmHint: ""
+    pets: [], petId: "", petText: "", companion: "", anchorLabel: "", totalDays: 0,
+    groups: [], milestones: [], totalCount: 0, nextCursor: "", loading: true, loadingMore: false, error: "", empty: false,
+    filmYears: [new Date().getFullYear(), new Date().getFullYear() - 1], filmYear: new Date().getFullYear(),
+    filmDurations: [10, 20, 30], filmDuration: 20, filmBusy: false, filmHint: "", filmPreview: null, filmPricing: null
   },
-  onLoad(options) {
-    // 从 pets 页带 petId 进来时看的就是那只，别回落到默认宠物。
-    const wanted = options && options.petId;
-    api.request("/api/pets").then((pets) => {
-      const pet = (wanted && pets.find((item) => item.id === wanted))
-        || pets.find((item) => item.isDefault)
-        || pets[0];
-      this.setData({ pets, petId: pet ? pet.id : "", petText: pet ? pet.name : "", loading: Boolean(pet) });
-      if (pet) this.load(pet);
-      else this.setData({ loading: false, empty: true });
-    }).catch((error) => this.setData({ error: error.message, loading: false }));
+  onLoad(options) { this._tracking = recordSession(); this.setData({ petId: options.petId || "" }); },
+  onShow() { this._visible = true; this.reload(); },
+  onHide() { this._visible = false; this._view = (this._view || 0) + 1; },
+  onUnload() { this.onHide(); },
+  async reload() {
+    const view = this._view = (this._view || 0) + 1;
+    this.setData({ loading: true, error: "", groups: [], nextCursor: "", filmPreview: null, filmPricing: null, filmBusy: false });
+    try {
+      const pets = await api.request("/api/pets");
+      if (!this._visible || view !== this._view) return;
+      this.setData({ pets });
+      const pet = this.data.petId ? pets.find((item) => item.id === this.data.petId) : pets.find((item) => item.isDefault) || pets[0];
+      if (this.data.petId && !pet) throw new Error("这只宠物的档案不可用，请重新选择");
+      if (!pet) return this.setData({ loading: false, empty: true, petText: "", companion: "" });
+      this.setData({ petId: pet.id, petText: pet.name });
+      await this.load(false, view);
+    } catch (error) { if (view === this._view) this.setData({ loading: false, error: error.message, empty: false }); }
   },
   choosePet(event) {
+    if (this.data.filmBusy) return;
     const pet = this.data.pets[Number(event.detail.value)];
     if (!pet) return;
-    this.setData({ petId: pet.id, petText: pet.name, loading: true, groups: [] });
-    this.load(pet);
+    this.setData({ petId: pet.id, petText: pet.name, filmHint: "" }); this.reload();
   },
-  /**
-   * 按年份分组。一条平铺的长列表读不出「哪一年」，
-   * 而时间线的意义正是让人看见跨度。
-   */
-  load(pet) {
-    api.request("/api/pets/" + encodeURIComponent(pet.id) + "/timeline")
-      .then((timeline) => {
-        const groups = [];
-        for (const entry of timeline.entries || []) {
-          const year = String(entry.date || "").slice(0, 4) || "更早";
-          // wx:key 需要标量，照片 id 是这里唯一稳定的标识
-          const item = Object.assign({}, entry, { key: entry.photo && entry.photo.id });
-          const last = groups[groups.length - 1];
-          if (last && last.year === year) last.items.push(item);
-          else groups.push({ year, items: [item] });
-        }
-        const days = daysSince(anchorOf(pet), pet.memorialSince);
-        this.setData({
-          groups,
-          milestones: timeline.milestones || [],
-          totalDays: timeline.totalDays || 0,
-          anchorLabel: ANCHOR_LABEL[timeline.anchorType] || "建档",
-          companion: companionText(pet, days),
-          loading: false,
-          empty: !(timeline.entries || []).length,
-          error: ""
-        });
-      })
-      .catch((error) => this.setData({ error: error.message, loading: false }));
+  async load(append, view) {
+    if (append && (this.data.loadingMore || !this.data.nextCursor)) return;
+    view = view || this._view;
+    const petId = this.data.petId;
+    const pet = this.data.pets.find((item) => item.id === petId);
+    this.setData({ loadingMore: Boolean(append) });
+    try {
+      const timeline = await api.request("/api/pets/" + petId + "/timeline?pageSize=50" + (append ? "&cursor=" + encodeURIComponent(this.data.nextCursor) : "")).then(displayMediaTree);
+      if (!this._visible || view !== this._view || petId !== this.data.petId) return;
+      const entries = append ? this._entries.concat(timeline.entries) : timeline.entries;
+      this._entries = entries;
+      if (this._tracking) this._tracking.viewed(petId, "timeline");
+      const groups = [];
+      entries.forEach((entry) => {
+        const year = entry.date.slice(0, 4);
+        const item = Object.assign({}, entry, { key: entry.photo.id, sourceText: SOURCES[entry.dateSource], tagTexts: (entry.photo.tags || []).map((code) => TAGS[code]) });
+        const last = groups[groups.length - 1];
+        if (last && last.year === year) last.items.push(item); else groups.push({ year, items: [item] });
+      });
+      this.setData({ groups, nextCursor: timeline.nextCursor || "", totalCount: timeline.totalCount, totalDays: timeline.totalDays,
+        milestones: timeline.milestones || [], anchorLabel: ANCHOR_LABEL[timeline.anchorType] || "建档",
+        companion: companionText(pet, timeline.totalDays), loading: false, loadingMore: false, empty: timeline.totalCount === 0, error: "",
+        filmYears: Array.from(new Set([new Date().getFullYear()].concat(entries.map((entry) => Number(entry.date.slice(0, 4)))))).sort((a, b) => b - a) });
+    } catch (error) { if (view === this._view) this.setData({ error: error.message, loading: false, loadingMore: false }); }
   },
-  /*
-   * chip 的下标来自 dataset 而不是 picker 的 detail.value ——
-   * 从 picker 改过来时忘了这一处不会报错，只是选中项永远是第一个
-   * （见 CLAUDE.md 的 UI 重构约定）。这里直接取值而非下标。
-   */
-  chooseFilmYear(event) { this.setData({ filmYear: Number(event.currentTarget.dataset.year), filmHint: "" }); },
-  chooseFilmDuration(event) { this.setData({ filmDuration: Number(event.currentTarget.dataset.duration), filmHint: "" }); },
-
-  /**
-   * 入队一条叙事年度视频（E5）。
-   *
-   * 只负责入队，不在这里轮询渲染进度：叙事视频是四段 filtergraph，
-   * 而 `processNextVideo` 的队列并发是 1 —— 渲染可能要几十秒到几分钟，
-   * 让用户停在这一页等是错的。入队成功后引导去作品库看。
-   *
-   * 服务端限频是每分钟 3 条（足够试三个时长档），撞上了会返回 429，
-   * 错误文案直接透出，不自己编。
-   */
-  createFilm() {
-    if (this.data.filmBusy) return;
-    this.setData({ filmBusy: true, filmHint: "", error: "" });
-    api.request("/api/annual-films", { method: "POST", data: { year: this.data.filmYear, durationSeconds: this.data.filmDuration } })
-      .then((film) => {
-        this.setData({
-          filmBusy: false,
-          filmHint: "已开始渲染" + (film && film.shots ? "，用了 " + film.shots + " 张照片" : "") + "。完成后会出现在作品库里。"
-        });
-      })
-      .catch((error) => this.setData({ filmBusy: false, filmHint: error.message || "生成失败，请稍后再试" }));
+  more() { return this.load(true); },
+  chooseFilmYear(event) { if (!this.data.filmBusy) this.setData({ filmYear: Number(event.currentTarget.dataset.year), filmPreview: null, filmHint: "" }); },
+  chooseFilmDuration(event) { if (!this.data.filmBusy) this.setData({ filmDuration: Number(event.currentTarget.dataset.duration), filmPreview: null, filmHint: "" }); },
+  async createFilm() {
+    if (this.data.filmBusy || !this.data.petId) return;
+    const petId = this.data.petId, view = this._view;
+    if (this._tracking) this._tracking.deliverable(petId, "pl-19", "timeline");
+    this.setData({ filmBusy: true, filmHint: "" });
+    try {
+      const result = await Promise.all([
+        api.request("/api/annual-films?petId=" + petId + "&year=" + this.data.filmYear + "&durationSeconds=" + this.data.filmDuration).then(displayMediaTree),
+        api.request("/api/pets/" + petId + "/pricing?pluginId=pl-19")
+      ]);
+      if (view !== this._view) return;
+      if (!result[0].photos.length) throw new Error(this.data.filmYear + " 年还没有可用照片，可以先收好照片或校正日期");
+      this.setData({ filmPreview: result[0], filmPricing: result[1] });
+    } catch (error) { if (view === this._view) this.setData({ filmHint: error.message || "暂时无法确认素材和报价，请重试" }); }
+    finally { if (view === this._view) this.setData({ filmBusy: false }); }
   },
-
-  openPhotos() { wx.navigateTo({ url: "/pages/photos/photos" }); }
+  async confirmFilm() {
+    const preview = this.data.filmPreview, view = this._view;
+    if (this.data.filmBusy || !preview || preview.petId !== this.data.petId) return;
+    this.setData({ filmBusy: true, filmHint: "" });
+    try {
+      const film = await api.request("/api/annual-films", { method: "POST", data: { petId: preview.petId, year: preview.year, durationSeconds: preview.durationSeconds, photoIds: preview.photos.map((photo) => photo.id) } });
+      if (view === this._view) this.setData({ filmPreview: null, filmHint: "已为 " + film.petName + " 开始渲染，使用确认的 " + film.shots + " 张照片。完成后到作品库查看。" });
+    } catch (error) { if (view === this._view) this.setData({ filmHint: error.message }); }
+    finally { if (view === this._view) this.setData({ filmBusy: false }); }
+  },
+  openDetail(event) { wx.navigateTo({ url: "/pages/photos/photos?petId=" + this.data.petId + "&photoId=" + event.currentTarget.dataset.id }); },
+  openPhotos() { wx.navigateTo({ url: "/pages/photos/photos?mode=record&entry=timeline" + (this.data.petId ? "&petId=" + this.data.petId : "") }); }
 });

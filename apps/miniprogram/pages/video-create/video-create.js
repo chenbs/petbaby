@@ -1,3 +1,4 @@
+const { displayMediaTree } = require("../../services/photo-files");
 const api = require("../../services/api");
 const { themedPage } = require("../../theme/page-mixin");
 
@@ -37,20 +38,29 @@ themedPage({
     pets: [], petId: "", petText: "", photos: [], selected: [],
     title: "我们的日常电影", caption: "", bgm: "none", bgmOptions: BGM,
     durationSeconds: 20, durationValue: "20", durationOptions: DURATION_OPTIONS, maxPhotos: maxPhotosFor(20),
-    error: "", busy: false, loading: true, durationText: "20 秒成片"
+    error: "", busy: false, loading: true, durationText: "20 秒成片", pricingText: "正在读取报价"
   },
-  onLoad() {
-    api.request("/api/pets").then((pets) => {
-      const pet = pets.find((item) => item.isDefault) || pets[0];
+  onLoad(query) {
+    this._initialPhotoIds = query && query.photoIds ? query.photoIds.split(",").filter(Boolean) : [];
+    api.request("/api/pets").then(displayMediaTree).then((pets) => {
+      const pet = query && query.petId ? pets.find((item) => item.id === query.petId) : pets.find((item) => item.isDefault) || pets[0];
+      if (query && query.petId && !pet) throw new Error("这只宠物的档案不可用，请重新选择");
       this.setData({ pets, petId: pet ? pet.id : "", petText: pet ? pet.name : "", loading: false });
       if (pet) this.loadPhotos(pet.id);
     }).catch((error) => this.setData({ error: error.message, loading: false }));
   },
   loadPhotos(id) {
-    api.request("/api/photos?petId=" + encodeURIComponent(id))
-      .then((photos) => { this.setData({ photos, selected: [] }); this.syncDuration(); })
-      .catch((error) => this.setData({ error: error.message }));
+    const request = this._photoRequest = (this._photoRequest || 0) + 1;
+    this.setData({ loading: true });
+    api.request("/api/photos?petId=" + encodeURIComponent(id)).then(displayMediaTree)
+      .then((photos) => { if (request !== this._photoRequest || id !== this.data.petId) return; const selected = this._initialPhotoIds || this.data.selected; this._initialPhotoIds = null; if (selected.some((value) => !photos.some((photo) => photo.id === value))) { this.setData({ photos, selected: [], loading: false }); throw new Error("部分照片已不可用，请重新确认素材"); } this.setData({ photos, selected, loading: false }); this.syncDuration(); })
+      .catch((error) => { if (request === this._photoRequest) this.setData({ error: error.message, loading: false }); });
+    api.request("/api/pets/" + id + "/pricing?pluginId=pl-19").then((price) => {
+      if (request === this._photoRequest) this.setData({ pricingText: "预览免费，高清解锁 ¥" + price.amount + " · " + price.label });
+    }).catch(() => { if (request === this._photoRequest) this.setData({ pricingText: "暂时无法读取报价，请稍后重试" }); });
   },
+  onShow() { if (this.data.petId && !this.data.busy) this.loadPhotos(this.data.petId); },
+  onHide() { this._photoRequest = (this._photoRequest || 0) + 1; },
   /**
    * 成片时长由用户选，这里只回答「当前张数配这个时长，每张停多久」。
    *
@@ -77,9 +87,11 @@ themedPage({
     this.syncDuration();
   },
   choosePet(event) {
+    if (this.data.busy) return;
     const pet = this.data.pets[Number(event.detail.value)];
     if (!pet) return;
-    this.setData({ petId: pet.id, petText: pet.name });
+    this._initialPhotoIds = null;
+    this.setData({ petId: pet.id, petText: pet.name, selected: [], photos: [], error: "", pricingText: "正在读取报价" });
     this.loadPhotos(pet.id);
   },
   toggle(event) {
@@ -96,8 +108,9 @@ themedPage({
   inputTitle(event) { this.setData({ title: event.detail.value }); },
   inputCaption(event) { this.setData({ caption: event.detail.value }); },
   chooseBgm(event) { this.setData({ bgm: event.currentTarget.dataset.id }); },
-  openPhotos() { wx.navigateTo({ url: "/pages/photos/photos" }); },
+  openPhotos() { wx.navigateTo({ url: "/pages/photos/photos?petId=" + this.data.petId }); },
   create() {
+    if (this.data.busy || this.data.loading) return;
     if (!this.data.petId || !this.data.selected.length) return this.setData({ error: "请先选择照片" });
     const limit = maxPhotosFor(this.data.durationSeconds);
     if (this.data.selected.length > limit) return this.setData({ error: this.data.durationSeconds + " 秒的片子最多放 " + limit + " 张照片，取消几张再创建。" });

@@ -5,7 +5,7 @@
   <view class="title">照片库</view>
 
   <view class="bar">
-    <picker range="{{pets}}" range-key="name" bindchange="choosePet">
+    <picker range="{{pets}}" range-key="name" disabled="{{saving || preparing}}" bindchange="choosePet">
       <view class="picker">
         <text class="small">当前宠物</text>
         <text class="picker-value">{{petText || '暂无档案'}}</text>
@@ -15,21 +15,63 @@
   </view>
 
   <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
+  <t-button wx:if="{{error && !detail && !batchEditing}}" type="ghost" size="mini" bindtap="load">重新加载</t-button>
+  <t-notice wx:if="{{message}}" type="success" message="{{message}}" class="block-gap"></t-notice>
+
+  <view wx:if="{{petId && !loading}}" class="bar">
+    <t-button type="primary" anim="{{animType}}" bindtap="goCreate">收好照片</t-button>
+    <t-button type="ghost" anim="{{animType}}" bindtap="timeline">查看时间线</t-button>
+  </view>
+  <view wx:if="{{petId && totalCount && !loading}}" class="record-actions">
+    <t-button type="ghost" size="mini" bindtap="compare">免费成长对比（带水印）</t-button>
+    <t-button type="ghost" size="mini" data-kind="album" bindtap="makeWork">做成画册</t-button>
+    <t-button type="ghost" size="mini" data-kind="video" bindtap="makeWork">做成短片</t-button>
+  </view>
+
+  <view wx:if="{{recordMode && petId && !loading}}" class="record-panel">
+    <view class="sub-title">为 {{petText}} 收好照片</view>
+    <text class="small">每批 1–9 张。选好后点「收好照片」才开始保存；文字和标签可以稍后再补。</text>
+    <text class="small">上传可能压缩照片，保存的是上传后的文件。</text>
+    <t-button type="secondary" anim="{{animType}}" disabled="{{uploading || preparing || uploadItems.length >= 9}}" bindtap="choosePhotos">{{preparing ? '正在整理照片' : '选择照片'}}</t-button>
+    <view wx:for="{{uploadItems}}" wx:key="requestId" class="upload-row">
+      <image src="{{item.path}}" mode="aspectFill" class="upload-thumb" />
+      <view class="upload-copy">
+        <text>{{petText}} · 第 {{index + 1}} 张 · {{item.stateText}}</text>
+        <text wx:if="{{item.state === 'uploading'}}" class="small">已发送 {{item.progress}}%，等待确认保存</text>
+        <text wx:if="{{item.error}}" class="small">{{item.error}}</text>
+        <text wx:if="{{item.duplicatePhotoId}}" class="small">照片库中可能已有这张照片，你可以保留或在图库中移除。</text>
+        <t-button wx:if="{{item.needsReselect || item.state === 'failed'}}" type="ghost" size="mini" data-id="{{item.requestId}}" bindtap="choosePhotos">重选这一张</t-button>
+        <t-button wx:if="{{!item.attempted}}" type="ghost" size="mini" data-id="{{item.requestId}}" bindtap="cancelSelected">取消这一张</t-button>
+      </view>
+    </view>
+    <text wx:if="{{uploadItems.length}}">已为 {{petText}} 收好 {{savedCount}} 张，{{pendingCount}} 张待处理</text>
+    <t-button wx:if="{{pendingCount}}" type="primary" anim="{{animType}}" disabled="{{uploading || preparing}}" bindtap="savePhotos">{{uploading ? '正在收好照片' : (savedCount ? '核对并重试剩余照片' : '收好照片')}}</t-button>
+    <block wx:if="{{savedCount}}">
+      <text class="small">照片已经收好了。想起什么时，再来补一句。</text>
+      <view class="record-actions">
+        <t-button type="secondary" size="mini" bindtap="viewSaved">查看这次记录</t-button>
+        <t-button type="ghost" size="mini" disabled="{{uploading}}" bindtap="editBatch">给本次成功照片补一句</t-button>
+        <t-button type="ghost" size="mini" disabled="{{pendingCount || uploading}}" bindtap="continueBatch">继续收好照片</t-button>
+        <t-button type="ghost" size="mini" bindtap="home">返回陪伴首页</t-button>
+      </view>
+    </block>
+  </view>
 
   <t-skeleton wx:if="{{loading}}" type="grid" count="9" class="block-gap"></t-skeleton>
 
   <t-empty
-    wx:elif="{{!photos.length}}"
+    wx:elif="{{!photos.length && !error}}"
     icon="photo"
-    title="照片库还是空的"
-    description="制作作品时上传的照片会自动存到这里，下次可以直接复用。"
-    action-text="去做一个"
+    title="先收好第一张照片"
+    description="以后从这里接着记。不用先选择玩法，也可以只保存照片。"
+    action-text="{{petId ? '收好照片' : '先建宠物档案'}}"
     anim="{{animType}}"
     decor="{{decor}}"
     bindaction="goCreate"
   ></t-empty>
 
   <block wx:else>
+    <view class="bar"><text class="small">{{petText}} 的照片库共 {{totalCount}} 张{{batchView ? ' · 正在看这次记录' : ''}}</text><t-button wx:if="{{batchView}}" type="ghost" size="mini" bindtap="load">全部照片</t-button></view>
     <t-photo-grid
       photos="{{photos}}"
       selected-ids="{{picked}}"
@@ -39,6 +81,8 @@
       class="block-gap"
       bindtoggle="togglePick"
     ></t-photo-grid>
+    <t-button wx:if="{{nextCursor}}" class="block-gap" type="secondary" block disabled="{{loadingMore}}" bindtap="more">{{loadingMore ? '正在加载' : '加载更多'}}</t-button>
+    <text wx:elif="{{photos.length && !batchView}}" class="small end-note">没有更多照片了</text>
 
     <!-- 管理模式下的批量删除条固定在底部 -->
     <view wx:if="{{manage}}" class="dock">
@@ -51,10 +95,35 @@
 <t-dialog
   visible="{{removeCount > 0}}"
   title="删除 {{removeCount}} 张照片？"
-  content="已经用这些照片生成的作品不受影响，但下次制作时无法再选到它们。"
+  content="从照片库移除后不能恢复。已导出的成品和他人保存的副本不会远程删除；需要关闭的作品分享请另行关闭。有制作任务使用的照片，需任务完成或取消后再删除。"
   confirm-text="删除"
   danger
   anim="{{animType}}"
   bindconfirm="confirmRemove"
   bindcancel="cancelRemove"
 ></t-dialog>
+
+<t-popup visible="{{!!detail || batchEditing}}" title="{{batchEditing ? '补一句话与标签' : '这张照片的记录'}}" anim="{{animType}}" bindclose="closeDetail">
+  <view class="record-stack">
+    <t-notice wx:if="{{error}}" type="error" message="{{error}}"></t-notice>
+    <block wx:if="{{detail}}">
+      <image src="{{detail.localUrl}}" mode="widthFix" class="detail-photo" bindtap="previewDetail" />
+      <text>{{petText}} · {{detail.recordedDate}}</text>
+      <text class="small">{{detail.sourceText}}</text>
+      <picker mode="date" value="{{editDate}}" bindchange="chooseDate"><t-field control="select" label="记录日期（选填）" value="{{editDate}}" placeholder="不确定时可以不填"></t-field></picker>
+      <t-button type="ghost" size="mini" bindtap="clearDate">清除手工日期，恢复照片或上传日期</t-button>
+    </block>
+    <t-field control="textarea" label="想留的一句话（选填）" value="{{editCaption}}" maxlength="120" show-count placeholder="照片已收好，不必现在写" bindchange="inputCaption"></t-field>
+    <text class="small">最多选择三个标签</text>
+    <view class="record-tags"><view wx:for="{{tagOptions}}" wx:key="code" class="record-tag {{item.selected ? 'record-tag-selected' : ''}}" data-code="{{item.code}}" bindtap="toggleTag">{{item.label}}</view></view>
+    <block wx:if="{{detail}}">
+      <t-button type="secondary" disabled="{{saving}}" bindtap="download">下载保存的照片</t-button>
+      <text class="small">文件可能经过上传压缩。</text>
+      <t-button wx:if="{{albumDenied}}" type="ghost" bindtap="albumSettings">打开相册权限设置</t-button>
+    </block>
+  </view>
+  <view slot="footer" class="record-actions">
+    <t-button type="ghost" disabled="{{saving}}" bindtap="closeDetail">稍后再补</t-button>
+    <t-button type="primary" disabled="{{saving}}" bindtap="saveMetadata">{{saving ? '正在保存' : (batchEditing ? '应用到本次成功的 ' + savedCount + ' 张' : '保存记录')}}</t-button>
+  </view>
+</t-popup>

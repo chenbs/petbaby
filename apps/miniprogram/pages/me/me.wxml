@@ -77,6 +77,9 @@
     <view class="section">
       <view class="section-title">常用功能</view>
       <t-card blur="{{blurOk}}" anim="{{animType}}" padded="{{false}}">
+        <view class="entry" hover-class="entry-hover" bindtap="record">
+          <view class="entry-text"><view class="entry-name">收好照片</view><text class="small">先记录，随时回来补一句</text></view><text class="entry-arrow">›</text>
+        </view>
         <view class="entry" hover-class="entry-hover" bindtap="openOrders">
           <view class="entry-text"><view class="entry-name">订单与退款</view><text class="small">支付记录、发票与退款进度</text></view>
           <text class="entry-arrow">›</text>

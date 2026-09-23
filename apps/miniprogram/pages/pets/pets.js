@@ -1,3 +1,4 @@
+const { displayMediaTree } = require("../../services/photo-files");
 const api = require("../../services/api");
 const config = require("../../config");
 const companion = require("../../services/companion");
@@ -22,13 +23,19 @@ function labelOf(map, value) {
 
 themedPage({
   data: {
-    pets: [], editing: null, loading: true, error: "", message: "", removeTarget: null,
+    pets: [], editing: null, loading: true, saving: false, error: "", message: "", removeTarget: null,
     speciesLabels: SPECIES.labels, genderLabels: GENDER.labels, dateTypeLabels: DATE_TYPE.labels, stageLabels: STAGE.labels,
     editSpeciesText: "", editGenderText: "", editDateTypeText: "", editStageText: ""
   },
+  onLoad(query) { this._returnToRecord = query.returnToRecord === "1"; if (query.mode === "create") this.newPet(); },
   onShow() { this.reload(); },
+  newPet() {
+    this.setData({ editing: { name: "", species: "cat", gender: "unknown", birthday: "", dateType: "birthday", lifeStage: "active" }, error: "", message: "" });
+    this.syncEditLabels();
+  },
+  record(event) { wx.navigateTo({ url: "/pages/photos/photos?mode=record&entry=pets&petId=" + encodeURIComponent(event.currentTarget.dataset.id) }); },
   reload() {
-    api.request("/api/pets")
+    return api.request("/api/pets").then(displayMediaTree)
       .then((pets) => this.setData({
         loading: false,
         pets: pets.map((pet) => {
@@ -71,7 +78,7 @@ themedPage({
   memorial(event) {
     wx.navigateTo({ url: "/pages/memorials/memorials?petId=" + encodeURIComponent(event.currentTarget.dataset.id) });
   },
-  cancel() { this.setData({ editing: null }); },
+  cancel() { if (!this.data.saving) this.setData({ editing: null }); },
   /** 编辑抽屉里的枚举值同步成中文 */
   syncEditLabels() {
     const editing = this.data.editing || {};
@@ -94,14 +101,28 @@ themedPage({
   chooseStage(event) { this.setData({ "editing.lifeStage": STAGE.values[Number(event.currentTarget.dataset.index)] }); this.syncEditLabels(); },
   save() {
     const pet = this.data.editing;
+    if (this.data.saving) return;
     if (!pet || !pet.name.trim()) return this.setData({ error: "请填写宠物名字" });
-    api.request("/api/pets/" + pet.id, { method: "PATCH", data: { name: pet.name, species: pet.species, gender: pet.gender, birthday: pet.birthday || "", dateType: pet.dateType || "birthday", lifeStage: pet.lifeStage || "active" } })
-      .then(() => { this.setData({ editing: null, message: "档案已保存" }); this.reload(); })
-      .catch((error) => this.setData({ error: error.message }));
+    this.setData({ saving: true, error: "" });
+    return api.request(pet.id ? "/api/pets/" + pet.id : "/api/pets", { method: pet.id ? "PATCH" : "POST", data: { name: pet.name, species: pet.species, gender: pet.gender, birthday: pet.birthday || "", dateType: pet.dateType || "birthday", lifeStage: pet.lifeStage || "active" } }).then(displayMediaTree)
+      .then((saved) => {
+        this.setData({ editing: null, saving: false, message: "档案已保存" });
+        if (!pet.id && this._returnToRecord) {
+          this.getOpenerEventChannel().emit("petCreated", { petId: saved.id });
+          wx.navigateBack();
+        } else this.reload();
+      })
+      .catch((error) => {
+        this.setData({ saving: false, error: error.message });
+        if (!pet.id && (!error.statusCode || error.statusCode >= 500)) {
+          this.setData({ editing: null, error: "保存结果待确认，请先查看档案列表；若已出现，请使用已有档案，不要重复新建。" });
+          this.reload();
+        }
+      });
   },
   avatar() {
     const pet = this.data.editing;
-    if (!pet) return;
+    if (!pet || !pet.id) return;
     wx.chooseMedia({ count: 1, mediaType: ["image"], sourceType: ["album", "camera"], success: (result) => {
       wx.uploadFile({
         url: config.apiBaseUrl + "/api/pets/" + pet.id + "/avatar",
@@ -116,7 +137,7 @@ themedPage({
       });
     } });
   },
-  setDefault(event) { api.request("/api/pets/" + event.currentTarget.dataset.id, { method: "POST" }).then(() => this.reload()); },
+  setDefault(event) { api.request("/api/pets/" + event.currentTarget.dataset.id, { method: "POST" }).then(displayMediaTree).then(() => this.reload()); },
   askRemove(event) {
     const target = this.data.pets.find((item) => item.id === event.currentTarget.dataset.id);
     if (target) this.setData({ removeTarget: target });
@@ -126,9 +147,9 @@ themedPage({
     const target = this.data.removeTarget;
     if (!target) return;
     this.setData({ removeTarget: null });
-    api.request("/api/pets/" + target.id, { method: "DELETE" })
+    api.request("/api/pets/" + target.id, { method: "DELETE" }).then(displayMediaTree)
       .then(() => { wx.showToast({ title: "档案已删除", icon: "none" }); this.reload(); })
       .catch((error) => this.setData({ error: error.message }));
   },
-  goCreate() { wx.switchTab({ url: "/pages/index/index" }); }
+  goCreate() { this.newPet(); }
 });

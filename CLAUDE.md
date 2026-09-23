@@ -17,7 +17,7 @@ pnpm check                   # lint + typecheck + test:coverage + build（提交
 pnpm test                    # Vitest 单测
 pnpm test -- src/server/platform-service.test.ts        # 单个测试文件
 pnpm test -- -t "创建生成任务"                            # 按用例名筛选
-pnpm test:e2e                # Playwright，自动拉起 DATABASE_URL=memory:// 的 dev server（端口 3100）
+pnpm test:e2e                # Playwright，默认内存库；设置 E2E_DATABASE_URL 则拉起对应库的 Web + Worker（端口 3100）
 pnpm test:e2e -- --headed -g "completes generation"     # 单个 E2E 用例
 pnpm db:generate             # 由 src/server/db/schema.ts 生成 drizzle/*.sql
 pnpm db:migrate              # 对 DATABASE_URL 指向的 PostgreSQL 执行迁移
@@ -25,7 +25,7 @@ pnpm db:migrate              # 对 DATABASE_URL 指向的 PostgreSQL 执行迁�
 
 首次需 `pnpm exec playwright install chromium`。小程序侧在 `apps/miniprogram/` 执行 `pnpm validate`（十项门禁 + `node --test`，见下文「小程序主题系统」），`pnpm preview` / `pnpm upload` 走 miniprogram-ci。
 
-**当前仓库没有 `.github/workflows/ci.yml`。** 原有 GitHub Actions 工作流已于 2026-08-22 删除；`pnpm check`、`pnpm test:e2e`、真实 PostgreSQL 迁移、小程序 `pnpm validate`、官网 `pnpm check && pnpm build && pnpm check:links`、Gitleaks 与容器构建目前都要本地或在发布环境显式执行。恢复等价自动门禁是发布前事项，不能把“本地跑过”写成 CI 已覆盖。
+**`.github/workflows/ci.yml` 已于 2026-09-23 恢复，远端执行仍待验。** 包含 PostgreSQL + ffmpeg 的 `pnpm check` / E2E、空库/重复迁移、小程序校验、官网构建/链接/像素/交互、Gitleaks 和容器构建。工作流只校验，不上传小程序或发布镜像。已通过本地 actionlint，但不能把静态校验或本地业务测试写成远端 CI 已通过；证据见 `docs/delivery/09-陪伴与记录实施验收记录.md`。
 
 ## 架构要点
 
@@ -39,7 +39,9 @@ pnpm db:migrate              # 对 DATABASE_URL 指向的 PostgreSQL 执行迁�
 
 **运行时全部是原始参数化 SQL**，`src/server/db/schema.ts`（drizzle-orm）仅供 `drizzle-kit generate` 产出 `drizzle/*.sql`，业务代码不 import 它。行→领域对象的转换集中在 `src/server/db/rows.ts`（`mapPet` / `mapWork` / `mapTask` …，snake_case → camelCase）。
 
-**关键陷阱**：`getDatabase()` 在首次调用时按 `client.ts` 里**硬编码列出**的迁移文件顺序 `exec` 一遍（当前 `0000` → `0026`）。新增迁移必须同时：① 在 `drizzle/` 放 forward-only 的 SQL，② 追加到 `client.ts` 的 `readFile` 列表，③ 视情况更新 `resetDatabaseForTest()`（它 TRUNCATE 固定表清单并重跑最后一个迁移）。只做①会让本地/E2E 拿不到新表。迁移一律只向前，不改历史。
+`getDatabase()` 首次调用 `db/migrate.ts` 的 `migrateDatabase()`：按文件名排序扫描 `drizzle/` 下四位编号 SQL，在事务锁内查询 `schema_migrations`，只执行尚未登记的迁移。新增 forward-only SQL 无需追加运行时硬编码列表，禁止改写历史迁移。`resetDatabaseForTest()` 则仍有固定 TRUNCATE 表清单与种子迁移重放，新增表或种子须单独检查测试重置覆盖。
+
+**测试隔离**：Vitest 在未显式设置时使用 `DATABASE_URL=memory://` 和 `.data/test-objects`；显式传入的配置仍会生效。执行 reset 类回归前必须确认是专用测试库，不得连接日常开发库 `.data/petbaby`。数据库事务上下文使用 `globalThis` 上的 AsyncLocalStorage 单例，避免 Next 热重载产生两份上下文而自锁。
 
 ### 生成任务：队列 + 本地内联执行
 
@@ -64,9 +66,15 @@ REST route handler 在 `src/app/api/**/route.ts`，它们只做「守卫 → 限
 - `server/platform-service.ts` —— 阶段一主链路：宠物、照片、生成、作品/版本/分享、订单、支付、退款。
 - `server/growth-service.ts` —— 最大的一个：AI 四选一、互动页、视频项目、订阅消息、会员、年度报告、实体商品。
 - `server/memorial-service.ts`、`server/account-service.ts`、`server/user-status-service.ts`、`server/maintenance.ts`。
-- `server/timeline-service.ts` —— 成长时间线与「去年今日」，按 `photos.shot_at` 聚合。
+- `server/timeline-service.ts` —— 成长时间线按有效记录日期分页；「去年今日」仍按 EXIF 命中，手工日期与 EXIF 不一致时排除。
 
 外部依赖都走 provider 模式，本地有零配置实现、生产按环境变量切换：`server/storage/index.ts`（`LocalObjectStorage` ↔ `ConfiguredCloudStorage`，另含 `inspectImage` 魔数校验）、`server/payments/provider.ts`（模拟支付 ↔ 微信支付 v3）、`server/ai/provider.ts`（本地 SVG 占位 ↔ HTTP 图片接口，`generateWithFailover` 支持主备 + 熔断）。
+
+### 陪伴与记录的数据边界
+
+正常照片不因年龄或没有作品引用被维护任务删除。`photo-library-service.ts` 负责上传幂等回执、照片元数据及分页；手工记录日期不改写 `shot_at` 或历史计价。原照只允许所有者读取且 `no-store`，公开分享使用受控的独立展示图；删除先阻止新读取并保留请求墓碑，对象清理进入持久重试。
+
+年度视频入队冻结宠物、照片和有效日期/来源的 aggregate；普通视频冻结素材/配置，不能在 Worker 中改读最新草稿照片。页面必须保留显式传入的宠物上下文，无权或已删除时显示错误。实现边界、最终自动化证据和仍待真机/外部验证的项目见 `docs/delivery/09-陪伴与记录实施验收记录.md`。
 
 ### 请求约定
 
@@ -101,7 +109,7 @@ await Promise.all([enforceRateLimit(...), assertGenerationCircuit()]);
 
 `components/glass-sheet/` 是沉浸式玻璃面板，接入 `pages/work` 和 `pages/ai-run`。**拖动期间零 `setData`**：位移、遮罩、`actions` 反向平移全在 `index.wxs` 里改样式，逻辑层只在手指抬起时收到一次 `onGestureEnd`。面板内的文本层级类（`glass-title` 等）放在 `app.wxss` 而非组件 `.wxss`，因为 slot 内容归页面作用域。
 
-`scripts/validate.js` 十项（编号 1–10，另有 7b）：每页 4 文件齐备、JSON 可解析、零硬编码扫描、token 完整性与类型、文字对比度、玻璃面板双极对比度、注入串体积、黏土内高光跟随卡面明暗（7b）、`var()` 引用的变量确有来源、**组件在同页 `usingComponents` 注册**、**WXML 标签闭合**。最后三项管的都是「静默失效」类错误：无来源的 `var()` 只是不生效，漏注册的组件被当未知节点丢掉、页面少一块但不报错，标签失衡要等开发者工具打开才现形。`pnpm validate` 末尾还会跑 `node --test`（陪伴天数）；准确页数与用例数只看 `docs/README.md`「当前状态」。当前没有 GitHub Actions 工作流，这条门禁必须在每次相关改动和发布前手工执行，恢复 CI 后再将它接回自动关卡。
+`scripts/validate.js` 十项（编号 1–10，另有 7b）：每页 4 文件齐备、JSON 可解析、零硬编码扫描、token 完整性与类型、文字对比度、玻璃面板双极对比度、注入串体积、黏土内高光跟随卡面明暗（7b）、`var()` 引用的变量确有来源、**组件在同页 `usingComponents` 注册**、**WXML 标签闭合**。最后三项管的都是「静默失效」类错误：无来源的 `var()` 只是不生效，漏注册的组件被当未知节点丢掉、页面少一块但不报错，标签失衡要等开发者工具打开才现形。`pnpm validate` 末尾还会跑 `node --test`（陪伴天数、上传及页面状态）；准确页数与用例数只看 `docs/README.md`「当前状态」。该命令已接入恢复后的 CI；每次相关改动仍须本地执行，远端结果单独记录。
 
 **测试脚本带 `--test-concurrency=1`，且装 `global` 替身的文件必须在 `test.after()` 里还原。** `global.wx` 是进程级的而 `node --test` 默认并发跑文件，两个文件各自 `installWx()` 会互相覆盖 —— 表现是**单跑全过、合跑随机失败**，且失败信息可能不提替身。两道防线都要：只加串行是把问题掩盖掉，谁把并发调回来就又随机红。场景化配色走 `theme/scene-presets.js` 的 `.scene-*` 内联注入，与全局主题 token 刻意隔离。
 
@@ -203,7 +211,7 @@ await Promise.all([enforceRateLimit(...), assertGenerationCircuit()]);
 
 静态原型在 `docs/website/prototype/`（11 区块单页，`index.html` + `styles.css` + `main.js` + `assets/`，无构建步骤，打开即看）。视觉体系与小程序同源：色值取 `cute.js`，阴影用 `tokens.js` 的暖褐成品串，浅色为主、hero 与页脚深色包夹。
 
-**实现是 `apps/website`（Astro 7，纯静态，独立域名，与 `apps/platform` 互不影响）**，方案见 `docs/website/02-独立官网实施方案.md`、实现记录与偏离见 `03-独立官网实现说明.md`。命令在 `apps/website/` 下跑（不是 workspace，不能 `--filter`）：`pnpm build`、`pnpm check:links`（站内链接 + canonical/sitemap 一致性门禁）、`pnpm check:pixels`（首页与原型逐像素比对，Chromium 与 sharp 从 `apps/platform/node_modules` 借）。当前无 CI workflow，以上命令需显式执行。发布走 `deploy/scripts/release-website.sh`，切软链原子生效，不碰 Docker、不重启容器、不跑迁移。
+**实现是 `apps/website`（Astro 7，纯静态，独立域名，与 `apps/platform` 互不影响）**，方案见 `docs/website/02-独立官网实施方案.md`、实现记录与偏离见 `03-独立官网实现说明.md`。命令在 `apps/website/` 下跑（不是 workspace，不能 `--filter`）：`pnpm build`、`pnpm check:links`（站内链接 + canonical/sitemap 一致性门禁）、`pnpm check:pixels`（首页与原型逐像素比对，Chromium 与 sharp 从 `apps/platform/node_modules` 借）。恢复后的 CI 已接入这些命令，远端结果仍待验。发布走 `deploy/scripts/release-website.sh`，切软链原子生效，不碰 Docker、不重启容器、不跑迁移。
 
 三条不能破：**`src/styles/site.css` 与 `src/scripts/site.js` 是原型文件的逐字节副本**（`cmp` 可验），新样式一律进 `site-additions.css` / `prose.css` —— 改前者就说明视觉出现了偏差，停下来查原因。**素材三处同步**（真源 `tools/imagegen/out/website/` → 原型 → `apps/website/public/assets/`），release 脚本只 warn 不自动同步，因为哪份新只有人知道。**域名只有一个来源**：`SITE_URL` 环境变量同时喂 `astro.config.mjs` 的 `site` 与 `src/config/site.ts`，`robots.txt` / `llms.txt` 都是端点而非静态文件 —— canonical 与 sitemap 逐字一致是硬要求。
 
@@ -239,6 +247,6 @@ Playwright 只有 `tests/e2e/main-flow.spec.ts` 两个用例：完整生成→�
 
 `docs/product/17-产品改造方案.md`（批次 1–3）与 `20-功能改造方案-第二轮.md`（四批）是已完成的改造方案，偏离分别记在 20 号文 11.4 与 11.6；`19-验收文档.md` 记着验收结果与三个「只有真跑才发现」的缺陷。图片玩法的研究、原始矩阵、重构、animal 扩展和宠物人化审批依次看 `27`～`31` 号文。阶段一至三与后台批次 K 的逐批完成记录已归档清理，需要历史口径查 Git 历史。
 
-`docs/product/14-direction-review-emotional-value.md` 是情绪价值方向的任务书，六项已全部完成，每项末尾的「实现记录」记着偏离与未验证项（**其中年度视频的成片观感未验证 —— 开发机无 ffmpeg**）。
+`docs/product/14-direction-review-emotional-value.md` 是情绪价值方向的任务书，每项末尾保留该批次的实现记录。后续陪伴与记录批次已在本机真实 ffmpeg 验证年度 B 宠物快照并抽帧；生产 Linux/容器、全时长观感和设备播放仍待验，最新证据见 `docs/delivery/09-陪伴与记录实施验收记录.md`。
 
 `docs/demand/` 放已定稿的专项需求规格（当前是 `theme.md` 主题系统、`theme-2.md` 玻璃面板）。这两份的约定是**正文保持原判不改写，偏离逐条记进最后一章「实现差异记录」**——改主题相关代码前先看那一章，正文里的部分取值（如 45 个 token、`glassBackground` 透明度）已被实现修正。

@@ -2,6 +2,7 @@ import "server-only";
 
 import { getDatabase } from "@/server/db/client";
 import { objectStorage } from "@/server/storage";
+import { processObjectCleanupJobs } from "@/server/object-cleanup";
 
 export async function closeExpiredOrders() {
   const database = await getDatabase();
@@ -20,9 +21,10 @@ export async function cleanupExpiredContent() {
     await database.query("DELETE FROM works WHERE id=$1", [work.id]);
   }
   await database.query("DELETE FROM rate_limits WHERE window_start < now()-interval '2 days'");
-  const orphanPhotos = await database.query<{ id: string; storage_key: string }>("SELECT p.id,p.storage_key FROM photos p WHERE p.created_at < now()-interval '1 day' AND NOT EXISTS(SELECT 1 FROM generation_tasks t WHERE p.id::text IN (SELECT jsonb_array_elements_text(t.photo_ids))) AND NOT EXISTS(SELECT 1 FROM works w WHERE w.photo_id=p.id)");
-  for (const photo of orphanPhotos) { await objectStorage.delete(photo.storage_key); await database.query("DELETE FROM photos WHERE id=$1", [photo.id]); }
-  return { works: works.length, photos: orphanPhotos.length };
+  // 照片库是用户的记录，不是生成任务的临时素材；没有作品引用也必须保留。
+  // 软删行也不能硬删：上传请求键的墓碑依赖它阻止旧请求复活。
+  const objectCleanup = await processObjectCleanupJobs();
+  return { works: works.length, photos: 0, objectCleanup };
 }
 
 export async function healthSnapshot() {

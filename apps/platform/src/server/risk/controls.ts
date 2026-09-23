@@ -12,7 +12,7 @@ export async function enforceRateLimit(scope: string, subject: string, limit: nu
      ON CONFLICT (scope,subject,window_start) DO UPDATE SET hits=rate_limits.hits+1 RETURNING hits`,
     [crypto.randomUUID(), scope, subject.slice(0, 160), windowStart],
   );
-  if (rows[0].hits > limit) throw new AppError("RATE_LIMITED", "操作太频繁，请稍后再试", 429);
+  if (rows[0].hits > limit) throw new AppError("RATE_LIMITED", "操作太频繁，请稍后再试", 429, Math.max(1, Math.ceil((windowStart.getTime() + windowMs - Date.now()) / 1000)));
 }
 
 export async function assertGenerationCircuit() {

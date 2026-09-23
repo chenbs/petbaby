@@ -41,8 +41,10 @@ export type NarrativeShot = {
   file: string;
   /** 「第 N 天」 */
   day: number;
+  showDay?: boolean;
   /** 拍摄日期，YYYY-MM-DD */
   date: string;
+  dateSource?: "manual" | "exif" | "upload";
 };
 
 export type NarrativeInput = {
@@ -50,7 +52,7 @@ export type NarrativeInput = {
   companionDays: number;
   shots: NarrativeShot[];
   /** 成长对比的两张（已归一）。不足两张时省略该段 */
-  compare?: { earliestFile: string; latestFile: string; earliestDay: number; latestDay: number; gapDays: number };
+  compare?: { earliestFile: string; latestFile: string; earliestDay: number; latestDay: number; gapDays: number; earliestDate?: string; latestDate?: string; earliestShowDay?: boolean; latestShowDay?: boolean };
   counts: { photos: number; works: number; interactions: number };
   year: number;
   totalSeconds: number;
@@ -162,8 +164,7 @@ export function buildNarrativeArgs(input: NarrativeInput) {
   filters.push([
     `[${index}:v]setsar=1`,
     drawtext(openingLead, { size: 40, y: "h*0.28" }),
-    countUp(input.companionDays, 0.2, Math.max(0.4, plan.opening - 0.3), "h*0.44", 132),
-    drawtext(daysCaption, { size: 34, y: "h*0.60" }),
+    ...(input.companionDays > 0 ? [countUp(input.companionDays, 0.2, Math.max(0.4, plan.opening - 0.3), "h*0.44", 132), drawtext(daysCaption, { size: 34, y: "h*0.60" })] : []),
     `fade=t=in:st=0:d=${FADE_SECONDS.toFixed(2)}`,
   ].join(",") + `[s${index}]`);
   labels.push(`[s${index}]`);
@@ -179,8 +180,8 @@ export function buildNarrativeArgs(input: NarrativeInput) {
       "setsar=1",
       // 半透明底衬让字幕在任何底图上都可读（服务端不受 .wxss 禁 rgba( 的门禁约束）
       `drawbox=x=0:y=ih-190:w=iw:h=190:color=black@0.45:t=fill`,
-      drawtext(`第 ${shot.day} 天`, { size: 44, y: "h-150" }),
-      drawtext(shot.date, { size: 28, y: "h-92" }),
+      ...(shot.showDay === false ? [] : [drawtext(`第 ${shot.day} 天`, { size: 44, y: "h-150" })]),
+      drawtext(`${shot.date}${shot.dateSource === "manual" ? " · 你设置的日期" : shot.dateSource === "upload" ? " · 按上传时间记录" : shot.dateSource === "exif" ? " · 照片里的拍摄时间" : ""}`, { size: 28, y: "h-92" }),
       `fade=t=in:st=0:d=${FADE_SECONDS.toFixed(2)}`,
       `fade=t=out:st=${Math.max(0, perShot - FADE_SECONDS).toFixed(2)}:d=${FADE_SECONDS.toFixed(2)}`,
     ].join(",") + `[s${index}]`);
@@ -196,8 +197,8 @@ export function buildNarrativeArgs(input: NarrativeInput) {
     inputs.push("-loop", "1", "-t", plan.compare.toFixed(3), "-i", input.compare.latestFile);
     const bottomIndex = index; index += 1;
     // 两幅各占半屏，必须分别预缩到 720×640 —— vstack 要求输入等宽。
-    filters.push(`[${topIndex}:v]scale=${WIDTH}:${half}:force_original_aspect_ratio=increase,crop=${WIDTH}:${half},setsar=1,${drawtext(`第 ${input.compare.earliestDay} 天`, { size: 34, y: "h-60" })}[cmpTop]`);
-    filters.push(`[${bottomIndex}:v]scale=${WIDTH}:${half}:force_original_aspect_ratio=increase,crop=${WIDTH}:${half},setsar=1,${drawtext(`第 ${input.compare.latestDay} 天`, { size: 34, y: "h-60" })}[cmpBottom]`);
+    filters.push(`[${topIndex}:v]scale=${WIDTH}:${half}:force_original_aspect_ratio=increase,crop=${WIDTH}:${half},setsar=1,${drawtext(input.compare.earliestShowDay === false ? input.compare.earliestDate || "" : `第 ${input.compare.earliestDay} 天`, { size: 34, y: "h-60" })}[cmpTop]`);
+    filters.push(`[${bottomIndex}:v]scale=${WIDTH}:${half}:force_original_aspect_ratio=increase,crop=${WIDTH}:${half},setsar=1,${drawtext(input.compare.latestShowDay === false ? input.compare.latestDate || "" : `第 ${input.compare.latestDay} 天`, { size: 34, y: "h-60" })}[cmpBottom]`);
     const gapLine = input.compare.gapDays > 0 ? `这中间过了 ${input.compare.gapDays} 天` : "同一天的两张";
     filters.push([
       "[cmpTop][cmpBottom]vstack=inputs=2",
@@ -224,7 +225,7 @@ export function buildNarrativeArgs(input: NarrativeInput) {
     const from = (plan.closing / (lines.length + 1)) * order;
     closingParts.push(drawtext(text, { size: 52, y: `h*${position.toFixed(2)}`, from, to: plan.closing }));
   });
-  closingParts.push(drawtext(`陪伴${input.memorial ? "了" : "第"} ${input.companionDays} 天`, { size: 30, y: "h*0.80" }));
+  if (input.companionDays > 0) closingParts.push(drawtext(`陪伴${input.memorial ? "了" : "第"} ${input.companionDays} 天`, { size: 30, y: "h*0.80" }));
   closingParts.push(`fade=t=out:st=${Math.max(0, plan.closing - FADE_SECONDS).toFixed(2)}:d=${FADE_SECONDS.toFixed(2)}`);
   filters.push(closingParts.join(",") + "[sEnd]");
   labels.push("[sEnd]");

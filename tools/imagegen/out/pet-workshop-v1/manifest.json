@@ -1,0 +1,168 @@
+{
+  "version": "v1",
+  "purpose": "AI 创意工坊第一批 12 个官方主题候选图",
+  "style": [
+    "premium commercial pet campaign for a modern Chinese pet memories product",
+    "playful and irresistibly cute, instantly recognizable concept, high-end art direction",
+    "one clearly visible pet as the main subject, expressive natural face and body, tactile physical set",
+    "bright clean studio lighting, crisp detail, tasteful coral yellow sky-blue lilac mint accents",
+    "minimal contemporary composition, polished editorial pet photography, charming enough to make viewers want to try it",
+    "no readable text, letters, numbers, watermark, logo, UI, or human people"
+  ],
+  "existing": [
+    {
+      "id": "01-flying-adventure",
+      "name": "飞行冒险",
+      "category": "幻想冒险",
+      "source": "tools/imagegen/out/website-v2/website-v2-play-poster.jpg",
+      "sourceId": "website-v2-play-poster",
+      "file": "tools/imagegen/out/pet-workshop-v1/01-flying-adventure.jpg"
+    },
+    {
+      "id": "02-fashion-icon",
+      "name": "潮流造型",
+      "category": "风格肖像",
+      "source": "tools/imagegen/out/website-v2/website-v2-ai.jpg",
+      "sourceId": "website-v2-ai",
+      "file": "tools/imagegen/out/pet-workshop-v1/02-fashion-icon.jpg"
+    },
+    {
+      "id": "03-four-season-growth",
+      "name": "四季成长",
+      "category": "成长记录",
+      "source": "tools/imagegen/out/website-v2/website-v2-timeline.jpg",
+      "sourceId": "website-v2-timeline",
+      "file": "tools/imagegen/out/pet-workshop-v1/03-four-season-growth.jpg"
+    }
+  ],
+  "generated": [
+    {
+      "id": "04-cloud-mail",
+      "name": "云朵邮差",
+      "category": "角色冒险",
+      "prompt": "premium commercial pet campaign for a modern Chinese pet memories product. playful and irresistibly cute, instantly recognizable concept, high-end art direction. one clearly visible pet as the main subject, expressive natural face and body, tactile physical set. bright clean studio lighting, crisp detail, tasteful coral yellow sky-blue lilac mint accents. minimal contemporary composition, polished editorial pet photography, charming enough to make viewers want to try it. no readable text, letters, numbers, watermark, logo, UI, or human people. a happy corgi as a tiny cloud mail carrier, wearing a miniature sky-blue satchel and paper cap, standing beside a fluffy cloud mailbox, one paw reaching toward a floating heart-shaped parcel, pale blue sky set, whimsical but premium",
+      "anchor": 0.38,
+      "file": "tools/imagegen/out/pet-workshop-v1/04-cloud-mail.jpg",
+      "size": {
+        "width": 1600,
+        "height": 1200
+      },
+      "provider": "lingsuan",
+      "model": "gpt-image-2"
+    },
+    {
+      "id": "05-bubble-tea",
+      "name": "奶茶店长",
+      "category": "日常职业",
+      "prompt": "premium commercial pet campaign for a modern Chinese pet memories product. playful and irresistibly cute, instantly recognizable concept, high-end art direction. one clearly visible pet as the main subject, expressive natural face and body, tactile physical set. bright clean studio lighting, crisp detail, tasteful coral yellow sky-blue lilac mint accents. minimal contemporary composition, polished editorial pet photography, charming enough to make viewers want to try it. no readable text, letters, numbers, watermark, logo, UI, or human people. a curious orange tabby as a tiny bubble tea shop helper, sitting beside an oversized pastel drink cup with tapioca pearls and a striped straw, wearing a tiny coral apron, cheerful counter set, playful scale contrast, no drinking",
+      "anchor": 0.42,
+      "file": "tools/imagegen/out/pet-workshop-v1/05-bubble-tea.jpg",
+      "size": {
+        "width": 1600,
+        "height": 1200
+      },
+      "provider": "lingsuan",
+      "model": "gpt-image-2"
+    },
+    {
+      "id": "06-space-rover",
+      "name": "月球探险车",
+      "category": "幻想冒险",
+      "prompt": "premium commercial pet campaign for a modern Chinese pet memories product. playful and irresistibly cute, instantly recognizable concept, high-end art direction. one clearly visible pet as the main subject, expressive natural face and body, tactile physical set. bright clean studio lighting, crisp detail, tasteful coral yellow sky-blue lilac mint accents. minimal contemporary composition, polished editorial pet photography, charming enough to make viewers want to try it. no readable text, letters, numbers, watermark, logo, UI, or human people. a brave shiba inu in a clear toy astronaut bubble helmet, seated in a tiny rounded moon rover, floating star props and a lavender planet around it, colorful studio space set, heroic but irresistibly cute, clearly still a dog",
+      "anchor": 0.4,
+      "file": "tools/imagegen/out/pet-workshop-v1/06-space-rover.jpg",
+      "size": {
+        "width": 1600,
+        "height": 1200
+      },
+      "provider": "lingsuan",
+      "model": "gpt-image-2"
+    },
+    {
+      "id": "07-pastel-dj",
+      "name": "彩色 DJ 台",
+      "category": "音乐派对",
+      "prompt": "premium commercial pet campaign for a modern Chinese pet memories product. playful and irresistibly cute, instantly recognizable concept, high-end art direction. one clearly visible pet as the main subject, expressive natural face and body, tactile physical set. bright clean studio lighting, crisp detail, tasteful coral yellow sky-blue lilac mint accents. minimal contemporary composition, polished editorial pet photography, charming enough to make viewers want to try it. no readable text, letters, numbers, watermark, logo, UI, or human people. a black-and-white cat wearing colorful oversized headphones, paws resting on a tiny pastel DJ controller, soft coral and cobalt stage lights, playful paper confetti and small speakers, joyful music festival energy, clearly still a cat",
+      "anchor": 0.4,
+      "file": "tools/imagegen/out/pet-workshop-v1/07-pastel-dj.jpg",
+      "size": {
+        "width": 1600,
+        "height": 1200
+      },
+      "provider": "lingsuan",
+      "model": "gpt-image-2"
+    },
+    {
+      "id": "08-paw-detective",
+      "name": "爪印侦探",
+      "category": "互动解谜",
+      "prompt": "premium commercial pet campaign for a modern Chinese pet memories product. playful and irresistibly cute, instantly recognizable concept, high-end art direction. one clearly visible pet as the main subject, expressive natural face and body, tactile physical set. bright clean studio lighting, crisp detail, tasteful coral yellow sky-blue lilac mint accents. minimal contemporary composition, polished editorial pet photography, charming enough to make viewers want to try it. no readable text, letters, numbers, watermark, logo, UI, or human people. a toy poodle detective with an oversized magnifying glass, following a trail of glowing paw prints through a candy-colored studio, miniature trench coat and detective hat, curious surprised face, clean visual story, no human body",
+      "anchor": 0.4,
+      "file": "tools/imagegen/out/pet-workshop-v1/08-paw-detective.jpg",
+      "size": {
+        "width": 1600,
+        "height": 1200
+      },
+      "provider": "lingsuan",
+      "model": "gpt-image-2"
+    },
+    {
+      "id": "09-rainy-day",
+      "name": "雨天散步",
+      "category": "生活记录",
+      "prompt": "premium commercial pet campaign for a modern Chinese pet memories product. playful and irresistibly cute, instantly recognizable concept, high-end art direction. one clearly visible pet as the main subject, expressive natural face and body, tactile physical set. bright clean studio lighting, crisp detail, tasteful coral yellow sky-blue lilac mint accents. minimal contemporary composition, polished editorial pet photography, charming enough to make viewers want to try it. no readable text, letters, numbers, watermark, logo, UI, or human people. a joyful golden retriever in a bright yellow raincoat under a transparent dome umbrella, standing beside reflective puddles with tiny paper boats, teal and peach rain set, warm diffused light, cozy rather than gloomy",
+      "anchor": 0.42,
+      "file": "tools/imagegen/out/pet-workshop-v1/09-rainy-day.jpg",
+      "size": {
+        "width": 1600,
+        "height": 1200
+      },
+      "provider": "lingsuan",
+      "model": "gpt-image-2"
+    },
+    {
+      "id": "10-giant-garden",
+      "name": "巨型花园",
+      "category": "趣味日常",
+      "prompt": "premium commercial pet campaign for a modern Chinese pet memories product. playful and irresistibly cute, instantly recognizable concept, high-end art direction. one clearly visible pet as the main subject, expressive natural face and body, tactile physical set. bright clean studio lighting, crisp detail, tasteful coral yellow sky-blue lilac mint accents. minimal contemporary composition, polished editorial pet photography, charming enough to make viewers want to try it. no readable text, letters, numbers, watermark, logo, UI, or human people. a fluffy cream kitten exploring an oversized greenhouse, sitting beside a giant strawberry and a tiny mint watering can, flower vines and soft glass reflections, playful scale contrast, bright coral and mint palette, one kitten",
+      "anchor": 0.4,
+      "file": "tools/imagegen/out/pet-workshop-v1/10-giant-garden.jpg",
+      "size": {
+        "width": 1600,
+        "height": 1200
+      },
+      "provider": "lingsuan",
+      "model": "gpt-image-2"
+    },
+    {
+      "id": "11-undersea-submarine",
+      "name": "海底潜水艇",
+      "category": "幻想探险",
+      "prompt": "premium commercial pet campaign for a modern Chinese pet memories product. playful and irresistibly cute, instantly recognizable concept, high-end art direction. one clearly visible pet as the main subject, expressive natural face and body, tactile physical set. bright clean studio lighting, crisp detail, tasteful coral yellow sky-blue lilac mint accents. minimal contemporary composition, polished editorial pet photography, charming enough to make viewers want to try it. no readable text, letters, numbers, watermark, logo, UI, or human people. a curious corgi peeking from the round window of a small colorful toy submarine in an underwater garden, bubbles, coral, sea stars and soft fish-shaped props, turquoise and lilac studio world, adventurous and cute, clearly still a dog",
+      "anchor": 0.4,
+      "file": "tools/imagegen/out/pet-workshop-v1/11-undersea-submarine.jpg",
+      "size": {
+        "width": 1600,
+        "height": 1200
+      },
+      "provider": "lingsuan",
+      "model": "gpt-image-2"
+    },
+    {
+      "id": "12-storybook-castle",
+      "name": "立体故事书",
+      "category": "童话想象",
+      "prompt": "premium commercial pet campaign for a modern Chinese pet memories product. playful and irresistibly cute, instantly recognizable concept, high-end art direction. one clearly visible pet as the main subject, expressive natural face and body, tactile physical set. bright clean studio lighting, crisp detail, tasteful coral yellow sky-blue lilac mint accents. minimal contemporary composition, polished editorial pet photography, charming enough to make viewers want to try it. no readable text, letters, numbers, watermark, logo, UI, or human people. a fluffy cream puppy sitting inside an oversized pop-up storybook, surrounded by a paper castle, folded clouds and tiny stars, wearing a small sky-blue cape, tactile paper folds, warm ivory studio, magical and playful, one puppy",
+      "anchor": 0.4,
+      "file": "tools/imagegen/out/pet-workshop-v1/12-storybook-castle.jpg",
+      "size": {
+        "width": 1600,
+        "height": 1200
+      },
+      "provider": "lingsuan",
+      "model": "gpt-image-2"
+    }
+  ],
+  "outputRatio": "4:3",
+  "generatedAt": "2026-09-22T16:50:32.889Z"
+}

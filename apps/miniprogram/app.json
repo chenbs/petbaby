@@ -34,7 +34,7 @@
   "tabBar": {
     "custom": true,
     "list": [
-      { "pagePath": "pages/index/index", "text": "玩法" },
+      { "pagePath": "pages/index/index", "text": "陪伴" },
       { "pagePath": "pages/works/works", "text": "作品" },
       { "pagePath": "pages/me/me", "text": "我的" }
     ]

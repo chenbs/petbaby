@@ -1,3 +1,4 @@
+const { displayMediaTree } = require("../../services/photo-files");
 const payment = require("../../services/payment");
 const api = require("../../services/api");
 const { themedPage } = require("../../theme/page-mixin");
@@ -44,7 +45,7 @@ themedPage({
 
   load() {
     this.setData({ loading: !this.data.works.length && !this.data.orders.length, error: "" });
-    Promise.all([api.request("/api/works?locked=false"), api.request("/api/physical-orders")])
+    Promise.all([api.request("/api/works?locked=false").then(displayMediaTree), api.request("/api/physical-orders")])
       .then(([works, orders]) => {
         const list = works.map((work) => Object.assign({}, work, { coverUrl: work.outputUrl || (work.photo && work.photo.url) || "" }));
         const current = list.filter((work) => work.id === this.data.workId)[0] || list[0];

@@ -1,3 +1,4 @@
+const { displayMediaTree } = require("../../services/photo-files");
 const api = require("../../services/api");
 const companion = require("../../services/companion");
 const { themedPage } = require("../../theme/page-mixin");
@@ -62,7 +63,7 @@ themedPage({ mood: "memorial" }, {
 
   load() {
     this.setData({ loading: !this.data.items.length, error: "" });
-    Promise.all([api.request("/api/memorials"), api.request("/api/pets")])
+    Promise.all([api.request("/api/memorials"), api.request("/api/pets").then(displayMediaTree)])
       .then(([items, pets]) => {
         const petById = {};
         for (const pet of pets) petById[pet.id] = pet;
@@ -103,7 +104,7 @@ themedPage({ mood: "memorial" }, {
   },
 
   loadPhotos(id) {
-    api.request("/api/photos?petId=" + encodeURIComponent(id))
+    api.request("/api/photos?petId=" + encodeURIComponent(id)).then(displayMediaTree)
       .then((photos) => this.setData({ photos, selected: [] }))
       .catch(() => this.setData({ photos: [], selected: [] }));
   },

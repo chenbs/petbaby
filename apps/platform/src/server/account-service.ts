@@ -2,10 +2,10 @@ import "server-only";
 
 import { z } from "zod";
 import type { AccountProfile } from "@/domain/models";
-import { getDatabase } from "@/server/db/client";
-import { objectStorage } from "@/server/storage";
+import { getDatabase, inTransaction } from "@/server/db/client";
+import { processObjectCleanupJob, queueObjectCleanup } from "@/server/object-cleanup";
 import { AppError } from "@/server/errors";
-import { deletePetHumanIdentities } from "@/server/pet-human-identity-service";
+import { softDeletePetResources } from "@/server/photo-deletion-service";
 
 export async function getAccountProfile(userId: string): Promise<AccountProfile> {
   const database = await getDatabase();
@@ -39,16 +39,18 @@ export async function exportAccountData(userId: string) {
 
 export async function deleteAccount(userId: string) {
   await getAccountProfile(userId);
+  const jobs = await inTransaction(async (db) => {
+    await db.query("SELECT id FROM users WHERE id=$1 FOR UPDATE", [userId]);
+    const pets = await db.query("SELECT id FROM pets WHERE user_id=$1 AND deleted_at IS NULL ORDER BY id FOR UPDATE", [userId]);
+    const ids: string[] = [];
+    for (const pet of pets) ids.push(...await softDeletePetResources(userId, String(pet.id)));
+    const owners = await db.query("UPDATE owner_photos SET deleted_at=coalesce(deleted_at,now()) WHERE user_id=$1 RETURNING storage_key", [userId]);
+    for (const photo of owners) ids.push(await queueObjectCleanup(String(photo.storage_key), "account_deleted"));
+    await db.query("UPDATE users SET deleted_at=now(),display_name=NULL,wechat_openid=NULL WHERE id=$1", [userId]);
+    return ids;
+  });
+  for (const job of jobs) await processObjectCleanupJob(job);
   const database = await getDatabase();
-  await deletePetHumanIdentities({ userId });
-  const photoRows = await database.query<{ storage_key: string }>("SELECT storage_key FROM photos WHERE user_id=$1", [userId]);
-  const ownerPhotoRows = await database.query<{ storage_key: string }>("SELECT storage_key FROM owner_photos WHERE user_id=$1", [userId]);
-  await Promise.all([...photoRows, ...ownerPhotoRows].map((row) => objectStorage.delete(row.storage_key).catch(() => undefined)));
-  await database.query("UPDATE pets SET deleted_at=now(),is_default=false WHERE user_id=$1 AND deleted_at IS NULL", [userId]);
-  await database.query("UPDATE photos SET deleted_at=now() WHERE user_id=$1 AND deleted_at IS NULL", [userId]);
-  await database.query("UPDATE owner_photos SET deleted_at=now() WHERE user_id=$1 AND deleted_at IS NULL", [userId]);
-  await database.query("UPDATE works SET deleted_at=now(),public=false,share_token=null WHERE user_id=$1 AND deleted_at IS NULL", [userId]);
-  await database.query("UPDATE users SET deleted_at=now(),display_name=NULL,wechat_openid=NULL WHERE id=$1", [userId]);
   // user_id 是 uuid、target_id 是 text，复用同一个占位符会让 PostgreSQL 推断出冲突类型。
   await database.query("INSERT INTO audit_logs (id,user_id,action,target_type,target_id,created_at) VALUES ($1,$2,'account_deleted','user',$3,$4)", [crypto.randomUUID(), userId, userId, new Date()]);
   return { deleted: true };

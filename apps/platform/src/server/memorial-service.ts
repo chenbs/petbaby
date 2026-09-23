@@ -1,6 +1,7 @@
+import { lockPhotoInputs } from "@/server/photo-deliverable-assets";
 import "server-only";
 import { z } from "zod";
-import { getDatabase } from "@/server/db/client";
+import { getDatabase, inTransaction } from "@/server/db/client";
 import { jsonIdArray } from "@/server/db/rows";
 import { AppError } from "@/server/errors";
 import { objectStorage } from "@/server/storage";
@@ -18,8 +19,8 @@ async function getOwned(userId: string, id: string) { const rows = await (await 
 async function snapshot(id: string, row: Record<string, unknown>) { await (await getDatabase()).query("INSERT INTO memorial_versions (id,memorial_id,version,snapshot,created_at) VALUES ($1,$2,$3,$4::jsonb,$5) ON CONFLICT (memorial_id,version) DO NOTHING", [crypto.randomUUID(), id, Number(row.version || 1), JSON.stringify(row), new Date()]); }
 
 export async function listMemorialSpaces(userId: string) { return (await getDatabase()).query("SELECT * FROM memorial_spaces WHERE user_id=$1 AND deleted_at IS NULL ORDER BY updated_at DESC", [userId]); }
-export async function createMemorialSpace(userId: string, input: unknown) { const data = createSchema.parse(input); const database = await getDatabase(); const pets = await database.query("SELECT id FROM pets WHERE id=$1 AND user_id=$2 AND deleted_at IS NULL", [data.petId, userId]); if (!pets[0]) throw new AppError("PET_NOT_FOUND", "宠物档案不存在", 404); await assertPhotos(userId, data.petId, data.photoIds); const id = crypto.randomUUID(); const now = new Date(); const rows = await database.query("INSERT INTO memorial_spaces (id,user_id,pet_id,status,title,story,theme,photo_ids,cover_photo_id,visibility,lifecycle,created_at,updated_at) VALUES ($1,$2,$3,'private',$4,$5,$6,$7::jsonb,$8,'private','active',$9,$9) RETURNING *", [id, userId, data.petId, data.title, data.story, data.theme, JSON.stringify(data.photoIds), data.coverPhotoId || data.photoIds[0] || null, now]); await database.query("UPDATE pets SET life_stage='memorial' WHERE id=$1", [data.petId]); await snapshot(id, rows[0]); return rows[0]; }
-export async function updateMemorialSpace(userId: string, id: string, input: unknown) { const current = await getOwned(userId, id); const legacy = z.object({ title: z.string(), story: z.string(), theme: z.enum(["stardust", "forest", "dawn"]), status: z.enum(["private", "shared", "hidden"]) }).safeParse(input); if (legacy.success) { if (legacy.data.status === "hidden") return setMemorialLifecycle(userId, id, "hidden", "用户主动隐藏"); input = { ...legacy.data, photoIds: current.photo_ids || [], storySections: current.story_sections || [], visibility: legacy.data.status === "shared" ? "shared" : "private" }; } const data = editSchema.parse(input); await assertPhotos(userId, String(current.pet_id), data.photoIds); if (data.coverPhotoId && !data.photoIds.includes(data.coverPhotoId)) throw new AppError("MEMORIAL_COVER_INVALID", "封面必须来自纪念照片", 422); const token = data.visibility === "shared" ? current.share_token || crypto.randomUUID().replaceAll("-", "") : null; const expiresAt = data.visibility === "shared" ? new Date(Date.now() + 30 * 86400000) : null; const rows = await (await getDatabase()).query("UPDATE memorial_spaces SET title=$3,story=$4,theme=$5,photo_ids=$6::jsonb,story_sections=$7::jsonb,cover_photo_id=$8,visibility=$9,status=$9,share_token=$10,share_expires_at=$11,version=version+1,updated_at=now() WHERE id=$1 AND user_id=$2 RETURNING *", [id, userId, data.title, data.story, data.theme, JSON.stringify(data.photoIds), JSON.stringify(data.storySections), data.coverPhotoId || data.photoIds[0] || null, data.visibility, token, expiresAt]); await snapshot(id, rows[0]); return rows[0]; }
+async function createMemorialSpaceOperation(userId: string, input: unknown) { const data = createSchema.parse(input); const database = await getDatabase(); const pets = await database.query("SELECT id FROM pets WHERE id=$1 AND user_id=$2 AND deleted_at IS NULL", [data.petId, userId]); if (!pets[0]) throw new AppError("PET_NOT_FOUND", "宠物档案不存在", 404); await assertPhotos(userId, data.petId, data.photoIds); const id = crypto.randomUUID(); const now = new Date(); const rows = await database.query("INSERT INTO memorial_spaces (id,user_id,pet_id,status,title,story,theme,photo_ids,cover_photo_id,visibility,lifecycle,created_at,updated_at) VALUES ($1,$2,$3,'private',$4,$5,$6,$7::jsonb,$8,'private','active',$9,$9) RETURNING *", [id, userId, data.petId, data.title, data.story, data.theme, JSON.stringify(data.photoIds), data.coverPhotoId || data.photoIds[0] || null, now]); await database.query("UPDATE pets SET life_stage='memorial' WHERE id=$1", [data.petId]); await snapshot(id, rows[0]); return rows[0]; }
+async function updateMemorialSpaceOperation(userId: string, id: string, input: unknown) { const current = await getOwned(userId, id); const legacy = z.object({ title: z.string(), story: z.string(), theme: z.enum(["stardust", "forest", "dawn"]), status: z.enum(["private", "shared", "hidden"]) }).safeParse(input); if (legacy.success) { if (legacy.data.status === "hidden") return setMemorialLifecycle(userId, id, "hidden", "用户主动隐藏"); input = { ...legacy.data, photoIds: current.photo_ids || [], storySections: current.story_sections || [], visibility: legacy.data.status === "shared" ? "shared" : "private" }; } const data = editSchema.parse(input); await assertPhotos(userId, String(current.pet_id), data.photoIds); if (data.coverPhotoId && !data.photoIds.includes(data.coverPhotoId)) throw new AppError("MEMORIAL_COVER_INVALID", "封面必须来自纪念照片", 422); const token = data.visibility === "shared" ? current.share_token || crypto.randomUUID().replaceAll("-", "") : null; const expiresAt = data.visibility === "shared" ? new Date(Date.now() + 30 * 86400000) : null; const rows = await (await getDatabase()).query("UPDATE memorial_spaces SET title=$3,story=$4,theme=$5,photo_ids=$6::jsonb,story_sections=$7::jsonb,cover_photo_id=$8,visibility=$9,status=$9,share_token=$10,share_expires_at=$11,version=version+1,updated_at=now() WHERE id=$1 AND user_id=$2 RETURNING *", [id, userId, data.title, data.story, data.theme, JSON.stringify(data.photoIds), JSON.stringify(data.storySections), data.coverPhotoId || data.photoIds[0] || null, data.visibility, token, expiresAt]); await snapshot(id, rows[0]); return rows[0]; }
 export async function setMemorialLifecycle(userId: string, id: string, lifecycle: "hidden" | "restored", reason: string) { z.string().trim().min(2).max(200).parse(reason); await getOwned(userId, id); const rows = await (await getDatabase()).query("UPDATE memorial_spaces SET lifecycle=$3,hidden_reason=CASE WHEN $3='hidden' THEN $4 ELSE NULL END,visibility=CASE WHEN $3='hidden' THEN 'private' ELSE visibility END,status=CASE WHEN $3='hidden' THEN 'hidden' ELSE 'private' END,share_token=CASE WHEN $3='hidden' THEN NULL ELSE share_token END,updated_at=now() WHERE id=$1 AND user_id=$2 RETURNING *", [id, userId, lifecycle, reason]); return rows[0]; }
 
 /**
@@ -43,7 +44,7 @@ function stardustSvg(row: Record<string, unknown>, title: string, photo?: { body
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1440"><rect width="1080" height="1440" fill="${colors[0]}"/><text x="72" y="140" fill="${colors[1]}" font-size="30" font-family="sans-serif">麻麻抱我 · 纪念页</text><text x="72" y="280" fill="white" font-size="72" font-family="serif">${escapeXml(title)}</text>${image}<text x="72" y="1060" fill="${colors[1]}" font-size="32" font-family="serif">${spans}</text><text x="72" y="1390" fill="${colors[1]}" font-size="26" font-family="sans-serif">安静记住，不开放留言</text></svg>`;
 }
 export async function exportMemorialSpace(userId: string, id: string) { return generateMemorialProduct(userId, id, "album"); }
-export async function generateMemorialProduct(userId: string, id: string, product: "album" | "video" | "stardust") { const row = await getOwned(userId, id); if (String(row.lifecycle) === "hidden") throw new AppError("MEMORIAL_HIDDEN", "请先恢复纪念空间", 409); const photoIds = Array.isArray(row.photo_ids) ? row.photo_ids.map(String) : []; if (!photoIds.length) throw new AppError("MEMORIAL_PHOTOS_REQUIRED", "请先添加纪念照片", 422); const database = await getDatabase(); const workIds = (row.work_ids || {}) as Record<string, string>;
+async function generateMemorialProductOperation(userId: string, id: string, product: "album" | "video" | "stardust") { const row = await getOwned(userId, id); if (String(row.lifecycle) === "hidden") throw new AppError("MEMORIAL_HIDDEN", "请先恢复纪念空间", 409); const photoIds = Array.isArray(row.photo_ids) ? row.photo_ids.map(String) : []; if (!photoIds.length) throw new AppError("MEMORIAL_PHOTOS_REQUIRED", "请先添加纪念照片", 422); const database = await getDatabase(); const workIds = (row.work_ids || {}) as Record<string, string>;
   if (product === "video") {
     const projectId = crypto.randomUUID(); const now = new Date();
     // 纪念视频不让用户选时长，取能容下张数的最短档并显式写入，别依赖列的 DEFAULT。
@@ -118,7 +119,7 @@ export async function generateMemorialProduct(userId: string, id: string, produc
   return { product, workId, outputKey, status: "ready" };
 }
 
-export async function getPublicMemorial(token: string) { const rows = await (await getDatabase()).query("SELECT m.*,p.name pet_name FROM memorial_spaces m JOIN pets p ON p.id=m.pet_id WHERE m.share_token=$1 AND m.visibility='shared' AND m.lifecycle<>'hidden' AND m.deleted_at IS NULL", [token]); const row = rows[0]; if (!row) throw new AppError("MEMORIAL_SHARE_INVALID", "纪念分享已关闭或失效", 410); if (row.share_expires_at && new Date(String(row.share_expires_at)).getTime() < Date.now()) throw new AppError("MEMORIAL_SHARE_EXPIRED", "纪念分享已过期", 410); const photos = await (await getDatabase()).query("SELECT id,storage_key FROM photos WHERE id=ANY($1::uuid[]) AND deleted_at IS NULL", [jsonIdArray(row.photo_ids)]); return { ...row, photos: photos.map((photo) => ({ id: String(photo.id), url: `/api/media/${encodeURIComponent(String(photo.storage_key))}` })) }; }
+export async function getPublicMemorial(token: string) { const rows = await (await getDatabase()).query("SELECT m.*,p.name pet_name FROM memorial_spaces m JOIN pets p ON p.id=m.pet_id WHERE m.share_token=$1 AND m.visibility='shared' AND m.lifecycle<>'hidden' AND m.deleted_at IS NULL AND p.deleted_at IS NULL AND EXISTS(SELECT 1 FROM users u WHERE u.id=m.user_id AND u.deleted_at IS NULL)", [token]); const row = rows[0]; if (!row) throw new AppError("MEMORIAL_SHARE_INVALID", "纪念分享已关闭或失效", 410); if (row.share_expires_at && new Date(String(row.share_expires_at)).getTime() < Date.now()) throw new AppError("MEMORIAL_SHARE_EXPIRED", "纪念分享已过期", 410); return { id: String(row.id), title: row.title, story: row.story, story_sections: row.story_sections, theme: row.theme, pet_name: row.pet_name, photos: jsonIdArray(row.photo_ids).map((id) => ({ id, url: `/api/memorial-share/${encodeURIComponent(token)}/media/${id}` })) }; }
 export async function recordMemorialVisit(token: string, input: unknown) { const data = z.object({ visitorKey: z.string().max(80).optional(), source: z.string().max(80).default("share"), eventName: z.enum(["visit", "duration"]), durationMs: z.number().int().min(0).max(86400000).optional() }).parse(input); const memorial = await getPublicMemorial(token) as unknown as { id: string }; await (await getDatabase()).query("INSERT INTO memorial_visits (id,memorial_id,visitor_key,source,event_name,duration_ms,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7)", [crypto.randomUUID(), memorial.id, data.visitorKey || null, data.source, data.eventName, data.durationMs || null, new Date()]); return { accepted: true }; }
 
 export async function listMemorialAdmin(filters: { lifecycle?: string; visibility?: string; page?: number; pageSize?: number } = {}) {
@@ -188,4 +189,29 @@ export async function mutateMemorialAdmin(actorId: string, input: unknown) {
   const updated = (await database.query("UPDATE memorial_spaces SET product_jobs=$2::jsonb,updated_at=now() WHERE id=$1 RETURNING *", [data.id, JSON.stringify(nextJobs)]))[0];
   await recordAdminAudit({ actorId, action: data.action, targetType: "memorial", targetId: data.id, reason: data.reason, before: current, after: { memorial: updated, render }, userId: String(current.user_id) });
   return render;
+}
+
+export async function createMemorialSpace(userId: string, input: unknown) {
+  return inTransaction(async () => {
+    const data = createSchema.parse(input);
+    await lockPhotoInputs(userId, data.petId, data.photoIds);
+    return createMemorialSpaceOperation(userId, input);
+  });
+}
+
+export async function updateMemorialSpace(userId: string, id: string, input: unknown) {
+  return inTransaction(async () => {
+    const row = await getOwned(userId, id);
+    const data = z.object({ photoIds: z.array(z.string().uuid()).optional() }).parse(input);
+    await lockPhotoInputs(userId, String(row.pet_id), data.photoIds || jsonIdArray(row.photo_ids));
+    return updateMemorialSpaceOperation(userId, id, input);
+  });
+}
+
+export async function generateMemorialProduct(userId: string, id: string, product: "album" | "video" | "stardust") {
+  return inTransaction(async () => {
+    const row = await getOwned(userId, id);
+    await lockPhotoInputs(userId, String(row.pet_id), jsonIdArray(row.photo_ids));
+    return generateMemorialProductOperation(userId, id, product);
+  });
 }

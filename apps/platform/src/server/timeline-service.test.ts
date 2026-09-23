@@ -284,4 +284,11 @@ describe("growth pair", () => {
     await addPhoto({ shotAt: "2024-01-01T10:00:00Z", createdAt: "2025-06-02T00:00:00Z" });
     expect(await pickGrowthPair(USER, PET)).toBeUndefined();
   });
+
+  it("空图库与同一记录日的两张照片不提供成长首尾对比", async () => {
+    expect(await pickGrowthPair(USER, PET)).toBeUndefined();
+    await addPhoto({ shotAt: "2024-01-01T10:00:00Z", createdAt: "2025-06-02T00:00:00Z" });
+    await addPhoto({ shotAt: "2024-01-01T11:00:00Z", createdAt: "2025-06-03T00:00:00Z" });
+    expect(await pickGrowthPair(USER, PET)).toBeUndefined();
+  });
 });

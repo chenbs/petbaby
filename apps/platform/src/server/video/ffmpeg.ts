@@ -1,6 +1,7 @@
 import "server-only";
 
 import { spawn } from "node:child_process";
+import { createHash } from "node:crypto";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import os from "node:os";
@@ -9,6 +10,12 @@ import { getDatabase } from "@/server/db/client";
 import { objectStorage } from "@/server/storage";
 import { FADE_SECONDS, MAX_PHOTOS, normalizeDuration, perPhotoSeconds } from "@/domain/video-duration";
 import { renderAnnualFilm } from "@/server/video/annual-film";
+
+/** source_id is a UUID; stable per owner, pet and year without a schema change. */
+export function annualFilmSourceId(userId: string, petId: string, year: number) {
+  const hex = createHash("sha256").update(`petbaby:annual-film:${userId}:${petId}:${year}`).digest("hex");
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-8${hex.slice(13, 16)}-a${hex.slice(17, 20)}-${hex.slice(20, 32)}`;
+}
 
 function run(command: string, args: string[]) {
   return new Promise<void>((resolve, reject) => {
@@ -96,8 +103,8 @@ async function processAnnualFilm(row: Record<string, unknown>, database: Awaited
 
   const year = Number(config.year);
   const title = `${aggregate.petName || "我们"}的 ${year}`;
-  const subtitle = `${aggregate.companionDays} 天 · ${aggregate.counts.photos} 张照片`;
-  const sourceId = `${userId}:${year}`;
+  const subtitle = `${aggregate.companionDays ? `${aggregate.companionDays} 天 · ` : ""}${aggregate.counts.photos} 张照片`;
+  const sourceId = annualFilmSourceId(userId, aggregate.petId!, year);
   const existing = await database.query("SELECT id,version FROM works WHERE source_kind='report' AND source_id=$1", [sourceId]);
   const workId = existing[0] ? String(existing[0].id) : crypto.randomUUID();
   const version = existing[0] ? Number(existing[0].version || 1) + 1 : 1;
@@ -119,7 +126,7 @@ export async function processNextVideo() {
   if (!rows[0]) return null;
   const row = rows[0]; const directory = await mkdtemp(path.join(os.tmpdir(), "petbaby-video-")); const file = path.join(directory, `${String(row.id)}.mp4`);
   try {
-    const config = (row.config || {}) as { kind?: string; projectId?: string; photos?: unknown; captions?: unknown; bgm?: string; cover?: unknown; interactiveSessionId?: string; petId?: string; photoId?: string; durationSeconds?: unknown; snapshot?: { title?: string; copy?: string } };
+    const config = (row.config || {}) as { kind?: string; projectId?: string; photoIds?: unknown; photos?: unknown; captions?: unknown; bgm?: string; cover?: unknown; interactiveSessionId?: string; petId?: string; photoId?: string; durationSeconds?: unknown; snapshot?: { title?: string; copy?: string } };
     /*
      * 叙事年度视频走另一条 filtergraph（四段结构，见 `video/narrative.ts`），
      * 但共用这一个队列与并发 1 —— 视频任务独占 CPU 时图文任务跟着延迟，
@@ -183,7 +190,14 @@ export async function processNextVideo() {
       const projects = await database.query("SELECT * FROM video_projects WHERE id=$1 AND user_id=$2", [config.projectId, row.user_id]);
       const project = projects[0];
       if (!project) throw new Error("VIDEO_PROJECT_NOT_FOUND");
-      const photoIds = Array.isArray(project.photo_ids) ? project.photo_ids.map(String) : [];
+      // 成片必须使用入队时锁定的素材快照。项目页可以在排队期间继续编辑，
+      // 读取最新 photo_ids 会让成片封面和用户确认的预览不一致，甚至把新照片
+      // 带进已经确认的任务。标题等展示字段仍取项目当前值，素材只认 config。
+      // 旧排队任务没有 photoIds 时只按冻结的对象键找回原照片，不采用当前草稿。
+      const sourcePhotos = await database.query("SELECT id,pet_id,storage_key FROM photos WHERE user_id=$1 AND storage_key=ANY($2::text[])", [row.user_id, photoKeys]);
+      const sourceByKey = new Map(sourcePhotos.map((photo) => [String(photo.storage_key), String(photo.id)]));
+      const photoIds = Array.isArray(config.photoIds) ? config.photoIds.filter((item): item is string => typeof item === "string") : photoKeys.map((key) => sourceByKey.get(key)).filter((id): id is string => Boolean(id));
+      const petId = config.petId || sourcePhotos[0]?.pet_id;
       if (!photoIds[0]) throw new Error("VIDEO_PROJECT_PHOTO_MISSING");
       const existing = await database.query("SELECT id,version FROM works WHERE source_kind='video' AND source_id=$1", [config.projectId]);
       workId = existing[0] ? String(existing[0].id) : crypto.randomUUID();
@@ -192,7 +206,7 @@ export async function processNextVideo() {
       // 副标题写实际时长。时长可选之后「15 秒可编辑宠物短片」对 10/30 秒的片子是错的。
       const subtitle = `${totalSeconds} 秒可编辑宠物短片`;
       if (existing[0]) await database.query("UPDATE works SET title=$2,subtitle=$3,output_key=$4,preview_key=$5,locked=true,public=false,share_token=NULL,version=$6,photo_id=$7,deleted_at=NULL WHERE id=$1", [workId, title, subtitle, key, previewKey, version, photoIds[0]]);
-      else await database.query("INSERT INTO works (id,user_id,plugin_id,pet_id,photo_id,title,subtitle,serial_number,authority,output_key,preview_key,asset_kind,source_kind,source_id,locked,public,version,created_at) VALUES ($1,$2,'pl-19',$3,$4,$5,$6,$7,'麻麻抱我 · 视频工作室',$8,$9,'video','video',$10,true,false,1,$11)", [workId, row.user_id, project.pet_id, photoIds[0], title, subtitle, `VID-${String(row.id).slice(0, 8).toUpperCase()}`, key, previewKey, config.projectId, createdAt]);
+      else await database.query("INSERT INTO works (id,user_id,plugin_id,pet_id,photo_id,title,subtitle,serial_number,authority,output_key,preview_key,asset_kind,source_kind,source_id,locked,public,version,created_at) VALUES ($1,$2,'pl-19',$3,$4,$5,$6,$7,'麻麻抱我 · 视频工作室',$8,$9,'video','video',$10,true,false,1,$11)", [workId, row.user_id, petId, photoIds[0], title, subtitle, `VID-${String(row.id).slice(0, 8).toUpperCase()}`, key, previewKey, config.projectId, createdAt]);
       await database.query("INSERT INTO work_versions (id,work_id,version,title,subtitle,output_key,preview_key,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)", [crypto.randomUUID(), workId, version, title, subtitle, key, previewKey, createdAt]);
       await database.query("UPDATE video_projects SET status='preview_ready',work_id=$2,updated_at=now() WHERE id=$1", [config.projectId, workId]);
     }

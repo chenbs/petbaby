@@ -3,9 +3,11 @@
 <view class="page page-flat">
   <text class="eyebrow">GROWTH TIMELINE</text>
   <view class="title">{{companion || '成长时间线'}}</view>
-  <text class="muted">按拍摄时间排，每张标出是{{anchorLabel}}后的第几天。</text>
+  <text class="muted">按记录日期回看，日期来源会标在每张照片旁。</text>
+  <t-button class="block-gap" bindtap="openPhotos">收好照片</t-button>
 
   <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
+  <t-button wx:if="{{error}}" bindtap="reload">重新加载</t-button>
 
   <view class="section" wx:if="{{pets.length > 1}}">
     <t-card blur="{{blurOk}}" anim="{{animType}}">
@@ -28,32 +30,40 @@
   <t-skeleton wx:if="{{loading}}" type="list" count="4"></t-skeleton>
 
   <t-empty
-    wx:elif="{{empty}}"
+    wx:if="{{!loading && empty}}"
     icon="photo"
     title="还没有照片"
-    description="上传照片后，这里会按拍摄时间排成一条线。"
-    action-text="去上传照片"
+    description="先收好第一张照片，以后从这里接着记。"
+    action-text="收好照片"
     anim="{{animType}}"
     decor="{{decor}}"
     bindaction="openPhotos"
   ></t-empty>
 
-  <view wx:else class="section" wx:for="{{groups}}" wx:for-item="group" wx:key="year">
+  <view wx:if="{{!loading && !error && !empty}}" class="section" wx:for="{{groups}}" wx:for-item="group" wx:key="year">
     <view class="section-title">{{group.year}}</view>
     <view class="line">
-      <view wx:for="{{group.items}}" wx:for-item="entry" wx:key="key" class="node">
+      <view wx:for="{{group.items}}" wx:for-item="entry" wx:key="key" class="node" data-id="{{entry.photo.id}}" bindtap="openDetail">
         <image class="node-photo" src="{{entry.photo.url}}" mode="aspectFill" lazy-load />
         <view class="node-copy">
-          <view class="node-day">第 {{entry.day}} 天</view>
+          <view wx:if="{{entry.showDay}}" class="node-day">第 {{entry.day}} 天</view>
           <text class="small">{{entry.date}}</text>
           <!-- 没有 EXIF 的照片只有上传时间，标注出来，别把它当拍摄事实 -->
-          <text class="small" wx:if="{{entry.dateSource === 'upload'}}">按上传时间</text>
+          <text class="small">{{entry.sourceText}}</text>
+          <text wx:if="{{entry.photo.caption}}">{{entry.photo.caption}}</text>
+          <text wx:if="{{entry.photo.imageError}}" class="small">{{entry.photo.imageError}}</text>
+          <t-tag wx:for="{{entry.tagTexts}}" wx:key="*this" text="{{item}}" size="mini"></t-tag>
           <t-tag wx:if="{{entry.milestone}}" tone="accent" size="mini" text="{{entry.milestone}}"></t-tag>
         </view>
       </view>
     </view>
   </view>
 
+  <view wx:if="{{!loading && !error && !empty}}" class="section">
+    <text class="small">照片库共 {{totalCount}} 张</text>
+    <t-button wx:if="{{nextCursor}}" loading="{{loadingMore}}" bindtap="more">加载更多</t-button>
+    <text wx:else class="small">没有更多了</text>
+  </view>
   <!--
     叙事年度视频入口（改造项 E5）。`POST /api/annual-films` 早已建成
     但**零端上调用方** —— 已付出的开发成本拿不到任何用户价值。
@@ -89,7 +99,14 @@
           bindtap="chooseFilmDuration"
         >{{item}} 秒</view>
       </view>
-      <t-button type="ai" block anim="{{animType}}" loading="{{filmBusy}}" class="block-gap" bindtap="createFilm">生成年度短片</t-button>
+      <t-button type="ai" block anim="{{animType}}" loading="{{filmBusy}}" class="block-gap" bindtap="createFilm">确认年度素材与报价</t-button>
+      <view wx:if="{{filmPreview}}" class="section">
+        <view>{{filmPreview.petName}} · {{filmPreview.year}} · {{filmPreview.durationSeconds}} 秒</view>
+        <text class="small">本次采用以下 {{filmPreview.photos.length}} 张，按显示顺序制作。</text>
+        <view wx:for="{{filmPreview.photos}}" wx:key="id" class="node"><image class="node-photo" src="{{item.url}}" mode="aspectFill" /><text>{{item.date}}</text></view>
+        <text>解锁价格 ¥{{filmPricing.amount}} · {{filmPricing.label}}</text>
+        <t-button loading="{{filmBusy}}" bindtap="confirmFilm">用这些照片制作</t-button>
+      </view>
       <text wx:if="{{filmHint}}" class="hint">{{filmHint}}</text>
     </t-card>
   </view>

@@ -15,7 +15,12 @@ export interface Database {
   close(): Promise<void>;
 }
 
-export const databaseContext = new AsyncLocalStorage<Database>();
+declare global {
+  var __petbabyDatabaseContext: AsyncLocalStorage<Database> | undefined;
+}
+// Next dev retains the global connection across route reloads. Its transaction
+// context must have the same lifetime or nested queries wait on their own lock.
+export const databaseContext = globalThis.__petbabyDatabaseContext ??= new AsyncLocalStorage<Database>();
 
 function postgresDatabase(client: postgres.Sql | postgres.TransactionSql): Database {
   const database: Database = {
@@ -56,7 +61,19 @@ function pgliteDatabase(client: PGlite | Transaction): Database {
 export async function createDatabase(): Promise<Database> {
   const url = process.env.DATABASE_URL || "file://.data/petbaby";
   if (url.startsWith("postgres://") || url.startsWith("postgresql://")) {
-    return postgresDatabase(postgres(url, { max: 10, idle_timeout: 20, connect_timeout: 10 }));
+    return postgresDatabase(postgres(url, {
+      max: 10, idle_timeout: 20, connect_timeout: 10,
+      // The SQL boundary uses encoded JSON text for both adapters. postgres.js
+      // otherwise encodes these strings a second time after inferring jsonb OIDs.
+      types: {
+        json: { to: 114, from: [114, 3802], serialize: (value: unknown) => typeof value === "string" ? value : JSON.stringify(value), parse: JSON.parse },
+        jsonb: { to: 3802, from: [], serialize: (value: unknown) => typeof value === "string" ? value : JSON.stringify(value), parse: JSON.parse },
+        // Preserve six-digit keyset timestamps; converting SQL text to Date
+        // truncates microseconds and repeats rows at a page boundary.
+        date: { to: 1184, from: [1082, 1114, 1184], serialize: (value: unknown) => value instanceof Date ? value.toISOString() : String(value), parse: (value: string) => new Date(value) },
+        calendarDate: { to: 1082, from: [1082], serialize: (value: unknown) => value instanceof Date ? value.toISOString().slice(0, 10) : String(value), parse: (value: string) => value },
+      },
+    }));
   }
   if (url.startsWith("file://")) await mkdir(path.resolve(url.slice(7)), { recursive: true });
   return pgliteDatabase(url === "memory://" ? new PGlite() : new PGlite(url));

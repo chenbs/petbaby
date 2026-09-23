@@ -20,7 +20,7 @@ export default async function TimelinePage({ searchParams }: { searchParams: Pro
       <Link className="back-link" href="/me">返回我的</Link>
       <span className="eyebrow">TIMELINE</span>
       <h1>成长时间线</h1>
-      <p>按拍摄时间把照片排成一条线，标出每张是相处的第几天。</p>
+      <p>按记录日期回看收好的照片，每张都注明日期来源。</p>
     </div>
     <TimelineClient initialPetId={petId} />
   </main>;

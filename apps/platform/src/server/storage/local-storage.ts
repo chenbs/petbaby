@@ -42,6 +42,9 @@ export class LocalObjectStorage implements ObjectStorage {
 
   async delete(key: string) {
     const target = safePath(this.root, key);
-    await Promise.allSettled([unlink(target), unlink(`${target}.meta`)]);
+    await Promise.all([target, `${target}.meta`].map(async (filename) => {
+      try { await unlink(filename); }
+      catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; }
+    }));
   }
 }

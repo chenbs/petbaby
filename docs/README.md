@@ -1,6 +1,6 @@
 # 文档索引
 
-更新：2026-09-21
+更新：2026-09-23
 
 本目录只保留当前有效的产品、运营、交付和发布资料。既定产品批次和 76 个非人化图片母版已完成；宠物人化直接效果图运行时代码与 V2 本地素材接入已完成，效果图尚未上传、seed、冻结或批准上线，因此相关注册项继续不可见。虚拟支付合规与 `growth_orders` 支付缺陷的代码改造已完成，剩余工作是素材发布、外部凭据、真实 Provider/微信/供应商联调、远端 CI、部署演练和发布门禁。
 
@@ -13,6 +13,7 @@
 | 按网站、小程序前端和后端查看开发、配置与验收待办 | [`delivery/06-development-and-configuration-todos.md`](delivery/06-development-and-configuration-todos.md) |
 | 只看未完成的业务与功能事项 | [`delivery/07-business-and-feature-todos.md`](delivery/07-business-and-feature-todos.md) |
 | 按页查功能点、改一项要动哪几端                   | [`product/21-小程序功能点清单.md`](product/21-小程序功能点清单.md)                                                 |
+| 陪伴与记录第一期规格和实施验收 | [`product/33-陪伴与记录开发清单及实施计划.md`](product/33-陪伴与记录开发清单及实施计划.md)、[`delivery/09-陪伴与记录实施验收记录.md`](delivery/09-陪伴与记录实施验收记录.md) |
 | 查 Web/后台/REST 入口与玩法 manifest      | [`product/15-功能入口清单.md`](product/15-功能入口清单.md)                                                     |
 | 情绪价值方向任务书（六项已完成，含实现记录）            | [`product/14-direction-review-emotional-value.md`](product/14-direction-review-emotional-value.md) |
 | 竞品分析与产品复盘（分析文档，非任务书；健康线十条红线在 3.8） | [`product/16-竞品分析与产品复盘.md`](product/16-竞品分析与产品复盘.md)                                               |
@@ -62,7 +63,9 @@ docs/
 │   ├── 28-图片母版货架与65图归档矩阵.md # 原始 8 入口、61 模板及 65 图唯一归档
 │   ├── 30-动物效果图扩展执行计划.md # animal 目录 24 张历史产物、21 个当前 live 模板
 │   ├── 29-图片玩法重构方案.md      # 图片玩法、付费点及后续决策覆盖记录
-│   └── 31-宠物人化两阶段执行与审批记录.md # 宠物人化方案演进、直接效果图链路与接入交接
+│   ├── 31-宠物人化两阶段执行与审批记录.md # 宠物人化方案演进、直接效果图链路与接入交接
+│   ├── 32-陪伴与记录产品体验方案.md # 陪伴与记录产品方向
+│   └── 33-陪伴与记录开发清单及实施计划.md # 第一期范围、验收与实现差异
 ├── operations/
 │   ├── 01-ops-plan.md
 │   ├── 02-xiaohongshu-playbook.md
@@ -75,7 +78,8 @@ docs/
 │   ├── 04-environment-reference.md
 │   ├── 05-api-operations-reference.md
 │   ├── 06-development-and-configuration-todos.md # 三端开发、配置与验收待办总览
-│   └── 07-business-and-feature-todos.md # 仅含未完成业务与功能的三端视图
+│   ├── 07-business-and-feature-todos.md # 仅含未完成业务与功能的三端视图
+│   └── 09-陪伴与记录实施验收记录.md # T00–T10、A01–A18 证据及外部门禁
 ├── demand/
 │   ├── theme.md
 │   └── theme-2.md
@@ -108,11 +112,15 @@ docs/
 - 同一事实只在一个文档中维护，其他文档通过链接引用；完成记录不作为新的开发待办。
 - 生产环境不得使用本地磁盘存储或模拟支付；只有显式 `APP_ENV=staging` 才允许测试机降级配置。
 
-## 当前状态（2026-09-21）
+## 当前状态（2026-09-23）
 
-**代码规模**（与工作区一致）：数据库迁移 `0000`～`0029`、REST 路由 132 个、Web/H5 与后台页面 37 个（含 9 个后台）、小程序 23 页、内置玩法 manifest 10 条（7 live + 3 archived）、图片货架 9 个已登记入口 / 116 个模板（76 个冻结 live、40 个已完成本地素材映射但尚未上传的 `pending-review`；`human` 入口没有 live 项，因此公开 API 当前仍下发 8 个入口）、小程序主题 4 套 / 57 token / 18 个公共组件。
+**代码规模**（与工作区一致）：数据库迁移 `0000`～`0033`（34 份）、REST 路由 135 个、Web/H5 与后台页面 37 个（含 9 个后台）、小程序 23 页、内置玩法 manifest 10 条（7 live + 3 archived）、图片货架 9 个已登记入口 / 116 个模板（76 个冻结 live、40 个已完成本地素材映射但尚未上传的 `pending-review`；`human` 入口没有 live 项，因此公开 API 当前仍下发 8 个入口）、小程序主题 4 套 / 57 token / 18 个公共组件。
+
+**最新测试快照（2026-09-23）**：平台 `pnpm check` 通过（lint 0 错误 / 8 警告，typecheck、coverage、build 通过）；52 个测试文件、524 条用例，内存环境 522 通过 / 2 条真实成片用例跳过，真实 PostgreSQL + ffmpeg 环境 524 条全通过。覆盖率 Statements 79.11%、Branches 72.36%、Functions 86.09%、Lines 83.49%，范围以 Vitest 配置为准；[本地覆盖率报告](../apps/platform/coverage/index.html)。PostgreSQL + 真实 Worker 的移动浏览器 E2E 6 条通过，小程序十项校验及 45 条行为测试通过。命令、日志、截图、默认开发库误触事故与 A01–A18 待验项统一见 [实施验收记录](delivery/09-陪伴与记录实施验收记录.md)，不代表真机或发布已放行。
 
 **已完成的功能批次**（口径与落点全部登记在 `product/07-functional-backlog.md`）：
+
+- 陪伴与记录第一期（33 号计划）代码增量已落地：独立建档/收好、幂等回执、元数据编辑、完整分页、私有媒体/衍生交付图、持久删除清理、单宠年度快照、记录事件。逐项 A01–A18 自动化与外部待验状态见 `delivery/09`；尚未达到全部真机及发布放行条件。
 
 - 阶段一至三及管理后台补全批次 K 的纯功能开发已完成，Web/H5、REST API、Worker、微信小程序和管理员入口均已覆盖。批次划分与完成记录见 Git 历史，不再单列文档。
 - 情绪价值方向（`product/14-direction-review-emotional-value.md`）六项：照片 EXIF 拍摄时间、可选视频时长、多页纪念册 PDF、成长时间线与「去年今日」、叙事型年度视频、年度报告做实。
@@ -125,24 +133,24 @@ docs/
 | 类型 | 剩余事项 | 权威入口 |
 | --- | --- | --- |
 | 代码 / 合规 | 虚拟支付按 SKU 选 Provider、`growth_orders` 改为支付确认后发权益、端上接 `wx.requestVirtualPayment` 与 iOS 退款问询已完成；待真实后台和真机验收 | `delivery/06-development-and-configuration-todos.md` |
-| 自动化门禁 | `.github/workflows/ci.yml` 已恢复；远端 Actions、gitleaks 和容器关卡仍待实际运行 | `operations/05-release-checklist.md` |
+| 自动化门禁 | `.github/workflows/ci.yml` 已恢复并通过 actionlint；本地生产依赖审计和 Git 历史/工作区 Gitleaks 通过，远端 Actions 与容器关卡仍待执行 | `operations/05-release-checklist.md` |
 | 宠物人化素材发布 | V2 本地图片、ID、提示词和计划对象键已登记；待完整门禁、明确发布批准、对象存储上传、seed、冻结和真实双参考验证 | `product/31-宠物人化两阶段执行与审批记录.md` |
 | 微信后台 / 发布 | AppID、AppSecret、登录、支付、订阅消息模板、三类合法域名、隐私与服务类目、上传私钥和提审发布 | `operations/04-external-prerequisites.md`、`delivery/03-miniprogram-release.md` |
-| 真实环境 | PostgreSQL E2E、真实 lingsuan/对象存储/供应商联调、年度视频抽帧、健康 PDF 中文字形、四主题真机走查、部署与备份恢复演练 | `operations/05-release-checklist.md` |
+| 真实环境 | 本地 PostgreSQL E2E 和年度视频抽帧已验；发布环境 PostgreSQL、真实 lingsuan/对象存储/供应商、Linux 视频/字体、健康 PDF 字形、四主题真机、部署与备份恢复仍待验 | `operations/05-release-checklist.md` |
 
 这里的“剩余”包含素材、外部后台和真实环境门禁，不等于小程序页面功能没写完；纯功能基线仍以 `product/07-functional-backlog.md` 为准。
 
 **当前阻塞与未验证项**：
 
 - **健康线的文案法律意见是对外上线的产品性阻塞**（`19` 号文 E7）。技术实现已完成，但合规结论基于对《动物诊疗机构管理办法》与微信类目要求的推断，未经专业审查；第二轮新增的档案 PDF、免疫记录与提示文案同样属用户可见文案。
-- **年度视频的成片观感从未验证** —— 开发机无 ffmpeg，需在有 ffmpeg 的环境抽帧确认四段齐全、成片总长等于所选时长。
+- **年度视频已在本机真实 ffmpeg 验证 B 宠物快照并抽帧检查**；生产 Linux/容器字体、全时长观感和设备播放仍需验收，证据见 `delivery/09-陪伴与记录实施验收记录.md`。
 - **健康档案 PDF 的中文字形未在真机/真实打印下验证** —— PDF 走 sharp 栅格化，生产容器字体集若不同可能出现方框。
 - **虚拟支付代码改造已完成**，但微信虚拟支付签约、商品上架、真实回调、iOS 退款问询和真机验收尚未完成；未配置时生产会明确拒绝支付。
-- **自动化 CI 已恢复但尚未远端执行**：本机平台覆盖率、内存/PostgreSQL E2E、小程序、官网像素与媒体冒烟已验证；gitleaks、Docker 构建和 GitHub Actions 仍待执行。
+- **自动化 CI 已恢复，尚未远端执行**：本机平台覆盖率、PostgreSQL E2E、小程序、生产依赖审计及 Git 历史/工作区 Gitleaks 已有本批次证据；新增工作流通过 actionlint，Docker 实构建仍待执行。官网验收仍以官网实现记录为准。
 - 宠物人化旧两阶段资产不可恢复；V2 本地映射虽已完成，但在对象上传、真实调用验证和明确发布批准前仍保持 `pending-review`，不会下发给用户。
 - 官网 `apps/website`（Astro 静态站）已实现；上线仍需真实小程序码、主体/备案/法务信息和生产域名验收。
 - 小程序主题系统与玻璃面板的剩余验收依赖真机，见 `operations/05-release-checklist.md` 的「主题系统验收」。
-- PostgreSQL 空库/重复迁移及内存/PostgreSQL E2E 已在本机通过；真实 Provider/微信/供应商联调、真实 Linux + Docker 部署和备份恢复仍需按发布清单验收。
+- PostgreSQL 空库/重复迁移、内存/PostgreSQL E2E 及本地隔离库备份恢复已通过；真实 Provider/微信/供应商联调、Linux + Docker 部署及目标环境备份恢复仍待验。微信开发者工具已找到，但 Codex 授权超时，编译/页面验收尚未执行，见实施验收记录。
 
 
 ## 维护规则

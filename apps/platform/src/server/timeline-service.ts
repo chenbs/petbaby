@@ -2,11 +2,12 @@ import "server-only";
 
 import { z } from "zod";
 
-import { getDatabase } from "@/server/db/client";
+import { getDatabase, inTransaction } from "@/server/db/client";
 import { mapPhoto } from "@/server/db/rows";
 import { AppError } from "@/server/errors";
 import { MILESTONE_DAYS, anchorOf, dayIndexOf, daysSince, milestoneLabel, startOfLocalDay } from "@/domain/companion";
 import type { Photo } from "@/domain/models";
+import { listTimelinePhotos } from "@/server/photo-library-service";
 
 /**
  * 成长时间线。方向 A 的底座，零边际成本，也是叙事视频（任务 5）的数据来源。
@@ -27,7 +28,9 @@ export type TimelineEntry = {
   /** 拍摄日期的本地日历日，YYYY-MM-DD */
   date: string;
   /** 这张照片的日期是真实拍摄时间还是仅上传时间 */
-  dateSource: Photo["shotAtSource"];
+  dateSource: "manual" | "exif" | "upload";
+  /** 只约束记录展示，不改变旧 dayIndexOf 的起点前回落算法。 */
+  showDay?: boolean;
   /** 命中里程碑时的文案，未命中为 undefined */
   milestone?: string;
 };
@@ -46,13 +49,17 @@ export type Timeline = {
   entries: TimelineEntry[];
   /** 已达成的里程碑，供端上做「第 100 天」这类标记 */
   milestones: Array<{ day: number; label: string; date?: string }>;
+  totalCount?: number;
+  nextCursor?: string | null;
 };
 
 const querySchema = z.object({
   /** 倒序（默认，最近的在前）或正序（从第一天读起） */
   order: z.enum(["desc", "asc"]).optional().default("desc"),
   limit: z.number().int().min(1).max(500).optional().default(200),
-});
+  pageSize: z.number().int().min(1).max(100).optional(),
+  cursor: z.string().min(1).max(2048).optional(),
+}).refine((input) => !input.cursor || input.pageSize !== undefined, "游标需要显式分页");
 
 function localDate(value: unknown) {
   const day = startOfLocalDay(value);
@@ -73,19 +80,7 @@ async function getOwnedPet(userId: string, petId: string) {
 export async function getPetTimeline(userId: string, petId: string, input: unknown = {}): Promise<Timeline> {
   const options = querySchema.parse(input);
   const pet = await getOwnedPet(userId, petId);
-  const database = await getDatabase();
-
-  /*
-   * `coalesce(shot_at, created_at)` 既是排序键也是展示日期，与 `mapPhoto` 的
-   * 回落口径一致。两处必须一样，否则「排在第 3 位的照片显示的却是更早的日期」。
-   */
-  const rows = await database.query(
-    `SELECT * FROM photos
-      WHERE user_id=$1 AND pet_id=$2 AND deleted_at IS NULL
-      ORDER BY coalesce(shot_at, created_at) ${options.order === "asc" ? "ASC" : "DESC"}, position
-      LIMIT $3`,
-    [userId, petId, options.limit],
-  );
+  const page = await listTimelinePhotos(userId, petId, options);
 
   const anchor = anchorOf({
     birthday: pet.birthday ? String(pet.birthday) : undefined,
@@ -96,10 +91,11 @@ export async function getPetTimeline(userId: string, petId: string, input: unkno
     : undefined;
   const anchorType: Timeline["anchorType"] = pet.birthday ? (String(pet.date_type || "birthday") as "birthday" | "got_home") : "created";
 
-  const entries: TimelineEntry[] = rows.map((row) => {
-    const photo = mapPhoto(row);
-    const day = dayIndexOf(anchor, photo.shotAt);
-    return { photo, day, date: localDate(photo.shotAt), dateSource: photo.shotAtSource, milestone: milestoneLabel(day) };
+  const entries: TimelineEntry[] = page.items.map((photo) => {
+    const date = photo.recordedDate || localDate(photo.shotAt);
+    const day = dayIndexOf(anchor, date);
+    const showDay = date >= localDate(anchor) && (pet.life_stage !== "memorial" || Boolean(memorialSince && date <= localDate(memorialSince)));
+    return { photo, day, date, dateSource: photo.memoryDateSource || photo.shotAtSource, showDay, milestone: showDay && pet.life_stage !== "memorial" ? milestoneLabel(day) : undefined };
   });
 
   /*
@@ -108,15 +104,16 @@ export async function getPetTimeline(userId: string, petId: string, input: unkno
    * 天数按 memorialSince 封口：已离开的宠物不该冒出一个尚未到来的「第 1000 天」，
    * 那是一件不会发生的事。
    */
-  const totalDays = daysSince(anchor, memorialSince);
+  const totalDays = pet.life_stage === "memorial" && !memorialSince ? 0 : daysSince(anchor, memorialSince);
   const dateByDay = new Map(entries.map((entry) => [entry.day, entry.date]));
-  const milestones = MILESTONE_DAYS.filter((day) => day <= totalDays).map((day) => ({
+  const milestones = MILESTONE_DAYS.filter((day) => pet.life_stage !== "memorial" && day <= totalDays).map((day) => ({
     day,
     label: milestoneLabel(day) as string,
     date: dateByDay.get(day),
   }));
 
-  return { petId: String(pet.id), petName: String(pet.name), anchor, anchorType, totalDays, memorialSince, entries, milestones };
+  return { petId: String(pet.id), petName: String(pet.name), anchor, anchorType, totalDays, memorialSince, entries, milestones,
+    ...(options.pageSize === undefined ? {} : { totalCount: page.totalCount, nextCursor: page.nextCursor }) };
 }
 
 /**
@@ -130,8 +127,9 @@ export async function getPetTimeline(userId: string, petId: string, input: unkno
  *
  * @param now 注入当天，便于测试
  */
-export async function findOnThisDay(userId: string, now = new Date()) {
+export async function findOnThisDay(userId: string, now = new Date(), petId?: string) {
   const database = await getDatabase();
+  if (petId) await getOwnedPet(userId, petId);
   const month = now.getMonth() + 1;
   const day = now.getDate();
   const rows = await database.query(
@@ -141,8 +139,10 @@ export async function findOnThisDay(userId: string, now = new Date()) {
         AND ph.shot_at IS NOT NULL
         AND EXTRACT(MONTH FROM ph.shot_at)=$2 AND EXTRACT(DAY FROM ph.shot_at)=$3
         AND ph.shot_at < $4
+        AND (ph.memory_date IS NULL OR ph.memory_date=(ph.shot_at AT TIME ZONE $5)::date)
+        ${petId ? "AND ph.pet_id=$6" : ""}
       ORDER BY ph.shot_at DESC`,
-    [userId, month, day, new Date(now.getFullYear(), now.getMonth(), now.getDate())],
+    [userId, month, day, new Date(now.getFullYear(), now.getMonth(), now.getDate()), Intl.DateTimeFormat().resolvedOptions().timeZone, ...(petId ? [petId] : [])],
   );
   return rows.map((row) => {
     const photo = mapPhoto(row);
@@ -199,7 +199,10 @@ async function findOnThisDayConsent(userId: string) {
  * 只是不推送。
  */
 export async function scheduleOnThisDay(userId: string, now = new Date()) {
-  const matches = await findOnThisDay(userId, now);
+  return inTransaction(async (database) => {
+  const candidates = await findOnThisDay(userId, now);
+  const pets = await database.query("SELECT id FROM pets WHERE user_id=$1 AND deleted_at IS NULL AND life_stage<>'memorial' ORDER BY id FOR UPDATE", [userId]);
+  const matches = candidates.filter((item) => pets.some((pet) => pet.id === item.petId));
   if (!matches.length) return { scheduled: 0 };
   /*
    * 授权检查放在命中判定**之后**：没命中就不必查授权（省一次查询），
@@ -207,7 +210,6 @@ export async function scheduleOnThisDay(userId: string, now = new Date()) {
    */
   const consentId = await findOnThisDayConsent(userId);
   if (!consentId) return { scheduled: 0, reason: "no_consent" as const };
-  const database = await getDatabase();
   const dayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const dayEnd = new Date(dayStart.getTime() + 86_400_000);
   const existing = await database.query(
@@ -225,12 +227,14 @@ export async function scheduleOnThisDay(userId: string, now = new Date()) {
    * 下一次推送要求用户重新授权。用 `consumed` 而不是 `sent` ——
    * `sent` 是投递结果，这条授权记录本身从未被投递。
    */
-  await database.query("UPDATE message_subscriptions SET status='consumed',status_updated_at=now() WHERE id=$1 AND status='active'", [consentId]);
+  const claimed = await database.query("UPDATE message_subscriptions SET status='consumed',status_updated_at=now() WHERE id=$1 AND status='active' AND revoked_at IS NULL RETURNING id", [consentId]);
+  if (!claimed.length) return { scheduled: 0, reason: "no_consent" as const };
   await database.query(
     "INSERT INTO message_subscriptions (id,user_id,pet_id,event_type,template_code,status,scheduled_at,consented_at,created_at) VALUES ($1,$2,$3,'on_this_day','on-this-day-v1','scheduled',$4,$5,$5)",
     [crypto.randomUUID(), userId, first.petId, now, now],
   );
   return { scheduled: 1, petId: first.petId, date: first.date, yearsAgo: first.yearsAgo };
+  });
 }
 
 /**
@@ -259,15 +263,18 @@ export async function scheduleAllOnThisDay(now = new Date()) {
  * 只有一张照片时返回 undefined，由调用方决定降级，而不是拿同一张照片比自己。
  */
 export async function pickGrowthPair(userId: string, petId: string) {
-  const timeline = await getPetTimeline(userId, petId, { order: "asc", limit: 500 });
-  if (timeline.entries.length < 2) return undefined;
+  const [timeline, end] = await Promise.all([
+    getPetTimeline(userId, petId, { order: "asc", limit: 1 }),
+    getPetTimeline(userId, petId, { order: "desc", limit: 1 }),
+  ]);
   const earliest = timeline.entries[0];
-  const latest = timeline.entries[timeline.entries.length - 1];
+  const latest = end.entries[0];
+  if (!earliest || !latest || earliest.photo.id === latest.photo.id || earliest.date === latest.date) return undefined;
   return {
     petName: timeline.petName,
     earliest,
     latest,
     /** 两张照片相隔的天数 */
-    gapDays: Math.max(0, latest.day - earliest.day),
+    gapDays: Math.round((new Date(`${latest.date}T12:00:00`).getTime() - new Date(`${earliest.date}T12:00:00`).getTime()) / 86_400_000),
   };
 }

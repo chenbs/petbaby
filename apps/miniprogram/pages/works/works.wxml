@@ -88,7 +88,7 @@
           bindtap="open"
         >
           <view class="cover-wrap">
-            <image class="cover" src="{{item.outputUrl || item.photo.url}}" mode="aspectFill" lazy-load />
+            <image class="cover" src="{{item.assetKind === 'video' || item.assetKind === 'pdf' || item.assetKind === 'h5' ? item.photo.url : (item.outputUrl || item.photo.url)}}" mode="aspectFill" lazy-load />
             <view class="veil"></view>
             <t-tag
               wx:if="{{item.statusTone !== 'success'}}"

@@ -1,6 +1,7 @@
 const api = require("../../services/api");
 const companion = require("../../services/companion");
 const { themedPage } = require("../../theme/page-mixin");
+const { displayMediaTree } = require("../../services/photo-files");
 
 /**
  * 拆出 Hero 位与网格位（UI 重构方案 A：1 大 + 2 列）。
@@ -37,6 +38,7 @@ themedPage({
      * 这是全批唯一改变「用户打开时先看到谁」的改动。
      */
     pet: null,
+    pets: [], petLoading: true, recordError: "", recent: [], recordAction: "开始记录",
     /** 今天刚达成的里程碑（E3）。只在当天出现一次，不是常驻标签 */
     milestone: "",
     /** 去年今日（E4）。命中才有，没命中整块静默隐藏 */
@@ -52,7 +54,6 @@ themedPage({
      * 首屏应该跟着变。玩法列表放在 onLoad —— 它不会因为用户的操作而变。
      */
     this.loadPet();
-    this.loadOnThisDay();
   },
   onLoad() { this.load(); },
   load() {
@@ -71,22 +72,40 @@ themedPage({
    * 天数一律走 `services/companion.js`，不在这里重算：纪念阶段要按
    * memorialSince 封口，而那个判断（含「没有截止日就不给数字」）只在那里有。
    */
-  loadPet() {
-    api.request("/api/pets")
-      .then((pets) => {
-        const pet = (pets || []).find((item) => item.isDefault) || (pets || [])[0];
-        if (!pet) return this.setData({ pet: null, milestone: "" });
-        const days = companion.daysSince(companion.anchorOf(pet), pet.memorialSince);
-        this.setData({
-          pet: Object.assign({}, pet, {
-            companionText: companion.companionText(pet, days),
-            counts: pet.counts || { works: 0, photos: 0, memorials: 0 }
-          }),
-          milestone: companion.milestoneToday(pet, days)
-        });
-      })
-      .catch(() => undefined);
+  async loadPet() {
+    const view = this._view = (this._view || 0) + 1;
+    const session = wx.getStorageSync("petbaby_session");
+    if (session !== this._accountSession) this._petId = "";
+    this._accountSession = session;
+    this.setData({ petLoading: true, recordError: "", pet: null, recent: [], onThisDay: null, milestone: "" });
+    try {
+      const pets = await api.request("/api/pets").then(displayMediaTree);
+      if (view !== this._view) return;
+      const pet = this._petId ? pets.find((item) => item.id === this._petId) : pets.find((item) => item.isDefault) || pets[0];
+      this.setData({ pets });
+      if (this._petId && !pet) throw new Error("所选档案不可用，请重新选择宠物");
+      if (!pet) return this.setData({ petLoading: false, recordAction: "开始记录" });
+      this._petId = pet.id;
+      const days = companion.daysSince(companion.anchorOf(pet), pet.memorialSince);
+      this.setData({ pet: Object.assign({}, pet, { companionText: companion.companionText(pet, days) }), petLoading: false,
+        recordAction: pet.lifeStage === "memorial" ? "收好照片" : pet.counts && pet.counts.photos ? "记录今天" : "收好第一张照片",
+        milestone: pet.lifeStage === "memorial" ? "" : companion.milestoneToday(pet, days) });
+      const result = await Promise.all([
+        api.request("/api/photos?petId=" + pet.id + "&pageSize=3&order=uploaded").then(displayMediaTree),
+        api.request("/api/on-this-day?petId=" + pet.id).then(displayMediaTree)
+      ]);
+      if (view !== this._view) return;
+      const first = (result[1].matches || [])[0];
+      const source = { manual: "你设置的日期", exif: "照片里的拍摄时间", upload: "按上传时间记录" };
+      this.setData({ recent: result[0].items.map((item) => Object.assign({}, item, { savedOn: item.createdAt.slice(0, 10), sourceText: source[item.memoryDateSource] })),
+        onThisDay: first ? Object.assign({}, first, { eyebrow: first.yearsAgo === 1 ? "去年今日" : first.yearsAgo + " 年前的今天" }) : null,
+        onThisDayMore: Math.max(0, (result[1].matches || []).length - 1) });
+    } catch (error) { if (view === this._view) this.setData({ petLoading: false, recordError: error.message }); }
   },
+  choosePet(event) { const pet = this.data.pets[Number(event.detail.value)]; if (pet) { this._petId = pet.id; this.loadPet(); } },
+  record() { wx.navigateTo({ url: "/pages/photos/photos?mode=record&entry=index" + (this.data.pet ? "&petId=" + this.data.pet.id : "") }); },
+  recentDetail(event) { if (this.data.pet) wx.navigateTo({ url: "/pages/photos/photos?petId=" + this.data.pet.id + "&photoId=" + event.currentTarget.dataset.id }); },
+  onHide() { this._view = (this._view || 0) + 1; },
 
   /**
    * 去年今日（E4）。Web 首页早有这一块，小程序没有 —— 而小程序是主端。
@@ -128,13 +147,14 @@ themedPage({
   start(event) {
     const pluginId = event.currentTarget.dataset.id;
     const category = event.currentTarget.dataset.category;
+    const petQuery = this.data.pet ? "?petId=" + encodeURIComponent(this.data.pet.id) : "";
     api.request("/api/events", { method: "POST", data: { name: "plugin_selected", pluginId, channel: "miniprogram", metadata: {} } }).catch(() => undefined);
-    if (category === "ai-image") return wx.navigateTo({ url: "/pages/ai-create/ai-create" });
-    if (category === "interactive") return wx.navigateTo({ url: "/pages/interactive-create/interactive-create" });
-    if (category === "video") return wx.navigateTo({ url: "/pages/video-create/video-create" });
+    if (category === "ai-image") return wx.navigateTo({ url: "/pages/ai-create/ai-create" + petQuery });
+    if (category === "interactive") return wx.navigateTo({ url: "/pages/interactive-create/interactive-create" + petQuery });
+    if (category === "video") return wx.navigateTo({ url: "/pages/video-create/video-create" + petQuery });
     if (category === "memorial") return wx.navigateTo({ url: "/pages/memorials/memorials" });
     if (category === "report") return wx.navigateTo({ url: "/pages/commerce/commerce" });
-    wx.navigateTo({ url: "/pages/create/create?pluginId=" + encodeURIComponent(pluginId) });
+    wx.navigateTo({ url: "/pages/create/create?pluginId=" + encodeURIComponent(pluginId) + (this.data.pet ? "&petId=" + this.data.pet.id : "") });
   },
   openTheme() { wx.navigateTo({ url: "/pages/theme/theme" }); }
 });

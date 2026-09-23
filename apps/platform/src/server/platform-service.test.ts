@@ -34,7 +34,7 @@ import { listRuntimePlugins, listRuntimePluginVersions, rollbackRuntimePlugin, u
 
 const USER_A = "00000000-0000-4000-8000-00000000000a";
 const USER_B = "00000000-0000-4000-8000-00000000000b";
-const PNG = Uint8Array.from(Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9Z1ZQAAAAASUVORK5CYII=", "base64"));
+const PNG = Uint8Array.from(Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAADUlEQVQImWP4////fwAJ+wP9CNHoHgAAAABJRU5ErkJggg==", "base64"));
 
 async function seedUser(userId: string) {
   const database = await getDatabase();
@@ -146,7 +146,7 @@ describe("persistent platform service", () => {
     const shared = await shareWork(USER_A, completed.work!.id);
     const sharedWork = await getSharedWork(shared.token);
     expect(sharedWork.public).toBe(true);
-    expect(sharedWork.outputUrl).toMatch(/\.svg$/);
+    expect(sharedWork.outputUrl).toBe(`/api/share/${shared.token}/media/output`);
     await expect(listWorks(USER_B)).resolves.toHaveLength(0);
   });
 
@@ -258,6 +258,9 @@ describe("security boundaries", () => {
     const validation = (() => { try { z.string().min(2).parse(""); } catch (error) { return error; } })();
     expect(routeError(validation).status).toBe(422);
     expect(routeError(new AppError("NO_QUOTA", "额度不足", 429)).status).toBe(429);
+    const throttled = routeError(new AppError("RATE_LIMITED", "操作太频繁，请稍后再试", 429, 17));
+    expect(throttled.headers.get("Retry-After")).toBe("17");
+    expect((await throttled.json()).error.retryAfterSeconds).toBe(17);
     const spy = vi.spyOn(console, "error").mockImplementation(() => undefined);
     const response = routeError(new Error("database secret"));
     expect((await response.json()).error.code).toBe("INTERNAL_ERROR");

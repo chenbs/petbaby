@@ -1,6 +1,7 @@
 import "server-only";
 
 import sharp from "sharp";
+import type { Pet, Photo } from "@/domain/models";
 import { getRuntimePlugin } from "@/plugins/runtime";
 import { getDatabase } from "@/server/db/client";
 import { mapPet, mapPhoto, mapTask } from "@/server/db/rows";
@@ -25,11 +26,12 @@ export async function processTask(task: ReturnType<typeof mapTask>) {
     const plugin = task.pluginSnapshot || await getRuntimePlugin(task.pluginId);
     if (!plugin) throw new Error("PLUGIN_UNAVAILABLE");
     const [petRows, photoRows] = await Promise.all([
-      database.query("SELECT * FROM pets WHERE id=$1 AND user_id=$2", [task.petId, task.userId]),
-      database.query("SELECT * FROM photos WHERE id = ANY($1::uuid[]) AND user_id=$2", [task.photoIds, task.userId]),
+      database.query("SELECT * FROM pets WHERE id=$1 AND user_id=$2 AND deleted_at IS NULL", [task.petId, task.userId]),
+      database.query("SELECT * FROM photos WHERE id = ANY($1::uuid[]) AND user_id=$2 AND deleted_at IS NULL", [task.photoIds, task.userId]),
     ]);
     if (!petRows[0] || photoRows.length !== task.photoIds.length) throw new Error("INPUT_NOT_FOUND");
     const byId = new Map(photoRows.map((row) => [String(row.id), row]));
+    const snapshot = task.pluginId === "pl-23" ? task.options.recordSnapshot as { pet: Pet; photos: Photo[] } | undefined : undefined;
     const photos = [];
     for (const photoId of task.photoIds) {
       const row = byId.get(photoId);
@@ -40,12 +42,12 @@ export async function processTask(task: ReturnType<typeof mapTask>) {
         object = await objectStorage.get(String(row.storage_key));
       }
       if (!object) throw new Error("PHOTO_OBJECT_NOT_FOUND");
-      photos.push({ metadata: mapPhoto(row), object });
+      photos.push({ metadata: snapshot?.photos.find((photo) => photo.id === photoId) || mapPhoto(row), object });
     }
 
     const generator = generatorRegistry[plugin.generator.template as keyof typeof generatorRegistry];
     if (!generator) throw new Error("GENERATOR_NOT_FOUND");
-    const output = await generator({ task, pet: mapPet(petRows[0]), photos, plugin });
+    const output = await generator({ task, pet: snapshot?.pet || mapPet(petRows[0]), photos, plugin });
     const storedFiles: Record<string, string> = {};
     for (const file of output.files) {
       const key = `private/${task.userId}/works/${task.id}.${file.suffix}`;

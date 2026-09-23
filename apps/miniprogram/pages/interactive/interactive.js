@@ -1,3 +1,4 @@
+const { displayMediaTree } = require("../../services/photo-files");
 const api = require("../../services/api");
 const config = require("../../config");
 const { themedPage } = require("../../theme/page-mixin");
@@ -32,7 +33,7 @@ themedPage({
         loading: false,
         exportText: session.exportStatus ? EXPORT_TEXT[session.exportStatus] || session.exportStatus : ""
       });
-      if (!this.token) api.request("/api/photos?petId=" + encodeURIComponent(session.petId)).then((photos) => this.setData({ photos: photos.map((photo) => Object.assign({}, photo, { selected: (session.photoIds || []).indexOf(photo.id) >= 0 })) }));
+      if (!this.token) api.request("/api/photos?petId=" + encodeURIComponent(session.petId)).then(displayMediaTree).then((photos) => this.setData({ photos: photos.map((photo) => Object.assign({}, photo, { selected: (session.photoIds || []).indexOf(photo.id) >= 0 })) }));
       if (this.token && !this.startedAt) { this.startedAt = Date.now(); api.request(path, { method: "POST", data: { name: "visit", visitorKey: this.visitorKey, source: this.source, payload: {} } }).catch(() => undefined); }
       if (!this.token && (session.exportStatus === "queued" || session.exportStatus === "processing")) this.timer = setTimeout(() => this.load(), 1600);
       return session;

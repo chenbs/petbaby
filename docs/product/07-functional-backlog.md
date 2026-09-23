@@ -1,11 +1,23 @@
 # 纯功能开发待办
 
-版本：v3.9 ｜ 更新：2026-09-21
+版本：v4.0 ｜ 更新：2026-09-23
 口径：只记录尚未达到产品验收标准的代码功能；外部资质、密钥、域名、真实供应商联调、测试、部署和发布不进入本文。
 
 **当前纯功能待办已清零。** 虚拟支付改造与 `growth_orders` 支付缺陷的代码已完成；其余下方各节是已完成批次的功能落点登记，供追溯「某个能力落在哪个文件、哪条迁移」用，不是待办。
 
-## 最近完成：虚拟支付合规与 `growth_orders` 支付缺陷
+## 最近完成：陪伴与记录第一期代码增量
+
+规格见 [`33-陪伴与记录开发清单及实施计划.md`](33-陪伴与记录开发清单及实施计划.md)，验收证据与外部待验项见 [实施验收记录](../delivery/09-陪伴与记录实施验收记录.md)。本节只登记代码落点，不表示已批准上线。
+
+| 功能 | 落点 | 状态 |
+| --- | --- | --- |
+| 独立记录与保留 | 档案新建抽屉、图库记录模式；`maintenance.ts` 保留正常照片 | 代码完成 |
+| 上传可靠性、元数据、完整回看 | `photo-library-service.ts`、`photo-upload-session.js`、`photo-memory.ts`；0030/0033 | 代码完成 |
+| 私密媒体、删除、持久清理 | `photo-deliverable-assets.ts`、`photo-deletion-service.ts`、`object-cleanup.ts`；0031 | 代码完成 |
+| 单宠年度制作与素材快照 | `annual/aggregate.ts`、`video/annual-film.ts`、`video/ffmpeg.ts`；小程序/Web 年度确认 | 代码完成 |
+| 陪伴入口与可信记录事件 | index/me/pets/photos/timeline；`record-events.ts`、0032、`scripts/record-funnel.sql` | 代码完成 |
+
+## 虚拟支付合规与 `growth_orders` 支付缺陷
 
 详细方案、外部待确认项、实施顺序与验收标准统一见 [`23-虚拟支付合规改造方案.md`](23-虚拟支付合规改造方案.md)，本表只维护功能状态。
 

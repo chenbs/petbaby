@@ -6,11 +6,12 @@ import path from "node:path";
 import os from "node:os";
 import sharp from "sharp";
 
-import { getDatabase } from "@/server/db/client";
+import { getDatabase, inTransaction } from "@/server/db/client";
 import { AppError } from "@/server/errors";
 import { objectStorage } from "@/server/storage";
 import { getRuntimePlugin } from "@/plugins/runtime";
-import { collectAnnualData } from "@/server/annual/aggregate";
+import { collectAnnualData, type AnnualAggregate } from "@/server/annual/aggregate";
+import { lockPhotoInputs } from "@/server/photo-deliverable-assets";
 import { buildNarrativeArgs } from "@/server/video/narrative";
 import { normalizeDuration } from "@/domain/video-duration";
 
@@ -28,6 +29,13 @@ import { normalizeDuration } from "@/domain/video-duration";
 /** 叙事视频最多用多少张照片。四段结构还要为开场/对比/数据卡留时间 */
 const MAX_NARRATIVE_SHOTS = 12;
 
+export async function previewAnnualFilm(userId: string, input: { petId: string; year: number; durationSeconds?: number }) {
+  const durationSeconds = normalizeDuration(input.durationSeconds);
+  const aggregate = await collectAnnualData(userId, input.year, Math.min(MAX_NARRATIVE_SHOTS, Math.floor(durationSeconds - 2.4)), { petId: input.petId, recordDates: true });
+  return { petId: aggregate.petId, petName: aggregate.petName, year: input.year, durationSeconds,
+    photos: aggregate.photos.map((item) => ({ id: item.photo.id, url: item.photo.url, date: item.date, dateSource: item.dateSource })) };
+}
+
 function run(command: string, args: string[]) {
   return new Promise<void>((resolve, reject) => {
     const child = spawn(command, args, { windowsHide: true });
@@ -43,21 +51,30 @@ function run(command: string, args: string[]) {
  *
  * @param durationSeconds 用户选的总时长（10 / 20 / 30），受任务 2 的档位约束
  */
-export async function createAnnualFilm(userId: string, input: { year: number; durationSeconds?: number }) {
+export async function createAnnualFilm(userId: string, input: { year: number; durationSeconds?: number; petId?: string; photoIds?: string[] }) {
+  return inTransaction(async () => createAnnualFilmInTransaction(userId, input));
+}
+
+async function createAnnualFilmInTransaction(userId: string, input: { year: number; durationSeconds?: number; petId?: string; photoIds?: string[] }) {
   const plugin = await getRuntimePlugin("pl-19");
   if (!plugin || plugin.status !== "live") throw new AppError("VIDEO_PRODUCT_UNAVAILABLE", "视频产品暂未开放", 404);
   const year = Number(input.year);
   if (!Number.isInteger(year) || year < 2000 || year > 2100) throw new AppError("ANNUAL_YEAR_INVALID", "年份不正确", 422);
   const durationSeconds = normalizeDuration(input.durationSeconds);
 
-  const aggregate = await collectAnnualData(userId, year, MAX_NARRATIVE_SHOTS);
+  const database = await getDatabase();
+  // 旧入口自动选主角前锁住候选宠物；新入口只锁指定宠物，绝不回退。
+  await database.query("SELECT id FROM pets WHERE user_id=$1 AND deleted_at IS NULL AND ($2::uuid IS NULL OR id=$2) ORDER BY id FOR UPDATE", [userId, input.petId || null]);
+  const limit = Math.min(MAX_NARRATIVE_SHOTS, Math.floor(durationSeconds - 2.4));
+  const aggregate = await collectAnnualData(userId, year, limit, { petId: input.petId, photoIds: input.photoIds, recordDates: true });
   /*
    * 一张照片都没有时明确报错，不产出一条只有开场和数据卡的空片子 ——
    * 那种片子里唯一属于用户的东西就是几个数字，正是要避免的「产品的表演」。
    */
   if (!aggregate.photos.length) throw new AppError("ANNUAL_PHOTOS_REQUIRED", `${year} 年还没有照片，先上传几张再来`, 422);
 
-  const database = await getDatabase();
+  const photoIds = aggregate.photos.map((item) => item.photo.id);
+  await lockPhotoInputs(userId, aggregate.petId!, photoIds);
   const renderId = crypto.randomUUID();
   const config = {
     kind: "annual-film" as const,
@@ -65,26 +82,28 @@ export async function createAnnualFilm(userId: string, input: { year: number; du
     durationSeconds,
     petId: aggregate.petId,
     photoId: aggregate.photos[0]?.photo.id,
+    photoIds,
+    snapshotVersion: 1,
+    snapshot: aggregate,
   };
   await database.query(
     "INSERT INTO video_renders (id,user_id,plugin_id,status,progress,config,available_at,created_at) VALUES ($1,$2,'pl-19','queued',5,$3::jsonb,now(),$4)",
     [renderId, userId, JSON.stringify(config), new Date()],
   );
-  return { id: renderId, status: "queued", year, durationSeconds, petName: aggregate.petName, shots: aggregate.photos.length };
+  return { id: renderId, status: "queued", year, durationSeconds, petId: aggregate.petId, petName: aggregate.petName, photoIds, shots: aggregate.photos.length };
 }
 
 /**
  * 实际渲染。由 `processNextVideo` 在认出 `config.kind === "annual-film"` 时调用。
  *
- * 照片在这里重新取一次而不是把字节塞进 config：`video_renders.config` 是 jsonb，
- * 十几张照片的 base64 会把行撑到几 MB，而队列表是频繁扫描的。
+ * 元数据只采用入队快照，照片字节按快照中的对象键读取。
  */
 export async function renderAnnualFilm(row: { id: string; user_id: string; config: unknown }) {
-  const config = (row.config || {}) as { year?: number; durationSeconds?: unknown };
+  const config = (row.config || {}) as { year?: number; durationSeconds?: unknown; petId?: string; snapshot?: AnnualAggregate };
   const userId = String(row.user_id);
   const year = Number(config.year);
   const totalSeconds = normalizeDuration(config.durationSeconds);
-  const aggregate = await collectAnnualData(userId, year, MAX_NARRATIVE_SHOTS);
+  const aggregate = config.snapshot || await snapshotLegacyAnnualFilm(row.id, userId, year, totalSeconds, config.petId);
   if (!aggregate.photos.length) throw new Error("ANNUAL_PHOTOS_REQUIRED");
 
   const directory = await mkdtemp(path.join(os.tmpdir(), "petbaby-annual-"));
@@ -103,7 +122,7 @@ export async function renderAnnualFilm(row: { id: string; user_id: string; confi
     for (const [index, item] of aggregate.photos.entries()) {
       // 越权兜底：所有 key 必须落在这个用户的私有前缀下。
       if (!item.photo.storageKey.startsWith(`private/${userId}/`)) throw new Error("VIDEO_ASSET_NOT_ALLOWED");
-      shots.push({ file: await normalize(item.photo.storageKey, `${index}.jpg`), day: item.day, date: item.date });
+      shots.push({ file: await normalize(item.photo.storageKey, `${index}.jpg`), day: item.day, showDay: item.showDay, date: item.date, dateSource: item.dateSource });
     }
 
     let compare;
@@ -116,6 +135,10 @@ export async function renderAnnualFilm(row: { id: string; user_id: string; confi
         earliestDay: earliest.day,
         latestDay: latest.day,
         gapDays: aggregate.pair.gapDays,
+        earliestDate: earliest.date,
+        latestDate: latest.date,
+        earliestShowDay: earliest.showDay,
+        latestShowDay: latest.showDay,
       };
     }
 
@@ -128,7 +151,7 @@ export async function renderAnnualFilm(row: { id: string; user_id: string; confi
       year,
       totalSeconds,
       outputFile: file,
-      memorial: Boolean(aggregate.memorialSince),
+      memorial: aggregate.memorial || Boolean(aggregate.memorialSince),
     });
     await run(process.env.FFMPEG_PATH || "ffmpeg", args);
 
@@ -139,4 +162,15 @@ export async function renderAnnualFilm(row: { id: string; user_id: string; confi
   } finally {
     await rm(directory, { recursive: true, force: true }).catch(() => undefined);
   }
+}
+
+async function snapshotLegacyAnnualFilm(id: string, userId: string, year: number, duration: number, petId?: string) {
+  return inTransaction(async (db) => {
+    await db.query("SELECT id FROM pets WHERE user_id=$1 AND deleted_at IS NULL ORDER BY id FOR UPDATE", [userId]);
+    const aggregate = await collectAnnualData(userId, year, Math.min(MAX_NARRATIVE_SHOTS, Math.floor(duration - 2.4)), { petId, recordDates: true });
+    const photoIds = aggregate.photos.map((item) => item.photo.id);
+    if (aggregate.petId) await lockPhotoInputs(userId, aggregate.petId, photoIds);
+    await db.query("UPDATE video_renders SET config=config || $2::jsonb WHERE id=$1", [id, JSON.stringify({ petId: aggregate.petId, photoIds, snapshotVersion: 1, snapshot: aggregate })]);
+    return aggregate;
+  });
 }

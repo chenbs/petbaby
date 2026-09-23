@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 const tinyPng = Buffer.from(
-  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9Z1ZQAAAAASUVORK5CYII=",
+  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAADElEQVQImWP4v5QBAARLAaVqE1cAAAAAAElFTkSuQmCC",
   "base64",
 );
 
@@ -130,7 +130,7 @@ test("reaches the growth timeline from the account entry", async ({ page }) => {
   await expect(page.getByRole("heading", { name: /^第 \d+ 天$/ }).first()).toBeVisible();
 
   // 叙事年度视频入口（E5）：有照片才出现，否则服务端会以 ANNUAL_PHOTOS_REQUIRED 拒掉。
-  await expect(page.getByRole("button", { name: "生成年度短片" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "确认年度素材与报价" })).toBeVisible();
 });
 
 test("loads every administrator workspace through the formal navigation", async ({ page }) => {

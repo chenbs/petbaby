@@ -1,5 +1,6 @@
 import "server-only";
 
+import { AsyncLocalStorage } from "node:async_hooks";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { createDatabase, databaseContext, type Database } from "./connection";
@@ -9,6 +10,7 @@ export type { Database, SqlRow } from "./connection";
 declare global {
   var __petbabyDatabasePromise: Promise<Database> | undefined;
   var __petbabyDatabaseReady: Promise<void> | undefined;
+  var __petbabyRollbackEffects: AsyncLocalStorage<Array<() => Promise<void>>> | undefined;
 }
 
 export async function getDatabase(): Promise<Database> {
@@ -21,14 +23,29 @@ export async function getDatabase(): Promise<Database> {
   return database;
 }
 
+const rollbackEffects = globalThis.__petbabyRollbackEffects ??= new AsyncLocalStorage<Array<() => Promise<void>>>();
+
+/** Register external writes before attempting them; compensation runs after rollback. */
+export function afterTransactionRollback(effect: () => Promise<void>) {
+  const effects = rollbackEffects.getStore();
+  if (!effects) throw new Error("TRANSACTION_REQUIRED");
+  effects.push(effect);
+}
+
 export async function inTransaction<T>(operation: (database: Database) => Promise<T>): Promise<T> {
   const database = await getDatabase();
-  return database.transaction(operation);
+  if (rollbackEffects.getStore()) return database.transaction(operation);
+  const effects: Array<() => Promise<void>> = [];
+  try { return await rollbackEffects.run(effects, () => database.transaction(operation)); }
+  catch (error) {
+    for (const effect of effects.reverse()) await effect();
+    throw error;
+  }
 }
 
 export async function resetDatabaseForTest() {
   const database = await getDatabase();
-  await database.exec("TRUNCATE payment_refund_inquiries, payment_refunds, payment_transactions, wechat_sessions, user_notifications, pet_human_identities, owner_photos, plugin_config_versions, plugin_configs, refunds, rate_limits, system_usage, ai_cost_ledger, interactive_events, experiment_metrics, events, daily_quotas, health_daily_quotas, health_sessions, health_reminders, health_documents, pet_care_records, pet_weight_records, audit_logs, operation_audit_logs, orders, growth_orders, physical_orders, generation_tasks, works, photos, pets, users CASCADE;");
+  await database.exec("TRUNCATE object_cleanup_jobs, payment_refund_inquiries, payment_refunds, payment_transactions, wechat_sessions, user_notifications, pet_human_identities, owner_photos, plugin_config_versions, plugin_configs, refunds, rate_limits, system_usage, ai_cost_ledger, interactive_events, experiment_metrics, events, daily_quotas, health_daily_quotas, health_sessions, health_reminders, health_documents, pet_care_records, pet_weight_records, audit_logs, operation_audit_logs, orders, growth_orders, physical_orders, generation_tasks, works, photos, pets, users CASCADE;");
   await database.exec(await readFile(path.join(process.cwd(), "drizzle", "0013_admin_completion.sql"), "utf8"));
   await database.exec(await readFile(path.join(process.cwd(), "drizzle", "0014_password_auth.sql"), "utf8"));
   await database.exec(await readFile(path.join(process.cwd(), "drizzle", "0015_photo_shot_at.sql"), "utf8"));

@@ -1,10 +1,7 @@
+const { displayMediaTree } = require("../../services/photo-files");
 const api = require("../../services/api");
-const config = require("../../config");
+const { preparePhoto, createUploadSession, requestId } = require("../../services/photo-upload-session");
 const { themedPage } = require("../../theme/page-mixin");
-
-function sessionHeader() {
-  return { "x-petbaby-client": "miniprogram", authorization: "Bearer " + wx.getStorageSync("petbaby_session") };
-}
 
 // 选项值 → 中文文案。picker 只显示中文，请求仍然发送原始枚举值。
 const SPECIES = { values: ["cat", "dog", "other"], labels: ["猫咪", "狗狗", "其他"] };
@@ -99,17 +96,25 @@ themedPage({
   onLoad(query) {
     const pluginId = query.pluginId || "pet-id-card";
     this.setData({ pluginId });
-    Promise.all([api.request("/api/plugins"), api.request("/api/pets")]).then((result) => {
+    this._sessionToken = wx.getStorageSync("petbaby_session");
+    Promise.all([api.request("/api/plugins"), api.request("/api/pets").then(displayMediaTree), api.request("/api/account")]).then((result) => {
       const plugin = result[0].find((item) => item.id === pluginId);
       const pets = result[1];
-      const draft = wx.getStorageSync("petbaby_create_" + pluginId) || {};
-      const pet = pets.find((item) => item.id === draft.petId);
+      this._draftKey = "petbaby_create_" + result[2].id + "_" + pluginId;
+      const draft = query.petId ? {} : wx.getStorageSync(this._draftKey) || {};
+      const terminal = draft.task && ["succeeded", "failed"].indexOf(draft.task.status) >= 0;
+      const pendingTask = draft.task && !terminal ? { id: draft.task.id, status: draft.task.status || "queued" } : null;
+      this._submission = terminal ? null : draft.submission || null;
+      const pet = pets.find((item) => item.id === (query.petId || draft.petId));
+      if (query.petId && !pet) throw new Error("这只宠物的档案不可用，请重新选择");
+      if (!plugin) throw new Error("这个玩法暂时不可用");
       this.setData({
         plugin,
         pets,
         pet: pet || null,
-        stage: pet ? "photos" : "profile",
-        selectedExistingIds: draft.selectedExistingIds || [],
+        stage: pendingTask && pet ? "generating" : pet ? "photos" : "profile",
+        task: pendingTask,
+        selectedExistingIds: query.photoIds ? query.photoIds.split(",").filter(Boolean) : draft.selectedExistingIds || [],
         newPhotos: draft.newPhotos || [],
         documentType: draft.documentType || "identity",
         style: draft.style || "classic",
@@ -120,6 +125,7 @@ themedPage({
       });
       this.syncLabels();
       if (pet) this.loadPhotoLibrary();
+      if (pendingTask && pet) { this.setData({ busy: true }); this._pollGeneration = (this._pollGeneration || 0) + 1; this.poll(pendingTask.id, this._pollGeneration); }
     }).catch((error) => this.setData({ error: error.message }));
   },
 
@@ -160,8 +166,8 @@ themedPage({
 
   saveDraft() {
     const pet = this.data.pet;
-    if (!pet) return;
-    wx.setStorageSync("petbaby_create_" + this.data.pluginId, {
+    if (!pet || !this._draftKey || wx.getStorageSync("petbaby_session") !== this._sessionToken) return;
+    wx.setStorageSync(this._draftKey, {
       petId: pet.id,
       selectedExistingIds: this.data.selectedExistingIds,
       newPhotos: this.data.newPhotos,
@@ -170,7 +176,10 @@ themedPage({
       composition: this.data.composition,
       theme: this.data.theme,
       review: this.data.review,
-      coverTitle: this.data.coverTitle
+      coverTitle: this.data.coverTitle,
+      submission: this._submission || null,
+      // 只保存可恢复轮询所需的任务 ID/状态，不把候选、正文或作品对象写进草稿。
+      task: this.data.task && this.data.task.id ? { id: this.data.task.id, status: this.data.task.status } : null
     });
   },
 
@@ -188,6 +197,7 @@ themedPage({
   backToPhotos() { this.setData({ stage: "photos", error: "" }); this.syncLabels(); },
 
   choosePet(event) {
+    if (this.data.busy) return;
     const pet = this.data.pets[Number(event.detail.value)];
     if (!pet) return;
     this.setData({ pet, stage: "photos", selectedExistingIds: [], newPhotos: [] });
@@ -197,9 +207,10 @@ themedPage({
   },
 
   savePet() {
+    if (this.data.busy) return;
     if (!this.data.name.trim()) return this.setData({ error: "请填写宠物名字" });
     this.setData({ busy: true, error: "" });
-    api.request("/api/pets", { method: "POST", data: { name: this.data.name, species: this.data.species, gender: this.data.gender, birthday: this.data.birthday, dateType: this.data.dateType, lifeStage: "active" } })
+    api.request("/api/pets", { method: "POST", data: { name: this.data.name, species: this.data.species, gender: this.data.gender, birthday: this.data.birthday, dateType: this.data.dateType, lifeStage: "active" } }).then(displayMediaTree)
       .then((pet) => {
         this.setData({ pet, pets: this.data.pets.concat([pet]), stage: "photos", busy: false });
         this.loadPhotoLibrary();
@@ -211,11 +222,15 @@ themedPage({
 
   loadPhotoLibrary() {
     if (!this.data.pet) return;
-    api.request("/api/photos?petId=" + this.data.pet.id).then((items) => {
+    const petId = this.data.pet.id;
+    const version = this._photoRequest = (this._photoRequest || 0) + 1;
+    api.request("/api/photos?petId=" + petId).then(displayMediaTree).then((items) => {
+      if (version !== this._photoRequest || !this.data.pet || petId !== this.data.pet.id) return;
       const selected = this.data.selectedExistingIds;
+      if (selected.some((id) => !items.some((item) => item.id === id))) this.setData({ error: "部分已选照片不可用，请重新确认素材", selectedExistingIds: [] });
       this.setData({ existingPhotos: items.map((item) => Object.assign({}, item, { selected: selected.indexOf(item.id) >= 0 })) });
       this.syncLabels();
-    });
+    }).catch((error) => { if (version === this._photoRequest && this.data.pet && petId === this.data.pet.id) this.setData({ error: error.message }); });
     this.loadPricing();
   },
 
@@ -223,13 +238,15 @@ themedPage({
    * 取本次交付物的档位与价格（L3）。
    *
    * 分档看的是这只宠物的**积累总量**而不是本次选了几张，所以只在换宠物时拉一次，
-   * 不跟着勾选状态重算。取不到时静默不显示 —— 价格区块缺失好过显示一个错的价。
+   * 不跟着勾选状态重算。报价失败时明确提示，不能使用旧宠物的报价。
    */
   loadPricing() {
     const pet = this.data.pet;
+    const version = this._photoRequest;
     if (!pet) return this.setData({ pricing: null, pricingText: "", pricingHint: "" });
-    api.request("/api/pets/" + pet.id + "/pricing?pluginId=" + encodeURIComponent(this.data.pluginId))
+    api.request("/api/pets/" + pet.id + "/pricing?pluginId=" + encodeURIComponent(this.data.pluginId)).then(displayMediaTree)
       .then((pricing) => {
+        if (version !== this._photoRequest || !this.data.pet || pet.id !== this.data.pet.id) return;
         if (pricing.free) return this.setData({ pricing: null, pricingText: "", pricingHint: "" });
         const tierName = pricing.tiered && pricing.specTier ? (TIER_NAME[pricing.specTier] || "") + "版 · " : "";
         const hints = [];
@@ -242,11 +259,12 @@ themedPage({
           pricingHint: hints.filter(Boolean).join("")
         });
       })
-      .catch(() => this.setData({ pricing: null, pricingText: "", pricingHint: "" }));
+      .catch(() => { if (version === this._photoRequest && this.data.pet && pet.id === this.data.pet.id) this.setData({ pricing: null, pricingText: "暂不可报价，请稍后重试", pricingHint: "" }); });
   },
 
   /** 九宫格点选：图库照片切换选中，新拍照片直接移除。 */
   toggleTile(event) {
+    if (this.data.busy) return;
     const id = event.detail.id;
     if (String(id).indexOf("new:") === 0) {
       const target = Number(String(id).split(":")[1]);
@@ -266,65 +284,55 @@ themedPage({
   },
 
   choosePhotos() {
+    if (this.data.busy) return;
     // 新照片改为追加而非覆盖，剩余额度要同时扣掉已选图库照片与已拍照片
     const remaining = this.data.plugin.input.photos.max - this.data.selectedExistingIds.length - this.data.newPhotos.length;
     if (remaining <= 0) return this.setData({ error: "最多只能选 " + this.data.plugin.input.photos.max + " 张照片" });
     wx.chooseMedia({
-      count: remaining,
+      count: Math.min(9, remaining),
       mediaType: ["image"],
       sourceType: ["album", "camera"],
-      success: (result) => {
-        const files = result.tempFiles.slice(0, remaining);
-        const compressed = [];
-        const run = (index) => {
-          if (index >= files.length) {
-            this.setData({ newPhotos: this.data.newPhotos.concat(compressed) });
-            this.syncLabels();
-            this.saveDraft();
-            return;
+      success: async (result) => {
+        const petId = this.data.pet.id;
+        this.setData({ busy: true, error: "" });
+        try {
+          for (const file of result.tempFiles) {
+            const prepared = Object.assign(await preparePhoto(file), { requestId: requestId(), state: "ready", attempted: false });
+            if (this.data.pet.id !== petId || this._closed) return;
+            this.setData({ newPhotos: this.data.newPhotos.concat([prepared]) }); this.syncLabels(); this.saveDraft();
           }
-          wx.compressImage({
-            src: files[index].tempFilePath,
-            quality: 82,
-            compressedWidth: 1800,
-            success: (response) => { compressed.push({ path: response.tempFilePath, name: "pet-" + index + ".jpg", status: "ready" }); run(index + 1); },
-            fail: () => { compressed.push({ path: files[index].tempFilePath, name: "pet-" + index + ".jpg", status: "ready" }); run(index + 1); }
-          });
-        };
-        run(0);
+        } catch (error) { this.setData({ error: error.message }); }
+        finally { this.setData({ busy: false }); }
       }
     });
   },
 
 
-  uploadOne(photo, index, attempt) {
-    return new Promise((resolve, reject) => {
-      const task = wx.uploadFile({
-        url: config.apiBaseUrl + "/api/uploads",
-        filePath: photo.path,
-        name: "file",
-        formData: { petId: this.data.pet.id, filename: photo.name },
-        header: sessionHeader(),
-        success: (response) => {
-          let body;
-          try { body = JSON.parse(response.data); } catch (error) { reject(error); return; }
-          if (response.statusCode >= 200 && response.statusCode < 300) resolve(body.data);
-          else if (attempt < 2) this.uploadOne(photo, index, attempt + 1).then(resolve).catch(reject);
-          else reject(new Error((body.error && body.error.message) || "照片上传失败"));
-        },
-        fail: (error) => {
-          if (attempt < 2) this.uploadOne(photo, index, attempt + 1).then(resolve).catch(reject);
-          else reject(error);
-        }
-      });
-      task.onProgressUpdate((progress) => {
-        const total = Math.max(1, this.data.newPhotos.length);
-        this.setData({ uploadProgress: Math.round((index * 100 + progress.progress) / total) });
-      });
+  async uploadOne(photo, index) {
+    const account = await api.request("/api/account");
+    const pet = this.data.pet;
+    photo.requestId = photo.requestId || requestId();
+    const session = createUploadSession({ accountId: account.id, petId: pet.id, petName: pet.name, entry: "create",
+      dependencies: {
+        read: () => ({ sessionId: photo.requestId, items: [Object.assign({}, photo, { state: photo.state || "ready", attempted: Boolean(photo.attempted), progress: photo.progress || 0 })] }),
+        write: (_, value) => { Object.assign(photo, value.items[0]); this.saveDraft(); }
+      },
+      onChange: (state) => { const item = state.items[0]; this.setData({ uploadProgress: Math.round((index * 100 + item.progress) / Math.max(1, this.data.newPhotos.length)) }); },
+      onLoginRequired: () => wx.navigateTo({ url: "/pages/login/login" })
     });
+    this._upload = session;
+    const state = await session.run();
+    this._upload = null;
+    const item = state.items[0];
+    if (this._closed || item.state !== "saved") throw new Error(item.error || "保存结果待核对，回来后可以继续");
+    return { id: item.photoId };
   },
+  onShow() { this._closed = false; if (this.data.task && this.data.stage === "generating") { this._pollGeneration = (this._pollGeneration || 0) + 1; this.poll(this.data.task.id, this._pollGeneration); } else if (this.data.pet && !this.data.busy) this.loadPhotoLibrary(); },
+  onHide() { this._closed = true; this._photoRequest = (this._photoRequest || 0) + 1; this._pollGeneration = (this._pollGeneration || 0) + 1; if (this._pollTimer) clearTimeout(this._pollTimer); if (this._upload) this._upload.stop(); this.saveDraft(); },
+  onUnload() { this.onHide(); },
 
   generate() {
+    if (this.data.busy) return;
     const plugin = this.data.plugin;
     const count = this.data.selectedExistingIds.length + this.data.newPhotos.length;
     if (!this.data.pet || count < plugin.input.photos.min || count > plugin.input.photos.max) return this.setData({ error: "请选择 " + plugin.input.photos.min + "-" + plugin.input.photos.max + " 张照片" });
@@ -335,29 +343,53 @@ themedPage({
       return this.uploadOne(this.data.newPhotos[index], index, 0).then((photo) => { uploaded.push(photo); return uploadNext(index + 1); });
     };
     uploadNext(0).then(() => {
+      if (this._closed) throw new Error("上传已暂停，回来后可继续");
       let options = {};
       if (this.data.pluginId === "pet-id-card") options = { documentType: this.data.documentType };
       if (this.data.pluginId === "pet-movie-poster") options = { style: this.data.style, composition: this.data.composition, review: this.data.review || undefined };
       if (this.data.pluginId === "pet-time-album") options = { voice: "pet", theme: this.data.theme, coverTitle: this.data.coverTitle || undefined };
-      return api.request("/api/generations", { method: "POST", data: { pluginId: this.data.pluginId, petId: this.data.pet.id, photoIds: this.data.selectedExistingIds.concat(uploaded.map((item) => item.id)), idempotencyKey: Date.now() + "-miniprogram", options } });
+      const input = { pluginId: this.data.pluginId, petId: this.data.pet.id, photoIds: this.data.selectedExistingIds.concat(uploaded.map((item) => item.id)), options };
+      const signature = JSON.stringify(input);
+      if (!this._submission || this._submission.signature !== signature) this._submission = { signature, key: requestId() };
+      this.saveDraft();
+      return api.request("/api/generations", { method: "POST", data: Object.assign({}, input, { idempotencyKey: this._submission.key }) }).then(displayMediaTree);
     }).then((task) => {
-      wx.removeStorageSync("petbaby_create_" + this.data.pluginId);
       this.setData({ task, stage: "generating" });
+      this.saveDraft();
       this.syncLabels();
       this.pollCount = 0;
-      this.poll(task.id);
+      this._pollGeneration = (this._pollGeneration || 0) + 1;
+      this.poll(task.id, this._pollGeneration);
     }).catch((error) => this.setData({ error: error.message || error.errMsg, busy: false }));
   },
 
-  poll(taskId) {
+  poll(taskId, generation) {
+    const currentGeneration = generation || this._pollGeneration || 0;
+    if (this._closed || currentGeneration !== (this._pollGeneration || 0)) return;
+    if (this._pollTimer) clearTimeout(this._pollTimer);
     const delay = Math.min(5000, 800 * Math.pow(1.45, this.pollCount || 0));
     this.pollCount = (this.pollCount || 0) + 1;
-    api.requestWithRetry("/api/generations/" + taskId, {}, 2).then((task) => {
+    api.requestWithRetry("/api/generations/" + taskId, {}, 2).then(displayMediaTree).then((task) => {
+      if (this._closed || currentGeneration !== (this._pollGeneration || 0)) return;
       this.setData({ task });
-      if (task.status === "succeeded") { this.setData({ work: task.work, stage: "result", busy: false }); this.syncLabels(); api.request("/api/events", { method: "POST", data: { name: "previewed", pluginId: this.data.pluginId, channel: "miniprogram", metadata: {} } }).catch(() => undefined); }
-      else if (task.status === "failed") { this.setData({ error: "生成失败，免费次数已返还", stage: "photos", busy: false }); this.syncLabels(); }
-      else setTimeout(() => this.poll(taskId), delay);
-    }).catch((error) => { this.setData({ error: error.message, stage: "photos", busy: false }); this.syncLabels(); });
+      if (task.status === "succeeded") {
+        this._submission = null;
+        this.setData({ task: null, work: task.work, stage: "result", busy: false });
+        this.saveDraft();
+        this.syncLabels();
+        api.request("/api/events", { method: "POST", data: { name: "previewed", pluginId: this.data.pluginId, channel: "miniprogram", metadata: {} } }).catch(() => undefined);
+      } else if (task.status === "failed") {
+        // 失败任务不能继续复用同一幂等键，否则服务端会持续返回原 failed 任务。
+        this._submission = null;
+        this.setData({ task: null, error: "生成失败，免费次数已返还", stage: "photos", busy: false });
+        this.saveDraft();
+        this.syncLabels();
+      }
+      else this._pollTimer = setTimeout(() => this.poll(taskId, currentGeneration), delay);
+    }).catch((error) => {
+      if (this._closed || currentGeneration !== (this._pollGeneration || 0)) return;
+      this.setData({ error: error.message, stage: "photos", busy: false }); this.syncLabels();
+    });
   },
 
   openWork() { if (this.data.work) wx.navigateTo({ url: "/pages/work/work?id=" + this.data.work.id }); }

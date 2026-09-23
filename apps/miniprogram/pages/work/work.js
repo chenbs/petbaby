@@ -1,3 +1,4 @@
+const { displayMediaTree } = require("../../services/photo-files");
 const payment = require("../../services/payment");
 const api = require("../../services/api");
 const config = require("../../config");
@@ -31,15 +32,22 @@ function nextTierText(pricing) {
 
 // 沉浸式版式：navigationStyle 为 custom，导航栏同步无效，交给 immersive 跳过
 themedPage({ immersive: true }, {
-  data: { work: null, versions: [], error: "", busy: false, loading: true, confirmRevoke: false, priceText: "", priceHint: "", createdText: "", shareExpiresText: "", sheetState: "half" },
+  data: { work: null, versions: [], error: "", busy: false, loading: true, confirmRevoke: false, priceText: "", priceHint: "", createdText: "", shareExpiresText: "", sheetState: "half", sheetBackgroundVideo: "", sheetBackgroundImage: "", sheetPoster: "", sheetTitle: "" },
   onLoad(query) { this.workId = query.id; this.reload(); },
   reload() {
     this.setData({ loading: !this.data.work, error: "" });
-    Promise.all([api.requestWithRetry("/api/works/" + this.workId, {}, 2), api.request("/api/works/" + this.workId + "/versions")])
+    Promise.all([api.requestWithRetry("/api/works/" + this.workId, {}, 2).then(displayMediaTree), api.request("/api/works/" + this.workId + "/versions").then(displayMediaTree)])
       .then((result) => {
         const work = result[0];
+        const photoUrl = work.photo && work.photo.url ? work.photo.url : "";
+        const sheetBackgroundVideo = work.assetKind === "video" ? work.outputUrl || "" : "";
+        const sheetBackgroundImage = work.assetKind === "video" ? "" : work.assetKind === "pdf" || work.assetKind === "h5" ? photoUrl : work.outputUrl || photoUrl;
         this.setData({
           work,
+          sheetBackgroundVideo,
+          sheetBackgroundImage,
+          sheetPoster: photoUrl,
+          sheetTitle: work.title || "",
           versions: result[1],
           loading: false,
           createdText: formatMoment(work.createdAt),
@@ -63,7 +71,7 @@ themedPage({ immersive: true }, {
    * `/api/pets/{id}/pricing`，它与下单走同一个计价函数。
    */
   loadPricing(work) {
-    api.request("/api/pets/" + work.petId + "/pricing?pluginId=" + encodeURIComponent(work.pluginId))
+    api.request("/api/pets/" + work.petId + "/pricing?pluginId=" + encodeURIComponent(work.pluginId)).then(displayMediaTree)
       .then((pricing) => {
         if (pricing.free) return this.setData({ priceText: "解锁高清无水印", priceHint: "" });
         const tier = pricing.tiered && pricing.specTier ? (TIER_NAME[pricing.specTier] || "") + "版 · " : "";
@@ -89,16 +97,16 @@ themedPage({ immersive: true }, {
   },
   saveImage() { const work = this.data.work; if (!work || work.locked) return wx.showToast({ title: "请先解锁", icon: "none" }); this.setData({ busy: true }); wx.downloadFile({ url: config.apiBaseUrl + "/api/works/" + work.id + "/download?format=image", header: { authorization: "Bearer " + wx.getStorageSync("petbaby_session") }, success: (result) => wx.saveImageToPhotosAlbum({ filePath: result.tempFilePath, success: () => wx.showToast({ title: "已保存" }) }), complete: () => this.setData({ busy: false }) }); },
   downloadVideo() { const work = this.data.work; if (!work) return; this.setData({ busy: true }); wx.downloadFile({ url: config.apiBaseUrl + "/api/works/" + work.id + "/download?format=video", header: { authorization: "Bearer " + wx.getStorageSync("petbaby_session") }, success: (result) => wx.saveVideoToPhotosAlbum({ filePath: result.tempFilePath, success: () => wx.showToast({ title: "视频已保存" }) }), complete: () => this.setData({ busy: false }) }); },
-  share() { api.request("/api/works/" + this.workId + "/share", { method: "POST", data: { expiresInHours: 168 } }).then(() => { this.setData({ "work.public": true }); wx.showToast({ title: "分享已开启" }); }).catch((error) => this.setData({ error: error.message })); },
-  resetShare() { api.request("/api/works/" + this.workId + "/share", { method: "POST", data: { expiresInHours: 168, resetToken: true } }).then(() => wx.showToast({ title: "分享已重置" })); },
+  share() { api.request("/api/works/" + this.workId + "/share", { method: "POST", data: { expiresInHours: 168 } }).then(displayMediaTree).then(() => { this.setData({ "work.public": true }); wx.showToast({ title: "分享已开启" }); }).catch((error) => this.setData({ error: error.message })); },
+  resetShare() { api.request("/api/works/" + this.workId + "/share", { method: "POST", data: { expiresInHours: 168, resetToken: true } }).then(displayMediaTree).then(() => wx.showToast({ title: "分享已重置" })); },
   askRevoke() { this.setData({ confirmRevoke: true }); },
   cancelRevoke() { this.setData({ confirmRevoke: false }); },
   revoke() {
     this.setData({ confirmRevoke: false });
-    api.request("/api/works/" + this.workId + "/revoke-share", { method: "POST" })
+    api.request("/api/works/" + this.workId + "/revoke-share", { method: "POST" }).then(displayMediaTree)
       .then(() => { this.setData({ "work.public": false }); wx.showToast({ title: "已停止分享", icon: "none" }); })
       .catch((error) => this.setData({ error: error.message }));
   },
-  restore(event) { api.request("/api/works/" + this.workId + "/versions", { method: "POST", data: { versionId: event.currentTarget.dataset.id } }).then(() => { wx.showToast({ title: "版本已恢复" }); this.reload(); }); },
+  restore(event) { api.request("/api/works/" + this.workId + "/versions", { method: "POST", data: { versionId: event.currentTarget.dataset.id } }).then(displayMediaTree).then(() => { wx.showToast({ title: "版本已恢复" }); this.reload(); }); },
   onShareAppMessage() { return { title: this.data.work ? this.data.work.title : "麻麻抱我", path: "/pages/work/work?id=" + this.workId }; }
 });

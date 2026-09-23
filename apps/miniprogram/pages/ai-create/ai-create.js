@@ -1,22 +1,6 @@
 const api = require("../../services/api");
-const config = require("../../config");
+const { displayMediaTree: withPrivatePreviews } = require("../../services/photo-files");
 const { themedPage } = require("../../theme/page-mixin");
-
-function absoluteUrl(path) {
-  return /^https?:\/\//.test(path || "") ? path : config.apiBaseUrl + path;
-}
-
-function withPrivatePreviews(items) {
-  const session = wx.getStorageSync("petbaby_session");
-  return Promise.all((items || []).map((item) => new Promise((resolve) => {
-    wx.downloadFile({
-      url: absoluteUrl(item.url),
-      header: { authorization: "Bearer " + session },
-      success(result) { resolve(Object.assign({}, item, { url: result.tempFilePath })); },
-      fail() { resolve(item); }
-    });
-  })));
-}
 
 themedPage({
   data: {
@@ -25,7 +9,8 @@ themedPage({
     ownerPhotos: [], ownerPhotoIds: [], authorizationConfirmed: false,
     busy: false, error: "", loading: true
   },
-  onLoad() {
+  onLoad(query) {
+    this._initialPhotoIds = query && query.photoIds ? query.photoIds.split(",").filter(Boolean) : [];
     Promise.all([
       api.request("/api/pets"),
       api.request("/api/image-templates"),
@@ -33,7 +18,8 @@ themedPage({
     ]).then((results) => {
       const pets = results[0] || [];
       const entries = (results[1] && results[1].entries) || [];
-      const selectedPet = pets.find((item) => item.isDefault) || pets[0];
+      const selectedPet = query && query.petId ? pets.find((item) => item.id === query.petId) : pets.find((item) => item.isDefault) || pets[0];
+      if (query && query.petId && !selectedPet) throw new Error("这只宠物的档案不可用，请重新选择");
       const entry = entries[0];
       const template = entry && entry.templates[0];
       this.setData({
@@ -52,15 +38,21 @@ themedPage({
     }).then((ownerPhotos) => this.setData({ ownerPhotos })).catch((error) => this.setData({ error: error.message, loading: false }));
   },
   loadPhotos(petId) {
+    const request = this._photoRequest = (this._photoRequest || 0) + 1;
+    this.setData({ loading: true });
     api.request("/api/photos?petId=" + encodeURIComponent(petId))
       .then(withPrivatePreviews)
-      .then((photos) => this.setData({ photos, photoIds: [] }))
-      .catch((error) => this.setData({ error: error.message }));
+      .then((photos) => { if (request !== this._photoRequest || petId !== this.data.petId) return; const photoIds = this._initialPhotoIds || this.data.photoIds; this._initialPhotoIds = null; if (photoIds.length > 1 || photoIds.some((value) => !photos.some((photo) => photo.id === value))) { this.setData({ photos, photoIds: [], loading: false }); throw new Error("请选择当前宠物的一张可用照片"); } this.setData({ photos, photoIds, loading: false }); })
+      .catch((error) => { if (request === this._photoRequest) this.setData({ error: error.message, loading: false }); });
   },
+  onShow() { if (this.data.petId && !this.data.busy) this.loadPhotos(this.data.petId); },
+  onHide() { this._photoRequest = (this._photoRequest || 0) + 1; },
   choosePet(event) {
+    if (this.data.busy) return;
     const pet = this.data.pets[Number(event.detail.value)];
     if (!pet) return;
-    this.setData({ petId: pet.id, petText: pet.name });
+    this._initialPhotoIds = null;
+    this.setData({ petId: pet.id, petText: pet.name, photos: [], photoIds: [], error: "" });
     this.loadPhotos(pet.id);
   },
   chooseEntry(event) {
@@ -119,6 +111,7 @@ themedPage({
       .catch((error) => this.setData({ error: error.message, busy: false }));
   },
   create() {
+    if (this.data.busy || this.data.loading) return;
     const template = this.data.activeTemplate;
     if (!template || !this.data.petId || this.data.photoIds.length !== 1) return this.setData({ error: "请选择模板、宠物和 1 张宠物身份照" });
     if (template.subjectMode === "owner-pet" && (!this.data.authorizationConfirmed || this.data.ownerPhotoIds.length !== 1)) return this.setData({ error: "人宠模板需要 1 张已授权的主人照片" });
@@ -137,5 +130,5 @@ themedPage({
       .then((run) => wx.redirectTo({ url: "/pages/ai-run/ai-run?id=" + run.id }))
       .catch((error) => this.setData({ busy: false, error: error.message }));
   },
-  openPhotos() { wx.navigateTo({ url: "/pages/photos/photos" }); }
+  openPhotos() { wx.navigateTo({ url: "/pages/photos/photos?petId=" + this.data.petId }); }
 });

@@ -4,6 +4,9 @@ import { getDatabase } from "@/server/db/client";
 import { mapPhoto } from "@/server/db/rows";
 import { anchorOf, dayIndexOf, daysSince } from "@/domain/companion";
 import type { Photo } from "@/domain/models";
+import { effectivePhotoDate, photoLocalDate } from "@/domain/photo-memory";
+import { AppError } from "@/server/errors";
+import { spanDaysBetween } from "@/domain/pricing";
 
 /**
  * 年度聚合数据。叙事视频（任务 5）与年度报告（任务 6）共用同一份 ——
@@ -23,10 +26,11 @@ export type AnnualPhoto = {
   petName: string;
   /** 相处的第几天 */
   day: number;
+  showDay?: boolean;
   /** 本地日历日 YYYY-MM-DD */
   date: string;
   /** 日期是真实拍摄时间还是仅上传时间 */
-  dateSource: Photo["shotAtSource"];
+  dateSource: "manual" | "exif" | "upload";
 };
 
 export type AnnualAggregate = {
@@ -39,6 +43,7 @@ export type AnnualAggregate = {
   /** 到年末（或已离开则到离开日）的陪伴天数 */
   companionDays: number;
   memorialSince?: string;
+  memorial?: boolean;
   counts: { photos: number; works: number; shares: number; pets: number; interactions: number };
   /** 当年照片，按拍摄时间正序。已按主角宠物过滤 */
   photos: AnnualPhoto[];
@@ -58,7 +63,7 @@ function localDate(value: unknown) {
  *        （见 `domain/video-duration.ts` 的 MIN_PHOTO_SECONDS），而年度视频
  *        还要为开场、对比、数据卡三段留出时间。
  */
-export async function collectAnnualData(userId: string, year: number, limit = 12): Promise<AnnualAggregate> {
+export async function collectAnnualData(userId: string, year: number, limit = 12, options: { petId?: string; photoIds?: string[]; recordDates?: boolean } = {}): Promise<AnnualAggregate> {
   const database = await getDatabase();
 
   /*
@@ -85,16 +90,28 @@ export async function collectAnnualData(userId: string, year: number, limit = 12
    * 「第 N 天」就没有意义了（各自的起算日不同）。
    */
   const leadRows = await database.query(
-    `SELECT p.id,p.name,p.birthday,p.date_type,p.created_at,
-            (SELECT count(*)::int FROM photos ph WHERE ph.pet_id=p.id AND ph.deleted_at IS NULL AND extract(year from coalesce(ph.shot_at,ph.created_at))=$2) shot_count,
+    `SELECT p.id,p.name,p.birthday,p.date_type,p.created_at,p.life_stage,
+            (SELECT count(*)::int FROM photos ph WHERE ph.pet_id=p.id AND ph.deleted_at IS NULL AND extract(year from ${options.recordDates ? "coalesce(ph.memory_date,coalesce(ph.shot_at,ph.created_at)::date)" : "coalesce(ph.shot_at,ph.created_at)"})=$2) shot_count,
             (SELECT MIN(created_at) FROM memorial_spaces m WHERE m.pet_id=p.id AND m.deleted_at IS NULL) memorial_since
        FROM pets p
-      WHERE p.user_id=$1 AND p.deleted_at IS NULL
+      WHERE p.user_id=$1 AND p.deleted_at IS NULL AND ($3::uuid IS NULL OR p.id=$3)
       ORDER BY shot_count DESC, p.is_default DESC, p.created_at
       LIMIT 1`,
-    [userId, year],
+    [userId, year, options.petId || null],
   );
   const lead = leadRows[0];
+  if (options.petId && !lead) throw new AppError("PET_NOT_FOUND", "宠物档案不存在，请重新选择", 404);
+  if (options.petId) {
+    const [scoped] = await database.query<{ photos: number; works: number; shares: number; pets: number; interactions: number }>(
+      `SELECT (SELECT count(*)::int FROM photos WHERE user_id=$1 AND pet_id=$3 AND extract(year from created_at)=$2 AND deleted_at IS NULL) photos,
+        (SELECT count(*)::int FROM works WHERE user_id=$1 AND pet_id=$3 AND extract(year from created_at)=$2 AND deleted_at IS NULL) works,
+        (SELECT count(*)::int FROM works WHERE user_id=$1 AND pet_id=$3 AND extract(year from created_at)=$2 AND public=true AND deleted_at IS NULL) shares,
+        1::int pets,
+        (SELECT count(*)::int FROM interactive_events e JOIN interactive_sessions s ON s.id=e.session_id WHERE e.user_id=$1 AND s.pet_id=$3 AND extract(year from e.created_at)=$2) interactions`,
+      [userId, year, options.petId],
+    );
+    counts[0] = scoped;
+  }
   const base = { year, counts: counts[0] || { photos: 0, works: 0, shares: 0, pets: 0, interactions: 0 } };
   if (!lead) return { ...base, companionDays: 0, photos: [] };
 
@@ -115,7 +132,8 @@ export async function collectAnnualData(userId: string, year: number, limit = 12
    */
   const yearEnd = new Date(year, 11, 31);
   const cap = memorialSince || (yearEnd.getTime() < Date.now() ? yearEnd.toISOString() : undefined);
-  const companionDays = daysSince(anchor, cap);
+  const memorial = lead.life_stage === "memorial";
+  const companionDays = memorial && !memorialSince ? 0 : daysSince(anchor, cap);
 
   /*
    * 叙事段落用的照片按 `coalesce(shot_at, created_at)` 取当年、正序。
@@ -127,18 +145,27 @@ export async function collectAnnualData(userId: string, year: number, limit = 12
   const photoRows = await database.query(
     `SELECT * FROM photos
       WHERE user_id=$1 AND pet_id=$2 AND deleted_at IS NULL
-        AND extract(year from coalesce(shot_at, created_at))=$3
-      ORDER BY coalesce(shot_at, created_at)`,
+        AND extract(year from ${options.recordDates ? "coalesce(memory_date,coalesce(shot_at,created_at)::date)" : "coalesce(shot_at,created_at)"})=$3
+      ORDER BY ${options.recordDates ? "coalesce(memory_date,coalesce(shot_at,created_at)::date)" : "coalesce(shot_at, created_at)"},created_at,id`,
     [userId, String(lead.id), year],
   );
   const all: AnnualPhoto[] = photoRows.map((row) => {
     const photo = mapPhoto(row);
-    return { photo, petName: String(lead.name), day: dayIndexOf(anchor, photo.shotAt), date: localDate(photo.shotAt), dateSource: photo.shotAtSource };
+    const recorded = effectivePhotoDate(photo);
+    const date = options.recordDates ? recorded.date : localDate(photo.shotAt);
+    const showDay = date >= anchor && (!memorial || Boolean(memorialSince && date <= photoLocalDate(memorialSince)));
+    return { photo, petName: String(lead.name), day: dayIndexOf(anchor, date), showDay, date, dateSource: options.recordDates ? recorded.source : photo.shotAtSource };
   });
-  const photos = sampleEvenly(all, limit);
+  let photos = sampleEvenly(all, limit);
+  if (options.photoIds) {
+    const byId = new Map(all.map((item) => [item.photo.id, item]));
+    if (options.photoIds.length > limit || new Set(options.photoIds).size !== options.photoIds.length || options.photoIds.some((id) => !byId.has(id))) throw new AppError("ANNUAL_SELECTION_INVALID", "所选照片超过数量限制，或不属于当前宠物和年份，请重新确认", 422);
+    photos = options.photoIds.map((id) => byId.get(id)!);
+  }
 
-  const pair = all.length >= 2
-    ? { earliest: all[0], latest: all[all.length - 1], gapDays: Math.max(0, all[all.length - 1].day - all[0].day) }
+  const pairPhotos = [...photos].sort((a, b) => a.date.localeCompare(b.date));
+  const pair = pairPhotos.length >= 2 && pairPhotos[0].date !== pairPhotos[pairPhotos.length - 1].date
+    ? { earliest: pairPhotos[0], latest: pairPhotos[pairPhotos.length - 1], gapDays: spanDaysBetween(new Date(`${pairPhotos[0].date}T12:00:00`), new Date(`${pairPhotos[pairPhotos.length - 1].date}T12:00:00`)) }
     : undefined;
 
   return {
@@ -148,6 +175,7 @@ export async function collectAnnualData(userId: string, year: number, limit = 12
     anchor,
     companionDays,
     memorialSince,
+    memorial,
     photos,
     pair,
   };

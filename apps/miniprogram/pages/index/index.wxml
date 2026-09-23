@@ -1,6 +1,14 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
 <view class="page page-tabbar">
+  <t-skeleton wx:if="{{petLoading}}" type="card" count="1"></t-skeleton>
+  <view wx:if="{{recordError}}" class="section">
+    <t-notice type="error" message="{{recordError}}"></t-notice>
+    <t-button bindtap="loadPet">重新加载记录</t-button>
+  </view>
+  <picker wx:if="{{pets.length > 1}}" range="{{pets}}" range-key="name" bindchange="choosePet">
+    <view class="small hit-area">当前宠物：{{pet.name || '请选择'}} · 切换</view>
+  </picker>
   <!--
     第一屏是**宠物**而不是货架（改造项 E1）。
     20 号文 2.2：情绪价值不是内容问题而是分发问题 —— 服务端 8 项能力全建成，
@@ -38,6 +46,17 @@
     </view>
   </t-card>
 
+  <view wx:if="{{!petLoading && !recordError}}" class="section">
+    <text wx:if="{{!pet}}" class="muted">先给它一个名字，收好第一张照片。</text>
+    <t-button block bindtap="record">{{recordAction}}</t-button>
+  </view>
+  <view wx:if="{{recent.length}}" class="section">
+    <view class="section-title">最近收好</view>
+    <view wx:for="{{recent}}" wx:key="id" class="memory block-gap" data-id="{{item.id}}" bindtap="recentDetail">
+      <image class="memory-photo" src="{{item.url}}" mode="aspectFill" />
+      <view class="memory-copy"><text class="small">{{item.savedOn}} 收好</text><view>{{item.recordedDate}}</view><text class="small">{{item.sourceText}}</text><text wx:if="{{item.imageError}}" class="small">{{item.imageError}}</text></view>
+    </view>
+  </view>
   <!--
     今天刚达成的里程碑（E3）。**只在当天出现一次**：
     里程碑是一个瞬间而不是一种状态，常驻会让它变成又一个货架标签。
@@ -73,19 +92,19 @@
   </view>
 
   <!-- 没有宠物时才出现的标语 Hero。有宠物时它的位置让给上面那块 -->
-  <view wx:if="{{!pet}}" class="hero hero-{{themeId}}">
+  <view wx:if="{{!pet && !petLoading && !recordError}}" class="hero hero-{{themeId}}">
     <view class="hero-top">
       <text class="eyebrow">PET CREATIVE LAB</text>
       <view class="hero-theme hit-area" aria-role="button" aria-label="切换外观主题" bindtap="openTheme">◑</view>
     </view>
-    <view class="title hero-title">让它的每张照片，<text class="accent">都有新身份。</text></view>
-    <text class="muted">选一个玩法，上传照片。一分钟后，带走一件只属于它的作品。</text>
+    <view class="title hero-title">把和它一起的日子，<text class="accent">一张张收好。</text></view>
+    <text class="muted">照片先收好，想起什么时，再来补一句。</text>
     <view wx:if="{{decor}}" class="seal">PET
 OK</view>
   </view>
 
   <view class="section">
-    <view class="section-title">今天想把它变成什么？</view>
+    <view class="section-title">{{pet && recent.length ? '把这些日子做成作品' : '看看作品玩法'}}</view>
 
     <t-skeleton wx:if="{{loading}}" type="card" count="3"></t-skeleton>
 

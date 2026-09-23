@@ -4,6 +4,7 @@
   <text class="eyebrow">PL-19 · MEMORY FILM</text>
   <view class="title">剪一段回忆短片</view>
   <text class="muted">按选择顺序排片，最多 {{maxPhotos}} 张。</text>
+  <text class="small">{{pricingText}}</text>
 
   <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
 

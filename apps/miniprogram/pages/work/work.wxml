@@ -4,10 +4,10 @@
 
 <t-glass-sheet
   id="sheet"
-  background-video="{{work.assetKind === 'video' ? work.outputUrl : ''}}"
-  background-image="{{work.assetKind === 'video' ? '' : (work.outputUrl || work.photo.url)}}"
-  poster="{{work.photo.url}}"
-  title="{{work.title}}"
+  background-video="{{sheetBackgroundVideo}}"
+  background-image="{{sheetBackgroundImage}}"
+  poster="{{sheetPoster}}"
+  title="{{sheetTitle}}"
   state="half"
   blur="{{blurOk}}"
   anim="{{animType}}"

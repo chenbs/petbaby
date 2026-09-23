@@ -6,6 +6,7 @@ export class AppError extends Error {
     public readonly code: string,
     message: string,
     public readonly status = 400,
+    public readonly retryAfterSeconds?: number,
   ) {
     super(message);
   }
@@ -26,8 +27,8 @@ export function routeError(error: unknown) {
 
   if (error instanceof AppError) {
     return NextResponse.json(
-      { error: { code: error.code, message: error.message } },
-      { status: error.status },
+      { error: { code: error.code, message: error.message, ...(error.retryAfterSeconds ? { retryAfterSeconds: error.retryAfterSeconds } : {}) } },
+      { status: error.status, ...(error.retryAfterSeconds ? { headers: { "Retry-After": String(error.retryAfterSeconds) } } : {}) },
     );
   }
 

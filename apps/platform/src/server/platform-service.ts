@@ -1,3 +1,4 @@
+import { lockPhotoInputs } from "@/server/photo-deliverable-assets";
 ﻿import "server-only";
 
 import { createHash } from "node:crypto";
@@ -15,14 +16,14 @@ import {
 } from "@/domain/models";
 import { isTieredPlugin, nextTierGap, resolveOrderPricing, spanDaysBetween, tierPrice, type AccumulationInput } from "@/domain/pricing";
 import { getRuntimePlugin, listRuntimePlugins, resolveManifestTone } from "@/plugins/runtime";
-import { getDatabase } from "@/server/db/client";
+import { getDatabase, inTransaction } from "@/server/db/client";
 import { mapOrder, mapPet, mapPhoto, mapTask, mapWork } from "@/server/db/rows";
 import { hasTierUnlock } from "@/server/entitlements";
 import { AppError } from "@/server/errors";
 import { confirmOrderPayment, prepareOrderPayment, refundOrderPayment } from "@/server/payments/service";
-import { deletePetHumanIdentities } from "@/server/pet-human-identity-service";
 import { objectStorage } from "@/server/storage";
 import { runWorkerUntilIdle } from "@/server/worker/generation-worker";
+import { ensurePhotoDeliverableAsset } from "@/server/photo-deliverable-assets";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -123,66 +124,13 @@ export async function setDefaultPet(userId: string, id: string): Promise<Pet> {
   return mapPet(rows[0]);
 }
 
-export async function deletePet(userId: string, id: string) {
-  const database = await getDatabase();
-  const pet = belongsToUser((await database.query("SELECT * FROM pets WHERE id=$1 AND deleted_at IS NULL", [id])).map(mapPet)[0], userId);
-  await deletePetHumanIdentities({ userId, petId: id });
-  await database.query("UPDATE pets SET deleted_at=now(),is_default=false WHERE id=$1", [id]);
-  await database.query("UPDATE photos SET deleted_at=now() WHERE pet_id=$1 AND deleted_at IS NULL", [id]);
-  await database.query("UPDATE works SET deleted_at=now(),public=false,share_token=null WHERE pet_id=$1 AND deleted_at IS NULL", [id]);
-  if (pet.isDefault) {
-    await database.query("UPDATE pets SET is_default=true WHERE id=(SELECT id FROM pets WHERE user_id=$1 AND deleted_at IS NULL ORDER BY created_at LIMIT 1)", [userId]);
-  }
-  return { deleted: true };
-}
+export { deletePetWithCleanup as deletePet } from "@/server/photo-deletion-service";
 /* c8 ignore stop */
 
-export async function savePhoto(
-  userId: string,
-  input: { petId: string; filename: string; mimeType: string; size: number; storageKey: string; quality?: "clear" | "blurry"; shotAt?: Date },
-) {
-  const database = await getDatabase();
-  const petRows = await database.query("SELECT * FROM pets WHERE id = $1", [input.petId]);
-  belongsToUser(petRows[0] ? mapPet(petRows[0]) : undefined, userId);
-  const id = crypto.randomUUID();
-  const createdAt = new Date();
-  const rows = await database.query(
-    "INSERT INTO photos (id, user_id, pet_id, filename, mime_type, size, storage_key, position, quality, shot_at, created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,(SELECT coalesce(max(position),-1)+1 FROM photos WHERE pet_id=$3 AND deleted_at IS NULL),$8,$9,$10) RETURNING *",
-    [id, userId, input.petId, input.filename, input.mimeType, input.size, input.storageKey, input.quality || "unknown", input.shotAt || null, createdAt],
-  );
-  return mapPhoto(rows[0]);
-}
+// 历史调用点和记录入口共用同一照片实现。
+export { savePhoto, listPhotos, updatePhotoOrder, deletePhoto } from "@/server/photo-library-service";
 
-export async function listPhotos(userId: string, petId?: string) {
-  const database = await getDatabase();
-  const rows = petId
-    ? await database.query("SELECT * FROM photos WHERE user_id=$1 AND pet_id=$2 AND deleted_at IS NULL ORDER BY position, created_at", [userId, petId])
-    : await database.query("SELECT * FROM photos WHERE user_id=$1 AND deleted_at IS NULL ORDER BY created_at DESC", [userId]);
-  return rows.map(mapPhoto);
-}
-
-/* c8 ignore start */
-export async function updatePhotoOrder(userId: string, petId: string, photoIds: string[]) {
-  const database = await getDatabase();
-  const rows = await database.query("SELECT id FROM photos WHERE user_id=$1 AND pet_id=$2 AND deleted_at IS NULL", [userId, petId]);
-  const allowed = new Set(rows.map((row) => String(row.id)));
-  if (photoIds.length !== rows.length || photoIds.some((id) => !allowed.has(id))) throw new AppError("PHOTO_ORDER_INVALID", "Photo order is invalid", 422);
-  for (const [position, id] of photoIds.entries()) await database.query("UPDATE photos SET position=$2 WHERE id=$1", [id, position]);
-  return listPhotos(userId, petId);
-}
-
-export async function deletePhoto(userId: string, id: string) {
-  const database = await getDatabase();
-  const rows = await database.query("SELECT * FROM photos WHERE id=$1 AND deleted_at IS NULL", [id]);
-  const photo = belongsToUser(rows[0] ? mapPhoto(rows[0]) : undefined, userId);
-  await deletePetHumanIdentities({ userId, sourcePhotoId: id });
-  await database.query("UPDATE photos SET deleted_at=now() WHERE id=$1", [id]);
-  await objectStorage.delete(photo.storageKey).catch(() => undefined);
-  return { deleted: true };
-}
-/* c8 ignore stop */
-
-export async function createGeneration(userId: string, input: unknown): Promise<GenerationTask> {
+async function createGenerationOperation(userId: string, input: unknown): Promise<GenerationTask> {
   const data = generationInputSchema.parse(input);
   const database = await getDatabase();
   const existing = await database.query(
@@ -231,19 +179,14 @@ export async function createGeneration(userId: string, input: unknown): Promise<
 
   const taskId = crypto.randomUUID();
   const timestamp = new Date();
-  try {
-    if (!data.sourceWorkId) await database.query("INSERT INTO daily_quotas (id, user_id, quota_date, task_id, created_at) VALUES ($1,$2,$3,$4,$5)", [crypto.randomUUID(), userId, quotaDate, taskId, timestamp]);
+  const options = { ...data.options, recordSnapshot: plugin.id === "pl-23" ? { pet, photos: photoRows.map(mapPhoto) } : undefined };
+    if (!data.sourceWorkId && !membershipId) await database.query("INSERT INTO daily_quotas (id, user_id, quota_date, task_id, created_at) VALUES ($1,$2,$3,$4,$5)", [crypto.randomUUID(), userId, quotaDate, taskId, timestamp]);
     const rows = await database.query(
       "INSERT INTO generation_tasks (id,user_id,plugin_id,pet_id,photo_ids,idempotency_key,status,progress,attempt,source_work_id,options,plugin_snapshot,available_at,created_at,updated_at) VALUES ($1,$2,$3,$4,$5::jsonb,$6,'queued',8,0,$7,$8::jsonb,$9::jsonb,$10,$10,$10) RETURNING *",
-      [taskId, userId, data.pluginId, data.petId, JSON.stringify(data.photoIds), data.idempotencyKey, data.sourceWorkId || null, JSON.stringify(data.options), JSON.stringify(plugin), timestamp],
+      [taskId, userId, data.pluginId, data.petId, JSON.stringify(data.photoIds), data.idempotencyKey, data.sourceWorkId || null, JSON.stringify(options), JSON.stringify(plugin), timestamp],
     );
     await recordEvent(userId, "generation_created", data.pluginId);
     return mapTask(rows[0]);
-  } catch (error) {
-    await database.query("DELETE FROM daily_quotas WHERE task_id = $1 AND NOT EXISTS (SELECT 1 FROM generation_tasks WHERE id = $1)", [taskId]);
-    if (membershipId) await database.query("UPDATE memberships SET used=greatest(used-1,0) WHERE id=$1", [membershipId]);
-    throw error;
-  }
 }
 
 export async function getGeneration(userId: string, id: string): Promise<GenerationTask & { work?: PublicWork }> {
@@ -286,8 +229,11 @@ async function hydrateWork(work: Work): Promise<PublicWork> {
    * 不解析的话纪念册会按画册的 19.9 收费而不是纪念价 49。
    */
   const plugin = resolveManifestTone(rawPlugin, pet.lifeStage);
-  const visibleKey = work.locked ? work.previewKey : work.outputKey;
-  return { ...work, pet, photo, plugin, outputUrl: visibleKey ? `/api/media/${encodeURIComponent(visibleKey)}` : undefined };
+  const coverKey = await ensurePhotoDeliverableAsset(work.userId, work.petId, "work", work.id, work.photoId);
+  const sourceKey = work.locked ? work.previewKey : work.outputKey;
+  const visibleKey = sourceKey === photo.storageKey ? coverKey : sourceKey;
+  // 作品只需要封面；不要把后来补写的私人记录或上传标识嵌入作品响应。
+  return { ...work, pet, photo: { id: photo.id, url: `/api/media/${encodeURIComponent(coverKey)}` }, plugin, outputUrl: visibleKey ? `/api/media/${encodeURIComponent(visibleKey)}` : undefined };
 }
 
 export async function listWorks(userId: string, filters: { petId?: string; pluginId?: string; locked?: boolean } = {}) {
@@ -529,7 +475,7 @@ export async function getDownload(userId: string, id: string, format: "image" | 
 export async function getSharedWork(token: string, accessCode?: string) {
   if (!/^[a-f0-9]{32}$/.test(token)) throw new AppError("SHARE_NOT_FOUND", "分享已关闭或不存在", 404);
   const database = await getDatabase();
-  const rows = await database.query("SELECT * FROM works WHERE share_token = $1 AND public = true", [token]);
+  const rows = await database.query("SELECT w.* FROM works w JOIN pets p ON p.id=w.pet_id JOIN users u ON u.id=w.user_id WHERE w.share_token=$1 AND w.public=true AND w.deleted_at IS NULL AND p.deleted_at IS NULL AND u.deleted_at IS NULL", [token]);
   if (!rows[0]) throw new AppError("SHARE_NOT_FOUND", "分享已关闭或不存在", 404);
   const row = rows[0];
   if (row.share_expires_at && new Date(String(row.share_expires_at)).getTime() <= Date.now()) throw new AppError("SHARE_EXPIRED", "分享已经过期", 410);
@@ -537,7 +483,16 @@ export async function getSharedWork(token: string, accessCode?: string) {
     const hash = accessCode ? createHash("sha256").update(accessCode).digest("hex") : "";
     if (hash !== String(row.share_access_code_hash)) throw new AppError("SHARE_ACCESS_CODE_REQUIRED", "请输入正确的分享访问码", 401);
   }
-  return hydrateWork(mapWork(row));
+  const work = await hydrateWork(mapWork(row));
+  const query = accessCode ? `?code=${encodeURIComponent(accessCode)}` : "";
+  return {
+    ...work,
+    // 显式白名单，私人档案和对象键不随作品对外传播。
+    userId: "", outputKey: undefined, previewKey: undefined,
+    pet: { id: work.pet.id, name: work.pet.name, species: work.pet.species, lifeStage: work.pet.lifeStage },
+    photo: { id: work.photo.id, url: `/api/share/${token}/media/cover${query}` },
+    outputUrl: work.outputUrl ? `/api/share/${token}/media/output${query}` : undefined,
+  };
 }
 
 export async function recordShareAttribution(token: string, eventName: "visit" | "cta" | "duration", source?: string, visitorKey?: string, durationSeconds?: number, accessCode?: string) {
@@ -545,7 +500,8 @@ export async function recordShareAttribution(token: string, eventName: "visit" |
   const database = await getDatabase();
   const eventSource = eventName === "duration" ? `${source || "share"};seconds=${Math.max(0, Math.min(86400, durationSeconds || 0))}` : source;
   await database.query("INSERT INTO share_visits (id,work_id,share_token,event_name,source,visitor_key,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7)", [crypto.randomUUID(),work.id,token,eventName,eventSource?.slice(0,80)||null,visitorKey?.slice(0,80)||null,new Date()]);
-  if (eventName === "visit" || eventName === "cta") await recordEvent(work.userId, eventName === "visit" ? "share_page_visit" : "share_page_cta", work.pluginId, source, { visitorKey });
+  const [owner] = await database.query("SELECT user_id FROM works WHERE id=$1", [work.id]);
+  if (owner && (eventName === "visit" || eventName === "cta")) await recordEvent(String(owner.user_id), eventName === "visit" ? "share_page_visit" : "share_page_cta", work.pluginId, source, { visitorKey });
   return work;
 }
 
@@ -591,4 +547,13 @@ export async function getDashboard(userId: string) {
 
 export function canRegenerate(work: Work, at = new Date()) {
   return at.getTime() - new Date(work.createdAt).getTime() <= DAY_MS;
+}
+
+export async function createGeneration(userId: string, input: unknown) {
+  return inTransaction(async (database) => {
+    const data = generationInputSchema.parse(input);
+    await database.query("SELECT id FROM users WHERE id=$1 FOR UPDATE", [userId]);
+    await lockPhotoInputs(userId, data.petId, data.photoIds);
+    return createGenerationOperation(userId, input);
+  });
 }

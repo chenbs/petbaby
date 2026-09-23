@@ -1,4 +1,5 @@
 const api = require("../../services/api");
+const { clearRecordDrafts } = require("../../services/photo-upload-session");
 const config = require("../../config");
 const { themedPage } = require("../../theme/page-mixin");
 
@@ -42,7 +43,7 @@ themedPage({
   doDelete() {
     this.setData({ confirmDelete: false, deleting: true, notice: "" });
     api.request("/api/account/delete", { method: "POST" })
-      .then(() => wx.reLaunch({ url: "/pages/index/index" }))
+      .then(() => { clearRecordDrafts(); wx.removeStorageSync("petbaby_session"); wx.reLaunch({ url: "/pages/index/index" }); })
       .catch((error) => this.setData({ deleting: false, notice: error.message, noticeType: "error" }));
   }
 });

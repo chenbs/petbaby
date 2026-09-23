@@ -1,7 +1,8 @@
+import { lockPhotoInputs } from "@/server/photo-deliverable-assets";
 import "server-only";
 
 import { z } from "zod";
-import { getDatabase } from "@/server/db/client";
+import { getDatabase, inTransaction } from "@/server/db/client";
 import { jsonIdArray } from "@/server/db/rows";
 import { AppError } from "@/server/errors";
 import { getRuntimePlugin } from "@/plugins/runtime";
@@ -90,7 +91,7 @@ export async function createVideoProject(userId: string, input: unknown) {
   return rows[0];
 }
 
-export async function updateVideoProject(userId: string, id: string, input: unknown) {
+async function updateVideoProjectOperation(userId: string, id: string, input: unknown) {
   const project = await getVideoProject(userId, id); const data = patchSchema.parse(input); const database = await getDatabase();
   const petId = data.petId || String(project.pet_id); const photoIds = data.photoIds || jsonIdArray(project.photo_ids);
   await assertAssets(userId, petId, photoIds);
@@ -103,8 +104,12 @@ export async function updateVideoProject(userId: string, id: string, input: unkn
   return rows[0];
 }
 
-export async function renderVideoProject(userId: string, id: string) {
+async function renderVideoProjectOperation(userId: string, id: string) {
   const project = await getVideoProject(userId, id); const database = await getDatabase();
+  if (project.current_render_id) {
+    const active = await getVideoRender(userId, String(project.current_render_id));
+    if (["queued", "processing"].includes(String(active.status))) return active;
+  }
   if (["queued", "processing", "preview_ready"].includes(String(project.status)) && project.current_render_id) return getVideoRender(userId, String(project.current_render_id));
   await assertAssets(userId, String(project.pet_id), jsonIdArray(project.photo_ids));
   const photoRows = await database.query("SELECT id,storage_key FROM photos WHERE id=ANY($1::uuid[]) AND user_id=$2", [jsonIdArray(project.photo_ids), userId]); const keyMap = new Map(photoRows.map((row) => [String(row.id), String(row.storage_key)]));
@@ -112,7 +117,7 @@ export async function renderVideoProject(userId: string, id: string) {
   // 渲染前再校验一次：项目可能是在时长选项上线前建的，或照片被别处删到不足。
   const durationSeconds = normalizeDuration(project.duration_seconds);
   assertDurationFits(durationSeconds, photoKeys.length);
-  const renderId = crypto.randomUUID(); const config = { projectId: id, photos: photoKeys, cover: keyMap.get(String(project.cover_photo_id)) || photoKeys[0], captions: project.captions, bgm: project.bgm, durationSeconds, templateCode: project.template_code, canvas: project.canvas };
+  const renderId = crypto.randomUUID(); const config = { projectId: id, petId: String(project.pet_id), photoIds: jsonIdArray(project.photo_ids), photos: photoKeys, cover: keyMap.get(String(project.cover_photo_id)) || photoKeys[0], captions: project.captions, bgm: project.bgm, durationSeconds, templateCode: project.template_code, canvas: project.canvas, snapshotVersion: 1 };
   await database.query("INSERT INTO video_renders (id,user_id,plugin_id,project_id,status,progress,config,available_at,created_at) VALUES ($1,$2,'pl-19',$3,'queued',5,$4::jsonb,now(),$5)", [renderId, userId, id, JSON.stringify(config), new Date()]);
   await database.query("UPDATE video_projects SET status='queued',current_render_id=$3,updated_at=now() WHERE id=$1 AND user_id=$2", [id, userId, renderId]);
   return getVideoRender(userId, renderId);
@@ -124,8 +129,8 @@ export async function getVideoRender(userId: string, id: string) {
 }
 
 export async function cancelVideoRender(userId: string, id: string) {
-  const rows = await (await getDatabase()).query("UPDATE video_renders SET status='cancelled',cancelled_at=now(),locked_at=NULL WHERE id=$1 AND user_id=$2 AND status IN ('queued','processing','preview_ready') RETURNING *", [id, userId]);
-  if (!rows[0]) throw new AppError("VIDEO_RENDER_NOT_CANCELLABLE", "任务当前不能取消", 409);
+  const rows = await (await getDatabase()).query("UPDATE video_renders SET status='cancelled',cancelled_at=now(),locked_at=NULL WHERE id=$1 AND user_id=$2 AND status IN ('queued','preview_ready') RETURNING *", [id, userId]);
+  if (!rows[0]) throw new AppError("VIDEO_RENDER_NOT_CANCELLABLE", "视频已开始处理，请在处理结束后再删除照片", 409);
   if (rows[0].project_id) await (await getDatabase()).query("UPDATE video_projects SET status='draft',updated_at=now() WHERE id=$1 AND user_id=$2", [rows[0].project_id, userId]);
   return rows[0];
 }
@@ -199,4 +204,20 @@ export async function mutateVideoRenderForAdmin(actorId: string, input: unknown)
   const result = data.action === "retry" ? await retryVideoRender(String(current.user_id), data.id) : await cancelVideoRender(String(current.user_id), data.id);
   await recordAdminAudit({ actorId, action: `video_render_${data.action}`, targetType: "video_render", targetId: data.id, reason: data.reason, before: current, after: result, userId: String(current.user_id) });
   return result;
+}
+
+export async function renderVideoProject(userId: string, id: string) {
+  return inTransaction(async (db) => {
+    await db.query("SELECT id FROM video_projects WHERE id=$1 AND user_id=$2 FOR UPDATE", [id, userId]);
+    const project = await getVideoProject(userId, id);
+    await lockPhotoInputs(userId, String(project.pet_id), jsonIdArray(project.photo_ids));
+    return renderVideoProjectOperation(userId, id);
+  });
+}
+
+export async function updateVideoProject(userId: string, id: string, input: unknown) {
+  return inTransaction(async (db) => {
+    await db.query("SELECT id FROM video_projects WHERE id=$1 AND user_id=$2 FOR UPDATE", [id, userId]);
+    return updateVideoProjectOperation(userId, id, input);
+  });
 }

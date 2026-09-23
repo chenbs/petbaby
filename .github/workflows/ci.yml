@@ -1,0 +1,172 @@
+name: Repository checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: checks-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  platform:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: apps/platform
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: record_tests
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d record_tests"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      CI: "true"
+      DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/record_tests
+      E2E_DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/record_e2e
+      LOCAL_STORAGE_DIR: .data/ci-objects
+      FFMPEG_PATH: /usr/bin/ffmpeg
+      FFMPEG_FONT_FILE: /usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+          cache-dependency-path: apps/platform/pnpm-lock.yaml
+      - name: Install dependencies and media tools
+        run: |
+          pnpm install --frozen-lockfile
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg fonts-noto-cjk postgresql-client
+          test -f "$FFMPEG_FONT_FILE"
+          pnpm exec playwright install --with-deps chromium
+      - name: Check production dependencies
+        run: pnpm audit --prod
+      - name: Check empty and repeated PostgreSQL migrations
+        run: |
+          pnpm db:migrate
+          pnpm db:migrate
+          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -c 'CREATE DATABASE record_e2e'
+      - name: Check platform with PostgreSQL and real ffmpeg
+        run: pnpm check
+      - name: Run mobile journeys with a separate PostgreSQL database and worker
+        run: pnpm test:e2e
+      - name: Preserve verification artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: platform-verification
+          path: |
+            apps/platform/coverage/
+            apps/platform/test-results/
+            apps/platform/playwright-report/
+            apps/platform/output/playwright/
+          if-no-files-found: ignore
+          retention-days: 7
+
+  miniprogram:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate all themes, pages and behavior tests
+        working-directory: apps/miniprogram
+        run: pnpm validate
+
+  website:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+          cache-dependency-path: |
+            apps/platform/pnpm-lock.yaml
+            apps/website/pnpm-lock.yaml
+      - name: Install website and shared browser tooling
+        run: |
+          pnpm --dir apps/platform install --frozen-lockfile
+          pnpm --dir apps/website install --frozen-lockfile
+          pnpm --dir apps/platform exec playwright install --with-deps chromium
+      - name: Check website, links, pixels and interactions
+        working-directory: apps/website
+        run: |
+          pnpm check
+          pnpm build
+          pnpm check:links
+          pnpm check:pixels
+          pnpm verify
+      - name: Preserve pixel comparison artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: website-pixels
+          path: apps/website/.pixel-diff/
+          if-no-files-found: ignore
+          retention-days: 7
+
+  secrets:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install verified Gitleaks release
+        shell: bash
+        run: |
+          set -euo pipefail
+          scan_tools="$RUNNER_TEMP/gitleaks"
+          mkdir -p "$scan_tools"
+          cd "$scan_tools"
+          release_url=https://github.com/gitleaks/gitleaks/releases/download/v8.30.1
+          curl --fail --location --retry 3 "$release_url/gitleaks_8.30.1_linux_x64.tar.gz" -o gitleaks_8.30.1_linux_x64.tar.gz
+          curl --fail --location --retry 3 "$release_url/gitleaks_8.30.1_checksums.txt" -o checksums.txt
+          sha256sum --check --ignore-missing checksums.txt
+          tar -xzf gitleaks_8.30.1_linux_x64.tar.gz gitleaks
+          echo "$scan_tools" >> "$GITHUB_PATH"
+      - name: Scan full fetched history and checked-out files
+        run: |
+          gitleaks git . --log-opts=--all --redact=100 --no-banner
+          gitleaks dir . --redact=100 --no-banner
+
+  container:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build platform and worker image
+        run: docker build --tag petbaby-platform:ci apps/platform
+      - name: Check runtime user, video tools and Chinese font
+        run: |
+          docker run --rm --entrypoint node petbaby-platform:ci -e 'if (process.getuid() === 0) process.exit(1)'
+          docker run --rm --entrypoint ffmpeg petbaby-platform:ci -version
+          docker run --rm --entrypoint test petbaby-platform:ci -f /usr/share/fonts/noto/NotoSansCJK-Regular.ttc

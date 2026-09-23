@@ -2,6 +2,8 @@ import { beforeEach, describe, expect, it } from "vitest";
 
 import { getDatabase, resetDatabaseForTest } from "@/server/db/client";
 import { createAnnualFilm } from "@/server/video/annual-film";
+import { deletePhoto, updatePhotoMetadata } from "@/server/photo-library-service";
+import type { AnnualAggregate } from "@/server/annual/aggregate";
 
 const USER = "00000000-0000-4000-8000-0000000000d1";
 const PET = "00000000-0000-4000-8000-0000000000d2";
@@ -71,5 +73,27 @@ describe("createAnnualFilm", () => {
     }
     const film = await createAnnualFilm(USER, { year: 2025, durationSeconds: 30 });
     expect(film.shots).toBe(12);
+  });
+
+  it("A14：指定非默认 B，排队后 A 增图和 B 改日期不改变素材、日期、计数快照", async () => {
+    const db = await getDatabase();
+    const b = crypto.randomUUID();
+    await db.query("INSERT INTO pets (id,user_id,name,species,gender,date_type,life_stage,is_default,created_at) VALUES ($1,$2,'B','dog','unknown','birthday','active',false,now())", [b, USER]);
+    const first = await addPhoto("2025-01-01T10:00:00Z");
+    const second = await addPhoto("2025-06-01T10:00:00Z");
+    await db.query("UPDATE photos SET pet_id=$2 WHERE id=ANY($1::uuid[])", [[first, second], b]);
+    await updatePhotoMetadata(USER, first, { version: 1, memoryDate: "2025-02-03", caption: "私人笔记" });
+    const film = await createAnnualFilm(USER, { petId: b, year: 2025, photoIds: [second, first] });
+    const [before] = await db.query<{ config: { photoIds: string[]; snapshot: AnnualAggregate } }>("SELECT config FROM video_renders WHERE id=$1", [film.id]);
+    expect(before.config.photoIds).toEqual([second, first]);
+    expect(before.config.snapshot).toMatchObject({ petId: b, petName: "B", counts: { photos: 2, pets: 1 } });
+    expect(before.config.snapshot.photos[1]).toMatchObject({ date: "2025-02-03", dateSource: "manual", showDay: false });
+    for (let index = 0; index < 15; index++) await addPhoto("2025-03-01T10:00:00Z");
+    await updatePhotoMetadata(USER, first, { version: 2, memoryDate: "2024-02-03" });
+    await expect(deletePhoto(USER, first)).rejects.toMatchObject({ code: "PHOTO_IN_USE" });
+    const [after] = await db.query("SELECT config FROM video_renders WHERE id=$1", [film.id]);
+    expect(after.config).toEqual(before.config);
+    await expect(createAnnualFilm(USER, { petId: b, year: 2025, photoIds: [first] })).rejects.toMatchObject({ code: "ANNUAL_SELECTION_INVALID" });
+    await expect(createAnnualFilm(USER, { petId: crypto.randomUUID(), year: 2025 })).rejects.toMatchObject({ code: "PET_NOT_FOUND" });
   });
 });

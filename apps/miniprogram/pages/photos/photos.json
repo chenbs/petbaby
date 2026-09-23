@@ -6,6 +6,8 @@
     "t-empty": "../../components/empty/index",
     "t-dialog": "../../components/dialog/index",
     "t-skeleton": "../../components/skeleton/index",
-    "t-photo-grid": "../../components/photo-grid/index"
+    "t-photo-grid": "../../components/photo-grid/index",
+    "t-popup": "../../components/popup/index",
+    "t-field": "../../components/field/index"
   }
 }

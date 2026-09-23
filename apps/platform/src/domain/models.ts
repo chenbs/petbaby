@@ -174,6 +174,16 @@ export type Photo = {
   shotAt: string;
   /** `shotAt` 的来源。`upload` 表示这张照片没有 EXIF，日期只是上传时间，不能当拍摄事实展示 */
   shotAtSource: "exif" | "upload";
+  /** 用户确认的纯日期；null 表示采用 EXIF/上传日期。 */
+  memoryDate?: string | null;
+  recordedDate?: string;
+  memoryDateSource?: "manual" | "exif" | "upload";
+  caption?: string;
+  tags?: import("@/domain/photo-memory").PhotoTag[];
+  metadataVersion?: number;
+  metadataUpdatedAt?: string;
+  uploadRequestId?: string;
+  duplicatePhotoId?: string;
   position: number;
   quality?: "unknown" | "clear" | "blurry";
   deletedAt?: string;
@@ -281,8 +291,8 @@ export type FunnelEvent = {
 };
 
 export type PublicWork = Work & {
-  pet: Pet;
-  photo: Photo;
+  pet: Pick<Pet, "id" | "name" | "species" | "lifeStage">;
+  photo: Pick<Photo, "id" | "url">;
   plugin: PluginManifest;
   outputUrl?: string;
 };

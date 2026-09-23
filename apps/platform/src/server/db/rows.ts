@@ -1,4 +1,5 @@
 import type { AiRun, FunnelEvent, GenerationTask, Order, OwnerPhoto, Pet, Photo, Work } from "@/domain/models";
+import { effectivePhotoDate, storedMemoryDate } from "@/domain/photo-memory";
 
 function iso(value: unknown) {
   return value instanceof Date ? value.toISOString() : String(value);
@@ -64,6 +65,10 @@ export function mapPet(row: Record<string, unknown>): Pet {
 }
 
 export function mapPhoto(row: Record<string, unknown>): Photo {
+  const memoryDate = storedMemoryDate(row.memory_date);
+  const shotAt = iso(row.shot_at || row.created_at);
+  const shotAtSource = row.shot_at ? "exif" : "upload";
+  const effective = effectivePhotoDate({ memoryDate, shotAt, shotAtSource });
   return {
     id: String(row.id), userId: String(row.user_id), petId: String(row.pet_id),
     filename: String(row.filename), mimeType: String(row.mime_type), size: Number(row.size),
@@ -75,8 +80,12 @@ export function mapPhoto(row: Record<string, unknown>): Photo {
      * 回落只发生在读取侧：写入侧（savePhoto）取不到 EXIF 就存 NULL，
      * 这样「真实拍摄时间」与「只有上传时间」在库里仍然可区分。
      */
-    shotAt: iso(row.shot_at || row.created_at),
-    shotAtSource: row.shot_at ? "exif" : "upload",
+    shotAt, shotAtSource, memoryDate,
+    recordedDate: effective.date, memoryDateSource: effective.source,
+    caption: String(row.caption || ""), tags: jsonIdArray(row.tags) as Photo["tags"],
+    metadataVersion: Number(row.metadata_version || 1),
+    metadataUpdatedAt: row.metadata_updated_at ? iso(row.metadata_updated_at) : undefined,
+    uploadRequestId: row.upload_request_id ? String(row.upload_request_id) : undefined,
     quality: (row.quality || "unknown") as Photo["quality"], deletedAt: row.deleted_at ? iso(row.deleted_at) : undefined,
   };
 }

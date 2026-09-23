@@ -5,11 +5,17 @@ import { requireUserId } from "@/server/auth/session";
 import { routeError } from "@/server/errors";
 import { listPhotos, updatePhotoOrder } from "@/server/platform-service";
 import { assertTrustedMutation } from "@/server/auth/request-guard";
+import { listPhotoPage } from "@/server/photo-library-service";
 
 export async function GET(request: Request) {
   try {
-    const petId = z.string().uuid().optional().parse(new URL(request.url).searchParams.get("petId") || undefined);
-    return NextResponse.json({ data: await listPhotos(await requireUserId(request), petId) });
+    const userId = await requireUserId(request);
+    const query = new URL(request.url).searchParams;
+    if (query.has("pageSize")) {
+      return NextResponse.json({ data: await listPhotoPage(userId, Object.fromEntries(query)) }, { headers: { "Cache-Control": "private, no-store" } });
+    }
+    const petId = z.string().uuid().optional().parse(query.get("petId") || undefined);
+    return NextResponse.json({ data: await listPhotos(userId, petId) }, { headers: { "Cache-Control": "private, no-store" } });
   } catch (error) { return routeError(error); }
 }
 

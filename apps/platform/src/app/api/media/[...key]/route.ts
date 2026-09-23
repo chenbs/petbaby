@@ -15,19 +15,25 @@ export async function GET(
     const key = segments.join("/");
     if (!/^[a-zA-Z0-9/_-]+\.[a-zA-Z0-9]+$/.test(key)) throw new AppError("MEDIA_NOT_FOUND", "文件不存在", 404);
     const database = await getDatabase();
-    const rows = await database.query<{ user_id: string; is_public: boolean }>(
-      `SELECT p.user_id, EXISTS(SELECT 1 FROM works w WHERE w.photo_id=p.id AND w.public=true) is_public FROM photos p WHERE p.storage_key=$1
-       UNION SELECT p.user_id, false is_public FROM pets p WHERE p.avatar_key=$1 AND p.deleted_at IS NULL
-       UNION SELECT w.user_id, w.public is_public FROM works w WHERE w.preview_key=$1
-       UNION SELECT w.user_id, w.public is_public FROM works w WHERE w.output_key=$1 AND w.locked=false`, [key],
+    if (!userId) throw new AppError("MEDIA_NOT_FOUND", "文件不存在", 404);
+    const rows = await database.query(
+      `SELECT ph.id FROM photos ph JOIN pets p ON p.id=ph.pet_id WHERE ph.storage_key=$1 AND ph.user_id=$2 AND ph.deleted_at IS NULL AND p.deleted_at IS NULL
+       UNION SELECT p.id FROM pets p WHERE p.avatar_key=$1 AND p.user_id=$2 AND p.deleted_at IS NULL
+         AND NOT EXISTS(SELECT 1 FROM photos ph WHERE ph.storage_key=$1 AND ph.deleted_at IS NOT NULL)
+       UNION SELECT w.id FROM works w JOIN pets p ON p.id=w.pet_id WHERE w.user_id=$2 AND w.deleted_at IS NULL AND p.deleted_at IS NULL
+         AND (w.preview_key=$1 OR (w.output_key=$1 AND w.locked=false))
+         AND NOT EXISTS(SELECT 1 FROM photos ph WHERE ph.storage_key=$1)
+       UNION SELECT a.id FROM photo_deliverable_assets a JOIN works w ON a.kind='work' AND w.id=a.resource_id JOIN pets p ON p.id=w.pet_id
+         WHERE a.storage_key=$1 AND a.user_id=$2 AND w.deleted_at IS NULL AND p.deleted_at IS NULL`, [key, userId],
     );
-    if (!rows.some((row) => row.user_id === userId || row.is_public)) throw new AppError("MEDIA_NOT_FOUND", "文件不存在", 404);
+    if (!rows.length) throw new AppError("MEDIA_NOT_FOUND", "文件不存在", 404);
     const object = await objectStorage.get(key);
     if (!object) throw new AppError("MEDIA_NOT_FOUND", "文件不存在", 404);
     return new NextResponse(Buffer.from(object.body), {
       headers: {
         "Content-Type": object.contentType,
-        "Cache-Control": "private, max-age=300",
+        "Cache-Control": "private, no-store",
+        "Vary": "Cookie, Authorization",
         "X-Content-Type-Options": "nosniff",
       },
     });

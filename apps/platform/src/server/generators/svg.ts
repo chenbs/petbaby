@@ -3,6 +3,8 @@ import sharp from "sharp";
 import { localCopy } from "@/server/generators/copy";
 import type { GeneratorInput, GeneratorOutput } from "@/server/generators/types";
 import { anchorOf, dayIndexOf } from "@/domain/companion";
+import { effectivePhotoDate, photoLocalDate } from "@/domain/photo-memory";
+import { spanDaysBetween } from "@/domain/pricing";
 
 function escapeXml(value: string) {
   return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
@@ -100,20 +102,29 @@ export async function generateGrowthCompare(input: GeneratorInput) {
    * 用户在选择器里点选的顺序与拍摄先后无关，排错了「成长」方向就是倒的。
    * `shotAt` 无 EXIF 时已由 mapPhoto 回落到上传时间，所以一定有值。
    */
-  const sorted = [...input.photos].sort((left, right) => new Date(left.metadata.shotAt).getTime() - new Date(right.metadata.shotAt).getTime());
+  const sorted = [...input.photos].sort((left, right) => effectivePhotoDate(left.metadata).date.localeCompare(effectivePhotoDate(right.metadata).date));
   const earliest = sorted[0];
   const latest = sorted[sorted.length - 1];
   const anchor = anchorOf({ birthday: input.pet.birthday, createdAt: input.pet.createdAt });
-  const earliestDay = dayIndexOf(anchor, earliest.metadata.shotAt);
-  const latestDay = dayIndexOf(anchor, latest.metadata.shotAt);
-  const gap = Math.max(0, latestDay - earliestDay);
-  const dateOf = (value: string) => new Date(value).toLocaleDateString("zh-CN");
+  const earliestDate = effectivePhotoDate(earliest.metadata);
+  const latestDate = effectivePhotoDate(latest.metadata);
+  const earliestDay = dayIndexOf(anchor, earliestDate.date);
+  const latestDay = dayIndexOf(anchor, latestDate.date);
+  const gap = spanDaysBetween(new Date(`${earliestDate.date}T12:00:00`), new Date(`${latestDate.date}T12:00:00`));
+  const dateOf = (photo: typeof earliest) => {
+    const recorded = effectivePhotoDate(photo.metadata);
+    return `${recorded.date} · ${recorded.source === "manual" ? "你设置的日期" : recorded.source === "exif" ? "照片里的拍摄时间" : "按上传时间记录"}`;
+  };
+  const dayOf = (photo: typeof earliest, day: number) => {
+    const date = effectivePhotoDate(photo.metadata).date;
+    return date < anchor || (input.pet.lifeStage === "memorial" && (!input.pet.memorialSince || date > photoLocalDate(input.pet.memorialSince))) ? "" : `第 ${day} 天`;
+  };
 
   const panel = (photo: typeof earliest, x: number, day: number, label: string) => `
     <g>
       <clipPath id="gc${x}"><rect x="${x}" y="240" width="460" height="614" rx="14"/></clipPath>
       <image href="${embeddedImage(photo.object)}" x="${x}" y="240" width="460" height="614" preserveAspectRatio="xMidYMid slice" clip-path="url(#gc${x})"/>
-      <text x="${x}" y="906" fill="#14251c" font-family="serif" font-size="34">第 ${day} 天</text>
+      <text x="${x}" y="906" fill="#14251c" font-family="serif" font-size="34">${dayOf(photo, day)}</text>
       <text x="${x}" y="950" fill="#53645b" font-family="sans-serif" font-size="22">${escapeXml(label)}</text>
     </g>`;
 
@@ -123,8 +134,8 @@ export async function generateGrowthCompare(input: GeneratorInput) {
     <rect width="1080" height="1080" fill="#edf8f2"/>
     <text x="70" y="120" fill="#14251c" font-family="serif" font-size="60">${escapeXml(input.pet.name)}的变化</text>
     <text x="70" y="178" fill="#53645b" font-family="sans-serif" font-size="26">${escapeXml(gapLine)}</text>
-    ${panel(earliest, 70, earliestDay, dateOf(earliest.metadata.shotAt))}
-    ${panel(latest, 550, latestDay, dateOf(latest.metadata.shotAt))}
+    ${panel(earliest, 70, earliestDay, dateOf(earliest))}
+    ${panel(latest, 550, latestDay, dateOf(latest))}
     <text x="540" y="1030" text-anchor="middle" fill="#216844" font-family="sans-serif" font-size="20" letter-spacing="4">麻麻抱我 · 成长记录</text>
   </svg>`;
   const preview = await sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toBuffer();

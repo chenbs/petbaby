@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import {
   boolean,
   date,
@@ -48,9 +49,36 @@ export const photos = pgTable("photos", {
   quality: text("quality").notNull().default("unknown"),
   /** EXIF 拍摄时间。可空：历史照片与截图没有 EXIF，读取侧回落到 created_at */
   shotAt: timestamp("shot_at", { withTimezone: true }),
+  memoryDate: date("memory_date"),
+  caption: text("caption").notNull().default(""),
+  tags: jsonb("tags").$type<string[]>().notNull().default([]),
+  metadataVersion: integer("metadata_version").notNull().default(1),
+  metadataUpdatedAt: timestamp("metadata_updated_at", { withTimezone: true }),
+  uploadRequestId: uuid("upload_request_id"),
+  contentSha256: text("content_sha256"),
   deletedAt: timestamp("deleted_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull(),
-}, (table) => [index("photos_pet_shot_idx").on(table.petId, table.shotAt)]);
+}, (table) => [
+  index("photos_pet_shot_idx").on(table.petId, table.shotAt),
+  uniqueIndex("photos_upload_request_idx").on(table.userId, table.uploadRequestId),
+  index("photos_uploaded_idx").on(table.userId, table.petId, table.createdAt, table.id),
+  index("photos_recorded_idx").on(table.userId, table.petId, table.memoryDate, table.shotAt, table.createdAt, table.id),
+  index("photos_library_idx").on(table.userId, table.petId, table.position, table.createdAt, table.id),
+  index("photos_content_idx").on(table.userId, table.petId, table.contentSha256),
+]);
+
+export const objectCleanupJobs = pgTable("object_cleanup_jobs", {
+  id: uuid("id").primaryKey(),
+  storageKey: text("storage_key").notNull().unique(),
+  reason: text("reason").notNull(),
+  photoId: uuid("photo_id").references(() => photos.id, { onDelete: "set null" }),
+  attempts: integer("attempts").notNull().default(0),
+  nextAttemptAt: timestamp("next_attempt_at", { withTimezone: true }).notNull().defaultNow(),
+  status: text("status").notNull().default("pending"),
+  lastError: text("last_error"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  completedAt: timestamp("completed_at", { withTimezone: true }),
+}, (table) => [index("object_cleanup_due_idx").on(table.status, table.nextAttemptAt)]);
 
 export const generationTasks = pgTable("generation_tasks", {
   id: uuid("id").primaryKey(),
@@ -191,8 +219,13 @@ export const events = pgTable("events", {
   userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   pluginId: text("plugin_id"),
   name: text("name").notNull(),
+  channel: text("channel"),
+  sessionKey: text("session_key"),
+  metadata: jsonb("metadata").notNull().default({}),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull(),
-});
+}, (table) => [uniqueIndex("record_event_session_idx").on(table.userId, table.name,
+  sql`(${table.metadata}->>'sessionId')`, sql`(coalesce(${table.metadata}->>'petId',''))`, sql`(coalesce(${table.metadata}->>'viewType',''))`,
+).where(sql`${table.name} IN ('record_entry_opened','memory_viewed')`)]);
 
 export const dailyQuotas = pgTable("daily_quotas", {
   id: uuid("id").primaryKey(),
@@ -236,6 +269,17 @@ export const healthSessions = pgTable("health_sessions", {
   index("health_sessions_pet_created_idx").on(table.petId, table.createdAt),
   index("health_sessions_user_created_idx").on(table.userId, table.createdAt),
 ]);
+
+export const photoDeliverableAssets = pgTable("photo_deliverable_assets", {
+  id: uuid("id").primaryKey(),
+  userId: uuid("user_id").notNull().references(() => users.id),
+  petId: uuid("pet_id").notNull().references(() => pets.id),
+  photoId: uuid("photo_id").notNull().references(() => photos.id),
+  kind: text("kind").notNull(),
+  resourceId: uuid("resource_id").notNull(),
+  storageKey: text("storage_key").notNull().unique(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+}, (table) => [uniqueIndex("photo_deliverable_resource_idx").on(table.kind, table.resourceId, table.photoId), index("photo_deliverable_photo_idx").on(table.photoId)]);
 
 export const healthDailyQuotas = pgTable("health_daily_quotas", {
   id: uuid("id").primaryKey(),

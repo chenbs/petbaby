@@ -1,3 +1,4 @@
+import { lockPhotoInputs } from "@/server/photo-deliverable-assets";
 ﻿/* c8 ignore file -- adapter endpoints are covered by contract tests in deployment environments. */
 import "server-only";
 
@@ -5,7 +6,7 @@ import { z } from "zod";
 import sharp from "sharp";
 import { PDFDocument } from "pdf-lib";
 import type { AiRun, InteractiveSession, Membership, VideoRender } from "@/domain/models";
-import { getDatabase } from "@/server/db/client";
+import { getDatabase, inTransaction } from "@/server/db/client";
 import { confirmOrderPayment, refundOrderPayment } from "@/server/payments/service";
 import { jsonIdArray, jsonObject, mapAiRoleInputs, mapOrder } from "@/server/db/rows";
 import { AppError } from "@/server/errors";
@@ -71,7 +72,7 @@ const interactiveInput = z.object({
 });
 const addressSchema = z.object({ name: z.string().min(1), phone: z.string().min(6), province: z.string().min(1), city: z.string().min(1), detail: z.string().min(1) });
 
-export async function createAiRun(userId: string, input: unknown): Promise<AiRun> {
+async function createAiRunOperation(userId: string, input: unknown): Promise<AiRun> {
   const data = aiInput.parse(input);
   const database = await getDatabase();
   const existing = await database.query("SELECT id FROM ai_runs WHERE user_id=$1 AND idempotency_key=$2", [userId, data.idempotencyKey]);
@@ -279,25 +280,34 @@ export async function getAiRun(userId: string, id: string) {
 }
 
 export async function selectAiCandidate(userId: string, id: string, candidateId: string) {
-  const run = await getAiRun(userId, id);
+  await inTransaction(async (database) => {
+    // 与重抽/删除保持宠物→任务锁顺序，并在等待后重新读取 work_id。
+    const initial = await getAiRun(userId, id);
+    await lockPhotoInputs(userId, initial.petId, []);
+    await database.query("SELECT id FROM ai_runs WHERE id=$1 AND user_id=$2 FOR UPDATE", [id, userId]);
+    const run = await getAiRun(userId, id);
 
-  if (run.status !== "succeeded") throw new AppError("AI_NOT_READY", "AI 任务尚未完成", 409);
-  const candidate = run.candidates.find((item) => item.id === candidateId);
-  if (!candidate?.outputKey || !candidate.previewKey) throw new AppError("AI_CANDIDATE_NOT_FOUND", "AI 候选结果不存在", 404);
-  if (run.order && run.selectedId !== candidateId) throw new AppError("AI_SELECTION_LOCKED", "订单已创建，不能再更换候选结果", 409);
-  if (run.workId) {
-    await (await getDatabase()).query("UPDATE ai_runs SET selected_id=$3 WHERE id=$1 AND user_id=$2", [id, userId, candidateId]);
-    return getAiRun(userId, id);
-  }
-  const database = await getDatabase();
-  const pets = await database.query("SELECT name FROM pets WHERE id=$1 AND user_id=$2", [run.petId, userId]);
-  const workId = crypto.randomUUID(); const now = new Date(); const title = `${String(pets[0]?.name || "它")}的 AI 肖像`;
-  const selectionLabel = run.roleInputs.subjectMode === "pet-human" ? "二选一" : "四选一";
-  const subtitle = `AI 生成内容 · 已选中的${selectionLabel}结果`;
-  await database.query("INSERT INTO works (id,user_id,plugin_id,pet_id,photo_id,title,subtitle,serial_number,authority,output_key,preview_key,asset_kind,source_kind,source_id,locked,public,version,expires_at,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,'麻麻抱我 AI 工作室',$9,$10,'image','ai',$11,true,false,1,$12,$13)", [workId, userId, run.pluginId, run.petId, run.photoIds[0], title, subtitle, `AI-${id.slice(0, 8).toUpperCase()}`, candidate.outputKey, candidate.previewKey, id, new Date(Date.now() + 90 * 86400000), now]);
-  await database.query("INSERT INTO work_versions (id,work_id,version,title,subtitle,output_key,preview_key,created_at) VALUES ($1,$2,1,$3,$4,$5,$6,$7)", [crypto.randomUUID(), workId, title, subtitle, candidate.outputKey, candidate.previewKey, now]);
-  await database.query("UPDATE ai_runs SET selected_id=$3,work_id=$4 WHERE id=$1 AND user_id=$2", [id, userId, candidateId, workId]);
-  await recordEvent(userId, "ai_candidate_selected", run.pluginId, "product", { runId: id, candidateId });
+    if (run.status !== "succeeded") throw new AppError("AI_NOT_READY", "AI 任务尚未完成", 409);
+    const candidate = run.candidates.find((item) => item.id === candidateId);
+    if (!candidate?.outputKey || !candidate.previewKey) throw new AppError("AI_CANDIDATE_NOT_FOUND", "AI 候选结果不存在", 404);
+    if (run.order && run.selectedId !== candidateId) throw new AppError("AI_SELECTION_LOCKED", "订单已创建，不能再更换候选结果", 409);
+    if (run.workId) {
+      await (await getDatabase()).query("UPDATE ai_runs SET selected_id=$3 WHERE id=$1 AND user_id=$2", [id, userId, candidateId]);
+      return;
+    }
+    // 选择候选会新建作品并引用原照片；与删除照片共用宠物→照片锁，
+    // 防止删除已经落库而选择操作仍把工作指向不存在的素材。
+    await lockPhotoInputs(userId, run.petId, run.photoIds);
+    const db = await getDatabase();
+    const pets = await db.query("SELECT name FROM pets WHERE id=$1 AND user_id=$2", [run.petId, userId]);
+    const workId = crypto.randomUUID(); const now = new Date(); const title = `${String(pets[0]?.name || "它")}的 AI 肖像`;
+    const selectionLabel = run.roleInputs.subjectMode === "pet-human" ? "二选一" : "四选一";
+    const subtitle = `AI 生成内容 · 已选中的${selectionLabel}结果`;
+    await db.query("INSERT INTO works (id,user_id,plugin_id,pet_id,photo_id,title,subtitle,serial_number,authority,output_key,preview_key,asset_kind,source_kind,source_id,locked,public,version,expires_at,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,'麻麻抱我 AI 工作室',$9,$10,'image','ai',$11,true,false,1,$12,$13)", [workId, userId, run.pluginId, run.petId, run.photoIds[0], title, subtitle, `AI-${id.slice(0, 8).toUpperCase()}`, candidate.outputKey, candidate.previewKey, id, new Date(Date.now() + 90 * 86400000), now]);
+    await db.query("INSERT INTO work_versions (id,work_id,version,title,subtitle,output_key,preview_key,created_at) VALUES ($1,$2,1,$3,$4,$5,$6,$7)", [crypto.randomUUID(), workId, title, subtitle, candidate.outputKey, candidate.previewKey, now]);
+    await db.query("UPDATE ai_runs SET selected_id=$3,work_id=$4 WHERE id=$1 AND user_id=$2", [id, userId, candidateId, workId]);
+    await recordEvent(userId, "ai_candidate_selected", run.pluginId, "product", { runId: id, candidateId });
+  });
   return getAiRun(userId, id);
 }
 
@@ -309,7 +319,7 @@ export async function unlockAiCandidate(userId: string, id: string) {
   return getAiRun(userId, id);
 }
 
-export async function rerollAiRun(userId: string, id: string, reason: ImageTemplateRerollReason = "composition") {
+async function rerollAiRunOperation(userId: string, id: string, reason: ImageTemplateRerollReason = "composition") {
   const run = await getAiRun(userId, id);
 
   const template = run.roleInputs.templateId ? getImageTemplate(run.roleInputs.templateId) : undefined;
@@ -324,19 +334,19 @@ export async function rerollAiRun(userId: string, id: string, reason: ImageTempl
   return getAiRun(userId, id);
 }
 
-export async function retryAiRun(userId: string, id: string) {
+async function retryAiRunOperation(userId: string, id: string) {
   const rows = await (await getDatabase()).query("UPDATE ai_runs SET status='queued',error_code=NULL,retry_count=retry_count+1,available_at=now(),locked_at=NULL WHERE id=$1 AND user_id=$2 AND status='failed' AND retry_count<2 RETURNING id", [id, userId]);
   if (!rows[0]) throw new AppError("AI_RETRY_LIMIT", "任务不可重试或重试次数已用完", 409);
   return getAiRun(userId, id);
 }
 
 export async function cancelAiRun(userId: string, id: string) {
-  const rows = await (await getDatabase()).query("UPDATE ai_runs SET status='cancelled',cancelled_at=now(),locked_at=NULL WHERE id=$1 AND user_id=$2 AND status IN ('queued','processing') RETURNING id", [id, userId]);
-  if (!rows[0]) throw new AppError("AI_NOT_CANCELLABLE", "当前任务不能取消", 409);
+  const rows = await (await getDatabase()).query("UPDATE ai_runs SET status='cancelled',cancelled_at=now(),locked_at=NULL WHERE id=$1 AND user_id=$2 AND status='queued' RETURNING id", [id, userId]);
+  if (!rows[0]) throw new AppError("AI_NOT_CANCELLABLE", "任务已开始处理，请在处理结束后再删除照片", 409);
   return getAiRun(userId, id);
 }
 
-export async function createInteractiveSession(userId: string, input: unknown): Promise<InteractiveSession> {
+async function createInteractiveSessionOperation(userId: string, input: unknown): Promise<InteractiveSession> {
   const data = interactiveInput.parse(input); const id = crypto.randomUUID(); const createdAt = new Date(); const database = await getDatabase();
   const plugin = await getRuntimePlugin(data.pluginId);
   if (!plugin || plugin.status !== "live" || plugin.category !== "interactive") throw new AppError("INTERACTIVE_PLUGIN_UNAVAILABLE", "这个互动玩法暂未开放", 404);
@@ -362,7 +372,7 @@ function mapInteractive(row: Record<string, unknown>): InteractiveSession {
   };
 }
 
-export async function updateInteractiveSession(userId: string, id: string, input: unknown) {
+async function updateInteractiveSessionOperation(userId: string, id: string, input: unknown) {
   const data = z.object({ snapshot: interactiveSnapshotSchema, photoIds: z.array(z.string().uuid()).min(1).max(6).optional() }).parse(input); const database = await getDatabase();
   const session = await getInteractiveSession(userId, id); const photoIds = data.photoIds || session.photoIds;
   const photos = await database.query("SELECT id FROM photos WHERE id=ANY($1::uuid[]) AND pet_id=$2 AND user_id=$3 AND deleted_at IS NULL", [photoIds, session.petId, userId]);
@@ -407,7 +417,7 @@ export async function shareInteractiveSession(userId: string, sessionId: string,
 }
 
 export async function getPublicInteractiveSession(token: string) {
-  const rows = await (await getDatabase()).query("SELECT s.*,v.status export_status,v.progress export_progress FROM interactive_sessions s LEFT JOIN video_renders v ON v.id=s.export_render_id WHERE s.share_token=$1", [token]);
+  const rows = await (await getDatabase()).query("SELECT s.*,v.status export_status,v.progress export_progress FROM interactive_sessions s LEFT JOIN video_renders v ON v.id=s.export_render_id WHERE s.share_token=$1 AND EXISTS(SELECT 1 FROM pets p JOIN users u ON u.id=p.user_id WHERE p.id=s.pet_id AND p.deleted_at IS NULL AND u.deleted_at IS NULL)", [token]);
   if (!rows[0]) throw new AppError("INTERACTIVE_SHARE_NOT_FOUND", "互动分享不存在", 404);
   if (rows[0].revoked_at) throw new AppError("INTERACTIVE_SHARE_REVOKED", "这份互动分享已经撤销", 410);
   if (rows[0].share_expires_at && new Date(String(rows[0].share_expires_at)).getTime() <= Date.now()) throw new AppError("INTERACTIVE_SHARE_EXPIRED", "这份互动分享已经过期", 410);
@@ -421,7 +431,7 @@ export async function appendPublicInteractiveEvent(token: string, input: unknown
   return { id: String(rows[0].id), accepted: true };
 }
 
-export async function exportInteractiveSession(userId: string, sessionId: string) {
+async function exportInteractiveSessionOperation(userId: string, sessionId: string) {
   const session = await getInteractiveSession(userId, sessionId);
   if (session.exportRenderId && ["queued", "processing", "ready"].includes(session.exportStatus || "")) return session;
   const database = await getDatabase();
@@ -435,7 +445,7 @@ export async function exportInteractiveSession(userId: string, sessionId: string
    * 缺这个键会走 normalizeDuration 的缺省档，时长就成了隐式约定。
    * 取能容下当前张数的最短档，成片不拖沓也不黑闪。
    */
-  const config = { interactiveSessionId: session.id, petId: session.petId, photoId: session.photoIds[0], photos: photoKeys, cover: photoKeys[0], captions: [snapshot.title, snapshot.copy], bgm: snapshot.theme === "sunset" ? "calm" : "bright", durationSeconds: shortestDurationFor(photoKeys.length), snapshot };
+  const config = { interactiveSessionId: session.id, petId: session.petId, photoId: session.photoIds[0], photoIds: session.photoIds, photos: photoKeys, cover: photoKeys[0], captions: [snapshot.title, snapshot.copy], bgm: snapshot.theme === "sunset" ? "calm" : "bright", durationSeconds: shortestDurationFor(photoKeys.length), snapshot };
   await database.query("INSERT INTO video_renders (id,user_id,plugin_id,status,progress,config,available_at,created_at) VALUES ($1,$2,$3,'queued',5,$4::jsonb,now(),$5)", [renderId, userId, session.pluginId, JSON.stringify(config), new Date()]);
   await database.query("UPDATE interactive_sessions SET state='exporting',export_render_id=$3,updated_at=now() WHERE id=$1 AND user_id=$2", [sessionId, userId, renderId]);
   await recordEvent(userId, "interactive_export_queued", session.pluginId, "product", { sessionId, renderId });
@@ -443,10 +453,19 @@ export async function exportInteractiveSession(userId: string, sessionId: string
 }
 
 export async function createVideoRender(userId:string,input:unknown):Promise<VideoRender> {
-  const data=z.object({pluginId:z.string().min(1),workId:z.string().uuid().optional(),photos:z.array(z.string().min(1)).max(20).default([]),captions:z.array(z.string().max(120)).max(20).default([]),bgm:z.enum(["none","calm","bright"]).default("none"),cover:z.string().min(1).optional()}).parse(input); const id=crypto.randomUUID(); const createdAt=new Date(); const database=await getDatabase();
+  const data=z.object({pluginId:z.string().min(1),workId:z.string().uuid().optional(),photos:z.array(z.string().min(1)).min(1).max(20),captions:z.array(z.string().max(120)).max(20).default([]),bgm:z.enum(["none","calm","bright"]).default("none"),cover:z.string().min(1).optional()}).parse(input);
+  return inTransaction(async (database) => {
+  const keys = [...new Set([...data.photos, ...(data.cover ? [data.cover] : [])])];
+  const photos = await database.query("SELECT id,pet_id,storage_key FROM photos WHERE user_id=$1 AND storage_key=ANY($2::text[]) AND deleted_at IS NULL", [userId, keys]);
+  if (photos.length !== keys.length || new Set(photos.map((photo) => photo.pet_id)).size !== 1) throw new AppError("PHOTO_PET_MISMATCH", "请选择当前宠物照片库中的照片", 422);
+  const petId = String(photos[0].pet_id), photoIds = photos.map((photo) => String(photo.id));
+  await lockPhotoInputs(userId, petId, photoIds);
+  if (data.workId && !(await database.query("SELECT id FROM works WHERE id=$1 AND user_id=$2 AND pet_id=$3 AND deleted_at IS NULL", [data.workId, userId, petId])).length) throw new AppError("NOT_FOUND", "作品不存在", 404);
+  const id=crypto.randomUUID(); const createdAt=new Date();
   // 同互动页导出：这条入口不让用户选时长，取能容下张数的最短档并显式写入 config。
-  await database.query("INSERT INTO video_renders (id,user_id,plugin_id,status,config,created_at) VALUES ($1,$2,$3,'queued',$4::jsonb,$5)",[id,userId,data.pluginId,JSON.stringify({workId:data.workId,photos:data.photos,captions:data.captions,bgm:data.bgm,cover:data.cover,durationSeconds:shortestDurationFor(data.photos.length)}),createdAt]);
+  await database.query("INSERT INTO video_renders (id,user_id,plugin_id,status,config,created_at) VALUES ($1,$2,$3,'queued',$4::jsonb,$5)",[id,userId,data.pluginId,JSON.stringify({workId:data.workId,petId,photoIds,photos:data.photos,captions:data.captions,bgm:data.bgm,cover:data.cover,durationSeconds:shortestDurationFor(keys.length)}),createdAt]);
   return {id,userId,pluginId:data.pluginId,status:"queued",progress:0,createdAt:createdAt.toISOString()};
+  });
 }
 export async function getVideoRender(userId:string,id:string){const rows=await (await getDatabase()).query("SELECT * FROM video_renders WHERE id=$1 AND user_id=$2",[id,userId]);if(!rows[0])throw new AppError("VIDEO_NOT_FOUND","视频任务不存在",404);return rows[0];}
 
@@ -467,23 +486,28 @@ export async function subscribeReminder(userId:string,input:unknown) {
 }
 
 export async function scheduleUpcomingReminders(userId: string, now = new Date()) {
-  const database = await getDatabase();
-  const pets = await database.query("SELECT id,birthday,date_type FROM pets WHERE user_id=$1 AND deleted_at IS NULL AND birthday IS NOT NULL", [userId]);
+  return inTransaction(async (database) => {
+  const pets = await database.query("SELECT id,birthday,date_type FROM pets WHERE user_id=$1 AND deleted_at IS NULL AND life_stage<>'memorial' AND birthday IS NOT NULL ORDER BY id FOR UPDATE", [userId]);
   const scheduled: Array<{ petId: string; eventType: string; scheduledAt: string }> = [];
   for (const pet of pets) {
     const eventType = String(pet.date_type || "birthday");
+    if (!["birthday", "got_home"].includes(eventType)) continue;
     const date = String(pet.birthday);
     const target = new Date(`${date.slice(0, 4)}-${date.slice(5, 10)}T09:00:00.000Z`);
+    if (!Number.isFinite(target.getTime())) continue;
     target.setUTCFullYear(now.getUTCFullYear());
     if (target.getTime() <= now.getTime()) target.setUTCFullYear(target.getUTCFullYear() + 1);
     const scheduledAt = new Date(target.getTime() - 7 * 86400000);
     if (scheduledAt.getTime() <= now.getTime()) continue;
-    const existing = await database.query("SELECT id FROM message_subscriptions WHERE user_id=$1 AND event_type=$2 AND scheduled_at=$3 AND status IN ('active','scheduled','sent')", [userId, eventType, scheduledAt]);
+    const existing = await database.query("SELECT id FROM message_subscriptions WHERE user_id=$1 AND event_type=$2 AND scheduled_at=$3 AND pet_id=$4 AND status IN ('active','scheduled','sent')", [userId, eventType, scheduledAt, pet.id]);
     if (existing[0]) continue;
-    await database.query("INSERT INTO message_subscriptions (id,user_id,event_type,status,scheduled_at,consented_at,created_at) VALUES ($1,$2,$3,'scheduled',$4,$5,$6)", [crypto.randomUUID(), userId, eventType, scheduledAt, now, now]);
+    const consent = await database.query("UPDATE message_subscriptions SET status='consumed',status_updated_at=now() WHERE id=(SELECT id FROM message_subscriptions WHERE user_id=$1 AND event_type=$2 AND status='active' AND revoked_at IS NULL AND scheduled_at IS NULL AND (pet_id=$3 OR pet_id IS NULL) ORDER BY created_at,id LIMIT 1 FOR UPDATE) AND status='active' RETURNING template_code,consented_at", [userId, eventType, pet.id]);
+    if (!consent.length) continue;
+    await database.query("INSERT INTO message_subscriptions (id,user_id,pet_id,event_type,template_code,status,scheduled_at,consented_at,created_at) VALUES ($1,$2,$3,$4,$5,'scheduled',$6,$7,$8)", [crypto.randomUUID(), userId, pet.id, eventType, consent[0].template_code, scheduledAt, consent[0].consented_at, now]);
     scheduled.push({ petId: String(pet.id), eventType, scheduledAt: scheduledAt.toISOString() });
   }
   return scheduled;
+  });
 }
 export async function scheduleAllUpcomingReminders(now = new Date()) { const users = await (await getDatabase()).query("SELECT id FROM users"); let count = 0; for (const user of users) count += (await scheduleUpcomingReminders(String(user.id), now)).length; return count; }
 
@@ -941,3 +965,52 @@ export async function rollbackExperiment(id: string, reason: string, actorId: st
 export async function getExperimentDetail(id:string){const database=await getDatabase();const rows=await database.query("SELECT * FROM experiment_variants WHERE id=$1",[id]);if(!rows[0])throw new AppError("EXPERIMENT_NOT_FOUND","赛马实验不存在",404);const [metrics,operations]=await Promise.all([database.query("SELECT * FROM experiment_metrics WHERE variant_id=$1 ORDER BY period_start DESC",[id]),database.query("SELECT * FROM experiment_operations WHERE variant_id=$1 ORDER BY created_at DESC",[id])]);return{variant:rows[0],metrics,operations};}
 export async function recordExperimentMetric(input: unknown) { const data=z.object({variantId:z.string().uuid(),metric:z.enum(["exposure","start","completion","paid","refund","cost"]),value:z.number().nonnegative(),sampleCount:z.number().int().nonnegative().default(1),revenue:z.number().nonnegative().default(0),source:z.enum(["manual","automatic"]).default("manual"),channel:z.enum(["all","web","miniprogram"]).default("all"),periodStart:z.string().datetime(),periodEnd:z.string().datetime()}).parse(input); const rows=await (await getDatabase()).query("INSERT INTO experiment_metrics (id,variant_id,metric,value,sample_count,revenue,source,channel,period_start,period_end,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,now()) RETURNING *",[crypto.randomUUID(),data.variantId,data.metric,data.value,data.sampleCount,data.revenue,data.source,data.channel,new Date(data.periodStart),new Date(data.periodEnd)]); return rows[0]; }
 export async function listExperimentMetrics(variantId?: string) { return variantId ? (await getDatabase()).query("SELECT * FROM experiment_metrics WHERE variant_id=$1 ORDER BY period_start DESC", [variantId]) : (await getDatabase()).query("SELECT * FROM experiment_metrics ORDER BY period_start DESC"); }
+
+export async function createAiRun(userId: string, input: unknown) {
+  return inTransaction(async () => {
+    const data = aiInput.parse(input);
+    await lockPhotoInputs(userId, data.petId, data.photoIds);
+    return createAiRunOperation(userId, input);
+  });
+}
+
+export async function createInteractiveSession(userId: string, input: unknown) {
+  return inTransaction(async () => {
+    const data = interactiveInput.parse(input);
+    await lockPhotoInputs(userId, data.petId, data.photoIds);
+    return createInteractiveSessionOperation(userId, input);
+  });
+}
+
+export async function updateInteractiveSession(userId: string, id: string, input: unknown) {
+  return inTransaction(async () => {
+    const session = await getInteractiveSession(userId, id);
+    const data = z.object({ photoIds: z.array(z.string().uuid()).optional() }).parse(input);
+    await lockPhotoInputs(userId, session.petId, data.photoIds || session.photoIds);
+    return updateInteractiveSessionOperation(userId, id, input);
+  });
+}
+
+export async function exportInteractiveSession(userId: string, sessionId: string) {
+  return inTransaction(async () => {
+    const session = await getInteractiveSession(userId, sessionId);
+    await lockPhotoInputs(userId, session.petId, session.photoIds);
+    return exportInteractiveSessionOperation(userId, sessionId);
+  });
+}
+
+export async function retryAiRun(userId: string, id: string) {
+  return inTransaction(async () => {
+    const run = await getAiRun(userId, id);
+    await lockPhotoInputs(userId, run.petId, run.photoIds);
+    return retryAiRunOperation(userId, id);
+  });
+}
+
+export async function rerollAiRun(userId: string, id: string, reason: ImageTemplateRerollReason = "composition") {
+  return inTransaction(async () => {
+    const run = await getAiRun(userId, id);
+    await lockPhotoInputs(userId, run.petId, run.photoIds);
+    return rerollAiRunOperation(userId, id, reason);
+  });
+}

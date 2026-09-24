@@ -13,7 +13,7 @@ require_docker
 log "在 Compose 网络内执行冒烟测试"
 compose run --rm --no-deps -T --entrypoint sh web -c 'pnpm exec tsx scripts/smoke.ts http://web:3000'
 
-# 样例图单独查一遍：它们不在镜像里，靠 seed-samples.sh 灌进卷，
+# 样例图单独查一遍：它们不在镜像里，靠 seed-samples.sh 灌进测试卷或生产 COS，
 # 漏灌时 /api/plugins 照样返回 200（manifest 里只是路径字符串），
 # 只有真去取字节才会暴露 404 —— 端上表现是入口图裂开，不报任何错。
 log "校验玩法样例图可下发"

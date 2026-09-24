@@ -383,7 +383,7 @@ sudo nginx -t
 3. **构建镜像**并启动 PostgreSQL。
 4. **执行数据库迁移**（当前 `0000` → `0029`，失败则不更新应用容器）。
 5. **启动 web / worker**，等待 web 进入 `healthy`；宿主机 Nginx 不由 Docker 编排管理。
-6. **灌样例图**（`seed-samples.sh`）：把 `tools/imagegen/out/` 下的入口图与风格对比图按内容哈希写进 `object-data` 卷。**这一步不能省** —— 素材不在镜像里（构建上下文是 `apps/platform`，素材在仓库根的 `tools/imagegen/`），漏掉的表现是首页 Hero、玩法网格、AI 风格选项全部裂图，而 `/api/plugins` 仍返回 200（manifest 里只是路径字符串），健康检查也照样通过。
+6. **灌样例图**（`seed-samples.sh`）：测试环境把 `tools/imagegen/out/` 下的资源写进 `object-data` 卷，生产环境上传到 COS 私有桶。**这一步不能省** —— 素材不在镜像里（构建上下文是 `apps/platform`，素材在仓库根的 `tools/imagegen/`），漏掉的表现是首页 Hero、玩法网格、AI 风格选项全部裂图，而 `/api/plugins` 仍返回 200（manifest 里只是路径字符串），健康检查也照样通过。
 7. **健康检查** `https://<域名>/api/health`。
 8. **主链路冒烟测试**：注册 → 建宠物档案 → 上传照片 → 提交生成 → Worker 出图 → 读回对象存储 → 下单模拟支付解锁 → 生成分享链接并匿名访问 → 软删除测试账号；随后逐张校验 13 张样例图能取到字节。
 
@@ -517,7 +517,7 @@ cd /opt/petbaby && ./deploy/scripts/release.sh staging
 - **不检查工作区是否干净**。部署机上 `chmod +x` 这类权限位变更会被 git 记成改动，为此拦住发布得不偿失。拉取用 `--ff-only`，真有冲突时 git 自己会拒绝并保留现场，脚本随即停在拉取步骤、不做任何部署动作。
   权限位噪音想根治就关掉跟踪：`cd /opt/petbaby && git config core.fileMode false`。
 - **迁移前必备份**。迁移是单向的（没有 down 脚本），改过库结构后只能靠备份回去。首次发布时数据库容器还没起，这一步会自动跳过。
-- **样例图每次都灌**。键名由内容哈希决定，没换图时就是覆盖同名文件，代价是 13 个小文件的 `docker cp`。换了图或卷被 `down -v` 重建过时，这是唯一能补上字节的地方 —— 分不清哪次需要，不如每次都做。
+- **样例图每次都校验**。测试环境把素材写入本地卷；生产环境通过 `deploy/.env.production` 中的 COS 凭据上传到私有桶。生产脚本逐个 GET 并核对 SHA-256，已存在且一致的对象会跳过；同名对象内容不一致时发布失败。母版和预览以 `tools/imagegen/out/reference-v1/deploy-assets.tsv` 为准。先运行 `node deploy/scripts/upload-samples-cos.mjs --dry-run` 可在无凭据环境校验全部本地素材；上传后可用同一 Compose 命令把脚本参数改为 `--verify-only` 复核云端对象。未完成云端校验前不要从 Git 移除这些素材；脚本不会删除 COS 对象。
 
 出问题时的开关（正常发布一个都不用加）：
 

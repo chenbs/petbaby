@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-# 把 tools/imagegen/out 下的样例图灌进对象存储卷。
+# 把 tools/imagegen/out 下的样例图灌进测试卷或生产 COS。
 # 用法：./deploy/scripts/seed-samples.sh [staging|production]
 #
 # 为什么需要这一步：registry.ts 里的 samples 路径带内容哈希，指向对象存储中的
@@ -15,6 +15,12 @@ set -eu
 resolve_mode "${1:-}"
 require_env_file
 require_docker
+
+if [ "$MODE" = "production" ]; then
+  log "校验样例图并上传生产 COS"
+  compose run --rm --no-deps -T --volume "$REPO_DIR:/repo:ro" --entrypoint node web /repo/deploy/scripts/upload-samples-cos.mjs --upload
+  exit 0
+fi
 
 PLUGINS_DIR="$REPO_DIR/tools/imagegen/out/plugins"
 STYLES_DIR="$REPO_DIR/tools/imagegen/out/styles"

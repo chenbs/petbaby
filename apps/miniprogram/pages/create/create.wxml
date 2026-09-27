@@ -13,6 +13,7 @@
 -->
 <t-glass-sheet
   wx:if="{{formStage}}"
+  class="art-film layout-workbench"
   background-image="{{plugin.samples.heroUrl}}"
   title="{{plugin ? plugin.name : '准备玩法'}}"
   state="half"
@@ -155,7 +156,7 @@
   </view>
 </t-glass-sheet>
 
-<view wx:else class="page page-flat">
+<view wx:else class="page page-flat art-film layout-workbench">
   <text class="eyebrow">CREATE</text>
   <view class="title">{{plugin ? plugin.name : '准备玩法'}}</view>
 
@@ -183,7 +184,8 @@
   <view wx:else class="section">
     <t-card variant="clay" padded="{{false}}" blur="{{false}}" anim="{{animType}}">
       <view class="result-frame">
-        <image class="result-image" src="{{work.outputUrl}}" mode="widthFix" />
+        <image wx:if="{{work.outputUrl && !resultImageFailed}}" class="result-image" src="{{work.outputUrl}}" mode="widthFix" data-src="{{work.outputUrl}}" binderror="onResultImageError" />
+        <view wx:else class="result-image result-image-blank">作品预览暂不可用，请进入详情查看</view>
       </view>
     </t-card>
     <view class="result-copy">

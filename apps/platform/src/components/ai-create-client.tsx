@@ -21,6 +21,7 @@ type ImageTemplate = {
 };
 
 type TemplateEntry = { id: string; title: string; templates: ImageTemplate[] };
+type ArtScene = { id: string; title: string; description: string; url: string };
 
 export function AiCreateClient() {
   const [pets, setPets] = useState<Pet[]>([]);
@@ -30,6 +31,8 @@ export function AiCreateClient() {
   const [entries, setEntries] = useState<TemplateEntry[]>([]);
   const [entryId, setEntryId] = useState("");
   const [templateId, setTemplateId] = useState("");
+  const [scenes, setScenes] = useState<ArtScene[]>([]);
+  const [sceneId, setSceneId] = useState("window-morning");
   const [ownerPhotos, setOwnerPhotos] = useState<OwnerPhoto[]>([]);
   const [ownerPhotoId, setOwnerPhotoId] = useState("");
   const [authorizationConfirmed, setAuthorizationConfirmed] = useState(false);
@@ -47,14 +50,19 @@ export function AiCreateClient() {
       apiFetch<Pet[]>("/api/pets"),
       apiFetch<{ entries: TemplateEntry[] }>("/api/image-templates"),
       apiFetch<OwnerPhoto[]>("/api/owner-photos"),
-    ]).then(([petItems, catalog, owners]) => {
+      apiFetch<Array<{ id: string; samples?: { sceneOptions?: Array<Omit<ArtScene, "url">>; sceneUrls?: Record<string, string> } }>>("/api/plugins"),
+    ]).then(([petItems, catalog, owners, plugins]) => {
       const defaultPet = petItems.find((item) => item.isDefault) || petItems[0];
-      const firstEntry = catalog.entries[0];
+      const firstEntry = catalog.entries.find((entry) => entry.id === "art") || catalog.entries[0];
+      const samples = plugins.find((plugin) => plugin.id === "pl-10")?.samples;
+      const artScenes = (samples?.sceneOptions || []).map((scene) => ({ ...scene, url: samples?.sceneUrls?.[scene.id] || "" }));
       setPets(petItems);
       setPetId(defaultPet?.id || "");
       setEntries(catalog.entries);
       setEntryId(firstEntry?.id || "");
       setTemplateId(firstEntry?.templates[0]?.templateId || "");
+      setScenes(artScenes);
+      setSceneId(artScenes[0]?.id || "window-morning");
       setOwnerPhotos(owners);
     }).catch((loadError) => setError(loadError instanceof Error ? loadError.message : "制作页加载失败"));
   }, []);
@@ -108,6 +116,7 @@ export function AiCreateClient() {
 
   async function create() {
     if (!activeTemplate || !petId || !photoId) { setError("请先选择模板、宠物和 1 张宠物身份照"); return; }
+    if (activeTemplate.templateId === "pet-art-photo" && !scenes.some((scene) => scene.id === sceneId)) { setError("写真场景暂不可用，请重新加载"); return; }
     if (activeTemplate.subjectMode === "owner-pet" && (!ownerPhotoId || !authorizationConfirmed)) {
       setError("人宠模板需要选择 1 张已授权的主人照片"); return;
     }
@@ -122,6 +131,7 @@ export function AiCreateClient() {
           photoIds: [photoId],
           ownerPhotoIds: activeTemplate.subjectMode === "owner-pet" ? [ownerPhotoId] : [],
           authorizationConfirmed: activeTemplate.subjectMode === "owner-pet" && authorizationConfirmed,
+          options: { scene: sceneId },
           promptVersion: `template-${activeTemplate.version}`,
           modelVersion: "provider-v1",
           idempotencyKey: `web-${Date.now()}-${activeTemplate.templateId}-${photoId}`,
@@ -135,8 +145,9 @@ export function AiCreateClient() {
   }
 
   return <>
-    <section className="panel ai-brief-card"><span className="eyebrow">TEMPLATE SHELF</span><h2>先选玩法，再替换成你们</h2><p>运行时只使用自有模板和你选择的身份照片；候选均保留 AI 标识。</p></section>
+    <section className="panel ai-brief-card"><span className="eyebrow">PET ART PHOTO</span><h2>宠物艺术写真</h2><p>选择场景、模板和身份照，生成保留它真实模样的作品。</p></section>
     <section className="panel" style={{ marginTop: 18 }}><div className="form-grid">
+      {templateId === "pet-art-photo" ? <div className="field"><span>写真场景 · {scenes.length} 套</span><div className="asset-choice-grid art-scene-grid">{scenes.map((scene) => <button aria-pressed={sceneId === scene.id} className={sceneId === scene.id ? "art-scene-choice selected" : "art-scene-choice"} key={scene.id} onClick={() => setSceneId(scene.id)} type="button"><span className="art-scene-image">{scene.url ? <Image alt={`${scene.title}：${scene.description}`} fill sizes="160px" src={scene.url} unoptimized /> : null}</span><strong>{scene.title}</strong><small>{scene.description}</small></button>)}</div></div> : null}
       <div className="field"><label htmlFor="ai-entry">玩法入口</label><select id="ai-entry" value={entryId} onChange={(event) => chooseEntry(event.target.value)}>{entries.map((entry) => <option key={entry.id} value={entry.id}>{entry.title}</option>)}</select></div>
       <div className="field"><span>模板</span><div className="asset-choice-grid">{activeEntry?.templates.map((template) => <button aria-pressed={templateId === template.templateId} className={templateId === template.templateId ? "asset-choice selected" : "asset-choice"} key={template.templateId} onClick={() => setTemplateId(template.templateId)} type="button"><Image alt={template.title} fill sizes="160px" src={template.sampleUrl} unoptimized /><span>{template.title}</span></button>)}</div></div>
       <div className="field"><label htmlFor="ai-pet">宠物</label><select id="ai-pet" value={petId} onChange={(event) => setPetId(event.target.value)}><option value="">选择宠物</option>{pets.map((pet) => <option key={pet.id} value={pet.id}>{pet.name}</option>)}</select></div>

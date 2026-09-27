@@ -27,16 +27,23 @@ Component({
   observers: {
     "photos, selectedIds, ordered": function (photos, selectedIds) {
       const ids = selectedIds || [];
+      const failed = new Set((this.data.tiles || []).filter((tile) => tile.imageFailed).map((tile) => tile.id + "|" + tile.url));
       this.setData({
         tiles: (photos || []).map((photo) => {
           const order = ids.indexOf(photo.id);
-          return Object.assign({}, photo, { order: order >= 0 ? order + 1 : 0, picked: order >= 0 || Boolean(photo.selected) });
+          return Object.assign({}, photo, { order: order >= 0 ? order + 1 : 0, picked: order >= 0 || Boolean(photo.selected), imageFailed: failed.has(photo.id + "|" + photo.url) });
         })
       });
     }
   },
   methods: {
     handleAdd() { this.triggerEvent("add"); },
+
+    handleImageError(event) {
+      const { id, src } = event.currentTarget.dataset;
+      const index = this.data.tiles.findIndex((tile) => tile.id === id && tile.url === src);
+      if (index >= 0) this.setData({ ["tiles[" + index + "].imageFailed"]: true });
+    },
 
     handleTap(event) {
       const id = event.currentTarget.dataset.id;

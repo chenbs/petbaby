@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 import { createHash, createHmac } from "node:crypto";
-import { readFile, readdir, realpath } from "node:fs/promises";
+import { readFile, realpath } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
 const root = path.resolve(import.meta.dirname, "../..");
 const output = path.join(root, "tools/imagegen/out");
 const manifest = path.join(output, "reference-v1/deploy-assets.tsv");
+const reviewedSamples = path.join(root, "tools/imagegen/reviewed-sample-files.txt");
 const retired = path.join(output, "reference-v1/retired-storage-keys.txt");
 const keyPattern = /^samples\/[a-zA-Z0-9/_-]+\.(?:jpg|webp)$/;
 
@@ -28,24 +29,29 @@ async function addAsset(assets, key, filename, expectedHash, contentType) {
 
 export async function buildPlan() {
   const assets = new Map();
-  const pluginDir = path.join(output, "plugins");
-  const plugins = (await readdir(pluginDir)).filter((name) => /^[a-zA-Z0-9_-]+\.jpg$/.test(name)).sort();
-  if (!plugins.length) throw new Error(`没有插件样例图：${pluginDir}`);
-  for (const name of plugins) {
-    const filename = path.join(pluginDir, name);
+  const reviewed = (await readFile(reviewedSamples, "utf8")).split(/\r?\n/)
+    .filter((line) => line && !line.startsWith("#"));
+  if (new Set(reviewed).size !== reviewed.length) throw new Error("样例图白名单有重复路径");
+  const plugins = reviewed.filter((name) => /^plugins\/[a-zA-Z0-9_-]+\.jpg$/.test(name));
+  const styles = reviewed.filter((name) => /^styles\/style-[a-zA-Z0-9_-]+\.jpg$/.test(name));
+  const scenes = reviewed.filter((name) => /^scenes\/scene-[a-zA-Z0-9_-]+\.jpg$/.test(name));
+  if (plugins.length + styles.length + scenes.length !== reviewed.length || !plugins.length) throw new Error("样例图白名单有非法路径或缺少插件图");
+  for (const relative of plugins) {
+    const filename = path.join(output, relative);
     const hash = sha256(await readFile(filename));
-    await addAsset(assets, `samples/${name.slice(0, -4)}-${hash.slice(0, 12)}.jpg`, filename, hash, "image/jpeg");
+    await addAsset(assets, `samples/${path.basename(relative, ".jpg")}-${hash.slice(0, 12)}.jpg`, filename, hash, "image/jpeg");
   }
 
-  const styleDir = path.join(output, "styles");
-  const styles = (await readdir(styleDir).catch((error) => {
-    if (error.code === "ENOENT") return [];
-    throw error;
-  })).filter((name) => /^style-[a-zA-Z0-9_-]+\.jpg$/.test(name)).sort();
-  for (const name of styles) {
-    const filename = path.join(styleDir, name);
+  for (const relative of styles) {
+    const filename = path.join(output, relative);
     const hash = sha256(await readFile(filename));
-    await addAsset(assets, `samples/${name.slice(0, -4)}-${hash.slice(0, 12)}.jpg`, filename, hash, "image/jpeg");
+    await addAsset(assets, `samples/${path.basename(relative, ".jpg")}-${hash.slice(0, 12)}.jpg`, filename, hash, "image/jpeg");
+  }
+
+  for (const relative of scenes) {
+    const filename = path.join(output, relative);
+    const hash = sha256(await readFile(filename));
+    await addAsset(assets, `samples/${path.basename(relative, ".jpg")}-${hash.slice(0, 12)}.jpg`, filename, hash, "image/jpeg");
   }
 
   const counts = { master: 0, preview: 0 };
@@ -78,7 +84,7 @@ export async function buildPlan() {
       throw new Error(`退役对象键无效或仍在发布清单中：${key}`);
     }
   }
-  return { assets, plugins: plugins.length, styles: styles.length, counts };
+  return { assets, plugins: plugins.length, styles: styles.length, scenes: scenes.length, counts };
 }
 
 function config() {
@@ -147,7 +153,7 @@ async function main() {
   }
   const plan = await buildPlan();
   const size = [...plan.assets.values()].reduce((sum, asset) => sum + asset.size, 0);
-  console.log(`本地校验通过：${plan.plugins} 张插件图、${plan.styles} 张风格图、${plan.counts.master} 张母版、${plan.counts.preview} 张预览，共 ${plan.assets.size} 个对象，${(size / 1048576).toFixed(2)} MiB`);
+  console.log(`本地校验通过：${plan.plugins} 张插件图、${plan.styles} 张风格图、${plan.scenes} 张写真、${plan.counts.master} 张母版、${plan.counts.preview} 张预览，共 ${plan.assets.size} 个对象，${(size / 1048576).toFixed(2)} MiB`);
   if (mode === "--dry-run") return;
 
   const credentials = config();

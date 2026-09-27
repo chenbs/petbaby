@@ -92,13 +92,15 @@ export type PluginManifest = {
     heroUrl?: string;
     /** 网格缩略图，3:4。同一玩法的多种产出，用于入口下方的横向 rail */
     thumbUrls?: string[];
-    /**
-     * 风格对比图，3:4。键为 style 枚举值（warm-film / paper-cut / studio / fantasy）。
-     *
-     * 方案 3.3 的硬规则：这组图必须是**同一只样板宠物**在不同风格下的产出。
-     * 用户在这里比较的是「风格」，换了宠物就变成比较宠物，选择依据当场失效。
-     * 抽象渐变色块同理不合格 —— 色块回答不了「我的狗做出来长什么样」。
-     */
+    /** 宠物艺术写真造型样片，3:4；样板猫/狗只用于展示，不参与用户身份图。 */
+    sceneUrls?: Record<string, string>;
+    /** 场景卡的稳定文案，供小程序展示动作与表情差异。 */
+    sceneOptions?: Array<{
+      id: string;
+      title: string;
+      description: string;
+    }>;
+    /** @deprecated 旧 AI 风格对照字段，仅供历史 manifest 和回滚读取。 */
     styleUrls?: Record<string, string>;
   };
   /**

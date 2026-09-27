@@ -1,6 +1,6 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-flat page-memorial">
+<view class="page page-flat page-memorial art-film layout-bookshelf">
   <text class="eyebrow">MEMORIAL</text>
   <view class="title">纪念空间</view>
   <text class="muted">一个安静的位置，留给已经离开的它。</text>
@@ -12,6 +12,7 @@
   <t-button type="secondary" block anim="{{animType}}" class="block-gap" bindtap="openForm">新建纪念空间</t-button>
 
   <t-skeleton wx:if="{{loading}}" type="list" count="2" class="block-gap"></t-skeleton>
+  <t-button wx:elif="{{error && !items.length}}" type="secondary" bindtap="load">重新加载纪念空间</t-button>
 
   <t-empty
     wx:elif="{{!items.length}}"
@@ -23,47 +24,25 @@
     bindaction="openForm"
   ></t-empty>
 
-  <!--
-    方案 E 的时间轴形态：左侧节点与竖线串起纪念空间，右侧是内容卡。
-    这一页的性质是叙事与回溯，时间轴比等价卡片列表更贴合。
-  -->
-  <view wx:else class="timeline">
-    <view wx:for="{{items}}" wx:key="id" class="node">
-      <view class="node-rail">
-        <view class="node-dot"></view>
-        <view class="node-line"></view>
+  <view wx:else class="bookshelf">
+    <view wx:for="{{items}}" wx:key="id" class="chapter">
+      <view class="chapter-cover">
+        <image wx:if="{{item.avatarUrl}}" class="chapter-image" src="{{item.avatarUrl}}" mode="aspectFill" data-id="{{item.id}}" data-src="{{item.avatarUrl}}" binderror="onChapterImageError" lazy-load />
+        <view wx:else class="chapter-placeholder">{{item.petName || '纪念'}}</view>
       </view>
-
-      <view class="node-body">
-        <view class="node-date">
-          <text class="node-date-text">{{item.dateText}}</text>
-          <!-- 过去式、不递增：截止日在 JS 侧固定为离开日期 -->
-          <text wx:if="{{item.companionText}}" class="node-days">{{item.companionText}}</text>
+      <view class="chapter-body">
+        <view class="chapter-meta"><text>第 {{item.chapter}} 章</text><text>{{item.dateText}}</text></view>
+        <view class="chapter-title">{{item.title}}</view>
+        <text class="small">{{item.petName || '未关联宠物'}} · {{item.companionText || item.themeText}}</text>
+        <text wx:if="{{item.storyPreview}}" class="chapter-excerpt">{{item.storyPreview}}</text>
+        <view class="memorial-tags">
+          <t-tag tone="{{item.lifecycleTone}}" size="mini" text="{{item.lifecycleText}}"></t-tag>
+          <t-tag tone="neutral" size="mini" text="{{item.visibilityText}}"></t-tag>
         </view>
-
-        <t-card blur="{{blurOk}}" anim="fade">
-          <view class="row">
-            <view class="memorial-main">
-              <view class="sub-title">{{item.title}}</view>
-              <text class="small">{{item.themeText}} · {{item.petName || '未关联宠物'}}</text>
-            </view>
-            <view class="memorial-more hit-area" aria-role="button" aria-label="更多操作" data-id="{{item.id}}" bindtap="openMore">⋯</view>
-          </view>
-
-          <view class="memorial-tags">
-            <t-tag tone="{{item.lifecycleTone}}" size="mini" text="{{item.lifecycleText}}"></t-tag>
-            <t-tag tone="neutral" size="mini" text="{{item.visibilityText}}"></t-tag>
-          </view>
-
-          <t-button
-            type="ghost"
-            size="mini"
-            anim="fade"
-            class="block-gap"
-            data-id="{{item.id}}"
-            bindtap="openProducts"
-          >生成纪念物</t-button>
-        </t-card>
+        <view class="chapter-actions">
+          <t-button type="ghost" size="mini" anim="fade" data-id="{{item.id}}" bindtap="openProducts">生成纪念物</t-button>
+          <view class="memorial-more hit-area" aria-role="button" aria-label="更多操作" data-id="{{item.id}}" bindtap="openMore">⋯</view>
+        </view>
       </view>
     </view>
   </view>

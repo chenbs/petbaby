@@ -1,4 +1,5 @@
 import type { PluginManifest } from "@/domain/models";
+import { petArtPhotoScenes } from "@/domain/pet-art-photo";
 
 export const plugins: PluginManifest[] = [
   {
@@ -22,7 +23,7 @@ export const plugins: PluginManifest[] = [
      */
     pricing: { unlockPrice: 0, label: "免费下载（带水印）" },
     output: { formats: ["image"] },
-    samples: { heroUrl: "/api/plugin-samples/samples/pet-id-card-cee27b346c67.jpg" },
+    samples: { heroUrl: "/api/plugin-samples/samples/mp26-pet-id-card-e7e1697450c7.jpg" },
     status: "live",
   },
   {
@@ -40,7 +41,7 @@ export const plugins: PluginManifest[] = [
     generator: { type: "html-template", template: "movie-poster-v1" },
     pricing: { unlockPrice: 12.9, label: "竖版高清海报" },
     output: { formats: ["image"] },
-    samples: { heroUrl: "/api/plugin-samples/samples/pet-movie-poster-d49f06ae0fdf.jpg" },
+    samples: { heroUrl: "/api/plugin-samples/samples/mp26-pet-movie-poster-v3-0f9f70e6c032.jpg" },
     status: "live",
   },
   {
@@ -63,7 +64,7 @@ export const plugins: PluginManifest[] = [
      */
     pricing: { unlockPrice: 19.9, label: "长图 + PDF" },
     output: { formats: ["image", "pdf"] },
-    samples: { heroUrl: "/api/plugin-samples/samples/pet-time-album-a56e5316f509.jpg" },
+    samples: { heroUrl: "/api/plugin-samples/samples/mp26-pet-time-album-8da9fa598537.jpg" },
     // 原 PL-20「纪念册」并入此处（改造方案 D3）。两者本来都是多照片图文册，
     // memorial/album.ts 的实现本身就是参考 time-album-v1 写的。
     // 老 manifest 保留为 archived（见文件末尾）而不是删除 —— 理由在那里说明。
@@ -91,34 +92,39 @@ export const plugins: PluginManifest[] = [
   {
     id: "pl-10",
     code: "PL-10",
-    name: "AI 宠物肖像",
+    name: "宠物艺术写真",
     category: "ai-image",
-    tagline: "四张候选，只留下最像它的一张",
-    description: "选择宠物照片、风格与提示词，生成四张带 AI 标识的候选肖像。",
+    tagline: "换一个场景，看见它不一样的神态",
+    description: "选择宠物身份照和写真场景，生成四张保留它真实身份的艺术写真候选。",
     accent: "orange",
     input: {
-      photos: { min: 1, max: 4 },
+      photos: { min: 1, max: 1 },
       profileFields: ["name", "species"],
     },
     generator: { type: "image-api", template: "ai-portrait-v1" },
     pricing: { unlockPrice: 16.9, label: "选中候选高清无水印" },
     output: { formats: ["image"] },
     samples: {
-      heroUrl: "/api/plugin-samples/samples/pl-10-df4b766033ec.jpg",
+      heroUrl: "/api/plugin-samples/samples/mp26-gray-toy-poodle-editorial-v1-7c583b9dcb50.jpg",
       /*
-       * 风格对比图：同一只样板宠物（橘白猫「摩奇」）分别走四种风格的真实产出，
-       * 由 tools/imagegen 生成 —— 方案 3.3 的硬规则要求主体唯一，
-       * 换了宠物用户比较的就是宠物而不是风格。
-       *
-       * 键必须与 growth-service 的 style enum 和 ai-create.js 的 STYLES 一致；
-       * 端上按 id 取图而非按数组下标，顺序错位不会报错、只会静默配错风格。
+       * 十二套已通过的造型由蓝双色布偶猫和灰泰迪示范；用户身份仍只取其私有照片。
+       * 旧 styleUrls 不再作为默认字段；runtime.ts 仅为历史配置保留读取能力。
        */
-      styleUrls: {
-        "warm-film": "/api/plugin-samples/samples/style-warm-film-745db4c3d705.jpg",
-        "paper-cut": "/api/plugin-samples/samples/style-paper-cut-e6ab5e0ba3d3.jpg",
-        studio: "/api/plugin-samples/samples/style-studio-9006fcd75888.jpg",
-        fantasy: "/api/plugin-samples/samples/style-fantasy-aae6d3e4c431.jpg",
+      sceneUrls: {
+        "window-morning": "/api/plugin-samples/samples/scene-window-morning-v3-396d098a6999.jpg",
+        "garden-curious": "/api/plugin-samples/samples/scene-garden-curious-v3-0778c1b4a102.jpg",
+        "studio-confident": "/api/plugin-samples/samples/scene-studio-confident-v3-1af96b734e2a.jpg",
+        "night-playful": "/api/plugin-samples/samples/scene-night-playful-v3-fc3d97dedc94.jpg",
+        "seaside-breeze": "/api/plugin-samples/samples/scene-seaside-breeze-v3-2a54b86c666a.jpg",
+        "library-whisper": "/api/plugin-samples/samples/scene-library-whisper-v3-29dffafc3a93.jpg",
+        "autumn-leaves": "/api/plugin-samples/samples/scene-autumn-leaves-v3-4092e8d074ba.jpg",
+        "snow-cabin": "/api/plugin-samples/samples/scene-snow-cabin-v4-76d611cfe07a.jpg",
+        "cafe-afternoon": "/api/plugin-samples/samples/scene-cafe-afternoon-v3-820e1318d077.jpg",
+        "lakeside-sunset": "/api/plugin-samples/samples/scene-lakeside-sunset-v4-5cc0cb785432.jpg",
+        "city-rain": "/api/plugin-samples/samples/scene-city-rain-v3-0ccde8661153.jpg",
+        "spring-picnic": "/api/plugin-samples/samples/scene-spring-picnic-v4-274593d9cd4a.jpg",
       },
+      sceneOptions: petArtPhotoScenes.map(({ id, title, description }) => ({ id, title, description })),
     },
     status: "live",
   },
@@ -137,7 +143,7 @@ export const plugins: PluginManifest[] = [
     generator: { type: "h5-theme", template: "stardust-v1" },
     pricing: { unlockPrice: 0, label: "互动页与 15 秒导出" },
     output: { formats: ["h5"] },
-    samples: { heroUrl: "/api/plugin-samples/samples/pl-15-2b583f83d80c.jpg" },
+    samples: { heroUrl: "/api/plugin-samples/samples/mp26-pl-15-photographic-v2-d2e283f5b2eb.jpg" },
     // 原 PL-22「星尘纪念页」并入此处（D5）。两者是同一个 h5-theme 模板的
     // 两套调性包装，都免费，没有理由占两张卡位。
     // senior 只换一句 tagline：星尘页本身已经足够安静，描述不必改。
@@ -160,7 +166,7 @@ export const plugins: PluginManifest[] = [
     // 基础价，实际按积累量分档（≤20 张 19.9 / 21–60 张 29.9 / 跨度满年 39.9）。
     pricing: { unlockPrice: 19.9, label: "高清无水印视频" },
     output: { formats: ["video"] },
-    samples: { heroUrl: "/api/plugin-samples/samples/pl-19-c88acc8d9d43.jpg" },
+    samples: { heroUrl: "/api/plugin-samples/samples/mp26-pl-19-713030e67164.jpg" },
     // 原 PL-21「纪念视频」并入此处（D4）。两者走同一条 ffmpeg 链路。
     /*
      * senior 调性同画册：去掉「会呼吸的记忆」这类修饰（此刻读起来轻浮），
@@ -179,11 +185,9 @@ export const plugins: PluginManifest[] = [
      * `photos.min` 是 **2** 而不是 1：一张照片比不出变化，
      * 放行 1 张只会让用户拿到一张左右一样的图，然后觉得这个玩法是坏的。
      *
-     * 暂无样例图。按 CLAUDE.md 的规则**缺图时只留文字，不画占位色块** ——
-     * 色块回答不了「我的狗做出来长什么样」，挂上去比留空更糟。
-     * 补图时键名要带内容哈希（换图必须换键）。
+     * 样例图仅演示两张同一宠物不同阶段的并排构图；实际结果始终使用用户自己的两张照片。
      */
-    id: "pl-23", code: "PL-23", name: "成长对比图", category: "layout", tagline: "把两个时间点放在一起看", description: "同一只宠物两个时间点的并排对比，标注中间过了多少天。", accent: "yellow", input: { photos: { min: 2, max: 2 }, profileFields: ["name", "birthday"] }, generator: { type: "html-template", template: "growth-compare-v1" }, pricing: { unlockPrice: 0, label: "免费下载（带水印）" }, output: { formats: ["image"] }, status: "live",
+    id: "pl-23", code: "PL-23", name: "成长对比图", category: "layout", tagline: "把两个时间点放在一起看", description: "同一只宠物两个时间点的并排对比，标注中间过了多少天。", accent: "yellow", input: { photos: { min: 2, max: 2 }, profileFields: ["name", "birthday"] }, generator: { type: "html-template", template: "growth-compare-v1" }, pricing: { unlockPrice: 0, label: "免费下载（带水印）" }, output: { formats: ["image"] }, samples: { heroUrl: "/api/plugin-samples/samples/mp26-pl-23-v4-e7a4b4054ae8.jpg" }, status: "live",
   },
 
   /*

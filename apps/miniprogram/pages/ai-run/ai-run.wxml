@@ -9,11 +9,14 @@
 <!-- 已选中候选：结果确认区改为沉浸式，选中图占满全屏 -->
 <t-glass-sheet
   wx:if="{{immersive}}"
+  class="art-brand layout-canvas"
   background-image="{{selectedUrl}}"
+  framed
   title="确认这一张"
   state="half"
   blur="{{blurOk}}"
   anim="{{animType}}"
+  bindbackgrounderror="onBackgroundError"
 >
   <view slot="header">
     <text class="glass-eyebrow">AI IMAGE · 已选中</text>
@@ -63,7 +66,7 @@
   </view>
 </t-glass-sheet>
 
-<view wx:else class="page page-flat">
+<view wx:else class="page page-flat art-brand layout-workbench">
   <t-skeleton wx:if="{{loading}}" type="card" count="2"></t-skeleton>
 
   <block wx:elif="{{run}}">
@@ -110,7 +113,8 @@
             hover-class="candidate-hover"
             bindtap="select"
           >
-            <image class="candidate-image" src="{{item.url}}" mode="aspectFill" lazy-load />
+            <image wx:if="{{!item.imageFailed}}" class="candidate-image" src="{{item.url}}" mode="aspectFill" data-id="{{item.id}}" data-src="{{item.url}}" binderror="onCandidateImageError" lazy-load />
+            <view wx:else class="candidate-image candidate-image-blank">候选图片暂不可用</view>
             <view class="candidate-foot">
               <text class="small strong">0{{item.number}}</text>
               <t-tag wx:if="{{run.selectedId === item.id}}" tone="success" size="mini" text="已选中"></t-tag>

@@ -63,24 +63,24 @@ describe("GET /api/plugins", () => {
     expect((body.data[0].samples as { heroUrl: string }).heroUrl).toBe("http://192.168.1.9:3000/api/plugin-samples/samples/a.jpg");
   });
 
-  it("风格对比图逐条绝对化，且保留 style 键", async () => {
+  it("写真场景图逐条绝对化，且保留 scene 键", async () => {
     process.env.PUBLIC_APP_URL = "https://petbaby.example.com";
     listRuntimePlugins.mockResolvedValue([
       {
         ...basePlugin,
         samples: {
-          styleUrls: {
-            "warm-film": "/api/plugin-samples/samples/style-warm-film.jpg",
-            fantasy: "/api/plugin-samples/samples/style-fantasy.jpg",
+          sceneUrls: {
+            "window-morning": "/api/plugin-samples/samples/scene-window-morning.jpg",
+            "night-playful": "/api/plugin-samples/samples/scene-night-playful.jpg",
           },
         },
       },
     ]);
 
     const body = await callGet("http://localhost:3000/api/plugins");
-    expect((body.data[0].samples as { styleUrls: Record<string, string> }).styleUrls).toEqual({
-      "warm-film": "https://petbaby.example.com/api/plugin-samples/samples/style-warm-film.jpg",
-      fantasy: "https://petbaby.example.com/api/plugin-samples/samples/style-fantasy.jpg",
+    expect((body.data[0].samples as { sceneUrls: Record<string, string> }).sceneUrls).toEqual({
+      "window-morning": "https://petbaby.example.com/api/plugin-samples/samples/scene-window-morning.jpg",
+      "night-playful": "https://petbaby.example.com/api/plugin-samples/samples/scene-night-playful.jpg",
     });
   });
 

@@ -1,0 +1,12 @@
+{
+  "id": "pl-19",
+  "group": "plugins",
+  "prompt": "Premium contemporary pet product campaign image for a Chinese pet memories app. Bright, clean, vivid but restrained color, natural expressive animal anatomy, crisp face and eyes, tactile material detail. The subject and actual finished product must be immediately legible at small mobile thumbnail size. No readable text, letters, numbers, watermark, logo, UI screenshot, fake interface or extra limbs. A cinematic frame from a pet memories film, a joyful golden retriever in motion through a sunlit home, gentle fabric movement and realistic paws, rich warm film color, clear expressive face, looks like an actual finished video still, no fake playback controls.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": null,
+  "output": "tools/imagegen/out/plugins/mp26-pl-19.jpg",
+  "sha256": "713030e67164b31d6b8841c9242334a0e27121d4641453dbaf69e1350f25b0e8",
+  "review": "approved-by-user",
+  "reviewedAt": "2026-09-26"
+}

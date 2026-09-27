@@ -1,12 +1,13 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-flat">
+<view class="page page-flat art-brand layout-workbench">
   <text class="eyebrow">ACCOUNT</text>
   <view class="title">账户与隐私</view>
 
   <t-notice wx:if="{{notice}}" type="{{noticeType}}" message="{{notice}}" closable bindclose="clearNotice"></t-notice>
 
   <t-skeleton wx:if="{{loading}}" type="card" count="2"></t-skeleton>
+  <t-button wx:elif="{{!profile}}" type="secondary" bindtap="onLoad">重新加载账户资料</t-button>
 
   <block wx:else>
     <!-- 资料区 -->

@@ -526,6 +526,14 @@ img {
 .asset-choice img { object-fit: cover; }
 .asset-choice span { position: absolute; right: 6px; bottom: 6px; border-radius: 999px; background: rgba(20,37,28,.86); padding: 5px 8px; color: white; font-size: 9px; }
 .asset-choice.selected { border-color: var(--orange); box-shadow: 0 0 0 3px var(--orange-soft); }
+.art-scene-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.art-scene-choice { min-width: 0; overflow: hidden; border: 2px solid transparent; border-radius: 8px; background: var(--paper-deep); padding: 0 0 9px; color: var(--ink); text-align: left; cursor: pointer; }
+.art-scene-choice.selected { border-color: var(--orange); box-shadow: 0 0 0 2px var(--orange-soft); }
+.art-scene-image { position: relative; display: block; width: 100%; aspect-ratio: 3 / 4; overflow: hidden; }
+.art-scene-image img { object-fit: cover; }
+.art-scene-choice strong, .art-scene-choice small { display: block; margin: 6px 8px 0; line-height: 1.35; }
+.art-scene-choice strong { font-size: 12px; }
+.art-scene-choice small { color: var(--ink-soft); font-size: 10px; }
 .ai-brief-card { background: linear-gradient(135deg, var(--yellow-soft), var(--orange-soft)); }
 .ai-brief-card h2 { font: 900 26px/1.2 var(--font-display); }
 .ai-brief-card p { margin-top: 8px; color: var(--ink-soft); font-size: 12px; line-height: 1.7; }

@@ -104,14 +104,14 @@
 
 /* 压图文字走玻璃态亮色：遮罩下永远是暗底，浅色主题的深色正文在这里看不见 */
 .hero-days {
-  color: var(--glass-text-secondary);
+  color: var(--on-image-secondary);
   font-size: var(--small-size);
   font-weight: var(--fw-bold);
   letter-spacing: var(--eyebrow-tracking);
 }
 
 .hero-name {
-  color: var(--glass-text-primary);
+  color: var(--on-image-primary);
   font-size: var(--font-h2);
   font-weight: var(--fw-bold);
   line-height: var(--lh-h2);

@@ -38,8 +38,14 @@ themedPage({ immersive: true }, {
     const humanMode = run.roleInputs && run.roleInputs.subjectMode === "pet-human";
     return { run, statusText: STATUS_TEXT[run.status] || run.status, immersive, selectedUrl: selected ? selected.url : "", humanMode, rerollReasons: REROLL_REASONS.filter((item) => !item.ownerOnly || ownerMode) };
   },
+  onBackgroundError() { this.setData({ message: "候选图片暂时无法显示，请稍后重试", messageType: "error" }); },
+  onCandidateImageError(event) {
+    const { id, src } = event.currentTarget.dataset;
+    const index = this.data.candidates.findIndex((item) => item.id === id && item.url === src);
+    if (index >= 0) this.setData({ ["candidates[" + index + "].imageFailed"]: true });
+  },
   poll() { this.load().then((run) => { if (run.status === "queued" || run.status === "processing") this.timer = setTimeout(() => this.poll(), 1600); }).catch((error) => this.setData({ message: error.message, messageType: "error", loading: false })); },
-  select(event) { this.setData({ busy: true }); api.request("/api/ai-runs/" + this.runId, { method: "PATCH", data: { action: "select", candidateId: event.currentTarget.dataset.id } }).then((run) => this.setData(Object.assign({ busy: false, message: "已选定这一张，解锁只对应它。", messageType: "success" }, this.deriveRun(run)))).catch((error) => this.setData({ busy: false, message: error.message, messageType: "error" })); },
+  select(event) { const id = event.currentTarget.dataset.id; const candidate = this.data.candidates.find((item) => item.id === id); if (!candidate || candidate.imageFailed || this.data.busy) return; this.setData({ busy: true }); api.request("/api/ai-runs/" + this.runId, { method: "PATCH", data: { action: "select", candidateId: id } }).then((run) => this.setData(Object.assign({ busy: false, message: "已选定这一张，解锁只对应它。", messageType: "success" }, this.deriveRun(run)))).catch((error) => this.setData({ busy: false, message: error.message, messageType: "error" })); },
   chooseRerollReason(event) { this.setData({ rerollReason: event.currentTarget.dataset.id }); },
   reroll() { if (this.data.humanMode) return; this.setData({ busy: true }); api.request("/api/ai-runs/" + this.runId + "/reroll", { method: "POST", data: { reason: this.data.rerollReason } }).then((run) => { this.setData(Object.assign({ busy: false, message: "新一组候选已排队。", messageType: "info" }, this.deriveRun(run))); this.poll(); }).catch((error) => this.setData({ busy: false, message: error.message, messageType: "error" })); },
   retry() { this.setData({ busy: true }); api.request("/api/ai-runs/" + this.runId, { method: "PATCH", data: { action: "retry" } }).then((run) => { this.setData(Object.assign({ busy: false }, this.deriveRun(run))); this.poll(); }).catch((error) => this.setData({ busy: false, message: error.message, messageType: "error" })); },

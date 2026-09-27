@@ -1,6 +1,6 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-tabbar">
+<view class="page page-tabbar art-brand layout-matrix">
   <text class="eyebrow">MY CABINET</text>
   <view class="title">我的作品柜</view>
 
@@ -29,6 +29,7 @@
   <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
 
   <t-skeleton wx:if="{{loading}}" type="list" count="4" class="block-gap"></t-skeleton>
+  <t-button wx:elif="{{error}}" type="secondary" bindtap="load">重新加载作品</t-button>
 
   <block wx:else>
     <!-- 进行中的任务置顶，失败项给重试入口 -->
@@ -51,7 +52,7 @@
       </view>
     </view>
 
-    <view class="section">
+    <view wx:if="{{works.length || !tasks.length}}" class="section">
       <view class="section-title">已完成</view>
 
       <!--
@@ -88,8 +89,9 @@
           bindtap="open"
         >
           <view class="cover-wrap">
-            <image class="cover" src="{{item.assetKind === 'video' || item.assetKind === 'pdf' || item.assetKind === 'h5' ? item.photo.url : (item.outputUrl || item.photo.url)}}" mode="aspectFill" lazy-load />
-            <view class="veil"></view>
+            <image wx:if="{{!item.imageFailed && item.coverUrl}}" class="cover" src="{{item.coverUrl}}" mode="aspectFill" data-id="{{item.id}}" data-src="{{item.coverUrl}}" binderror="onCoverError" lazy-load />
+            <view wx:else class="cover cover-fallback">作品预览暂不可用</view>
+            <view wx:if="{{!item.imageFailed}}" class="veil"></view>
             <t-tag
               wx:if="{{item.statusTone !== 'success'}}"
               class="cover-tag"
@@ -97,7 +99,7 @@
               size="mini"
               text="{{item.statusText}}"
             ></t-tag>
-            <view class="cover-meta">
+            <view wx:if="{{!item.imageFailed}}" class="cover-meta">
               <view class="work-title">{{item.title}}</view>
               <text class="cover-sub">{{item.plugin.code}} · v{{item.version}}</text>
             </view>

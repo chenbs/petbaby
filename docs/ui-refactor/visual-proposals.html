@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>麻麻抱我 · 小程序整体美术风格方案</title>
+  <style>
+    :root {
+      --ink: #211d1a;
+      --muted: #756d67;
+      --paper: #f6f3ef;
+      --line: #ded8d1;
+      --accent: #e8654a;
+      --shadow: 0 18px 55px rgba(36, 27, 20, .12);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--ink);
+      background: #f6f3ef;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); }
+    a { color: inherit; }
+    .wrap { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
+    .masthead { padding: 54px 0 34px; display: grid; grid-template-columns: 1fr 320px; gap: 48px; align-items: end; }
+    .eyebrow { text-transform: uppercase; letter-spacing: .2em; font-size: 11px; color: var(--accent); font-weight: 700; }
+    h1 { font-size: clamp(32px, 5vw, 62px); line-height: 1.05; letter-spacing: -.05em; margin: 14px 0 18px; }
+    .intro { color: var(--muted); line-height: 1.8; max-width: 680px; margin: 0; }
+    .scope { border-left: 2px solid var(--accent); padding-left: 18px; color: var(--muted); font-size: 13px; line-height: 1.8; }
+    .scope b { color: var(--ink); display: block; margin-bottom: 5px; }
+    .jumpbar { position: sticky; top: 0; z-index: 20; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgba(246,243,239,.92); backdrop-filter: blur(16px); }
+    .jumpbar .wrap { display: flex; gap: 8px; overflow-x: auto; padding: 11px 0; }
+    .jump { flex: 0 0 auto; border: 1px solid var(--line); border-radius: 999px; background: #fff; padding: 8px 13px; font-size: 12px; text-decoration: none; }
+    .jump:hover, .jump:focus-visible { border-color: var(--accent); color: var(--accent); outline: none; }
+    .proposal { padding: 62px 0 70px; border-bottom: 1px solid var(--line); }
+    .proposal-head { display: flex; justify-content: space-between; gap: 26px; align-items: start; margin-bottom: 30px; }
+    .proposal-id { color: var(--accent); letter-spacing: .14em; font-size: 12px; font-weight: 700; }
+    h2 { font-size: clamp(25px, 3vw, 38px); letter-spacing: -.04em; margin: 8px 0 8px; }
+    .english { color: var(--muted); font-size: 12px; letter-spacing: .13em; text-transform: uppercase; }
+    .lead { color: var(--muted); line-height: 1.8; max-width: 610px; margin: 0; }
+    .proposal-meta { min-width: 210px; font-size: 12px; line-height: 1.8; color: var(--muted); }
+    .proposal-meta b { color: var(--ink); font-weight: 600; }
+    .proposal-body { display: grid; grid-template-columns: minmax(290px, 360px) 1fr; gap: clamp(30px, 6vw, 90px); align-items: start; }
+    .phone-wrap { display: flex; justify-content: center; }
+    .phone { width: 300px; height: 610px; border: 8px solid #24201d; border-radius: 39px; box-shadow: 0 28px 58px rgba(35, 27, 22, .27); overflow: hidden; position: relative; background: #fff; }
+    .phone::before { content: ""; position: absolute; z-index: 5; top: 9px; left: 50%; translate: -50% 0; width: 72px; height: 18px; border-radius: 999px; background: #24201d; }
+    .status { height: 40px; padding: 20px 17px 0; font-size: 9px; display: flex; justify-content: space-between; align-items: end; position: relative; z-index: 4; }
+    .screen { height: calc(100% - 40px); overflow: hidden; position: relative; }
+    .phone-top { display: flex; justify-content: space-between; align-items: center; padding: 15px 18px 12px; font-size: 12px; font-weight: 700; }
+    .phone-top span:last-child { font-weight: 400; opacity: .58; }
+    .photo { position: relative; overflow: hidden; background: #ddd; }
+    .photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .photo::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, transparent 60%, rgba(18,12,8,.48)); }
+    .hero-photo { height: 218px; margin: 0 15px; border-radius: 20px; }
+    .hero-copy { position: absolute; z-index: 2; left: 16px; bottom: 14px; color: #fff; }
+    .hero-copy small { font-size: 9px; opacity: .76; }
+    .hero-copy b { display: block; font-size: 20px; margin-top: 3px; letter-spacing: -.04em; }
+    .section-label { display: flex; justify-content: space-between; align-items: center; padding: 17px 18px 9px; font-size: 13px; font-weight: 700; }
+    .section-label small { color: #8a827b; font-size: 9px; font-weight: 400; }
+    .tile-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 0 18px; }
+    .tile { aspect-ratio: 1 / 1.12; border-radius: 11px; overflow: hidden; position: relative; background: #e3ddd7; }
+    .tile img { width: 100%; height: 100%; object-fit: cover; }
+    .tile span { position: absolute; z-index: 2; left: 7px; bottom: 6px; color: #fff; font-size: 9px; text-shadow: 0 1px 5px #000; }
+    .actions { display: flex; gap: 7px; padding: 17px 18px; }
+    .action { flex: 1; min-width: 0; padding: 9px 6px; border-radius: 999px; background: #211d1a; color: #fff; font-size: 10px; text-align: center; }
+    .tabbar { position: absolute; left: 13px; right: 13px; bottom: 12px; border-radius: 999px; padding: 8px; display: flex; justify-content: space-around; font-size: 9px; z-index: 4; }
+    .tabbar span { opacity: .5; }
+    .tabbar .on { opacity: 1; font-weight: 700; }
+    .notes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 28px; }
+    .note { border-top: 1px solid var(--line); padding-top: 14px; }
+    .note h3 { font-size: 13px; margin: 0 0 8px; }
+    .note p { font-size: 13px; line-height: 1.75; color: var(--muted); margin: 0; }
+    .swatches { display: flex; gap: 7px; margin-top: 11px; }
+    .swatch { width: 27px; height: 27px; border-radius: 50%; border: 2px solid rgba(255,255,255,.8); box-shadow: 0 1px 5px rgba(0,0,0,.12); }
+    .tag { display: inline-block; margin: 7px 5px 0 0; border: 1px solid var(--line); border-radius: 999px; padding: 5px 9px; color: var(--muted); font-size: 11px; }
+
+    /* 1 暖调胶片 */
+    .theme-warm { --surface: #fffaf3; --soft: #f1e3d2; --brand: #e77854; --text: #3b2c22; background: var(--surface); color: var(--text); }
+    .theme-warm .screen { background: var(--surface); }
+    .theme-warm .phone-top { background: var(--surface); }
+    .theme-warm .tabbar { background: #3b2c22; color: #fffaf3; }
+    .theme-warm .action { background: var(--brand); }
+    .theme-warm .section-label { color: var(--text); }
+    /* 2 影棚 */
+    .theme-studio { --surface: #fafafa; --text: #202020; background: var(--surface); color: var(--text); }
+    .theme-studio .screen { background: var(--surface); }
+    .theme-studio .phone-top { border-bottom: 1px solid #dedede; }
+    .theme-studio .hero-photo { border-radius: 0; margin: 0; height: 235px; }
+    .theme-studio .tile { border-radius: 0; border: 1px solid #ddd; }
+    .theme-studio .tabbar { border-radius: 0; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #ddd; }
+    .theme-studio .action { background: #202020; border-radius: 3px; }
+    /* 3 电影 */
+    .theme-cinema { --surface: #131313; --text: #f7f3ed; background: var(--surface); color: var(--text); }
+    .theme-cinema .screen { background: var(--surface); }
+    .theme-cinema .phone-top { color: #f7f3ed; }
+    .theme-cinema .hero-photo { margin: 0; height: 264px; border-radius: 0; }
+    .theme-cinema .tile { border-radius: 4px; }
+    .theme-cinema .section-label small, .theme-cinema .tabbar span { color: #a59e96; }
+    .theme-cinema .tabbar { left: 0; right: 0; bottom: 0; border-radius: 0; background: rgba(18,18,18,.95); border-top: 1px solid #3b3835; }
+    .theme-cinema .action { background: #e2ad58; color: #17120e; border-radius: 3px; }
+    /* 4 宠物主场 */
+    .theme-pet { --surface: #f1f7f4; --text: #2c3e3a; background: var(--surface); color: var(--text); }
+    .theme-pet .screen { background: radial-gradient(circle at 85% 10%, #e2dafa 0 22%, transparent 23%), var(--surface); }
+    .theme-pet .phone-top { padding-top: 23px; }
+    .theme-pet .hero-photo { border-radius: 30px; height: 204px; box-shadow: 0 13px 0 #d6e6df; }
+    .theme-pet .tile { border-radius: 19px; border: 3px solid #fff; box-shadow: 0 4px 10px rgba(44,62,58,.12); }
+    .theme-pet .action { background: #8e78c5; }
+    .theme-pet .tabbar { background: #fff; color: var(--text); box-shadow: 0 6px 20px rgba(44,62,58,.15); }
+    /* 5 杂志 */
+    .theme-editorial { --surface: #eeece6; --text: #141414; background: var(--surface); color: var(--text); }
+    .theme-editorial .screen { background: var(--surface); }
+    .theme-editorial .phone-top { text-transform: uppercase; letter-spacing: .15em; border-bottom: 2px solid #141414; padding-top: 22px; }
+    .theme-editorial .hero-photo { border-radius: 0; margin: 0; height: 238px; }
+    .theme-editorial .hero-copy b { font-size: 27px; text-transform: uppercase; line-height: .95; }
+    .theme-editorial .tile { border-radius: 0; }
+    .theme-editorial .action { border-radius: 0; background: #141414; }
+    .theme-editorial .tabbar { border-radius: 0; left: 0; right: 0; bottom: 0; background: #e3dfd5; border-top: 2px solid #141414; }
+    /* 6 软陶 */
+    .theme-clay { --surface: #f7d9cf; --text: #553a3a; background: var(--surface); color: var(--text); }
+    .theme-clay .screen { background: var(--surface); }
+    .theme-clay .phone-top { padding-top: 23px; }
+    .theme-clay .hero-photo { border-radius: 38px; border: 8px solid #f8e8df; box-shadow: 8px 8px 0 #cb9e9b; }
+    .theme-clay .tile { border-radius: 25px; border: 5px solid #f8e8df; box-shadow: 5px 5px 0 #cb9e9b; }
+    .theme-clay .action { background: #e38778; box-shadow: inset 0 -3px 0 rgba(120,70,70,.2); }
+    .theme-clay .tabbar { background: #f8e8df; box-shadow: 0 7px 0 #cb9e9b; }
+    /* 7 官网参考 */
+    .theme-official { --surface: #fff; --text: #171513; background: var(--surface); color: var(--text); }
+    .theme-official .screen { background: #fff; }
+    .theme-official .phone-top { letter-spacing: .14em; padding-top: 23px; }
+    .theme-official .hero-photo { margin: 0 15px; border-radius: 20px; height: 215px; }
+    .theme-official .tile { border-radius: 12px; }
+    .theme-official .action { border-radius: 0; background: #e8654a; }
+    .theme-official .tabbar { background: #171513; color: #fff; border-radius: 0; left: 0; right: 0; bottom: 0; }
+
+    .matrix { padding: 72px 0; }
+    .matrix h2 { margin-bottom: 10px; }
+    .matrix-lead { color: var(--muted); line-height: 1.8; max-width: 690px; }
+    .table-wrap { overflow-x: auto; margin-top: 26px; background: #fff; border: 1px solid var(--line); }
+    table { border-collapse: collapse; width: 100%; min-width: 760px; font-size: 12px; }
+    th, td { border-bottom: 1px solid var(--line); padding: 14px 15px; text-align: left; vertical-align: top; line-height: 1.65; }
+    th { background: #f0ece7; color: var(--muted); font-weight: 600; }
+    tr:last-child td { border-bottom: 0; }
+    .rating { color: var(--accent); letter-spacing: .08em; white-space: nowrap; }
+    .decision { background: #211d1a; color: #f7f3ed; padding: 34px; margin: 0 0 70px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+    .decision h2 { color: #fff; margin-top: 0; }
+    .decision p, .decision li { color: #c6bdb5; line-height: 1.8; font-size: 13px; }
+    .decision ul { margin: 0; padding-left: 18px; }
+    .footer { padding: 0 0 54px; color: var(--muted); font-size: 12px; line-height: 1.8; }
+    @media (max-width: 760px) {
+      .wrap { width: min(100% - 28px, 560px); }
+      .masthead { grid-template-columns: 1fr; gap: 24px; padding-top: 32px; }
+      .proposal { padding: 44px 0 50px; }
+      .proposal-head { display: block; }
+      .proposal-meta { margin-top: 16px; }
+      .proposal-body { grid-template-columns: 1fr; gap: 30px; }
+      .phone { width: min(300px, 88vw); }
+      .notes { gap: 18px 12px; }
+      .decision { grid-template-columns: 1fr; padding: 25px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="wrap masthead">
+    <div>
+      <div class="eyebrow">MAMA BAO WO · VISUAL OPTIONS / 2026.09</div>
+      <h1>小程序整体美术<br>风格方案 · 7 选 1</h1>
+      <p class="intro">这是一份用于方向确认的视觉展板。每套方案都用同一组宠物样片模拟首页、作品入口和底部导航，方便只比较美术语言，不把页面功能误认为风格。</p>
+    </div>
+    <div class="scope"><b>本阶段边界</b>只新增方案展板，不修改 `apps/miniprogram` 的页面、主题 Token 或业务功能。图像来自当前官网样片资产，最终方向确认后再单独做小程序适配稿。</div>
+  </header>
+  <nav class="jumpbar"><div class="wrap">
+    <a class="jump" href="#warm">01 暖调胶片</a><a class="jump" href="#studio">02 品牌影棚</a><a class="jump" href="#cinema">03 沉浸电影</a><a class="jump" href="#pet">04 宠物主场</a><a class="jump" href="#editorial">05 杂志封面</a><a class="jump" href="#clay">06 软陶果冻</a><a class="jump" href="#official">07 官网参考</a><a class="jump" href="#matrix">对比矩阵</a>
+  </div></nav>
+
+  <main>
+    <section class="proposal" id="warm"><div class="wrap">
+      <div class="proposal-head"><div><div class="proposal-id">01 / WARM FILM</div><h2>暖调胶片画廊</h2><div class="english">A gentle archive for everyday memories</div><p class="lead">米白底、暖棕文字和珊瑚色操作色。把首页当成一面持续长大的作品墙，适合陪伴记录、成长时间线和纪念内容。</p></div><div class="proposal-meta"><b>关键词</b><br>温暖 · 有生活感 · 可长期使用<br><b>优先页面</b><br>首页 / 时间线 / 纪念 / 作品库</div></div>
+      <div class="proposal-body"><div class="phone-wrap"><div class="phone theme-warm"><div class="status"><span>9:41</span><span>▰ ◼</span></div><div class="screen"><div class="phone-top"><span>麻麻抱我</span><span>我的小家</span></div><div class="photo hero-photo"><img src="../../apps/website/public/assets/website-v2-play-album.jpg" alt="宠物画册样片"><div class="hero-copy"><small>今日的陪伴记录</small><b>把每一天，留在画里</b></div></div><div class="section-label"><span>最近作品</span><small>查看全部 →</small></div><div class="tile-row"><div class="tile"><img src="../../tools/imagegen/out/styles/style-warm-film-v3.jpg" alt="暖调胶片样片"><span>暖调胶片</span></div><div class="tile"><img src="../../tools/imagegen/out/plugins/mp26-pet-id-card.jpg" alt="宠物身份证样片"><span>我的身份证</span></div><div class="tile"><img src="../../tools/imagegen/out/styles/play-storybook-v3.jpg" alt="绘本样片"><span>绘本主角</span></div></div><div class="actions"><div class="action">记录一张照片</div><div class="action">做一件作品</div></div><div class="tabbar"><span class="on">首页</span><span>创作</span><span>记录</span><span>我的</span></div></div></div></div>
+        <div class="notes"><div class="note"><h3>视觉规则</h3><p>大留白、暖色图片、轻阴影、16–22rpx 圆角。图片承载情绪，文字只负责说明和引导。</p><div class="swatches"><i class="swatch" style="background:#fffaf3"></i><i class="swatch" style="background:#e77854"></i><i class="swatch" style="background:#3b2c22"></i><i class="swatch" style="background:#f1e3d2"></i></div></div><div class="note"><h3>优点 / 风险</h3><p>亲和、耐看、最适合记录型产品；风险是品牌记忆点需要靠固定插画或角标补强。</p><span class="tag">陪伴感强</span><span class="tag">信息密度中等</span></div><div class="note"><h3>交互气质</h3><p>按钮像“继续记录”的邀请，反馈使用轻微上浮与照片叠放，避免游戏化过度。</p></div><div class="note"><h3>推荐指数</h3><p class="rating">★★★★★</p></div></div></div>
+    </div></section>
+
+    <section class="proposal" id="studio"><div class="wrap">
+      <div class="proposal-head"><div><div class="proposal-id">02 / QUIET STUDIO</div><h2>品牌影棚</h2><div class="english">Quiet, precise, product-led</div><p class="lead">白底、墨色、细线和规整图片比例。让每个功能入口像一件被精心陈列的产品，强调成熟、可靠和清晰的选择成本。</p></div><div class="proposal-meta"><b>关键词</b><br>克制 · 清晰 · 高级<br><b>优先页面</b><br>创作工作台 / 订单 / 会员 / 设置</div></div>
+      <div class="proposal-body"><div class="phone-wrap"><div class="phone theme-studio"><div class="status"><span>9:41</span><span>▰ ◼</span></div><div class="screen"><div class="phone-top"><span>PET LAB</span><span>作品库</span></div><div class="photo hero-photo"><img src="../../tools/imagegen/out/styles/style-studio-v3.jpg" alt="影棚风格样片"><div class="hero-copy"><small>FEATURED WORK</small><b>一张照片<br>一件作品</b></div></div><div class="section-label"><span>选择创作</span><small>3 个入口</small></div><div class="tile-row"><div class="tile"><img src="../../tools/imagegen/out/styles/play-portrait-v4.jpg" alt="肖像样片"><span>AI 肖像</span></div><div class="tile"><img src="../../tools/imagegen/out/plugins/mp26-pet-movie-poster-v3.jpg" alt="海报样片"><span>电影海报</span></div><div class="tile"><img src="../../tools/imagegen/out/plugins/mp26-pet-time-album.jpg" alt="画册样片"><span>时光画册</span></div></div><div class="actions"><div class="action">开始创作　→</div></div><div class="tabbar"><span class="on">作品</span><span>创作</span><span>订单</span><span>我的</span></div></div></div></div>
+        <div class="notes"><div class="note"><h3>视觉规则</h3><p>单色底、1px 分隔线、统一 4:3 / 3:4 图片比例，取消多余装饰，让真实样片成为主视觉。</p><div class="swatches"><i class="swatch" style="background:#fafafa"></i><i class="swatch" style="background:#202020"></i><i class="swatch" style="background:#e8654a"></i><i class="swatch" style="background:#dedede"></i></div></div><div class="note"><h3>优点 / 风险</h3><p>最容易建立“专业产品”印象，适合付费转化；风险是情绪温度偏低，需要图片和文案有足够人情味。</p><span class="tag">转化清楚</span><span class="tag">品牌感强</span></div><div class="note"><h3>交互气质</h3><p>强调选择、预览、确认三步；适合将价格、额度、生成状态放在清楚的层级里。</p></div><div class="note"><h3>推荐指数</h3><p class="rating">★★★★☆</p></div></div></div>
+    </div></section>
+
+    <section class="proposal" id="cinema"><div class="wrap">
+      <div class="proposal-head"><div><div class="proposal-id">03 / CINEMATIC MEMORY</div><h2>沉浸电影</h2><div class="english">Every pet has a story worth screening</div><p class="lead">深色画布、满幅图片和低饱和金色强调。把宠物成长与纪念内容做成“片单”，让结果页拥有电影片尾般的情绪停留。</p></div><div class="proposal-meta"><b>关键词</b><br>沉浸 · 纪念 · 高级<br><b>优先页面</b><br>视频 / 纪念空间 / 分享页 / 结果页</div></div>
+      <div class="proposal-body"><div class="phone-wrap"><div class="phone theme-cinema"><div class="status"><span>9:41</span><span>▰ ◼</span></div><div class="screen"><div class="phone-top"><span>MEMORY FILM</span><span>☰</span></div><div class="photo hero-photo"><img src="../../apps/website/public/assets/website-v2-video.jpg" alt="宠物视频样片"><div class="hero-copy"><small>NOW PLAYING · 02:18</small><b>它陪我走过<br>最普通的日子</b></div></div><div class="section-label"><span>继续观看</span><small>全部片单</small></div><div class="tile-row"><div class="tile"><img src="../../apps/website/public/assets/website-v2-timeline.jpg" alt="时间线样片"><span>成长记录</span></div><div class="tile"><img src="../../apps/website/public/assets/website-v2-memorial.jpg" alt="纪念页样片"><span>星尘纪念</span></div><div class="tile"><img src="../../tools/imagegen/out/styles/play-magazine-v4.jpg" alt="杂志样片"><span>今日特辑</span></div></div><div class="actions"><div class="action">播放回忆　▶</div></div><div class="tabbar"><span class="on">片单</span><span>记录</span><span>制作</span><span>我的</span></div></div></div></div>
+        <div class="notes"><div class="note"><h3>视觉规则</h3><p>黑色或深褐底，图片铺满屏幕，金色只用于当前状态和关键操作，字号层级像电影海报。</p><div class="swatches"><i class="swatch" style="background:#131313"></i><i class="swatch" style="background:#e2ad58"></i><i class="swatch" style="background:#f7f3ed"></i><i class="swatch" style="background:#4f4740"></i></div></div><div class="note"><h3>优点 / 风险</h3><p>情绪感染力最强，适合纪念和分享；风险是长时间浏览的可读性、亮屏功耗和浅色图片适配要额外验证。</p><span class="tag">情绪峰值高</span><span class="tag">适合分享</span></div><div class="note"><h3>交互气质</h3><p>用播放、进度、章节和转场制造“看一部片”的节奏，生成结果应成为第一主角。</p></div><div class="note"><h3>推荐指数</h3><p class="rating">★★★★☆</p></div></div></div>
+    </div></section>
+
+    <section class="proposal" id="pet"><div class="wrap">
+      <div class="proposal-head"><div><div class="proposal-id">04 / PET CENTRIC</div><h2>宠物主场</h2><div class="english">A playful home built around the pet</div><p class="lead">薄荷绿、淡紫和大圆角，强调“这是我家宠物的空间”。宠物头像、成长状态与轻量互动贯穿所有页面。</p></div><div class="proposal-meta"><b>关键词</b><br>可爱 · 轻互动 · 归属感<br><b>优先页面</b><br>首页 / 宠物档案 / 健康 / 互动玩法</div></div>
+      <div class="proposal-body"><div class="phone-wrap"><div class="phone theme-pet"><div class="status"><span>9:41</span><span>▰ ◼</span></div><div class="screen"><div class="phone-top"><span>🐾 毛孩子的家</span><span>编辑</span></div><div class="photo hero-photo"><img src="../../apps/website/public/assets/website-v2-interactive.jpg" alt="互动样片"><div class="hero-copy"><small>今天也要开心</small><b>和它玩一会儿</b></div></div><div class="section-label"><span>我家小明星</span><small>成长 86%</small></div><div class="tile-row"><div class="tile"><img src="../../apps/website/public/assets/website-v2-ai.jpg" alt="AI样片"><span>AI 变身</span></div><div class="tile"><img src="../../apps/website/public/assets/website-v2-health.jpg" alt="健康样片"><span>健康档案</span></div><div class="tile"><img src="../../apps/website/public/assets/website-v2-timeline.jpg" alt="成长时间线"><span>成长足迹</span></div></div><div class="actions"><div class="action">上传今天的照片</div></div><div class="tabbar"><span class="on">小家</span><span>玩耍</span><span>记录</span><span>我</span></div></div></div></div>
+        <div class="notes"><div class="note"><h3>视觉规则</h3><p>大圆角、柔和阴影、头像和宠物标签。可以有轻微贴纸感，但每个页面最多一个强调装饰。</p><div class="swatches"><i class="swatch" style="background:#f1f7f4"></i><i class="swatch" style="background:#8e78c5"></i><i class="swatch" style="background:#d6e6df"></i><i class="swatch" style="background:#2c3e3a"></i></div></div><div class="note"><h3>优点 / 风险</h3><p>宠物身份最鲜明，新用户容易理解；风险是过于卡通会削弱纪念册和付费作品的高级感。</p><span class="tag">记忆点强</span><span class="tag">互动友好</span></div><div class="note"><h3>交互气质</h3><p>以宠物为中心的状态反馈和轻互动，适合把健康、照片和创作入口收拢到同一个“小家”。</p></div><div class="note"><h3>推荐指数</h3><p class="rating">★★★★☆</p></div></div></div>
+    </div></section>
+
+    <section class="proposal" id="editorial"><div class="wrap">
+      <div class="proposal-head"><div><div class="proposal-id">05 / EDITORIAL COVER</div><h2>杂志封面</h2><div class="english">Make every pet a cover star</div><p class="lead">高对比黑白、巨大标题、编号和编辑感排版。把每次生成都当成一期封面，适合突出“我家宠物就是主角”的身份表达。</p></div><div class="proposal-meta"><b>关键词</b><br>大胆 · 编辑感 · 可传播<br><b>优先页面</b><br>AI 创作 / 作品详情 / 作品库 / 分享卡</div></div>
+      <div class="proposal-body"><div class="phone-wrap"><div class="phone theme-editorial"><div class="status"><span>9:41</span><span>▰ ◼</span></div><div class="screen"><div class="phone-top"><span>ISSUE 004</span><span>麻麻抱我</span></div><div class="photo hero-photo"><img src="../../apps/website/public/assets/website-v2-human-v2.jpg" alt="宠物人化样片"><div class="hero-copy"><small>THE PET ISSUE</small><b>如果我是人</b></div></div><div class="section-label"><span>本期作品</span><small>01 / 07</small></div><div class="tile-row"><div class="tile"><img src="../../tools/imagegen/out/styles/play-magazine-v4.jpg" alt="杂志样片"><span>封面肖像</span></div><div class="tile"><img src="../../tools/imagegen/out/styles/style-paper-cut-v3.jpg" alt="纸艺样片"><span>纸艺特辑</span></div><div class="tile"><img src="../../tools/imagegen/out/plugins/mp26-pet-movie-poster-v3.jpg" alt="海报样片"><span>大片海报</span></div></div><div class="actions"><div class="action">做我的封面　→</div></div><div class="tabbar"><span class="on">封面</span><span>灵感</span><span>制作</span><span>档案</span></div></div></div></div>
+        <div class="notes"><div class="note"><h3>视觉规则</h3><p>黑白为骨架，单一品牌色做编号或 CTA；标题可以压在图上，但必须确保安全区和对比度。</p><div class="swatches"><i class="swatch" style="background:#eeece6"></i><i class="swatch" style="background:#141414"></i><i class="swatch" style="background:#e8654a"></i><i class="swatch" style="background:#d2cec3"></i></div></div><div class="note"><h3>优点 / 风险</h3><p>分享卡和作品详情的识别度高；风险是对图片裁切要求严格，复杂后台页面不宜全量使用。</p><span class="tag">分享传播强</span><span class="tag">作品导向</span></div><div class="note"><h3>交互气质</h3><p>把“选图、选风格、出封面”做成编辑流程，适合 AI 创作和作品归档。</p></div><div class="note"><h3>推荐指数</h3><p class="rating">★★★★☆</p></div></div></div>
+    </div></section>
+
+    <section class="proposal" id="clay"><div class="wrap">
+      <div class="proposal-head"><div><div class="proposal-id">06 / SOFT CLAY</div><h2>软陶果冻</h2><div class="english">Tactile, soft, instantly recognizable</div><p class="lead">粉彩底色、厚圆角、内外双层阴影和轻微“捏出来”的按钮。适合把创作入口变成一组有触感的玩具盒。</p></div><div class="proposal-meta"><b>关键词</b><br>软萌 · 触感 · 高识别<br><b>优先页面</b><br>首页入口 / 互动 / 空状态 / 新手引导</div></div>
+      <div class="proposal-body"><div class="phone-wrap"><div class="phone theme-clay"><div class="status"><span>9:41</span><span>▰ ◼</span></div><div class="screen"><div class="phone-top"><span>麻麻抱我</span><span>小窝</span></div><div class="photo hero-photo"><img src="../../tools/imagegen/out/styles/style-fantasy-v3.jpg" alt="幻想样片"><div class="hero-copy"><small>今日灵感</small><b>捏一个<br>新世界</b></div></div><div class="section-label"><span>想玩什么？</span><small>滑动选择</small></div><div class="tile-row"><div class="tile"><img src="../../tools/imagegen/out/styles/play-storybook-v3.jpg" alt="绘本样片"><span>绘本</span></div><div class="tile"><img src="../../tools/imagegen/out/plugins/mp26-pet-movie-poster-v3.jpg" alt="电影海报样片"><span>海报</span></div><div class="tile"><img src="../../tools/imagegen/out/styles/play-portrait-v4.jpg" alt="肖像样片"><span>肖像</span></div></div><div class="actions"><div class="action">开始捏作品　＋</div></div><div class="tabbar"><span class="on">小窝</span><span>玩玩</span><span>作品</span><span>我的</span></div></div></div></div>
+        <div class="notes"><div class="note"><h3>视觉规则</h3><p>圆角是核心识别点，阴影要像物体被托起；控制彩色数量，同屏最多两种高饱和色。</p><div class="swatches"><i class="swatch" style="background:#f7d9cf"></i><i class="swatch" style="background:#e38778"></i><i class="swatch" style="background:#f8e8df"></i><i class="swatch" style="background:#553a3a"></i></div></div><div class="note"><h3>优点 / 风险</h3><p>一眼记住，适合拉开与普通工具型小程序的差异；风险是长期使用容易疲劳，健康和支付页需要降噪。</p><span class="tag">差异化最强</span><span class="tag">适合新手</span></div><div class="note"><h3>交互气质</h3><p>动作有“按下去”的反馈，适合新手引导、互动玩法和轻量奖励，不建议用在严肃信息页。</p></div><div class="note"><h3>推荐指数</h3><p class="rating">★★★☆☆</p></div></div></div>
+    </div></section>
+
+    <section class="proposal" id="official"><div class="wrap">
+      <div class="proposal-head"><div><div class="proposal-id">07 / OFFICIAL REFERENCE</div><h2>官网参考 · 内容品牌</h2><div class="english">The current website language, translated to H5</div><p class="lead">参考官网当前展示图片和品牌语言：白底、墨色、少量玫红，图片成为信息主角，搭配编号、细线和大面积留白。它是与官网联动最强的一套。</p></div><div class="proposal-meta"><b>关键词</b><br>统一品牌 · 内容产品 · 图片优先<br><b>优先页面</b><br>首页 / 作品库 / 玩法详情 / 分享页</div></div>
+      <div class="proposal-body"><div class="phone-wrap"><div class="phone theme-official"><div class="status"><span>9:41</span><span>▰ ◼</span></div><div class="screen"><div class="phone-top"><span>麻麻抱我</span><span>作品 · 01</span></div><div class="photo hero-photo"><img src="../../apps/website/public/assets/website-v2-play-id-card.jpg" alt="官网宠物身份证样片"><div class="hero-copy"><small>从一张照片开始</small><b>把我留在<br>每天的爱里</b></div></div><div class="section-label"><span>核心玩法</span><small>看全部 →</small></div><div class="tile-row"><div class="tile"><img src="../../apps/website/public/assets/website-v2-play-album.jpg" alt="官网画册样片"><span>画册</span></div><div class="tile"><img src="../../apps/website/public/assets/website-v2-human-v2.jpg" alt="官网宠物人化样片"><span>如果我是人</span></div><div class="tile"><img src="../../apps/website/public/assets/website-v2-memorial.jpg" alt="官网纪念样片"><span>纪念</span></div></div><div class="actions"><div class="action">打开小程序　→</div></div><div class="tabbar"><span class="on">首页</span><span>玩法</span><span>作品</span><span>我的</span></div></div></div></div>
+        <div class="notes"><div class="note"><h3>视觉规则</h3><p>延续官网的图片优先、细边框、墨色正文与玫红强调；移动端用固定比例图片和内容编号保持识别。</p><div class="swatches"><i class="swatch" style="background:#fff"></i><i class="swatch" style="background:#171513"></i><i class="swatch" style="background:#e8654a"></i><i class="swatch" style="background:#f1efeb"></i></div></div><div class="note"><h3>优点 / 风险</h3><p>品牌一致性最高，官网投放和小程序入口可以互相解释；风险是需要持续产出高质量图片，通用工具页要补充结构化组件。</p><span class="tag">官网联动最佳</span><span class="tag">图片依赖高</span></div><div class="note"><h3>交互气质</h3><p>像浏览一份有编辑选择的宠物作品集，适合把样片、玩法和真实产出放在转化路径前面。</p></div><div class="note"><h3>推荐指数</h3><p class="rating">★★★★★</p></div></div></div>
+    </div></section>
+
+    <section class="matrix" id="matrix"><div class="wrap">
+      <div class="eyebrow">DECISION MATRIX</div><h2>七套方案怎么选</h2><p class="matrix-lead">先选主品牌气质，再决定哪些页面采用变体。推荐优先比较“首页第一眼”“作品详情”“健康与订单”三个场景，避免只看首页效果。</p>
+      <div class="table-wrap"><table><thead><tr><th>方案</th><th>第一眼感受</th><th>图片依赖</th><th>功能信息承载</th><th>纪念 / 分享</th><th>适合做主方向</th></tr></thead><tbody>
+        <tr><td><b>01 暖调胶片</b></td><td>温暖、像家</td><td class="rating">高</td><td class="rating">★★★★☆</td><td class="rating">★★★★☆</td><td>陪伴记录型产品</td></tr>
+        <tr><td><b>02 品牌影棚</b></td><td>成熟、专业</td><td class="rating">中高</td><td class="rating">★★★★★</td><td class="rating">★★★☆☆</td><td>付费创作和工具型产品</td></tr>
+        <tr><td><b>03 沉浸电影</b></td><td>情绪、沉浸</td><td class="rating">很高</td><td class="rating">★★★☆☆</td><td class="rating">★★★★★</td><td>视频与纪念主导</td></tr>
+        <tr><td><b>04 宠物主场</b></td><td>可爱、归属</td><td class="rating">中高</td><td class="rating">★★★★☆</td><td class="rating">★★★★☆</td><td>宠物档案和互动主导</td></tr>
+        <tr><td><b>05 杂志封面</b></td><td>大胆、可传播</td><td class="rating">很高</td><td class="rating">★★★☆☆</td><td class="rating">★★★★★</td><td>AI 作品和分享主导</td></tr>
+        <tr><td><b>06 软陶果冻</b></td><td>软萌、有触感</td><td class="rating">中</td><td class="rating">★★★☆☆</td><td class="rating">★★★☆☆</td><td>年轻化和互动玩法</td></tr>
+        <tr><td><b>07 官网参考</b></td><td>品牌、内容感</td><td class="rating">很高</td><td class="rating">★★★★☆</td><td class="rating">★★★★★</td><td>官网与小程序统一</td></tr>
+      </tbody></table></div>
+    </div></section>
+    <section class="wrap decision"><div><div class="eyebrow">CONFIRMATION CHECKLIST</div><h2>确认方向后再进入正式改版</h2><p>这份展板只用于选方向。确认时建议同时指定“主方向 + 允许借用的变体”，例如“07 官网参考为主，02 品牌影棚用于订单与健康页”。</p></div><div><ul><li>主方向编号：________________</li><li>允许借用的变体：____________</li><li>首页 / 作品 / 记录 / 订单的特殊要求：____________</li><li>需要保留的现有页面结构：____________</li><li>确认人和日期：________________</li></ul></div></section>
+  </main>
+  <footer class="wrap footer">说明：展板中的图片来自当前官网公开样片资产，仅用于比较构图与界面气质；不代表最终小程序素材。正式改版前仍需按选定方向补齐 Token、页面稿、无障碍对比度与真实设备验证。</footer>
+</body>
+</html>

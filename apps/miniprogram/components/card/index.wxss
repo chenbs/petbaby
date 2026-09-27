@@ -54,8 +54,8 @@
   padding: 0;
 }
 
-.card-hero { border-radius: var(--radius-lg); }
-.card-grid { border-radius: var(--radius-md); }
+.card-hero { border-radius: var(--radius-image-hero); }
+.card-grid { border-radius: var(--radius-image-thumb); }
 
 /* 浮层卡：弹层与抽屉内的面板 */
 .card-float {
@@ -73,7 +73,7 @@
   box-shadow: inset 0 -10rpx 20rpx var(--clay-highlight), var(--shadow-clay-body);
 }
 
-/* 封面卡：F 方向满版出血 —— 无圆角、无阴影、无底色，质感全靠排版纪律 */
+/* 封面卡不带背景，内部图片仍按统一图片圆角裁切。 */
 .card-flat {
   border: 0;
   border-radius: var(--radius-none);

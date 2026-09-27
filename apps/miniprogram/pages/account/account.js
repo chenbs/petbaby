@@ -15,6 +15,7 @@ themedPage({
     noticeType: "info"
   },
   onLoad() {
+    this.setData({ loading: true, notice: "" });
     api.request("/api/account")
       .then((profile) => this.setData({ profile, name: profile.displayName || "", loading: false }))
       .catch((error) => this.setData({ loading: false, notice: error.message, noticeType: "error" }));

@@ -4,6 +4,8 @@
 
 这份文档是唯一的部署入口。小程序的上传与发布步骤在 [`03-miniprogram-release.md`](03-miniprogram-release.md)，环境变量逐项说明在 [`04-environment-reference.md`](04-environment-reference.md)，还没拿到的外部凭据在 [`../operations/04-external-prerequisites.md`](../operations/04-external-prerequisites.md)。
 
+本机局域网预览可在仓库根目录运行 `bash deploy/scripts/start-local-preview.sh`，后端/H5 使用 `http://<本机局域网 IP>:3000`，官网使用 `http://<本机局域网 IP>:4321`；结束时运行 `bash deploy/scripts/stop-local-preview.sh`。Windows Git Bash/MSYS2 入口调用配套 PowerShell 脚本管理进程，Linux 入口由 Bash 直接启动服务。Windows 脚本自动选取实体网卡的私有 IPv4，也可传本机 IP；Linux 脚本可将本机 IP 作为第一个参数。本机模式使用 PGlite、本地对象存储和模拟支付，不需要 Docker，生成任务在开发模式下内联执行。它用于页面和业务体验，不等于下文 PostgreSQL、HTTPS、真实微信回调的 staging/production 部署验证。微信开发者工具连接本机 HTTP 地址时需关闭合法域名校验；上传的小程序版本仍须使用已登记的 HTTPS 域名。
+
 ---
 
 ## 0. 先读这一节：两种部署模式

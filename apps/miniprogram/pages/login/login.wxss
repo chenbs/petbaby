@@ -55,12 +55,12 @@
   background: var(--divider);
 }
 
-/* glass：标识发光；light / dark：纯文字标识，不加装饰 */
-.brand-glass .brand-name {
+/* 夜间主题保留轻微强调，其他主题使用同一品牌结构 */
+.brand-night .brand-name {
   text-shadow: 0 0 24rpx var(--ai-glow);
 }
 
-.brand-cute .brand-name {
+.brand-pet .brand-name {
   color: var(--primary);
 }
 

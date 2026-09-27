@@ -1,6 +1,6 @@
 /**
  * Token 键名清单（唯一真源）。
- * 新增 token 必须先登记在此，四套皮肤缺键或类型不符时 `pnpm validate` 直接失败。
+ * 新增 token 必须先登记在此，四套主题缺键或类型不符时 `pnpm validate` 直接失败。
  *
  * 类型说明：
  *   color 纯色（hex / rgb / rgba）   paint 纯色或渐变
@@ -89,7 +89,7 @@ const NAV_TEXT_STYLES = ["black", "white"];
 /**
  * 只被逻辑层消费、CSS 从不引用的 token：不进注入串。
  *
- * 注入串有 2048 字节硬门禁（需求 theme-2.md 11.3），glass 主题曾贴到 2045。这几个 token
+ * 注入串有 2048 字节硬门禁（需求 theme-2.md 11.3）。这几个 token
  * 的消费方都在 JS 里 —— animationType/glowAnimation 转成 anim-* 类名，navBarTextStyle 给
  * wx.setNavigationBarColor，aiGradientEnd/Angle 由 deriveScale 合成 --ai-gradient，
  * glassBackgroundSolid 只作降级兜底 —— 下发它们纯属浪费预算。
@@ -105,7 +105,7 @@ const GLASS_EASING = "cubic-bezier(.22,.61,.36,1)";
 /**
  * 与主题无关的常量变量：不进 setData 注入串，只在 app.wxss 的 `page{}` 里声明一次。
  * page-style 是内联样式，注入串只需承载「随主题变化」的量；常量下发纯属重复开销，
- * 会把 glass 主题的注入串顶到 2KB 门禁之上（需求 theme-2.md 11.3 要求优先合并而非放宽阈值）。
+ * 会把主题注入串顶到 2KB 门禁之上（需求 theme-2.md 11.3 要求优先合并而非放宽阈值）。
  */
 const CONSTANT_VARS = {
   "--radius-pill": "999rpx",
@@ -113,7 +113,7 @@ const CONSTANT_VARS = {
   "--glass-blur-degraded": "0",
 
   // ── 间距（UI 重构方案 2.1）────────────────────────────────────────────────
-  // 绝对阶梯，不再由 pagePadding 按比例派生：派生会让 light(40rpx) 与 glass(32rpx)
+  // 绝对阶梯，不再由 pagePadding 按比例派生：不同主题的页边距
   // 得到 20/16 这种错位取值，跨主题对不齐。页面外边距仍走 --page-padding。
   // 标签与其副标题之间的贴合间距，比 --space-1 更紧，用于「一组不可分的文字」
   "--space-0": "4rpx",
@@ -131,13 +131,15 @@ const CONSTANT_VARS = {
   "--gap-section": "96rpx",
 
   // ── 圆角（方案 2.2）──────────────────────────────────────────────────────
-  // 阶梯是绝对值；--card-radius 仍是主题身份（light 16 / cute 24 / glass 28），
+  // 阶梯是绝对值；--card-radius 仍由主题控制，
   // 卡片用它，其余元件按尺寸取阶梯档 —— 方案指出「所有卡片同一圆角」是粗糙感来源。
   "--radius-xs": "8rpx",
   "--radius-sm": "16rpx",
   "--radius-md": "24rpx",
   "--radius-lg": "32rpx",
   "--radius-xl": "48rpx",
+  "--radius-image-hero": "40rpx",
+  "--radius-image-thumb": "24rpx",
   "--radius-clay": "56rpx",
   "--radius-none": "0",
   // t-empty 的线条插画形状常量：门禁只豁免单值 50%，非对称的有机形状须登记为 token
@@ -167,6 +169,8 @@ const CONSTANT_VARS = {
   "--ratio-card": "3 / 4",
   "--ratio-cover": "4 / 3",
   "--ratio-square": "1 / 1",
+  "--on-image-primary": "#FFFFFF",
+  "--on-image-secondary": "#EDECEB",
 
   // ── 动效（方案 2.6）──────────────────────────────────────────────────────
   "--dur-fast": "120ms",
@@ -390,8 +394,8 @@ function deriveScale(tokens, themeId) {
     "--shadow-clay-inset": `inset 0 6rpx 18rpx ${withAlpha(tokens.textPrimary, 0.28)}`,
     // 玻璃面板把手宽度（需求 theme-2.md 5.1）
     "--glass-handle-width": rpx(pad, 2),
-    // 档位切换时长：cute 稍慢，其余统一 320ms。缓动是常量，见 CONSTANT_VARS
-    "--glass-duration": themeId === "cute" ? "360ms" : "320ms"
+    // 宠物主场稍慢，其余统一 320ms。缓动是常量，见 CONSTANT_VARS
+    "--glass-duration": themeId === "pet" ? "360ms" : "320ms"
   };
 }
 

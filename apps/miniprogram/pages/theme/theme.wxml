@@ -1,9 +1,8 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-flat">
+<view class="page page-flat art-pet layout-matrix">
   <text class="eyebrow">APPEARANCE</text>
   <view class="title">挑一套喜欢的外观</view>
-  <text class="muted">切换立即生效，选择会记住，不影响任何作品内容。</text>
 
   <view class="theme-list section">
     <view
@@ -25,20 +24,17 @@
         </view>
         <text class="preview-desc">{{item.description}}</text>
         <view class="preview-demo">
+          <image wx:if="{{!previewImageFailed}}" class="demo-image" src="/assets/theme-preview.jpg" mode="aspectFill" binderror="onPreviewImageError" />
+          <view wx:else class="demo-image demo-image-blank">预览图暂不可用</view>
           <view class="demo-card">
             <view class="demo-line demo-line-title"></view>
             <view class="demo-line"></view>
             <view class="demo-line demo-line-short"></view>
-          </view>
-          <view class="demo-side">
-            <view class="demo-btn">解锁</view>
-            <view class="demo-btn demo-btn-ai">AI</view>
-            <view class="demo-tag">已完成</view>
+            <view class="demo-btn">查看作品</view>
           </view>
         </view>
       </view>
     </view>
   </view>
 
-  <t-notice type="info" message="玻璃科技主题在部分安卓机型不支持毛玻璃，会自动退回不透明卡片，功能不受影响。"></t-notice>
 </view>

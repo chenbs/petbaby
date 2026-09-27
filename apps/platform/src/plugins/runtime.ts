@@ -16,6 +16,72 @@ const toneVariantSchema = z.object({
   label: z.string().min(1).max(80).optional(),
 });
 
+const previousArtSceneOptions = [
+  { id: "window-morning", title: "窗边晨光", description: "坐姿望窗 · 平静神态" },
+  { id: "garden-curious", title: "花园探索", description: "抬爪嗅花 · 好奇神态" },
+  { id: "studio-confident", title: "影棚主角", description: "正面坐姿 · 自信凝视" },
+  { id: "night-playful", title: "夜色追光", description: "回头跃起 · 惊喜活泼" },
+];
+
+const previousV2ArtSceneOptions = [
+  { id: "window-morning", title: "窗边观鸟", description: "伏窗望鸟 · 安静专注" },
+  { id: "garden-curious", title: "花园探花", description: "抬爪嗅花 · 好奇" },
+  { id: "studio-confident", title: "复古影棚", description: "登上木台 · 自信回望" },
+  { id: "night-playful", title: "夜庭追光", description: "跃步追光 · 惊喜活泼" },
+  { id: "seaside-breeze", title: "海边栈道", description: "迎风站立 · 警觉舒展" },
+  { id: "library-whisper", title: "书店探险", description: "转角探身 · 机灵好奇" },
+  { id: "autumn-leaves", title: "枫叶小径", description: "轻跑落叶 · 兴奋" },
+  { id: "snow-cabin", title: "雪窗木屋", description: "蜷卧毛毯 · 困倦满足" },
+  { id: "cafe-afternoon", title: "街角咖啡馆", description: "坐椅转头 · 悠闲观察" },
+  { id: "lakeside-sunset", title: "湖畔木桥", description: "伸懒腰 · 眯眼迎光" },
+  { id: "city-rain", title: "雨后骑楼", description: "跨过水洼 · 惊讶" },
+  { id: "spring-picnic", title: "春日野餐", description: "伸爪拨带 · 轻快愉悦" },
+];
+
+const previousSampleDefaults: Record<string, { heroUrl?: string; styleUrls?: Record<string, string>; sceneUrls?: Record<string, string> }> = {
+  "pet-id-card": { heroUrl: "/api/plugin-samples/samples/pet-id-card-cee27b346c67.jpg" },
+  "pet-movie-poster": { heroUrl: "/api/plugin-samples/samples/pet-movie-poster-d49f06ae0fdf.jpg" },
+  "pet-time-album": { heroUrl: "/api/plugin-samples/samples/pet-time-album-a56e5316f509.jpg" },
+  "pl-10": {
+    heroUrl: "/api/plugin-samples/samples/pl-10-df4b766033ec.jpg",
+    sceneUrls: {
+      "window-morning": "/api/plugin-samples/samples/scene-window-morning-v1-9770823ac40a.jpg",
+      "garden-curious": "/api/plugin-samples/samples/scene-garden-curious-v1-d4fa01fd949b.jpg",
+      "studio-confident": "/api/plugin-samples/samples/scene-studio-confident-v1-0eaea2bc2fc0.jpg",
+      "night-playful": "/api/plugin-samples/samples/scene-night-playful-v1-7057658d097e.jpg",
+    },
+    styleUrls: {
+      "warm-film": "/api/plugin-samples/samples/style-warm-film-745db4c3d705.jpg",
+      "paper-cut": "/api/plugin-samples/samples/style-paper-cut-e6ab5e0ba3d3.jpg",
+      studio: "/api/plugin-samples/samples/style-studio-9006fcd75888.jpg",
+      fantasy: "/api/plugin-samples/samples/style-fantasy-aae6d3e4c431.jpg",
+    },
+  },
+  "pl-15": { heroUrl: "/api/plugin-samples/samples/pl-15-2b583f83d80c.jpg" },
+  "pl-19": { heroUrl: "/api/plugin-samples/samples/pl-19-c88acc8d9d43.jpg" },
+};
+
+const previousV2SampleDefaults: Record<string, { heroUrl?: string; sceneUrls?: Record<string, string> }> = {
+  "pl-10": {
+    heroUrl: "/api/plugin-samples/samples/mp26-pl-10-8bfc17d3b3b5.jpg",
+    sceneUrls: {
+      "window-morning": "/api/plugin-samples/samples/scene-window-morning-v2-76d6e35bcd80.jpg",
+      "garden-curious": "/api/plugin-samples/samples/scene-garden-curious-v2-6afe0ff901ac.jpg",
+      "studio-confident": "/api/plugin-samples/samples/scene-studio-confident-v2-52ea373449b2.jpg",
+      "night-playful": "/api/plugin-samples/samples/scene-night-playful-v2-4e6edc0635d4.jpg",
+      "seaside-breeze": "/api/plugin-samples/samples/scene-seaside-breeze-v2-5d97dde2ceff.jpg",
+      "library-whisper": "/api/plugin-samples/samples/scene-library-whisper-v2-2a60ecd39569.jpg",
+      "autumn-leaves": "/api/plugin-samples/samples/scene-autumn-leaves-v2-1885e1d0a87d.jpg",
+      "snow-cabin": "/api/plugin-samples/samples/scene-snow-cabin-v2-6efe37c5381b.jpg",
+      "cafe-afternoon": "/api/plugin-samples/samples/scene-cafe-afternoon-v2-47cc12cccf0a.jpg",
+      "lakeside-sunset": "/api/plugin-samples/samples/scene-lakeside-sunset-v3-1e2beeb35285.jpg",
+      "city-rain": "/api/plugin-samples/samples/scene-city-rain-v2-a33c5af764c0.jpg",
+      "spring-picnic": "/api/plugin-samples/samples/scene-spring-picnic-v3-eed947ea641e.jpg",
+    },
+  },
+  "pl-15": { heroUrl: "/api/plugin-samples/samples/mp26-pl-15-bd5db2c1f693.jpg" },
+};
+
 const manifestSchema: z.ZodType<PluginManifest> = z.object({
   id: z.string().min(1).max(80),
   code: z.string().min(1).max(80),
@@ -35,9 +101,9 @@ const manifestSchema: z.ZodType<PluginManifest> = z.object({
   samples: z.object({
     heroUrl: z.string().max(500).regex(/^\/api\/plugin-samples\//).optional(),
     thumbUrls: z.array(z.string().max(500).regex(/^\/api\/plugin-samples\//)).max(8).optional(),
-    // 风格对比图：键是 growth-service 里的 style 枚举值，值是同一只样板宠物在该风格下的产出。
-    // 用映射而非 thumbUrls 的下标顺序 —— 顺序约定一旦和前端 STYLES 数组错开，
-    // 用户看到的就是「张冠李戴」的风格预览，而这种错位不会报错、只会静默骗人。
+    sceneUrls: z.record(z.string().max(40), z.string().max(500).regex(/^\/api\/plugin-samples\//)).optional(),
+    sceneOptions: z.array(z.object({ id: z.string().min(1).max(40), title: z.string().min(1).max(80), description: z.string().max(180) })).max(12).optional(),
+    // 旧 AI 风格对照字段，仅供历史 manifest 和回滚读取。
     styleUrls: z.record(z.string().max(40), z.string().max(500).regex(/^\/api\/plugin-samples\//)).optional(),
   }).optional(),
   // 生命阶段调性覆盖。同 samples：必须与 models.ts 的 PluginManifest 同步 ——
@@ -90,6 +156,19 @@ function asRecord(value: unknown): Record<string, unknown> {
     : {};
 }
 
+function matchesArtSceneOptions(value: unknown, options: typeof previousV2ArtSceneOptions) {
+  return Array.isArray(value) && value.length === options.length
+    && value.every((item, index) => {
+      const current = asRecord(item);
+      const previous = options[index];
+      return current.id === previous.id && current.title === previous.title && current.description === previous.description;
+    });
+}
+
+function matchesPreviousArtScenes(value: unknown) {
+  return matchesArtSceneOptions(value, previousArtSceneOptions) || matchesArtSceneOptions(value, previousV2ArtSceneOptions);
+}
+
 async function ensurePluginConfigs() {
   const database = await getDatabase();
   for (const plugin of plugins) {
@@ -105,19 +184,52 @@ async function ensurePluginConfigs() {
       if (stored) {
         const manifest = asRecord(stored.manifest);
         if (manifest.id) {
-          // 逐键回填而非整块判断：老库里可能已经有 samples.heroUrl（上一次部署补的），
-          // 若按「有 samples 就跳过」处理，后来新增的 styleUrls 永远进不去已有行。
-          // 仍然只补「库里缺的键」，已有值一律不动 —— 那些是运营在后台改过的。
+          // 仅替换上一版代码的默认 URL；不同值视为后台人工配置，保持原样。
           const storedSamples = asRecord(manifest.samples);
           const merged = { ...storedSamples };
           let changed = false;
           for (const [key, value] of Object.entries(plugin.samples)) {
-            if (value !== undefined && merged[key] === undefined) { merged[key] = value; changed = true; }
+            if (key === "styleUrls" || key === "sceneUrls") {
+              const currentStyles = asRecord(merged[key]);
+              const nextStyles = { ...currentStyles };
+              const oldStyles = previousSampleDefaults[plugin.id]?.[key] || {};
+              const v2Styles = key === "sceneUrls" ? previousV2SampleDefaults[plugin.id]?.sceneUrls || {} : {};
+              for (const [style, url] of Object.entries(value as Record<string, string>)) {
+                if (nextStyles[style] === undefined || nextStyles[style] === oldStyles[style] || nextStyles[style] === v2Styles[style]) {
+                  if (nextStyles[style] !== url) { nextStyles[style] = url; changed = true; }
+                }
+              }
+              merged[key] = nextStyles;
+            } else if (key === "sceneOptions") {
+              if (merged[key] === undefined || matchesPreviousArtScenes(merged[key])) { merged[key] = value; changed = true; }
+            } else if (value !== undefined && (merged[key] === undefined || merged[key] === previousSampleDefaults[plugin.id]?.[key as "heroUrl"] || merged[key] === previousV2SampleDefaults[plugin.id]?.[key as "heroUrl"])) {
+              if (merged[key] !== value) { merged[key] = value; changed = true; }
+            }
           }
           if (changed) {
             await database.query("UPDATE plugin_configs SET manifest=$2::jsonb,updated_at=$3 WHERE id=$1", [plugin.id, JSON.stringify({ ...manifest, samples: merged }), new Date()]);
           }
         }
+      }
+    }
+    if (plugin.id === "pl-10") {
+      const stored = (await database.query<{ manifest: unknown }>("SELECT manifest FROM plugin_configs WHERE id=$1", [plugin.id]))[0];
+      if (stored) {
+        const manifest = asRecord(stored.manifest);
+        const oldCopy: Record<string, string> = {
+          name: "AI 宠物肖像",
+          tagline: "四张候选，只留下最像它的一张",
+          description: "选择宠物照片、风格与提示词，生成四张带 AI 标识的候选肖像。",
+        };
+        const next = { ...manifest };
+        let changed = false;
+        for (const key of Object.keys(oldCopy)) {
+          if (next[key] === oldCopy[key]) {
+            next[key] = plugin[key as "name" | "tagline" | "description"];
+            changed = true;
+          }
+        }
+        if (changed) await database.query("UPDATE plugin_configs SET manifest=$2::jsonb,updated_at=$3 WHERE id=$1", [plugin.id, JSON.stringify(next), new Date()]);
       }
     }
     await database.query("INSERT INTO plugin_config_versions (id,plugin_id,version,manifest,template_version,created_at) VALUES ($1,$2,1,$3::jsonb,$4,$5) ON CONFLICT (plugin_id,version) DO NOTHING", [crypto.randomUUID(), plugin.id, JSON.stringify(plugin), plugin.generator.template, new Date()]);

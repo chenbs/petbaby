@@ -33,6 +33,17 @@
   background: var(--disabled);
 }
 
+.node-photo-blank {
+  display: flex;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2);
+  color: var(--text-secondary);
+  font-size: var(--eyebrow-size);
+  text-align: center;
+}
+
 .node-copy {
   display: flex;
   flex-direction: column;

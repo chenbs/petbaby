@@ -1,0 +1,12 @@
+{
+  "id": "gray-toy-poodle-v1",
+  "group": "identity",
+  "prompt": "Use case: photorealistic-natural editorial pet photography. Make this look like a real commissioned studio or lifestyle photograph, with real fur detail, believable fabric, physically plausible props, natural contact shadows and a real camera lens. One adult pet only, complete head and body visible, natural anatomy and paws, no people or hands, no duplicate subject. No brand marks, logos, copied magazine mastheads, readable text, pseudo-letters, watermark, signature, CGI, 3D render, illustration, plastic fur or surreal background. Vertical 3:4 composition. The pet is the clear hero and occupies about 45-65% of frame height; the set, clothing and props remain visible and recognizable. A clear full-body breed reference photograph of one adult gray toy poodle standing naturally against a neutral light-gray studio background. The exact same adult gray toy poodle as Image 1: compact healthy toy-poodle build, charcoal-gray curly coat, round clipped muzzle with a lighter gray beard, floppy ears, dark eyes and black nose. Preserve the individual identity and natural proportions. Do not turn it into a schnauzer, doodle, terrier or plush toy. No collar, clothing, props, text or watermark.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": null,
+  "output": "tools/imagegen/out/scenes-v3/identity-gray-toy-poodle-v1.jpg",
+  "sha256": "f0db84c8923312412c2c63a4c5d3fdbb1d1bc14d3cca7febecf28d7cad906541",
+  "review": "approved-by-user",
+  "reviewedAt": "2026-09-26"
+}

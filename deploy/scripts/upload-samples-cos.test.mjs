@@ -14,9 +14,15 @@ const credentials = {
 test("部署清单中的所有母版和预览均可按原始哈希找到", async () => {
   const plan = await buildPlan();
   assert.deepEqual(plan.counts, { master: 76, preview: 76 });
-  assert.equal(plan.plugins, 9);
+  assert.equal(plan.plugins, 16);
   assert.equal(plan.styles, 4);
-  assert.equal(plan.assets.size, 165);
+  assert.equal(plan.scenes, 12);
+  assert.equal(plan.assets.size, 184);
+  assert.ok(plan.assets.has("samples/scene-snow-cabin-v4-76d611cfe07a.jpg"));
+  assert.ok(plan.assets.has("samples/mp26-gray-toy-poodle-editorial-v1-7c583b9dcb50.jpg"));
+  assert.ok(plan.assets.has("samples/mp26-pl-15-photographic-v2-d2e283f5b2eb.jpg"));
+  assert.ok(![...plan.assets.keys()].some((key) => key.includes("mp26-pl-10-8bfc17d3b3b5") || key.includes("mp26-pl-15-bd5db2c1f693")));
+  assert.ok(![...plan.assets.keys()].some((key) => key.includes("mp26-pl-23-v3")));
 
   const root = path.resolve(import.meta.dirname, "../..");
   const sources = ["apps/platform/src/plugins/registry.ts", "apps/platform/src/server/image-template-registry.ts"];

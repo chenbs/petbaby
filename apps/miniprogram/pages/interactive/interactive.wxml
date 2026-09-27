@@ -1,6 +1,6 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-flat">
+<view class="page page-flat art-pet layout-canvas {{publicMode ? 'page-visitor' : ''}}">
   <t-skeleton wx:if="{{loading}}" type="card" count="2"></t-skeleton>
 
   <block wx:elif="{{session}}">
@@ -12,7 +12,7 @@
     <t-notice wx:if="{{message}}" type="{{messageType}}" message="{{message}}" class="block-gap"></t-notice>
 
     <!-- 场景本体：访客视角下就是整个页面，编辑态里是实时预览 -->
-    <view class="scene" style="{{sceneStyle}}" bindtap="addStar">
+    <view class="scene {{publicMode ? 'scene-visitor' : ''}}" style="{{sceneStyle}}" bindtap="addStar">
       <view class="scene-stars">✦ · ✧ · ✦ · ✧ · ✦</view>
       <view class="scene-title">{{title}}</view>
       <text class="scene-copy">{{copy}}</text>

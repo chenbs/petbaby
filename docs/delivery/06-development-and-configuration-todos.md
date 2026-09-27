@@ -7,7 +7,7 @@
 ### 产品与清理
 
 - 已移除宠物小岛旧实现、入口、分包、接口、数据表定义、专属素材、测试及 22/24/25/26 号专属文档；保留历史迁移记录和共享能力，未保留占位入口。
-- 已统一品牌为「麻麻抱我」，官网为 `https://www.babykitty.cn`，应用 API 为 `https://app.babykitty.cn`；小程序名称和 `cargo/logo.jpg` Logo 引用已同步。
+- 已统一品牌为「麻麻抱我」，官网为 `https://www.babykitty.cn`，应用 API 为 `https://a.babykitty.cn`；小程序名称和 `cargo/logo.jpg` Logo 引用已同步。
 - 已完成官网内容、真实品牌 Logo、社交分享图、响应式图片衍生资源、法律正文、noindex 草案保护、结构化数据、链接检查和官网发布检查脚本。
 - 官网已接入真实域名配置、Nginx 分流、生产发布前后的环境和资源检查；未虚构 ICP、主体、联系方式或小程序码。
 
@@ -43,8 +43,8 @@
 以下项目必须由项目方或第三方后台完成，代码已提供对应读取、校验和失败提示：
 
 1. **微信主体与支付后台**：在小程序后台完成认证、虚拟支付签约、Offer/商品上架、现网与沙箱 AppKey、商品 `productId` 和价格配置；在商户平台配置商户号 `1117969043`、API v3 Key、证书序列号/私钥、平台证书序列号/公钥及普通支付回调。将值填入部署机环境变量，执行 `deploy/scripts/preflight.sh production`。
-2. **微信消息推送**：在「开发 → 开发管理 → 消息推送」配置 `https://app.babykitty.cn/api/payments/virtual/notify`，使用安全模式 Token 与 EncodingAESKey，并在环境中设置 `WECHAT_MESSAGE_TOKEN`、`WECHAT_MESSAGE_AES_KEY`；完成虚拟支付发货、退款和 iOS 退款问询真实回调验证。
-3. **登录与域名**：提供真实 AppID/AppSecret，配置 request/upload/downloadFile 合法域名和 HTTPS 证书；确认 `app.babykitty.cn`、`www.babykitty.cn`、裸域跳转及支付回调 DNS/证书生效。
+2. **微信消息推送**：在「开发 → 开发管理 → 消息推送」配置 `https://a.babykitty.cn/api/payments/virtual/notify`，使用安全模式 Token 与 EncodingAESKey，并在环境中设置 `WECHAT_MESSAGE_TOKEN`、`WECHAT_MESSAGE_AES_KEY`；完成虚拟支付发货、退款和 iOS 退款问询真实回调验证。
+3. **登录与域名**：提供真实 AppID/AppSecret，配置 request/upload/downloadFile 合法域名和 HTTPS 证书；确认 `a.babykitty.cn`、`www.babykitty.cn`、裸域跳转及支付回调 DNS/证书生效。
 4. **COS**：提供最小权限 SecretId/SecretKey、确认桶地域并设置 `STORAGE_REGION`；桶保持私有读写，CDN 在备案完成后再单独配置，当前不填写 CDN。
 5. **官网法务与发布**：提供主体名称、联系邮箱/电话、办公地址、服务商和存储地域、ICP 备案号、真实 PNG 小程序码及法务批准；填入官网变量后运行 `pnpm check:release --dist apps/website/dist`，通过后再发布。
 6. **小程序发布**：提供真实 AppID、上传私钥和体验成员，在微信开发者工具 Nightly 中执行 `node scripts/ci.js upload --version x.y.z --desc "..."`，完成预览、体验版、提审、灰度和回滚演练。

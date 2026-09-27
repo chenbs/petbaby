@@ -47,6 +47,19 @@ describe("stage two growth services", () => {
     expect((await getAiRun(USER, run.id)).errorCode).toBe("必需参考图不存在，请重新选择或联系运营补齐母版");
   });
 
+  it("艺术写真只用宠物身份照，并保留旧风格入参映射的场景", async () => {
+    await objectStorage.delete(MASTER_KEY);
+    const run = await createAiRun(USER, {
+      pluginId: "pl-10", templateId: "pet-art-photo", petId: PET, photoIds: [PHOTO],
+      options: { style: "paper-cut" }, idempotencyKey: "ai-test-art-photo",
+    });
+    expect(run.options.scene).toBe("garden-curious");
+    expect(run.prompt).toContain("green dinosaur hoodie and leans against the plush toy");
+    expect(run.prompt).toContain("Image 1 as the sole pet identity reference");
+    expect((await processNextAiRun())?.status).toBe("succeeded");
+    expect((await getAiRun(USER, run.id)).candidates).toHaveLength(4);
+  });
+
   it("候选完成后删除原照，不能再创建引用该照片的新作品", async () => {
     const run = await createAiRun(USER, { pluginId: "pl-10", petId: PET, photoIds: [PHOTO], idempotencyKey: "deleted-ai-source" });
     await processNextAiRun();

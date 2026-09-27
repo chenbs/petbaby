@@ -103,6 +103,23 @@ themedPage({
     } catch (error) { if (view === this._view) this.setData({ petLoading: false, recordError: error.message }); }
   },
   choosePet(event) { const pet = this.data.pets[Number(event.detail.value)]; if (pet) { this._petId = pet.id; this.loadPet(); } },
+  onImageError(event) {
+    const { kind, id, src } = event.currentTarget.dataset;
+    if (kind === "pet" && this.data.pet && this.data.pet.avatarUrl === src) this.setData({ "pet.avatarUrl": "" });
+    if (kind === "recent") {
+      const index = this.data.recent.findIndex((item) => item.id === id && item.url === src);
+      if (index >= 0) this.setData({ ["recent[" + index + "].url"]: "", ["recent[" + index + "].imageError"]: "照片暂时无法显示" });
+    }
+    if (kind === "on-this-day" && this.data.onThisDay && this.data.onThisDay.photo.url === src) this.setData({ "onThisDay.photo.url": "" });
+    if (kind === "grid") {
+      const index = this.data.gridPlugins.findIndex((item) => item.id === id && item.samples.heroUrl === src);
+      if (index >= 0) this.setData({ ["gridPlugins[" + index + "].samples.heroUrl"]: "" });
+    }
+    if (kind === "hero" && this.data.heroPlugin && this.data.heroPlugin.id === id && this.data.heroPlugin.samples.heroUrl === src) {
+      const fallback = Object.assign({}, this.data.heroPlugin, { samples: Object.assign({}, this.data.heroPlugin.samples, { heroUrl: "" }) });
+      this.setData({ heroPlugin: null, gridPlugins: [fallback].concat(this.data.gridPlugins) });
+    }
+  },
   record() { wx.navigateTo({ url: "/pages/photos/photos?mode=record&entry=index" + (this.data.pet ? "&petId=" + this.data.pet.id : "") }); },
   recentDetail(event) { if (this.data.pet) wx.navigateTo({ url: "/pages/photos/photos?petId=" + this.data.pet.id + "&photoId=" + event.currentTarget.dataset.id }); },
   onHide() { this._view = (this._view || 0) + 1; },

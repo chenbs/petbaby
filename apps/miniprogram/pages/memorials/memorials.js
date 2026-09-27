@@ -74,7 +74,7 @@ themedPage({ mood: "memorial" }, {
           petLabels: pets.map((pet) => pet.name),
           petId: current ? current.id : "",
           petName: current ? current.name : "",
-          items: items.map((item) => {
+          items: items.map((item, index) => {
             const pet = petById[item.petId];
             /*
              * 陪伴天数在这一页按拍板走**过去式且不递增**：
@@ -89,6 +89,9 @@ themedPage({ mood: "memorial" }, {
             return Object.assign({}, item, {
               themeText: sceneName(item.theme),
               petName: item.petName || (pet ? pet.name : ""),
+              avatarUrl: pet ? pet.avatarUrl : "",
+              chapter: String(items.length - index).padStart(2, "0"),
+              storyPreview: String(item.story || "").slice(0, 80),
               lifecycleText: LIFECYCLE_TEXT[item.lifecycle || item.status] || "正常",
               lifecycleTone: LIFECYCLE_TONE[item.lifecycle || item.status] || "success",
               visibilityText: VISIBILITY_TEXT[item.visibility || "private"] || "私密",
@@ -107,6 +110,12 @@ themedPage({ mood: "memorial" }, {
     api.request("/api/photos?petId=" + encodeURIComponent(id)).then(displayMediaTree)
       .then((photos) => this.setData({ photos, selected: [] }))
       .catch(() => this.setData({ photos: [], selected: [] }));
+  },
+
+  onChapterImageError(event) {
+    const { id, src } = event.currentTarget.dataset;
+    const index = this.data.items.findIndex((item) => item.id === id && item.avatarUrl === src);
+    if (index >= 0) this.setData({ ["items[" + index + "].avatarUrl"]: "" });
   },
 
   openForm() { this.setData({ formOpen: true, message: "" }); },

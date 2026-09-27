@@ -22,8 +22,8 @@
   margin-top: var(--space-3);
 }
 
-/* cute：黄底贴纸卡 + 印章；其余主题不加装饰，靠留白与字重表达层级 */
-.hero-cute {
+/* 宠物身份区使用当前主题的表面和强调色。 */
+.hero-pet {
   padding: var(--space-6) var(--space-5) var(--space-6);
   border: var(--card-border);
   border-radius: var(--card-radius-variant);
@@ -32,7 +32,7 @@
   box-shadow: var(--shadow-card);
 }
 
-.hero-glass {
+.hero-film {
   padding: var(--space-6) var(--space-5);
   border: var(--card-border);
   border-radius: var(--card-radius);
@@ -71,7 +71,7 @@
   position: relative;
   overflow: hidden;
   aspect-ratio: var(--ratio-hero);
-  border-radius: inherit;
+  border-radius: var(--radius-image-hero);
 }
 
 .pet-image {
@@ -79,6 +79,7 @@
   width: 100%;
   height: 100%;
   background: var(--skeleton-base);
+  border-radius: inherit;
 }
 
 /* 没上传头像时给爪印占位。它标的是档案本身，不冒充产出（同 pages/me） */
@@ -111,7 +112,7 @@
 
 /* 压图文字一律用玻璃态亮色：遮罩下永远是暗底，浅色主题的深色正文在这里看不见 */
 .pet-days {
-  color: var(--glass-text-secondary);
+  color: var(--on-image-secondary);
   font-size: var(--small-size);
   font-weight: var(--fw-bold);
   letter-spacing: var(--eyebrow-tracking);
@@ -123,7 +124,7 @@
  * 没有 --font-h1 这个 token —— h1 就是 --title-size 本身。
  */
 .pet-name {
-  color: var(--glass-text-primary);
+  color: var(--on-image-primary);
   font-size: var(--title-size);
   font-weight: var(--fw-bold);
   letter-spacing: var(--ls-tight);
@@ -131,7 +132,7 @@
 }
 
 .pet-hint {
-  color: var(--glass-text-secondary);
+  color: var(--on-image-secondary);
   font-size: var(--small-size);
 }
 
@@ -154,8 +155,19 @@
   flex: none;
   width: 160rpx;
   height: 160rpx;
-  border-radius: var(--card-radius-variant);
+  border-radius: var(--radius-image-thumb);
   background: var(--skeleton-base);
+}
+
+.memory-photo-blank {
+  display: flex;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2);
+  color: var(--text-secondary);
+  font-size: var(--eyebrow-size);
+  text-align: center;
 }
 
 .memory-copy {
@@ -173,7 +185,7 @@
   position: relative;
   overflow: hidden;
   aspect-ratio: var(--ratio-hero);
-  border-radius: inherit;
+  border-radius: var(--radius-image-hero);
 }
 
 .hero-image {
@@ -181,6 +193,7 @@
   width: 100%;
   height: 100%;
   background: var(--skeleton-base);
+  border-radius: inherit;
 }
 
 /* 三段遮罩保证压图文字可读；基色是暖褐而非纯黑（方案 A 落地要点） */
@@ -221,14 +234,14 @@
  * 遮罩之下永远是暗底，浅色主题若沿用深色正文会彻底看不见。
  */
 .hero-code {
-  color: var(--glass-text-secondary);
+  color: var(--on-image-secondary);
   font-size: var(--eyebrow-size);
   font-weight: var(--fw-bold);
   letter-spacing: var(--eyebrow-tracking);
 }
 
 .hero-name {
-  color: var(--glass-text-primary);
+  color: var(--on-image-primary);
   font-size: var(--font-h2);
   font-weight: var(--fw-bold);
   letter-spacing: var(--ls-tight);
@@ -237,7 +250,7 @@
 
 .hero-tagline {
   overflow: hidden;
-  color: var(--glass-text-secondary);
+  color: var(--on-image-secondary);
   font-size: var(--small-size);
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -256,7 +269,7 @@
   position: relative;
   overflow: hidden;
   aspect-ratio: var(--ratio-card);
-  border-radius: inherit;
+  border-radius: var(--radius-image-thumb);
 }
 
 .grid-image {
@@ -264,6 +277,7 @@
   width: 100%;
   height: 100%;
   background: var(--skeleton-base);
+  border-radius: inherit;
 }
 
 .grid-veil {
@@ -299,7 +313,7 @@
 
 .grid-name {
   overflow: hidden;
-  color: var(--glass-text-primary);
+  color: var(--on-image-primary);
   font-size: var(--body-size);
   font-weight: var(--fw-bold);
   line-height: var(--lh-h3);
@@ -308,7 +322,7 @@
 }
 
 .grid-code {
-  color: var(--glass-text-secondary);
+  color: var(--on-image-secondary);
   font-size: var(--eyebrow-size);
   letter-spacing: var(--eyebrow-tracking);
 }

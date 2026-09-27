@@ -5,6 +5,7 @@
     "t-tag": "../../components/tag/index",
     "t-notice": "../../components/notice/index",
     "t-skeleton": "../../components/skeleton/index",
-    "t-progress": "../../components/progress/index"
+    "t-progress": "../../components/progress/index",
+    "t-button": "../../components/button/index"
   }
 }

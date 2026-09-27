@@ -1,6 +1,6 @@
 # 文档索引
 
-更新：2026-09-23
+更新：2026-09-24
 
 本目录只保留当前有效的产品、运营、交付和发布资料。既定产品批次和 76 个非人化图片母版已完成；宠物人化直接效果图运行时代码与 V2 本地素材接入已完成，效果图尚未上传、seed、冻结或批准上线，因此相关注册项继续不可见。虚拟支付合规与 `growth_orders` 支付缺陷的代码改造已完成，剩余工作是素材发布、外部凭据、真实 Provider/微信/供应商联调、远端 CI、部署演练和发布门禁。
 
@@ -27,6 +27,9 @@
 | 图片玩法重构、付费点与实现覆盖说明                  | [`product/29-图片玩法重构方案.md`](product/29-图片玩法重构方案.md)                                                       |
 | API 与运维速查                         | [`delivery/05-api-operations-reference.md`](delivery/05-api-operations-reference.md)               |
 | 小程序 UI 重构拍板结论                     | [`ui-refactor/阶段0-代码盘点与方向分配.md`](ui-refactor/阶段0-代码盘点与方向分配.md)                                     |
+| 小程序新一轮美术方向确认、23 页分配与待换图清单 | [`ui-refactor/小程序美术方向确认与待实现清单.md`](ui-refactor/小程序美术方向确认与待实现清单.md) |
+| 小程序已确认的六套页面布局 | [`ui-refactor/layout-proposals-6.html`](ui-refactor/layout-proposals-6.html) |
+| 小程序新图逐张审核与 92 格视觉验收 | [`ui-refactor/小程序新图审核展板.html`](ui-refactor/小程序新图审核展板.html) · [`ui-refactor/小程序视觉验收矩阵.md`](ui-refactor/小程序视觉验收矩阵.md) |
 | 配置外部账号、域名和凭据                      | [`operations/04-external-prerequisites.md`](operations/04-external-prerequisites.md)               |
 | 发布前验收和回滚                          | [`operations/05-release-checklist.md`](operations/05-release-checklist.md)                         |
 | 测试机/生产部署                          | [`delivery/02-deployment-guide.md`](delivery/02-deployment-guide.md)                               |
@@ -116,7 +119,9 @@ docs/
 
 **代码规模**（与工作区一致）：数据库迁移 `0000`～`0033`（34 份）、REST 路由 135 个、Web/H5 与后台页面 37 个（含 9 个后台）、小程序 23 页、内置玩法 manifest 10 条（7 live + 3 archived）、图片货架 9 个已登记入口 / 116 个模板（76 个冻结 live、40 个已完成本地素材映射但尚未上传的 `pending-review`；`human` 入口没有 live 项，因此公开 API 当前仍下发 8 个入口）、小程序主题 4 套 / 57 token / 18 个公共组件。
 
-**最新测试快照（2026-09-23）**：平台 `pnpm check` 通过（lint 0 错误 / 8 警告，typecheck、coverage、build 通过）；52 个测试文件、524 条用例，内存环境 522 通过 / 2 条真实成片用例跳过，真实 PostgreSQL + ffmpeg 环境 524 条全通过。覆盖率 Statements 79.11%、Branches 72.36%、Functions 86.09%、Lines 83.49%，范围以 Vitest 配置为准；[本地覆盖率报告](../apps/platform/coverage/index.html)。PostgreSQL + 真实 Worker 的移动浏览器 E2E 6 条通过，小程序十项校验及 45 条行为测试通过。命令、日志、截图、默认开发库误触事故与 A01–A18 待验项统一见 [实施验收记录](delivery/09-陪伴与记录实施验收记录.md)，不代表真机或发布已放行。
+**平台与上一轮小程序测试快照（2026-09-23）**：平台 `pnpm check` 通过（lint 0 错误 / 8 警告，typecheck、coverage、build 通过）；52 个测试文件、524 条用例，内存环境 522 通过 / 2 条真实成片用例跳过，真实 PostgreSQL + ffmpeg 环境 524 条全通过。覆盖率 Statements 79.11%、Branches 72.36%、Functions 86.09%、Lines 83.49%，范围以 Vitest 配置为准；[本地覆盖率报告](../apps/platform/coverage/index.html)。PostgreSQL + 真实 Worker 的移动浏览器 E2E 6 条通过，小程序十项校验及 45 条行为测试通过。命令、日志、截图、默认开发库误触事故与 A01–A18 待验项统一见 [实施验收记录](delivery/09-陪伴与记录实施验收记录.md)，不代表真机或发布已放行。
+
+**小程序美术改版本地复核（2026-09-26）**：23 页、4 主题、57 token 的结构校验通过，`npm.cmd run validate` 的 57 项 Node 测试通过；宠物艺术写真已有 12 套场景和本地样片，待用户复审。[92 格视觉验收矩阵](ui-refactor/小程序视觉验收矩阵.md)尚未取得微信开发者工具与真机截图，新图用户终审及测试环境 URL 核验仍待完成。
 
 **已完成的功能批次**（口径与落点全部登记在 `product/07-functional-backlog.md`）：
 

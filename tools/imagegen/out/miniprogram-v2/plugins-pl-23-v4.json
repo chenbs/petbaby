@@ -1,0 +1,12 @@
+{
+  "id": "pl-23",
+  "group": "plugins",
+  "prompt": "Premium contemporary pet product campaign image for a Chinese pet memories app. Bright, clean, vivid but restrained color, natural expressive animal anatomy, crisp face and eyes, tactile material detail. The subject and actual finished product must be immediately legible at small mobile thumbnail size. No readable text, letters, numbers, watermark, logo, UI screenshot, fake interface or extra limbs. Landscape 16:10 editorial two-photo growth comparison of the EXACT SAME orange-and-white tabby cat in the supplied photograph. Left: that cat as a kitten; right: that cat as an adult. Both animals fully visible from ears to paws, generous clear headroom, same orange stripes, white muzzle, chest and right forepaw, same eye color. Two believable home photographs divided by a fine line. No other cats, no text.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/model/front.jpg",
+  "output": "tools/imagegen/out/plugins/mp26-pl-23-v4.jpg",
+  "sha256": "e7a4b4054ae8af43dc05f9da9b9b670f44b0f1b1d41148ecaebd4bbabea96d9f",
+  "review": "approved-by-user",
+  "reviewedAt": "2026-09-26"
+}

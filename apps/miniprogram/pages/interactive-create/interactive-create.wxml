@@ -1,6 +1,6 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-flat">
+<view class="page page-flat art-pet layout-workbench">
   <text class="eyebrow">PL-15 · INTERACTIVE H5</text>
   <view class="title">编辑一页会回应的回忆</view>
   <text class="muted">收到的人点一下屏幕，星光会亮起来。</text>

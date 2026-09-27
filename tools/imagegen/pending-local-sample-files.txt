@@ -1,0 +1,1 @@
+# Local preview candidates only. Approved assets belong in reviewed-sample-files.txt.

@@ -22,6 +22,17 @@
   height: 100%;
 }
 
+.tile-image-blank {
+  display: flex;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2);
+  color: var(--text-secondary);
+  font-size: var(--eyebrow-size);
+  text-align: center;
+}
+
 .tile-picked {
   border-color: var(--primary);
 }

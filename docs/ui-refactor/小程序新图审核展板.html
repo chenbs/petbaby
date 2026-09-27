@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>小程序新图审核展板</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f4f6f5; color: #192723; font-family: system-ui, -apple-system, "Microsoft YaHei", sans-serif; line-height: 1.5; }
+    header, main { max-width: 1500px; margin: 0 auto; padding: 24px; }
+    header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px; border-bottom: 1px solid #ccd8d3; }
+    h1 { margin: 0; font-size: 24px; }
+    h2 { margin: 34px 0 16px; font-size: 18px; }
+    p { margin: 0; color: #52615b; }
+    a { color: #176253; text-underline-offset: 3px; }
+    .count { color: #8d3150; font-weight: 700; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 270px), 1fr)); gap: 18px; }
+    figure { min-width: 0; margin: 0; overflow: hidden; border: 1px solid #d5dfdb; border-radius: 6px; background: #fff; }
+    img { display: block; width: 100%; height: auto; background: #e7eeea; }
+    figcaption { display: grid; gap: 4px; padding: 12px 14px 14px; }
+    strong { font-size: 15px; }
+    small { color: #52615b; font-size: 12px; }
+    .note { margin-top: 30px; padding-top: 16px; border-top: 1px solid #ccd8d3; }
+  </style>
+</head>
+<body>
+  <header><h1>小程序新图审核展板</h1><p><span class="count">展板 24 张图片已全部通过</span> · V2 写真退役 · 测试环境与真机验收待完成</p></header>
+  <main>
+    <h2>玩法入口 · 16:10</h2>
+    <div class="grid">
+      <figure><img src="../../tools/imagegen/out/plugins/mp26-pet-id-card.jpg" alt="宠物身份卡样片"><figcaption><strong>宠物身份卡</strong><small>P01/P02 · 公共玩法入口</small><a href="../../tools/imagegen/out/miniprogram-v2/plugins-pet-id-card.json">提示词与哈希</a></figcaption></figure>
+      <figure><img src="../../tools/imagegen/out/plugins/mp26-pet-movie-poster-v3.jpg" alt="宠物电影海报样片"><figcaption><strong>宠物电影海报</strong><small>P01/P02 · 第三版已通过</small><a href="../../tools/imagegen/out/miniprogram-v2/plugins-pet-movie-poster-v3.json">提示词与哈希</a></figcaption></figure>
+      <figure><img src="../../tools/imagegen/out/plugins/mp26-pet-time-album.jpg" alt="时光画册样片"><figcaption><strong>时光画册</strong><small>P01/P02 · 公共玩法入口</small><a href="../../tools/imagegen/out/miniprogram-v2/plugins-pet-time-album.json">提示词与哈希</a></figcaption></figure>
+      <figure><img src="../../tools/imagegen/out/plugins/mp26-gray-toy-poodle-editorial-v1.jpg" alt="灰色泰迪艺术写真入口"><figcaption><strong>宠物艺术写真</strong><small>灰色泰迪 · 真实影棚 · 已通过</small><a href="../../tools/imagegen/out/miniprogram-v3/plugins-gray-toy-poodle-editorial-v1.json">提示词与哈希</a></figcaption></figure>
+      <figure><img src="../../tools/imagegen/out/plugins/mp26-pl-15-photographic-v2.jpg" alt="真实布景互动页入口"><figcaption><strong>互动页</strong><small>实物星灯布景 · 已通过</small><a href="../../tools/imagegen/out/miniprogram-v3/plugins-pl-15-photographic-v2.json">提示词与哈希</a></figcaption></figure>
+      <figure><img src="../../tools/imagegen/out/plugins/mp26-pl-19.jpg" alt="记忆短片样片"><figcaption><strong>记忆短片</strong><small>P01/P02 · 公共玩法入口</small><a href="../../tools/imagegen/out/miniprogram-v2/plugins-pl-19.json">提示词与哈希</a></figcaption></figure>
+      <figure><img src="../../tools/imagegen/out/plugins/mp26-pl-23-v4.jpg" alt="成长对比样片"><figcaption><strong>成长对比</strong><small>P01/P02 · 第四版已通过</small><a href="../../tools/imagegen/out/miniprogram-v2/plugins-pl-23-v4.json">提示词与哈希</a></figcaption></figure>
+    </div>
+
+    <h2>身份参考 · 不进入公共样片存储</h2>
+    <div class="grid">
+      <figure><img src="../../tools/imagegen/out/scenes/identity-ragdoll-bicolor-v2.jpg" alt="蓝双色布偶猫身份参考"><figcaption><strong>蓝双色布偶猫 · 已通过</strong><small>白色倒 V 面纹 · 粉色鼻头 · 蓝眼睛 · 白色四爪</small><a href="../../tools/imagegen/out/miniprogram-v2/identity-ragdoll-bicolor-v2.json">提示词与哈希</a></figcaption></figure>
+      <figure><img src="../../tools/imagegen/out/scenes-v3/identity-gray-toy-poodle-v1.jpg" alt="灰色泰迪身份参考"><figcaption><strong>灰色泰迪 · 已通过</strong><small>灰色卷毛 · 浅色口鼻 · 垂耳 · 深色眼睛</small><a href="../../tools/imagegen/out/miniprogram-v3/identity-gray-toy-poodle-v1.json">提示词与哈希</a></figcaption></figure>
+    </div>
+
+    <h2>宠物艺术写真 · 12 套真实摄影造型 · 3:4 · 已通过</h2>
+    <div class="grid">
+      <figure><img src="../../tools/imagegen/out/scenes/scene-window-morning-v3.jpg" alt="蓝格睡衣卧室写真"><figcaption><strong>蓝格睡衣卧室</strong><small>床上打哈欠 · 慵懒放松</small><a href="../../tools/imagegen/out/miniprogram-v3/scenes-window-morning-v3.json">提示词与哈希</a></figcaption></figure>
+      <figure><img src="../../tools/imagegen/out/scenes/scene-garden-curious-v3.jpg" alt="绿幕恐龙朋友写真"><figcaption><strong>绿幕恐龙朋友</strong><small>抱住玩偶 · 天真好奇</small><a href="../../tools/imagegen/out/miniprogram-v3/scenes-garden-curious-v3.json">提示词与哈希</a></figcaption></figure>
+      <figure><img src="../../tools/imagegen/out/scenes/scene-studio-confident-v3.jpg" alt="薄荷领带影棚写真"><figcaption><strong>薄荷领带影棚</strong><small>端坐回望 · 自信从容</small><a href="../../tools/imagegen/out/miniprogram-v3/scenes-studio-confident-v3.json">提示词与哈希</a></figcaption></figure>
+      <figure><img src="../../tools/imagegen/out/scenes/scene-night-playful-v3.jpg" alt="星夜小王子写真"><figcaption><strong>星夜小王子</strong><small>披风坐定 · 安静幻想</small><a href="../../tools/imagegen/out/miniprogram-v3/scenes-night-playful-v3.json">提示词与哈希</a></figcaption></figure>
+      <figure><img src="../../tools/imagegen/out/scenes/scene-seaside-breeze-v3.jpg" alt="柠檬黄日记写真"><figcaption><strong>柠檬黄日记</strong><small>柠檬入镜 · 俏皮大笑</small><a href="../../tools/imagegen/out/miniprogram-v3/scenes-seaside-breeze-v3.json">提示词与哈希</a></figcaption></figure>
+      <figure><img src="../../tools/imagegen/out/scenes/scene-library-whisper-v3.jpg" alt="复古摄影师写真"><figcaption><strong>复古摄影师</strong><small>相机在旁 · 慢慢观察</small><a href="../../tools/imagegen/out/miniprogram-v3/scenes-library-whisper-v3.json">提示词与哈希</a></figcaption></figure>
+      <figure><img src="../../tools/imagegen/out/scenes/scene-autumn-leaves-v3.jpg" alt="蓝调杂志封面写真"><figcaption><strong>蓝调杂志封面</strong><small>耳机与领带 · 俏皮凝视</small><a href="../../tools/imagegen/out/miniprogram-v3/scenes-autumn-leaves-v3.json">提示词与哈希</a></figcaption></figure>
+      <figure><img src="../../tools/imagegen/out/scenes/scene-snow-cabin-v4.jpg" alt="黑白经典肖像写真"><figcaption><strong>黑白经典肖像</strong><small>灰色泰迪 · 黑白影棚 · 温柔凝视</small><a href="../../tools/imagegen/out/miniprogram-v3/scenes-snow-cabin-v4.json">提示词与哈希</a></figcaption></figure>
+      <figure><img src="../../tools/imagegen/out/scenes/scene-cafe-afternoon-v3.jpg" alt="玫红眼镜写真"><figcaption><strong>玫红眼镜写真</strong><small>衬衫领带 · 轻松回眸</small><a href="../../tools/imagegen/out/miniprogram-v3/scenes-cafe-afternoon-v3.json">提示词与哈希</a></figcaption></figure>
+      <figure><img src="../../tools/imagegen/out/scenes/scene-lakeside-sunset-v4.jpg" alt="草地花环午后写真"><figcaption><strong>草地花环午后</strong><small>花束相伴 · 温柔凝视</small><a href="../../tools/imagegen/out/miniprogram-v3/scenes-lakeside-sunset-v4.json">提示词与哈希</a></figcaption></figure>
+      <figure><img src="../../tools/imagegen/out/scenes/scene-city-rain-v3.jpg" alt="街头雨衣写真"><figcaption><strong>街头雨衣</strong><small>雨后水洼 · 小心探步</small><a href="../../tools/imagegen/out/miniprogram-v3/scenes-city-rain-v3.json">提示词与哈希</a></figcaption></figure>
+      <figure><img src="../../tools/imagegen/out/scenes/scene-spring-picnic-v4.jpg" alt="软玩具野餐写真"><figcaption><strong>软玩具野餐</strong><small>野餐垫上 · 伸爪拨带</small><a href="../../tools/imagegen/out/miniprogram-v3/scenes-spring-picnic-v4.json">提示词与哈希</a></figcaption></figure>
+    </div>
+
+    <h2>设计概念图 · 已通过 · 不进入公共样片</h2>
+    <div class="grid">
+      <figure><img src="../../tools/imagegen/out/styles/play-portrait-v4.jpg" alt="AI 肖像概念图"><figcaption><strong>AI 肖像</strong><small>替换旧展板图片</small><a href="../../tools/imagegen/out/miniprogram-v2/plays-portrait-v4.json">提示词与哈希</a></figcaption></figure>
+      <figure><img src="../../tools/imagegen/out/styles/play-storybook-v3.jpg" alt="绘本主角概念图"><figcaption><strong>绘本主角</strong><small>替换旧展板图片</small><a href="../../tools/imagegen/out/miniprogram-v2/plays-storybook-v3.json">提示词与哈希</a></figcaption></figure>
+      <figure><img src="../../tools/imagegen/out/styles/play-magazine-v4.jpg" alt="杂志封面概念图"><figcaption><strong>杂志封面</strong><small>替换旧展板图片</small><a href="../../tools/imagegen/out/miniprogram-v2/plays-magazine-v4.json">提示词与哈希</a></figcaption></figure>
+    </div>
+    <p class="note">本页 24 张图片于 2026-09-26 获用户审核通过。运行时图位、历史对象键与后续验收状态以<a href="./小程序新图图位与审核台账.md">图位台账</a>为准；宠物人化 V2 不在本批。</p>
+  </main>
+</body>
+</html>

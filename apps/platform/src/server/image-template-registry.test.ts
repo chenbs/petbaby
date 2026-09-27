@@ -41,6 +41,16 @@ describe("image template registry", () => {
     expect(getImageTemplate("animal-ink-scratch-portrait", { includePending: true })).toBeUndefined();
   });
 
+  it("艺术写真公开为独立单图模板，不改变历史母版目录", () => {
+    const template = getImageTemplate("pet-art-photo");
+    expect(template).toMatchObject({ entryId: "art", subjectMode: "pet", status: "live", version: "v03", sampleStorageKey: "samples/scene-window-morning-v3-396d098a6999.jpg" });
+    expect(template?.masterStorageKey).toBeUndefined();
+    expect(listImageTemplates().some((item) => item.templateId === "pet-art-photo")).toBe(false);
+    expect(listPublicImageTemplateEntries().find((entry) => entry.id === "art")?.templates[0]?.templateId).toBe("pet-art-photo");
+    expect(getImageTemplateCandidateCount(template!)).toBe(4);
+    expect(imageTemplateSupportsReroll(template!)).toBe(true);
+  });
+
   it("宠物人化模板保持待审批，并使用固定提示词生成两张且禁止重抽", () => {
     const template = getImageTemplate("human-effect-01", { includePending: true });
     const anotherTemplate = getImageTemplate("human-effect-02", { includePending: true });

@@ -22,11 +22,10 @@ if [ "$MODE" = "production" ]; then
   exit 0
 fi
 
-PLUGINS_DIR="$REPO_DIR/tools/imagegen/out/plugins"
-STYLES_DIR="$REPO_DIR/tools/imagegen/out/styles"
+REVIEWED_SAMPLES="$REPO_DIR/tools/imagegen/reviewed-sample-files.txt"
 IMAGE_ASSET_MANIFEST="$REPO_DIR/tools/imagegen/out/reference-v1/deploy-assets.tsv"
 RETIRED_IMAGE_KEYS="$REPO_DIR/tools/imagegen/out/reference-v1/retired-storage-keys.txt"
-[ -d "$PLUGINS_DIR" ] || fail "缺少 $PLUGINS_DIR，请先在有凭据的机器上执行 node tools/imagegen/generate.mjs plugins"
+[ -f "$REVIEWED_SAMPLES" ] || fail "缺少已审核样例图清单：$REVIEWED_SAMPLES"
 
 WEB_CONTAINER=$(compose ps -q web)
 [ -n "$WEB_CONTAINER" ] || fail "web 容器未运行，请先执行：$SCRIPT_DIR/deploy.sh $MODE"
@@ -57,19 +56,14 @@ put() {
   count=$((count + 1))
 }
 
-for file in "$PLUGINS_DIR"/*.jpg; do
-  [ -f "$file" ] || continue
-  name=$(basename "$file" .jpg)
-  put "$file" "$name"
-done
-
-if [ -d "$STYLES_DIR" ]; then
-  for file in "$STYLES_DIR"/style-*.jpg; do
-    [ -f "$file" ] || continue
-    name=$(basename "$file" .jpg)
-    put "$file" "$name"
-  done
-fi
+while IFS= read -r relative_file || [ -n "$relative_file" ]; do
+  case "$relative_file" in ''|\#*) continue ;; esac
+  case "$relative_file" in plugins/*.jpg|styles/style-*.jpg|scenes/scene-*.jpg) ;; *) fail "样例图白名单路径非法：$relative_file" ;; esac
+  case "$relative_file" in *..*|*\\*|/*) fail "样例图白名单路径越界：$relative_file" ;; esac
+  file="$REPO_DIR/tools/imagegen/out/$relative_file"
+  [ -f "$file" ] || fail "缺少已审核样例图：$file"
+  put "$file" "$(basename "$relative_file" .jpg)"
+done < "$REVIEWED_SAMPLES"
 
 # 自有冻结母版供运行时图生图使用。第三方效果图不在这里，也不进入对象存储。
 # 键名与 apps/platform/src/server/image-template-registry.ts 一一对应。这里只灌入

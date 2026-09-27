@@ -8,22 +8,22 @@
   gap: var(--space-3);
 }
 
-/* 作品缩略图选择器：横向滚动，选中态用 --primary 描边（需求 5.20-2） */
-.work-rail {
-  display: flex;
-  width: 100%;
-  white-space: nowrap;
+/* 已解锁作品按可比较的双列呈现。 */
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--gap-item);
 }
 
 .work-item {
-  display: inline-flex;
-  width: 220rpx;
+  display: flex;
+  width: 100%;
+  min-width: 0;
   box-sizing: border-box;
   flex-direction: column;
   padding: var(--space-2);
   border: var(--card-border);
   border-radius: var(--card-radius);
-  margin-right: var(--space-3);
   background: var(--card-background);
   gap: var(--space-2);
 }
@@ -43,8 +43,19 @@
   display: block;
   width: 100%;
   aspect-ratio: var(--ratio-card);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-image-thumb);
   background: var(--skeleton-base);
+}
+
+.work-cover-blank {
+  display: flex;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3);
+  color: var(--text-secondary);
+  font-size: var(--small-size);
+  text-align: center;
 }
 
 .work-title {

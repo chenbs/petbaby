@@ -1,0 +1,12 @@
+{
+  "id": "pet-movie-poster",
+  "group": "plugins",
+  "prompt": "Premium contemporary pet product campaign image for a Chinese pet memories app. Bright, clean, vivid but restrained color, natural expressive animal anatomy, crisp face and eyes, tactile material detail. The subject and actual finished product must be immediately legible at small mobile thumbnail size. No readable text, letters, numbers, watermark, logo, UI screenshot, fake interface or extra limbs. Photograph of one complete vertically framed pet movie poster mounted on a clean coral gallery wall. Inside the printed poster a single corgi stands with all four paws on a sunlit city pavement like the lead of a warm adventure film. Clear theatrical lighting, deliberate empty title area, subtle unlettered credits strip, visible premium paper and full frame edges. The animal must be grounded and anatomically natural.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": null,
+  "output": "tools/imagegen/out/plugins/mp26-pet-movie-poster-v3.jpg",
+  "sha256": "0f9f70e6c032d306fb630d3a344b0f574ba3c230462a70b8bacefadf333d30ac",
+  "review": "approved-by-user",
+  "reviewedAt": "2026-09-26"
+}

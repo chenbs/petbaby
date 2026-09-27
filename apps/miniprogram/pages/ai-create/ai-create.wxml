@@ -1,11 +1,28 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-flat">
-  <text class="eyebrow">PL-10 · TEMPLATE SHELF</text>
-  <view class="title">先选玩法，再替换成你们</view>
-  <text class="muted">普通玩法生成四张候选；宠物人化生成两张候选，选中一张再解锁高清。</text>
+<view class="page page-flat art-brand layout-matrix">
+  <text class="eyebrow">PL-10 · PET ART PHOTO</text>
+  <view class="title">把它拍成一组艺术写真</view>
+  <text class="muted">先选场景，再选模板和身份照。普通写真生成四张候选；宠物人化仍生成两张候选。</text>
 
   <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
+
+  <t-skeleton wx:if="{{catalogLoading}}" type="grid" count="4"></t-skeleton>
+  <t-empty wx:elif="{{!entries.length}}" icon="work" title="暂无可用模板" description="模板目录暂时无法使用。" action-text="重新加载" anim="{{animType}}" decor="{{decor}}" bindaction="loadCatalog"></t-empty>
+
+  <block wx:else>
+
+  <view wx:if="{{templateId === 'pet-art-photo' && sceneOptions.length}}" class="section">
+    <view class="section-title">写真场景 · {{sceneOptions.length}} 套</view>
+    <view class="template-grid scene-grid">
+      <view wx:for="{{sceneOptions}}" wx:key="id" class="option template-option scene-option {{sceneId === item.id ? 'option-on' : ''}}" data-id="{{item.id}}" hover-class="option-hover" bindtap="chooseScene">
+        <image wx:if="{{item.url}}" class="style-thumb" src="{{item.url}}" mode="aspectFill" data-id="{{item.id}}" binderror="onSceneImageError" lazy-load />
+        <view wx:else class="style-thumb style-thumb-blank">样片暂不可用</view>
+        <view class="option-name">{{item.title}}</view>
+        <text class="small">{{item.description}}</text>
+      </view>
+    </view>
+  </view>
 
   <view class="section">
     <view class="section-title">玩法入口</view>
@@ -19,13 +36,14 @@
 
   <view class="section">
     <view class="section-title">模板</view>
-    <scroll-view class="chooser" scroll-x enable-flex>
-      <view wx:for="{{templates}}" wx:key="templateId" class="option {{templateId === item.templateId ? 'option-on' : ''}}" data-id="{{item.templateId}}" hover-class="option-hover" bindtap="chooseTemplate">
-        <image class="style-thumb" src="{{item.sampleUrl}}" mode="aspectFill" lazy-load />
+    <view class="template-grid">
+      <view wx:for="{{templates}}" wx:key="templateId" class="option template-option {{templateId === item.templateId ? 'option-on' : ''}}" data-id="{{item.templateId}}" hover-class="option-hover" bindtap="chooseTemplate">
+        <image wx:if="{{item.sampleUrl}}" class="style-thumb" src="{{item.sampleUrl}}" mode="aspectFill" data-id="{{item.templateId}}" data-src="{{item.sampleUrl}}" binderror="onTemplateImageError" lazy-load />
+        <view wx:else class="style-thumb style-thumb-blank">样片暂不可用</view>
         <view class="option-name">{{item.title}}</view>
         <text class="small">{{item.subjectMode === 'owner-pet' ? '主人 + 宠物' : item.subjectMode === 'pet-human' ? '宠物人化' : '宠物主体'}}</text>
       </view>
-    </scroll-view>
+    </view>
   </view>
 
   <view class="section">
@@ -56,4 +74,5 @@
   </block>
 
   <t-button type="ai" block anim="{{animType}}" loading="{{busy}}" disabled="{{!activeTemplate || !photoIds.length || (activeTemplate.subjectMode === 'owner-pet' && (!ownerPhotoIds.length || !authorizationConfirmed))}}" class="block-gap" bindtap="create">生成 {{activeTemplate && activeTemplate.candidateCount ? activeTemplate.candidateCount : 4}} 张候选</t-button>
+  </block>
 </view>

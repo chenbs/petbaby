@@ -56,6 +56,19 @@
   box-shadow: var(--shadow-clay-inset);
 }
 
+.result-image-blank {
+  display: flex;
+  box-sizing: border-box;
+  aspect-ratio: var(--ratio-card);
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5);
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-size: var(--small-size);
+  text-align: center;
+}
+
 .result-copy {
   padding: var(--space-4) 0 0;
 }

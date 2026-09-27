@@ -30,16 +30,29 @@ import {
   imageTemplateSupportsReroll,
   type ImageTemplateRerollReason,
 } from "@/server/image-template-registry";
+import {
+  buildPetArtPhotoPrompt,
+  PET_ART_PHOTO_TEMPLATE_ID,
+  PET_ART_PHOTO_VERSION,
+  PET_ART_PHOTO_SCENE_IDS,
+  resolvePetArtPhotoScene,
+  type PetArtPhotoSceneId,
+} from "@/domain/pet-art-photo";
 
-/**
- * AI 肖像的风格枚举，单一事实来源。
- *
- * 这组 id 同时被三处引用：本文件的入参校验、PL-10 manifest 的 samples.styleUrls 键、
- * 小程序 ai-create.js 的 STYLES。改名或增删风格必须三处同步 ——
- * 只改一处不会报错，端上只是静默取不到对比图，退回纯文字选项。
- * registry.test.ts 里有一条断言把 manifest 的键钉在这个数组上。
- */
+/** 宠物艺术写真场景的单一事实来源；旧 AI_STYLE_IDS 仅为历史请求兼容。 */
+export const AI_SCENE_IDS = PET_ART_PHOTO_SCENE_IDS;
+/** @deprecated 使用 AI_SCENE_IDS；旧 style 入参仍接受并映射到对应场景。 */
 export const AI_STYLE_IDS = ["warm-film", "paper-cut", "studio", "fantasy"] as const;
+
+const aiOptions = z.object({
+  play: z.enum(["portrait", "storybook", "magazine"]).default("portrait"),
+  scene: z.enum(AI_SCENE_IDS).optional(),
+  style: z.enum(AI_STYLE_IDS).optional(),
+  promptPreset: z.enum(["gentle", "heroic", "curious", "custom"]).default("gentle"),
+}).default({ play: "portrait", promptPreset: "gentle" }).transform((options) => ({
+  ...options,
+  scene: resolvePetArtPhotoScene(options as { scene?: PetArtPhotoSceneId; style?: string }),
+}));
 
 const aiInput = z.object({
   pluginId: z.string().min(1),
@@ -52,11 +65,7 @@ const aiInput = z.object({
   promptVersion: z.string().min(1).max(40).default("portrait-v1"),
   modelVersion: z.string().min(1).max(80).default("provider-v1"),
   idempotencyKey: z.string().min(8).max(120),
-  options: z.object({
-    play: z.enum(["portrait", "storybook", "magazine"]).default("portrait"),
-    style: z.enum(AI_STYLE_IDS).default("warm-film"),
-    promptPreset: z.enum(["gentle", "heroic", "curious", "custom"]).default("gentle"),
-  }).default({ play: "portrait", style: "warm-film", promptPreset: "gentle" }),
+  options: aiOptions,
 });
 const interactiveSnapshotSchema = z.object({
   title: z.string().trim().min(1).max(60),
@@ -80,11 +89,11 @@ async function createAiRunOperation(userId: string, input: unknown): Promise<AiR
   const plugin = await getRuntimePlugin(data.pluginId);
   if (!plugin || plugin.status !== "live" || plugin.category !== "ai-image") throw new AppError("AI_PLUGIN_UNAVAILABLE", "这个 AI 玩法暂未开放", 404);
   const template = getImageTemplate(data.templateId);
-  if (!template?.masterStorageKey) throw new AppError("IMAGE_TEMPLATE_UNAVAILABLE", "这个图片模板尚未开放", 404);
-  if (template.subjectMode === "owner-pet" && (!data.authorizationConfirmed || data.ownerPhotoIds.length !== 1)) {
+  if (!template || (!template.masterStorageKey && template.templateId !== PET_ART_PHOTO_TEMPLATE_ID)) throw new AppError("IMAGE_TEMPLATE_UNAVAILABLE", "这个图片模板尚未开放", 404);
+  if (template?.subjectMode === "owner-pet" && (!data.authorizationConfirmed || data.ownerPhotoIds.length !== 1)) {
     throw new AppError("OWNER_AUTHORIZATION_REQUIRED", "人宠模板需要 1 张已获授权的主人照片并确认授权", 422);
   }
-  if (template.subjectMode !== "owner-pet" && data.ownerPhotoIds.length) {
+  if (template?.subjectMode !== "owner-pet" && data.ownerPhotoIds.length) {
     throw new AppError("OWNER_PHOTO_NOT_ALLOWED", "这个模板不接收主人照片", 422);
   }
   const [pets, photos, ownerPhotos] = await Promise.all([
@@ -104,9 +113,11 @@ async function createAiRunOperation(userId: string, input: unknown): Promise<AiR
     petPhotoIds: data.photoIds,
     authorizationConfirmed: template.subjectMode === "owner-pet" ? data.authorizationConfirmed : false,
   };
-  const prompt = buildImageTemplatePrompt(template);
-  await database.query("INSERT INTO ai_runs (id,user_id,plugin_id,pet_id,photo_ids,role_inputs,status,prompt,prompt_version,model_version,provider,options,idempotency_key,candidates,cost,available_at,created_at) VALUES ($1,$2,$3,$4,$5::jsonb,$6::jsonb,'queued',$7,$8,$9,'pending',$10::jsonb,$11,'[]'::jsonb,0,now(),$12)", [id, userId, data.pluginId, data.petId, JSON.stringify(data.photoIds), JSON.stringify(roleInputs), prompt, `template-${template.version}`, data.modelVersion, JSON.stringify({ ...data.options, templateId: template.templateId }), data.idempotencyKey, new Date()]);
-  await recordEvent(userId, "ai_created", data.pluginId, "product", { petId: data.petId, templateId: template.templateId, subjectMode: template.subjectMode });
+  const prompt = template.templateId === PET_ART_PHOTO_TEMPLATE_ID
+    ? buildPetArtPhotoPrompt(data.options.scene)
+    : buildImageTemplatePrompt(template);
+  await database.query("INSERT INTO ai_runs (id,user_id,plugin_id,pet_id,photo_ids,role_inputs,status,prompt,prompt_version,model_version,provider,options,idempotency_key,candidates,cost,available_at,created_at) VALUES ($1,$2,$3,$4,$5::jsonb,$6::jsonb,'queued',$7,$8,$9,'pending',$10::jsonb,$11,'[]'::jsonb,0,now(),$12)", [id, userId, data.pluginId, data.petId, JSON.stringify(data.photoIds), JSON.stringify(roleInputs), prompt, `template-${roleInputs.templateVersion}`, data.modelVersion, JSON.stringify({ ...data.options, templateId: roleInputs.templateId }), data.idempotencyKey, new Date()]);
+  await recordEvent(userId, "ai_created", data.pluginId, "product", { petId: data.petId, templateId: roleInputs.templateId, subjectMode: roleInputs.subjectMode, scene: template.templateId === PET_ART_PHOTO_TEMPLATE_ID ? data.options.scene : undefined });
   return getAiRun(userId, id);
 }
 
@@ -161,6 +172,13 @@ async function loadTemplateReferences(row: Record<string, unknown>) {
   const userId = String(row.user_id);
   const petId = String(row.pet_id);
   const roleInputs = mapAiRoleInputs(row.role_inputs);
+  if (roleInputs.templateId === PET_ART_PHOTO_TEMPLATE_ID) {
+    if (!["v01", PET_ART_PHOTO_VERSION].includes(roleInputs.templateVersion || "") || roleInputs.subjectMode !== "pet" || roleInputs.petPhotoIds.length !== 1 || roleInputs.ownerPhotoIds.length) {
+      throw new AppError("AI_TEMPLATE_SNAPSHOT_INVALID", "写真任务输入已失效，请重新创建", 409);
+    }
+    const reference = await loadPetReference(userId, petId, roleInputs.petPhotoIds[0]);
+    return { template: getImageTemplate(PET_ART_PHOTO_TEMPLATE_ID)!, references: [reference] };
+  }
   const template = roleInputs.templateId ? getImageTemplate(roleInputs.templateId) : undefined;
   if (!template?.masterStorageKey || template.version !== roleInputs.templateVersion || template.subjectMode !== roleInputs.subjectMode) {
     throw new AppError("AI_TEMPLATE_SNAPSHOT_INVALID", "任务使用的模板版本已失效，请重新创建", 409);
@@ -300,7 +318,7 @@ export async function selectAiCandidate(userId: string, id: string, candidateId:
     await lockPhotoInputs(userId, run.petId, run.photoIds);
     const db = await getDatabase();
     const pets = await db.query("SELECT name FROM pets WHERE id=$1 AND user_id=$2", [run.petId, userId]);
-    const workId = crypto.randomUUID(); const now = new Date(); const title = `${String(pets[0]?.name || "它")}的 AI 肖像`;
+    const workId = crypto.randomUUID(); const now = new Date(); const title = `${String(pets[0]?.name || "它")}的${run.roleInputs.templateId === PET_ART_PHOTO_TEMPLATE_ID ? "宠物艺术写真" : "AI 肖像"}`;
     const selectionLabel = run.roleInputs.subjectMode === "pet-human" ? "二选一" : "四选一";
     const subtitle = `AI 生成内容 · 已选中的${selectionLabel}结果`;
     await db.query("INSERT INTO works (id,user_id,plugin_id,pet_id,photo_id,title,subtitle,serial_number,authority,output_key,preview_key,asset_kind,source_kind,source_id,locked,public,version,expires_at,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,'麻麻抱我 AI 工作室',$9,$10,'image','ai',$11,true,false,1,$12,$13)", [workId, userId, run.pluginId, run.petId, run.photoIds[0], title, subtitle, `AI-${id.slice(0, 8).toUpperCase()}`, candidate.outputKey, candidate.previewKey, id, new Date(Date.now() + 90 * 86400000), now]);
@@ -328,7 +346,14 @@ async function rerollAiRunOperation(userId: string, id: string, reason: ImageTem
   if (reason === "owner-not-like" && template.subjectMode !== "owner-pet") throw new AppError("REROLL_REASON_INVALID", "单宠模板不能选择主人不像", 422);
   if (reason === "too-animal" && template.subjectMode !== "pet-human") throw new AppError("REROLL_REASON_INVALID", "只有宠物人化模板可以选择太像动物", 422);
   const roleInputs = { ...run.roleInputs, rerollReason: reason };
-  const rows = await (await getDatabase()).query("UPDATE ai_runs SET status='queued',candidates='[]'::jsonb,selected_id=NULL,reroll_count=reroll_count+1,error_code=NULL,available_at=now(),locked_at=NULL,role_inputs=$3::jsonb,prompt=$4 WHERE id=$1 AND user_id=$2 AND status IN ('succeeded','failed') AND reroll_count<2 AND work_id IS NULL RETURNING id", [id, userId, JSON.stringify(roleInputs), buildImageTemplatePrompt(template, reason)]);
+  const scene = resolvePetArtPhotoScene({
+    scene: typeof run.options.scene === "string" && (AI_SCENE_IDS as readonly string[]).includes(run.options.scene) ? run.options.scene as PetArtPhotoSceneId : undefined,
+    style: typeof run.options.style === "string" ? run.options.style : undefined,
+  });
+  const prompt = template.templateId === PET_ART_PHOTO_TEMPLATE_ID
+    ? buildPetArtPhotoPrompt(scene, reason)
+    : buildImageTemplatePrompt(template, reason);
+  const rows = await (await getDatabase()).query("UPDATE ai_runs SET status='queued',candidates='[]'::jsonb,selected_id=NULL,reroll_count=reroll_count+1,error_code=NULL,available_at=now(),locked_at=NULL,role_inputs=$3::jsonb,prompt=$4 WHERE id=$1 AND user_id=$2 AND status IN ('succeeded','failed') AND reroll_count<2 AND work_id IS NULL RETURNING id", [id, userId, JSON.stringify(roleInputs), prompt]);
   if (!rows[0]) throw new AppError("AI_REROLL_LIMIT", "重抽次数已用完、任务仍在处理中或候选已经归档", 409);
   await Promise.all(run.candidates.flatMap((candidate) => [candidate.outputKey, candidate.previewKey].filter((key): key is string => Boolean(key)).map((key) => objectStorage.delete(key).catch(() => undefined))));
   return getAiRun(userId, id);

@@ -6,21 +6,33 @@ themedPage({
   data: {
     pets: [], petId: "", petText: "", photos: [], photoIds: [],
     entries: [], entryId: "", templates: [], templateId: "", activeTemplate: null,
+    artPlugin: null, sceneOptions: [], sceneId: "window-morning",
     ownerPhotos: [], ownerPhotoIds: [], authorizationConfirmed: false,
-    busy: false, error: "", loading: true
+    busy: false, error: "", loading: true, catalogLoading: true
   },
   onLoad(query) {
+    this._query = query || {};
     this._initialPhotoIds = query && query.photoIds ? query.photoIds.split(",").filter(Boolean) : [];
+    this.loadCatalog();
+  },
+  loadCatalog() {
+    const query = this._query;
+    this.setData({ catalogLoading: true, error: "" });
     Promise.all([
       api.request("/api/pets"),
       api.request("/api/image-templates"),
-      api.request("/api/owner-photos")
+      api.request("/api/owner-photos"),
+      api.request("/api/plugins")
     ]).then((results) => {
       const pets = results[0] || [];
       const entries = (results[1] && results[1].entries) || [];
+      const artPlugin = (results[3] || []).find((item) => item.id === "pl-10") || null;
+      const sceneOptions = artPlugin && artPlugin.samples && artPlugin.samples.sceneOptions
+        ? artPlugin.samples.sceneOptions.map((item) => Object.assign({}, item, { url: artPlugin.samples.sceneUrls && artPlugin.samples.sceneUrls[item.id] || "" }))
+        : [];
       const selectedPet = query && query.petId ? pets.find((item) => item.id === query.petId) : pets.find((item) => item.isDefault) || pets[0];
       if (query && query.petId && !selectedPet) throw new Error("这只宠物的档案不可用，请重新选择");
-      const entry = entries[0];
+      const entry = entries.find((item) => item.id === "art") || entries[0];
       const template = entry && entry.templates[0];
       this.setData({
         pets,
@@ -31,11 +43,15 @@ themedPage({
         templates: entry ? entry.templates : [],
         templateId: template ? template.templateId : "",
         activeTemplate: template || null,
-        loading: false
+        artPlugin,
+        sceneOptions,
+        sceneId: sceneOptions.length ? sceneOptions[0].id : "window-morning",
+        loading: false,
+        catalogLoading: false
       });
       if (selectedPet) this.loadPhotos(selectedPet.id);
       return withPrivatePreviews(results[2] || []);
-    }).then((ownerPhotos) => this.setData({ ownerPhotos })).catch((error) => this.setData({ error: error.message, loading: false }));
+    }).then((ownerPhotos) => this.setData({ ownerPhotos })).catch((error) => this.setData({ error: error.message, loading: false, catalogLoading: false }));
   },
   loadPhotos(petId) {
     const request = this._photoRequest = (this._photoRequest || 0) + 1;
@@ -72,6 +88,22 @@ themedPage({
     const id = event.currentTarget.dataset.id;
     const template = this.data.templates.find((item) => item.templateId === id);
     this.setData({ templateId: id, activeTemplate: template || null, ownerPhotoIds: [], authorizationConfirmed: false });
+  },
+  onTemplateImageError(event) {
+    const { id, src } = event.currentTarget.dataset;
+    const index = this.data.templates.findIndex((item) => item.templateId === id && item.sampleUrl === src);
+    if (index >= 0) this.setData({ ["templates[" + index + "].sampleUrl"]: "" });
+  },
+  chooseScene(event) {
+    if (this.data.busy) return;
+    const id = event.currentTarget.dataset.id;
+    if (!this.data.sceneOptions.some((item) => item.id === id)) return;
+    this.setData({ sceneId: id, error: "" });
+  },
+  onSceneImageError(event) {
+    const id = event.currentTarget.dataset.id;
+    const index = this.data.sceneOptions.findIndex((item) => item.id === id);
+    if (index >= 0) this.setData({ ["sceneOptions[" + index + "].url"]: "" });
   },
   togglePhoto(event) {
     const id = event.detail.id;
@@ -114,6 +146,7 @@ themedPage({
     if (this.data.busy || this.data.loading) return;
     const template = this.data.activeTemplate;
     if (!template || !this.data.petId || this.data.photoIds.length !== 1) return this.setData({ error: "请选择模板、宠物和 1 张宠物身份照" });
+    if (template.templateId === "pet-art-photo" && !this.data.sceneOptions.some((item) => item.id === this.data.sceneId)) return this.setData({ error: "写真场景暂不可用，请重新加载" });
     if (template.subjectMode === "owner-pet" && (!this.data.authorizationConfirmed || this.data.ownerPhotoIds.length !== 1)) return this.setData({ error: "人宠模板需要 1 张已授权的主人照片" });
     this.setData({ busy: true, error: "" });
     api.request("/api/ai-runs", { method: "POST", data: {
@@ -123,6 +156,7 @@ themedPage({
       photoIds: this.data.photoIds,
       ownerPhotoIds: template.subjectMode === "owner-pet" ? this.data.ownerPhotoIds : [],
       authorizationConfirmed: template.subjectMode === "owner-pet" && this.data.authorizationConfirmed,
+      options: { scene: this.data.sceneId },
       promptVersion: "template-" + template.version,
       modelVersion: "provider-v1",
       idempotencyKey: "mp-" + Date.now() + "-" + template.templateId + "-" + this.data.photoIds[0]

@@ -1,22 +1,41 @@
 const api = require("../../services/api");
+const { displayMediaTree } = require("../../services/photo-files");
 const { themedPage } = require("../../theme/page-mixin");
 
 const RENDER_TEXT = { queued: "排队中", processing: "渲染中", succeeded: "已完成", failed: "渲染失败", cancelled: "已取消" };
 
 themedPage({
-  data: { id: "", project: null, render: null, caption: "", message: "", messageType: "info", busy: false, loading: true, renderText: "", confirmCancel: false },
+  data: { id: "", project: null, render: null, coverUrl: "", caption: "", message: "", messageType: "info", busy: false, loading: true, renderText: "", confirmCancel: false },
   onLoad(options) { this.setData({ id: options.id }); this.load(); },
   onShow() { if (this.data.id && this.data.project) this.load(); },
   onUnload() { if (this.timer) clearTimeout(this.timer); },
   load() {
     api.request("/api/video-projects/" + this.data.id).then((project) => {
       this.setData({ project, caption: project.captions && project.captions[0] || "", loading: false });
+      this.loadCover(project);
       if (!project.current_render_id) return;
       return api.request("/api/video-renders/" + project.current_render_id).then((render) => {
         this.setData({ render, renderText: RENDER_TEXT[render.status] || render.status });
         if (["queued", "processing"].indexOf(render.status) >= 0) this.timer = setTimeout(() => this.load(), 2500);
       });
     }).catch((error) => this.setData({ message: error.message, messageType: "error", loading: false }));
+  },
+  loadCover(project) {
+    const ids = Array.isArray(project.photo_ids) ? project.photo_ids : [];
+    const coverId = project.cover_photo_id || ids[0];
+    if (!coverId || !project.pet_id || coverId === this._coverId) return;
+    this._coverId = coverId;
+    return api.request("/api/photos?petId=" + encodeURIComponent(project.pet_id))
+      .then((photos) => {
+        const photo = photos.filter((item) => item.id === coverId)[0];
+        if (!photo) throw new Error("封面照片已不可用");
+        return displayMediaTree(photo);
+      })
+      .then((photo) => { if (coverId === this._coverId) this.setData({ coverUrl: photo.url || "" }); })
+      .catch(() => { if (coverId === this._coverId) this.setData({ coverUrl: "" }); });
+  },
+  onCoverError(event) {
+    if (this.data.coverUrl === event.currentTarget.dataset.src) this.setData({ coverUrl: "" });
   },
   inputCaption(event) { this.setData({ caption: event.detail.value }); },
   save() {

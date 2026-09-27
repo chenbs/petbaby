@@ -1,11 +1,4 @@
-/*
- * 访客阅读页按 F（杂志封面）改造：整页没有圆角卡片、没有阴影，
- * 质感全部由排版纪律承担 —— 宽版心、极端字重对比、满版出血图、细线收口。
- *
- * 版心用 --page-x-wide（48rpx）而非原来的 calc(--page-padding * 1.5)：
- * 后者在四套主题下得到 48/54/48/60 四个值，跨主题对不齐，
- * 而 F 的留白本身就是主要材料，必须是确定值。
- */
+/* 访客阅读保留章节节奏，并让原比例照片完整呈现。 */
 .page-read {
   padding-right: var(--page-x-wide);
   padding-left: var(--page-x-wide);
@@ -44,21 +37,29 @@
   background: var(--divider);
 }
 
-/*
- * 照片满版出血：用负外边距抵掉版心，图片顶到屏幕两侧。
- * 去掉描边与圆角 —— F 的规则是「整屏没有一个圆角卡片、没有一个阴影」，
- * 纪念页尤其不该给遗照套一个 UI 边框。
- */
 .photo-flow {
   display: grid;
-  margin: var(--gap-section) calc(-1 * var(--page-x-wide));
+  margin: var(--gap-section) 0;
   gap: var(--gap-group);
+}
+
+.photo-frame {
+  overflow: hidden;
+  border-radius: var(--radius-image-hero);
+  background: var(--skeleton-base);
 }
 
 .photo {
   display: block;
   width: 100%;
-  background: var(--skeleton-base);
+  border-radius: var(--radius-image-hero);
+}
+
+.photo-error {
+  padding: var(--space-6) var(--space-4);
+  color: var(--text-secondary);
+  font-size: var(--small-size);
+  text-align: center;
 }
 
 /* 正文行高比常规更松，长文阅读优先 */
@@ -72,8 +73,14 @@
   white-space: pre-wrap;
 }
 
-.closing {
-  display: block;
-  padding-top: var(--space-5);
+.story-section {
+  margin-top: var(--gap-group);
   border-top: 2rpx solid var(--divider);
+}
+
+.story-heading {
+  margin-top: var(--space-5);
+  color: var(--text-primary);
+  font-size: var(--font-h2);
+  font-weight: var(--fw-bold);
 }

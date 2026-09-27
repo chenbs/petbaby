@@ -83,7 +83,7 @@ themedPage({
     coverTitle: "",
     uploadProgress: 0,
     task: null,
-    work: null,
+    work: null, resultImageFailed: false,
     // 档位与价格在制作前展示（改造项 L3）。服务端 /api/pets/{id}/pricing 是唯一来源，
     // 端上不自己按照片数算档 —— 展示价与实收价由两份代码算出来必然走散。
     pricing: null,
@@ -374,7 +374,7 @@ themedPage({
       this.setData({ task });
       if (task.status === "succeeded") {
         this._submission = null;
-        this.setData({ task: null, work: task.work, stage: "result", busy: false });
+        this.setData({ task: null, work: task.work, stage: "result", busy: false, resultImageFailed: false });
         this.saveDraft();
         this.syncLabels();
         api.request("/api/events", { method: "POST", data: { name: "previewed", pluginId: this.data.pluginId, channel: "miniprogram", metadata: {} } }).catch(() => undefined);
@@ -392,5 +392,8 @@ themedPage({
     });
   },
 
+  onResultImageError(event) {
+    if (this.data.work && this.data.work.outputUrl === event.currentTarget.dataset.src) this.setData({ resultImageFailed: true });
+  },
   openWork() { if (this.data.work) wx.navigateTo({ url: "/pages/work/work?id=" + this.data.work.id }); }
 });

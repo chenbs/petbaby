@@ -1,0 +1,11 @@
+{
+  "id": "fantasy",
+  "group": "styles",
+  "prompt": "Premium contemporary pet product campaign image for a Chinese pet memories app. Bright, clean, vivid but restrained color, natural expressive animal anatomy, crisp face and eyes, tactile material detail. The subject and actual finished product must be immediately legible at small mobile thumbnail size. No readable text, letters, numbers, watermark, logo, UI screenshot, fake interface or extra limbs. Restyle the supplied ragdoll cat as a luminous story illustration in a bright botanical garden, delicate magical details and refined painted texture, blue eyes and long cream fur clearly visible. Preserve the dark point mask, face, species and anatomy.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/website/work-ragdoll.jpg",
+  "output": "tools/imagegen/out/styles/style-fantasy-v3.jpg",
+  "sha256": "e339ff43907b9c1045c7582ceb9ca56e48f07a803ec211b236147ae18f558766",
+  "review": "pending-visual-review"
+}

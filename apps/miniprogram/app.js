@@ -3,7 +3,7 @@ const api = require("./services/api");
 const theme = require("./theme/manager");
 
 App({
-  globalData: { apiBaseUrl: config.apiBaseUrl, loggedIn: false, themeId: "cute" },
+  globalData: { apiBaseUrl: config.apiBaseUrl, loggedIn: false, themeId: "pet" },
   onLaunch() {
     // 主题必须早于任何网络请求落地，确保首屏不出现主题闪变（需求 6.3.1）。
     this.globalData.themeId = theme.init();

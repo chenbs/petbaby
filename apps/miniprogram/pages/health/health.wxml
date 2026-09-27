@@ -1,6 +1,6 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-flat">
+<view class="page page-flat art-pet layout-workbench">
   <text class="eyebrow">HEALTH</text>
   <view class="title">健康助手</view>
   <!--
@@ -12,6 +12,7 @@
   <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
 
   <t-skeleton wx:if="{{loading}}" type="list" count="2" class="block-gap"></t-skeleton>
+  <t-button wx:elif="{{error && !pets.length}}" type="secondary" bindtap="load">重新加载档案</t-button>
 
   <t-empty
     wx:elif="{{!pets.length}}"

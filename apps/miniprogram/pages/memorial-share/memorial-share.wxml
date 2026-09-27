@@ -1,36 +1,33 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-flat page-read">
+<view class="page page-flat page-read art-film layout-bookshelf">
   <t-skeleton wx:if="{{loading}}" type="card" count="2"></t-skeleton>
 
   <t-empty
     wx:elif="{{!item}}"
     icon="pet"
     title="打不开这个纪念空间"
-    description="这个纪念空间可能已关闭分享。"
+    description="{{error || '这个纪念空间可能已关闭分享。'}}"
     anim="fade"
   ></t-empty>
 
   <block wx:else>
-    <!-- F 的封面式开篇：期数标识 + 巨大标题 + 副题 + 细线收口 -->
     <text class="share-kicker">麻麻抱我 · 纪念空间</text>
     <view class="share-title">{{item.title}}</view>
     <text class="share-pet">{{item.pet_name}}</text>
     <view class="share-rule"></view>
 
-    <!-- 照片按原始比例纵向流，保留完整构图（需求 5.18-2）；F 下满版出血 -->
     <view class="photo-flow">
-      <image
-        wx:for="{{photos}}"
-        wx:key="id"
-        class="photo"
-        src="{{item.url}}"
-        mode="widthFix"
-      ></image>
+      <view wx:for="{{photos}}" wx:key="id" class="photo-frame">
+        <image wx:if="{{item.url}}" class="photo" src="{{item.url}}" mode="widthFix" data-id="{{item.id}}" data-src="{{item.url}}" binderror="onPhotoError"></image>
+        <view wx:else class="photo-error">{{item.imageError || '照片暂时无法显示'}}</view>
+      </view>
     </view>
 
-    <text class="story">{{item.story}}</text>
-
-    <text class="small closing">这里不开放留言、排名或营销弹窗。</text>
+    <text wx:if="{{item.story}}" class="story">{{item.story}}</text>
+    <view wx:for="{{sections}}" wx:key="index" class="story-section">
+      <view class="story-heading">{{item.title}}</view>
+      <text class="story">{{item.body}}</text>
+    </view>
   </block>
 </view>

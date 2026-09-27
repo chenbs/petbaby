@@ -6,8 +6,9 @@ const manager = require("../../theme/manager");
  * 切换即时生效、无需重启、不发网络请求。
  */
 themedPage({
-  data: { themes: [], previews: [], applied: "" },
+  data: { themes: [], previews: [], applied: "", previewImageFailed: false },
   onLoad() { this.build(); },
+  onPreviewImageError() { this.setData({ previewImageFailed: true }); },
   build() {
     const current = manager.getThemeId();
     const previews = manager.listThemes().map((item) => ({

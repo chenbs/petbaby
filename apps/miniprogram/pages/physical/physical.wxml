@@ -1,6 +1,6 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-flat">
+<view class="page page-flat art-brand layout-matrix">
   <text class="eyebrow">KEEPSAKE</text>
   <view class="title">实体纪念品</view>
   <text class="muted">把它的作品印出来，寄到你手上。</text>
@@ -10,8 +10,10 @@
 
   <t-skeleton wx:if="{{loading}}" type="card" count="2" class="block-gap"></t-skeleton>
 
+  <t-button wx:elif="{{error && !works.length && !orders.length}}" type="secondary" bindtap="load">重新加载</t-button>
+
   <block wx:else>
-    <!-- 作品选择：缩略图横向滚动，替代文字 picker（需求 5.20-2） -->
+    <!-- 作品选择：缩略图矩阵，保持原有选择动作。 -->
     <view class="section">
       <view class="section-title">选择作品</view>
 
@@ -26,7 +28,7 @@
         bindaction="goWorks"
       ></t-empty>
 
-      <scroll-view wx:else class="work-rail" scroll-x enable-flex>
+      <view wx:else class="work-grid">
         <view
           wx:for="{{works}}"
           wx:key="id"
@@ -34,10 +36,11 @@
           data-id="{{item.id}}"
           bindtap="chooseWork"
         >
-          <image class="work-cover" src="{{item.coverUrl}}" mode="aspectFill"></image>
+          <image wx:if="{{item.coverUrl}}" class="work-cover" src="{{item.coverUrl}}" mode="aspectFill" data-id="{{item.id}}" data-src="{{item.coverUrl}}" binderror="onCoverError"></image>
+          <view wx:else class="work-cover work-cover-blank">作品预览暂不可用</view>
           <text class="small work-title">{{item.title}}</text>
         </view>
-      </scroll-view>
+      </view>
     </view>
 
     <!-- 收货信息：五个字段显式化 + 中文 label（需求 5.20-1） -->

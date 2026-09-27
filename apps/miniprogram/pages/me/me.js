@@ -5,17 +5,24 @@ const { themedPage } = require("../../theme/page-mixin");
 const manager = require("../../theme/manager");
 
 themedPage({
-  data: { profile: null, status: null, hero: null, loading: true, themeName: "" },
+  data: { profile: null, status: null, hero: null, loading: true, error: "", themeName: "" },
   onShow() {
     const tabbar = this.getTabBar && this.getTabBar();
     if (tabbar) tabbar.setData({ selected: 2 });
     // 当前主题名展示在入口行右侧，让用户不进二级页也知道用的是哪套
     const current = manager.listThemes().find((item) => item.id === manager.getThemeId());
     this.setData({ themeName: current ? current.name : "" });
+    this.loadAccount();
+    this.loadHero();
+  },
+  loadAccount() {
+    this.setData({ profile: null, status: null, loading: true, error: "" });
     Promise.all([api.request("/api/account"), api.request("/api/account/status")])
       .then((result) => this.setData({ profile: result[0], status: result[1], loading: false }))
-      .catch(() => this.setData({ loading: false }));
-    this.loadHero();
+      .catch((error) => this.setData({ loading: false, error: error.message || "账户资料加载失败" }));
+  },
+  onHeroImageError(event) {
+    if (this.data.hero && this.data.hero.avatarUrl === event.currentTarget.dataset.src) this.setData({ "hero.avatarUrl": "" });
   },
   /**
    * 方案 E：个人中心先给「对象」，再给功能。取默认宠物作为顶部区块，

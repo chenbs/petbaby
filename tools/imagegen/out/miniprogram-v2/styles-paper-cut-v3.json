@@ -1,0 +1,11 @@
+{
+  "id": "paper-cut",
+  "group": "styles",
+  "prompt": "Premium contemporary pet product campaign image for a Chinese pet memories app. Bright, clean, vivid but restrained color, natural expressive animal anatomy, crisp face and eyes, tactile material detail. The subject and actual finished product must be immediately legible at small mobile thumbnail size. No readable text, letters, numbers, watermark, logo, UI screenshot, fake interface or extra limbs. Restyle the supplied ragdoll cat as a sophisticated layered paper-cut illustration with visible matte paper fibers and cast shadows, full recognizable blue-eyed face, cool ivory and cobalt paper layers. Preserve the ragdoll's dark point mask, long cream fur, species and anatomy.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/website/work-ragdoll.jpg",
+  "output": "tools/imagegen/out/styles/style-paper-cut-v3.jpg",
+  "sha256": "134da066452131978efe8120d508f537363ce3d9365a0e155b14633e06826683",
+  "review": "pending-visual-review"
+}

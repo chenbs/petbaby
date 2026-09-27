@@ -60,7 +60,9 @@ themedPage({
       return ["all", "locked", "unlocked", "expired"].indexOf(status) >= 0;
     }).map((work) => {
       const expired = Boolean(work.locked && work.expiresAt && new Date(work.expiresAt).getTime() < now);
+      const photoUrl = work.photo && work.photo.url || "";
       return Object.assign({}, work, {
+        coverUrl: ["video", "pdf", "h5"].indexOf(work.assetKind) >= 0 ? photoUrl : work.outputUrl || photoUrl,
         statusText: expired ? "已过期" : work.locked ? "待解锁" : "已解锁",
         statusTone: expired ? "error" : work.locked ? "warning" : "success"
       });
@@ -71,6 +73,11 @@ themedPage({
     }).map((task) => Object.assign({}, task, { statusText: TASK_TEXT[task.status] || task.status }));
     // 有筛选条件但结果为空时，空状态要引导「清空筛选」而不是「去创作」
     this.setData({ works, tasks, filtered: Boolean(petId || pluginId || status !== "all") });
+  },
+  onCoverError(event) {
+    const { id, src } = event.currentTarget.dataset;
+    const index = this.data.works.findIndex((item) => item.id === id && item.coverUrl === src);
+    if (index >= 0) this.setData({ ["works[" + index + "].imageFailed"]: true });
   },
   open(event) { wx.navigateTo({ url: "/pages/work/work?id=" + event.currentTarget.dataset.id }); },
   retry(event) { const task = this.data.tasks.find((item) => item.id === event.currentTarget.dataset.id); if (task) wx.navigateTo({ url: "/pages/create/create?pluginId=" + task.pluginId }); },

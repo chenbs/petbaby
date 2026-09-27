@@ -1,0 +1,15 @@
+{
+  "id": "window-morning",
+  "title": "蓝格睡衣卧室",
+  "description": "床上打哈欠 · 慵懒放松",
+  "group": "scenes",
+  "prompt": "Use case: photorealistic-natural editorial pet photography. Make this look like a real commissioned studio or lifestyle photograph, with real fur detail, believable fabric, physically plausible props, natural contact shadows and a real camera lens. One adult pet only, complete head and body visible, natural anatomy and paws, no people or hands, no duplicate subject. No brand marks, logos, copied magazine mastheads, readable text, pseudo-letters, watermark, signature, CGI, 3D render, illustration, plastic fur or surreal background. Vertical 3:4 composition. The pet is the clear hero and occupies about 45-65% of frame height; the set, clothing and props remain visible and recognizable. The exact same adult blue-bicolor Ragdoll cat as Image 1: broad rounded head, clean symmetric white inverted-V face blaze, pink nose, deep blue eyes, white chin/chest/legs/paws, blue-gray ears/back and long silky coat. Preserve the individual identity and healthy natural proportions. Do not turn it into a seal-point cat, Siamese, Birman or generic long-haired cat. Scene and styling: A real bright bedroom set with a blue gingham duvet, pale blue pillows and a neatly made bed beneath a tall window. The cat wears a soft blue gingham sleep cap and matching tiny pajama collar, sitting in the bedding with a natural wide yawn. Morning window light, documentary lifestyle framing, tactile cotton and fur. The clothing must fit the cat naturally and never hide its face or create human anatomy. Return one finished photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/scenes/identity-ragdoll-bicolor-v2.jpg",
+  "referenceSha256": "a4b90b4e422d431f59695c95b5bfbde6868e2271737afc2b3deb2e51d9e26cdf",
+  "output": "tools/imagegen/out/scenes/scene-window-morning-v3.jpg",
+  "sha256": "396d098a69993d4240fcbec76cc4b8da9b0034e283d7ddc4b0c4636010feb93c",
+  "review": "approved-by-user",
+  "reviewedAt": "2026-09-26"
+}

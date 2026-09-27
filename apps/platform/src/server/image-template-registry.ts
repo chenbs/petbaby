@@ -1,4 +1,5 @@
 import "server-only";
+import { PET_ART_PHOTO_TEMPLATE_ID, PET_ART_PHOTO_VERSION } from "@/domain/pet-art-photo";
 
 export type ImageTemplateSubjectMode = "pet" | "owner-pet" | "pet-human";
 export type ImageTemplateOrientation = "portrait" | "landscape";
@@ -220,7 +221,15 @@ const templates = registeredTemplates.map((template) => {
   };
 });
 
+const artPhotoTemplate: ImageTemplateDefinition = {
+  entryId: "art", templateId: PET_ART_PHOTO_TEMPLATE_ID, title: "宠物艺术写真",
+  subjectMode: "pet", orientation: "portrait", size: "720x1280",
+  version: PET_ART_PHOTO_VERSION, status: "live",
+  sampleStorageKey: "samples/scene-window-morning-v3-396d098a6999.jpg",
+};
+
 export function getImageTemplate(templateId: string, options: { includePending?: boolean } = {}) {
+  if (templateId === PET_ART_PHOTO_TEMPLATE_ID) return artPhotoTemplate;
   const template = templates.find((item) => item.templateId === templateId);
   if (!template || (!options.includePending && template.status !== "live")) return undefined;
   return template;
@@ -233,7 +242,9 @@ export function listImageTemplates(options: { includePending?: boolean } = {}) {
 export function listPublicImageTemplateEntries() {
   const live = listImageTemplates();
   return imageTemplateEntries
-    .map((entry) => ({ ...entry, templates: live.filter((template) => template.entryId === entry.id) }))
+    .map((entry) => ({ ...entry, templates: entry.id === "art"
+      ? [artPhotoTemplate, ...live.filter((template) => template.entryId === entry.id)]
+      : live.filter((template) => template.entryId === entry.id) }))
     .filter((entry) => entry.templates.length > 0);
 }
 

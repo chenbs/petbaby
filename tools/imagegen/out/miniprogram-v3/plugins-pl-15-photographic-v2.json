@@ -1,0 +1,12 @@
+{
+  "id": "pl-15-photographic-v2",
+  "group": "plugins",
+  "prompt": "Use case: photorealistic-natural editorial pet photography. Make this look like a real commissioned studio or lifestyle photograph, with real fur detail, believable fabric, physically plausible props, natural contact shadows and a real camera lens. One adult pet only, complete head and body visible, natural anatomy and paws, no people or hands, no duplicate subject. No brand marks, logos, copied magazine mastheads, readable text, pseudo-letters, watermark, signature, CGI, 3D render, illustration, plastic fur or surreal background. Vertical 3:4 composition. The pet is the clear hero and occupies about 45-65% of frame height; the set, clothing and props remain visible and recognizable. A real studio photograph of one healthy adult red Shiba Inu sitting on a midnight-blue paper set. One front paw gently touches a small warm-white star-shaped LED light prop standing on the floor. Matte paper cloud cutouts and a few practical string lights form a clearly physical, handcrafted backdrop. The dog's anatomy, paw contact, red-and-cream fur and studio shadows are realistic. Bright enough to inspect the pet's face. No floating stars, no cartoon clouds, no CGI, no text, no interface.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": null,
+  "output": "tools/imagegen/out/plugins/mp26-pl-15-photographic-v2.jpg",
+  "sha256": "d2e283f5b2eb1e4f15fba2ba4625069b0cd5648464c666c7a6fc7a804a03e350",
+  "review": "approved-by-user",
+  "reviewedAt": "2026-09-26"
+}

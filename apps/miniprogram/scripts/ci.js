@@ -7,7 +7,7 @@ function validateConfig(mode, environment, currentConfig) {
   if (!["preview", "upload"].includes(mode)) throw new Error("用法：node scripts/ci.js preview|upload");
   const appid = environment.MINIPROGRAM_APP_ID || currentConfig.appid;
   if (!/^wx[0-9a-f]{16}$/i.test(appid || "")) throw new Error("MINIPROGRAM_APP_ID 必须是已认证小程序的真实 AppID");
-  const apiBaseUrl = environment.MINIPROGRAM_API_BASE_URL || "https://app.babykitty.cn";
+  const apiBaseUrl = environment.MINIPROGRAM_API_BASE_URL || "https://a.babykitty.cn";
   const url = new URL(apiBaseUrl);
   if (url.protocol !== "https:" || url.username || url.password || url.pathname !== "/" || url.search || url.hash) throw new Error("预览与上传需要无路径的 HTTPS API 域名");
   const version = environment.MINIPROGRAM_VERSION;

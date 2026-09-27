@@ -1,6 +1,6 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-flat">
+<view class="page page-flat art-film layout-workbench">
   <text class="eyebrow">PL-19 · MEMORY FILM</text>
   <view class="title">剪一段回忆短片</view>
   <text class="muted">按选择顺序排片，最多 {{maxPhotos}} 张。</text>

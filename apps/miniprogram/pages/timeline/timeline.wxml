@@ -1,6 +1,6 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-flat">
+<view class="page page-flat art-film layout-timeline">
   <text class="eyebrow">GROWTH TIMELINE</text>
   <view class="title">{{companion || '成长时间线'}}</view>
   <text class="muted">按记录日期回看，日期来源会标在每张照片旁。</text>
@@ -30,7 +30,7 @@
   <t-skeleton wx:if="{{loading}}" type="list" count="4"></t-skeleton>
 
   <t-empty
-    wx:if="{{!loading && empty}}"
+    wx:if="{{!loading && !error && empty}}"
     icon="photo"
     title="还没有照片"
     description="先收好第一张照片，以后从这里接着记。"
@@ -44,7 +44,8 @@
     <view class="section-title">{{group.year}}</view>
     <view class="line">
       <view wx:for="{{group.items}}" wx:for-item="entry" wx:key="key" class="node" data-id="{{entry.photo.id}}" bindtap="openDetail">
-        <image class="node-photo" src="{{entry.photo.url}}" mode="aspectFill" lazy-load />
+        <image wx:if="{{entry.photo.url}}" class="node-photo" src="{{entry.photo.url}}" mode="aspectFill" data-kind="timeline" data-id="{{entry.photo.id}}" data-src="{{entry.photo.url}}" binderror="onPhotoError" lazy-load />
+        <view wx:else class="node-photo node-photo-blank">照片暂不可用</view>
         <view class="node-copy">
           <view wx:if="{{entry.showDay}}" class="node-day">第 {{entry.day}} 天</view>
           <text class="small">{{entry.date}}</text>
@@ -103,7 +104,7 @@
       <view wx:if="{{filmPreview}}" class="section">
         <view>{{filmPreview.petName}} · {{filmPreview.year}} · {{filmPreview.durationSeconds}} 秒</view>
         <text class="small">本次采用以下 {{filmPreview.photos.length}} 张，按显示顺序制作。</text>
-        <view wx:for="{{filmPreview.photos}}" wx:key="id" class="node"><image class="node-photo" src="{{item.url}}" mode="aspectFill" /><text>{{item.date}}</text></view>
+        <view wx:for="{{filmPreview.photos}}" wx:key="id" class="node"><image wx:if="{{item.url}}" class="node-photo" src="{{item.url}}" mode="aspectFill" data-kind="film" data-id="{{item.id}}" data-src="{{item.url}}" binderror="onPhotoError" /><view wx:else class="node-photo node-photo-blank">照片暂不可用</view><text>{{item.date}}</text></view>
         <text>解锁价格 ¥{{filmPricing.amount}} · {{filmPricing.label}}</text>
         <t-button loading="{{filmBusy}}" bindtap="confirmFilm">用这些照片制作</t-button>
       </view>

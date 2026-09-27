@@ -1,0 +1,35 @@
+# Existing object keys remain available for stored manifests and historical links.
+plugins/pet-id-card.jpg
+plugins/pet-movie-poster.jpg
+plugins/pet-time-album.jpg
+plugins/pl-10.jpg
+plugins/pl-15.jpg
+plugins/pl-19.jpg
+plugins/pl-20.jpg
+plugins/pl-21.jpg
+plugins/pl-22.jpg
+styles/style-warm-film.jpg
+styles/style-paper-cut.jpg
+styles/style-studio.jpg
+styles/style-fantasy.jpg
+# Approved Mini Program assets used by the deployment sample seeding scripts.
+plugins/mp26-pet-id-card.jpg
+plugins/mp26-pet-movie-poster-v3.jpg
+plugins/mp26-pet-time-album.jpg
+plugins/mp26-pl-19.jpg
+plugins/mp26-pl-23-v4.jpg
+# Approved in the 2026-09-26 Mini Program visual review.
+plugins/mp26-gray-toy-poodle-editorial-v1.jpg
+plugins/mp26-pl-15-photographic-v2.jpg
+scenes/scene-window-morning-v3.jpg
+scenes/scene-garden-curious-v3.jpg
+scenes/scene-studio-confident-v3.jpg
+scenes/scene-night-playful-v3.jpg
+scenes/scene-seaside-breeze-v3.jpg
+scenes/scene-library-whisper-v3.jpg
+scenes/scene-autumn-leaves-v3.jpg
+scenes/scene-snow-cabin-v4.jpg
+scenes/scene-cafe-afternoon-v3.jpg
+scenes/scene-lakeside-sunset-v4.jpg
+scenes/scene-city-rain-v3.jpg
+scenes/scene-spring-picnic-v4.jpg

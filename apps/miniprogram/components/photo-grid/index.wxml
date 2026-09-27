@@ -16,7 +16,8 @@
     bindtap="handleTap"
     bindlongpress="handleLongPress"
   >
-    <image class="tile-image" src="{{item.url}}" mode="aspectFill" lazy-load />
+    <image wx:if="{{item.url && !item.imageFailed}}" class="tile-image" src="{{item.url}}" mode="aspectFill" data-id="{{item.id}}" data-src="{{item.url}}" binderror="handleImageError" lazy-load />
+    <view wx:else class="tile-image tile-image-blank">照片暂不可用</view>
 
     <!-- 选中角标：ordered 时显示序号，供视频等依赖顺序的场景 -->
     <view wx:if="{{item.picked}}" class="badge">{{ordered ? item.order : '✓'}}</view>

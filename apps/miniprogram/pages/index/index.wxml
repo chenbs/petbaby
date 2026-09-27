@@ -1,6 +1,6 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-tabbar">
+<view class="page page-tabbar art-film layout-pet">
   <t-skeleton wx:if="{{petLoading}}" type="card" count="1"></t-skeleton>
   <view wx:if="{{recordError}}" class="section">
     <t-notice type="error" message="{{recordError}}"></t-notice>
@@ -34,7 +34,7 @@
     bindtap="openTimeline"
   >
     <view class="pet-media">
-      <image wx:if="{{pet.avatarUrl}}" class="pet-image" src="{{pet.avatarUrl}}" mode="aspectFill" lazy-load />
+      <image wx:if="{{pet.avatarUrl}}" class="pet-image" src="{{pet.avatarUrl}}" mode="aspectFill" data-kind="pet" data-src="{{pet.avatarUrl}}" binderror="onImageError" lazy-load />
       <!-- 没头像时给爪印占位：它标的是档案本身，不冒充产出（同 pages/me） -->
       <view wx:else class="pet-image pet-image-blank">🐾</view>
       <view class="pet-veil"></view>
@@ -53,7 +53,8 @@
   <view wx:if="{{recent.length}}" class="section">
     <view class="section-title">最近收好</view>
     <view wx:for="{{recent}}" wx:key="id" class="memory block-gap" data-id="{{item.id}}" bindtap="recentDetail">
-      <image class="memory-photo" src="{{item.url}}" mode="aspectFill" />
+      <image wx:if="{{item.url}}" class="memory-photo" src="{{item.url}}" mode="aspectFill" data-kind="recent" data-id="{{item.id}}" data-src="{{item.url}}" binderror="onImageError" />
+      <view wx:else class="memory-photo memory-photo-blank">照片暂不可用</view>
       <view class="memory-copy"><text class="small">{{item.savedOn}} 收好</text><view>{{item.recordedDate}}</view><text class="small">{{item.sourceText}}</text><text wx:if="{{item.imageError}}" class="small">{{item.imageError}}</text></view>
     </view>
   </view>
@@ -81,7 +82,8 @@
   <view wx:if="{{onThisDay}}" class="section">
     <t-card blur="{{blurOk}}" anim="{{animType}}" clickable bindtap="openOnThisDay">
       <view class="memory">
-        <image class="memory-photo" src="{{onThisDay.photo.url}}" mode="aspectFill" lazy-load />
+        <image wx:if="{{onThisDay.photo.url}}" class="memory-photo" src="{{onThisDay.photo.url}}" mode="aspectFill" data-kind="on-this-day" data-src="{{onThisDay.photo.url}}" binderror="onImageError" lazy-load />
+        <view wx:else class="memory-photo memory-photo-blank">照片暂不可用</view>
         <view class="memory-copy">
           <text class="eyebrow">{{onThisDay.eyebrow}}</text>
           <view class="sub-title">{{onThisDay.petName}}的第 {{onThisDay.day}} 天</view>
@@ -138,7 +140,7 @@ OK</view>
         bindtap="start"
       >
         <view class="hero-media">
-          <image class="hero-image" src="{{heroPlugin.samples.heroUrl}}" mode="aspectFill" lazy-load />
+          <image class="hero-image" src="{{heroPlugin.samples.heroUrl}}" mode="aspectFill" data-kind="hero" data-id="{{heroPlugin.id}}" data-src="{{heroPlugin.samples.heroUrl}}" binderror="onImageError" lazy-load />
           <view class="hero-veil"></view>
           <view class="hero-price">{{heroPlugin.pricing.unlockPrice ? '¥' + heroPlugin.pricing.unlockPrice : '免费'}}</view>
           <view class="hero-caption">
@@ -164,7 +166,7 @@ OK</view>
         >
           <!-- 有样例图走图卡；没有的仍用文字卡，不拿空底色冒充成品 -->
           <view wx:if="{{item.samples.heroUrl}}" class="grid-media">
-            <image class="grid-image" src="{{item.samples.heroUrl}}" mode="aspectFill" lazy-load />
+            <image class="grid-image" src="{{item.samples.heroUrl}}" mode="aspectFill" data-kind="grid" data-id="{{item.id}}" data-src="{{item.samples.heroUrl}}" binderror="onImageError" lazy-load />
             <view class="grid-veil"></view>
             <view class="grid-price">{{item.pricing.unlockPrice ? '¥' + item.pricing.unlockPrice : '免费'}}</view>
             <view class="grid-caption">

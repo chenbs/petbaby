@@ -64,6 +64,22 @@ themedPage({
     } catch (error) { if (view === this._view) this.setData({ error: error.message, loading: false, loadingMore: false }); }
   },
   more() { return this.load(true); },
+  onPhotoError(event) {
+    const { kind, id, src } = event.currentTarget.dataset;
+    if (kind === "film" && this.data.filmPreview) {
+      const index = this.data.filmPreview.photos.findIndex((photo) => photo.id === id && photo.url === src);
+      if (index >= 0) this.setData({ ["filmPreview.photos[" + index + "].url"]: "" });
+    }
+    if (kind === "timeline") {
+      for (let group = 0; group < this.data.groups.length; group += 1) {
+        const index = this.data.groups[group].items.findIndex((entry) => entry.photo.id === id && entry.photo.url === src);
+        if (index >= 0) {
+          this.setData({ ["groups[" + group + "].items[" + index + "].photo.url"]: "", ["groups[" + group + "].items[" + index + "].photo.imageError"]: "照片暂时无法显示" });
+          return;
+        }
+      }
+    }
+  },
   chooseFilmYear(event) { if (!this.data.filmBusy) this.setData({ filmYear: Number(event.currentTarget.dataset.year), filmPreview: null, filmHint: "" }); },
   chooseFilmDuration(event) { if (!this.data.filmBusy) this.setData({ filmDuration: Number(event.currentTarget.dataset.duration), filmPreview: null, filmHint: "" }); },
   async createFilm() {

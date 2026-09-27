@@ -1,3 +1,44 @@
+.film-canvas {
+  position: relative;
+  height: 700rpx;
+  overflow: hidden;
+  border-radius: var(--radius-image-hero);
+  background: var(--surface);
+}
+
+.film-cover {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-image-hero);
+}
+
+.film-placeholder {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5);
+  color: var(--text-secondary);
+  font-size: var(--font-h2);
+  text-align: center;
+}
+
+.film-play {
+  position: absolute;
+  right: var(--space-4);
+  bottom: var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  background: var(--button-primary);
+  color: var(--button-primary-text);
+}
+
+.film-heading {
+  margin-top: var(--space-5);
+}
+
 .block-gap {
   display: block;
   margin-top: var(--space-4);

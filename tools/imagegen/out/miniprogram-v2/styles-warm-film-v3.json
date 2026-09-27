@@ -1,0 +1,11 @@
+{
+  "id": "warm-film",
+  "group": "styles",
+  "prompt": "Premium contemporary pet product campaign image for a Chinese pet memories app. Bright, clean, vivid but restrained color, natural expressive animal anatomy, crisp face and eyes, tactile material detail. The subject and actual finished product must be immediately legible at small mobile thumbnail size. No readable text, letters, numbers, watermark, logo, UI screenshot, fake interface or extra limbs. Restyle the supplied ragdoll cat as a premium warm analogue film portrait, natural candid pose by a bright window, restrained grain and gentle halation, elegant cream and honey palette. Preserve the ragdoll's blue eyes, dark point mask, long cream fur, face, species and anatomy.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/website/work-ragdoll.jpg",
+  "output": "tools/imagegen/out/styles/style-warm-film-v3.jpg",
+  "sha256": "d28e1edbf2dc901ae0ae5a072a5d9e17880cb59047a75405a3e929e020ef6f0e",
+  "review": "pending-visual-review"
+}

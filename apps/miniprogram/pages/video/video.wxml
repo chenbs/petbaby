@@ -1,10 +1,15 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-flat">
+<view class="page page-flat art-film layout-canvas">
   <t-skeleton wx:if="{{loading}}" type="card" count="2"></t-skeleton>
 
   <block wx:elif="{{project}}">
-    <view class="row">
+    <view class="film-canvas">
+      <image wx:if="{{coverUrl}}" class="film-cover" src="{{coverUrl}}" mode="aspectFill" data-src="{{coverUrl}}" binderror="onCoverError" />
+      <view wx:else class="film-placeholder">{{project.title}}</view>
+      <view wx:if="{{render && render.work_id}}" class="film-play hit-area" aria-role="button" aria-label="播放成片" bindtap="openWork">▶</view>
+    </view>
+    <view class="row film-heading">
       <text class="eyebrow">MEMORY FILM</text>
       <t-tag wx:if="{{renderText}}" tone="{{render.status === 'failed' ? 'error' : render.status === 'succeeded' ? 'success' : 'accent'}}" size="mini" text="{{renderText}}"></t-tag>
     </view>

@@ -111,7 +111,8 @@ themedPage({
     } catch (error) { if (petId === this.data.petId) this.setData({ error: error.message }); }
   },
   syncUpload(state) {
-    this.setData({ uploadItems: state.items.map((item) => Object.assign({}, item, { stateText: STATES[item.state] })), savedCount: state.savedCount, pendingCount: state.pendingCount, uploading: state.running });
+    const failed = new Set(this.data.uploadItems.filter((item) => item.thumbFailed).map((item) => item.requestId + "|" + item.path));
+    this.setData({ uploadItems: state.items.map((item) => Object.assign({}, item, { stateText: STATES[item.state], thumbFailed: failed.has(item.requestId + "|" + item.path) })), savedCount: state.savedCount, pendingCount: state.pendingCount, uploading: state.running });
     if (state.pendingCount && wx.enableAlertBeforeUnload) wx.enableAlertBeforeUnload({ message: "未完成的上传将停止，已发出的照片会在回来后核对保存结果。" });
     else if (wx.disableAlertBeforeUnload) wx.disableAlertBeforeUnload();
   },
@@ -193,6 +194,14 @@ themedPage({
     } catch (error) { this.setData({ error: error.message }); }
   },
   closeDetail() { if (!this.data.saving) this.setData({ detail: null, batchEditing: false }); },
+  onDetailImageError(event) {
+    if (this.data.detail && this.data.detail.localUrl === event.currentTarget.dataset.src) this.setData({ "detail.localUrl": "" });
+  },
+  onUploadThumbError(event) {
+    const { id, src } = event.currentTarget.dataset;
+    const index = this.data.uploadItems.findIndex((item) => item.requestId === id && item.path === src);
+    if (index >= 0) this.setData({ ["uploadItems[" + index + "].thumbFailed"]: true });
+  },
   inputCaption(event) { this.setData({ editCaption: event.detail.value }); },
   chooseDate(event) { this.setData({ editDate: event.detail.value }); },
   clearDate() { this.setData({ editDate: "" }); },
@@ -223,7 +232,7 @@ themedPage({
     finally { this.setData({ saving: false }); }
   },
   albumSettings() { wx.openSetting({}); },
-  previewDetail() { if (this.data.detail) wx.previewImage({ urls: [this.data.detail.localUrl] }); },
+  previewDetail() { if (this.data.detail && this.data.detail.localUrl) wx.previewImage({ urls: [this.data.detail.localUrl] }); },
   askRemove() { if (this.data.picked.length) this.setData({ removeCount: this.data.picked.length }); },
   cancelRemove() { this.setData({ removeCount: 0 }); },
   async confirmRemove() {

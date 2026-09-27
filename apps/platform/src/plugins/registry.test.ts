@@ -1,7 +1,12 @@
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
+import path from "node:path";
+
+import sharp from "sharp";
 import { describe, expect, it } from "vitest";
 
 import { plugins } from "@/plugins/registry";
-import { AI_STYLE_IDS } from "@/server/growth-service";
+import { AI_SCENE_IDS } from "@/server/growth-service";
 import { generatorRegistry } from "@/server/generators/svg";
 
 /**
@@ -12,10 +17,32 @@ import { generatorRegistry } from "@/server/generators/svg";
 describe("玩法样例图与枚举对齐", () => {
   const aiPortrait = plugins.find((plugin) => plugin.code === "PL-10");
 
-  it("PL-10 的 styleUrls 恰好覆盖 style 枚举，不多不少", () => {
-    const styleUrls = aiPortrait?.samples?.styleUrls;
-    expect(styleUrls, "PL-10 应配齐风格对比图").toBeDefined();
-    expect(Object.keys(styleUrls ?? {}).sort()).toEqual([...AI_STYLE_IDS].sort());
+  it("PL-10 的 sceneUrls 恰好覆盖写真场景枚举，不多不少", () => {
+    const sceneUrls = aiPortrait?.samples?.sceneUrls;
+    expect(sceneUrls, "PL-10 应配齐写真场景图").toBeDefined();
+    expect(Object.keys(sceneUrls ?? {}).sort()).toEqual([...AI_SCENE_IDS].sort());
+    expect(aiPortrait?.samples?.sceneOptions?.map((item) => item.id).sort()).toEqual([...AI_SCENE_IDS].sort());
+  });
+
+  it("十二张场景样片的注册键、文件尺寸与元数据哈希一致", async () => {
+    const urls = aiPortrait?.samples?.sceneUrls;
+    if (!urls) throw new Error("PL-10 sceneUrls missing");
+    for (const [id, url] of Object.entries(urls)) {
+      const match = url.match(/\/samples\/(scene-[a-z-]+-v\d+)-([a-f0-9]{12})\.jpg$/);
+      expect(match, `${id} 对象键格式错误`).not.toBeNull();
+      const stem = match![1];
+      const file = path.resolve(process.cwd(), "../../tools/imagegen/out/scenes", `${stem}.jpg`);
+      const bytes = readFileSync(file);
+      const hash = createHash("sha256").update(bytes).digest("hex");
+      const version = stem.match(/-v\d+$/)?.[0];
+      const metadata = JSON.parse(readFileSync(path.resolve(process.cwd(), "../../tools/imagegen/out/miniprogram-v3", `scenes-${id}${version}.json`), "utf8"));
+      expect(hash.slice(0, 12)).toBe(match![2]);
+      expect(metadata.sha256).toBe(hash);
+      expect(metadata.reference).toBe(id === "snow-cabin"
+        ? "tools/imagegen/out/scenes-v3/identity-gray-toy-poodle-v1.jpg"
+        : "tools/imagegen/out/scenes/identity-ragdoll-bicolor-v2.jpg");
+      expect(await sharp(bytes).metadata()).toMatchObject({ width: 900, height: 1200, format: "jpeg" });
+    }
   });
 
   /**
@@ -102,6 +129,7 @@ describe("玩法样例图与枚举对齐", () => {
       const urls = [
         ...(samples.heroUrl ? [samples.heroUrl] : []),
         ...(samples.thumbUrls ?? []),
+        ...Object.values(samples.sceneUrls ?? {}),
         ...Object.values(samples.styleUrls ?? {}),
       ];
       for (const url of urls) {

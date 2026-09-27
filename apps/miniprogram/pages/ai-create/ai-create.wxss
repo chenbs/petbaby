@@ -32,6 +32,24 @@
   margin-left: var(--space-3);
 }
 
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--gap-item);
+}
+
+.template-option {
+  width: 100%;
+  min-width: 0;
+  padding: var(--space-2);
+  border-radius: var(--radius-image-thumb);
+  white-space: normal;
+}
+
+.template-option + .template-option {
+  margin-left: 0;
+}
+
 .option-hover {
   transform: scale(.97);
 }
@@ -50,24 +68,30 @@
 }
 
 /*
- * 风格色板：不引入新色值，全部由既有 token 组合而成，
- * 因此四套主题下都会跟着主题走，而不是固定的四块死色。
- */
-/*
- * 风格对比缩略图（方案 3.3）。替换掉原先的 .swatch 抽象渐变色块：
- * 那 4 个 linear-gradient 是方案点名的硬规则违例 —— 用户在这里比较风格，
- * 而色块无法回答「我的狗做成这个风格长什么样」。
+ * 宠物艺术写真场景缩略图：每个卡片必须展示真实场景，
+ * 让用户比较动作和表情，不用抽象色块代替成品。
  *
- * 比例锁 3:4 与作品网格同档：四个选项并排，唯一变量必须是画面内容本身。
+ * 比例锁 3:4 与作品网格同档，图片内容由 sceneUrls 提供。
  */
 .style-thumb {
   display: block;
   width: 100%;
   aspect-ratio: var(--ratio-card);
   margin-bottom: var(--space-2);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-image-thumb);
   background: var(--skeleton-base);
   box-shadow: var(--shadow-clay-inset);
+}
+
+.style-thumb-blank {
+  display: flex;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3);
+  color: var(--text-secondary);
+  font-size: var(--small-size);
+  text-align: center;
 }
 
 /*

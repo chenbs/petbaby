@@ -1,0 +1,12 @@
+{
+  "id": "ragdoll-bicolor-v2",
+  "group": "identity",
+  "prompt": "A clear natural-light full-body breed reference photograph of one genuine adult blue bicolor Ragdoll cat. Symmetrical white inverted V marking across the face, pink nose, white chin, chest, legs and paws, blue-gray ears/back and fluffy tail, large deep blue eyes, broad rounded head and soft semi-long silky coat. Standing in three-quarter view with all four paws and tail visible against a plain light gray background. True Ragdoll proportions, not a Siamese, Birman, Himalayan or dark-faced seal-point mix. No collar, person, text or props.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": null,
+  "output": "tools/imagegen/out/scenes/identity-ragdoll-bicolor-v2.jpg",
+  "sha256": "a4b90b4e422d431f59695c95b5bfbde6868e2271737afc2b3deb2e51d9e26cdf",
+  "review": "approved-by-user",
+  "reviewedAt": "2026-09-26"
+}

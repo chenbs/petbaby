@@ -1,8 +1,11 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-tabbar">
+<view class="page page-tabbar art-pet layout-pet">
   <text class="eyebrow">ACCOUNT</text>
   <view class="title">我的麻麻抱我</view>
+
+  <t-notice wx:if="{{error}}" type="error" message="{{error}}"></t-notice>
+  <t-button wx:if="{{error}}" type="secondary" bindtap="loadAccount">重新加载账户资料</t-button>
 
   <t-skeleton wx:if="{{loading}}" type="card" count="2"></t-skeleton>
 
@@ -22,7 +25,7 @@
       bindtap="openPets"
     >
       <view class="hero-media">
-        <image wx:if="{{hero.avatarUrl}}" class="hero-image" src="{{hero.avatarUrl}}" mode="aspectFill" lazy-load />
+        <image wx:if="{{hero.avatarUrl}}" class="hero-image" src="{{hero.avatarUrl}}" mode="aspectFill" data-src="{{hero.avatarUrl}}" binderror="onHeroImageError" lazy-load />
         <view wx:else class="hero-image hero-image-blank">🐾</view>
         <view class="hero-veil"></view>
         <view class="hero-caption">

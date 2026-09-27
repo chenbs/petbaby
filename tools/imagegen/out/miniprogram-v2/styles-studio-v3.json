@@ -1,0 +1,11 @@
+{
+  "id": "studio",
+  "group": "styles",
+  "prompt": "Premium contemporary pet product campaign image for a Chinese pet memories app. Bright, clean, vivid but restrained color, natural expressive animal anatomy, crisp face and eyes, tactile material detail. The subject and actual finished product must be immediately legible at small mobile thumbnail size. No readable text, letters, numbers, watermark, logo, UI screenshot, fake interface or extra limbs. Restyle the supplied ragdoll cat as a polished fashion studio pet portrait on a warm white seamless background with one large softbox, confident calm expression and blue eyes. Preserve the dark point mask, long cream fur, face, species and anatomy.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/website/work-ragdoll.jpg",
+  "output": "tools/imagegen/out/styles/style-studio-v3.jpg",
+  "sha256": "46accd9b0b3481a540fabf45b5adc91277d134b4a478fcf15e5f9510beba58bb",
+  "review": "pending-visual-review"
+}

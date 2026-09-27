@@ -1,0 +1,12 @@
+{
+  "id": "pet-id-card",
+  "group": "plugins",
+  "prompt": "Premium contemporary pet product campaign image for a Chinese pet memories app. Bright, clean, vivid but restrained color, natural expressive animal anatomy, crisp face and eyes, tactile material detail. The subject and actual finished product must be immediately legible at small mobile thumbnail size. No readable text, letters, numbers, watermark, logo, UI screenshot, fake interface or extra limbs. A collectible pet identity card lying flat on a pale mint studio tabletop, whole physical card visible, a joyful small orange tabby portrait in the photo window, neat empty label rows and a tiny embossed paw seal, refined print finish, top-down editorial product photography.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": null,
+  "output": "tools/imagegen/out/plugins/mp26-pet-id-card.jpg",
+  "sha256": "e7e1697450c7fc11334136e00ba83c7e11d00ee6e6d084116d24608d802014bc",
+  "review": "approved-by-user",
+  "reviewedAt": "2026-09-26"
+}

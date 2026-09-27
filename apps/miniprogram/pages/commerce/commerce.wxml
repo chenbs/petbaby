@@ -1,6 +1,6 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-flat">
+<view class="page page-flat art-brand layout-workbench">
   <text class="eyebrow">MEMBERSHIP</text>
   <view class="title">会员与年度报告</view>
 
@@ -8,6 +8,7 @@
   <t-notice wx:if="{{message}}" type="success" message="{{message}}" class="block-gap"></t-notice>
 
   <t-skeleton wx:if="{{loading}}" type="card" count="3" class="block-gap"></t-skeleton>
+  <t-button wx:elif="{{error && !plans.length && !memberships.length && !subscriptions.length && !reports.length}}" type="secondary" bindtap="load">重新加载会员信息</t-button>
 
   <block wx:else>
     <!-- 当前会员状态 -->

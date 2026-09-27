@@ -73,6 +73,17 @@
   flex: none;
   border-radius: var(--radius-sm);
 }
+.upload-thumb-blank {
+  display: flex;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-1);
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-size: var(--eyebrow-size);
+  text-align: center;
+}
 .upload-copy {
   flex: 1;
   display: flex;
@@ -80,6 +91,15 @@
   gap: var(--space-1);
 }
 .detail-photo { width: 100%; border-radius: var(--radius-md); }
+.detail-photo-blank {
+  display: flex;
+  min-height: calc(var(--space-8) + var(--space-8));
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-size: var(--small-size);
+}
 .record-tag {
   padding: var(--space-2) var(--space-3);
   border: var(--card-border);

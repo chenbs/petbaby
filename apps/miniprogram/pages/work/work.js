@@ -34,6 +34,7 @@ function nextTierText(pricing) {
 themedPage({ immersive: true }, {
   data: { work: null, versions: [], error: "", busy: false, loading: true, confirmRevoke: false, priceText: "", priceHint: "", createdText: "", shareExpiresText: "", sheetState: "half", sheetBackgroundVideo: "", sheetBackgroundImage: "", sheetPoster: "", sheetTitle: "" },
   onLoad(query) { this.workId = query.id; this.reload(); },
+  onBackgroundError() { if (this.data.work) this.setData({ error: "作品预览暂时无法显示，请稍后重试" }); },
   reload() {
     this.setData({ loading: !this.data.work, error: "" });
     Promise.all([api.requestWithRetry("/api/works/" + this.workId, {}, 2).then(displayMediaTree), api.request("/api/works/" + this.workId + "/versions").then(displayMediaTree)])

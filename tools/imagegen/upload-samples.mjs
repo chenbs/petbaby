@@ -1,5 +1,5 @@
 /**
- * 把插件样图、风格图和获批冻结母版推进对象存储，并打印插件 registry 片段。
+ * 把插件样图、本地待审写真场景图、历史风格回滚图和获批冻结母版推进本地对象存储，并打印插件 registry 片段。
  *
  * 用法：
  *   node tools/imagegen/upload-samples.mjs                       推本地存储（.data/objects）
@@ -15,7 +15,7 @@
  * 换图必须换键，否则 CDN 与客户端会一直拿旧图。
  */
 import { createHash } from "node:crypto";
-import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 const OUT = path.resolve(import.meta.dirname, "out", "plugins");
@@ -23,6 +23,8 @@ const STYLES_OUT = path.resolve(import.meta.dirname, "out", "styles");
 const REPO_ROOT = path.resolve(import.meta.dirname, "../..");
 const MASTERS_INDEX = path.resolve(import.meta.dirname, "out", "reference-v1", "masters", "index.json");
 const PUBLIC_PREVIEWS_INDEX = path.resolve(import.meta.dirname, "out", "reference-v1", "public-previews", "index.json");
+const REVIEWED_SAMPLES = path.resolve(import.meta.dirname, "reviewed-sample-files.txt");
+const PENDING_LOCAL_SAMPLES = path.resolve(import.meta.dirname, "pending-local-sample-files.txt");
 const STORAGE_DIR = process.env.LOCAL_STORAGE_DIR
   ? path.resolve(process.env.LOCAL_STORAGE_DIR)
   : path.resolve(import.meta.dirname, "../../apps/platform/.data/objects");
@@ -48,11 +50,21 @@ async function pushExact(body, key, contentType) {
   console.log(`已推送 ${key}`);
 }
 
-const files = (await readdir(OUT).catch(() => [])).filter((name) => name.endsWith(".jpg"));
-if (!files.length) throw new Error(`${OUT} 下没有图，请先跑 node tools/imagegen/generate.mjs plugins`);
+// 待审样片只供本地预览；COS 部署和测试环境播种只读取 REVIEWED_SAMPLES。
+const reviewed = (await Promise.all([REVIEWED_SAMPLES, PENDING_LOCAL_SAMPLES].map((file) => readFile(file, "utf8"))))
+  .flatMap((contents) => contents.split(/\r?\n/))
+  .filter((line) => line && !line.startsWith("#"));
+if (new Set(reviewed).size !== reviewed.length) throw new Error("样例图白名单有重复路径");
+const files = reviewed.filter((name) => /^plugins\/[a-zA-Z0-9_-]+\.jpg$/.test(name));
+const styleFiles = reviewed.filter((name) => /^styles\/style-[a-zA-Z0-9_-]+\.jpg$/.test(name));
+const sceneFiles = reviewed.filter((name) => /^scenes\/scene-[a-zA-Z0-9_-]+\.jpg$/.test(name));
+if (files.length + styleFiles.length + sceneFiles.length !== reviewed.length || !files.length) {
+  throw new Error("样例图白名单有非法路径或缺少插件图");
+}
 
 const entries = [];
-for (const name of files) {
+for (const relative of files) {
+  const name = path.basename(relative);
   const pluginId = name.replace(/\.jpg$/, "");
   const url = await push(await readFile(path.join(OUT, name)), pluginId);
   entries.push({ pluginId, url });
@@ -63,11 +75,19 @@ for (const name of files) {
  * growth-service 的 style enum、ai-create.js 的 STYLES、prompts.mjs 的 AI_STYLES。
  * 键名即 style id，端上按 id 取图，不依赖数组顺序 —— 顺序错位不会报错，只会静默配错风格。
  */
-const styleFiles = (await readdir(STYLES_OUT).catch(() => [])).filter((name) => /^style-.+\.jpg$/.test(name));
 const styleUrls = {};
-for (const name of styleFiles.sort()) {
-  const styleId = name.replace(/^style-/, "").replace(/\.jpg$/, "");
-  styleUrls[styleId] = await push(await readFile(path.join(STYLES_OUT, name)), `style-${styleId}`);
+for (const relative of styleFiles) {
+  const name = path.basename(relative);
+  const styleId = name.replace(/^style-/, "").replace(/\.jpg$/, "").replace(/-v\d+$/, "");
+  styleUrls[styleId] = await push(await readFile(path.join(STYLES_OUT, name)), name.replace(/\.jpg$/, ""));
+}
+
+/* 新 PL-10 的宠物艺术写真场景图。文件名 id 必须与 AI_SCENE_IDS 对齐。 */
+const sceneUrls = {};
+for (const relative of sceneFiles) {
+  const name = path.basename(relative);
+  const sceneId = name.replace(/^scene-/, "").replace(/\.jpg$/, "").replace(/-v\d+$/, "");
+  sceneUrls[sceneId] = await push(await readFile(path.join(import.meta.dirname, "out", relative)), name.replace(/\.jpg$/, ""));
 }
 
 /*
@@ -111,18 +131,26 @@ for (const item of publicPreviewIndex.templates) {
 }
 
 entries.sort((a, b) => a.pluginId.localeCompare(b.pluginId));
-console.log(`\n共 ${entries.length + styleFiles.length} 张插件/风格图、${masterIndex.templates.length} 张冻结母版和 ${publicPreviewIndex.templates.length} 张独立键公开样图，落盘于 ${STORAGE_DIR}`);
+console.log(`\n共 ${entries.length + styleFiles.length + sceneFiles.length} 张插件/写真/历史风格图、${masterIndex.templates.length} 张冻结母版和 ${publicPreviewIndex.templates.length} 张独立键公开样图，落盘于 ${STORAGE_DIR}`);
 console.log("把下面每段并入 registry.ts 里对应 plugin 的 manifest：\n");
 for (const entry of entries) {
   console.log(`  // ${entry.pluginId}`);
   console.log(`  samples: { heroUrl: "${entry.url}" },\n`);
 }
 if (styleFiles.length) {
-  console.log("  // PL-10（AI 四选一肖像）：风格对比图，键为 style 枚举值");
+  console.log("  // 历史 styleUrls：仅供旧配置回滚，不作为新功能入口");
   console.log("  samples: {");
   console.log("    heroUrl: \"…保留现有值…\",");
   console.log("    styleUrls: {");
   for (const [styleId, url] of Object.entries(styleUrls)) console.log(`      "${styleId}": "${url}",`);
+  console.log("    },\n  },\n");
+}
+if (sceneFiles.length) {
+  console.log("  // PL-10（宠物艺术写真）：场景样片，键为 scene 枚举值");
+  console.log("  samples: {");
+  console.log("    heroUrl: \"…保留现有值…\",");
+  console.log("    sceneUrls: {");
+  for (const [sceneId, url] of Object.entries(sceneUrls)) console.log(`      "${sceneId}": "${url}",`);
   console.log("    },\n  },\n");
 }
 console.log("提示：上线前确认服务端已配 PUBLIC_APP_URL，且该域名在小程序后台的 downloadFile 白名单内。");

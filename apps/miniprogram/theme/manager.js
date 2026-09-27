@@ -6,6 +6,7 @@ const themes = require("./index");
 
 const STORAGE_KEY = "petbaby_theme";
 const BLUR_OVERRIDE_KEY = "petbaby_theme_blur_override";
+const LEGACY_THEME_IDS = { cute: "pet", glass: "film", light: "brand", dark: "night" };
 
 let currentId = themes.DEFAULT_THEME_ID;
 let blurSupported = true;
@@ -35,6 +36,11 @@ function readStoredId() {
   let stored = "";
   try { stored = wx.getStorageSync(STORAGE_KEY); } catch (error) { stored = ""; }
   if (themes.isValidThemeId(stored)) return stored;
+  if (LEGACY_THEME_IDS[stored]) {
+    const migrated = LEGACY_THEME_IDS[stored];
+    try { wx.setStorageSync(STORAGE_KEY, migrated); } catch (error) { /* 偏好不可写时仍使用迁移结果 */ }
+    return migrated;
+  }
   try { wx.setStorageSync(STORAGE_KEY, themes.DEFAULT_THEME_ID); } catch (error) { /* 缓存不可写时仅退回默认 */ }
   return themes.DEFAULT_THEME_ID;
 }
@@ -111,8 +117,8 @@ const manager = {
     return () => { const index = listeners.indexOf(fn); if (index >= 0) listeners.splice(index, 1); };
   },
 
-  /** 供固定主题页面（分享落地页）显式同步导航栏。 */
-  syncNavigationBar(id) { applyNavigationBar(themes.isValidThemeId(id) ? id : currentId); },
+  /** 页面 onShow 同步当前用户主题的导航栏。 */
+  syncNavigationBar() { applyNavigationBar(currentId); },
 
   STORAGE_KEY
 };

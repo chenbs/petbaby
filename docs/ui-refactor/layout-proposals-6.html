@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>麻麻抱我 · 六套页面排版与布局候选</title>
+  <style>
+    :root { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; color: #222521; background: #f3f5f2; }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; }
+    img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    button { font: inherit; }
+    .wrap { width: min(1200px, calc(100% - 36px)); margin: 0 auto; }
+    .intro { padding: 52px 0 35px; display: grid; grid-template-columns: minmax(0,1fr) 320px; gap: 40px; align-items: end; }
+    .eyebrow { color: #b24f39; font-size: 11px; font-weight: 700; }
+    h1 { font-size: 44px; line-height: 1.13; margin: 12px 0 16px; }
+    .intro p { max-width: 720px; color: #636b64; line-height: 1.75; margin: 0; font-size: 14px; }
+    .intro aside { border-left: 2px solid #bd674e; padding-left: 16px; line-height: 1.65; color: #636b64; font-size: 13px; }
+    .intro aside b { color: #222521; display: block; margin-bottom: 5px; }
+    .nav { position: sticky; top: 0; z-index: 20; border-top: 1px solid #d7ddd6; border-bottom: 1px solid #d7ddd6; background: rgba(243,245,242,.94); backdrop-filter: blur(12px); }
+    .nav .wrap { display: flex; gap: 8px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
+    .nav a { flex: 0 0 auto; padding: 8px 13px; border: 1px solid #d4dbd4; border-radius: 6px; background: #fff; color: #414b42; text-decoration: none; font-size: 12px; }
+    .nav a:hover, .nav a:focus-visible { border-color: #b24f39; color: #a5432e; outline: none; }
+    .concept { border-bottom: 1px solid #d7ddd6; padding: 58px 0 68px; scroll-margin-top: 70px; }
+    .concept-head { display: grid; grid-template-columns: minmax(0,1fr) 280px; gap: 32px; margin-bottom: 32px; }
+    .concept h2 { font-size: 30px; margin: 7px 0 9px; line-height: 1.25; }
+    .concept p { color: #636b64; font-size: 14px; line-height: 1.75; margin: 0; max-width: 650px; }
+    .meta { border-top: 2px solid #262c26; padding-top: 11px; font-size: 12px; color: #636b64; line-height: 1.7; }
+    .meta b { color: #222521; }
+    .meta div + div { border-top: 1px solid #d7ddd6; margin-top: 9px; padding-top: 9px; }
+    .concept-body { display: grid; grid-template-columns: 1fr 260px; gap: 42px; align-items: start; }
+    .screens { display: flex; gap: clamp(16px, 3vw, 42px); justify-content: center; align-items: start; flex-wrap: wrap; }
+    .screen-item { width: 302px; min-width: 0; }
+    .screen-cap { font-size: 12px; color: #636b64; margin: 0 0 11px; padding-left: 5px; }
+    .phone { width: 302px; height: 628px; border: 8px solid #222521; border-radius: 36px; overflow: hidden; background: #fff; position: relative; color: #232923; box-shadow: 0 22px 42px rgba(33,40,33,.16); }
+    .phone::before { content: ""; position: absolute; z-index: 9; top: 7px; left: 50%; translate: -50% 0; width: 70px; height: 17px; border-radius: 12px; background: #222521; }
+    .status { height: 35px; display: flex; justify-content: space-between; padding: 15px 16px 0; font-size: 9px; position: relative; z-index: 3; background: #fff; }
+    .viewport { height: calc(100% - 35px); overflow: hidden; position: relative; background: #fff; }
+    .phone-nav { position: absolute; z-index: 7; bottom: 0; left: 0; right: 0; height: 48px; display: flex; align-items: center; justify-content: space-around; background: #fff; border-top: 1px solid #e1e5df; font-size: 10px; color: #929990; }
+    .phone-nav strong { color: #283b32; }
+    .phone-head { height: 45px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 700; }
+    .phone-head small { font-size: 10px; color: #869087; font-weight: 500; }
+    .kicker { color: #9e5948; font-size: 9px; font-weight: 700; }
+    .title { font-size: 22px; line-height: 1.27; font-weight: 750; }
+    .sub { font-size: 10px; line-height: 1.55; color: #788078; }
+    .section-title { display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700; padding: 15px 16px 9px; }
+    .section-title small { font-size: 9px; color: #889188; font-weight: 400; }
+    .chip { font-size: 9px; border: 1px solid #dce2db; border-radius: 5px; padding: 4px 6px; color: #59665a; }
+    .mock-image { overflow: hidden; position: relative; background: #d8ded8; }
+    .mock-image img { width: 100%; height: 100%; object-fit: cover; }
+    .mock-image .caption { position: absolute; left: 10px; right: 10px; bottom: 9px; color: white; font-size: 12px; font-weight: 700; text-shadow: 0 1px 6px rgba(0,0,0,.8); }
+    .mock-image .caption small { display: block; font-size: 9px; font-weight: 400; margin-bottom: 3px; }
+    .pill-action { background: #284f42; color: #fff; border-radius: 6px; padding: 10px 13px; font-size: 11px; font-weight: 600; text-align: center; }
+    .side-notes { font-size: 12px; line-height: 1.7; color: #626b63; }
+    .side-notes h3 { font-size: 12px; color: #222521; margin: 0 0 8px; }
+    .side-notes ul { margin: 0; padding-left: 18px; }
+    .side-notes li + li { margin-top: 7px; }
+    .side-notes .fit { border-top: 1px solid #d7ddd6; padding-top: 15px; margin-top: 20px; }
+    .side-notes .fit b { color: #222521; }
+
+    /* 01: timeline spine */
+    .a-hero { display: flex; gap: 11px; align-items: center; margin: 1px 16px 7px; }
+    .a-avatar { width: 76px; height: 76px; flex: 0 0 76px; border-radius: 12px; overflow: hidden; }
+    .a-days { color: #b24f39; font-size: 11px; font-weight: 700; margin-bottom: 4px; }
+    .a-axis { margin: 7px 16px 0 28px; border-left: 2px solid #d1dcd1; padding-left: 16px; }
+    .a-entry { position: relative; border-bottom: 1px solid #e9ede7; padding: 9px 0; }
+    .a-entry::before { content: ""; width: 8px; height: 8px; position: absolute; left: -21px; top: 13px; border-radius: 50%; background: #bd674e; box-shadow: 0 0 0 4px #f5f1eb; }
+    .a-entry .date { color: #8a938a; font-size: 9px; margin-bottom: 5px; }
+    .a-entry .row { display: flex; gap: 9px; align-items: center; }
+    .a-entry .mock-image { width: 68px; height: 64px; border-radius: 8px; flex: 0 0 68px; }
+    .a-entry strong { font-size: 11px; display: block; margin-bottom: 4px; }
+    .a-cta { margin: 13px 16px; }
+    .a-focus { margin: 4px 16px 0; }
+    .a-focus .mock-image { height: 180px; border-radius: 10px; }
+    .a-focus h4 { font-size: 16px; margin: 12px 0 5px; }
+    .a-facts { display: flex; gap: 8px; border-top: 1px solid #e6ebe4; border-bottom: 1px solid #e6ebe4; padding: 13px 0; margin: 15px 0 12px; font-size: 10px; color: #6b766c; }
+    /* 02: showcase mosaic */
+    .b-feature { height: 180px; margin: 1px 16px 12px; border-radius: 10px; }
+    .b-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 16px; }
+    .b-grid .mock-image { height: 118px; border-radius: 8px; }
+    .b-filter { display: flex; gap: 5px; margin: 4px 16px 12px; }
+    .b-filter span { font-size: 9px; padding: 5px 8px; border: 1px solid #dae0d9; border-radius: 4px; }
+    .b-filter span:first-child { background: #284f42; border-color: #284f42; color: #fff; }
+    .b-detail-photo { margin: 2px 16px; height: 315px; border-radius: 10px; }
+    .b-detail-caption { margin: 13px 16px; display: flex; justify-content: space-between; align-items: start; }
+    .b-detail-caption strong { font-size: 18px; }
+    .b-detail-caption small { color: #8a938a; font-size: 10px; }
+    /* 03: pet hub */
+    .c-banner { margin: 4px 16px 11px; display: grid; grid-template-columns: 83px 1fr; gap: 12px; align-items: center; }
+    .c-banner .mock-image { width: 83px; height: 83px; border-radius: 50%; }
+    .c-banner b { font-size: 20px; display: block; }
+    .c-stats { display: grid; grid-template-columns: repeat(3,1fr); margin: 0 16px 9px; border-top: 1px solid #dfe7df; border-bottom: 1px solid #dfe7df; }
+    .c-stats div { padding: 10px 0; text-align: center; }
+    .c-stats div + div { border-left: 1px solid #dfe7df; }
+    .c-stats b { display: block; font-size: 15px; color: #284f42; }
+    .c-stats small { display: block; font-size: 9px; color: #839083; }
+    .c-shortcuts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 16px; }
+    .c-shortcut { border: 1px solid #dfe7df; border-radius: 8px; padding: 12px; min-height: 68px; }
+    .c-shortcut b { display: block; font-size: 11px; margin-bottom: 6px; }
+    .c-shortcut small { color: #849083; font-size: 9px; }
+    .c-last-photo { height: 94px; margin: 0 16px; border-radius: 8px; }
+    .c-health { margin: 2px 16px; border-top: 2px solid #284f42; }
+    .c-health-row { padding: 14px 0; border-bottom: 1px solid #e1e7df; display: flex; justify-content: space-between; gap: 9px; font-size: 11px; }
+    .c-health-row strong { color: #284f42; }
+    .c-health .mock-image { height: 158px; border-radius: 9px; margin: 12px 0; }
+    /* 04: list workspace */
+    .d-tabs { display: flex; justify-content: space-around; margin: 0 16px 13px; border-bottom: 1px solid #e0e6df; font-size: 10px; color: #839083; }
+    .d-tabs span { padding: 9px 4px; }
+    .d-tabs .on { border-bottom: 2px solid #284f42; color: #284f42; font-weight: 700; }
+    .d-search { background: #f0f4ef; color: #93a095; border-radius: 6px; padding: 10px; margin: 0 16px 9px; font-size: 10px; }
+    .d-list { margin: 0 16px; }
+    .d-item { display: flex; gap: 10px; padding: 9px 0; border-bottom: 1px solid #e4e9e2; align-items: center; }
+    .d-item .mock-image { width: 54px; height: 54px; flex: 0 0 54px; border-radius: 7px; }
+    .d-item b { display: block; font-size: 11px; margin-bottom: 4px; }
+    .d-item small { display: block; color: #879187; font-size: 9px; }
+    .d-item em { margin-left: auto; color: #a3afa3; font-style: normal; }
+    .d-steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 4px; margin: 0 16px 18px; font-size: 9px; text-align: center; }
+    .d-steps span { padding-top: 7px; border-top: 3px solid #dce4dc; }
+    .d-steps span:first-child { border-color: #284f42; color: #284f42; font-weight: 700; }
+    .d-field { margin: 0 16px 12px; border-bottom: 1px solid #e0e6df; padding: 7px 0 12px; font-size: 11px; display: flex; justify-content: space-between; }
+    .d-field span { color: #8a938a; }
+    .d-preview { margin: 0 16px; height: 145px; border-radius: 8px; }
+    /* 05: chapter covers */
+    .e-cover { margin: 2px 16px 14px; height: 270px; border-radius: 10px; }
+    .e-cover::after, .f-stage::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top,rgba(12,22,16,.72),transparent 54%); pointer-events: none; }
+    .e-cover .caption, .f-stage .caption { z-index: 1; font-size: 22px; line-height: 1.2; }
+    .e-chapter { margin: 0 16px; padding: 10px 0; display: grid; grid-template-columns: 32px 1fr 12px; align-items: center; border-top: 1px solid #dfe6dc; font-size: 11px; }
+    .e-chapter small { color: #8a938a; font-size: 9px; }
+    .e-spread { margin: 4px 16px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 5px; height: 185px; }
+    .e-spread .mock-image:first-child { border-radius: 10px 0 0 10px; }
+    .e-spread .mock-image:last-child { border-radius: 0 10px 10px 0; }
+    .e-copy { margin: 16px 16px 0; border-top: 1px solid #dfe6dc; padding-top: 15px; }
+    .e-copy b { font-size: 16px; display: block; margin-bottom: 9px; }
+    .e-copy p { font-size: 11px; line-height: 1.75; color: #687268; }
+    /* 06: immersive stage */
+    .f-stage { height: 335px; margin: 0; border-radius: 0 0 12px 12px; }
+    .f-stage .caption { left: 18px; bottom: 34px; }
+    .f-sheet { position: relative; z-index: 2; margin: -17px 0 0; padding: 14px 18px; border-radius: 17px 17px 0 0; background: #fff; }
+    .f-handle { width: 32px; height: 3px; background: #d6ded5; border-radius: 3px; margin: 0 auto 13px; }
+    .f-sheet b { font-size: 15px; display: block; margin-bottom: 5px; }
+    .f-sheet .sub { margin-bottom: 12px; }
+    .f-sheet .pill-action { margin-top: 10px; }
+    .f-bottom-facts { display: flex; gap: 12px; border-top: 1px solid #e5eae4; padding-top: 11px; margin-top: 11px; color: #728071; font-size: 9px; }
+    .f-result .f-stage { height: 340px; }
+    .f-result .f-sheet { margin-top: -26px; }
+
+    .compare { padding: 65px 0; }
+    .compare h2 { font-size: 28px; margin: 8px 0 12px; }
+    .compare p { color: #636b64; font-size: 13px; line-height: 1.75; }
+    .table-box { overflow-x: auto; border: 1px solid #d7ddd6; margin-top: 22px; background: #fff; }
+    table { width: 100%; min-width: 750px; border-collapse: collapse; font-size: 12px; }
+    th,td { border-bottom: 1px solid #d7ddd6; padding: 12px 14px; text-align: left; line-height: 1.5; }
+    th { background: #e9eee8; color: #59645b; }
+    tr:last-child td { border-bottom: 0; }
+    .choice { margin: 0 auto 65px; padding: 24px; background: #263b31; color: #fff; display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    .choice h2 { margin: 0; font-size: 24px; }
+    .choice p { color: #d4e0d5; line-height: 1.7; font-size: 13px; margin: 10px 0 0; }
+    .choice ol { color: #d4e0d5; line-height: 1.8; font-size: 13px; margin: 0; }
+    footer { font-size: 12px; color: #6c766d; padding-bottom: 48px; line-height: 1.7; }
+    @media (max-width: 980px) { .concept-body { grid-template-columns: 1fr; gap: 27px; } .side-notes { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; } .side-notes .fit { border: 0; padding: 0; margin: 0; } }
+    @media (max-width: 680px) { .wrap { width: min(100% - 28px, 430px); } .intro { grid-template-columns: 1fr; gap: 21px; padding-top: 32px; } h1 { font-size: 32px; } .concept { padding: 42px 0 52px; } .concept-head { grid-template-columns: 1fr; gap: 18px; } .concept h2 { font-size: 26px; } .screens { gap: 27px; } .side-notes { display: block; } .side-notes .fit { border-top: 1px solid #d7ddd6; padding-top: 13px; margin-top: 15px; } .choice { grid-template-columns: 1fr; padding: 20px; } }
+  </style>
+</head>
+<body>
+  <header class="wrap intro">
+    <div><div class="eyebrow">LAYOUT STUDY · 06 OPTIONS / 2026.09</div><h1>页面排版与布局<br>六套候选</h1><p>美术方向已定为暖调胶片、宠物主场、官网参考。这份展板只比较页面骨架：首屏内容顺序、图片比例、信息密度与操作位置。每套展示两个场景，内容均是示意，功能入口沿用现有小程序。</p></div>
+    <aside><b>阅读方法</b>先看第一屏能不能马上找到要做的事，再看第二屏能否顺畅完成该页任务。图像暂借当前官网样片，后续将按已记录的素材计划重新生成。</aside>
+  </header>
+  <nav class="nav" aria-label="布局方案导航"><div class="wrap"><a href="#layout-a">01 时间纵轴</a><a href="#layout-b">02 作品矩阵</a><a href="#layout-c">03 宠物主页</a><a href="#layout-d">04 清单工作台</a><a href="#layout-e">05 章节书架</a><a href="#layout-f">06 沉浸画布</a><a href="#comparison">对比</a></div></nav>
+  <main class="wrap" id="proposals"></main>
+  <section class="wrap compare" id="comparison"><div class="eyebrow">LAYOUT COMPARISON</div><h2>选择时看哪一项</h2><p>没有一套骨架适合所有页面。可选一套做全局主骨架，再指定个别页面使用另一套。正式实现前仍需逐页确认布局映射。</p><div class="table-box"><table><thead><tr><th>方案</th><th>首页第一眼</th><th>照片 / 作品</th><th>表单 / 交易</th><th>适合做主骨架</th></tr></thead><tbody><tr><td>01 时间纵轴</td><td>记录与日期</td><td>按时间回看</td><td>需要单独表单组件</td><td>陪伴与记录占主导</td></tr><tr><td>02 作品矩阵</td><td>样片与玩法</td><td>强，利于比较</td><td>详情页需信息面板</td><td>作品转化占主导</td></tr><tr><td>03 宠物主页</td><td>当前宠物</td><td>作为快捷入口</td><td>适合身份相关页</td><td>宠物关系占主导</td></tr><tr><td>04 清单工作台</td><td>任务与状态</td><td>可扫描列表</td><td>最清晰</td><td>效率与高频使用</td></tr><tr><td>05 章节书架</td><td>故事封面</td><td>强，适合长内容</td><td>需借用工作台结构</td><td>年度回顾与纪念</td></tr><tr><td>06 沉浸画布</td><td>全幅内容</td><td>最强视觉冲击</td><td>复杂信息需抽屉承载</td><td>分享和结果展示</td></tr></tbody></table></div></section>
+  <section class="wrap choice"><div><h2>待确认的布局结论</h2><p>选一个主布局编号，必要时附一个次布局用于特殊页面。美术风格已按 23 页分配，布局选择不会重开配色决策。</p></div><ol><li>主布局：____</li><li>特殊页面采用的次布局：____</li><li>是否保留首页“宠物在第一屏、玩法在第二屏”的现有顺序：____</li></ol></section>
+  <footer class="wrap">设计预览仅用于选择布局；没有修改 `apps/miniprogram`。正式页面须保留登录、支付、授权、错误、空态与加载态，并遵守既有主题系统和图像审核流程。</footer>
+  <script>
+    const assets = "../../apps/website/public/assets/";
+    const urls = {
+      pet: "website-v2-play-id-card.jpg", album: "website-v2-play-album.jpg",
+      ai: "website-v2-ai.jpg", timeline: "website-v2-timeline.jpg",
+      video: "website-v2-video.jpg", health: "website-v2-health.jpg",
+      interactive: "website-v2-interactive.jpg", memorial: "website-v2-memorial.jpg"
+    };
+    const image = (key, className = "", caption = "") => `<div class="mock-image ${className}"><img src="${assets + urls[key]}" alt="${key} 布局示意图">${caption ? `<div class="caption">${caption}</div>` : ""}</div>`;
+    const head = (title, aside = "") => `<div class="phone-head"><span>${title}</span><small>${aside}</small></div>`;
+    const nav = (active = "陪伴") => `<div class="phone-nav"><strong>${active}</strong><span>${active === "作品" ? "陪伴" : "作品"}</span><span>我的</span></div>`;
+    const phone = (content, active = "陪伴", variant = "") => `<div class="phone ${variant}"><div class="status"><span>9:41</span><span>▰ ▪</span></div><div class="viewport">${content}${nav(active)}</div></div>`;
+    const item = (key, title, detail) => `<div class="d-item">${image(key)}<div><b>${title}</b><small>${detail}</small></div><em>›</em></div>`;
+    const concepts = [
+      {
+        id: "a", name: "时间纵轴", phrase: "让一天一天的记录成为页面主线", summary: "首屏从当前宠物进入，以下按日期串起照片、回忆和作品。二级页继续保持时间顺序，适合把“收好照片”做成高频动作。",
+        first: "陪伴首页", second: "成长时间线", focus: "当前宠物 → 记录 → 回看", fit: "首页、照片库、时间线、纪念空间", cost: "玩法和交易入口会被放到较后位置，需保留可见的创作快捷入口。",
+        one: phone(`${head("麻麻抱我", "切换宠物")}<div class="a-hero">${image("pet", "a-avatar")}<div><div class="a-days">陪伴第 368 天</div><div class="title">麦麦的日子</div><div class="sub">把今天也好好收起来</div></div></div><div class="section-title"><span>最近收好</span><small>记录一张 +</small></div><div class="a-axis"><div class="a-entry"><div class="date">9月24日 · 今天</div><div class="row">${image("timeline")}<div><strong>阳光照在它身上</strong><div class="sub">一张照片 · 一句心情</div></div></div></div><div class="a-entry"><div class="date">9月18日</div><div class="row">${image("album")}<div><strong>第一次做时光画册</strong><div class="sub">作品已收好</div></div></div></div><div class="a-entry"><div class="date">9月10日</div><div class="row">${image("interactive")}<div><strong>一起玩了一会儿</strong><div class="sub">互动记录</div></div></div></div></div><div class="a-cta pill-action">收好今天的照片　＋</div>`),
+        two: phone(`${head("成长时间线", "筛选") }<div class="a-focus">${image("timeline")}<h4>它的一年，慢慢变成故事</h4><div class="sub">每个平常的日子都有日期，也都有它。</div><div class="a-facts"><span>照片 86 张</span><span>里程碑 4 个</span><span>作品 12 件</span></div></div><div class="a-axis"><div class="a-entry"><div class="date">2026年9月24日</div><strong>新照片已收好</strong><div class="sub">从照片进入这一天</div></div><div class="a-entry"><div class="date">2026年8月21日</div><strong>陪伴满一年</strong><div class="sub">一段值得回看的日子</div></div></div>`, "陪伴")
+      },
+      {
+        id: "b", name: "作品矩阵", phrase: "先让用户看见作品，再决定要不要制作", summary: "首页一张大样片带两张小样片，作品库用同尺度双列网格，详情页把大图与操作放在一起。对产出品质最敏感。",
+        first: "玩法首页", second: "作品详情", focus: "成品图 → 玩法 → 制作", fit: "首页、作品柜、AI 模板、实体纪念品", cost: "较依赖高质量样片；图片资产未更新前，旧图的不足也会被放大。",
+        one: phone(`${head("麻麻抱我", "全部玩法")}${image("ai", "b-feature", "<small>本周推荐 · AI 创作</small>把它的样子留在作品里")}<div class="section-title"><span>看看能做什么</span><small>查看更多 →</small></div><div class="b-grid">${image("album", "", "时光画册")}${image("video", "", "记忆短片")}${image("interactive", "", "互动一页")}${image("pet", "", "宠物身份证")}</div>`),
+        two: phone(`${head("作品详情", "分享")}${image("album", "b-detail-photo")}<div class="b-detail-caption"><div><strong>麦麦的时光画册</strong><div class="sub">2026年9月18日 · 已解锁</div></div><small>作品 03</small></div><div class="b-filter"><span>预览</span><span>详情</span><span>分享</span></div><div class="pill-action" style="margin:0 16px">保存作品</div>`, "作品")
+      },
+      {
+        id: "c", name: "宠物主页", phrase: "所有内容从“我家的这只”出发", summary: "把宠物档案置于页面顶部，下方通过状态与动作网格进入记录、创作和健康。切换宠物时，整页上下文一起改变。",
+        first: "宠物首页", second: "健康助手", focus: "宠物身份 → 状态 → 动作", fit: "首页、宠物档案、健康、我的、互动", cost: "多宠切换和无宠空态要设计完整；样片与作品入口不能被缩小成难辨识图标。",
+        one: phone(`${head("我的小家", "切换宠物") }<div class="c-banner">${image("pet")}<div><div class="kicker">今天也在一起</div><b>麦麦</b><div class="sub">陪伴第 368 天 · 3 岁</div></div></div><div class="c-stats"><div><b>86</b><small>照片</small></div><div><b>12</b><small>作品</small></div><div><b>4</b><small>里程碑</small></div></div><div class="section-title"><span>今天要做什么</span><small>更多 →</small></div><div class="c-shortcuts"><div class="c-shortcut"><b>收好照片</b><small>存下今天</small></div><div class="c-shortcut"><b>去做作品</b><small>看看成品</small></div><div class="c-shortcut"><b>健康记录</b><small>查看提醒</small></div><div class="c-shortcut"><b>陪它玩玩</b><small>互动一页</small></div></div><div class="section-title"><span>最近的一张</span><small>进入相册 →</small></div>${image("timeline", "c-last-photo", "日子都在这里")}`),
+        two: phone(`${head("麦麦 · 健康助手", "切换宠物") }<div class="c-banner">${image("health")}<div><div class="kicker">健康档案</div><b>最近怎么样</b><div class="sub">记录体重，查看提醒</div></div></div><div class="c-health"><div class="c-health-row"><span>最近体重</span><strong>5.1 kg</strong></div><div class="c-health-row"><span>下一次提醒</span><strong>查看日程</strong></div><div class="c-health-row"><span>健康资料</span><strong>已收好 2 份</strong></div>${image("health")}<div class="sub">健康建议仅用于分诊参考，具体情况请咨询兽医。</div><div class="pill-action" style="margin-top:12px">记录体重</div></div>`)
+      },
+      {
+        id: "d", name: "清单工作台", phrase: "用最少视线移动完成最常用的任务", summary: "固定栏目、轻筛选和一行一项的内容列表。制作页把步骤、当前选择和主操作排成稳定顺序，适合有较多状态和输入的页面。",
+        first: "作品与任务", second: "制作流程", focus: "筛选 → 列表 → 当前操作", fit: "作品柜、订单、AI 任务、制作、账户与会员", cost: "首页情绪表达较弱，适合与已选三套美术中的暖调图像搭配。",
+        one: phone(`${head("作品与任务", "筛选") }<div class="d-tabs"><span class="on">全部</span><span>制作中</span><span>已完成</span><span>待解锁</span></div><div class="d-search">搜索作品或玩法</div><div class="section-title"><span>进行中</span><small>1 项</small></div><div class="d-list">${item("ai","AI 肖像生成中","预计稍后可看候选")}</div><div class="section-title"><span>已完成</span><small>最近 3 件</small></div><div class="d-list">${item("album","时光画册","9月18日 · 已解锁")}${item("video","记忆短片","9月12日 · 已解锁")}${item("pet","宠物身份证","9月3日 · 免费作品")}</div>`, "作品"),
+        two: phone(`${head("制作时光画册", "草稿已保存") }<div class="d-steps"><span>1 选宠物</span><span>2 选照片</span><span>3 生成</span><span>4 完成</span></div><div class="section-title"><span>先选一只宠物</span><small>可稍后更改</small></div><div class="d-field"><strong>当前宠物</strong><span>麦麦　∨</span></div><div class="section-title"><span>接下来要用的照片</span><small>最少 6 张</small></div>${image("timeline", "d-preview")}<div class="d-field"><strong>已选照片</strong><span>6 张　›</span></div><div class="pill-action" style="margin:16px">下一步：编辑画册</div>`)
+      },
+      {
+        id: "e", name: "章节书架", phrase: "把内容整理成可翻阅的故事章节", summary: "封面、目录、双页和节选组成一本“会更新的书”。首页像目录，深入后看到成册的照片与文字，适合较长内容。",
+        first: "故事首页", second: "章节详情", focus: "封面 → 目录 → 内容", fit: "时光画册、年度回顾、时间线、纪念空间", cost: "交易与短表单不适合采用章节结构，需要与清单式结构搭配。",
+        one: phone(`${head("麦麦的故事", "全部章节") }${image("timeline", "e-cover", "<small>第一章 · 2026</small>平常的每一天") }<div class="e-chapter"><small>01</small><span>今年的照片</span><span>→</span></div><div class="e-chapter"><small>02</small><span>我们做过的作品</span><span>→</span></div><div class="e-chapter"><small>03</small><span>值得回看的日子</span><span>→</span></div>`),
+        two: phone(`${head("第一章 · 今年", "1 / 12") }<div class="e-spread">${image("album")}${image("pet")}</div><div class="e-copy"><div class="kicker">2026 / AUTUMN</div><b>阳光最好的那一天</b><p>它在窗边待了很久。后来我翻相册，才发现平常的一天也能慢慢变成最想留住的那一天。</p></div><div class="e-chapter" style="margin-top:18px"><small>01</small><span>上一段回忆</span><span>←</span></div><div class="e-chapter"><small>02</small><span>下一段回忆</span><span>→</span></div>`)
+      },
+      {
+        id: "f", name: "沉浸画布", phrase: "图片是整个舞台，信息从底部进入", summary: "大图覆盖首屏大半区域，事实和操作集中在固定底部面板。适合作品结果、视频与分享；控制层不遮挡宠物主体。",
+        first: "内容首页", second: "结果详情", focus: "全幅图 → 事实 → 操作", fit: "作品详情、AI 候选、视频、互动、分享", cost: "复杂表单和订单内容容易被挤进抽屉；必须保留实底降级和无图状态。",
+        one: phone(`${head("今日推荐", "全部作品") }${image("interactive", "f-stage", "<small>麦麦的互动一页</small>把今天<br>留在这里") }<div class="f-sheet"><div class="f-handle"></div><b>陪它玩一会儿</b><div class="sub">看一张照片，也可以做一页属于它的互动故事。</div><div class="f-bottom-facts"><span>单只宠物</span><span>照片 1–6 张</span><span>可分享</span></div><div class="pill-action">开始制作　→</div></div>`),
+        two: phone(`${head("作品详情", "分享") }${image("ai", "f-stage", "<small>已生成 · 选择喜欢的一张</small>像它，也像今天") }<div class="f-sheet"><div class="f-handle"></div><b>麦麦的 AI 肖像</b><div class="sub">四张候选中选一张，再查看高清作品。</div><div class="f-bottom-facts"><span>状态：已生成</span><span>宠物：麦麦</span></div><div class="pill-action">查看候选</div></div>`, "作品", "f-result")
+      }
+    ];
+    document.getElementById("proposals").innerHTML = concepts.map((item, index) => `<section class="concept" id="layout-${item.id}"><div class="concept-head"><div><div class="eyebrow">LAYOUT ${String(index + 1).padStart(2,"0")}</div><h2>${item.name}</h2><p>${item.summary}</p></div><div class="meta"><div><b>核心路径</b><br>${item.focus}</div><div><b>适合页面</b><br>${item.fit}</div></div></div><div class="concept-body"><div class="screens"><div class="screen-item"><div class="screen-cap">01 / ${item.first}</div>${item.one}</div><div class="screen-item"><div class="screen-cap">02 / ${item.second}</div>${item.two}</div></div><aside class="side-notes"><div><h3>${item.phrase}</h3><ul><li>本页统一采用中性示意样式，正式页面再接入已选美术语言。</li><li>首屏、列表与二级页遵循同一导航节奏。</li></ul></div><div class="fit"><b>取舍</b><br>${item.cost}</div></aside></div></section>`).join("");
+  </script>
+</body>
+</html>

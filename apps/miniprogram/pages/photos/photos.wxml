@@ -1,6 +1,6 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-flat">
+<view class="page page-flat art-film layout-matrix">
   <text class="eyebrow">LIBRARY</text>
   <view class="title">照片库</view>
 
@@ -34,7 +34,8 @@
     <text class="small">上传可能压缩照片，保存的是上传后的文件。</text>
     <t-button type="secondary" anim="{{animType}}" disabled="{{uploading || preparing || uploadItems.length >= 9}}" bindtap="choosePhotos">{{preparing ? '正在整理照片' : '选择照片'}}</t-button>
     <view wx:for="{{uploadItems}}" wx:key="requestId" class="upload-row">
-      <image src="{{item.path}}" mode="aspectFill" class="upload-thumb" />
+      <image wx:if="{{item.path && !item.thumbFailed}}" src="{{item.path}}" mode="aspectFill" class="upload-thumb" data-id="{{item.requestId}}" data-src="{{item.path}}" binderror="onUploadThumbError" />
+      <view wx:else class="upload-thumb upload-thumb-blank">预览失败</view>
       <view class="upload-copy">
         <text>{{petText}} · 第 {{index + 1}} 张 · {{item.stateText}}</text>
         <text wx:if="{{item.state === 'uploading'}}" class="small">已发送 {{item.progress}}%，等待确认保存</text>
@@ -107,7 +108,8 @@
   <view class="record-stack">
     <t-notice wx:if="{{error}}" type="error" message="{{error}}"></t-notice>
     <block wx:if="{{detail}}">
-      <image src="{{detail.localUrl}}" mode="widthFix" class="detail-photo" bindtap="previewDetail" />
+      <image wx:if="{{detail.localUrl}}" src="{{detail.localUrl}}" mode="widthFix" class="detail-photo" data-src="{{detail.localUrl}}" binderror="onDetailImageError" bindtap="previewDetail" />
+      <view wx:else class="detail-photo detail-photo-blank">照片暂时无法显示</view>
       <text>{{petText}} · {{detail.recordedDate}}</text>
       <text class="small">{{detail.sourceText}}</text>
       <picker mode="date" value="{{editDate}}" bindchange="chooseDate"><t-field control="select" label="记录日期（选填）" value="{{editDate}}" placeholder="不确定时可以不填"></t-field></picker>

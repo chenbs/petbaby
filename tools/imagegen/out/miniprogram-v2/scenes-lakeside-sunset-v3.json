@@ -1,0 +1,12 @@
+{
+  "id": "lakeside-sunset",
+  "group": "scenes",
+  "prompt": "The same genuine adult blue bicolor Ragdoll cat as Image 1: broad rounded face, symmetric clean white inverted V across the face, pink nose, deep blue eyes, white chin/chest/front legs and paws, blue-gray ears/back/plume tail, long silky coat. Not a seal-point dark-faced cat, Siamese, Birman or Himalayan. Preserve this exact individual's face and markings. Environmental editorial pet photograph, wide establishing view from several meters away. One full-body cat occupies about 30-40% of frame height and no more than 25% of image area; show the complete face, four paws and tail. The real location, architecture, surfaces and props occupy most of the frame and are sharp enough to recognize in a small mobile thumbnail. No close-up, studio-white void, heavy bokeh, cut-off head/paws, second animal, person, text, logo, watermark or extra limbs. Vertical 3:4 composition. For this frame move the camera farther back: the cat's full body including its tail must fit within at most 35% of image height. The cat is a small but recognizable subject in the lower middle distance. Preserve generous uninterrupted views of the bridge and lake or meadow and picnic setting. Scene, action and expression: A wooden footbridge beside a lake at sunset, with reflective water, far mountains and a visible pink-orange sky. The cat stretches its front paws on the bridge, tail raised, eyes gently squinting in warm light, relaxed. The lake and bridge dominate the composition.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/scenes/identity-ragdoll-bicolor-v2.jpg",
+  "referenceSha256": "a4b90b4e422d431f59695c95b5bfbde6868e2271737afc2b3deb2e51d9e26cdf",
+  "output": "tools/imagegen/out/scenes/scene-lakeside-sunset-v3.jpg",
+  "sha256": "1e2beeb3528516b80ec0907e30099cdaad48111b8b1a99d88ae70de00963ae09",
+  "review": "pending-visual-review"
+}

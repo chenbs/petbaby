@@ -1,0 +1,15 @@
+{
+  "id": "library-whisper",
+  "title": "复古摄影师",
+  "description": "相机在旁 · 慢慢观察",
+  "group": "scenes",
+  "prompt": "Use case: photorealistic-natural editorial pet photography. Make this look like a real commissioned studio or lifestyle photograph, with real fur detail, believable fabric, physically plausible props, natural contact shadows and a real camera lens. One adult pet only, complete head and body visible, natural anatomy and paws, no people or hands, no duplicate subject. No brand marks, logos, copied magazine mastheads, readable text, pseudo-letters, watermark, signature, CGI, 3D render, illustration, plastic fur or surreal background. Vertical 3:4 composition. The pet is the clear hero and occupies about 45-65% of frame height; the set, clothing and props remain visible and recognizable. The exact same adult blue-bicolor Ragdoll cat as Image 1: broad rounded head, clean symmetric white inverted-V face blaze, pink nose, deep blue eyes, white chin/chest/legs/paws, blue-gray ears/back and long silky coat. Preserve the individual identity and healthy natural proportions. Do not turn it into a seal-point cat, Siamese, Birman or generic long-haired cat. Scene and styling: A warm cream vintage photography corner with a brown corduroy jacket, silk neck scarf, tortoiseshell sunglasses resting correctly over the cat's eyes and a real compact film camera on the floor beside it. The cat lies with front paws crossed and looks calmly past the lens. Natural window light, period props, authentic pet fashion editorial, no readable labels. The clothing must fit the cat naturally and never hide its face or create human anatomy. Return one finished photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/scenes/identity-ragdoll-bicolor-v2.jpg",
+  "referenceSha256": "a4b90b4e422d431f59695c95b5bfbde6868e2271737afc2b3deb2e51d9e26cdf",
+  "output": "tools/imagegen/out/scenes/scene-library-whisper-v3.jpg",
+  "sha256": "29dffafc3a932b1d3680c90fae0bb217478f31b2e166c446a2e30208145399da",
+  "review": "approved-by-user",
+  "reviewedAt": "2026-09-26"
+}

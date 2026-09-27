@@ -23,6 +23,7 @@ Component({
     backgroundImage: { type: String, value: "" },
     backgroundVideo: { type: String, value: "" },
     poster: { type: String, value: "" },
+    framed: { type: Boolean, value: false },
     state: { type: String, value: "half", observer: "syncExternalState" },
     collapsedHeight: { type: Number, value: 22, observer: "measure" },
     defaultHeight: { type: Number, value: 60, observer: "measure" },

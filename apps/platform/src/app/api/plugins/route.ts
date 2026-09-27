@@ -23,6 +23,10 @@ function absolutize(manifest: PluginManifest, origin: string): PluginManifest {
     samples: {
       ...(samples.heroUrl ? { heroUrl: toAbsolute(samples.heroUrl) } : {}),
       ...(samples.thumbUrls ? { thumbUrls: samples.thumbUrls.map(toAbsolute) } : {}),
+      ...(samples.sceneUrls
+        ? { sceneUrls: Object.fromEntries(Object.entries(samples.sceneUrls).map(([scene, url]) => [scene, toAbsolute(url)])) }
+        : {}),
+      ...(samples.sceneOptions ? { sceneOptions: samples.sceneOptions } : {}),
       ...(samples.styleUrls
         ? { styleUrls: Object.fromEntries(Object.entries(samples.styleUrls).map(([style, url]) => [style, toAbsolute(url)])) }
         : {}),

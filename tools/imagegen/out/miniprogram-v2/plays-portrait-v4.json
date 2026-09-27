@@ -1,0 +1,12 @@
+{
+  "id": "portrait",
+  "group": "plays",
+  "prompt": "Premium contemporary pet product campaign image for a Chinese pet memories app. Bright, clean, vivid but restrained color, natural expressive animal anatomy, crisp face and eyes, tactile material detail. The subject and actual finished product must be immediately legible at small mobile thumbnail size. No readable text, letters, numbers, watermark, logo, UI screenshot, fake interface or extra limbs. Create a finished original fine-art pet portrait of a silver British Shorthair cat, visibly painted with confident expressive brushwork on textured canvas. Show the canvas itself in a slim natural-wood frame against a bright white gallery wall, frame edges fully visible. A clear commissioned artwork, not a regular photograph, and no orange tabby.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": null,
+  "output": "tools/imagegen/out/styles/play-portrait-v4.jpg",
+  "sha256": "c6b042d11eea75a838c66490f748810034ae9d18cd0d149ae9bb0fc154319182",
+  "review": "approved-by-user",
+  "reviewedAt": "2026-09-26"
+}

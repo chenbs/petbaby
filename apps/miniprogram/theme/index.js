@@ -4,8 +4,8 @@
  */
 const tokens = require("./tokens");
 
-const THEMES = [require("./themes/cute"), require("./themes/glass"), require("./themes/light"), require("./themes/dark")];
-const DEFAULT_THEME_ID = "cute";
+const THEMES = [require("./themes/film"), require("./themes/pet"), require("./themes/brand"), require("./themes/night")];
+const DEFAULT_THEME_ID = "pet";
 const INDEX = {};
 for (const theme of THEMES) INDEX[theme.id] = theme;
 

@@ -4,14 +4,17 @@
 
 <t-glass-sheet
   id="sheet"
+  class="art-brand layout-canvas"
   background-video="{{sheetBackgroundVideo}}"
   background-image="{{sheetBackgroundImage}}"
   poster="{{sheetPoster}}"
+  framed
   title="{{sheetTitle}}"
   state="half"
   blur="{{blurOk}}"
   anim="{{animType}}"
   gesture-disabled="{{loading || !work}}"
+  bindbackgrounderror="onBackgroundError"
   bindstatechange="handleStateChange"
 >
   <!-- 未解锁水印提示：自带实底容器，不把文字直接压在图片上 -->

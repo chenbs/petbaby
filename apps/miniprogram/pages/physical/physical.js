@@ -73,6 +73,12 @@ themedPage({
     this.refreshSubmittable();
   },
 
+  onCoverError(event) {
+    const { id, src } = event.currentTarget.dataset;
+    const index = this.data.works.findIndex((item) => item.id === id && item.coverUrl === src);
+    if (index >= 0) this.setData({ ["works[" + index + "].coverUrl"]: "" });
+  },
+
   onField(event) {
     const key = event.currentTarget.dataset.key;
     if (!key) return;

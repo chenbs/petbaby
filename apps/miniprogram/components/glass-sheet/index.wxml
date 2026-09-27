@@ -4,7 +4,7 @@
   <!-- 背景层：不随面板移动，图片与视频两条路径 -->
   <video
     wx:if="{{hasVideo}}"
-    class="sheet-media"
+    class="sheet-media {{framed ? 'sheet-media-framed' : ''}}"
     id="sheet-video"
     src="{{backgroundVideo}}"
     poster="{{poster}}"
@@ -22,7 +22,7 @@
   ></video>
   <image
     wx:elif="{{hasImage}}"
-    class="sheet-media"
+    class="sheet-media {{framed ? 'sheet-media-framed' : ''}}"
     src="{{backgroundImage}}"
     mode="aspectFill"
     binderror="handleImageError"

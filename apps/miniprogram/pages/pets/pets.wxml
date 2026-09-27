@@ -1,6 +1,6 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-flat">
+<view class="page page-flat art-pet layout-pet">
   <text class="eyebrow">PROFILES</text>
   <view class="title">宠物档案</view>
   <t-button class="block-gap" type="primary" anim="{{animType}}" bindtap="newPet">新建宠物档案</t-button>
@@ -9,6 +9,7 @@
   <t-notice wx:if="{{message}}" type="success" message="{{message}}" class="block-gap"></t-notice>
 
   <t-skeleton wx:if="{{loading}}" type="list" count="3" class="block-gap"></t-skeleton>
+  <t-button wx:elif="{{error && !pets.length}}" type="secondary" bindtap="reload">重新加载档案</t-button>
 
   <t-empty
     wx:elif="{{!pets.length}}"
@@ -24,7 +25,7 @@
   <view wx:else class="list">
     <t-card wx:for="{{pets}}" wx:key="id" blur="{{blurOk}}" anim="{{animType}}">
       <view class="pet">
-        <image wx:if="{{item.avatarUrl}}" class="pet-avatar" src="{{item.avatarUrl}}" mode="aspectFill" />
+        <image wx:if="{{item.avatarUrl}}" class="pet-avatar" src="{{item.avatarUrl}}" mode="aspectFill" data-kind="list" data-id="{{item.id}}" data-src="{{item.avatarUrl}}" binderror="onAvatarError" />
         <view wx:else class="pet-avatar pet-avatar-blank">🐾</view>
         <view class="pet-main">
           <view class="row">
@@ -79,7 +80,7 @@
 <t-popup visible="{{!!editing}}" title="{{editing.id ? '编辑档案' : '新建宠物档案'}}" anim="{{animType}}" bindclose="cancel">
   <view class="stack">
     <view wx:if="{{editing.id}}" class="avatar-row">
-      <image wx:if="{{editing.avatarUrl}}" class="avatar" src="{{editing.avatarUrl}}" mode="aspectFill" />
+      <image wx:if="{{editing.avatarUrl}}" class="avatar" src="{{editing.avatarUrl}}" mode="aspectFill" data-kind="editing" data-src="{{editing.avatarUrl}}" binderror="onAvatarError" />
       <view wx:else class="avatar avatar-blank">🐾</view>
       <t-button type="ghost" size="mini" anim="{{animType}}" bindtap="avatar">更换头像</t-button>
     </view>

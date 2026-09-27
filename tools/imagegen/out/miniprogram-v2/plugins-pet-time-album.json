@@ -1,0 +1,12 @@
+{
+  "id": "pet-time-album",
+  "group": "plugins",
+  "prompt": "Premium contemporary pet product campaign image for a Chinese pet memories app. Bright, clean, vivid but restrained color, natural expressive animal anatomy, crisp face and eyes, tactile material detail. The subject and actual finished product must be immediately legible at small mobile thumbnail size. No readable text, letters, numbers, watermark, logo, UI screenshot, fake interface or extra limbs. An open printed pet photo album on a light table, the same silver tabby cat appearing in three believable everyday moments across the spread, subtle dates represented only by blank editorial rules, creamy paper, daylight, fully visible two-page object.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": null,
+  "output": "tools/imagegen/out/plugins/mp26-pet-time-album.jpg",
+  "sha256": "8da9fa59853734366986c881d10545028aa3cd4dc1e8aba84efc62c3940658c7",
+  "review": "approved-by-user",
+  "reviewedAt": "2026-09-26"
+}

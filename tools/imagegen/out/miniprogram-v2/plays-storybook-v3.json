@@ -1,0 +1,12 @@
+{
+  "id": "storybook",
+  "group": "plays",
+  "prompt": "Premium contemporary pet product campaign image for a Chinese pet memories app. Bright, clean, vivid but restrained color, natural expressive animal anatomy, crisp face and eyes, tactile material detail. The subject and actual finished product must be immediately legible at small mobile thumbnail size. No readable text, letters, numbers, watermark, logo, UI screenshot, fake interface or extra limbs. Create one finished children's picture-book page with a golden retriever puppy as the clear main character stepping through a tiny sunny garden with a curious expression, tasteful gouache and paper texture, visually complete story scene, no words. The dog must be fully visible and clearly a golden retriever, not a cat.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": null,
+  "output": "tools/imagegen/out/styles/play-storybook-v3.jpg",
+  "sha256": "441259a319d5ccfe7097ed42c7119fa12165addaedcda842b3a62edb53065702",
+  "review": "approved-by-user",
+  "reviewedAt": "2026-09-26"
+}

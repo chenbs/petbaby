@@ -70,6 +70,14 @@ themedPage({
     this.setData({ editing: Object.assign({}, editing), error: "", message: "" });
     this.syncEditLabels();
   },
+  onAvatarError(event) {
+    const { kind, id, src } = event.currentTarget.dataset;
+    if (kind === "editing" && this.data.editing && this.data.editing.avatarUrl === src) this.setData({ "editing.avatarUrl": "" });
+    if (kind === "list") {
+      const index = this.data.pets.findIndex((pet) => pet.id === id && pet.avatarUrl === src);
+      if (index >= 0) this.setData({ ["pets[" + index + "].avatarUrl"]: "" });
+    }
+  },
   /** 成长时间线：按拍摄时间看这只宠物的全部照片 */
   timeline(event) {
     wx.navigateTo({ url: "/pages/timeline/timeline?petId=" + encodeURIComponent(event.currentTarget.dataset.id) });

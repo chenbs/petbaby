@@ -1,0 +1,12 @@
+{
+  "id": "magazine",
+  "group": "plays",
+  "prompt": "Premium contemporary pet product campaign image for a Chinese pet memories app. Bright, clean, vivid but restrained color, natural expressive animal anatomy, crisp face and eyes, tactile material detail. The subject and actual finished product must be immediately legible at small mobile thumbnail size. No readable text, letters, numbers, watermark, logo, UI screenshot, fake interface or extra limbs. A complete printed luxury pet fashion magazine cover featuring a black-and-white Maine Coon cat as its unmistakable star, photographed on a bright mint-and-coral studio set. Show visible paper cover edges, a blank unlettered masthead band and a few intentional unlettered editorial rules. It must read as a physical magazine cover at thumbnail size, not a plain cat portrait; no orange tabby.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": null,
+  "output": "tools/imagegen/out/styles/play-magazine-v4.jpg",
+  "sha256": "d54b13af1c4c2a9c4a8cd431948faadf9bb7c7a1f0d403c315417986492a2358",
+  "review": "approved-by-user",
+  "reviewedAt": "2026-09-26"
+}

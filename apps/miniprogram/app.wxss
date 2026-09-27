@@ -1,54 +1,54 @@
 /**
  * 全局样式：只做「CSS 变量 → 语义类」的映射。
  *
- * 本文件是唯一允许出现 var() 兜底字面量的地方（需求 3.4）。兜底值取 cute 主题，
- * 用于基础库低于 2.9.0（无 page-meta）或注入失败时的降级，此时整体以 cute 外观运行。
+ * 本文件是唯一允许出现 var() 兜底字面量的地方（需求 3.4）。兜底值取 pet 主题，
+ * 用于基础库低于 2.9.0（无 page-meta）或注入失败时的降级。
  * 其余 .wxss 一律零硬编码，由 scripts/validate.js 扫描把关。
  */
 page {
-  --primary: #C4335C;
-  --secondary: #FFD166;
-  --background: #FFF8F2;
-  --surface: #FFFDFA;
+  --primary: #197262;
+  --secondary: #C7B8E8;
+  --background: #F5F9F7;
+  --surface: #EAF3F0;
   --card-background: #FFFFFF;
-  --text-primary: #3A2C2C;
-  --text-secondary: #7A625E;
-  --border: #F3DCD5;
-  --divider: #F7E7E1;
+  --text-primary: #20322D;
+  --text-secondary: #4F6861;
+  --border: #CFE2DC;
+  --divider: #DDEBE6;
   --success: #26794E;
   --warning: #A85708;
   --error: #B8382A;
-  --disabled: #D8CCC8;
+  --disabled: #CBD8D3;
   --success-surface: #E8F7EE;
   --error-surface: #FDEBE7;
-  --ai-gradient-start: #C4335C;
-  --ai-gradient-end: #A85708;
-  --ai-glow: rgba(196, 51, 92, .32);
+  --ai-gradient-start: #197262;
+  --ai-gradient-end: #684888;
+  --ai-glow: rgba(25, 114, 98, .2);
   --ai-gradient-angle: 120deg;
-  --ai-gradient: linear-gradient(120deg, #C4335C, #A85708);
-  --button-primary: #C4335C;
-  --button-secondary: #FFF1E6;
-  --button-disabled: #EFE4E0;
-  --button-primary-text: #FFF5F7;
-  --button-secondary-text: #3A2C2C;
+  --ai-gradient: linear-gradient(120deg, #197262, #684888);
+  --button-primary: #197262;
+  --button-secondary: #E3F0EC;
+  --button-disabled: #E4EEEA;
+  --button-primary-text: #F5FFFC;
+  --button-secondary-text: #20322D;
   --button-radius: 999rpx;
   --card-radius: 24rpx;
-  --card-shadow: 0 4rpx 16rpx -4rpx rgba(60, 35, 20, .1), 0 28rpx 56rpx -32rpx rgba(60, 35, 20, .26);
+  --card-shadow: 0 4rpx 20rpx rgba(40, 80, 70, .1);
   --card-blur: 0;
-  --card-border: 2rpx solid rgba(243, 220, 213, .9);
-  --card-radius-variant: 24rpx 24rpx 48rpx 24rpx;
+  --card-border: 2rpx solid #CFE2DC;
+  --card-radius-variant: 24rpx;
   --page-padding: 32rpx;
   --section-spacing: 48rpx;
-  --page-bottom-safe: 180rpx;
-  --nav-bar-background: #FFF8F2;
-  --title-size: 48rpx;
+  --page-bottom-safe: 190rpx;
+  --nav-bar-background: #F5F9F7;
+  --title-size: 44rpx;
   --body-size: 28rpx;
   --small-size: 24rpx;
   --eyebrow-size: 20rpx;
   --title-weight: 800;
-  --title-letter-spacing: -0.01em;
+  --title-letter-spacing: 0;
   --transition-duration: 240ms;
-  --transition-easing: cubic-bezier(.34, 1.56, .64, 1);
+  --transition-easing: cubic-bezier(.22, .61, .36, 1);
   --border-highlight: 0 solid transparent;
   /* 以下均为与主题无关的常量，只在此声明一次，不进注入串（真源为 theme/tokens.js 的 CONSTANT_VARS） */
   --radius-pill: 999rpx;
@@ -72,6 +72,8 @@ page {
   --radius-md: 24rpx;
   --radius-lg: 32rpx;
   --radius-xl: 48rpx;
+  --radius-image-hero: 40rpx;
+  --radius-image-thumb: 24rpx;
   --radius-clay: 56rpx;
   --radius-none: 0;
   /* t-empty 线条插画的有机形状：门禁只豁免单值 50%，非对称圆角须登记为 token */
@@ -99,6 +101,8 @@ page {
   --ratio-card: 3 / 4;
   --ratio-cover: 4 / 3;
   --ratio-square: 1 / 1;
+  --on-image-primary: #FFFFFF;
+  --on-image-secondary: #EDECEB;
   /* 动效（方案 2.6） */
   --dur-fast: 120ms;
   --dur-base: 240ms;
@@ -111,18 +115,18 @@ page {
   --font-h3: 33rpx;
   --font-display: 61rpx;
   --eyebrow-tracking: 4rpx;
-  /* 沉浸式玻璃面板兜底：无 page-meta 时按 cute 的降级取值（不透明抽屉） */
-  --glass-background: rgba(255, 248, 242, .94);
-  --glass-background-solid: #FFF8F2;
+  /* 旧面板交互的表面兜底：无 page-meta 时按 pet 的实底取值 */
+  --glass-background: rgba(245, 249, 247, .94);
+  --glass-background-solid: #F5F9F7;
   --glass-border: 2rpx solid rgba(255, 255, 255, .55);
   --glass-blur: 0;
   --glass-radius: 48rpx 48rpx 0 0;
   --glass-shadow: 0 -12rpx 48rpx rgba(214, 150, 150, .28);
-  --glass-scrim: #2A1F1F;
+  --glass-scrim: #20322D;
   --glass-scrim-max: 0.32;
-  --glass-text-primary: #3A2C2C;
-  --glass-text-secondary: #7A625E;
-  --glass-handle: rgba(58, 44, 44, .28);
+  --glass-text-primary: #20322D;
+  --glass-text-secondary: #4F6861;
+  --glass-handle: rgba(32, 50, 45, .28);
   --glass-handle-width: 64rpx;
   --glass-blur-degraded: 0;
   --glass-easing: cubic-bezier(.22, .61, .36, 1);
@@ -133,7 +137,7 @@ page {
   --shadow-float: 0 16rpx 40rpx -12rpx rgba(60, 35, 20, .18), 0 64rpx 120rpx -40rpx rgba(60, 35, 20, .38);
   --shadow-press: 0 2rpx 8rpx -2rpx rgba(60, 35, 20, .14);
   --shadow-none: none;
-  /* 黏土（方案 J）：后三层是常量，内高光按主题明暗单独下发。兜底取 cute 的浅卡面值。 */
+  /* 旧黏土组件的兼容样式，兜底取 pet 的浅卡面值。 */
   --shadow-clay-body: inset 0 10rpx 24rpx rgba(190, 140, 120, .13), 0 16rpx 32rpx -12rpx rgba(190, 140, 120, .34), 0 36rpx 68rpx -36rpx rgba(190, 140, 120, .5);
   --clay-highlight: rgba(255, 255, 255, .95);
   --shadow-clay-inset: inset 0 6rpx 18rpx rgba(58, 44, 44, .28);
@@ -142,14 +146,14 @@ page {
   /* 弹层遮罩兜底。缺了它，基础库低于 2.9.0（无 page-meta）时 t-dialog / t-popup /
      t-action-sheet 的遮罩层会完全透明 —— 弹层浮在可见内容上且点不穿，比样式错更糟。 */
   --mask: rgba(58, 44, 44, .45);
-  /* 骨架屏与柔性分割线兜底：注入串里按主题明暗派生，此处取 cute 值 */
+  /* 骨架屏与柔性分割线兜底：注入串里按主题明暗派生，此处取 pet 值 */
   --skeleton-base: rgba(58, 44, 44, .06);
   --skeleton-shine: rgba(255, 255, 255, .55);
   --divider-soft: rgba(58, 44, 44, .06);
   --glass-duration: 360ms;
 
-  background: var(--background, #FFF8F2);
-  color: var(--text-primary, #3A2C2C);
+  background: var(--background, #F5F9F7);
+  color: var(--text-primary, #20322D);
   font-family: sans-serif;
   font-size: var(--body-size, 28rpx);
   transition: background var(--transition-duration, 240ms) var(--transition-easing, ease), color var(--transition-duration, 240ms) var(--transition-easing, ease);
@@ -163,12 +167,56 @@ page {
   background: var(--background);
 }
 
+image {
+  border-radius: var(--radius-image-thumb);
+}
+
 .page-flat {
-  padding-bottom: var(--space-6);
+  padding-bottom: calc(var(--space-6) + env(safe-area-inset-bottom));
 }
 
 .page-tabbar {
   padding-bottom: calc(var(--page-bottom-safe) + env(safe-area-inset-bottom));
+}
+
+/* 页面语言只改变阅读节奏和边界，配色始终来自用户主题。 */
+.art-film .section-title {
+  font-weight: var(--fw-medium);
+}
+
+.art-pet .section-title {
+  font-weight: var(--fw-bold);
+}
+
+.art-brand .section-title {
+  padding-bottom: var(--space-2);
+  border-bottom: 2rpx solid var(--divider);
+  font-weight: var(--fw-bold);
+}
+
+.layout-workbench .section {
+  margin-top: var(--gap-group);
+}
+
+.layout-workbench .section:first-child {
+  margin-top: 0;
+}
+
+.layout-bookshelf {
+  max-width: 880rpx;
+  margin: 0 auto;
+}
+
+.layout-bookshelf .section {
+  margin-top: var(--gap-section);
+}
+
+.layout-matrix .section-title {
+  margin-bottom: var(--gap-item);
+}
+
+.layout-canvas {
+  padding-top: var(--space-3);
 }
 
 .section {

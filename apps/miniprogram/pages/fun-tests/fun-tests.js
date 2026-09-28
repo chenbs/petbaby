@@ -2,6 +2,7 @@ const api = require("../../services/api");
 const config = require("../../config");
 const theme = require("../../theme/manager");
 const { themedPage } = require("../../theme/page-mixin");
+const resultRevealMs = 2600;
 
 function coverPath(cover) { return "/assets/fun-tests/" + cover + ".jpg"; }
 
@@ -94,13 +95,15 @@ themedPage({
       this.setData({ questionIndex: current + 1, progress: (current + 2) * 100 / test.questions.length, question: test.questions[current + 1] });
       return;
     }
-    this.setData({ busy: true });
+    this.setData({ busy: true, stage: "thinking" });
+    const revealDelay = new Promise((resolve) => setTimeout(resolve, resultRevealMs));
     try {
       const result = await api.request("/api/fun-tests/" + encodeURIComponent(test.id), {
         method: "POST", data: { petName: this.data.petName.trim(), answers }
       });
+      await revealDelay;
       this.setData({ result, stage: "result", ownResult: true, history: [result].concat(this.data.history) });
-    } catch (error) { this.setData({ error: error.message }); }
+    } catch (error) { this.setData({ stage: "question", error: error.message }); }
     finally { this.setData({ busy: false }); }
   },
   openSaved(event) {

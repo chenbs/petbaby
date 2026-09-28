@@ -4,6 +4,7 @@ const titles = ["它的隐藏性格", "它带来的小小好运", "你们的陪�
 
 test("four pet fun tests complete and produce shareable, revocable results", async ({ page }) => {
   for (const title of titles) {
+    let revealStarted = 0;
     await page.goto("/fun-tests");
     await expect(page.locator(".ft-catalog-item")).toHaveCount(4);
     await page.locator(".ft-catalog-item").filter({ hasText: title }).click();
@@ -18,10 +19,20 @@ test("four pet fun tests complete and produce shareable, revocable results", asy
         await expect(page.locator(".ft-quiz-top")).toContainText("1 / 10");
         await page.locator(".ft-choices button").nth(2).click();
       }
+      if (index === 9) revealStarted = Date.now();
       await page.locator(".ft-choices button").nth(index % 3).click();
+      if (index === 9) {
+        await expect(page.locator(".ft-thinking")).toBeVisible();
+        await expect(page.locator(".ft-thinking")).toContainText("正在拼出 年糕 的小答案");
+        if (title === titles[0]) {
+          await page.waitForTimeout(1700);
+          await page.screenshot({ path: "output/playwright/fun-tests-thinking-mobile.png", fullPage: true });
+        }
+      }
     }
 
     const resultName = await page.locator(".ft-result-sheet h1").innerText();
+    if (title === titles[0]) expect(Date.now() - revealStarted).toBeGreaterThanOrEqual(2500);
     await expect(page.locator(".ft-result-sheet")).toContainText("年糕");
     await expect(page.locator(".ft-result-sheet")).toContainText("日常名场面");
     await expect(page.locator(".ft-result-sheet")).toContainText("你们之间");
@@ -47,4 +58,18 @@ test("four pet fun tests complete and produce shareable, revocable results", asy
     await page.goto(shareUrl);
     await expect(page.getByRole("heading", { name: "这份结果已失效" })).toBeVisible();
   }
+});
+
+test("failed result submission returns to the final question", async ({ page }) => {
+  await page.route("**/api/fun-tests/hidden-personality", (route) => route.request().method() === "POST"
+    ? route.fulfill({ status: 500, contentType: "application/json", body: JSON.stringify({ error: { message: "结果生成失败，请重试" } }) })
+    : route.continue());
+  await page.goto("/fun-tests");
+  await page.locator(".ft-catalog-item").filter({ hasText: titles[0] }).click();
+  await page.getByLabel("宠物名字").fill("年糕");
+  await page.getByRole("button", { name: /开始测试/ }).click();
+  for (let index = 0; index < 10; index++) await page.locator(".ft-choices button").first().click();
+  await expect(page.locator(".ft-quiz-top")).toContainText("10 / 10");
+  await expect(page.locator(".ft-error")).toBeVisible();
+  await expect(page.locator(".ft-thinking")).toHaveCount(0);
 });

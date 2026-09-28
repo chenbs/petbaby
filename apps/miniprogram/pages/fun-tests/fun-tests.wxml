@@ -37,6 +37,15 @@
     <view class="fun-hint">选最像它平时样子的答案就好。</view>
   </view>
 
+  <view wx:if="{{!loading && stage === 'thinking' && test}}" class="fun-thinking">
+    <view class="fun-thinking-mark" aria-hidden="true"><text>✳</text></view>
+    <text class="fun-eyebrow">答案正在靠近</text>
+    <view class="fun-thinking-title">正在拼出 {{petName}} 的小答案</view>
+    <view class="fun-thinking-desc">把你选的日常片段，轻轻放在一起。</view>
+    <view class="fun-thinking-steps"><text>翻翻它的小习惯</text><text>看看你们的默契</text><text>装进一张结果卡</text></view>
+    <view class="fun-thinking-progress"><view></view></view>
+  </view>
+
   <view wx:if="{{!loading && stage === 'result' && result}}" class="fun-result">
     <view class="fun-reveal">RESULT REVEAL · 结果揭晓</view>
     <view class="fun-result-sheet">

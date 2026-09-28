@@ -52,6 +52,24 @@
 .fun-choice-text { flex: 1; }
 .fun-choice text:last-child { flex: none; }
 .fun-hint { margin-top: var(--space-4); color: var(--text-secondary); font-size: var(--small-size); }
+.fun-thinking { display: flex; min-height: 58vh; flex-direction: column; align-items: center; justify-content: center; padding: var(--space-8) var(--space-4); text-align: center; }
+.fun-thinking-mark { position: relative; display: flex; width: 176rpx; height: 176rpx; align-items: center; justify-content: center; border-radius: var(--radius-pill); background: var(--surface); color: var(--primary); }
+.fun-thinking-mark::before { position: absolute; top: 0; right: 0; bottom: 0; left: 0; border: 4rpx solid var(--divider); border-top-color: var(--primary); border-radius: var(--radius-pill); content: ""; animation: fun-thinking-spin 1.1s linear infinite; }
+.fun-thinking-mark text { font-size: var(--title-size); animation: fun-thinking-pulse 1.1s ease-in-out infinite alternate; }
+.fun-thinking > .fun-eyebrow { margin-top: var(--space-6); }
+.fun-thinking-title { margin-top: var(--space-3); color: var(--text-primary); font-size: var(--font-h2); font-weight: var(--fw-bold); line-height: var(--lh-h2); overflow-wrap: anywhere; }
+.fun-thinking-desc { margin-top: var(--space-2); color: var(--text-secondary); font-size: var(--body-size); line-height: var(--lh-body); }
+.fun-thinking-steps { display: flex; flex-direction: column; gap: var(--space-2); margin-top: var(--space-6); }
+.fun-thinking-steps text { color: var(--primary); font-size: var(--small-size); opacity: 0; animation: fun-thinking-step 400ms ease forwards; }
+.fun-thinking-steps text:nth-child(1) { animation-delay: 200ms; }
+.fun-thinking-steps text:nth-child(2) { animation-delay: 900ms; }
+.fun-thinking-steps text:nth-child(3) { animation-delay: 1600ms; }
+.fun-thinking-progress { width: 70%; height: 8rpx; overflow: hidden; margin-top: var(--space-6); border-radius: var(--radius-xs); background: var(--surface); }
+.fun-thinking-progress view { width: 0; height: 100%; background: var(--primary); animation: fun-thinking-fill 2.6s ease-out forwards; }
+@keyframes fun-thinking-spin { to { transform: rotate(360deg); } }
+@keyframes fun-thinking-pulse { to { transform: scale(1.15); } }
+@keyframes fun-thinking-step { to { opacity: 1; } }
+@keyframes fun-thinking-fill { to { width: 100%; } }
 .fun-reveal { margin-bottom: var(--space-3); color: var(--primary); font-size: var(--eyebrow-size); font-weight: var(--fw-bold); text-align: center; }
 .fun-result-sheet { padding: var(--space-4); border: 2rpx solid var(--border); border-radius: var(--radius-sm); background: var(--card-background); box-shadow: var(--shadow-card); }
 .fun-result-top { padding-bottom: var(--space-4); border-bottom: 2rpx solid var(--divider); color: var(--text-secondary); font-size: var(--eyebrow-size); }

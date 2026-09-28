@@ -10,9 +10,10 @@ import { apiFetch } from "@/lib/api";
 type TestSummary = { id: string; title: string; subtitle: string; category: string; cover: string; questionCount: number };
 type TestDetail = TestSummary & { introduction: string; disclaimer: string; questions: Array<{ prompt: string; choices: string[] }> };
 type Pet = { id: string; name: string; isDefault?: boolean };
+const resultRevealMs = 2600;
 
 export function FunTestsClient({ initialTests }: { initialTests: TestSummary[] }) {
-  const [view, setView] = useState<"list" | "intro" | "question" | "result">("list");
+  const [view, setView] = useState<"list" | "intro" | "question" | "thinking" | "result">("list");
   const [test, setTest] = useState<TestDetail>();
   const [petName, setPetName] = useState("");
   const [pets, setPets] = useState<Pet[]>([]);
@@ -71,14 +72,20 @@ export function FunTestsClient({ initialTests }: { initialTests: TestSummary[] }
     setError("");
     if (questionIndex < test.questions.length - 1) { setQuestionIndex(questionIndex + 1); return; }
     setBusy(true);
+    setView("thinking");
+    const revealDelay = new Promise<void>((resolve) => setTimeout(resolve, resultRevealMs));
     try {
       const created = await apiFetch<FunTestResult>(`/api/fun-tests/${test.id}`, {
         method: "POST", body: JSON.stringify({ petName: petName.trim(), answers: next }),
       });
+      await revealDelay;
       setResult(created);
       setHistory((saved) => [created, ...saved]);
       setView("result");
-    } catch (failure) { setError(failure instanceof Error ? failure.message : "结果生成失败，请重试"); }
+    } catch (failure) {
+      setView("question");
+      setError(failure instanceof Error ? failure.message : "结果生成失败，请重试");
+    }
     finally { setBusy(false); }
   }
 
@@ -123,6 +130,15 @@ export function FunTestsClient({ initialTests }: { initialTests: TestSummary[] }
       <h1>{test.questions[questionIndex].prompt}</h1>
       <div className="ft-choices">{test.questions[questionIndex].choices.map((choice, index) => <button type="button" key={choice} onClick={() => choose(index)} disabled={busy} aria-pressed={answers[questionIndex] === index}><span>{String.fromCharCode(65 + index)}</span>{choice}<b>→</b></button>)}</div>
       <p className="ft-quiz-hint">选最像它平时样子的答案就好。</p>
+    </section> : null}
+
+    {view === "thinking" && test ? <section className={`ft-thinking ft-theme-${test.cover}`} role="status" aria-live="polite">
+      <div className="ft-thinking-mark" aria-hidden="true"><span>✳</span></div>
+      <span className="ft-eyebrow">答案正在靠近</span>
+      <h1>正在拼出 {petName} 的小答案</h1>
+      <p>把你选的日常片段，轻轻放在一起。</p>
+      <div className="ft-thinking-steps"><span>翻翻它的小习惯</span><span>看看你们的默契</span><span>装进一张结果卡</span></div>
+      <div className="ft-thinking-progress" aria-hidden="true"><span /></div>
     </section> : null}
 
     {view === "result" && result ? <FunTestResultView result={result} onRetry={() => result && openTest(result.testId)} onDelete={removeResult} /> : null}

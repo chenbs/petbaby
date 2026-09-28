@@ -14,7 +14,7 @@ const result = {
   outcome: { name: "社交小太阳", description: "很有活力", closing: "一起开心", keywords: ["好奇", "热场"] }
 };
 
-function loadPage(request, wxOverrides) {
+function loadPage(request, wxOverrides, schedule) {
   let definition;
   const wx = Object.assign({
     getSystemInfoSync: () => ({ windowWidth: 375 }),
@@ -26,7 +26,7 @@ function loadPage(request, wxOverrides) {
       if (name.endsWith("manager")) return { getTheme: () => ({ navBarBackground: "#fff", primary: "#123", textPrimary: "#234", textSecondary: "#345" }) };
       if (name.endsWith("config")) return { apiBaseUrl: "https://example.test" };
       return { request };
-    }, wx, console, Array
+    }, wx, console, Array, setTimeout: schedule || ((callback) => callback())
   });
   return Object.assign({}, definition, {
     data: JSON.parse(JSON.stringify(definition.data)),
@@ -60,6 +60,33 @@ test("趣味测试从目录连续完成 10 题，保存结果并生成正确的�
   assert.deepEqual(Array.from(submission[1].data.answers), [0, 1, 2, 0, 1, 2, 0, 1, 2, 0]);
   assert.match(page.onShareAppMessage().path, /shareToken=a{32}$/);
   assert.equal(page.onShareTimeline().query, "shareToken=" + "a".repeat(32));
+});
+
+test("最后一题先展示 2.6 秒过渡，结果就绪后才揭晓", async () => {
+  const timers = [];
+  const page = loadPage(async () => result, {}, (callback, delay) => { timers.push({ callback, delay }); });
+  page.setData({ test: detail, petName: "年糕", stage: "question", questionIndex: 9, question: detail.questions[9], answers: Array(9).fill(0) });
+  const submission = page.chooseAnswer({ currentTarget: { dataset: { index: 1 } } });
+  assert.equal(page.data.stage, "thinking");
+  assert.equal(page.data.busy, true);
+  await new Promise(setImmediate);
+  assert.equal(timers.length, 1);
+  assert.equal(timers[0].delay, 2600);
+  assert.equal(page.data.stage, "thinking");
+  timers[0].callback();
+  await submission;
+  assert.equal(page.data.stage, "result");
+  assert.equal(page.data.busy, false);
+});
+
+test("结果提交失败时回到最后一题并保留答案", async () => {
+  const page = loadPage(async () => { throw new Error("网络暂不可用"); });
+  page.setData({ test: detail, petName: "年糕", stage: "question", questionIndex: 9, question: detail.questions[9], answers: Array(9).fill(0) });
+  await page.chooseAnswer({ currentTarget: { dataset: { index: 2 } } });
+  assert.equal(page.data.stage, "question");
+  assert.equal(page.data.busy, false);
+  assert.equal(page.data.answers[9], 2);
+  assert.equal(page.data.error, "网络暂不可用");
 });
 
 test("未登录时在开始前转到登录页，不消耗十道题", async () => {

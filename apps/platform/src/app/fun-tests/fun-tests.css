@@ -77,6 +77,25 @@
 .ft-choices button b { margin-left: auto; font-weight: 400; }
 .ft-quiz-hint { margin-top: 22px; color: var(--ink-soft); font-size: 12px; }
 
+.ft-thinking { display: flex; min-height: min(68vh, 560px); flex-direction: column; align-items: center; justify-content: center; padding: 52px 12px 72px; text-align: center; }
+.ft-thinking-mark { position: relative; display: grid; width: 112px; height: 112px; place-items: center; margin-bottom: 30px; border-radius: 50%; background: var(--paper-deep); color: var(--ft-accent); }
+.ft-thinking-mark::before { position: absolute; inset: 0; border: 2px solid var(--line); border-top-color: var(--ft-accent); border-radius: 50%; content: ""; animation: ft-thinking-spin 1.1s linear infinite; }
+.ft-thinking-mark span { font-size: 44px; animation: ft-thinking-pulse 1.1s ease-in-out infinite alternate; }
+.ft-thinking h1 { max-width: 20ch; margin: 12px 0 10px; font: 800 28px/1.35 var(--font-display); overflow-wrap: anywhere; }
+.ft-thinking > p { color: var(--ink-soft); font-size: 14px; line-height: 1.6; }
+.ft-thinking-steps { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 30px; }
+.ft-thinking-steps span { padding: 6px 9px; border: 1px solid var(--line); border-radius: 4px; color: var(--forest); font-size: 12px; opacity: 0; animation: ft-thinking-step 400ms ease forwards; }
+.ft-thinking-steps span:nth-child(1) { animation-delay: 200ms; }
+.ft-thinking-steps span:nth-child(2) { animation-delay: 900ms; }
+.ft-thinking-steps span:nth-child(3) { animation-delay: 1600ms; }
+.ft-thinking-progress { width: min(240px, 80%); height: 4px; overflow: hidden; margin-top: 30px; border-radius: 4px; background: var(--paper-deep); }
+.ft-thinking-progress span { display: block; width: 0; height: 100%; background: var(--ft-accent); animation: ft-thinking-fill 2.6s ease-out forwards; }
+
+@keyframes ft-thinking-spin { to { transform: rotate(360deg); } }
+@keyframes ft-thinking-pulse { to { transform: scale(1.15); } }
+@keyframes ft-thinking-step { to { opacity: 1; } }
+@keyframes ft-thinking-fill { to { width: 100%; } }
+
 .ft-result { padding-top: 24px; }
 .ft-result-reveal { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 18px; color: var(--ft-accent); font: 800 11px/1 var(--font-utility); }
 .ft-result-reveal span { font-size: 24px; }
@@ -112,4 +131,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .ft-progress span { transition: none; }
+  .ft-thinking-mark::before, .ft-thinking-mark span, .ft-thinking-steps span, .ft-thinking-progress span { animation: none; }
+  .ft-thinking-steps span { opacity: 1; }
+  .ft-thinking-progress span { width: 100%; }
 }

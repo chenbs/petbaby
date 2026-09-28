@@ -21,34 +21,48 @@
     而那块 Hero 现在只在「没有宠物」时出现 —— 不挪的话老用户就再也找不到换肤入口。
   -->
   <view wx:if="{{pet}}" class="hero-top">
-    <text class="eyebrow">PET CREATIVE LAB</text>
+    <text class="eyebrow">{{pet.name}}的日常</text>
     <view class="hero-theme hit-area" aria-role="button" aria-label="切换外观主题" bindtap="openTheme">◑</view>
   </view>
 
-  <t-card
-    wx:if="{{pet}}"
-    variant="hero"
-    clickable
-    blur="{{false}}"
-    anim="{{animType}}"
-    bindtap="openTimeline"
-  >
-    <view class="pet-media">
-      <image wx:if="{{pet.avatarUrl}}" class="pet-image" src="{{pet.avatarUrl}}" mode="aspectFill" data-kind="pet" data-src="{{pet.avatarUrl}}" binderror="onImageError" lazy-load />
-      <!-- 没头像时给爪印占位：它标的是档案本身，不冒充产出（同 pages/me） -->
-      <view wx:else class="pet-image pet-image-blank">🐾</view>
-      <view class="pet-veil"></view>
-      <view class="pet-caption">
-        <text class="pet-days">{{pet.companionText}}</text>
-        <view class="pet-name">{{pet.name}}</view>
-        <text class="pet-hint">看看这一路 →</text>
+  <view wx:if="{{pet}}" class="pet-feature" aria-role="button" aria-label="查看{{pet.name}}的时间线" hover-class="pet-feature-hover" bindtap="openTimeline">
+    <view class="pet-media {{petDisplayUrl ? '' : 'pet-media-empty'}}">
+      <image wx:if="{{petDisplayUrl}}" class="pet-image" src="{{petDisplayUrl}}" mode="aspectFit" data-kind="pet" data-src="{{petDisplayUrl}}" binderror="onImageError" />
+      <view wx:else class="pet-image example-image">
+        <image class="pet-image" src="{{introSampleUrl}}" mode="aspectFit" />
+        <text class="example-label">示例作品 · 上传后换成{{pet.name}}的照片</text>
       </view>
     </view>
-  </t-card>
+    <view class="pet-caption">
+      <view class="pet-identity"><view class="pet-name">{{pet.name}}</view><text class="pet-hint">看时间线 →</text></view>
+      <text class="pet-days">{{pet.companionText}}</text>
+    </view>
+  </view>
+
+  <view wx:if="{{!pet && !petLoading && !recordError}}" class="empty-intro">
+    <view class="hero-top">
+      <text class="eyebrow">从第一张照片开始</text>
+      <view class="hero-theme hit-area" aria-role="button" aria-label="切换外观主题" bindtap="openTheme">◑</view>
+    </view>
+    <view class="intro-preview">
+      <image class="intro-image" src="{{introSampleUrl}}" mode="aspectFit" />
+      <text class="example-label">示例作品 · 上传后换成你的宠物</text>
+    </view>
+    <view class="title hero-title">从它的第一张照片开始</view>
+    <text class="muted">上传照片后，这里会出现它的封面和陪伴日常。</text>
+  </view>
 
   <view wx:if="{{!petLoading && !recordError}}" class="section">
-    <text wx:if="{{!pet}}" class="muted">先给它一个名字，收好第一张照片。</text>
     <t-button block bindtap="record">{{recordAction}}</t-button>
+  </view>
+  <view wx:if="{{featuredTemplates.length}}" class="section">
+    <view class="section-title">更多好玩的出片方式</view>
+    <view class="cards featured-cards">
+      <view wx:for="{{featuredTemplates}}" wx:key="templateId" class="featured-item {{item.sampleShape === 'wide' ? 'featured-wide' : ''}}" data-entry="{{item.entryId}}" data-template="{{item.templateId}}" aria-role="button" aria-label="查看{{item.title}}" bindtap="startTemplate">
+        <image class="featured-image {{item.sampleShape === 'wide' ? 'featured-image-wide' : ''}}" src="{{item.sampleUrl}}" mode="aspectFit" lazy-load />
+        <view class="featured-name">{{item.title}}</view>
+      </view>
+    </view>
   </view>
   <view wx:if="{{recent.length}}" class="section">
     <view class="section-title">最近收好</view>
@@ -64,15 +78,13 @@
     已达成的历史里程碑在时间线页列出，那里才是回看的地方。
   -->
   <view wx:if="{{milestone}}" class="section">
-    <t-card blur="{{blurOk}}" anim="{{animType}}" clickable bindtap="openTimeline">
-      <view class="row">
-        <view class="stone-main">
-          <text class="eyebrow">今天</text>
-          <view class="sub-title">{{milestone}}</view>
-        </view>
-        <t-tag tone="accent" size="mini" text="里程碑"></t-tag>
+    <view class="milestone-row" aria-role="button" bindtap="openTimeline">
+      <view class="stone-main">
+        <text class="eyebrow">今天</text>
+        <view class="sub-title">{{milestone}}</view>
       </view>
-    </t-card>
+      <text class="small">回看 →</text>
+    </view>
   </view>
 
   <!--
@@ -80,29 +92,15 @@
     命中才渲染，没命中整块静默隐藏，不写「今天没有回忆」。
   -->
   <view wx:if="{{onThisDay}}" class="section">
-    <t-card blur="{{blurOk}}" anim="{{animType}}" clickable bindtap="openOnThisDay">
-      <view class="memory">
-        <image wx:if="{{onThisDay.photo.url}}" class="memory-photo" src="{{onThisDay.photo.url}}" mode="aspectFill" data-kind="on-this-day" data-src="{{onThisDay.photo.url}}" binderror="onImageError" lazy-load />
-        <view wx:else class="memory-photo memory-photo-blank">照片暂不可用</view>
-        <view class="memory-copy">
-          <text class="eyebrow">{{onThisDay.eyebrow}}</text>
-          <view class="sub-title">{{onThisDay.petName}}的第 {{onThisDay.day}} 天</view>
-          <text class="small">{{onThisDay.date}} 拍下的<block wx:if="{{onThisDayMore}}">，还有另外 {{onThisDayMore}} 张</block>。</text>
-        </view>
+    <view class="memory" aria-role="button" bindtap="openOnThisDay">
+      <image wx:if="{{onThisDay.photo.url}}" class="memory-photo" src="{{onThisDay.photo.url}}" mode="aspectFill" data-kind="on-this-day" data-src="{{onThisDay.photo.url}}" binderror="onImageError" lazy-load />
+      <view wx:else class="memory-photo memory-photo-blank">照片暂不可用</view>
+      <view class="memory-copy">
+        <text class="eyebrow">{{onThisDay.eyebrow}}</text>
+        <view class="sub-title">{{onThisDay.petName}}的第 {{onThisDay.day}} 天</view>
+        <text class="small">{{onThisDay.date}} 拍下的<block wx:if="{{onThisDayMore}}">，还有另外 {{onThisDayMore}} 张</block>。</text>
       </view>
-    </t-card>
-  </view>
-
-  <!-- 没有宠物时才出现的标语 Hero。有宠物时它的位置让给上面那块 -->
-  <view wx:if="{{!pet && !petLoading && !recordError}}" class="hero hero-{{themeId}}">
-    <view class="hero-top">
-      <text class="eyebrow">PET CREATIVE LAB</text>
-      <view class="hero-theme hit-area" aria-role="button" aria-label="切换外观主题" bindtap="openTheme">◑</view>
     </view>
-    <view class="title hero-title">把和它一起的日子，<text class="accent">一张张收好。</text></view>
-    <text class="muted">照片先收好，想起什么时，再来补一句。</text>
-    <view wx:if="{{decor}}" class="seal">PET
-OK</view>
   </view>
 
   <view class="section fun-teaser" bindtap="openFunTests" aria-role="button" aria-label="打开宠物趣味测试">
@@ -130,15 +128,11 @@ OK</view>
     ></t-empty>
 
     <block wx:else>
-      <!--
-        A 方向：Hero 16:10 一张大图打头，其余走 2 列 3:4 网格。
-        图就是广告 —— 用户此前看不到成品就被要求付钱，这是方案列为最致命的问题。
-        标题与价格压在渐变遮罩里，价格做成浮标。
-      -->
       <t-card
         wx:if="{{heroPlugin}}"
-        variant="hero"
+        variant="flat"
         clickable
+        padded="{{false}}"
         blur="{{false}}"
         anim="{{animType}}"
         data-id="{{heroPlugin.id}}"
@@ -147,21 +141,16 @@ OK</view>
       >
         <view class="hero-media">
           <image class="hero-image" src="{{heroPlugin.samples.heroUrl}}" mode="aspectFill" data-kind="hero" data-id="{{heroPlugin.id}}" data-src="{{heroPlugin.samples.heroUrl}}" binderror="onImageError" lazy-load />
-          <view class="hero-veil"></view>
-          <view class="hero-price">{{heroPlugin.pricing.unlockPrice ? '¥' + heroPlugin.pricing.unlockPrice : '免费'}}</view>
-          <view class="hero-caption">
-            <text class="hero-code">{{heroPlugin.code}} · 最多人做</text>
-            <view class="hero-name">{{heroPlugin.name}}</view>
-            <text class="hero-tagline">{{heroPlugin.tagline}}</text>
-          </view>
         </view>
+        <view class="play-head"><view class="hero-name">{{heroPlugin.name}}</view><text class="play-price">{{heroPlugin.pricing.unlockPrice ? '解锁 ¥' + heroPlugin.pricing.unlockPrice : '免费体验'}}</text></view>
+        <text class="hero-tagline">{{heroPlugin.tagline}}</text>
       </t-card>
 
       <view class="cards">
         <t-card
           wx:for="{{gridPlugins}}"
           wx:key="id"
-          variant="{{item.samples.heroUrl ? 'grid' : 'variant'}}"
+          variant="{{item.samples.heroUrl ? 'flat' : 'plain'}}"
           clickable
           padded="{{!item.samples.heroUrl}}"
           blur="{{blurOk}}"
@@ -170,16 +159,11 @@ OK</view>
           data-category="{{item.category}}"
           bindtap="start"
         >
-          <!-- 有样例图走图卡；没有的仍用文字卡，不拿空底色冒充成品 -->
+          <!-- 有样例图走图卡；没有的仍用文字卡 -->
           <view wx:if="{{item.samples.heroUrl}}" class="grid-media">
             <image class="grid-image" src="{{item.samples.heroUrl}}" mode="aspectFill" data-kind="grid" data-id="{{item.id}}" data-src="{{item.samples.heroUrl}}" binderror="onImageError" lazy-load />
-            <view class="grid-veil"></view>
-            <view class="grid-price">{{item.pricing.unlockPrice ? '¥' + item.pricing.unlockPrice : '免费'}}</view>
-            <view class="grid-caption">
-              <view class="grid-name">{{item.name}}</view>
-              <text class="grid-code">{{item.code}}</text>
-            </view>
           </view>
+          <view wx:if="{{item.samples.heroUrl}}" class="grid-copy"><view class="grid-name">{{item.name}}</view><text class="grid-price">{{item.pricing.unlockPrice ? '¥' + item.pricing.unlockPrice : '免费'}}</text></view>
           <block wx:else>
             <view class="card-top">
               <text class="small strong">{{item.code}}</text>

@@ -27,7 +27,6 @@
 .btn-primary {
   background: var(--button-primary);
   color: var(--button-primary-text);
-  box-shadow: var(--shadow-float);
 }
 
 /* 底部常驻转化按钮（方案 3.2）：比主按钮更高，价格右置 */
@@ -35,7 +34,6 @@
   min-height: 100rpx;
   background: var(--button-primary);
   color: var(--button-primary-text);
-  box-shadow: var(--shadow-float);
 }
 
 /* 价格用 .55 透明度：可见但不抢主文案，降低心理阻力 */
@@ -55,15 +53,14 @@
 }
 
 .btn-ghost {
-  border: 2rpx solid var(--border);
+  border: 0;
   background: transparent;
   color: var(--text-primary);
 }
 
 .btn-ai {
-  background: var(--ai-gradient);
+  background: var(--button-primary);
   color: var(--button-primary-text);
-  box-shadow: 0 8rpx 28rpx var(--ai-glow);
 }
 
 .btn-danger {
@@ -80,8 +77,8 @@
 
 /* 统一按压：缩放 + 阴影收紧，与 t-card 同一套规则 */
 .btn-hover {
-  transform: scale(.96);
-  box-shadow: var(--shadow-press);
+  transform: scale(.985);
+  opacity: .88;
 }
 
 .btn-hover.anim-fade { opacity: .82; }

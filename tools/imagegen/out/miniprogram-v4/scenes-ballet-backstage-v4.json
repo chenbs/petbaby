@@ -1,0 +1,14 @@
+{
+  "id": "ballet-backstage",
+  "title": "紫色芭蕾后台",
+  "description": "幕布之间 · 优雅回眸",
+  "samplePet": "british",
+  "prompt": "Use case: finished public sample for a premium photorealistic pet art-photo series. Edit Image 1 into a new real editorial photograph. Keep the same adult blue British Shorthair cat from Image 1, with round face, dense solid gray coat, copper-amber eyes and small upright ears; no other breed, no Ragdoll cat. One pet only. Vertical 3:4 image. Show the complete natural head, body and paws; leave 8% safety margin around the pet. Pet occupies 45-65% of frame height, with face and eyes sharp and unobstructed. Scene, composition, mood, styling and props: A real theater backstage corner with plum velvet curtain, ballet slippers laid on a low trunk and warm mirror bulbs. The pet wears a delicate lavender ribbon collar, sits naturally on the trunk and looks over one shoulder toward camera. Lilac and plum theatrical tones, full paws and tail visible, no tutu, human body or text. Use real fabric, physical props and believable contact shadows. Young, playful, polished visual style with crisp daylight or practical studio light. No people or hands, duplicate pets, extra limbs, CGI, illustration, logos, readable text or watermark. Return one image only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/source/cat-british.jpg",
+  "referenceSha256": "ddbdfb39b6cb3c6dddbfdd01555cd2fea299cfa927f76a1e7248d581152e0364",
+  "output": "tools/imagegen/out/scenes/scene-ballet-backstage-v4.jpg",
+  "sha256": "8e2f1641b5c0caeee5d72a49fd1467849da1bb0e49f6e05d60528b5fe2edc6e9",
+  "review": "pending-visual-review"
+}

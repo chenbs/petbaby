@@ -1,3 +1,8 @@
+.account-content {
+  display: grid;
+  gap: var(--space-4);
+}
+
 /* 危险区：--error 描边卡，与常规分区在视觉上明确区隔（需求 5.9-2） */
 .danger-zone {
   padding: var(--space-5);

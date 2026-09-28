@@ -2,6 +2,7 @@ const api = require("../../services/api");
 const companion = require("../../services/companion");
 const { themedPage } = require("../../theme/page-mixin");
 const { displayMediaTree } = require("../../services/photo-files");
+const { manifest, pluginSample, imageEntries } = require("../../services/sample-assets");
 
 /**
  * 拆出 Hero 位与网格位（UI 重构方案 A：1 大 + 2 列）。
@@ -26,7 +27,8 @@ function splitHero(plugins) {
 
 themedPage({
   data: {
-    plugins: [], heroPlugin: null, gridPlugins: [], loading: true, error: "",
+    plugins: [], heroPlugin: null, gridPlugins: [], featuredTemplates: [], loading: true, error: "",
+    introSampleUrl: manifest.plugins["pl-10"],
     /*
      * 首屏的「对象」区块（改造项 E1）。
      *
@@ -38,6 +40,7 @@ themedPage({
      * 这是全批唯一改变「用户打开时先看到谁」的改动。
      */
     pet: null,
+    petDisplayUrl: "",
     pets: [], petLoading: true, recordError: "", recent: [], recordAction: "开始记录",
     /** 今天刚达成的里程碑（E3）。只在当天出现一次，不是常驻标签 */
     milestone: "",
@@ -58,8 +61,25 @@ themedPage({
   onLoad() { this.load(); },
   load() {
     this.setData({ loading: true, error: "" });
-    api.request("/api/plugins")
-      .then((plugins) => this.setData(Object.assign({ plugins, loading: false }, splitHero(plugins))))
+    Promise.all([
+      api.request("/api/plugins"),
+      api.request("/api/image-templates").catch(() => ({ entries: [] }))
+    ])
+      .then((result) => {
+        const plugins = (result[0] || []).map(pluginSample);
+        const entries = imageEntries(result[1] && result[1].entries);
+        const featuredTemplates = entries.filter((entry) => entry.id !== "art" && entry.templates.length)
+          .map((entry) => ({
+            entryId: entry.id,
+            title: entry.title,
+            templateId: entry.templates[0].templateId,
+            sampleUrl: entry.templates[0].sampleUrl,
+            sampleShape: entry.templates[0].sampleShape
+          })).concat(entries.filter((entry) => entry.id === "art")
+            .reduce((list, entry) => list.concat(entry.templates.filter((template) => template.templateId !== "pet-art-photo")
+              .map((template) => ({ entryId: "art", title: template.title, templateId: template.templateId, sampleUrl: template.sampleUrl, sampleShape: template.sampleShape }))), []));
+        this.setData(Object.assign({ plugins, featuredTemplates, loading: false }, splitHero(plugins)));
+      })
       .catch((error) => this.setData({ error: error.message, loading: false }));
   },
 
@@ -77,7 +97,7 @@ themedPage({
     const session = wx.getStorageSync("petbaby_session");
     if (session !== this._accountSession) this._petId = "";
     this._accountSession = session;
-    this.setData({ petLoading: true, recordError: "", pet: null, recent: [], onThisDay: null, milestone: "" });
+    this.setData({ petLoading: true, recordError: "", pet: null, petDisplayUrl: "", recent: [], onThisDay: null, milestone: "" });
     try {
       const pets = await api.request("/api/pets").then(displayMediaTree);
       if (view !== this._view) return;
@@ -87,7 +107,7 @@ themedPage({
       if (!pet) return this.setData({ petLoading: false, recordAction: "开始记录" });
       this._petId = pet.id;
       const days = companion.daysSince(companion.anchorOf(pet), pet.memorialSince);
-      this.setData({ pet: Object.assign({}, pet, { companionText: companion.companionText(pet, days) }), petLoading: false,
+      this.setData({ pet: Object.assign({}, pet, { companionText: companion.companionText(pet, days) }), petDisplayUrl: pet.avatarUrl || "", petLoading: false,
         recordAction: pet.lifeStage === "memorial" ? "收好照片" : pet.counts && pet.counts.photos ? "记录今天" : "收好第一张照片",
         milestone: pet.lifeStage === "memorial" ? "" : companion.milestoneToday(pet, days) });
       const result = await Promise.all([
@@ -97,7 +117,8 @@ themedPage({
       if (view !== this._view) return;
       const first = (result[1].matches || [])[0];
       const source = { manual: "你设置的日期", exif: "照片里的拍摄时间", upload: "按上传时间记录" };
-      this.setData({ recent: result[0].items.map((item) => Object.assign({}, item, { savedOn: item.createdAt.slice(0, 10), sourceText: source[item.memoryDateSource] })),
+      const recent = result[0].items.map((item) => Object.assign({}, item, { savedOn: item.createdAt.slice(0, 10), sourceText: source[item.memoryDateSource] }));
+      this.setData({ recent, petDisplayUrl: this.data.pet.avatarUrl || (recent.find((item) => item.url) || {}).url || "",
         onThisDay: first ? Object.assign({}, first, { eyebrow: first.yearsAgo === 1 ? "去年今日" : first.yearsAgo + " 年前的今天" }) : null,
         onThisDayMore: Math.max(0, (result[1].matches || []).length - 1) });
     } catch (error) { if (view === this._view) this.setData({ petLoading: false, recordError: error.message }); }
@@ -105,7 +126,14 @@ themedPage({
   choosePet(event) { const pet = this.data.pets[Number(event.detail.value)]; if (pet) { this._petId = pet.id; this.loadPet(); } },
   onImageError(event) {
     const { kind, id, src } = event.currentTarget.dataset;
-    if (kind === "pet" && this.data.pet && this.data.pet.avatarUrl === src) this.setData({ "pet.avatarUrl": "" });
+    if (kind === "pet" && this.data.petDisplayUrl === src) {
+      const patch = { petDisplayUrl: "" };
+      if (this.data.pet && this.data.pet.avatarUrl === src) patch["pet.avatarUrl"] = "";
+      const index = this.data.recent.findIndex((item) => item.url === src);
+      if (index >= 0) patch["recent[" + index + "].url"] = "";
+      patch.petDisplayUrl = (this.data.recent.find((item) => item.url && item.url !== src) || {}).url || "";
+      this.setData(patch);
+    }
     if (kind === "recent") {
       const index = this.data.recent.findIndex((item) => item.id === id && item.url === src);
       if (index >= 0) this.setData({ ["recent[" + index + "].url"]: "", ["recent[" + index + "].imageError"]: "照片暂时无法显示" });
@@ -166,12 +194,19 @@ themedPage({
     const category = event.currentTarget.dataset.category;
     const petQuery = this.data.pet ? "?petId=" + encodeURIComponent(this.data.pet.id) : "";
     api.request("/api/events", { method: "POST", data: { name: "plugin_selected", pluginId, channel: "miniprogram", metadata: {} } }).catch(() => undefined);
+    if (pluginId === "pl-10") return wx.switchTab({ url: "/pages/art-photo/art-photo" });
     if (category === "ai-image") return wx.navigateTo({ url: "/pages/ai-create/ai-create" + petQuery });
     if (category === "interactive") return wx.navigateTo({ url: "/pages/interactive-create/interactive-create" + petQuery });
     if (category === "video") return wx.navigateTo({ url: "/pages/video-create/video-create" + petQuery });
     if (category === "memorial") return wx.navigateTo({ url: "/pages/memorials/memorials" });
     if (category === "report") return wx.navigateTo({ url: "/pages/commerce/commerce" });
     wx.navigateTo({ url: "/pages/create/create?pluginId=" + encodeURIComponent(pluginId) + (this.data.pet ? "&petId=" + this.data.pet.id : "") });
+  },
+  startTemplate(event) {
+    const entryId = event.currentTarget.dataset.entry;
+    const templateId = event.currentTarget.dataset.template;
+    const petQuery = this.data.pet ? "&petId=" + encodeURIComponent(this.data.pet.id) : "";
+    wx.navigateTo({ url: "/pages/ai-create/ai-create?entryId=" + encodeURIComponent(entryId) + "&templateId=" + encodeURIComponent(templateId) + petQuery });
   },
   openFunTests() { wx.navigateTo({ url: "/pages/fun-tests/fun-tests" }); },
   openTheme() { wx.navigateTo({ url: "/pages/theme/theme" }); }

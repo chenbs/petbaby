@@ -1,0 +1,26 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+<view class="page page-tabbar art-brand layout-matrix">
+  <view class="art-heading">
+    <text class="eyebrow">宠物艺术写真</text>
+    <view class="title">每一面，都值得被珍藏</view>
+    <text class="muted">24 套场景，选一个今天最像它的样子。</text>
+  </view>
+  <t-skeleton wx:if="{{loading}}" type="grid" count="4"></t-skeleton>
+  <t-notice wx:elif="{{error}}" type="error" message="{{error}}"></t-notice>
+  <block wx:else>
+    <view wx:for="{{collections}}" wx:for-item="group" wx:key="id" class="art-collection">
+      <view class="art-section-head">
+        <view class="section-title">{{group.title}}</view>
+        <text class="small">{{group.subtitle}}</text>
+      </view>
+      <view class="art-grid">
+        <view wx:for="{{group.scenes}}" wx:for-item="scene" wx:key="id" class="art-item" data-id="{{scene.id}}" aria-role="button" aria-label="选择{{scene.title}}写真" bindtap="chooseScene">
+          <image wx:if="{{scene.url}}" class="art-image" src="{{scene.url}}" mode="aspectFit" data-id="{{scene.id}}" binderror="onSceneImageError" lazy-load />
+          <view wx:else class="art-image art-image-empty">样片暂不可用</view>
+          <view class="art-name">{{scene.title}}</view>
+          <text class="small art-description">{{scene.description}}</text>
+        </view>
+      </view>
+    </view>
+  </block>
+</view>

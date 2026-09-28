@@ -21,7 +21,8 @@ export async function POST(request: Request) {
       assertGenerationCircuit(),
     ]);
     const task = await createGeneration(userId, await request.json());
-    if (!process.env.DATABASE_URL || process.env.DATABASE_URL === "memory://") {
+    const databaseUrl = process.env.DATABASE_URL;
+    if (!databaseUrl || databaseUrl === "memory://" || (process.env.NODE_ENV !== "production" && databaseUrl.startsWith("file://"))) {
       const { runNextTask } = await import("@/server/worker/generation-worker");
       await runNextTask();
     }

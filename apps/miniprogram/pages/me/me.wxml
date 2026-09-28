@@ -1,8 +1,7 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
 <view class="page page-tabbar art-pet layout-pet">
-  <text class="eyebrow">ACCOUNT</text>
-  <view class="title">我的麻麻抱我</view>
+  <view class="title">我的空间</view>
 
   <t-notice wx:if="{{error}}" type="error" message="{{error}}"></t-notice>
   <t-button wx:if="{{error}}" type="secondary" bindtap="loadAccount">重新加载账户资料</t-button>
@@ -18,20 +17,20 @@
     -->
     <t-card
       wx:if="{{hero}}"
-      variant="hero"
+      variant="flat"
       clickable
+      padded="{{false}}"
       blur="{{false}}"
       anim="{{animType}}"
       bindtap="openPets"
     >
-      <view class="hero-media">
-        <image wx:if="{{hero.avatarUrl}}" class="hero-image" src="{{hero.avatarUrl}}" mode="aspectFill" data-src="{{hero.avatarUrl}}" binderror="onHeroImageError" lazy-load />
-        <view wx:else class="hero-image hero-image-blank">🐾</view>
-        <view class="hero-veil"></view>
-        <view class="hero-caption">
-          <text wx:if="{{hero.companionDays}}" class="hero-days">{{hero.companionText}}</text>
-          <view class="hero-name">{{hero.name}}</view>
-        </view>
+      <view class="hero-media {{hero.imageUrl ? '' : 'hero-media-empty'}}">
+        <image wx:if="{{hero.imageUrl}}" class="hero-image" src="{{hero.imageUrl}}" mode="aspectFit" data-src="{{hero.imageUrl}}" binderror="onHeroImageError" />
+        <view wx:else class="hero-image hero-image-blank">还没有它的照片</view>
+      </view>
+      <view class="hero-caption">
+        <view class="hero-name">{{hero.name}}</view>
+        <text wx:if="{{hero.companionDays}}" class="hero-days">{{hero.companionText}}</text>
       </view>
       <view class="hero-stats">
         <view class="hero-stat">
@@ -50,7 +49,7 @@
     </t-card>
 
     <!-- 额度用环形进度呈现，一眼看出还剩多少 -->
-    <t-card wx:if="{{status}}" blur="{{blurOk}}" anim="{{animType}}" class="block-gap">
+    <view wx:if="{{status}}" class="quota-section">
       <view class="quota">
         <t-progress
           shape="ring"
@@ -68,7 +67,7 @@
       <view wx:if="{{status.refunds.length}}" class="quota-foot">
         <t-tag tone="warning" size="mini" text="{{status.refunds.length}} 笔退款处理中"></t-tag>
       </view>
-    </t-card>
+    </view>
 
     <view wx:if="{{status.notifications.length}}" class="section">
       <view class="section-title">站内通知</view>
@@ -79,7 +78,7 @@
 
     <view class="section">
       <view class="section-title">常用功能</view>
-      <t-card blur="{{blurOk}}" anim="{{animType}}" padded="{{false}}">
+      <view class="entry-list">
         <view class="entry" hover-class="entry-hover" bindtap="record">
           <view class="entry-text"><view class="entry-name">收好照片</view><text class="small">先记录，随时回来补一句</text></view><text class="entry-arrow">›</text>
         </view>
@@ -113,12 +112,12 @@
           <view class="entry-text"><view class="entry-name">会员与年度报告</view><text class="small">订阅、权益与实体周边</text></view>
           <text class="entry-arrow">›</text>
         </view>
-      </t-card>
+      </view>
     </view>
 
     <view class="section">
       <view class="section-title">设置</view>
-      <t-card blur="{{blurOk}}" anim="{{animType}}" padded="{{false}}">
+      <view class="entry-list">
         <view class="entry" hover-class="entry-hover" bindtap="openTheme">
           <view class="entry-text"><view class="entry-name">外观主题</view><text class="small">四套风格，随时切换</text></view>
           <view class="entry-side">
@@ -134,7 +133,7 @@
           <view class="entry-text"><view class="entry-name">登录与退出</view><text class="small">切换账号</text></view>
           <text class="entry-arrow">›</text>
         </view>
-      </t-card>
+      </view>
     </view>
   </block>
 </view>

@@ -8,7 +8,7 @@
     id="sheet-video"
     src="{{backgroundVideo}}"
     poster="{{poster}}"
-    object-fit="cover"
+    object-fit="{{framed ? 'contain' : 'cover'}}"
     muted
     loop
     controls="{{false}}"
@@ -24,7 +24,7 @@
     wx:elif="{{hasImage}}"
     class="sheet-media {{framed ? 'sheet-media-framed' : ''}}"
     src="{{backgroundImage}}"
-    mode="aspectFill"
+    mode="{{framed ? 'aspectFit' : 'aspectFill'}}"
     binderror="handleImageError"
   ></image>
   <view wx:else class="sheet-media sheet-media-blank"></view>
@@ -78,7 +78,7 @@
       capture-bind:touchend="{{gesture.end}}"
       capture-bind:touchcancel="{{gesture.end}}"
     >
-      <view class="sheet-scroll-inner"><slot></slot></view>
+      <view wx:if="{{state !== 'collapsed'}}" class="sheet-scroll-inner"><slot></slot></view>
     </scroll-view>
 
     <view class="sheet-actions" style="transform:translateY({{-initialOffset}}px)">

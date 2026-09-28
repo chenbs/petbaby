@@ -156,7 +156,7 @@ export function AiCreateClient() {
         <label className="field"><span>主人照片授权</span><span><input checked={authorizationConfirmed} onChange={(event) => setAuthorizationConfirmed(event.target.checked)} type="checkbox" /> 照片中的本人已同意将照片用于本次 AI 生图</span></label>
         <div className="field"><span>主人身份照（1 张）</span><input accept="image/jpeg,image/png,image/webp" disabled={busy || !authorizationConfirmed} onChange={(event) => uploadOwnerPhoto(event.target.files?.[0])} type="file" /><div className="asset-choice-grid">{ownerPhotos.map((photo) => <div key={photo.id}><button aria-pressed={ownerPhotoId === photo.id} className={ownerPhotoId === photo.id ? "asset-choice selected" : "asset-choice"} onClick={() => setOwnerPhotoId(photo.id)} type="button"><Image alt={photo.filename} fill sizes="120px" src={photo.url} unoptimized /><span>{ownerPhotoId === photo.id ? "已选" : "选择"}</span></button><button disabled={busy} onClick={() => removeOwnerPhoto(photo.id)} type="button">删除</button></div>)}</div></div>
       </> : null}
-      <button className="primary-button" disabled={busy || !activeTemplate || !photoId || activeTemplate.subjectMode === "owner-pet" && (!ownerPhotoId || !authorizationConfirmed)} onClick={create} type="button">{busy ? "正在建立生成任务…" : `生成 ${activeTemplate?.candidateCount || 4} 张候选`}</button>
+      <button className="primary-button" disabled={busy || !activeTemplate || !photoId || activeTemplate.subjectMode === "owner-pet" && (!ownerPhotoId || !authorizationConfirmed)} onClick={create} type="button">{busy ? "正在建立生成任务…" : `生成 ${activeTemplate?.candidateCount || 2} 张候选`}</button>
     </div></section>
     {error ? <div className="error-banner" role="alert">{error}</div> : null}
   </>;

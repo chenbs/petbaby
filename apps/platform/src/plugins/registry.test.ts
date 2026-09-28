@@ -24,7 +24,7 @@ describe("玩法样例图与枚举对齐", () => {
     expect(aiPortrait?.samples?.sceneOptions?.map((item) => item.id).sort()).toEqual([...AI_SCENE_IDS].sort());
   });
 
-  it("十二张场景样片的注册键、文件尺寸与元数据哈希一致", async () => {
+  it("二十四张场景样片的注册键、文件尺寸与元数据哈希一致", async () => {
     const urls = aiPortrait?.samples?.sceneUrls;
     if (!urls) throw new Error("PL-10 sceneUrls missing");
     for (const [id, url] of Object.entries(urls)) {
@@ -35,12 +35,18 @@ describe("玩法样例图与枚举对齐", () => {
       const bytes = readFileSync(file);
       const hash = createHash("sha256").update(bytes).digest("hex");
       const version = stem.match(/-v\d+$/)?.[0];
-      const metadata = JSON.parse(readFileSync(path.resolve(process.cwd(), "../../tools/imagegen/out/miniprogram-v3", `scenes-${id}${version}.json`), "utf8"));
+      const batch = version === "-v4" && !["snow-cabin", "lakeside-sunset", "spring-picnic"].includes(id) ? "v4" : "v3";
+      const metadata = JSON.parse(readFileSync(path.resolve(process.cwd(), `../../tools/imagegen/out/miniprogram-${batch}`, `scenes-${id}${version}.json`), "utf8"));
       expect(hash.slice(0, 12)).toBe(match![2]);
       expect(metadata.sha256).toBe(hash);
-      expect(metadata.reference).toBe(id === "snow-cabin"
-        ? "tools/imagegen/out/scenes-v3/identity-gray-toy-poodle-v1.jpg"
-        : "tools/imagegen/out/scenes/identity-ragdoll-bicolor-v2.jpg");
+      if (metadata.samplePet) {
+        expect(["golden", "poodle", "british"]).toContain(metadata.samplePet);
+        expect(metadata.reference).not.toContain("ragdoll");
+      } else {
+        expect(metadata.reference).toBe(id === "snow-cabin"
+          ? "tools/imagegen/out/scenes-v3/identity-gray-toy-poodle-v1.jpg"
+          : "tools/imagegen/out/scenes/identity-ragdoll-bicolor-v2.jpg");
+      }
       expect(await sharp(bytes).metadata()).toMatchObject({ width: 900, height: 1200, format: "jpeg" });
     }
   });

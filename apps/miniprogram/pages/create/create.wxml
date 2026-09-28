@@ -1,31 +1,10 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<!--
-  方案 C 的第二用法（表单变体）：背景虚化成目标产出图，表单浮在半透明卡片里。
-  用户填资料时始终看得见「我要做出来的东西」，方案称这对多步表单完成率有直接影响。
-
-  复用 t-glass-sheet 而非另写一套：背景图 + 半透明面板 + backdrop-filter 不可用时
-  退回 0.94 不透明底，这三件事它都已实现且被 ai-run 用在线上。
-  gesture-disabled 关掉拖拽档位 —— 表单里有 picker 与输入框，
-  面板跟手移动会和这些控件抢手势；关掉后 WXS 侧直接短路，触摸原样透传给控件。
-  高度用 default-height 而不是 state="expanded"：组件在 gestureDisabled 时会把档位
-  强制回 half（见组件 index.js），只有把 half 本身设高才拿得到满屏表单。
--->
-<t-glass-sheet
-  wx:if="{{formStage}}"
-  class="art-film layout-workbench"
-  background-image="{{plugin.samples.heroUrl}}"
-  title="{{plugin ? plugin.name : '准备玩法'}}"
-  state="half"
-  default-height="{{88}}"
-  expanded-height="{{88}}"
-  gesture-disabled
-  blur="{{blurOk}}"
-  anim="{{animType}}"
->
-  <view slot="header">
-    <text class="glass-eyebrow">CREATE · STEP {{stepIndex + 1}} / {{steps.length}}</text>
-    <view class="glass-title">{{plugin ? plugin.name : '准备玩法'}}</view>
+<view wx:if="{{formStage}}" class="page page-flat art-film layout-workbench creation-page">
+  <view class="creation-header">
+    <image wx:if="{{plugin && plugin.samples && plugin.samples.heroUrl && (stage === 'profile' || pluginId === 'pet-id-card')}}" class="creation-sample" src="{{plugin.samples.heroUrl}}" mode="aspectFit" />
+    <text class="eyebrow">第 {{stepIndex + 1}} 步 / 共 {{steps.length}} 步</text>
+    <view class="title">{{plugin ? plugin.name : '准备玩法'}}</view>
     <t-steps steps="{{steps}}" current="{{stepIndex}}" class="block-gap"></t-steps>
   </view>
 
@@ -33,9 +12,9 @@
 
   <!-- 步骤一：宠物档案 -->
   <view wx:if="{{stage === 'profile'}}" class="section-block">
-    <view class="glass-sub-title">先认识一下它</view>
+    <view class="sub-title">先认识一下它</view>
 
-    <t-card blur="{{blurOk}}" anim="{{animType}}">
+    <view class="creation-fields">
       <block wx:if="{{pets.length}}">
         <picker range="{{pets}}" range-key="name" bindchange="choosePet">
           <t-field label="选择已有档案" control="select" value="{{petText}}" placeholder="从已建档的宠物里挑一个"></t-field>
@@ -58,16 +37,28 @@
           <t-field label="{{dateTypeText}}" control="select" value="{{birthday}}" placeholder="选填" help="用于计算年龄与成长时间线"></t-field>
         </picker>
       </view>
-    </t-card>
+    </view>
 
   </view>
 
   <!-- 步骤二：选照片 + 玩法参数 -->
   <block wx:elif="{{stage === 'photos'}}">
+    <view wx:if="{{pluginId === 'pet-movie-poster' || pluginId === 'pet-time-album'}}" class="section-block">
+      <view class="sub-title">{{pluginId === 'pet-movie-poster' ? '选海报风格' : '选画册主题'}}</view>
+      <swiper class="sample-swiper" current="{{pluginId === 'pet-movie-poster' ? styleIndex : themeIndex}}" bindchange="swipeSample" indicator-dots circular>
+        <swiper-item wx:for="{{pluginId === 'pet-movie-poster' ? movieSamples : albumSamples}}" wx:key="id">
+          <view class="sample-slide">
+            <image class="sample-slide-image" src="{{item.url}}" mode="aspectFit" />
+            <view class="sample-option-name">{{item.title}}<text class="sample-check">已选中</text></view>
+          </view>
+        </swiper-item>
+      </swiper>
+      <text class="small">左右滑动切换效果</text>
+    </view>
     <view class="section-block">
       <view class="row">
-        <view class="glass-sub-title flush">挑几张它的照片</view>
-        <text class="glass-small {{selectedTileIds.length >= plugin.input.photos.max ? 'warn' : ''}}">{{photoHint}}</text>
+        <view class="sub-title flush">挑几张它的照片</view>
+        <text class="small {{selectedTileIds.length >= plugin.input.photos.max ? 'warn' : ''}}">{{photoHint}}</text>
       </view>
 
       <t-empty
@@ -94,17 +85,14 @@
     </view>
 
     <view class="section-block">
-      <view class="glass-sub-title">调一下风格</view>
-      <t-card blur="{{blurOk}}" anim="{{animType}}">
+      <view class="sub-title">调一下风格</view>
+      <view class="creation-fields">
         <view class="stack">
           <picker wx:if="{{pluginId === 'pet-id-card'}}" range="{{documentLabels}}" bindchange="setDocumentType">
             <t-field label="证件类型" control="select" value="{{documentText}}"></t-field>
           </picker>
 
           <block wx:if="{{pluginId === 'pet-movie-poster'}}">
-            <picker range="{{styleLabels}}" bindchange="setStyle">
-              <t-field label="海报风格" control="select" value="{{styleText}}"></t-field>
-            </picker>
             <picker range="{{compositionLabels}}" bindchange="setComposition">
               <t-field label="构图" control="select" value="{{compositionText}}"></t-field>
             </picker>
@@ -112,13 +100,10 @@
           </block>
 
           <block wx:if="{{pluginId === 'pet-time-album'}}">
-            <picker range="{{themeLabels}}" bindchange="setTheme">
-              <t-field label="画册主题" control="select" value="{{themeText}}"></t-field>
-            </picker>
             <t-field label="封面标题" value="{{coverTitle}}" placeholder="例如「小鱼的第一年」" maxlength="24" show-count bindchange="setCoverTitle"></t-field>
           </block>
         </view>
-      </t-card>
+      </view>
 
     </view>
 
@@ -127,16 +112,15 @@
       免费玩法整块不出现（pricingText 为空），给一个 ¥0 的价格区块只是噪声。
     -->
     <view wx:if="{{pricingText}}" class="section-block">
-      <view class="glass-sub-title">做好之后</view>
-      <t-card blur="{{blurOk}}" anim="{{animType}}">
-        <view class="glass-title">{{pricingText}}</view>
-        <text wx:if="{{pricingHint}}" class="glass-small">{{pricingHint}}</text>
-      </t-card>
+      <view class="sub-title">做好之后</view>
+      <view class="creation-price">
+        <view class="sub-title">{{pricingText}}</view>
+        <text wx:if="{{pricingHint}}" class="small">{{pricingHint}}</text>
+      </view>
     </view>
   </block>
 
-  <!-- 主 CTA 常驻底部（方案 C 的结构：细线步骤在顶，卡片浮中，CTA 钉底） -->
-  <view slot="actions">
+  <view class="creation-actions">
     <t-button
       wx:if="{{stage === 'profile'}}"
       type="primary"
@@ -154,10 +138,9 @@
       bindtap="generate"
     >免费生成预览</t-button>
   </view>
-</t-glass-sheet>
+</view>
 
 <view wx:else class="page page-flat art-film layout-workbench">
-  <text class="eyebrow">CREATE</text>
   <view class="title">{{plugin ? plugin.name : '准备玩法'}}</view>
 
   <t-steps steps="{{steps}}" current="{{stepIndex}}" class="block-gap"></t-steps>
@@ -166,14 +149,17 @@
 
   <!-- 步骤三：生成中。上传与生成是两段独立进度，分别展示 -->
   <view wx:elif="{{stage === 'generating'}}" class="section">
-    <t-card blur="{{blurOk}}" anim="{{animType}}">
-      <view class="stage-progress">{{task.progress || 0}}%</view>
+    <view class="creation-pending">
+      <view class="creation-pending-preview" aria-role="img" aria-label="作品正在生成">
+        <text>{{task.progress || 0}}%</text>
+      </view>
+      <view class="sub-title center">正在为它制作作品</view>
       <t-loading anim="{{animType}}" label="正在生成 {{plugin.name}}" progress="{{task.progress || 0}}"></t-loading>
       <text class="muted center block">排队第 {{task.queuePosition || 1}} 位，预计 {{task.estimatedSeconds || 15}} 秒</text>
       <view wx:if="{{uploadProgress > 0 && uploadProgress < 100}}" class="upload-line">
         <t-progress percent="{{uploadProgress}}" label="照片上传" show-value></t-progress>
       </view>
-    </t-card>
+    </view>
   </view>
 
   <!--
@@ -182,12 +168,10 @@
     这是静态单卡区域，可以用完整四层阴影，不受列表掉帧约束。
   -->
   <view wx:else class="section">
-    <t-card variant="clay" padded="{{false}}" blur="{{false}}" anim="{{animType}}">
-      <view class="result-frame">
-        <image wx:if="{{work.outputUrl && !resultImageFailed}}" class="result-image" src="{{work.outputUrl}}" mode="widthFix" data-src="{{work.outputUrl}}" binderror="onResultImageError" />
-        <view wx:else class="result-image result-image-blank">作品预览暂不可用，请进入详情查看</view>
-      </view>
-    </t-card>
+    <view class="result-frame">
+      <image wx:if="{{work.outputUrl && !resultImageFailed}}" class="result-image" src="{{work.outputUrl}}" mode="widthFix" data-src="{{work.outputUrl}}" binderror="onResultImageError" />
+      <view wx:else class="result-image result-image-blank">作品预览暂不可用，请进入详情查看</view>
+    </view>
     <view class="result-copy">
       <view class="section-title flush center">{{work.title}}</view>
       <text class="muted center block">{{work.subtitle}}</text>

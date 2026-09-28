@@ -2,8 +2,6 @@
 
 <t-navbar
   title="AI 任务与候选"
-  transparent="{{immersive}}"
-  tone="{{immersive ? 'inverse' : 'default'}}"
 ></t-navbar>
 
 <!-- 已选中候选：结果确认区改为沉浸式，选中图占满全屏 -->
@@ -19,35 +17,12 @@
   bindbackgrounderror="onBackgroundError"
 >
   <view slot="header">
-    <text class="glass-eyebrow">AI IMAGE · 已选中</text>
+    <text class="glass-eyebrow">已选中</text>
     <view class="glass-title run-title">确认这一张</view>
     <text class="glass-muted">{{humanMode ? '解锁只对这一张生效。' : '解锁只对这一张生效，重抽会作废当前选择。'}}</text>
   </view>
 
   <t-notice wx:if="{{message}}" type="{{messageType}}" message="{{message}}" class="block-gap"></t-notice>
-
-  <view class="facts">
-    <view class="fact">
-      <text class="glass-small">玩法编号</text>
-      <text class="glass-strong">{{run.pluginId}}</text>
-    </view>
-    <view class="fact">
-      <text class="glass-small">Provider</text>
-      <text class="glass-strong">{{run.provider || '待确认'}}</text>
-    </view>
-    <view class="fact">
-      <text class="glass-small">模型</text>
-      <text class="glass-strong">{{run.modelVersion || '默认'}}</text>
-    </view>
-    <view wx:if="{{!humanMode}}" class="fact">
-      <text class="glass-small">剩余重抽</text>
-      <text class="glass-strong">{{run.rerollRemaining}} 次</text>
-    </view>
-    <view wx:else class="fact">
-      <text class="glass-small">候选数量</text>
-      <text class="glass-strong">2 张</text>
-    </view>
-  </view>
 
   <view wx:if="{{run.selectedUnlocked}}" class="section-block">
     <view class="glass-sub-title">已解锁</view>
@@ -70,20 +45,24 @@
   <t-skeleton wx:if="{{loading}}" type="card" count="2"></t-skeleton>
 
   <block wx:elif="{{run}}">
-    <view class="row">
-      <text class="eyebrow">AI IMAGE · {{humanMode ? '2 SELECT 1' : '4 SELECT 1'}}</text>
+    <view wx:if="{{run.status !== 'queued' && run.status !== 'processing'}}" class="row">
+      <text class="eyebrow">从 {{run.candidates.length || 2}} 张中选 1 张</text>
       <t-tag tone="{{run.status === 'failed' ? 'error' : run.status === 'succeeded' ? 'success' : 'accent'}}" size="mini" text="{{statusText}}"></t-tag>
     </view>
-    <view class="title">{{run.status === 'succeeded' ? '挑一张最像它的' : 'AI 任务状态'}}</view>
+    <view wx:if="{{run.status !== 'queued' && run.status !== 'processing'}}" class="title">{{run.status === 'succeeded' ? '挑一张最像它的' : 'AI 任务状态'}}</view>
 
     <t-notice wx:if="{{message}}" type="{{messageType}}" message="{{message}}" class="block-gap"></t-notice>
 
     <!-- 排队/生成中 -->
-    <t-card wx:if="{{run.status === 'queued' || run.status === 'processing'}}" blur="{{blurOk}}" anim="{{animType}}">
-      <t-loading anim="{{animType}}" label="{{run.status === 'queued' ? '正在排队，第 ' + (run.queuePosition || 1) + ' 位' : humanMode ? '正在生成两张候选' : '正在生成四张候选'}}"></t-loading>
-      <text class="muted center block">{{run.status === 'queued' ? '预计 ' + (run.estimatedSeconds || 20) + ' 秒' : '第 ' + run.attempt + ' 次尝试，可以先退出，稍后回来看'}}</text>
+    <view wx:if="{{run.status === 'queued' || run.status === 'processing'}}" class="run-pending">
+      <view class="pending-image" aria-role="img" aria-label="作品正在生成">
+        <view class="pending-image-inner">2 张<text>候选正在准备</text></view>
+      </view>
+      <view class="pending-status">{{run.status === 'queued' ? '正在排队，第 ' + (run.queuePosition || 1) + ' 位' : '正在为它生成作品'}}</view>
+      <text class="muted center block">{{run.status === 'queued' ? '预计 ' + (run.estimatedSeconds || 20) + ' 秒' : '可以先退出，完成后在作品柜查看'}}</text>
+      <t-loading anim="{{animType}}" label="{{statusText}}"></t-loading>
       <t-button type="ghost" block anim="{{animType}}" class="block-gap" bindtap="askCancel">取消任务</t-button>
-    </t-card>
+    </view>
 
     <!-- 失败 -->
     <t-card wx:elif="{{run.status === 'failed'}}" blur="{{blurOk}}" anim="{{animType}}">
@@ -99,10 +78,10 @@
       <text class="muted">没有产生订单，也没有扣减额度。</text>
     </t-card>
 
-    <!-- 候选比较：普通玩法四选一，宠物人化二选一 -->
+    <!-- 候选比较：所有新任务二选一，历史四候选任务仍可显示。 -->
     <block wx:else>
       <view class="section">
-        <view class="candidates">
+        <view class="candidates {{humanMode ? 'candidates-human' : ''}}">
           <view
             wx:for="{{candidates}}"
             wx:key="id"
@@ -113,7 +92,7 @@
             hover-class="candidate-hover"
             bindtap="select"
           >
-            <image wx:if="{{!item.imageFailed}}" class="candidate-image" src="{{item.url}}" mode="aspectFill" data-id="{{item.id}}" data-src="{{item.url}}" binderror="onCandidateImageError" lazy-load />
+            <image wx:if="{{!item.imageFailed}}" class="candidate-image" src="{{item.url}}" mode="aspectFit" data-id="{{item.id}}" data-src="{{item.url}}" binderror="onCandidateImageError" lazy-load />
             <view wx:else class="candidate-image candidate-image-blank">候选图片暂不可用</view>
             <view class="candidate-foot">
               <text class="small strong">0{{item.number}}</text>
@@ -121,7 +100,7 @@
             </view>
           </view>
         </view>
-        <text class="small">{{run.provider || 'Provider'}} · {{humanMode ? '二选一结果' : '还能重抽 ' + run.rerollRemaining + ' 次'}}</text>
+        <text wx:if="{{!humanMode}}" class="small">还能重抽 {{run.rerollRemaining}} 次</text>
       </view>
 
       <view class="actions">

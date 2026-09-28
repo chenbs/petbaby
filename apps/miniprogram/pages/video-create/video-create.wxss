@@ -7,6 +7,51 @@
   margin: 0;
 }
 
+.video-sample {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: var(--ratio-hero);
+  margin-top: var(--space-3);
+  border-radius: var(--radius-image-hero);
+  background: var(--surface);
+}
+
+.video-sample-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.video-sample-label {
+  position: absolute;
+  right: var(--space-2);
+  bottom: var(--space-2);
+  padding: var(--space-2);
+  border-radius: var(--radius-image-thumb);
+  background: var(--background);
+  color: var(--text-primary);
+  font-size: var(--small-size);
+}
+
+.video-pet {
+  margin-top: var(--space-4);
+}
+
+.photos-section {
+  margin-top: var(--space-5);
+}
+
+.video-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.video-price {
+  display: block;
+  margin-top: var(--space-5);
+}
+
 .bgm {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

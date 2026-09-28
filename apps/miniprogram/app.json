@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/art-photo/art-photo",
     "pages/create/create",
     "pages/works/works",
     "pages/work/work",
@@ -28,14 +29,15 @@
   "lazyCodeLoading": "requiredComponents",
   "window": {
     "navigationBarTitleText": "麻麻抱我",
-    "navigationBarBackgroundColor": "#fff8f2",
+    "navigationBarBackgroundColor": "#ffffff",
     "navigationBarTextStyle": "black",
-    "backgroundColor": "#fff8f2"
+    "backgroundColor": "#ffffff"
   },
   "tabBar": {
     "custom": true,
     "list": [
       { "pagePath": "pages/index/index", "text": "陪伴" },
+      { "pagePath": "pages/art-photo/art-photo", "text": "写真" },
       { "pagePath": "pages/works/works", "text": "作品" },
       { "pagePath": "pages/me/me", "text": "我的" }
     ]

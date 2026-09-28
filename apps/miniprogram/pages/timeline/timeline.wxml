@@ -1,7 +1,6 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
 <view class="page page-flat art-film layout-timeline">
-  <text class="eyebrow">GROWTH TIMELINE</text>
   <view class="title">{{companion || '成长时间线'}}</view>
   <text class="muted">按记录日期回看，日期来源会标在每张照片旁。</text>
   <t-button class="block-gap" bindtap="openPhotos">收好照片</t-button>

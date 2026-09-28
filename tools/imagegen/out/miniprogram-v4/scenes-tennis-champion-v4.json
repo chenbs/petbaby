@@ -1,0 +1,14 @@
+{
+  "id": "tennis-champion",
+  "title": "网球场冠军",
+  "description": "球拍在旁 · 活力昂扬",
+  "samplePet": "golden",
+  "prompt": "Use case: finished public sample for a premium photorealistic pet art-photo series. Edit Image 1 into a new real editorial photograph. Keep the same adult golden retriever from Image 1, with its warm golden coat, floppy ears, dark eyes, black nose and naturally joyful face; no other breed, no Ragdoll cat. One pet only. Vertical 3:4 image. Show the complete natural head, body and paws; leave 8% safety margin around the pet. Pet occupies 45-65% of frame height, with face and eyes sharp and unobstructed. Scene, composition, mood, styling and props: A sunlit turquoise tennis court with a white net, two loose yellow tennis balls and a wooden racket lying safely on the ground. The pet wears a white athletic neckerchief with mint trim, stands naturally near the baseline and looks into camera with an open-mouth smile. Dynamic editorial sports photography, no logos or text. Use real fabric, physical props and believable contact shadows. Young, playful, polished visual style with crisp daylight or practical studio light. No people or hands, duplicate pets, extra limbs, CGI, illustration, logos, readable text or watermark. Return one image only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/source/dog-golden.jpg",
+  "referenceSha256": "1b6348ce4f6cd1d12f4c93d5f2a8a5c21847e0ce9bc43e4326c1ee89f7a89eef",
+  "output": "tools/imagegen/out/scenes/scene-tennis-champion-v4.jpg",
+  "sha256": "4747aee4a90a48ad1808a76d8b8adf08ee5892c5ec059c44f364660a04f889a9",
+  "review": "pending-visual-review"
+}

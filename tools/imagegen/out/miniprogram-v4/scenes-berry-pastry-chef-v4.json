@@ -1,0 +1,14 @@
+{
+  "id": "berry-pastry-chef",
+  "title": "莓果甜品师",
+  "description": "甜点台前 · 认真守候",
+  "samplePet": "poodle",
+  "prompt": "Use case: finished public sample for a premium photorealistic pet art-photo series. Edit Image 1 into a new real editorial photograph. Keep the same adult gray toy poodle from Image 1, with compact build, charcoal curly coat, lighter gray muzzle, floppy ears and dark eyes; no other breed, no Ragdoll cat. One pet only. Vertical 3:4 image. Show the complete natural head, body and paws; leave 8% safety margin around the pet. Pet occupies 45-65% of frame height, with face and eyes sharp and unobstructed. Scene, composition, mood, styling and props: A cheerful real bakery studio with mint tiled wall, stainless pastry tray, strawberries and one small unbranded berry tart on a low counter. The pet wears a neat cream chef neckerchief and tiny soft fabric cap, sits beside the tray and looks attentively at camera. Coral and mint accents, realistic food texture, no people, logos or text. Use real fabric, physical props and believable contact shadows. Young, playful, polished visual style with crisp daylight or practical studio light. No people or hands, duplicate pets, extra limbs, CGI, illustration, logos, readable text or watermark. Return one image only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/scenes-v3/identity-gray-toy-poodle-v1.jpg",
+  "referenceSha256": "f0db84c8923312412c2c63a4c5d3fdbb1d1bc14d3cca7febecf28d7cad906541",
+  "output": "tools/imagegen/out/scenes/scene-berry-pastry-chef-v4.jpg",
+  "sha256": "f7f46fd4c271ad11c3bae7c1f057abf3895fa6fd07a101e2a60bbb8cd900adbf",
+  "review": "pending-visual-review"
+}

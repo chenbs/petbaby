@@ -1,8 +1,9 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<t-navbar transparent tone="inverse" title="作品详情"></t-navbar>
+<t-navbar title="作品详情"></t-navbar>
 
 <t-glass-sheet
+  wx:if="{{loading || work}}"
   id="sheet"
   class="art-brand layout-canvas"
   background-video="{{sheetBackgroundVideo}}"
@@ -10,7 +11,7 @@
   poster="{{sheetPoster}}"
   framed
   title="{{sheetTitle}}"
-  state="half"
+  state="{{work ? 'collapsed' : 'half'}}"
   blur="{{blurOk}}"
   anim="{{animType}}"
   gesture-disabled="{{loading || !work}}"
@@ -24,7 +25,7 @@
 
   <view slot="header" wx:if="{{work}}">
     <view class="row">
-      <text class="glass-eyebrow">WORK · V{{work.version}}</text>
+      <text class="glass-eyebrow">第 {{work.version}} 版</text>
       <t-tag tone="{{work.locked ? 'warning' : 'success'}}" size="mini" text="{{work.locked ? '待解锁' : '已解锁'}}"></t-tag>
     </view>
     <view class="glass-title work-title">{{work.title}}</view>
@@ -86,8 +87,6 @@
     </view>
   </block>
 
-  <t-notice wx:else type="error" message="{{error || '作品不存在或已被删除'}}"></t-notice>
-
   <!-- actions 常驻，主 CTA 在三个档位下都可见可点 -->
   <view slot="actions" wx:if="{{work}}">
     <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
@@ -102,6 +101,12 @@
     <t-button wx:else type="primary" block anim="{{animType}}" loading="{{busy}}" bindtap="saveImage">保存到相册</t-button>
   </view>
 </t-glass-sheet>
+
+<view wx:else class="page page-flat work-unavailable">
+  <view class="title">作品暂时无法打开</view>
+  <t-notice type="error" message="{{error || '作品不存在或已被删除'}}"></t-notice>
+  <t-button type="secondary" anim="{{animType}}" bindtap="reload">重新加载</t-button>
+</view>
 
 <t-dialog
   visible="{{confirmRevoke}}"

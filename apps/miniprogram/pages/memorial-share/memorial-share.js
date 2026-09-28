@@ -20,6 +20,7 @@ themedPage({ mood: "memorial" }, {
 
   onLoad(options) {
     const token = options.token;
+    if (!token) return this.setData({ loading: false, error: "分享链接缺少必要信息，请让分享者重新发送。" });
     return api.request("/api/memorial-share/" + token)
       .then((item) => {
         const sections = item.storySections || item.story_sections || [];

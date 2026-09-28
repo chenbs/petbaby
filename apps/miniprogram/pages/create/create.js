@@ -2,6 +2,7 @@ const { displayMediaTree } = require("../../services/photo-files");
 const api = require("../../services/api");
 const { preparePhoto, createUploadSession, requestId } = require("../../services/photo-upload-session");
 const { themedPage } = require("../../theme/page-mixin");
+const { manifest, pluginSample } = require("../../services/sample-assets");
 
 // 选项值 → 中文文案。picker 只显示中文，请求仍然发送原始枚举值。
 const SPECIES = { values: ["cat", "dog", "other"], labels: ["猫咪", "狗狗", "其他"] };
@@ -11,6 +12,8 @@ const DOCUMENT = { values: ["identity", "passport", "household", "vaccine", "bun
 const STYLE = { values: ["classic", "arthouse", "hongkong"], labels: ["经典大片", "文艺影展", "港风复古"] };
 const COMPOSITION = { values: ["portrait", "closeup", "ensemble"], labels: ["竖版主角", "特写脸庞", "群像合照"] };
 const THEME = { values: ["growth", "birthday", "healing", "holiday"], labels: ["成长记录", "生日纪念", "治愈日常", "节日相册"] };
+const MOVIE_SAMPLES = STYLE.values.map((id, index) => ({ id, title: STYLE.labels[index], url: manifest.movie[id] }));
+const ALBUM_SAMPLES = THEME.values.map((id, index) => ({ id, title: THEME.labels[index], url: manifest.album[id] }));
 const STEPS = ["填档案", "选照片", "生成中", "完成"];
 const TIER_NAME = { basic: "基础", advanced: "进阶", annual: "年度" };
 const STAGE_INDEX = { profile: 0, photos: 1, generating: 2, result: 3 };
@@ -50,13 +53,17 @@ themedPage({
     styleLabels: STYLE.labels,
     compositionLabels: COMPOSITION.labels,
     themeLabels: THEME.labels,
+    movieSamples: MOVIE_SAMPLES,
+    albumSamples: ALBUM_SAMPLES,
     speciesText: SPECIES.labels[0],
     genderText: GENDER.labels[0],
     dateTypeText: DATE_TYPE.labels[0],
     documentText: DOCUMENT.labels[0],
     styleText: STYLE.labels[0],
+    styleIndex: 0,
     compositionText: COMPOSITION.labels[0],
     themeText: THEME.labels[0],
+    themeIndex: 0,
     petText: "",
     photoTiles: [],
     selectedTileIds: [],
@@ -98,7 +105,8 @@ themedPage({
     this.setData({ pluginId });
     this._sessionToken = wx.getStorageSync("petbaby_session");
     Promise.all([api.request("/api/plugins"), api.request("/api/pets").then(displayMediaTree), api.request("/api/account")]).then((result) => {
-      const plugin = result[0].find((item) => item.id === pluginId);
+      const sourcePlugin = result[0].find((item) => item.id === pluginId);
+      const plugin = sourcePlugin && pluginSample(sourcePlugin);
       const pets = result[1];
       this._draftKey = "petbaby_create_" + result[2].id + "_" + pluginId;
       const draft = query.petId ? {} : wx.getStorageSync(this._draftKey) || {};
@@ -143,8 +151,10 @@ themedPage({
       dateTypeText: labelOf(DATE_TYPE, this.data.dateType),
       documentText: labelOf(DOCUMENT, this.data.documentType),
       styleText: labelOf(STYLE, this.data.style),
+      styleIndex: Math.max(0, STYLE.values.indexOf(this.data.style)),
       compositionText: labelOf(COMPOSITION, this.data.composition),
       themeText: labelOf(THEME, this.data.theme),
+      themeIndex: Math.max(0, THEME.values.indexOf(this.data.theme)),
       petText: this.data.pet ? this.data.pet.name : "",
       photoHint: `已选 ${this.data.selectedExistingIds.length + this.data.newPhotos.length}/${limit.max} 张，至少 ${limit.min} 张`
     });
@@ -192,8 +202,31 @@ themedPage({
   setCoverTitle(event) { this.setData({ coverTitle: event.detail.value }); this.saveDraft(); },
   setDocumentType(event) { this.setData({ documentType: DOCUMENT.values[Number(event.detail.value)] }); this.syncLabels(); this.saveDraft(); },
   setStyle(event) { this.setData({ style: STYLE.values[Number(event.detail.value)] }); this.syncLabels(); this.saveDraft(); },
+  chooseStyle(event) {
+    const style = event.currentTarget.dataset.id;
+    if (STYLE.values.indexOf(style) < 0) return;
+    this.setData({ style }); this.syncLabels(); this.saveDraft();
+  },
   setComposition(event) { this.setData({ composition: COMPOSITION.values[Number(event.detail.value)] }); this.syncLabels(); this.saveDraft(); },
   setTheme(event) { this.setData({ theme: THEME.values[Number(event.detail.value)] }); this.syncLabels(); this.saveDraft(); },
+  chooseTheme(event) {
+    const theme = event.currentTarget.dataset.id;
+    if (THEME.values.indexOf(theme) < 0) return;
+    this.setData({ theme }); this.syncLabels(); this.saveDraft();
+  },
+  chooseSample(event) {
+    if (this.data.pluginId === "pet-movie-poster") this.chooseStyle(event);
+    else if (this.data.pluginId === "pet-time-album") this.chooseTheme(event);
+  },
+  swipeSample(event) {
+    const samples = this.data.pluginId === "pet-movie-poster" ? MOVIE_SAMPLES : ALBUM_SAMPLES;
+    const sample = samples[Number(event.detail.current)];
+    if (!sample) return;
+    if (this.data.pluginId === "pet-movie-poster") this.setData({ style: sample.id });
+    else this.setData({ theme: sample.id });
+    this.syncLabels();
+    this.saveDraft();
+  },
   backToPhotos() { this.setData({ stage: "photos", error: "" }); this.syncLabels(); },
 
   choosePet(event) {

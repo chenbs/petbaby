@@ -15,7 +15,7 @@ themedPage({
   },
   onShow() {
     const tabbar = this.getTabBar && this.getTabBar();
-    if (tabbar) tabbar.setData({ selected: 1 });
+    if (tabbar) tabbar.setData({ selected: 2 });
     this.load();
   },
   load() {
@@ -70,7 +70,10 @@ themedPage({
     const tasks = (this.allTasks || []).filter((task) => {
       if (["queued", "processing", "failed"].indexOf(task.status) < 0 || petId && task.petId !== petId || pluginId && task.pluginId !== pluginId) return false;
       return status === "all" || status === "processing" && task.status !== "failed" || status === "failed" && task.status === "failed";
-    }).map((task) => Object.assign({}, task, { statusText: TASK_TEXT[task.status] || task.status }));
+    }).map((task) => Object.assign({}, task, {
+      statusText: TASK_TEXT[task.status] || task.status,
+      pluginName: ((this.data.plugins || []).find((plugin) => plugin.id === task.pluginId) || {}).name || task.pluginId
+    }));
     // 有筛选条件但结果为空时，空状态要引导「清空筛选」而不是「去创作」
     this.setData({ works, tasks, filtered: Boolean(petId || pluginId || status !== "all") });
   },

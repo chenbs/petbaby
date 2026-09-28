@@ -43,11 +43,11 @@ describe("image template registry", () => {
 
   it("艺术写真公开为独立单图模板，不改变历史母版目录", () => {
     const template = getImageTemplate("pet-art-photo");
-    expect(template).toMatchObject({ entryId: "art", subjectMode: "pet", status: "live", version: "v03", sampleStorageKey: "samples/scene-window-morning-v3-396d098a6999.jpg" });
+    expect(template).toMatchObject({ entryId: "art", subjectMode: "pet", status: "live", version: "v04", sampleStorageKey: "samples/scene-window-morning-v3-396d098a6999.jpg" });
     expect(template?.masterStorageKey).toBeUndefined();
     expect(listImageTemplates().some((item) => item.templateId === "pet-art-photo")).toBe(false);
     expect(listPublicImageTemplateEntries().find((entry) => entry.id === "art")?.templates[0]?.templateId).toBe("pet-art-photo");
-    expect(getImageTemplateCandidateCount(template!)).toBe(4);
+    expect(getImageTemplateCandidateCount(template!)).toBe(2);
     expect(imageTemplateSupportsReroll(template!)).toBe(true);
   });
 

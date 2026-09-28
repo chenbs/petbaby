@@ -1,0 +1,14 @@
+{
+  "id": "greenhouse-gardener",
+  "title": "温室小园丁",
+  "description": "花盆之间 · 好奇探头",
+  "samplePet": "golden",
+  "prompt": "Use case: finished public sample for a premium photorealistic pet art-photo series. Edit Image 1 into a new real editorial photograph. Keep the same adult golden retriever from Image 1, with its warm golden coat, floppy ears, dark eyes, black nose and naturally joyful face; no other breed, no Ragdoll cat. One pet only. Vertical 3:4 image. Show the complete natural head, body and paws; leave 8% safety margin around the pet. Pet occupies 45-65% of frame height, with face and eyes sharp and unobstructed. Scene, composition, mood, styling and props: A bright glass greenhouse with terracotta pots, hanging ferns, a low watering can and a clear aisle. The pet wears a simple faded-denim gardening apron over its chest, stands among the pots and gently tilts its head toward a sprig of rosemary. Fresh leaf green and warm clay tones, complete body visible, no text. Use real fabric, physical props and believable contact shadows. Young, playful, polished visual style with crisp daylight or practical studio light. No people or hands, duplicate pets, extra limbs, CGI, illustration, logos, readable text or watermark. Return one image only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/source/dog-golden.jpg",
+  "referenceSha256": "1b6348ce4f6cd1d12f4c93d5f2a8a5c21847e0ce9bc43e4326c1ee89f7a89eef",
+  "output": "tools/imagegen/out/scenes/scene-greenhouse-gardener-v4.jpg",
+  "sha256": "c96b83f9b34b6d196d1cc93c3f960b35b24289407d157687ccd5358eccae8efa",
+  "review": "pending-visual-review"
+}

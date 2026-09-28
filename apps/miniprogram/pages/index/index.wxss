@@ -5,16 +5,13 @@
 .fun-teaser .small { color: var(--text-secondary); }
 .fun-teaser-arrow { color: var(--primary); font-size: var(--font-h2); }
 
-.hero {
-  position: relative;
-  overflow: hidden;
-  padding: var(--space-5) 0 var(--space-4);
-}
-
-.hero-top {
+.hero-top,
+.pet-identity,
+.play-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--space-3);
 }
 
 .hero-theme {
@@ -25,313 +22,218 @@
   font-size: var(--font-h3);
 }
 
-.hero-title {
-  margin-top: var(--space-3);
+.pet-feature {
+  margin-top: var(--space-2);
+  transition: opacity var(--dur-fast) var(--ease-out);
 }
 
-/* 宠物身份区使用当前主题的表面和强调色。 */
-.hero-pet {
-  padding: var(--space-6) var(--space-5) var(--space-6);
-  border: var(--card-border);
-  border-radius: var(--card-radius-variant);
-  background: var(--secondary);
-  /* 从旧的单层 --card-shadow 换到暖褐双层 --shadow-card（方案 2.4） */
-  box-shadow: var(--shadow-card);
+.pet-feature-hover {
+  opacity: .88;
 }
 
-.hero-film {
-  padding: var(--space-6) var(--space-5);
-  border: var(--card-border);
-  border-radius: var(--card-radius);
+.pet-media,
+.hero-media,
+.grid-media {
+  overflow: hidden;
   background: var(--surface);
-  backdrop-filter: blur(var(--card-blur));
-  -webkit-backdrop-filter: blur(var(--card-blur));
 }
-
-.seal {
-  position: absolute;
-  right: var(--space-5);
-  bottom: var(--space-4);
-  display: flex;
-  width: 116rpx;
-  height: 116rpx;
-  align-items: center;
-  justify-content: center;
-  border: 6rpx double var(--primary);
-  border-radius: 50%;
-  color: var(--primary);
-  font-size: var(--eyebrow-size);
-  font-weight: 900;
-  text-align: center;
-  transform: rotate(10deg);
-}
-
-/*
- * ---------- E1：首屏的宠物区块 ----------
- *
- * 与下面玩法 Hero 的 .hero-* 刻意分开命名（.pet-*）：两者比例不同
- * （宠物封面走 3:4 的 --ratio-card 更像一张照片，玩法入口走 16:10），
- * 且宠物区块没有价格浮标。共用一套类名会让改一处动到另一处。
- */
 
 .pet-media {
-  position: relative;
-  overflow: hidden;
-  aspect-ratio: var(--ratio-hero);
+  aspect-ratio: var(--ratio-cover);
   border-radius: var(--radius-image-hero);
 }
 
-.pet-image {
+.pet-media-empty {
+  aspect-ratio: var(--ratio-hero);
+}
+
+.example-image,
+.intro-preview {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.intro-preview {
+  aspect-ratio: var(--ratio-hero);
+  margin-top: var(--space-3);
+  border-radius: var(--radius-image-hero);
+}
+
+.intro-image {
   display: block;
   width: 100%;
   height: 100%;
-  background: var(--skeleton-base);
-  border-radius: inherit;
 }
 
-/* 没上传头像时给爪印占位。它标的是档案本身，不冒充产出（同 pages/me） */
-.pet-image-blank {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--surface);
-  font-size: var(--title-size);
-}
-
-.pet-veil {
+.example-label {
   position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 62%;
-  background: var(--veil-image);
-  pointer-events: none;
-}
-
-.pet-caption {
-  position: absolute;
-  right: var(--space-4);
-  bottom: var(--space-4);
-  left: var(--space-4);
-  display: grid;
-  gap: var(--space-0);
-}
-
-/* 压图文字一律用玻璃态亮色：遮罩下永远是暗底，浅色主题的深色正文在这里看不见 */
-.pet-days {
-  color: var(--on-image-secondary);
-  font-size: var(--small-size);
-  font-weight: var(--fw-bold);
-  letter-spacing: var(--eyebrow-tracking);
-}
-
-/*
- * 用 --title-size（方案 2.3 的 h1 阶，44rpx）而不是 --font-h2：
- * 首屏的宠物名字是这一屏的主标题，比玩法 Hero 的卡名高一阶。
- * 没有 --font-h1 这个 token —— h1 就是 --title-size 本身。
- */
-.pet-name {
-  color: var(--on-image-primary);
-  font-size: var(--title-size);
-  font-weight: var(--fw-bold);
-  letter-spacing: var(--ls-tight);
-  line-height: var(--lh-h2);
-}
-
-.pet-hint {
-  color: var(--on-image-secondary);
-  font-size: var(--small-size);
-}
-
-/* ---------- E3：里程碑行 ---------- */
-
-.stone-main {
-  display: grid;
-  gap: var(--space-0);
-}
-
-/* ---------- E4：去年今日 ---------- */
-
-.memory {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-}
-
-.memory-photo {
-  flex: none;
-  width: 160rpx;
-  height: 160rpx;
+  right: var(--space-2);
+  bottom: var(--space-2);
+  left: var(--space-2);
+  padding: var(--space-2);
   border-radius: var(--radius-image-thumb);
-  background: var(--skeleton-base);
+  background: var(--background);
+  color: var(--text-primary);
+  font-size: var(--small-size);
+  text-align: center;
 }
 
+.pet-image,
+.hero-image,
+.grid-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--surface);
+}
+
+.pet-image-blank,
 .memory-photo-blank {
   display: flex;
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
-  padding: var(--space-2);
+  padding: var(--space-3);
   color: var(--text-secondary);
-  font-size: var(--eyebrow-size);
+  font-size: var(--small-size);
   text-align: center;
 }
 
+.pet-caption {
+  display: grid;
+  gap: var(--space-0);
+  padding: var(--space-3) 0;
+}
+
+.pet-name {
+  min-width: 0;
+  color: var(--text-primary);
+  font-size: var(--title-size);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-h1);
+  word-break: break-all;
+}
+
+.pet-days,
+.pet-hint {
+  color: var(--text-secondary);
+  font-size: var(--small-size);
+  line-height: var(--lh-sm);
+}
+
+.pet-hint {
+  flex: none;
+}
+
+.empty-intro {
+  padding: var(--space-5) 0 var(--space-2);
+}
+
+.hero-title {
+  max-width: 14em;
+  margin-top: var(--space-3);
+}
+
+.milestone-row {
+  display: flex;
+  min-height: 88rpx;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: 2rpx solid var(--divider-soft);
+}
+
+.stone-main,
 .memory-copy {
   display: grid;
-  flex: 1;
   gap: var(--space-0);
-  /* 不给 min-width:0 时长文案会把图挤出容器 */
   min-width: 0;
 }
 
-/* ---------- A 方向：Hero 大图入口 ---------- */
+.memory {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-2) 0;
+}
 
-/* 比例锁 16:10（--ratio-hero），方案 2.5 要求入口主图比例严格固定 */
+.memory-photo {
+  flex: none;
+  width: calc(var(--space-8) + var(--space-6));
+  height: calc(var(--space-8) + var(--space-6));
+  border-radius: var(--radius-image-thumb);
+  background: var(--surface);
+}
+
+.memory-copy {
+  flex: 1;
+}
+
 .hero-media {
-  position: relative;
-  overflow: hidden;
   aspect-ratio: var(--ratio-hero);
   border-radius: var(--radius-image-hero);
 }
 
-.hero-image {
-  display: block;
-  width: 100%;
-  height: 100%;
-  background: var(--skeleton-base);
-  border-radius: inherit;
-}
-
-/* 三段遮罩保证压图文字可读；基色是暖褐而非纯黑（方案 A 落地要点） */
-.hero-veil {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 72%;
-  background: var(--veil-image);
-  pointer-events: none;
-}
-
-/* 价格浮标 */
-.hero-price {
-  position: absolute;
-  top: var(--space-3);
-  right: var(--space-3);
-  padding: var(--space-1) var(--space-3);
-  border-radius: var(--radius-pill);
-  background: var(--button-primary);
-  color: var(--button-primary-text);
-  font-size: var(--small-size);
-  font-weight: var(--fw-bold);
-}
-
-.hero-caption {
-  position: absolute;
-  right: var(--space-4);
-  bottom: var(--space-4);
-  left: var(--space-4);
-  display: grid;
-  gap: var(--space-0);
-}
-
-/*
- * 压图文字一律用玻璃态亮色，不跟随 --text-primary：
- * 遮罩之下永远是暗底，浅色主题若沿用深色正文会彻底看不见。
- */
-.hero-code {
-  color: var(--on-image-secondary);
-  font-size: var(--eyebrow-size);
-  font-weight: var(--fw-bold);
-  letter-spacing: var(--eyebrow-tracking);
+.play-head {
+  align-items: baseline;
+  margin-top: var(--space-3);
 }
 
 .hero-name {
-  color: var(--on-image-primary);
+  min-width: 0;
+  color: var(--text-primary);
   font-size: var(--font-h2);
   font-weight: var(--fw-bold);
-  letter-spacing: var(--ls-tight);
   line-height: var(--lh-h2);
+  word-break: break-all;
+}
+
+.play-price {
+  flex: none;
+  color: var(--primary);
+  font-size: var(--small-size);
+  font-weight: var(--fw-bold);
 }
 
 .hero-tagline {
-  overflow: hidden;
-  color: var(--on-image-secondary);
+  display: block;
+  margin-top: var(--space-0);
+  color: var(--text-secondary);
   font-size: var(--small-size);
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: var(--lh-sm);
 }
-
-/* ---------- 2 列网格 ---------- */
 
 .cards {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--gap-item);
-  margin-top: var(--gap-item);
+  margin-top: var(--space-5);
 }
 
 .grid-media {
-  position: relative;
-  overflow: hidden;
-  aspect-ratio: var(--ratio-card);
+  aspect-ratio: var(--ratio-hero);
   border-radius: var(--radius-image-thumb);
 }
 
-.grid-image {
-  display: block;
-  width: 100%;
-  height: 100%;
-  background: var(--skeleton-base);
-  border-radius: inherit;
-}
-
-.grid-veil {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 62%;
-  background: var(--veil-image);
-  pointer-events: none;
-}
-
-.grid-price {
-  position: absolute;
-  top: var(--space-2);
-  right: var(--space-2);
-  padding: var(--space-0) var(--space-2);
-  border-radius: var(--radius-pill);
-  background: var(--button-primary);
-  color: var(--button-primary-text);
-  font-size: var(--eyebrow-size);
-  font-weight: var(--fw-bold);
-}
-
-.grid-caption {
-  position: absolute;
-  right: var(--space-3);
-  bottom: var(--space-3);
-  left: var(--space-3);
+.grid-copy {
   display: grid;
   gap: var(--space-0);
+  padding: var(--space-2) 0 var(--space-4);
 }
 
 .grid-name {
-  overflow: hidden;
-  color: var(--on-image-primary);
+  color: var(--text-primary);
   font-size: var(--body-size);
   font-weight: var(--fw-bold);
   line-height: var(--lh-h3);
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  word-break: break-all;
 }
 
-.grid-code {
-  color: var(--on-image-secondary);
-  font-size: var(--eyebrow-size);
-  letter-spacing: var(--eyebrow-tracking);
+.grid-price {
+  color: var(--text-secondary);
+  font-size: var(--small-size);
 }
 
 .card-top {
@@ -344,16 +246,39 @@
 .card-title {
   margin: var(--space-5) 0 var(--space-2);
   color: var(--text-primary);
-  font-size: var(--font-h2);
-  font-weight: var(--title-weight);
-  letter-spacing: var(--title-letter-spacing);
+  font-size: var(--font-h3);
+  font-weight: var(--fw-bold);
 }
 
 .card-foot {
   margin-top: var(--space-4);
-  padding-top: var(--space-3);
-  border-top: 2rpx solid var(--divider);
-  color: var(--text-secondary);
+  color: var(--primary);
   font-size: var(--small-size);
-  font-weight: 700;
+  font-weight: var(--fw-bold);
+}
+
+.featured-cards {
+  margin-top: var(--space-3);
+}
+
+.featured-item {
+  min-width: 0;
+}
+
+.featured-image {
+  display: block;
+  width: 100%;
+  height: 588rpx;
+  aspect-ratio: var(--ratio-portrait);
+  border-radius: var(--radius-image-thumb);
+  background: var(--surface);
+}
+.featured-wide { grid-column: span 2; }
+.featured-image-wide { height: 420rpx; aspect-ratio: var(--ratio-hero); }
+
+.featured-name {
+  padding: var(--space-2) 0 var(--space-3);
+  color: var(--text-primary);
+  font-size: var(--body-size);
+  font-weight: var(--fw-bold);
 }

@@ -173,7 +173,7 @@ async function loadTemplateReferences(row: Record<string, unknown>) {
   const petId = String(row.pet_id);
   const roleInputs = mapAiRoleInputs(row.role_inputs);
   if (roleInputs.templateId === PET_ART_PHOTO_TEMPLATE_ID) {
-    if (!["v01", PET_ART_PHOTO_VERSION].includes(roleInputs.templateVersion || "") || roleInputs.subjectMode !== "pet" || roleInputs.petPhotoIds.length !== 1 || roleInputs.ownerPhotoIds.length) {
+    if (!["v01", "v03", PET_ART_PHOTO_VERSION].includes(roleInputs.templateVersion || "") || roleInputs.subjectMode !== "pet" || roleInputs.petPhotoIds.length !== 1 || roleInputs.ownerPhotoIds.length) {
       throw new AppError("AI_TEMPLATE_SNAPSHOT_INVALID", "写真任务输入已失效，请重新创建", 409);
     }
     const reference = await loadPetReference(userId, petId, roleInputs.petPhotoIds[0]);
@@ -319,7 +319,7 @@ export async function selectAiCandidate(userId: string, id: string, candidateId:
     const db = await getDatabase();
     const pets = await db.query("SELECT name FROM pets WHERE id=$1 AND user_id=$2", [run.petId, userId]);
     const workId = crypto.randomUUID(); const now = new Date(); const title = `${String(pets[0]?.name || "它")}的${run.roleInputs.templateId === PET_ART_PHOTO_TEMPLATE_ID ? "宠物艺术写真" : "AI 肖像"}`;
-    const selectionLabel = run.roleInputs.subjectMode === "pet-human" ? "二选一" : "四选一";
+    const selectionLabel = "二选一";
     const subtitle = `AI 生成内容 · 已选中的${selectionLabel}结果`;
     await db.query("INSERT INTO works (id,user_id,plugin_id,pet_id,photo_id,title,subtitle,serial_number,authority,output_key,preview_key,asset_kind,source_kind,source_id,locked,public,version,expires_at,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,'麻麻抱我 AI 工作室',$9,$10,'image','ai',$11,true,false,1,$12,$13)", [workId, userId, run.pluginId, run.petId, run.photoIds[0], title, subtitle, `AI-${id.slice(0, 8).toUpperCase()}`, candidate.outputKey, candidate.previewKey, id, new Date(Date.now() + 90 * 86400000), now]);
     await db.query("INSERT INTO work_versions (id,work_id,version,title,subtitle,output_key,preview_key,created_at) VALUES ($1,$2,1,$3,$4,$5,$6,$7)", [crypto.randomUUID(), workId, title, subtitle, candidate.outputKey, candidate.previewKey, now]);
@@ -757,7 +757,7 @@ export async function resetMembershipQuotas(now = new Date()) { const rows = awa
 export async function recordMembershipRenewal() {
   throw new AppError("MEMBERSHIP_RENEWAL_REQUIRES_ORDER", "续费需要重新下单并完成支付", 409);
 }
-export async function expirePastDueMemberships(now=new Date()){const rows=await (await getDatabase()).query("UPDATE memberships SET status='expired',quota=0,used=0,status_updated_at=$1 WHERE status='past_due' AND status_updated_at<$1-interval '3 days' RETURNING id",[now]);return rows.length;}
+export async function expirePastDueMemberships(now=new Date()){const rows=await (await getDatabase()).query("UPDATE memberships SET status='expired',quota=0,used=0,status_updated_at=$1 WHERE status='past_due' AND status_updated_at<$1::timestamptz-interval '3 days' RETURNING id",[now]);return rows.length;}
 export async function refundMembership(userId: string, id: string) {
   const rows = await (await getDatabase()).query("SELECT order_id FROM memberships WHERE id=$1 AND user_id=$2", [id,userId]);
   if (!rows[0]?.order_id) throw new AppError("MEMBERSHIP_NOT_REFUNDABLE", "会员记录不可退款", 409);

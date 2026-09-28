@@ -1,11 +1,23 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
 <view class="page page-flat art-pet layout-workbench">
-  <text class="eyebrow">PL-15 · INTERACTIVE H5</text>
   <view class="title">编辑一页会回应的回忆</view>
   <text class="muted">收到的人点一下屏幕，星光会亮起来。</text>
 
   <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
+
+  <view class="section">
+    <view class="section-title">选择场景氛围</view>
+    <swiper class="scene-swiper" indicator-dots circular bindchange="swipeScene">
+      <swiper-item wx:for="{{scenePresets}}" wx:key="id">
+        <view class="scene-slide">
+          <image class="scene-sample" src="{{item.sampleUrl}}" mode="aspectFit" />
+          <view class="scene-name">{{item.name}}<text class="scene-selected">已选中</text></view>
+        </view>
+      </swiper-item>
+    </swiper>
+    <text class="small">左右滑动切换场景</text>
+  </view>
 
   <view class="section">
     <picker range="{{pets}}" range-key="name" bindchange="choosePet">
@@ -35,6 +47,7 @@
     <t-photo-grid
       wx:else
       photos="{{photos}}"
+      columns="{{photos.length < 3 ? 2 : 3}}"
       selected-ids="{{photoIds}}"
       max="6"
       ordered
@@ -45,31 +58,9 @@
 
   <view class="section">
     <view class="section-title">文字</view>
-    <t-card blur="{{blurOk}}" anim="{{animType}}">
-      <view class="stack">
-        <t-field label="标题" value="{{title}}" placeholder="给这一页起个名字" maxlength="60" show-count bindchange="inputTitle"></t-field>
-        <t-field label="页面文案" control="textarea" value="{{copy}}" placeholder="想对它说的话" maxlength="180" show-count bindchange="inputCopy"></t-field>
-      </view>
-    </t-card>
-  </view>
-
-  <view class="section">
-    <view class="section-title">场景氛围</view>
-    <view class="scenes">
-      <view
-        wx:for="{{scenePresets}}"
-        wx:key="id"
-        class="scene {{theme === item.id ? 'scene-on' : ''}}"
-        data-id="{{item.id}}"
-        hover-class="scene-hover"
-        bindtap="chooseScene"
-      >
-        <view class="scene-chip" style="background:{{item.sky}}">
-          <view class="scene-dot" style="background:{{item.glow}}"></view>
-        </view>
-        <view class="scene-name">{{item.name}}</view>
-        <text class="small">{{item.hint}}</text>
-      </view>
+    <view class="interactive-fields">
+      <t-field label="标题" value="{{title}}" placeholder="给这一页起个名字" maxlength="60" show-count bindchange="inputTitle"></t-field>
+      <t-field label="页面文案" control="textarea" value="{{copy}}" placeholder="想对它说的话" maxlength="180" show-count bindchange="inputCopy"></t-field>
     </view>
   </view>
 

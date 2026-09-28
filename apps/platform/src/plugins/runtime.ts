@@ -102,7 +102,7 @@ const manifestSchema: z.ZodType<PluginManifest> = z.object({
     heroUrl: z.string().max(500).regex(/^\/api\/plugin-samples\//).optional(),
     thumbUrls: z.array(z.string().max(500).regex(/^\/api\/plugin-samples\//)).max(8).optional(),
     sceneUrls: z.record(z.string().max(40), z.string().max(500).regex(/^\/api\/plugin-samples\//)).optional(),
-    sceneOptions: z.array(z.object({ id: z.string().min(1).max(40), title: z.string().min(1).max(80), description: z.string().max(180) })).max(12).optional(),
+    sceneOptions: z.array(z.object({ id: z.string().min(1).max(40), title: z.string().min(1).max(80), description: z.string().max(180) })).max(24).optional(),
     // 旧 AI 风格对照字段，仅供历史 manifest 和回滚读取。
     styleUrls: z.record(z.string().max(40), z.string().max(500).regex(/^\/api\/plugin-samples\//)).optional(),
   }).optional(),
@@ -201,7 +201,8 @@ async function ensurePluginConfigs() {
               }
               merged[key] = nextStyles;
             } else if (key === "sceneOptions") {
-              if (merged[key] === undefined || matchesPreviousArtScenes(merged[key])) { merged[key] = value; changed = true; }
+              const previousTwelve = (value as typeof previousV2ArtSceneOptions).slice(0, 12);
+              if (merged[key] === undefined || matchesPreviousArtScenes(merged[key]) || matchesArtSceneOptions(merged[key], previousTwelve)) { merged[key] = value; changed = true; }
             } else if (value !== undefined && (merged[key] === undefined || merged[key] === previousSampleDefaults[plugin.id]?.[key as "heroUrl"] || merged[key] === previousV2SampleDefaults[plugin.id]?.[key as "heroUrl"])) {
               if (merged[key] !== value) { merged[key] = value; changed = true; }
             }
@@ -228,6 +229,10 @@ async function ensurePluginConfigs() {
             next[key] = plugin[key as "name" | "tagline" | "description"];
             changed = true;
           }
+        }
+        if (next.description === "选择宠物身份照和写真场景，生成四张保留它真实身份的艺术写真候选。") {
+          next.description = plugin.description;
+          changed = true;
         }
         if (changed) await database.query("UPDATE plugin_configs SET manifest=$2::jsonb,updated_at=$3 WHERE id=$1", [plugin.id, JSON.stringify(next), new Date()]);
       }

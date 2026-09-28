@@ -35,34 +35,39 @@ themedPage({
   },
   record(event) { wx.navigateTo({ url: "/pages/photos/photos?mode=record&entry=pets&petId=" + encodeURIComponent(event.currentTarget.dataset.id) }); },
   reload() {
+    const view = this._petView = (this._petView || 0) + 1;
     return api.request("/api/pets").then(displayMediaTree)
-      .then((pets) => this.setData({
-        loading: false,
-        pets: pets.map((pet) => {
-          // 已离开的宠物用离开日期封口，天数就此固定；陪伴中的算到今天
+      .then((pets) => {
+        if (view !== this._petView) return;
+        const items = pets.map((pet) => {
           const days = companion.daysSince(companion.anchorOf(pet), pet.memorialSince);
           return Object.assign({}, pet, {
             speciesText: labelOf(SPECIES, pet.species),
             stageText: labelOf(STAGE, pet.lifeStage),
             dateText: pet.birthday ? labelOf(DATE_TYPE, pet.dateType) + " " + pet.birthday : "",
             counts: pet.counts || { works: 0, photos: 0, memorials: 0 },
-            /*
-             * 方案 E 的留存钩子。已离开的宠物按拍板改过去式且不再递增
-             * （见 memorials 页同一处理）：对这些用户，天数继续往上跳是冒犯。
-             */
+            imageUrl: pet.avatarUrl || "",
+            coverUrl: "",
             companionDays: days,
             companionText: companion.companionText(pet, days),
-            /*
-             * 纪念空间入口只对 senior / memorial 出现（改造项 L4）。
-             *
-             * 原先它只在「我的」页固定展示、与生命阶段无关，于是纪念可达性
-             * 对 senior 不成立 —— 而那正是需要它的那一段。
-             * **只改可达性不加推送**：陪伴中的宠物旁边不出现这个按钮。
-             */
             showMemorial: pet.lifeStage === "senior" || pet.lifeStage === "memorial"
           });
-        })
-      }))
+        });
+        this.setData({ loading: false, pets: items });
+        items.filter((pet) => pet.counts.photos > 0).forEach((pet) => {
+          api.request("/api/photos?petId=" + encodeURIComponent(pet.id) + "&pageSize=1&order=uploaded")
+            .then(displayMediaTree)
+            .then((page) => {
+              if (view !== this._petView) return;
+              const index = this.data.pets.findIndex((item) => item.id === pet.id);
+              const first = (page.items || []).find((item) => item.url);
+              if (index < 0 || !first) return;
+              const current = this.data.pets[index];
+              this.setData({ ["pets[" + index + "].coverUrl"]: first.url, ["pets[" + index + "].imageUrl"]: current.imageUrl || first.url });
+            })
+            .catch(() => undefined);
+        });
+      })
       .catch((error) => this.setData({ error: error.message, loading: false }));
   },
   edit(event) {
@@ -74,8 +79,8 @@ themedPage({
     const { kind, id, src } = event.currentTarget.dataset;
     if (kind === "editing" && this.data.editing && this.data.editing.avatarUrl === src) this.setData({ "editing.avatarUrl": "" });
     if (kind === "list") {
-      const index = this.data.pets.findIndex((pet) => pet.id === id && pet.avatarUrl === src);
-      if (index >= 0) this.setData({ ["pets[" + index + "].avatarUrl"]: "" });
+      const index = this.data.pets.findIndex((pet) => pet.id === id && pet.imageUrl === src);
+      if (index >= 0) this.setData({ ["pets[" + index + "].imageUrl"]: this.data.pets[index].coverUrl && this.data.pets[index].coverUrl !== src ? this.data.pets[index].coverUrl : "" });
     }
   },
   /** 成长时间线：按拍摄时间看这只宠物的全部照片 */

@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>宠物小程序视觉参考｜10 个真实页面</title>
+  <style>
+    :root { color-scheme: light; --ink:#202823; --muted:#607069; --line:#d9e1dc; --paper:#fff; --ground:#f3f6f3; --accent:#b74732; --green:#1e6658; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:var(--ground); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif; }
+    button, input { font:inherit; }
+    button { cursor:pointer; }
+    a { color:var(--green); text-underline-offset:3px; }
+    :focus-visible { outline:3px solid #d2734d; outline-offset:3px; }
+    .wrap { width:min(1240px,calc(100% - 40px)); margin:auto; }
+    header { background:#20352e; color:#f6faf7; padding:23px 0 21px; }
+    .kicker { margin:0 0 10px; color:#b8d0c3; font-size:12px; font-weight:700; }
+    h1 { margin:0; font-size:32px; line-height:1.22; }
+    .intro { max-width:890px; margin:10px 0 0; color:#d9e5dd; font-size:14px; line-height:1.65; }
+    .meta-line { display:flex; flex-wrap:wrap; gap:8px 22px; margin-top:13px; color:#b8d0c3; font-size:12px; }
+    .toolbar { position:sticky; top:0; z-index:20; background:rgba(243,246,243,.97); border-bottom:1px solid var(--line); backdrop-filter:blur(10px); }
+    .toolbar-inner { display:flex; gap:16px; align-items:center; justify-content:space-between; min-height:66px; }
+    .filters { display:flex; gap:6px; align-items:center; overflow-x:auto; scrollbar-width:none; padding:9px 0; }
+    .filters::-webkit-scrollbar { display:none; }
+    .filter { flex:0 0 auto; border:1px solid transparent; border-radius:4px; background:transparent; color:#4d5c54; padding:8px 12px; font-size:13px; }
+    .filter[aria-pressed="true"] { border-color:#8da99a; background:#e1ede5; color:#14513f; font-weight:700; }
+    .picked { flex:0 1 auto; min-width:0; text-align:right; color:#43534a; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .overview { padding:17px 0 16px; border-bottom:1px solid var(--line); }
+    .overview h2 { margin:0 0 10px; font-size:14px; }
+    .overview-grid { display:flex; gap:7px; overflow-x:auto; scrollbar-width:thin; }
+    .overview a { display:block; flex:0 0 155px; min-height:76px; padding:9px 10px; border:1px solid var(--line); background:var(--paper); color:var(--ink); text-decoration:none; }
+    .overview a[hidden] { display:none; }
+    .overview a:hover { background:#eaf2ed; }
+    .overview strong { display:block; font-size:14px; }
+    .overview small { display:block; margin:5px 0 0; color:var(--muted); font-size:11px; line-height:1.45; }
+    .num { display:inline-block; min-width:27px; color:var(--accent); font-size:12px; font-weight:700; }
+    .case { padding:31px 0 42px; border-bottom:1px solid var(--line); scroll-margin-top:76px; }
+    .case[hidden] { display:none; }
+    .case-head { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:20px; align-items:start; margin-bottom:16px; }
+    .case-title { margin:4px 0 8px; font-size:25px; line-height:1.25; }
+    .case-summary { margin:0; color:var(--muted); font-size:14px; line-height:1.7; }
+    .tag-row { display:flex; gap:7px; flex-wrap:wrap; margin-top:14px; }
+    .tag { display:inline-block; border:1px solid #d2dcd4; border-radius:3px; color:#456154; background:#ebf1ec; padding:5px 7px; font-size:11px; }
+    .choose { display:flex; align-items:center; gap:8px; border:1px solid #a5b4aa; border-radius:4px; background:var(--paper); padding:9px 12px; font-size:13px; white-space:nowrap; }
+    .choose:has(input:checked) { border-color:#bc634f; color:#973b2a; background:#fff2ed; }
+    .choose input { width:16px; height:16px; margin:0; accent-color:var(--accent); }
+    .case-body { display:grid; grid-template-columns:minmax(0,1.5fr) minmax(265px,.8fr); gap:32px; align-items:start; }
+    .gallery { display:flex; align-items:flex-start; justify-content:center; gap:16px; padding:19px; min-height:620px; overflow-x:auto; background:#e7ece8; border:1px solid #dbe3dc; }
+    .shot { flex:0 0 auto; width:min(46%,310px); min-width:205px; margin:0; }
+    .shot.single { width:min(100%,330px); }
+    .shot button { display:block; width:100%; padding:0; border:0; background:transparent; }
+    .shot img { display:block; width:auto; max-width:100%; max-height:560px; height:auto; margin:auto; box-shadow:0 8px 20px rgba(23,40,30,.17); }
+    .shot figcaption { margin-top:11px; color:#495b50; font-size:12px; line-height:1.5; text-align:center; }
+    .analysis { display:grid; gap:0; margin:0; }
+    .analysis div { padding:11px 0 13px; border-top:1px solid var(--line); }
+    .analysis dt { margin:0 0 5px; color:#7a3e30; font-size:12px; font-weight:700; }
+    .analysis dd { margin:0; font-size:13px; line-height:1.65; }
+    .source { margin:17px 0 0; font-size:12px; line-height:1.6; color:var(--muted); }
+    .source a { overflow-wrap:anywhere; }
+    .disclaimer { padding:30px 0 50px; color:var(--muted); font-size:12px; line-height:1.75; }
+    dialog { width:min(95vw,900px); max-height:94vh; border:0; border-radius:5px; padding:0; background:#f4f7f4; box-shadow:0 20px 70px rgba(0,0,0,.35); }
+    dialog::backdrop { background:rgba(16,25,20,.82); }
+    .dialog-top { position:sticky; top:0; z-index:2; display:flex; gap:16px; justify-content:space-between; align-items:center; padding:10px 16px; background:#f4f7f4; border-bottom:1px solid var(--line); }
+    .dialog-top span { font-size:13px; line-height:1.4; }
+    .close { border:0; background:transparent; color:var(--ink); font-size:27px; line-height:1; width:32px; height:32px; }
+    .dialog-image { display:block; width:auto; max-width:100%; height:auto; max-height:calc(94vh - 58px); margin:auto; }
+    @media (max-width:1000px) { .case-body { grid-template-columns:1fr; } .gallery { min-height:0; } .analysis { grid-template-columns:repeat(2,minmax(0,1fr)); gap:0 20px; } }
+    @media (max-width:600px) { .wrap { width:calc(100% - 28px); } header { padding:20px 0; } h1 { font-size:26px; } .toolbar-inner { display:block; min-height:0; padding-bottom:8px; } .picked { text-align:left; padding:0 0 3px 10px; } .overview a { flex-basis:145px; } .case { padding:26px 0 39px; scroll-margin-top:117px; } .case-head { grid-template-columns:1fr; gap:13px; } .case-title { font-size:23px; } .choose { width:max-content; } .gallery { justify-content:flex-start; padding:14px; gap:14px; } .shot, .shot.single { width:235px; min-width:235px; } .shot img { max-height:500px; } .analysis { grid-template-columns:1fr; } }
+    @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <p class="kicker">宠物 · 成长记录 · 照片创作</p>
+      <h1>10 个真实小程序页面参考</h1>
+      <p class="intro">按与你的产品的关系筛选，点截图看原图，勾选喜欢的编号即可。这里展示的是各产品当年的实际页面截图，供挑选美术方向和布局；不是它们今天的最新版本，也不是为本项目绘制的概念稿。</p>
+      <div class="meta-line"><span>资料核对：2026-09-27</span><span>页面拍摄或发布：2017–2023</span><span>微信小程序：10 个</span></div>
+    </div>
+  </header>
+  <div class="toolbar">
+    <div class="wrap toolbar-inner">
+      <nav class="filters" aria-label="案例分类">
+        <button class="filter" type="button" data-filter="all" aria-pressed="true">全部 10</button>
+        <button class="filter" type="button" data-filter="pet" aria-pressed="false">宠物 4</button>
+        <button class="filter" type="button" data-filter="memory" aria-pressed="false">相册与记录 3</button>
+        <button class="filter" type="button" data-filter="creation" aria-pressed="false">内容创作 3</button>
+      </nav>
+      <div id="picked" class="picked" aria-live="polite">尚未选择</div>
+    </div>
+  </div>
+  <main class="wrap">
+    <section class="overview" aria-labelledby="overview-title">
+      <h2 id="overview-title">快速浏览</h2>
+      <div class="overview-grid" id="overview-grid"></div>
+    </section>
+    <div id="cases"></div>
+    <p class="disclaimer">截图仅作内部视觉研究。旧页面中的价格、功能、品牌状态均不代表现状。部分原站图片已失效，已保存搜索引擎缓存缩略图，因此放大后清晰度有限；来源链接与每张截图的页面性质均标在案例中。</p>
+  </main>
+  <dialog id="viewer" aria-label="查看页面截图">
+    <div class="dialog-top"><span id="viewer-caption"></span><button id="viewer-close" class="close" type="button" aria-label="关闭图片" title="关闭">×</button></div>
+    <img id="viewer-image" class="dialog-image" alt="">
+  </dialog>
+  <script>
+    const cases = [
+      { id:"01", name:"宠本本", category:"pet", hint:"宠物成长与健康记录", year:"2020–2021", mood:"明黄点缀、温和灰底、手绘小图标", layout:"年份与日期在左，记录正文在右；记录类别通过底部浮层快速添加。宠物资料使用分段表单。", borrow:"适合你的时间线、健康记录与宠物档案。日期轴能建立成长感，健康条目可保持轻量。", watch:"图文记录被大块白卡包裹，照片并非主角。用于照片时间线时应提高图片占比。", source:"https://www.zhihu.com/tardis/sogou/art/339038915", sourceName:"知乎使用体验", shots:[['01-chongbenben-record.jpg','养育记录：日期轴与分类浮层'],['01-chongbenben-pet.jpg','添加宠物：身份资料表单']] },
+      { id:"02", name:"宠咖秀", category:"pet", hint:"宠物展示与互动社区", year:"2018", mood:"珊瑚粉、亮色活动图、宠物照片", layout:"顶部品牌色和活动横幅，中间宠物头像横排与单列动态，底部三入口；个人页用大面积品牌色衬托身份卡。", borrow:"适合宠物主页、作品分享与轻社区。宠物头像横排能承担多宠切换，单列动态适合看完整照片。", watch:"品牌粉铺满整个个人页，长时间浏览会压住照片；可只取版式，不照搬饱和度。", source:"http://www.hackhome.com/xcx/4564.html", sourceName:"嗨客小程序商店", shots:[['02-chongkaxiu-home.jpg','首页：宠物头像和单列动态'],['02-chongkaxiu-profile.jpg','宠物档案：大色块与身份卡']] },
+      { id:"03", name:"宠业家社区", category:"pet", hint:"宠物垂直社区", year:"2020", mood:"白底、深蓝文字、青色强调", layout:"搜索与内容标签在最上层，活动入口和分类图标居中，帖子流在下；版块页按主题分组，双列目录便于扫描。", borrow:"适合你的健康专题或作品社区：栏目层级清楚，能把不同内容类型放在一个入口下。", watch:"顶部活动、十宫格和信息流同屏竞争，首页若以个人宠物为主需要缩减入口数。", source:"https://www.sohu.com/a/412984591_120725464", sourceName:"宠业家上线报道", shots:[['03-chongyejia-feed.jpg','首页：标签、入口与帖子流'],['03-chongyejia-sections.jpg','版块：双列分类目录']] },
+      { id:"04", name:"宠爱星球", category:"pet", hint:"宠物档案与会员账户", year:"2020", mood:"深绿黑底、暖金点缀、彩色工具图标", layout:"顶部宠物头像和会员权益条，下面按订单状态与工具服务分组；宠物档案与设置位于工具区。", borrow:"适合“我的”页面：宠物身份和账户事务可以分层，订单状态集中展示。", watch:"这张是文章中的操作说明图，带红色标注框；主体偏电商账户，不能作为创作首页的直接模板。", source:"https://www.sohu.com/a/420910259_710939", sourceName:"宠爱星球上线说明", shots:[['04-chongaixingqiu-account.png','我的：宠物头像、权益与工具分组']] },
+      { id:"05", name:"亲宝宝", category:"memory", hint:"家庭共享成长记录", year:"2017", mood:"暖黄导航、柔和生活照片、浅灰日期标记", layout:"宝宝大幅封面建立身份，亲友头像紧接其下；内容以日期切分，照片在记录中占主要面积。", borrow:"与你的宠物陪伴记录很接近：首屏先呈现“是谁”，再按时间看照片，亲友共享可作为次级入口。", watch:"旧版顶部黄色较亮，可借鉴身份与时间顺序，不必沿用配色。", source:"http://yuer.pcbaby.com.cn/346/3460484.html", sourceName:"太平洋亲子网上线报道", shots:[['05-qinbaobao-timeline.jpg','成长页：封面、亲友与日期照片']] },
+      { id:"06", name:"时光宝宝相册", category:"memory", hint:"私密成长相册", year:"2017", mood:"留白、淡粉身份区、照片本色", layout:"横幅封面与宝宝身份在上，拍摄/上传动作缩成一行；下方按日期直接展开三列照片墙。", borrow:"最适合照片库和宠物档案：照片上屏早，用户无需先穿过多层功能卡。", watch:"旧截图有第三方商店水印，图片较小；照片详情页还需独立检查原图比例和操作。", source:"http://www.160.com/xiaochengxu/2405.html", sourceName:"160 小程序目录", shots:[['06-shiguangbaobao-gallery.jpg','宝宝相册：日期分组与照片墙']] },
+      { id:"07", name:"美篇", category:"creation", hint:"图文故事创作", year:"2017", mood:"黑白基础、自然图片、克制的蓝色操作色", layout:"编辑页用大封面承接标题，再把照片和文字排成纵向故事；个人页以封面图和作品列表承接分享。", borrow:"适合年度故事、纪念册、长图文作品：照片与叙述交替，比均匀卡片更有阅读节奏。", watch:"原报道链接现已失效，截图取自搜索缓存；可研究历史版式，不应据此判断当前产品状态。", source:"http://www.sohu.com/a/195367990_661937", sourceName:"2017 年小程序发布报道（历史链接）", shots:[['07-meipian-edit.jpg','编辑页：封面、照片与文字块'],['07-meipian-profile.jpg','个人页：身份封面与作品流']] },
+      { id:"08", name:"小年糕有声影集 mini", category:"creation", hint:"照片制作有声影集", year:"2017", mood:"青绿强调、朴素白底、内容缩略图", layout:"作品列表以缩略图加标题纵向排列；编辑页把影集名称、上传、音乐和排序收在同一工作面。", borrow:"适合你的成长影片入口：先看到已有作品，再进入明确的制作步骤；素材和音乐可放在同一流程。", watch:"这是早期微信小程序样式，功能密度高且图片较小，主要参考信息顺序。", source:"http://www.hackhome.com/xcx/923.html", sourceName:"嗨客小程序商店", shots:[['08-xiaoniangao-list.jpg','影集列表：缩略图与作品标题'],['08-xiaoniangao-edit.jpg','编辑页：照片、音乐与顺序']] },
+      { id:"09", name:"小打卡", category:"memory", hint:"成长与健康打卡社区", year:"2018", mood:"白底、浅珊瑚与薄荷绿图标", layout:"搜索和活动横幅位于顶部，主题用两行图标网格导航；打卡群以照片缩略图加参与数据呈现。", borrow:"适合健康提醒与记录分类：类别一眼可扫完，群组式记录可启发日常习惯模块。", watch:"打卡平台的分类很宽泛；你的首页应围绕单只宠物组织，而不是复制十个平权分类。", source:"https://biz.ifeng.com/a/20181226/45271456_0.shtml", sourceName:"凤凰网小打卡报道", shots:[['09-xiaodaka-discover.jpg','发现页：主题网格与打卡群列表']] },
+      { id:"10", name:"妙鸭相机", category:"creation", hint:"AI 写真模板选择", year:"2023", mood:"白色画布、样片主导、极少装饰", layout:"页面直接以双列竖幅样片排版，模板名称放在图外，限制状态贴在图角；标题与平台导航占用很少高度。", borrow:"与你的宠物写真和人化候选选择最接近：完整样片优先，名称与状态分离，用户可以连续比较多个效果。", watch:"样片为人物写真；宠物图应按原比例或完整预览处理，避免脸和身体被统一裁切。", source:"http://www.tibet.cn/cn/Instant/expo/202308/t20230801_7458842.html", sourceName:"2023 年妙鸭相机报道", shots:[['10-miaoya-templates.jpg','写真模板：双列竖图与图外名称']] }
+    ];
+    const categoryNames = { pet:"宠物", memory:"相册与记录", creation:"内容创作" };
+    const grid = document.getElementById("overview-grid");
+    const root = document.getElementById("cases");
+    grid.innerHTML = cases.map(item => `<a href="#case-${item.id}" data-category="${item.category}"><span class="num">${item.id}</span><strong>${item.name}</strong><small>${item.hint}</small></a>`).join("");
+    root.innerHTML = cases.map(item => `<section id="case-${item.id}" class="case" data-category="${item.category}" aria-labelledby="title-${item.id}">
+      <div class="case-head"><div><span class="num">${item.id} / 10</span><h2 id="title-${item.id}" class="case-title">${item.name}</h2><p class="case-summary">${item.hint}</p><div class="tag-row"><span class="tag">${categoryNames[item.category]}</span><span class="tag">微信小程序</span><span class="tag">${item.year} 年页面</span></div></div><label class="choose"><input type="checkbox" value="${item.id}" aria-label="选择 ${item.name}">选择这个方向</label></div>
+      <div class="case-body"><div class="gallery">${item.shots.map(([file, caption]) => `<figure class="shot ${item.shots.length === 1 ? "single" : ""}"><button type="button" class="open-shot" data-src="assets/${file}" data-caption="${item.name} · ${caption}" title="查看原图" aria-label="查看 ${item.name}：${caption} 原图"><img src="assets/${file}" alt="${item.name}小程序截图：${caption}" loading="lazy"></button><figcaption>${caption}</figcaption></figure>`).join("")}</div>
+      <div><dl class="analysis"><div><dt>美术语言</dt><dd>${item.mood}</dd></div><div><dt>排版结构</dt><dd>${item.layout}</dd></div><div><dt>可借鉴</dt><dd>${item.borrow}</dd></div><div><dt>观察边界</dt><dd>${item.watch}</dd></div></dl><p class="source">截图来源：<a href="${item.source}" target="_blank" rel="noopener noreferrer">${item.sourceName} ↗</a>。图像已保存于本地，页面离线可看。</p></div></div>
+    </section>`).join("");
+    const picked = document.getElementById("picked");
+    const saved = JSON.parse(localStorage.getItem("petbaby-miniapp-reference-picks") || "[]");
+    document.querySelectorAll('.choose input').forEach(input => { input.checked = saved.includes(input.value); });
+    function updatePicked() {
+      const ids = [...document.querySelectorAll('.choose input:checked')].map(input => input.value);
+      picked.textContent = ids.length ? `已选 ${ids.join("、")}（告诉我编号即可）` : "尚未选择";
+      localStorage.setItem("petbaby-miniapp-reference-picks", JSON.stringify(ids));
+    }
+    updatePicked();
+    root.addEventListener("change", event => { if (event.target.matches('.choose input')) updatePicked(); });
+    document.querySelectorAll(".filter").forEach(button => button.addEventListener("click", () => {
+      const filter = button.dataset.filter;
+      document.querySelectorAll(".filter").forEach(option => option.setAttribute("aria-pressed", String(option === button)));
+      document.querySelectorAll(".case, .overview-grid a").forEach(item => { item.hidden = filter !== "all" && item.dataset.category !== filter; });
+    }));
+    const viewer = document.getElementById("viewer");
+    root.addEventListener("click", event => {
+      const button = event.target.closest(".open-shot");
+      if (!button) return;
+      document.getElementById("viewer-image").src = button.dataset.src;
+      document.getElementById("viewer-image").alt = button.dataset.caption;
+      document.getElementById("viewer-caption").textContent = button.dataset.caption;
+      viewer.showModal();
+    });
+    document.getElementById("viewer-close").addEventListener("click", () => viewer.close());
+    viewer.addEventListener("click", event => { if (event.target === viewer) viewer.close(); });
+  </script>
+</body>
+</html>

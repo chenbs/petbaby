@@ -149,6 +149,19 @@ describe("玩法样例图回填", () => {
     expect(samples?.sceneUrls?.["garden-curious"]).toBe(custom);
   });
 
+  it("旧十二套默认写真自动扩到二十四套，人工编辑过的十二套仍保留", async () => {
+    const portrait = plugins.find((plugin) => plugin.id === "pl-10");
+    if (!portrait?.samples?.sceneOptions) throw new Error("PL-10 scenes missing");
+    const twelve = portrait.samples.sceneOptions.slice(0, 12);
+    rows.set("pl-10", { manifest: { ...portrait, samples: { ...portrait.samples, sceneOptions: twelve } } });
+    const upgraded = await listRuntimePlugins();
+    expect(upgraded.find((plugin) => plugin.id === "pl-10")?.samples?.sceneOptions).toHaveLength(24);
+    const custom = twelve.map((scene, index) => index === 0 ? { ...scene, title: "运营自定标题" } : scene);
+    rows.set("pl-10", { manifest: { ...portrait, samples: { ...portrait.samples, sceneOptions: custom } } });
+    const preserved = await listRuntimePlugins();
+    expect(preserved.find((plugin) => plugin.id === "pl-10")?.samples?.sceneOptions).toEqual(custom);
+  });
+
   /*
    * 第三个方向：库里已有 samples 但缺新加的子键。
    * 上一次部署给 PL-10 补了 heroUrl，这次 registry 里新增 sceneUrls ——

@@ -1,0 +1,11 @@
+.art-heading { padding: var(--space-3) 0 var(--space-4); }
+.art-heading .title { margin: var(--space-2) 0; }
+.art-collection { margin-top: var(--space-6); }
+.art-section-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-2); margin-bottom: var(--space-3); }
+.art-section-head .section-title { margin: 0; }
+.art-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap-item); }
+.art-item { min-width: 0; padding-bottom: var(--space-4); }
+.art-image { display: block; width: 100%; aspect-ratio: var(--ratio-card); border-radius: var(--radius-image-thumb); background: var(--surface); }
+.art-image-empty { display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: var(--small-size); }
+.art-name { margin-top: var(--space-2); color: var(--text-primary); font-size: var(--body-size); font-weight: var(--fw-bold); }
+.art-description { display: block; margin-top: var(--space-1); }

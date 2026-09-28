@@ -10,7 +10,6 @@
       <view wx:if="{{render && render.work_id}}" class="film-play hit-area" aria-role="button" aria-label="播放成片" bindtap="openWork">▶</view>
     </view>
     <view class="row film-heading">
-      <text class="eyebrow">MEMORY FILM</text>
       <t-tag wx:if="{{renderText}}" tone="{{render.status === 'failed' ? 'error' : render.status === 'succeeded' ? 'success' : 'accent'}}" size="mini" text="{{renderText}}"></t-tag>
     </view>
     <view class="title">{{project.title}}</view>

@@ -6,7 +6,7 @@ const RENDER_TEXT = { queued: "排队中", processing: "渲染中", succeeded: "
 
 themedPage({
   data: { id: "", project: null, render: null, coverUrl: "", caption: "", message: "", messageType: "info", busy: false, loading: true, renderText: "", confirmCancel: false },
-  onLoad(options) { this.setData({ id: options.id }); this.load(); },
+  onLoad(options) { if (!options.id) return this.setData({ loading: false, message: "短片链接无效，请从作品柜重新打开。", messageType: "error" }); this.setData({ id: options.id }); this.load(); },
   onShow() { if (this.data.id && this.data.project) this.load(); },
   onUnload() { if (this.timer) clearTimeout(this.timer); },
   load() {

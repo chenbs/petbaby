@@ -6,6 +6,7 @@ Component({
   properties: {
     visible: { type: Boolean, value: false },
     title: { type: String, value: "" },
+    tall: { type: Boolean, value: false },
     anim: { type: String, value: "fade" }
   },
   methods: {

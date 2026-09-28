@@ -95,7 +95,7 @@ export const plugins: PluginManifest[] = [
     name: "宠物艺术写真",
     category: "ai-image",
     tagline: "换一个场景，看见它不一样的神态",
-    description: "选择宠物身份照和写真场景，生成四张保留它真实身份的艺术写真候选。",
+    description: "选择宠物身份照和写真场景，生成两张保留它真实身份的艺术写真候选。",
     accent: "orange",
     input: {
       photos: { min: 1, max: 1 },
@@ -107,7 +107,7 @@ export const plugins: PluginManifest[] = [
     samples: {
       heroUrl: "/api/plugin-samples/samples/mp26-gray-toy-poodle-editorial-v1-7c583b9dcb50.jpg",
       /*
-       * 十二套已通过的造型由蓝双色布偶猫和灰泰迪示范；用户身份仍只取其私有照片。
+       * 二十四套写真由布偶猫、金毛、泰迪和英短示范；用户身份仍只取其私有照片。
        * 旧 styleUrls 不再作为默认字段；runtime.ts 仅为历史配置保留读取能力。
        */
       sceneUrls: {
@@ -123,6 +123,18 @@ export const plugins: PluginManifest[] = [
         "lakeside-sunset": "/api/plugin-samples/samples/scene-lakeside-sunset-v4-5cc0cb785432.jpg",
         "city-rain": "/api/plugin-samples/samples/scene-city-rain-v3-0ccde8661153.jpg",
         "spring-picnic": "/api/plugin-samples/samples/scene-spring-picnic-v4-274593d9cd4a.jpg",
+        "railway-traveler": "/api/plugin-samples/samples/scene-railway-traveler-v4-af7a29506d35.jpg",
+        "tennis-champion": "/api/plugin-samples/samples/scene-tennis-champion-v4-4747aee4a90a.jpg",
+        "greenhouse-gardener": "/api/plugin-samples/samples/scene-greenhouse-gardener-v4-c96b83f9b34b.jpg",
+        "sailboat-holiday": "/api/plugin-samples/samples/scene-sailboat-holiday-v4-09c7ec74bcc6.jpg",
+        "berry-pastry-chef": "/api/plugin-samples/samples/scene-berry-pastry-chef-v4-f7f46fd4c271.jpg",
+        "paper-flower-window": "/api/plugin-samples/samples/scene-paper-flower-window-v4-b24f5e5c987f.jpg",
+        "mountain-cable-car": "/api/plugin-samples/samples/scene-mountain-cable-car-v4-92450690e202.jpg",
+        "laundry-day": "/api/plugin-samples/samples/scene-laundry-day-v4-12a2a8746e9d.jpg",
+        "museum-curator": "/api/plugin-samples/samples/scene-museum-curator-v4-ecba3a50b34d.jpg",
+        "poolside-vacation": "/api/plugin-samples/samples/scene-poolside-vacation-v4-742a01182dd2.jpg",
+        "post-office": "/api/plugin-samples/samples/scene-post-office-v4-539386983243.jpg",
+        "ballet-backstage": "/api/plugin-samples/samples/scene-ballet-backstage-v4-8e2f1641b5c0.jpg",
       },
       sceneOptions: petArtPhotoScenes.map(({ id, title, description }) => ({ id, title, description })),
     },

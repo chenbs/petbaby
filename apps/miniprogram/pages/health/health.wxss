@@ -3,16 +3,84 @@
   margin-top: var(--space-4);
 }
 
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-}
-
 .row {
   display: flex;
   gap: var(--space-3);
   align-items: center;
+}
+
+.health-form {
+  margin-top: var(--space-5);
+}
+
+.health-form .section-block:first-child {
+  margin-top: 0;
+}
+
+.health-form .section-block {
+  margin-top: var(--space-4);
+}
+
+.health-form > t-button {
+  display: block;
+  margin-top: var(--space-4);
+}
+
+.health-result {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
+.health-result .section-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.health-result .row {
+  justify-content: flex-start;
+}
+
+.health-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 2rpx solid var(--divider);
+}
+
+.health-section .section-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.health-section .row {
+  justify-content: space-between;
+}
+
+.health-history {
+  gap: var(--space-3);
+}
+
+.history-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-bottom: var(--space-3);
+  border-bottom: 2rpx solid var(--divider);
+}
+
+.history-item:last-child {
+  border-bottom: 0;
 }
 
 /* 免疫记录行的主体：项目名与日期两行，右侧留给到期标签与删除按钮 */

@@ -1,0 +1,14 @@
+{
+  "id": "laundry-day",
+  "title": "彩色洗衣日",
+  "description": "布篮旁边 · 俏皮抬头",
+  "samplePet": "poodle",
+  "prompt": "Use case: finished public sample for a premium photorealistic pet art-photo series. Edit Image 1 into a new real editorial photograph. Keep the same adult gray toy poodle from Image 1, with compact build, charcoal curly coat, lighter gray muzzle, floppy ears and dark eyes; no other breed, no Ragdoll cat. One pet only. Vertical 3:4 image. Show the complete natural head, body and paws; leave 8% safety margin around the pet. Pet occupies 45-65% of frame height, with face and eyes sharp and unobstructed. Scene, composition, mood, styling and props: A tidy pastel laundry room with a front-loading machine, colorful folded towels and a low wicker basket of clean cloth. The pet wears a red gingham bandana, sits beside the basket and tilts its head playfully toward camera. Clean mint and butter-yellow palette, real domestic photography, no person, logos or text. Use real fabric, physical props and believable contact shadows. Young, playful, polished visual style with crisp daylight or practical studio light. No people or hands, duplicate pets, extra limbs, CGI, illustration, logos, readable text or watermark. Return one image only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/scenes-v3/identity-gray-toy-poodle-v1.jpg",
+  "referenceSha256": "f0db84c8923312412c2c63a4c5d3fdbb1d1bc14d3cca7febecf28d7cad906541",
+  "output": "tools/imagegen/out/scenes/scene-laundry-day-v4.jpg",
+  "sha256": "12a2a8746e9d7f736951445cd3dc1e54c632838caa21872d51177a2e70d3a852",
+  "review": "pending-visual-review"
+}

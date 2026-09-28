@@ -1,11 +1,9 @@
 .card {
   box-sizing: border-box;
-  /* 描边改为顶部高光边（UI 重构方案 3.1）：亮色皮肤取 0 宽度、层级交给多层暖褐阴影；
-     暗色与玻璃皮肤才真正用它 —— 暗底上阴影几乎不可见，只能靠高光边分层。 */
-  border: var(--border-highlight);
+  border: 0;
   border-radius: var(--card-radius);
   background: var(--card-background);
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--shadow-none);
   transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
 }
 
@@ -22,7 +20,7 @@
 .card-media {
   overflow: hidden;
   padding: 0;
-  box-shadow: var(--shadow-image);
+  box-shadow: var(--shadow-none);
 }
 
 .card-media.card-pad {
@@ -46,7 +44,7 @@
 .card-grid {
   overflow: hidden;
   padding: 0;
-  box-shadow: var(--shadow-image);
+  box-shadow: var(--shadow-none);
 }
 
 .card-hero.card-pad,
@@ -83,8 +81,8 @@
 
 /* 统一按压态：缩放 + 阴影收紧（方案 2.6 投产比最高的三个动效之一） */
 .card-hover {
-  transform: scale(.97);
-  box-shadow: var(--shadow-press);
+  transform: scale(.985);
+  opacity: .9;
 }
 
 .card-hover.anim-fade { opacity: .92; }

@@ -1,7 +1,6 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
 <view class="page page-flat art-pet layout-workbench">
-  <text class="eyebrow">HEALTH</text>
   <view class="title">健康助手</view>
   <!--
     定位说明必须在最前面。「分诊」不是「问诊」——
@@ -26,7 +25,7 @@
   ></t-empty>
 
   <block wx:else>
-    <t-card blur="{{blurOk}}" anim="{{animType}}">
+    <view class="health-form">
       <view class="section-block">
         <text class="sub-title">哪一只</text>
         <view class="chips">
@@ -46,10 +45,10 @@
       </view>
 
       <t-button type="primary" block anim="{{animType}}" loading="{{busy}}" bindtap="submit">看看要不要去医院</t-button>
-    </t-card>
+    </view>
 
-    <!-- 结论区。免责声明与结论同屏且在结论之前，不折叠。 -->
-    <t-card wx:if="{{result}}" blur="{{blurOk}}" anim="{{animType}}" class="block-gap">
+    <!-- 免责声明与结论同屏且在结论之前，不折叠。 -->
+    <view wx:if="{{result}}" class="health-result">
       <text class="small">{{result.advisory.disclaimer}}</text>
 
       <view class="row block-gap">
@@ -74,7 +73,7 @@
         <text class="sub-title">去医院前准备</text>
         <text wx:for="{{result.advisory.visitPreparation}}" wx:key="*this" class="small">· {{item}}</text>
       </view>
-    </t-card>
+    </view>
 
     <!--
       体重记录与趋势（改造项 L6）。A4 只存不看等于相册 —— 价值全在趋势里。
@@ -84,7 +83,7 @@
       且体况评分本身是执业兽医的触诊项目，靠体重数字算不出来。
       趋势句与提示语全部由服务端下发，端上不拼。
     -->
-    <t-card blur="{{blurOk}}" anim="{{animType}}" class="block-gap">
+    <view class="health-section">
       <text class="sub-title">体重</text>
       <text wx:if="{{weightTrend}}" class="small">{{weightTrend.statement}}</text>
       <text wx:else class="small">记一次体重，之后就能看到变化。</text>
@@ -113,7 +112,7 @@
           <text class="small">{{item.weightText}}</text>
         </view>
       </view>
-    </t-card>
+    </view>
 
     <!--
       免疫与驱虫（改造项 L5 的数据来源）。到期前一周 Worker 会推一条站内通知。
@@ -122,7 +121,7 @@
       给清单就等于在推荐具体疫苗或驱虫药（红线 2）。
       列表上也只标「下次 X 月 X 日」「已过期」，不写「该打了」。
     -->
-    <t-card blur="{{blurOk}}" anim="{{animType}}" class="block-gap">
+    <view class="health-section">
       <text class="sub-title">免疫与驱虫</text>
       <text class="small">记下日子，到期前会提醒你。打什么、打不打由兽医决定。</text>
 
@@ -150,7 +149,7 @@
         </picker>
         <t-button type="ghost" block anim="{{animType}}" loading="{{careBusy}}" class="block-gap" bindtap="saveCare">记下这一次</t-button>
       </view>
-    </t-card>
+    </view>
 
     <!--
       健康档案（改造项 L1）。**是就医准备材料不是体检报告**：
@@ -159,7 +158,7 @@
 
       不可分享 —— 健康线的产出是私密记录，只能本人下载。
     -->
-    <t-card blur="{{blurOk}}" anim="{{animType}}" class="block-gap">
+    <view class="health-section">
       <text class="sub-title">带去医院的材料</text>
       <text class="small">把体重、免疫与分诊记录导成一份 PDF，就医时给兽医看。不是体检报告，也不含诊断结论。</text>
 
@@ -176,17 +175,17 @@
       <t-button type="ghost" block anim="{{animType}}" loading="{{documentBusy}}" class="block-gap" bindtap="exportDocument">导出健康档案</t-button>
       <t-button wx:if="{{canBuyDocument}}" type="ai" block anim="{{animType}}" loading="{{documentBusy}}" class="block-gap" bindtap="buyDocument">购买一次导出</t-button>
       <text wx:if="{{documentHint}}" class="hint">{{documentHint}}</text>
-    </t-card>
+    </view>
 
-    <view wx:if="{{sessions.length}}" class="list block-gap">
+    <view wx:if="{{sessions.length}}" class="health-section health-history">
       <text class="sub-title">之前的记录</text>
-      <t-card wx:for="{{sessions}}" wx:key="id" blur="{{blurOk}}" anim="{{animType}}">
+      <view wx:for="{{sessions}}" wx:key="id" class="history-item">
         <view class="row">
           <t-tag tone="{{item.levelTone}}" size="mini" text="{{item.levelText}}"></t-tag>
           <text class="small">{{item.dateText}}</text>
         </view>
         <text class="small">{{item.description}}</text>
-      </t-card>
+      </view>
     </view>
   </block>
 </view>

@@ -138,8 +138,8 @@ const CONSTANT_VARS = {
   "--radius-md": "24rpx",
   "--radius-lg": "32rpx",
   "--radius-xl": "48rpx",
-  "--radius-image-hero": "40rpx",
-  "--radius-image-thumb": "24rpx",
+  "--radius-image-hero": "16rpx",
+  "--radius-image-thumb": "16rpx",
   "--radius-clay": "56rpx",
   "--radius-none": "0",
   // t-empty 的线条插画形状常量：门禁只豁免单值 50%，非对称的有机形状须登记为 token
@@ -159,14 +159,15 @@ const CONSTANT_VARS = {
   "--fw-medium": "500",
   "--fw-bold": "700",
   "--fw-black": "800",
-  "--ls-tight": "-0.02em",
-  "--ls-tighter": "-0.04em",
-  "--ls-kicker": "0.24em",
-  "--ls-cover": "0.3em",
+  "--ls-tight": "0",
+  "--ls-tighter": "0",
+  "--ls-kicker": "0",
+  "--ls-cover": "0",
 
   // ── 图片比例（方案 2.5）──────────────────────────────────────────────────
   "--ratio-hero": "16 / 10",
   "--ratio-card": "3 / 4",
+  "--ratio-portrait": "9 / 16",
   "--ratio-cover": "4 / 3",
   "--ratio-square": "1 / 1",
   "--on-image-primary": "#FFFFFF",
@@ -377,7 +378,7 @@ function deriveScale(tokens, themeId) {
     // 1.28 对应方案 2.3 的 display 56rpx（相对 h1 44rpx）；旧的 1.6 会把 light
     // 顶到 70rpx、cute 顶到 77rpx，login 的四字标题在 375pt 屏上要折行。
     "--font-display": rpx(title, 1.28),
-    "--eyebrow-tracking": rpx(tokens.eyebrowSize, 0.2),
+    "--eyebrow-tracking": "0",
     "--ai-gradient": `linear-gradient(${tokens.aiGradientAngle},${tokens.aiGradientStart},${tokens.aiGradientEnd})`,
     // 弹层遮罩：由文字主色降透明度得到，亮色主题自然得到深遮罩、暗色主题得到浅遮罩
     "--mask": withAlpha(tokens.textPrimary, 0.45),

@@ -1,0 +1,14 @@
+{
+  "id": "sailboat-holiday",
+  "title": "帆船甲板假日",
+  "description": "迎着海风 · 轻松远眺",
+  "samplePet": "golden",
+  "prompt": "Use case: finished public sample for a premium photorealistic pet art-photo series. Edit Image 1 into a new real editorial photograph. Keep the same adult golden retriever from Image 1, with its warm golden coat, floppy ears, dark eyes, black nose and naturally joyful face; no other breed, no Ragdoll cat. One pet only. Vertical 3:4 image. Show the complete natural head, body and paws; leave 8% safety margin around the pet. Pet occupies 45-65% of frame height, with face and eyes sharp and unobstructed. Scene, composition, mood, styling and props: A real small sailboat moored in calm blue water, with striped canvas sail, rope coils and a low safe deck. The pet wears a cream-and-blue sailor collar, sits securely on the deck and gazes toward the horizon with a gentle open-mouth expression. Clear midday light, visible paws and sailboat context, no logos or text. Use real fabric, physical props and believable contact shadows. Young, playful, polished visual style with crisp daylight or practical studio light. No people or hands, duplicate pets, extra limbs, CGI, illustration, logos, readable text or watermark. Return one image only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/source/dog-golden.jpg",
+  "referenceSha256": "1b6348ce4f6cd1d12f4c93d5f2a8a5c21847e0ce9bc43e4326c1ee89f7a89eef",
+  "output": "tools/imagegen/out/scenes/scene-sailboat-holiday-v4.jpg",
+  "sha256": "09c7ec74bcc6523bb3af592f9847f524aea75bd8c689f24774d9c782c9a1bc39",
+  "review": "pending-visual-review"
+}

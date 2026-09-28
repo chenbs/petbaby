@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import sharp from "sharp";
 import { getDatabase, resetDatabaseForTest } from "@/server/db/client";
-import { createAiRun, getAiRun, processNextAiRun, selectAiCandidate, unlockAiCandidate, createInteractiveSession, appendInteractiveEvent, listInteractiveEvents, scheduleUpcomingReminders, createPhysicalOrder, createAnnualReport, payPhysicalOrder, createExperiment, updateExperiment, rollbackExperiment, updatePhysicalOrderStatus } from "@/server/growth-service";
+import { createAiRun, getAiRun, processNextAiRun, selectAiCandidate, unlockAiCandidate, createInteractiveSession, appendInteractiveEvent, listInteractiveEvents, scheduleUpcomingReminders, createPhysicalOrder, createAnnualReport, payPhysicalOrder, createExperiment, updateExperiment, rollbackExperiment, updatePhysicalOrderStatus, expirePastDueMemberships } from "@/server/growth-service";
 import { decryptAddress } from "@/server/commerce/address";
 import { objectStorage } from "@/server/storage";
 import { payOrder, deletePhoto } from "@/server/platform-service";
@@ -24,13 +24,38 @@ describe("stage two growth services", () => {
     await objectStorage.put(MASTER_KEY, new TextEncoder().encode("owned-master"), "image/webp");
   });
 
-  it("queues AI runs and persists four candidates with selectable unlock", async () => {
+  it("expires memberships only after three full days past due", async () => {
+    const database = await getDatabase();
+    const now = new Date("2026-09-27T12:00:00Z");
+    const cases = [
+      { id: crypto.randomUUID(), status: "past_due", updatedAt: "2026-09-24T11:59:59Z" },
+      { id: crypto.randomUUID(), status: "past_due", updatedAt: "2026-09-24T12:00:00Z" },
+      { id: crypto.randomUUID(), status: "active", updatedAt: "2026-09-23T12:00:00Z" },
+    ];
+    for (const item of cases) {
+      await database.query(
+        "INSERT INTO memberships (id,user_id,plan,status,quota,used,expires_at,created_at,status_updated_at) VALUES ($1,$2,'yearly',$3,5,1,$4,$4,$5)",
+        [item.id, USER, item.status, now, new Date(item.updatedAt)],
+      );
+    }
+
+    expect(await expirePastDueMemberships(now)).toBe(1);
+    const rows = await database.query<{ id: string; status: string; quota: number; used: number }>(
+      "SELECT id,status,quota,used FROM memberships WHERE user_id=$1", [USER],
+    );
+    const byId = new Map(rows.map((row) => [row.id, row]));
+    expect(byId.get(cases[0].id)).toMatchObject({ status: "expired", quota: 0, used: 0 });
+    expect(byId.get(cases[1].id)).toMatchObject({ status: "past_due", quota: 5, used: 1 });
+    expect(byId.get(cases[2].id)).toMatchObject({ status: "active", quota: 5, used: 1 });
+  });
+
+  it("queues AI runs and persists two candidates with selectable unlock", async () => {
     const run = await createAiRun(USER, { pluginId: "pl-10", petId: PET, photoIds: [PHOTO], prompt: "a cat", idempotencyKey: "ai-test-run-1" });
     expect(run.status).toBe("queued");
     expect(run.roleInputs).toMatchObject({ subjectMode: "pet", templateId: "pet-expression-grid", petPhotoIds: [PHOTO] });
     expect((await processNextAiRun())?.status).toBe("succeeded");
     const ready = await getAiRun(USER, run.id);
-    expect(ready.candidates).toHaveLength(4);
+    expect(ready.candidates).toHaveLength(2);
     const selected = await Promise.all([selectAiCandidate(USER, run.id, ready.candidates[0].id), selectAiCandidate(USER, run.id, ready.candidates[0].id)]);
     expect(selected[0].workId).toBe(selected[1].workId);
     expect(await (await getDatabase()).query("SELECT id FROM works WHERE source_id=$1", [run.id])).toHaveLength(1);
@@ -57,7 +82,7 @@ describe("stage two growth services", () => {
     expect(run.prompt).toContain("green dinosaur hoodie and leans against the plush toy");
     expect(run.prompt).toContain("Image 1 as the sole pet identity reference");
     expect((await processNextAiRun())?.status).toBe("succeeded");
-    expect((await getAiRun(USER, run.id)).candidates).toHaveLength(4);
+    expect((await getAiRun(USER, run.id)).candidates).toHaveLength(2);
   });
 
   it("候选完成后删除原照，不能再创建引用该照片的新作品", async () => {

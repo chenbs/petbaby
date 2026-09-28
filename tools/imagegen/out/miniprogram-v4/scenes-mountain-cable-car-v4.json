@@ -1,0 +1,14 @@
+{
+  "id": "mountain-cable-car",
+  "title": "山顶缆车乘客",
+  "description": "车厢望远 · 警觉好奇",
+  "samplePet": "poodle",
+  "prompt": "Use case: finished public sample for a premium photorealistic pet art-photo series. Edit Image 1 into a new real editorial photograph. Keep the same adult gray toy poodle from Image 1, with compact build, charcoal curly coat, lighter gray muzzle, floppy ears and dark eyes; no other breed, no Ragdoll cat. One pet only. Vertical 3:4 image. Show the complete natural head, body and paws; leave 8% safety margin around the pet. Pet occupies 45-65% of frame height, with face and eyes sharp and unobstructed. Scene, composition, mood, styling and props: Inside a stationary mountain cable-car cabin with a large clear window, distant snowy ridges and warm woven seat fabric. The pet wears a padded teal vest and soft mustard scarf, stands safely on the seat with paws visible and looks toward the landscape. Bright cold daylight, believable glass reflections, no snow covering the pet, no text. Use real fabric, physical props and believable contact shadows. Young, playful, polished visual style with crisp daylight or practical studio light. No people or hands, duplicate pets, extra limbs, CGI, illustration, logos, readable text or watermark. Return one image only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/scenes-v3/identity-gray-toy-poodle-v1.jpg",
+  "referenceSha256": "f0db84c8923312412c2c63a4c5d3fdbb1d1bc14d3cca7febecf28d7cad906541",
+  "output": "tools/imagegen/out/scenes/scene-mountain-cable-car-v4.jpg",
+  "sha256": "92450690e20270aad8533b136a10cef83beae5be92716469671dba304e317800",
+  "review": "pending-visual-review"
+}

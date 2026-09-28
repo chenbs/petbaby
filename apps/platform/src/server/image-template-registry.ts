@@ -248,8 +248,9 @@ export function listPublicImageTemplateEntries() {
     .filter((entry) => entry.templates.length > 0);
 }
 
-export function getImageTemplateCandidateCount(template: ImageTemplateDefinition): 2 | 4 {
-  return template.subjectMode === "pet-human" ? 2 : 4;
+export function getImageTemplateCandidateCount(template: ImageTemplateDefinition): 2 {
+  void template;
+  return 2;
 }
 
 export function imageTemplateSupportsReroll(template: ImageTemplateDefinition) {

@@ -11,7 +11,38 @@
 .chooser {
   display: flex;
   width: 100%;
+  height: 88rpx;
+  border-bottom: 2rpx solid var(--divider-soft);
   white-space: nowrap;
+}
+
+.chooser .option {
+  width: auto;
+  min-height: 88rpx;
+  box-sizing: border-box;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 var(--space-4);
+  border: 0;
+  border-bottom: 4rpx solid transparent;
+  border-radius: 0;
+  background: transparent;
+}
+
+.chooser .option + .option {
+  margin-left: 0;
+}
+
+.chooser .option .small {
+  display: none;
+}
+
+.chooser .option-on {
+  border-bottom-color: var(--primary);
+}
+
+.chooser .option-on .option-name {
+  color: var(--primary);
 }
 
 .option {
@@ -22,7 +53,7 @@
   flex-shrink: 0;
   gap: var(--space-1);
   padding: var(--space-4);
-  border: 2rpx solid var(--border);
+  border: 2rpx solid transparent;
   border-radius: var(--card-radius);
   background: var(--surface);
   transition: border-color var(--transition-duration) var(--transition-easing), transform var(--transition-duration) var(--transition-easing);
@@ -38,11 +69,32 @@
   gap: var(--gap-item);
 }
 
+.solo-template-image {
+  display: block;
+  width: 100%;
+  height: 1160rpx;
+  aspect-ratio: var(--ratio-portrait);
+  border-radius: var(--radius-image-thumb);
+  background: var(--surface);
+}
+
+.scene-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--gap-item);
+}
+
+.scene-grid .scene-option {
+  width: 100%;
+}
+
 .template-option {
   width: 100%;
   min-width: 0;
-  padding: var(--space-2);
+  padding: 0;
+  border-color: transparent;
   border-radius: var(--radius-image-thumb);
+  background: transparent;
   white-space: normal;
 }
 
@@ -57,7 +109,15 @@
 .option-on {
   border-color: var(--primary);
   background: var(--card-background);
-  box-shadow: 0 0 0 4rpx var(--ai-glow);
+}
+
+.template-option.option-on {
+  border-color: transparent;
+  background: transparent;
+}
+
+.template-option.option-on .style-thumb {
+  box-shadow: 0 0 0 4rpx var(--primary);
 }
 
 .option-name {
@@ -76,12 +136,33 @@
 .style-thumb {
   display: block;
   width: 100%;
-  aspect-ratio: var(--ratio-card);
+  height: 588rpx;
+  aspect-ratio: var(--ratio-portrait);
   margin-bottom: var(--space-2);
   border-radius: var(--radius-image-thumb);
   background: var(--skeleton-base);
-  box-shadow: var(--shadow-clay-inset);
 }
+.scene-thumb { height: 440rpx; aspect-ratio: var(--ratio-card); }
+.template-wide { grid-column: span 2; }
+.style-wide { height: 420rpx; aspect-ratio: var(--ratio-hero); }
+.solo-wide { height: 420rpx; aspect-ratio: var(--ratio-hero); }
+.ai-flow { padding-bottom: calc(var(--page-bottom-safe) + var(--space-8) + env(safe-area-inset-bottom)); }
+.flow-steps { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-2); color: var(--text-secondary); font-size: var(--small-size); }
+.flow-current { color: var(--primary); font-weight: var(--fw-bold); }
+.selected-effect { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-5); padding: var(--space-3); border-radius: var(--radius-image-thumb); background: var(--surface); }
+.selected-effect-image { flex: none; width: 100rpx; height: 132rpx; border-radius: var(--radius-image-thumb); background: var(--skeleton-base); }
+.selected-effect-copy { display: grid; gap: var(--space-1); min-width: 0; flex: 1; }
+.selected-effect-copy .sub-title { margin: 0; }
+.change-effect { flex: none; color: var(--primary); font-size: var(--small-size); font-weight: var(--fw-bold); }
+.effect-carousel-section { margin-top: var(--space-4); }
+.effect-swiper { height: 780rpx; margin-top: var(--space-3); }
+.effect-swiper-wide { height: 520rpx; }
+.effect-slide { display: flex; height: 100%; flex-direction: column; align-items: center; }
+.effect-slide-image { display: block; width: 500rpx; height: 666rpx; border-radius: var(--radius-image-thumb); background: var(--surface); }
+.effect-swiper-wide .effect-slide-image { width: 100%; height: 420rpx; }
+.effect-slide-label { display: flex; width: 100%; align-items: baseline; justify-content: space-between; gap: var(--space-3); padding-top: var(--space-2); }
+.effect-slide-label .sub-title { margin: 0; }
+.ai-actions { position: fixed; right: 0; bottom: 0; left: 0; z-index: 10; padding: var(--space-3) var(--page-padding) calc(var(--space-3) + env(safe-area-inset-bottom)); border-top: 2rpx solid var(--divider-soft); background: var(--background); }
 
 .style-thumb-blank {
   display: flex;

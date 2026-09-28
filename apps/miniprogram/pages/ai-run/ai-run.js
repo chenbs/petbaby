@@ -13,7 +13,7 @@ const REROLL_REASONS = [
 // 沉浸式结果确认区用 navigationStyle: "custom"，导航栏同步无效，交给 immersive 跳过
 themedPage({ immersive: true }, {
   data: { run: null, candidates: [], busy: false, message: "", messageType: "info", sharePath: "", loading: true, statusText: "", confirmCancel: false, immersive: false, selectedUrl: "", humanMode: false, rerollReasons: REROLL_REASONS.filter((item) => !item.ownerOnly), rerollReason: "composition" },
-  onLoad(query) { this.runId = query.id; this.poll(); },
+  onLoad(query) { this.runId = query.id; if (!this.runId) return this.setData({ loading: false, message: "生成任务链接无效，请从作品柜重新打开。", messageType: "error" }); this.poll(); },
   onUnload() { if (this.timer) clearTimeout(this.timer); },
   onPullDownRefresh() { this.load().finally(() => wx.stopPullDownRefresh()); },
   load() {
@@ -28,7 +28,7 @@ themedPage({ immersive: true }, {
   },
   /**
    * run → 页面派生字段。只有「已完成且已选中」才走沉浸式：
-   * 候选网格与全屏背景互斥：普通玩法四选一，宠物人化二选一。
+   * 候选网格与全屏背景互斥，所有新任务均二选一。
    */
   deriveRun(run, candidateList) {
     const candidates = candidateList || this.data.candidates;

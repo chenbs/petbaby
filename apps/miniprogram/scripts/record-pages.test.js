@@ -13,6 +13,7 @@ function loadPage(name, dependencies, wx) {
       const key = name.split("/").pop();
       if (dependencies[key]) return dependencies[key];
       if (key === "companion") return require("../services/companion");
+      if (key === "sample-assets") return require("../services/sample-assets");
       if (key === "record-events") return { recordSession: () => ({ opened() {}, viewed() {}, deliverable() {} }) };
       return {};
     }, wx, console, setTimeout, clearTimeout

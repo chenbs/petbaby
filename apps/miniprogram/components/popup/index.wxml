@@ -1,5 +1,5 @@
 <view wx:if="{{visible}}" class="mask" catchtouchmove="noop" bindtap="handleClose">
-  <view class="sheet" catchtap="noop">
+  <view class="sheet {{tall ? 'sheet-tall' : ''}}" catchtap="noop">
     <view class="sheet-head">
       <view class="sheet-title">{{title}}</view>
       <view class="sheet-close hit-area" aria-role="button" aria-label="关闭" catchtap="handleClose">×</view>

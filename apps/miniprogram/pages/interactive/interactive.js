@@ -13,7 +13,7 @@ themedPage({
     scenePresets: scenes.SCENE_PRESETS, sceneStyle: scenes.getSceneStyle("stardust"),
     busy: false, message: "", messageType: "info", loading: true, exportText: "", editing: false, confirmRevoke: false
   },
-  onLoad(query) { this.sessionId = query.id; this.token = query.token; this.source = query.source || "miniprogram-share"; this.visitorKey = wx.getStorageSync("petbaby_interactive_visitor") || (Date.now() + "-" + Math.random()); wx.setStorageSync("petbaby_interactive_visitor", this.visitorKey); this.load(); },
+  onLoad(query) { this.sessionId = query.id; this.token = query.token; this.source = query.source || "miniprogram-share"; if (!this.sessionId && !this.token) return this.setData({ loading: false, message: "互动页链接无效，请从作品柜重新打开。", messageType: "error" }); this.visitorKey = wx.getStorageSync("petbaby_interactive_visitor") || (Date.now() + "-" + Math.random()); wx.setStorageSync("petbaby_interactive_visitor", this.visitorKey); this.load(); },
   onUnload() { if (this.timer) clearTimeout(this.timer); if (this.data.publicMode && this.startedAt) api.request("/api/interactive-share/" + this.token, { method: "POST", data: { name: "duration", visitorKey: this.visitorKey, source: this.source, durationMs: Date.now() - this.startedAt, payload: {} } }).catch(() => undefined); },
   onPullDownRefresh() { this.load().finally(() => wx.stopPullDownRefresh()); },
   load() {

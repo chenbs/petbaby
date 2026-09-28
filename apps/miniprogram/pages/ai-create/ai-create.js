@@ -1,12 +1,14 @@
 const api = require("../../services/api");
 const { displayMediaTree: withPrivatePreviews } = require("../../services/photo-files");
 const { themedPage } = require("../../theme/page-mixin");
+const { pluginSample, imageEntries } = require("../../services/sample-assets");
 
 themedPage({
   data: {
     pets: [], petId: "", petText: "", photos: [], photoIds: [],
-    entries: [], entryId: "", templates: [], templateId: "", activeTemplate: null,
-    artPlugin: null, sceneOptions: [], sceneId: "window-morning",
+    entries: [], entryId: "", entryTitle: "", templates: [], carouselTemplates: [], templateId: "", templateIndex: 0, activeTemplate: null,
+    artPlugin: null, sceneOptions: [], sceneId: "window-morning", selectedScene: null,
+    stage: "samples",
     ownerPhotos: [], ownerPhotoIds: [], authorizationConfirmed: false,
     busy: false, error: "", loading: true, catalogLoading: true
   },
@@ -25,30 +27,41 @@ themedPage({
       api.request("/api/plugins")
     ]).then((results) => {
       const pets = results[0] || [];
-      const entries = (results[1] && results[1].entries) || [];
-      const artPlugin = (results[3] || []).find((item) => item.id === "pl-10") || null;
+      const entries = imageEntries(results[1] && results[1].entries);
+      const artSource = (results[3] || []).find((item) => item.id === "pl-10");
+      const artPlugin = artSource ? pluginSample(artSource) : null;
       const sceneOptions = artPlugin && artPlugin.samples && artPlugin.samples.sceneOptions
         ? artPlugin.samples.sceneOptions.map((item) => Object.assign({}, item, { url: artPlugin.samples.sceneUrls && artPlugin.samples.sceneUrls[item.id] || "" }))
         : [];
       const selectedPet = query && query.petId ? pets.find((item) => item.id === query.petId) : pets.find((item) => item.isDefault) || pets[0];
       if (query && query.petId && !selectedPet) throw new Error("这只宠物的档案不可用，请重新选择");
-      const entry = entries.find((item) => item.id === "art") || entries[0];
-      const template = entry && entry.templates[0];
+      const entry = entries.find((item) => item.id === query.entryId)
+        || entries.find((item) => item.templates.some((template) => template.templateId === query.templateId))
+        || entries.find((item) => item.id === "art") || entries[0];
+      const template = entry && (entry.templates.find((item) => item.templateId === query.templateId) || entry.templates[0]);
+      const sceneId = query && query.sceneId && sceneOptions.some((item) => item.id === query.sceneId)
+        ? query.sceneId : sceneOptions.length ? sceneOptions[0].id : "window-morning";
       this.setData({
         pets,
         petId: selectedPet ? selectedPet.id : "",
         petText: selectedPet ? selectedPet.name : "",
         entries,
         entryId: entry ? entry.id : "",
+        entryTitle: entry ? entry.title : "",
         templates: entry ? entry.templates : [],
+        carouselTemplates: entry ? entry.templates.filter((item) => item.templateId !== "pet-art-photo") : [],
         templateId: template ? template.templateId : "",
+        templateIndex: entry && template ? Math.max(0, entry.templates.filter((item) => item.templateId !== "pet-art-photo").findIndex((item) => item.templateId === template.templateId)) : 0,
         activeTemplate: template || null,
         artPlugin,
         sceneOptions,
-        sceneId: sceneOptions.length ? sceneOptions[0].id : "window-morning",
+        sceneId,
+        selectedScene: sceneOptions.find((item) => item.id === sceneId) || null,
+        stage: template && template.templateId === "pet-art-photo" && !query.sceneId ? "samples" : "photos",
         loading: false,
         catalogLoading: false
       });
+      if (wx.setNavigationBarTitle && template) wx.setNavigationBarTitle({ title: template.templateId === "pet-art-photo" ? "宠物艺术写真" : template.title });
       if (selectedPet) this.loadPhotos(selectedPet.id);
       return withPrivatePreviews(results[2] || []);
     }).then((ownerPhotos) => this.setData({ ownerPhotos })).catch((error) => this.setData({ error: error.message, loading: false, catalogLoading: false }));
@@ -77,8 +90,11 @@ themedPage({
     const template = entry && entry.templates[0];
     this.setData({
       entryId: id,
+      entryTitle: entry ? entry.title : "",
       templates: entry ? entry.templates : [],
+      carouselTemplates: entry ? entry.templates.filter((item) => item.templateId !== "pet-art-photo") : [],
       templateId: template ? template.templateId : "",
+      templateIndex: 0,
       activeTemplate: template || null,
       ownerPhotoIds: [],
       authorizationConfirmed: false
@@ -87,23 +103,47 @@ themedPage({
   chooseTemplate(event) {
     const id = event.currentTarget.dataset.id;
     const template = this.data.templates.find((item) => item.templateId === id);
-    this.setData({ templateId: id, activeTemplate: template || null, ownerPhotoIds: [], authorizationConfirmed: false });
+    this.setData({ templateId: id, templateIndex: this.data.templates.findIndex((item) => item.templateId === id), activeTemplate: template || null, ownerPhotoIds: [], authorizationConfirmed: false, stage: "photos", error: "" });
+    if (wx.setNavigationBarTitle && template) wx.setNavigationBarTitle({ title: template.title });
+  },
+  swipeTemplate(event) {
+    const template = this.data.carouselTemplates[Number(event.detail.current)];
+    if (!template || template.templateId === this.data.templateId) return;
+    this.setData({ templateId: template.templateId, templateIndex: Number(event.detail.current), activeTemplate: template, ownerPhotoIds: [], authorizationConfirmed: false, error: "" });
+    if (wx.setNavigationBarTitle) wx.setNavigationBarTitle({ title: template.title });
   },
   onTemplateImageError(event) {
     const { id, src } = event.currentTarget.dataset;
     const index = this.data.templates.findIndex((item) => item.templateId === id && item.sampleUrl === src);
-    if (index >= 0) this.setData({ ["templates[" + index + "].sampleUrl"]: "" });
+    if (index < 0) return;
+    const patch = { ["templates[" + index + "].sampleUrl"]: "" };
+    const carouselIndex = this.data.carouselTemplates.findIndex((item) => item.templateId === id && item.sampleUrl === src);
+    if (carouselIndex >= 0) patch["carouselTemplates[" + carouselIndex + "].sampleUrl"] = "";
+    if (this.data.activeTemplate && this.data.activeTemplate.templateId === id) patch["activeTemplate.sampleUrl"] = "";
+    this.setData(patch);
   },
   chooseScene(event) {
     if (this.data.busy) return;
     const id = event.currentTarget.dataset.id;
     if (!this.data.sceneOptions.some((item) => item.id === id)) return;
-    this.setData({ sceneId: id, error: "" });
+    this.setData({ sceneId: id, selectedScene: this.data.sceneOptions.find((item) => item.id === id), stage: "photos", error: "" });
+    this.scrollTop();
+  },
+  scrollTop() { if (wx.pageScrollTo) wx.pageScrollTo({ scrollTop: 0, duration: 180 }); },
+  continueToPhotos() { if (this.data.activeTemplate) { this.setData({ stage: "photos", error: "" }); this.scrollTop(); } },
+  changeSample() {
+    if (this.data.templateId === "pet-art-photo" && this._query && this._query.sceneId) return wx.switchTab({ url: "/pages/art-photo/art-photo" });
+    this.setData({ stage: "samples", error: "" });
+    this.scrollTop();
   },
   onSceneImageError(event) {
     const id = event.currentTarget.dataset.id;
     const index = this.data.sceneOptions.findIndex((item) => item.id === id);
-    if (index >= 0) this.setData({ ["sceneOptions[" + index + "].url"]: "" });
+    if (index >= 0) {
+      const patch = { ["sceneOptions[" + index + "].url"]: "" };
+      if (this.data.selectedScene && this.data.selectedScene.id === id) patch["selectedScene.url"] = "";
+      this.setData(patch);
+    }
   },
   togglePhoto(event) {
     const id = event.detail.id;
@@ -164,5 +204,5 @@ themedPage({
       .then((run) => wx.redirectTo({ url: "/pages/ai-run/ai-run?id=" + run.id }))
       .catch((error) => this.setData({ busy: false, error: error.message }));
   },
-  openPhotos() { wx.navigateTo({ url: "/pages/photos/photos?petId=" + this.data.petId }); }
+  openPhotos() { wx.navigateTo({ url: this.data.petId ? "/pages/photos/photos?petId=" + this.data.petId : "/pages/pets/pets" }); }
 });

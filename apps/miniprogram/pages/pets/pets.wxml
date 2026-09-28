@@ -1,7 +1,6 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
 <view class="page page-flat art-pet layout-pet">
-  <text class="eyebrow">PROFILES</text>
   <view class="title">宠物档案</view>
   <t-button class="block-gap" type="primary" anim="{{animType}}" bindtap="newPet">新建宠物档案</t-button>
 
@@ -23,10 +22,10 @@
   ></t-empty>
 
   <view wx:else class="list">
-    <t-card wx:for="{{pets}}" wx:key="id" blur="{{blurOk}}" anim="{{animType}}">
+    <view wx:for="{{pets}}" wx:key="id" class="pet-entry">
       <view class="pet">
-        <image wx:if="{{item.avatarUrl}}" class="pet-avatar" src="{{item.avatarUrl}}" mode="aspectFill" data-kind="list" data-id="{{item.id}}" data-src="{{item.avatarUrl}}" binderror="onAvatarError" />
-        <view wx:else class="pet-avatar pet-avatar-blank">🐾</view>
+        <image wx:if="{{item.imageUrl}}" class="pet-avatar" src="{{item.imageUrl}}" mode="aspectFill" data-kind="list" data-id="{{item.id}}" data-src="{{item.imageUrl}}" binderror="onAvatarError" />
+        <view wx:else class="pet-avatar pet-avatar-blank">{{item.speciesText}}</view>
         <view class="pet-main">
           <view class="row">
             <view class="pet-name">{{item.name}}</view>
@@ -39,21 +38,7 @@
         </view>
       </view>
 
-      <!-- 方案 E 的统计条：三个数字等分，是零成本的留存信息 -->
-      <view class="stats">
-        <view class="stat">
-          <view class="stat-value">{{item.counts.works}}</view>
-          <text class="stat-label">作品</text>
-        </view>
-        <view class="stat">
-          <view class="stat-value">{{item.counts.photos}}</view>
-          <text class="stat-label">照片</text>
-        </view>
-        <view class="stat">
-          <view class="stat-value">{{item.counts.memorials}}</view>
-          <text class="stat-label">纪念日</text>
-        </view>
-      </view>
+      <text class="small pet-counts">{{item.counts.photos}} 张照片 · {{item.counts.works}} 件作品 · {{item.counts.memorials}} 个纪念日</text>
       <view class="pet-actions">
         <t-button type="primary" size="mini" anim="{{animType}}" data-id="{{item.id}}" bindtap="record">收好照片</t-button>
         <t-button type="secondary" size="mini" anim="{{animType}}" data-id="{{item.id}}" bindtap="timeline">时间线</t-button>
@@ -72,7 +57,7 @@
         <t-button wx:if="{{!item.isDefault}}" type="ghost" size="mini" anim="{{animType}}" data-id="{{item.id}}" bindtap="setDefault">设为默认</t-button>
         <t-button type="ghost" size="mini" anim="{{animType}}" data-id="{{item.id}}" bindtap="askRemove">删除</t-button>
       </view>
-    </t-card>
+    </view>
   </view>
 </view>
 

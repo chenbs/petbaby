@@ -12,6 +12,7 @@ Component({
     animType: "fade",
     items: [
       { pagePath: "/pages/index/index", text: "陪伴", glyph: "✦" },
+      { pagePath: "/pages/art-photo/art-photo", text: "写真", glyph: "▣" },
       { pagePath: "/pages/works/works", text: "作品", glyph: "◈" },
       { pagePath: "/pages/me/me", text: "我的", glyph: "◉" }
     ]

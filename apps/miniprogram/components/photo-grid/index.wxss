@@ -22,6 +22,22 @@
   height: 100%;
 }
 
+.grid-featured .tile {
+  aspect-ratio: auto;
+  min-height: var(--space-8);
+  border-color: transparent;
+  border-radius: var(--radius-image-hero);
+}
+
+.grid-featured .tile-image {
+  height: auto;
+  display: block;
+}
+
+.grid-featured .tile-picked {
+  border-color: var(--primary);
+}
+
 .tile-image-blank {
   display: flex;
   box-sizing: border-box;

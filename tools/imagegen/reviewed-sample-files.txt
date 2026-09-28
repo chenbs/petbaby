@@ -33,3 +33,16 @@ scenes/scene-cafe-afternoon-v3.jpg
 scenes/scene-lakeside-sunset-v4.jpg
 scenes/scene-city-rain-v3.jpg
 scenes/scene-spring-picnic-v4.jpg
+# Reviewed on 2026-09-28: 4 golden retriever, 4 toy poodle, 4 British Shorthair scenes.
+scenes/scene-railway-traveler-v4.jpg
+scenes/scene-tennis-champion-v4.jpg
+scenes/scene-greenhouse-gardener-v4.jpg
+scenes/scene-sailboat-holiday-v4.jpg
+scenes/scene-berry-pastry-chef-v4.jpg
+scenes/scene-paper-flower-window-v4.jpg
+scenes/scene-mountain-cable-car-v4.jpg
+scenes/scene-laundry-day-v4.jpg
+scenes/scene-museum-curator-v4.jpg
+scenes/scene-poolside-vacation-v4.jpg
+scenes/scene-post-office-v4.jpg
+scenes/scene-ballet-backstage-v4.jpg

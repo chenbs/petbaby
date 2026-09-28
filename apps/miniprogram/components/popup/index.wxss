@@ -31,6 +31,8 @@
   animation: sheet-up var(--dur-slow) var(--ease-out);
 }
 
+.sheet-tall { height: 82vh; }
+
 @keyframes sheet-up {
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
@@ -63,6 +65,14 @@
   padding: var(--space-4) 0;
 }
 
+.sheet-tall .sheet-body {
+  height: 0;
+  min-height: 0;
+  max-height: none;
+  flex: 1;
+}
+
 .sheet-foot {
+  flex: none;
   padding-top: var(--space-2);
 }

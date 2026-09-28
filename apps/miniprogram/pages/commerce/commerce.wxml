@@ -1,7 +1,6 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
 <view class="page page-flat art-brand layout-workbench">
-  <text class="eyebrow">MEMBERSHIP</text>
   <view class="title">会员与年度报告</view>
 
   <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
@@ -55,13 +54,13 @@
           anim="{{animType}}"
         >
           <view class="plan-head">
-            <text class="small strong">{{item.label}}</text>
+            <text class="sub-title">{{item.label}}</text>
             <t-tag wx:if="{{item.badge}}" tone="accent" size="mini" text="{{item.badge}}"></t-tag>
           </view>
           <view class="plan-price">{{item.priceText}}</view>
           <text wx:if="{{item.hint}}" class="small">{{item.hint}}</text>
           <view class="plan-benefits">
-            <text wx:for="{{item.benefitTexts}}" wx:for-item="benefit" wx:key="*this" class="small benefit">· {{benefit}}</text>
+            <text wx:for="{{item.benefitTexts}}" wx:for-item="benefit" wx:key="*this" class="benefit">· {{benefit}}</text>
           </view>
           <t-button
             type="{{item.period === 'year' ? 'primary' : 'secondary'}}"
@@ -169,7 +168,6 @@
     <!-- 实体纪念品入口行（需求 5.19-5） -->
     <view class="section">
       <view class="entry-row tappable anim-{{animType}}" aria-role="button" bindtap="goPhysical">
-        <view class="entry-icon">📦</view>
         <view class="entry-main">
           <view class="sub-title">实体纪念品订单</view>
           <text class="small">把已解锁的作品印出来，寄到家里。</text>

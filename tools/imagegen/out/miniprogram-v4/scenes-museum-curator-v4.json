@@ -1,0 +1,14 @@
+{
+  "id": "museum-curator",
+  "title": "琥珀博物馆",
+  "description": "展柜前驻足 · 沉静凝视",
+  "samplePet": "british",
+  "prompt": "Use case: finished public sample for a premium photorealistic pet art-photo series. Edit Image 1 into a new real editorial photograph. Keep the same adult blue British Shorthair cat from Image 1, with round face, dense solid gray coat, copper-amber eyes and small upright ears; no other breed, no Ragdoll cat. One pet only. Vertical 3:4 image. Show the complete natural head, body and paws; leave 8% safety margin around the pet. Pet occupies 45-65% of frame height, with face and eyes sharp and unobstructed. Scene, composition, mood, styling and props: A small design museum gallery with amber glass display cases, sculptural ceramic objects, pale stone floor and soft spotlights. The pet wears a narrow burgundy velvet bow collar, sits naturally beside a low exhibit plinth and looks slightly past camera. Refined warm amber and cool gray palette, no readable labels or text. Use real fabric, physical props and believable contact shadows. Young, playful, polished visual style with crisp daylight or practical studio light. No people or hands, duplicate pets, extra limbs, CGI, illustration, logos, readable text or watermark. Return one image only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/source/cat-british.jpg",
+  "referenceSha256": "ddbdfb39b6cb3c6dddbfdd01555cd2fea299cfa927f76a1e7248d581152e0364",
+  "output": "tools/imagegen/out/scenes/scene-museum-curator-v4.jpg",
+  "sha256": "ecba3a50b34d8067c69a5e810f1e2c82ecf4f8c74a27f4f7c315cfd9eb30dcc7",
+  "review": "pending-visual-review"
+}

@@ -1,7 +1,6 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
 <view class="page page-flat art-brand layout-matrix">
-  <text class="eyebrow">KEEPSAKE</text>
   <view class="title">实体纪念品</view>
   <text class="muted">把它的作品印出来，寄到你手上。</text>
 

@@ -9,6 +9,7 @@ function loadPage(name, dependencies, wx) {
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, "../pages", name, name + ".js"), "utf8"), {
     require(module) {
       if (module.endsWith("page-mixin")) return { themedPage: (options, page) => { definition = page || options; } };
+      if (module.endsWith("sample-assets")) return require("../services/sample-assets");
       return dependencies[module.split("/").pop()] || {};
     },
     wx, console
@@ -19,8 +20,8 @@ function loadPage(name, dependencies, wx) {
   });
 }
 
-test("艺术写真展示十二套场景并提交所选场景", async () => {
-  const ids = ["window-morning", "garden-curious", "studio-confident", "night-playful", "seaside-breeze", "library-whisper", "autumn-leaves", "snow-cabin", "cafe-afternoon", "lakeside-sunset", "city-rain", "spring-picnic"];
+test("艺术写真展示二十四套场景并提交所选场景", async () => {
+  const ids = ["window-morning", "garden-curious", "studio-confident", "night-playful", "seaside-breeze", "library-whisper", "autumn-leaves", "snow-cabin", "cafe-afternoon", "lakeside-sunset", "city-rain", "spring-picnic", "railway-traveler", "tennis-champion", "greenhouse-gardener", "sailboat-holiday", "berry-pastry-chef", "paper-flower-window", "mountain-cable-car", "laundry-day", "museum-curator", "poolside-vacation", "post-office", "ballet-backstage"];
   let submitted;
   const page = loadPage("ai-create", {
     api: { request: async (url, options) => {
@@ -36,12 +37,48 @@ test("艺术写真展示十二套场景并提交所选场景", async () => {
   }, { redirectTo() {} });
   page.onLoad({});
   await new Promise((resolve) => setImmediate(resolve));
-  assert.equal(page.data.sceneOptions.length, 12);
-  page.chooseScene({ currentTarget: { dataset: { id: "spring-picnic" } } });
+  assert.equal(page.data.sceneOptions.length, 24);
+  page.chooseScene({ currentTarget: { dataset: { id: "ballet-backstage" } } });
+  assert.equal(page.data.stage, "photos");
   page.setData({ photoIds: ["photo"] });
   page.create();
   await new Promise((resolve) => setImmediate(resolve));
-  assert.equal(submitted.options.scene, "spring-picnic");
+  assert.equal(submitted.options.scene, "ballet-backstage");
+});
+
+test("写真底栏按六组展示二十四套场景并直达照片选择", async () => {
+  const ids = ["window-morning", "garden-curious", "studio-confident", "cafe-afternoon", "seaside-breeze", "library-whisper", "autumn-leaves", "lakeside-sunset", "night-playful", "snow-cabin", "city-rain", "spring-picnic", "railway-traveler", "tennis-champion", "greenhouse-gardener", "sailboat-holiday", "berry-pastry-chef", "paper-flower-window", "mountain-cable-car", "laundry-day", "museum-curator", "poolside-vacation", "post-office", "ballet-backstage"];
+  const urls = [];
+  const page = loadPage("art-photo", {
+    api: { request: async () => [{ id: "pl-10", samples: {
+      sceneOptions: ids.map((id) => ({ id, title: id, description: id })),
+      sceneUrls: Object.fromEntries(ids.map((id) => [id, id + ".jpg"]))
+    } }] }
+  }, { navigateTo: ({ url }) => urls.push(url) });
+  page.onLoad();
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.deepEqual(Array.from(page.data.collections, (group) => group.scenes.length), [4, 4, 4, 4, 4, 4]);
+  page.chooseScene({ currentTarget: { dataset: { id: "post-office" } } });
+  assert.match(urls[0], /templateId=pet-art-photo&sceneId=post-office/);
+});
+
+test("首页独立艺术模板直达指定样片", async () => {
+  const page = loadPage("ai-create", {
+    api: { request: async (url) => {
+      if (url === "/api/pets" || url === "/api/owner-photos") return [];
+      if (url === "/api/plugins") return [{ id: "pl-10", samples: { sceneOptions: [], sceneUrls: {} } }];
+      if (url === "/api/image-templates") return { entries: [{ id: "art", title: "艺术肖像", templates: [
+        { templateId: "pet-art-photo", title: "宠物艺术写真", subjectMode: "pet" },
+        { templateId: "ink-portrait", title: "黑白水墨肖像", subjectMode: "pet" }
+      ] }] };
+      throw new Error(url);
+    } },
+    "photo-files": { displayMediaTree: async (items) => items }
+  }, {});
+  page.onLoad({ entryId: "art", templateId: "ink-portrait" });
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(page.data.templateId, "ink-portrait");
+  assert.equal(page.data.activeTemplate.title, "黑白水墨肖像");
 });
 
 test("纪念访客照下载为可显示临时路径，单张失败保留占位", async () => {
@@ -86,6 +123,58 @@ test("首页玩法主图失败后降级为可进入的文字卡", () => {
   assert.equal(page.data.gridPlugins[0].id, "pl-10");
   assert.equal(page.data.gridPlugins[0].samples.heroUrl, "");
   assert.equal(page.data.gridPlugins[1].id, "pl-15");
+});
+
+test("首页模板样片直接进入对应玩法，电影与画册样片保持所选参数", () => {
+  const urls = [];
+  const home = loadPage("index", {}, { navigateTo: (item) => urls.push(item.url) });
+  home.data.pet = { id: "pet-1" };
+  home.startTemplate({ currentTarget: { dataset: { entry: "fun", template: "pet-wanted-poster" } } });
+  assert.match(urls[0], /entryId=fun&templateId=pet-wanted-poster&petId=pet-1/);
+
+  const drafts = [];
+  const create = loadPage("create", {}, {
+    getStorageSync: () => "session",
+    setStorageSync: (key, value) => drafts.push([key, value])
+  });
+  create._draftKey = "draft";
+  create._sessionToken = "session";
+  create.data.pet = { id: "pet-1" };
+  create.data.plugin = { input: { photos: { min: 1, max: 3 } } };
+  create.data.pluginId = "pet-movie-poster";
+  create.chooseSample({ currentTarget: { dataset: { id: "hongkong" } } });
+  assert.equal(create.data.style, "hongkong");
+  assert.equal(drafts[drafts.length - 1][1].style, "hongkong");
+  create.swipeSample({ detail: { current: 1 } });
+  assert.equal(create.data.style, "arthouse");
+  create.data.pluginId = "pet-time-album";
+  create.chooseSample({ currentTarget: { dataset: { id: "birthday" } } });
+  assert.equal(create.data.theme, "birthday");
+  assert.equal(drafts[drafts.length - 1][1].theme, "birthday");
+  create.swipeSample({ detail: { current: 3 } });
+  assert.equal(create.data.theme, "holiday");
+});
+
+test("非写真模板横滑即时选中并保持照片阶段", () => {
+  const page = loadPage("ai-create", {}, { setNavigationBarTitle() {} });
+  page.data.stage = "photos";
+  page.data.carouselTemplates = [
+    { templateId: "one", title: "效果一", subjectMode: "pet" },
+    { templateId: "two", title: "效果二", subjectMode: "owner-pet" }
+  ];
+  page.data.templateId = "one";
+  page.swipeTemplate({ detail: { current: 1 } });
+  assert.equal(page.data.templateId, "two");
+  assert.equal(page.data.activeTemplate.title, "效果二");
+  assert.equal(page.data.stage, "photos");
+});
+
+test("互动场景横滑即时更新场景与预览", () => {
+  const page = loadPage("interactive-create", { "scene-presets": { SCENE_PRESETS: [{ id: "stardust" }, { id: "meadow" }], getSceneStyle: (id) => "scene=" + id } }, {});
+  page.data.scenePresets = [{ id: "stardust" }, { id: "meadow" }];
+  page.swipeScene({ detail: { current: 1 } });
+  assert.equal(page.data.theme, "meadow");
+  assert.equal(page.data.sceneStyle, "scene=meadow");
 });
 
 test("旧列表的图片错误不会覆盖筛选后同位置的新作品", () => {

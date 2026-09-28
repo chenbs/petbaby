@@ -21,7 +21,8 @@ Component({
     removable: { type: Boolean, value: false },
     previewable: { type: Boolean, value: true },
     anim: { type: String, value: "fade" },
-    columns: { type: Number, value: 3 }
+    columns: { type: Number, value: 3 },
+    featured: { type: Boolean, value: false }
   },
   data: { tiles: [], dragIndex: -1 },
   observers: {

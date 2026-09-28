@@ -15,10 +15,8 @@
   min-height: 88rpx;
   align-content: center;
   gap: var(--space-1);
-  padding: var(--space-2) var(--space-3);
-  border: 2rpx solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
+  padding: var(--space-2) 0;
+  border-bottom: 2rpx solid var(--divider-soft);
 }
 
 .filter-label {
@@ -35,9 +33,13 @@
   white-space: nowrap;
 }
 
-.list {
-  display: grid;
-  gap: var(--space-3);
+.task-entry {
+  padding: var(--space-4) 0;
+  border-bottom: 2rpx solid var(--divider-soft);
+}
+
+.pending-works {
+  padding-top: var(--space-4);
 }
 
 .task-progress {
@@ -83,29 +85,16 @@
 }
 
 /* 压图文字必读性靠遮罩保证；基色是暖褐而非纯黑，见方案 A 落地要点 */
-.veil {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 62%;
-  background: var(--veil-image);
-  pointer-events: none;
-}
-
 .cover-tag {
   position: absolute;
   top: var(--space-2);
   left: var(--space-2);
 }
 
-.cover-meta {
-  position: absolute;
-  right: var(--space-3);
-  bottom: var(--space-3);
-  left: var(--space-3);
+.work-meta {
   display: grid;
   gap: var(--space-0);
+  padding: var(--space-2) 0 var(--space-4);
 }
 
 /*
@@ -113,17 +102,14 @@
  * 遮罩之下永远是暗底，浅色主题若沿用深色正文会彻底看不见。
  */
 .work-title {
-  overflow: hidden;
-  color: var(--on-image-primary);
+  color: var(--text-primary);
   font-size: var(--body-size);
   font-weight: var(--fw-bold);
   line-height: var(--lh-h3);
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  word-break: break-all;
 }
 
 .cover-sub {
-  color: var(--on-image-secondary);
+  color: var(--text-secondary);
   font-size: var(--eyebrow-size);
-  letter-spacing: var(--eyebrow-tracking);
 }

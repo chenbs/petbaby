@@ -1,4 +1,4 @@
-<view class="grid" style="grid-template-columns:repeat({{columns}},1fr)">
+<view class="grid {{featured ? 'grid-featured' : ''}}" style="grid-template-columns:repeat({{columns}},1fr)">
   <view wx:if="{{addable}}" class="tile tile-add anim-{{anim}}" aria-role="button" aria-label="追加照片" hover-class="tile-hover" bindtap="handleAdd">
     <text class="add-mark">＋</text>
     <text class="add-text">添加</text>
@@ -16,7 +16,7 @@
     bindtap="handleTap"
     bindlongpress="handleLongPress"
   >
-    <image wx:if="{{item.url && !item.imageFailed}}" class="tile-image" src="{{item.url}}" mode="aspectFill" data-id="{{item.id}}" data-src="{{item.url}}" binderror="handleImageError" lazy-load />
+    <image wx:if="{{item.url && !item.imageFailed}}" class="tile-image" src="{{item.url}}" mode="{{featured ? 'widthFix' : 'aspectFill'}}" data-id="{{item.id}}" data-src="{{item.url}}" binderror="handleImageError" lazy-load />
     <view wx:else class="tile-image tile-image-blank">照片暂不可用</view>
 
     <!-- 选中角标：ordered 时显示序号，供视频等依赖顺序的场景 -->

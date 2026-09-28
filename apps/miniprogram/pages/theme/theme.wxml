@@ -1,7 +1,6 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
 <view class="page page-flat art-pet layout-matrix">
-  <text class="eyebrow">APPEARANCE</text>
   <view class="title">挑一套喜欢的外观</view>
 
   <view class="theme-list section">

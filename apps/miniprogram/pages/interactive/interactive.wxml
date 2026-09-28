@@ -5,7 +5,6 @@
 
   <block wx:elif="{{session}}">
     <block wx:if="{{!publicMode}}">
-      <text class="eyebrow">INTERACTIVE H5</text>
       <view class="title">互动场景</view>
     </block>
 

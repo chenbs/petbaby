@@ -1,7 +1,6 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
 <view class="page page-flat art-film layout-matrix">
-  <text class="eyebrow">LIBRARY</text>
   <view class="title">照片库</view>
 
   <view class="bar">
@@ -20,12 +19,6 @@
 
   <view wx:if="{{petId && !loading}}" class="bar">
     <t-button type="primary" anim="{{animType}}" bindtap="goCreate">收好照片</t-button>
-    <t-button type="ghost" anim="{{animType}}" bindtap="timeline">查看时间线</t-button>
-  </view>
-  <view wx:if="{{petId && totalCount && !loading}}" class="record-actions">
-    <t-button type="ghost" size="mini" bindtap="compare">免费成长对比（带水印）</t-button>
-    <t-button type="ghost" size="mini" data-kind="album" bindtap="makeWork">做成画册</t-button>
-    <t-button type="ghost" size="mini" data-kind="video" bindtap="makeWork">做成短片</t-button>
   </view>
 
   <view wx:if="{{recordMode && petId && !loading}}" class="record-panel">
@@ -75,6 +68,8 @@
     <view class="bar"><text class="small">{{petText}} 的照片库共 {{totalCount}} 张{{batchView ? ' · 正在看这次记录' : ''}}</text><t-button wx:if="{{batchView}}" type="ghost" size="mini" bindtap="load">全部照片</t-button></view>
     <t-photo-grid
       photos="{{photos}}"
+      columns="{{photos.length === 1 ? 1 : 2}}"
+      featured="{{photos.length === 1}}"
       selected-ids="{{picked}}"
       manageable="{{manage}}"
       previewable="{{!manage}}"
@@ -91,6 +86,15 @@
       <t-button type="danger" size="mini" anim="{{animType}}" disabled="{{!picked.length}}" bindtap="askRemove">删除所选</t-button>
     </view>
   </block>
+
+  <view wx:if="{{petId && !loading}}" class="library-links">
+    <t-button type="ghost" size="mini" anim="{{animType}}" bindtap="timeline">查看时间线</t-button>
+    <view wx:if="{{totalCount}}" class="record-actions">
+      <t-button type="ghost" size="mini" bindtap="compare">免费成长对比（带水印）</t-button>
+      <t-button type="ghost" size="mini" data-kind="album" bindtap="makeWork">做成画册</t-button>
+      <t-button type="ghost" size="mini" data-kind="video" bindtap="makeWork">做成短片</t-button>
+    </view>
+  </view>
 </view>
 
 <t-dialog
@@ -104,7 +108,7 @@
   bindcancel="cancelRemove"
 ></t-dialog>
 
-<t-popup visible="{{!!detail || batchEditing}}" title="{{batchEditing ? '补一句话与标签' : '这张照片的记录'}}" anim="{{animType}}" bindclose="closeDetail">
+<t-popup visible="{{!!detail || batchEditing}}" tall="{{!!detail}}" title="{{batchEditing ? '补一句话与标签' : '这张照片的记录'}}" anim="{{animType}}" bindclose="closeDetail">
   <view class="record-stack">
     <t-notice wx:if="{{error}}" type="error" message="{{error}}"></t-notice>
     <block wx:if="{{detail}}">

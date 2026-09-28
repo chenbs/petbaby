@@ -8,7 +8,7 @@ themedPage({
   data: { profile: null, status: null, hero: null, loading: true, error: "", themeName: "" },
   onShow() {
     const tabbar = this.getTabBar && this.getTabBar();
-    if (tabbar) tabbar.setData({ selected: 2 });
+    if (tabbar) tabbar.setData({ selected: 3 });
     // 当前主题名展示在入口行右侧，让用户不进二级页也知道用的是哪套
     const current = manager.listThemes().find((item) => item.id === manager.getThemeId());
     this.setData({ themeName: current ? current.name : "" });
@@ -22,7 +22,12 @@ themedPage({
       .catch((error) => this.setData({ loading: false, error: error.message || "账户资料加载失败" }));
   },
   onHeroImageError(event) {
-    if (this.data.hero && this.data.hero.avatarUrl === event.currentTarget.dataset.src) this.setData({ "hero.avatarUrl": "" });
+    const hero = this.data.hero;
+    const src = event.currentTarget.dataset.src;
+    if (!hero || hero.imageUrl !== src) return;
+    const patch = { "hero.imageUrl": hero.fallbackUrl && hero.fallbackUrl !== src ? hero.fallbackUrl : "" };
+    if (hero.avatarUrl === src) patch["hero.avatarUrl"] = "";
+    this.setData(patch);
   },
   /**
    * 方案 E：个人中心先给「对象」，再给功能。取默认宠物作为顶部区块，
@@ -32,19 +37,32 @@ themedPage({
    * 不该因为它拉不到就挡住额度和入口列表这些真正的功能。
    */
   loadHero() {
-    api.request("/api/pets").then(displayMediaTree)
+    const view = this._heroView = (this._heroView || 0) + 1;
+    return api.request("/api/pets").then(displayMediaTree)
       .then((pets) => {
+        if (view !== this._heroView) return;
         const pet = (pets || []).find((item) => item.isDefault) || (pets || [])[0];
         if (!pet) return this.setData({ hero: null });
         const days = companion.daysSince(companion.anchorOf(pet), pet.memorialSince);
         this.setData({
           hero: Object.assign({}, pet, {
             counts: pet.counts || { works: 0, photos: 0, memorials: 0 },
+            imageUrl: pet.avatarUrl || "",
+            fallbackUrl: "",
             companionDays: days,
             // 文案与「无固定截止日则不给数字」的判断都在 companion 里，三页共用
             companionText: companion.companionText(pet, days)
           })
         });
+        if (!pet.counts || !pet.counts.photos) return;
+        return api.request("/api/photos?petId=" + encodeURIComponent(pet.id) + "&pageSize=1&order=uploaded")
+          .then(displayMediaTree)
+          .then((result) => {
+            if (view !== this._heroView || !this.data.hero || this.data.hero.id !== pet.id) return;
+            const first = (result.items || []).find((item) => item.url);
+            const fallbackUrl = first ? first.url : "";
+            this.setData({ "hero.fallbackUrl": fallbackUrl, "hero.imageUrl": this.data.hero.imageUrl || fallbackUrl });
+          });
       })
       .catch(() => undefined);
   },

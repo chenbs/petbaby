@@ -1,3 +1,12 @@
+.work-unavailable {
+  padding-top: var(--space-8);
+}
+
+.work-unavailable t-button {
+  display: block;
+  margin-top: var(--space-4);
+}
+
 /* 沉浸式版式下页面自身不再是卡片流，样式只服务于玻璃面板内的插槽内容 */
 .block-gap {
   display: block;

@@ -15,6 +15,7 @@ function page(name, request) {
       if (module.endsWith("photo-files")) return { displayMediaTree: async (data) => data };
       if (module.endsWith("record-events")) return { recordSession: () => ({ viewed: (...args) => events.push(args), opened() {}, deliverable() {} }) };
       if (module.endsWith("companion")) return require("../services/companion");
+      if (module.endsWith("sample-assets")) return require("../services/sample-assets");
       return {};
     },
     wx: { getStorageSync: () => "signed-session", navigateTo: (data) => navigation.push(data.url) }, console
@@ -62,7 +63,7 @@ test("A09：首页服务错误不伪装零档案；B的最近收好和去年今�
     if (fail) throw new Error("断网");
     if (url === "/api/pets") return [petA, petB];
     if (url.includes("on-this-day")) return { matches: [] };
-    return { items: [{ id: "b1", createdAt: "2026-09-23T12:00:00Z", recordedDate: "2020-01-01", memoryDateSource: "manual" }] };
+    return { items: [{ id: "b1", url: "https://example.test/b1.jpg", createdAt: "2026-09-23T12:00:00Z", recordedDate: "2020-01-01", memoryDateSource: "manual" }] };
   });
   await instance.loadPet(); assert.equal(instance.data.recordError, "断网"); assert.equal(instance.data.pet, null);
   fail = false; instance._petId = "B"; await instance.loadPet();
@@ -70,6 +71,56 @@ test("A09：首页服务错误不伪装零档案；B的最近收好和去年今�
   assert.ok(calls.some((url) => url.includes("petId=B&pageSize=3&order=uploaded")));
   assert.ok(calls.includes("/api/on-this-day?petId=B"));
   assert.equal(instance.data.recent[0].recordedDate, "2020-01-01");
+  assert.equal(instance.data.petDisplayUrl, "https://example.test/b1.jpg");
+  instance.onImageError({ currentTarget: { dataset: { kind: "pet", src: instance.data.petDisplayUrl } } });
+  assert.equal(instance.data.petDisplayUrl, "");
+});
+test("个人中心头像缺失或失败时使用该宠物最近的记录照片", async () => {
+  const pet = { ...petA, avatarUrl: "https://example.test/avatar.jpg", counts: { works: 0, photos: 1, memorials: 0 } };
+  const photoUrl = "https://example.test/recent.jpg";
+  const { instance } = page("me", async (url) => {
+    if (url === "/api/pets") return [pet];
+    if (url.includes("/api/photos?")) return { items: [{ id: "p1", url: photoUrl }] };
+    throw new Error("unexpected request");
+  });
+  instance.setData = function (values) {
+    for (const [key, value] of Object.entries(values)) {
+      if (key.startsWith("hero.")) this.data.hero[key.slice(5)] = value;
+      else this.data[key] = value;
+    }
+  };
+  await instance.loadHero();
+  assert.equal(instance.data.hero.imageUrl, pet.avatarUrl);
+  instance.onHeroImageError({ currentTarget: { dataset: { src: pet.avatarUrl } } });
+  assert.equal(instance.data.hero.imageUrl, photoUrl);
+  pet.avatarUrl = "";
+  await instance.loadHero();
+  assert.equal(instance.data.hero.imageUrl, photoUrl);
+});
+test("宠物档案头像失败后回退该宠物的最近照片", async () => {
+  const pet = { ...petA, avatarUrl: "https://example.test/avatar.jpg", counts: { works: 0, photos: 1, memorials: 0 } };
+  const photoUrl = "https://example.test/recent.jpg";
+  const { instance } = page("pets", async (url) => {
+    if (url === "/api/pets") return [pet];
+    if (url.includes("/api/photos?petId=A&")) return { items: [{ id: "p1", url: photoUrl }] };
+    throw new Error("unexpected request");
+  });
+  instance.setData = function (values) {
+    for (const [key, value] of Object.entries(values)) {
+      const match = key.match(/^pets\[(\d+)\]\.(\w+)$/);
+      if (match) this.data.pets[Number(match[1])][match[2]] = value;
+      else this.data[key] = value;
+    }
+  };
+  await instance.reload();
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(instance.data.pets[0].imageUrl, pet.avatarUrl);
+  instance.onAvatarError({ currentTarget: { dataset: { kind: "list", id: "A", src: pet.avatarUrl } } });
+  assert.equal(instance.data.pets[0].imageUrl, photoUrl);
+  pet.avatarUrl = "";
+  await instance.reload();
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(instance.data.pets[0].imageUrl, photoUrl);
 });
 test("A06：明确无效petId不回退默认宠物", async () => {
   const { instance } = page("timeline", async () => [petA]);

@@ -1,0 +1,14 @@
+{
+  "id": "railway-traveler",
+  "title": "复古车站旅人",
+  "description": "月台候车 · 笑着回望",
+  "samplePet": "golden",
+  "prompt": "Use case: finished public sample for a premium photorealistic pet art-photo series. Edit Image 1 into a new real editorial photograph. Keep the same adult golden retriever from Image 1, with its warm golden coat, floppy ears, dark eyes, black nose and naturally joyful face; no other breed, no Ragdoll cat. One pet only. Vertical 3:4 image. Show the complete natural head, body and paws; leave 8% safety margin around the pet. Pet occupies 45-65% of frame height, with face and eyes sharp and unobstructed. Scene, composition, mood, styling and props: A real vintage railway platform with teal train carriage, cream luggage trunk and warm ticket-window light. The pet wears a rust-red knit scarf and sits beside a small canvas travel bag, looking back with a relaxed happy expression. Full body and platform architecture visible, no readable signs. Use real fabric, physical props and believable contact shadows. Young, playful, polished visual style with crisp daylight or practical studio light. No people or hands, duplicate pets, extra limbs, CGI, illustration, logos, readable text or watermark. Return one image only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/source/dog-golden.jpg",
+  "referenceSha256": "1b6348ce4f6cd1d12f4c93d5f2a8a5c21847e0ce9bc43e4326c1ee89f7a89eef",
+  "output": "tools/imagegen/out/scenes/scene-railway-traveler-v4.jpg",
+  "sha256": "af7a29506d356bb9fd8e8f3159e02f0d6b07d1b99a671f207bf410fe2b848e95",
+  "review": "pending-visual-review"
+}

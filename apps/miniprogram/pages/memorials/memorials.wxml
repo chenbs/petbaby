@@ -1,7 +1,6 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
 <view class="page page-flat page-memorial art-film layout-bookshelf">
-  <text class="eyebrow">MEMORIAL</text>
   <view class="title">纪念空间</view>
   <text class="muted">一个安静的位置，留给已经离开的它。</text>
 
@@ -9,7 +8,7 @@
   <t-notice wx:if="{{message}}" type="success" message="{{message}}" class="block-gap"></t-notice>
 
   <!-- 创建入口与列表分离：表单收进底部抽屉（需求 5.17-2） -->
-  <t-button type="secondary" block anim="{{animType}}" class="block-gap" bindtap="openForm">新建纪念空间</t-button>
+  <t-button wx:if="{{!loading && items.length}}" type="secondary" block anim="{{animType}}" class="block-gap" bindtap="openForm">新建纪念空间</t-button>
 
   <t-skeleton wx:if="{{loading}}" type="list" count="2" class="block-gap"></t-skeleton>
   <t-button wx:elif="{{error && !items.length}}" type="secondary" bindtap="load">重新加载纪念空间</t-button>

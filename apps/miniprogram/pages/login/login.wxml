@@ -1,14 +1,8 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
 <view class="page page-flat art-film layout-workbench">
-  <!--
-    品牌区按 F（杂志封面）改造：期数式 kicker + 巨大标题 + 引文 + 一条细线收口。
-    F 只作用于这一屏定调区，下方表单仍是常规卡片 —— 方案明确 F 承载不了表单。
-    主题只改变品牌区的色彩和表面，不绑定旧主题 ID。
-  -->
   <view class="brand brand-{{themeId}}">
-    <view class="brand-mark">🐾</view>
-    <text class="brand-kicker">PET LAB</text>
+    <image class="brand-photo" src="/assets/theme-preview.jpg" mode="aspectFill" />
     <view class="brand-name">麻麻抱我</view>
     <text class="brand-quote">把它的照片，做成只属于它的作品。</text>
     <view class="brand-rule"></view>

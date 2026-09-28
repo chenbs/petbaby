@@ -1,0 +1,14 @@
+{
+  "id": "post-office",
+  "title": "旧书邮局来信",
+  "description": "信封旁边 · 端坐等待",
+  "samplePet": "british",
+  "prompt": "Use case: finished public sample for a premium photorealistic pet art-photo series. Edit Image 1 into a new real editorial photograph. Keep the same adult blue British Shorthair cat from Image 1, with round face, dense solid gray coat, copper-amber eyes and small upright ears; no other breed, no Ragdoll cat. One pet only. Vertical 3:4 image. Show the complete natural head, body and paws; leave 8% safety margin around the pet. Pet occupies 45-65% of frame height, with face and eyes sharp and unobstructed. Scene, composition, mood, styling and props: A charming old-fashioned postal sorting room with wooden pigeonholes, blank cream envelopes, twine-wrapped parcels and a green banker lamp. The pet wears a moss-green waistcoat and sits beside a small stack of sealed letters, facing camera with alert amber eyes. Warm paper and wood texture, no readable writing or logos. Use real fabric, physical props and believable contact shadows. Young, playful, polished visual style with crisp daylight or practical studio light. No people or hands, duplicate pets, extra limbs, CGI, illustration, logos, readable text or watermark. Return one image only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/source/cat-british.jpg",
+  "referenceSha256": "ddbdfb39b6cb3c6dddbfdd01555cd2fea299cfa927f76a1e7248d581152e0364",
+  "output": "tools/imagegen/out/scenes/scene-post-office-v4.jpg",
+  "sha256": "5393869832439f9dc7b303ff2f6300754cd0a5eee7a180158cb625ada7103b44",
+  "review": "pending-visual-review"
+}

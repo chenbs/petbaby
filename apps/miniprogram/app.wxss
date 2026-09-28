@@ -6,46 +6,46 @@
  * 其余 .wxss 一律零硬编码，由 scripts/validate.js 扫描把关。
  */
 page {
-  --primary: #197262;
-  --secondary: #C7B8E8;
-  --background: #F5F9F7;
-  --surface: #EAF3F0;
+  --primary: #C52D53;
+  --secondary: #14776B;
+  --background: #FFFFFF;
+  --surface: #F1F8F5;
   --card-background: #FFFFFF;
-  --text-primary: #20322D;
-  --text-secondary: #4F6861;
-  --border: #CFE2DC;
-  --divider: #DDEBE6;
+  --text-primary: #23312D;
+  --text-secondary: #566B64;
+  --border: #D3E4DC;
+  --divider: #E4EEE9;
   --success: #26794E;
   --warning: #A85708;
   --error: #B8382A;
-  --disabled: #CBD8D3;
+  --disabled: #CBDAD3;
   --success-surface: #E8F7EE;
   --error-surface: #FDEBE7;
-  --ai-gradient-start: #197262;
-  --ai-gradient-end: #684888;
-  --ai-glow: rgba(25, 114, 98, .2);
+  --ai-gradient-start: #C52D53;
+  --ai-gradient-end: #14776B;
+  --ai-glow: rgba(197, 45, 83, .18);
   --ai-gradient-angle: 120deg;
-  --ai-gradient: linear-gradient(120deg, #197262, #684888);
-  --button-primary: #197262;
-  --button-secondary: #E3F0EC;
-  --button-disabled: #E4EEEA;
-  --button-primary-text: #F5FFFC;
-  --button-secondary-text: #20322D;
+  --ai-gradient: linear-gradient(120deg, #C52D53, #14776B);
+  --button-primary: #C52D53;
+  --button-secondary: #F1F8F5;
+  --button-disabled: #E6EEEA;
+  --button-primary-text: #FFFFFF;
+  --button-secondary-text: #23312D;
   --button-radius: 999rpx;
-  --card-radius: 24rpx;
-  --card-shadow: 0 4rpx 20rpx rgba(40, 80, 70, .1);
+  --card-radius: 16rpx;
+  --card-shadow: 0 4rpx 16rpx rgba(28, 65, 52, .08);
   --card-blur: 0;
-  --card-border: 2rpx solid #CFE2DC;
-  --card-radius-variant: 24rpx;
+  --card-border: 2rpx solid #D3E4DC;
+  --card-radius-variant: 16rpx;
   --page-padding: 32rpx;
   --section-spacing: 48rpx;
   --page-bottom-safe: 190rpx;
-  --nav-bar-background: #F5F9F7;
+  --nav-bar-background: #FFFFFF;
   --title-size: 44rpx;
   --body-size: 28rpx;
   --small-size: 24rpx;
   --eyebrow-size: 20rpx;
-  --title-weight: 800;
+  --title-weight: 700;
   --title-letter-spacing: 0;
   --transition-duration: 240ms;
   --transition-easing: cubic-bezier(.22, .61, .36, 1);
@@ -72,8 +72,8 @@ page {
   --radius-md: 24rpx;
   --radius-lg: 32rpx;
   --radius-xl: 48rpx;
-  --radius-image-hero: 40rpx;
-  --radius-image-thumb: 24rpx;
+  --radius-image-hero: 16rpx;
+  --radius-image-thumb: 16rpx;
   --radius-clay: 56rpx;
   --radius-none: 0;
   /* t-empty 线条插画的有机形状：门禁只豁免单值 50%，非对称圆角须登记为 token */
@@ -92,13 +92,14 @@ page {
   --fw-medium: 500;
   --fw-bold: 700;
   --fw-black: 800;
-  --ls-tight: -0.02em;
-  --ls-tighter: -0.04em;
-  --ls-kicker: 0.24em;
-  --ls-cover: 0.3em;
+  --ls-tight: 0;
+  --ls-tighter: 0;
+  --ls-kicker: 0;
+  --ls-cover: 0;
   /* 图片比例（方案 2.5） */
   --ratio-hero: 16 / 10;
   --ratio-card: 3 / 4;
+  --ratio-portrait: 9 / 16;
   --ratio-cover: 4 / 3;
   --ratio-square: 1 / 1;
   --on-image-primary: #FFFFFF;
@@ -114,19 +115,19 @@ page {
   --font-h2: 39rpx;
   --font-h3: 33rpx;
   --font-display: 61rpx;
-  --eyebrow-tracking: 4rpx;
+  --eyebrow-tracking: 0;
   /* 旧面板交互的表面兜底：无 page-meta 时按 pet 的实底取值 */
-  --glass-background: rgba(245, 249, 247, .94);
-  --glass-background-solid: #F5F9F7;
-  --glass-border: 2rpx solid rgba(255, 255, 255, .55);
+  --glass-background: rgba(24, 39, 36, .97);
+  --glass-background-solid: #182724;
+  --glass-border: 2rpx solid rgba(255, 255, 255, .14);
   --glass-blur: 0;
-  --glass-radius: 48rpx 48rpx 0 0;
-  --glass-shadow: 0 -12rpx 48rpx rgba(214, 150, 150, .28);
-  --glass-scrim: #20322D;
+  --glass-radius: 24rpx 24rpx 0 0;
+  --glass-shadow: 0 -8rpx 28rpx rgba(24, 39, 36, .22);
+  --glass-scrim: #23312D;
   --glass-scrim-max: 0.32;
-  --glass-text-primary: #20322D;
-  --glass-text-secondary: #4F6861;
-  --glass-handle: rgba(32, 50, 45, .28);
+  --glass-text-primary: #FFFFFF;
+  --glass-text-secondary: #DAE5DE;
+  --glass-handle: rgba(255, 255, 255, .4);
   --glass-handle-width: 64rpx;
   --glass-blur-degraded: 0;
   --glass-easing: cubic-bezier(.22, .61, .36, 1);
@@ -152,8 +153,8 @@ page {
   --divider-soft: rgba(58, 44, 44, .06);
   --glass-duration: 360ms;
 
-  background: var(--background, #F5F9F7);
-  color: var(--text-primary, #20322D);
+  background: var(--background, #FFFFFF);
+  color: var(--text-primary, #23312D);
   font-family: sans-serif;
   font-size: var(--body-size, 28rpx);
   transition: background var(--transition-duration, 240ms) var(--transition-easing, ease), color var(--transition-duration, 240ms) var(--transition-easing, ease);
@@ -189,8 +190,8 @@ image {
 }
 
 .art-brand .section-title {
-  padding-bottom: var(--space-2);
-  border-bottom: 2rpx solid var(--divider);
+  padding-bottom: 0;
+  border-bottom: 0;
   font-weight: var(--fw-bold);
 }
 
@@ -253,7 +254,8 @@ image {
   font-size: var(--title-size);
   font-weight: var(--title-weight);
   letter-spacing: var(--title-letter-spacing);
-  line-height: 1.2;
+  line-height: var(--lh-h1);
+  word-break: break-all;
 }
 
 .section-title {
@@ -261,12 +263,14 @@ image {
   color: var(--text-primary);
   font-size: var(--font-h2);
   font-weight: var(--title-weight);
+  line-height: var(--lh-h2);
 }
 
 .sub-title {
   color: var(--text-primary);
   font-size: var(--font-h3);
   font-weight: 700;
+  line-height: var(--lh-h3);
 }
 
 .muted {

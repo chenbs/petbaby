@@ -7,6 +7,46 @@
   display: block;
 }
 
+.run-pending {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  min-height: 70vh;
+  align-content: center;
+}
+
+.pending-image {
+  display: flex;
+  width: 56%;
+  aspect-ratio: var(--ratio-card);
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-4);
+  border-radius: var(--radius-image-thumb);
+  background: var(--surface);
+}
+
+.pending-image-inner {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  color: var(--secondary);
+  font-size: var(--font-h2);
+  font-weight: var(--fw-bold);
+}
+
+.pending-image-inner text {
+  color: var(--text-secondary);
+  font-size: var(--small-size);
+  font-weight: var(--fw-normal);
+}
+
+.pending-status {
+  color: var(--text-primary);
+  font-size: var(--font-h3);
+  font-weight: var(--fw-bold);
+}
+
 .state-title {
   margin-bottom: var(--space-2);
   color: var(--text-primary);
@@ -14,7 +54,7 @@
   font-weight: var(--title-weight);
 }
 
-/* 候选双列铺满：普通玩法四张，宠物人化两张。 */
+/* 候选双列铺满；历史任务可能仍有四张。 */
 .candidates {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -29,10 +69,10 @@
  */
 .candidate {
   overflow: hidden;
-  border: 4rpx solid transparent;
+  border: 2rpx solid transparent;
   border-radius: var(--radius-md);
   background: var(--card-background);
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--shadow-none);
   transition: transform var(--transition-duration) var(--transition-easing), border-color var(--transition-duration) var(--transition-easing);
 }
 
@@ -42,7 +82,6 @@
 
 .candidate-on {
   border-color: var(--primary);
-  box-shadow: 0 0 0 6rpx var(--ai-glow);
 }
 
 /*
@@ -55,7 +94,10 @@
   width: 100%;
   aspect-ratio: var(--ratio-card);
   background: var(--skeleton-base);
-  box-shadow: var(--shadow-clay-inset);
+}
+
+.candidates-human .candidate-image {
+  aspect-ratio: var(--ratio-portrait);
 }
 
 .candidate-image-blank {
@@ -86,18 +128,6 @@
 /* ---------- 沉浸式结果确认区 ---------- */
 .run-title {
   margin: var(--space-2) 0;
-}
-
-.facts {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-3);
-  margin-bottom: var(--space-5);
-}
-
-.fact {
-  display: grid;
-  gap: var(--space-1);
 }
 
 /* .section-block 已提到 app.wxss 全局（create 的 C 表单变体同样要用） */

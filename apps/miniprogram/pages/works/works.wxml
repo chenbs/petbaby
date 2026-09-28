@@ -1,7 +1,6 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
 <view class="page page-tabbar art-brand layout-matrix">
-  <text class="eyebrow">MY CABINET</text>
   <view class="title">我的作品柜</view>
 
   <!-- 三个筛选器横排，节省纵向空间 -->
@@ -36,11 +35,11 @@
     <view wx:if="{{tasks.length}}" class="section">
       <view class="section-title">进行中</view>
       <view class="list">
-        <t-card wx:for="{{tasks}}" wx:key="id" blur="{{blurOk}}" anim="{{animType}}">
+        <view wx:for="{{tasks}}" wx:key="id" class="task-entry">
           <view class="row">
             <view>
               <view class="sub-title">{{item.statusText}}</view>
-              <text class="small">{{item.pluginId}}</text>
+              <text class="small">{{item.pluginName}}</text>
             </view>
             <t-tag tone="{{item.status === 'failed' ? 'error' : 'accent'}}" text="{{item.statusText}}"></t-tag>
           </view>
@@ -48,8 +47,14 @@
             <t-progress percent="{{item.progress}}" tone="ai" label="生成进度" show-value></t-progress>
           </view>
           <t-button wx:else type="secondary" size="mini" anim="{{animType}}" class="block-gap" data-id="{{item.id}}" bindtap="retry">重新尝试</t-button>
-        </t-card>
+        </view>
       </view>
+    </view>
+
+    <view wx:if="{{tasks.length && !works.length}}" class="section pending-works">
+      <view class="section-title">作品正在路上</view>
+      <text class="muted">完成后，就能在这里查看、保存和分享。</text>
+      <t-button type="ghost" anim="{{animType}}" class="block-gap" bindtap="goCreate">看看其他玩法 →</t-button>
     </view>
 
     <view wx:if="{{works.length || !tasks.length}}" class="section">
@@ -80,7 +85,7 @@
         <t-card
           wx:for="{{works}}"
           wx:key="id"
-          variant="grid"
+          variant="flat"
           clickable
           padded="{{false}}"
           blur="{{blurOk}}"
@@ -91,7 +96,6 @@
           <view class="cover-wrap">
             <image wx:if="{{!item.imageFailed && item.coverUrl}}" class="cover" src="{{item.coverUrl}}" mode="aspectFill" data-id="{{item.id}}" data-src="{{item.coverUrl}}" binderror="onCoverError" lazy-load />
             <view wx:else class="cover cover-fallback">作品预览暂不可用</view>
-            <view wx:if="{{!item.imageFailed}}" class="veil"></view>
             <t-tag
               wx:if="{{item.statusTone !== 'success'}}"
               class="cover-tag"
@@ -99,10 +103,10 @@
               size="mini"
               text="{{item.statusText}}"
             ></t-tag>
-            <view wx:if="{{!item.imageFailed}}" class="cover-meta">
-              <view class="work-title">{{item.title}}</view>
-              <text class="cover-sub">{{item.plugin.code}} · v{{item.version}}</text>
-            </view>
+          </view>
+          <view class="work-meta">
+            <view class="work-title">{{item.title}}</view>
+            <text class="cover-sub">{{item.plugin.name}} · v{{item.version}}</text>
           </view>
         </t-card>
       </view>

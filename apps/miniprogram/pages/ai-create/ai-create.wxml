@@ -1,78 +1,84 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-flat art-brand layout-matrix">
-  <text class="eyebrow">PL-10 · PET ART PHOTO</text>
-  <view class="title">把它拍成一组艺术写真</view>
-  <text class="muted">先选场景，再选模板和身份照。普通写真生成四张候选；宠物人化仍生成两张候选。</text>
-
+<view class="page page-flat art-brand layout-matrix ai-flow">
+  <view class="title">{{templateId === 'pet-art-photo' ? '宠物艺术写真' : entryId === 'art' && activeTemplate ? activeTemplate.title : entryTitle}}</view>
+  <view class="flow-steps"><text class="flow-current">1 选效果</text><text>→</text><text class="{{stage === 'photos' ? 'flow-current' : ''}}">2 选照片</text></view>
   <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
-
   <t-skeleton wx:if="{{catalogLoading}}" type="grid" count="4"></t-skeleton>
   <t-empty wx:elif="{{!entries.length}}" icon="work" title="暂无可用模板" description="模板目录暂时无法使用。" action-text="重新加载" anim="{{animType}}" decor="{{decor}}" bindaction="loadCatalog"></t-empty>
 
   <block wx:else>
-
-  <view wx:if="{{templateId === 'pet-art-photo' && sceneOptions.length}}" class="section">
-    <view class="section-title">写真场景 · {{sceneOptions.length}} 套</view>
-    <view class="template-grid scene-grid">
-      <view wx:for="{{sceneOptions}}" wx:key="id" class="option template-option scene-option {{sceneId === item.id ? 'option-on' : ''}}" data-id="{{item.id}}" hover-class="option-hover" bindtap="chooseScene">
-        <image wx:if="{{item.url}}" class="style-thumb" src="{{item.url}}" mode="aspectFill" data-id="{{item.id}}" binderror="onSceneImageError" lazy-load />
-        <view wx:else class="style-thumb style-thumb-blank">样片暂不可用</view>
-        <view class="option-name">{{item.title}}</view>
-        <text class="small">{{item.description}}</text>
+    <block wx:if="{{stage === 'samples'}}">
+      <view wx:if="{{entryId !== 'art'}}" class="section">
+        <view class="section-title">挑一张喜欢的成品</view>
+        <view class="template-grid">
+          <view wx:for="{{templates}}" wx:key="templateId" class="option template-option {{item.sampleShape === 'wide' ? 'template-wide' : ''}}" data-id="{{item.templateId}}" hover-class="option-hover" bindtap="chooseTemplate">
+            <image wx:if="{{item.sampleUrl}}" class="style-thumb {{item.sampleShape === 'wide' ? 'style-wide' : ''}}" src="{{item.sampleUrl}}" mode="aspectFit" data-id="{{item.templateId}}" data-src="{{item.sampleUrl}}" binderror="onTemplateImageError" lazy-load />
+            <view wx:else class="style-thumb style-thumb-blank">样片暂不可用</view>
+            <view class="option-name">{{item.title}}</view>
+            <text class="small">{{item.subjectMode === 'owner-pet' ? '主人 + 宠物' : item.subjectMode === 'pet-human' ? '宠物人化' : '宠物主体'}}</text>
+          </view>
+        </view>
       </view>
-    </view>
-  </view>
-
-  <view class="section">
-    <view class="section-title">玩法入口</view>
-    <scroll-view class="chooser" scroll-x enable-flex>
-      <view wx:for="{{entries}}" wx:key="id" class="option {{entryId === item.id ? 'option-on' : ''}}" data-id="{{item.id}}" hover-class="option-hover" bindtap="chooseEntry">
-        <view class="option-name">{{item.title}}</view>
-        <text class="small">{{item.templates.length}} 个模板</text>
+      <view wx:elif="{{activeTemplate && templateId !== 'pet-art-photo'}}" class="section">
+        <view class="section-title">看看成品风格</view>
+        <image class="solo-template-image {{activeTemplate.sampleShape === 'wide' ? 'solo-wide' : ''}}" src="{{activeTemplate.sampleUrl}}" mode="aspectFit" />
       </view>
-    </scroll-view>
-  </view>
-
-  <view class="section">
-    <view class="section-title">模板</view>
-    <view class="template-grid">
-      <view wx:for="{{templates}}" wx:key="templateId" class="option template-option {{templateId === item.templateId ? 'option-on' : ''}}" data-id="{{item.templateId}}" hover-class="option-hover" bindtap="chooseTemplate">
-        <image wx:if="{{item.sampleUrl}}" class="style-thumb" src="{{item.sampleUrl}}" mode="aspectFill" data-id="{{item.templateId}}" data-src="{{item.sampleUrl}}" binderror="onTemplateImageError" lazy-load />
-        <view wx:else class="style-thumb style-thumb-blank">样片暂不可用</view>
-        <view class="option-name">{{item.title}}</view>
-        <text class="small">{{item.subjectMode === 'owner-pet' ? '主人 + 宠物' : item.subjectMode === 'pet-human' ? '宠物人化' : '宠物主体'}}</text>
+      <view wx:if="{{templateId === 'pet-art-photo' && sceneOptions.length}}" class="section">
+        <view class="section-title">写真场景 · {{sceneOptions.length}} 套</view>
+        <view class="scene-grid">
+          <view wx:for="{{sceneOptions}}" wx:key="id" class="option template-option scene-option" data-id="{{item.id}}" hover-class="option-hover" bindtap="chooseScene">
+            <image wx:if="{{item.url}}" class="style-thumb scene-thumb" src="{{item.url}}" mode="aspectFit" data-id="{{item.id}}" binderror="onSceneImageError" lazy-load />
+            <view wx:else class="style-thumb style-thumb-blank">样片暂不可用</view>
+            <view class="option-name">{{item.title}}</view>
+            <text class="small">{{item.description}}</text>
+          </view>
+        </view>
       </view>
-    </view>
-  </view>
+      <view class="ai-actions"><t-button type="ai" block anim="{{animType}}" disabled="{{!activeTemplate}}" bindtap="continueToPhotos">用当前效果制作</t-button></view>
+    </block>
 
-  <view class="section">
-    <picker range="{{pets}}" range-key="name" bindchange="choosePet">
-      <t-field label="宠物" control="select" value="{{petText}}" placeholder="请选择宠物"></t-field>
-    </picker>
-  </view>
-
-  <view class="section">
-    <view class="row"><view class="section-title flush">宠物身份照</view><text class="small">选择 1 张</text></view>
-    <t-skeleton wx:if="{{loading}}" type="grid" count="6"></t-skeleton>
-    <t-empty wx:elif="{{!photos.length}}" icon="photo" title="这只宠物还没有照片" description="先去照片库上传一张，再回来生成。" action-text="去上传照片" anim="{{animType}}" decor="{{decor}}" bindaction="openPhotos"></t-empty>
-    <t-photo-grid wx:else photos="{{photos}}" selected-ids="{{photoIds}}" max="1" previewable="{{false}}" anim="{{animType}}" bindtoggle="togglePhoto"></t-photo-grid>
-  </view>
-
-  <block wx:if="{{activeTemplate && activeTemplate.subjectMode === 'owner-pet'}}">
-    <view class="section">
-      <view class="section-title">主人照片授权</view>
-      <checkbox-group bindchange="toggleAuthorization">
-        <label><checkbox value="confirmed" checked="{{authorizationConfirmed}}" />照片中的本人已同意用于本次 AI 生图</label>
-      </checkbox-group>
-    </view>
-    <view class="section">
-      <view class="row"><view class="section-title flush">主人身份照</view><text class="small">选择 1 张</text></view>
-      <t-button type="secondary" block anim="{{animType}}" disabled="{{!authorizationConfirmed || busy}}" bindtap="uploadOwnerPhoto">上传主人照片</t-button>
-      <t-photo-grid wx:if="{{ownerPhotos.length}}" class="block-gap" photos="{{ownerPhotos}}" selected-ids="{{ownerPhotoIds}}" max="1" previewable="{{false}}" removable anim="{{animType}}" bindtoggle="toggleOwnerPhoto" bindremove="removeOwnerPhoto"></t-photo-grid>
-    </view>
-  </block>
-
-  <t-button type="ai" block anim="{{animType}}" loading="{{busy}}" disabled="{{!activeTemplate || !photoIds.length || (activeTemplate.subjectMode === 'owner-pet' && (!ownerPhotoIds.length || !authorizationConfirmed))}}" class="block-gap" bindtap="create">生成 {{activeTemplate && activeTemplate.candidateCount ? activeTemplate.candidateCount : 4}} 张候选</t-button>
+    <block wx:else>
+      <view wx:if="{{templateId !== 'pet-art-photo'}}" class="section effect-carousel-section">
+        <view class="section-title">左右滑动选择效果</view>
+        <swiper class="effect-swiper {{activeTemplate.sampleShape === 'wide' ? 'effect-swiper-wide' : ''}}" current="{{templateIndex}}" bindchange="swipeTemplate" circular="{{carouselTemplates.length > 1}}">
+          <swiper-item wx:for="{{carouselTemplates}}" wx:key="templateId">
+            <view class="effect-slide">
+              <image wx:if="{{item.sampleUrl}}" class="effect-slide-image" src="{{item.sampleUrl}}" mode="aspectFit" data-id="{{item.templateId}}" data-src="{{item.sampleUrl}}" binderror="onTemplateImageError" />
+              <view wx:else class="effect-slide-image style-thumb-blank">样片暂不可用</view>
+              <view class="effect-slide-label"><view class="sub-title">{{item.title}}</view><text class="small">{{item.subjectMode === 'owner-pet' ? '主人 + 宠物' : item.subjectMode === 'pet-human' ? '宠物人化' : '宠物主体'}}</text></view>
+            </view>
+          </swiper-item>
+        </swiper>
+        <text class="small">{{carouselTemplates.length > 1 ? '左右滑动切换 · ' : ''}}{{templateIndex + 1}} / {{carouselTemplates.length}} · 当前效果已选中</text>
+      </view>
+      <view wx:else class="selected-effect">
+        <image wx:if="{{templateId === 'pet-art-photo' && selectedScene && selectedScene.url}}" class="selected-effect-image" src="{{selectedScene.url}}" mode="aspectFit" />
+        <image wx:elif="{{activeTemplate && activeTemplate.sampleUrl}}" class="selected-effect-image" src="{{activeTemplate.sampleUrl}}" mode="aspectFit" />
+        <view class="selected-effect-copy"><text class="small">已选效果</text><view class="sub-title">{{templateId === 'pet-art-photo' && selectedScene ? selectedScene.title : activeTemplate.title}}</view><text class="small">{{templateId === 'pet-art-photo' && selectedScene ? selectedScene.description : entryTitle}}</text></view>
+        <text class="change-effect" aria-role="button" bindtap="changeSample">更换</text>
+      </view>
+      <view class="section">
+        <picker range="{{pets}}" range-key="name" bindchange="choosePet"><t-field label="宠物" control="select" value="{{petText}}" placeholder="请选择宠物"></t-field></picker>
+      </view>
+      <view class="section">
+        <view class="row"><view class="section-title flush">宠物身份照</view><text class="small">选择 1 张</text></view>
+        <t-skeleton wx:if="{{loading}}" type="grid" count="6"></t-skeleton>
+        <t-empty wx:elif="{{!photos.length}}" icon="photo" title="这只宠物还没有照片" description="先去照片库上传一张，再回来生成。" action-text="去上传照片" anim="{{animType}}" decor="{{decor}}" bindaction="openPhotos"></t-empty>
+        <t-photo-grid wx:else photos="{{photos}}" selected-ids="{{photoIds}}" max="1" previewable="{{false}}" anim="{{animType}}" bindtoggle="togglePhoto"></t-photo-grid>
+      </view>
+      <block wx:if="{{activeTemplate && activeTemplate.subjectMode === 'owner-pet'}}">
+        <view class="section">
+          <view class="section-title">主人照片授权</view>
+          <checkbox-group bindchange="toggleAuthorization"><label><checkbox value="confirmed" checked="{{authorizationConfirmed}}" />照片中的本人已同意用于本次 AI 生图</label></checkbox-group>
+        </view>
+        <view class="section">
+          <view class="row"><view class="section-title flush">主人身份照</view><text class="small">选择 1 张</text></view>
+          <t-button type="secondary" block anim="{{animType}}" disabled="{{!authorizationConfirmed || busy}}" bindtap="uploadOwnerPhoto">上传主人照片</t-button>
+          <t-photo-grid wx:if="{{ownerPhotos.length}}" class="block-gap" photos="{{ownerPhotos}}" selected-ids="{{ownerPhotoIds}}" max="1" previewable="{{false}}" removable anim="{{animType}}" bindtoggle="toggleOwnerPhoto" bindremove="removeOwnerPhoto"></t-photo-grid>
+        </view>
+      </block>
+      <view class="ai-actions"><t-button type="ai" block anim="{{animType}}" loading="{{busy}}" disabled="{{!activeTemplate || !photoIds.length || (activeTemplate.subjectMode === 'owner-pet' && (!ownerPhotoIds.length || !authorizationConfirmed))}}" bindtap="create">生成 2 张候选</t-button></view>
+    </block>
   </block>
 </view>

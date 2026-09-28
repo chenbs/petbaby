@@ -1,3 +1,10 @@
+.fun-teaser { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3); border: 2rpx solid var(--border); border-radius: var(--radius-sm); background: var(--card-background); }
+.fun-teaser image { width: 124rpx; height: 124rpx; flex: none; border-radius: var(--radius-xs); }
+.fun-teaser > view { min-width: 0; flex: 1; }
+.fun-teaser .sub-title { color: var(--text-primary); }
+.fun-teaser .small { color: var(--text-secondary); }
+.fun-teaser-arrow { color: var(--primary); font-size: var(--font-h2); }
+
 .hero {
   position: relative;
   overflow: hidden;

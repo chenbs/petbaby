@@ -105,6 +105,12 @@
 OK</view>
   </view>
 
+  <view class="section fun-teaser" bindtap="openFunTests" aria-role="button" aria-label="打开宠物趣味测试">
+    <image src="/assets/fun-tests/personality.jpg" mode="aspectFill" lazy-load />
+    <view><text class="eyebrow">NEW · 免费趣测</text><view class="sub-title">它的小秘密，你最懂</view><text class="small">4 份轻松测试 · 结果可分享</text></view>
+    <text class="fun-teaser-arrow">→</text>
+  </view>
+
   <view class="section">
     <view class="section-title">{{pet && recent.length ? '把这些日子做成作品' : '看看作品玩法'}}</view>
 

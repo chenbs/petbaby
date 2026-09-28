@@ -14,6 +14,7 @@
 | 只看未完成的业务与功能事项 | [`delivery/07-business-and-feature-todos.md`](delivery/07-business-and-feature-todos.md) |
 | 按页查功能点、改一项要动哪几端                   | [`product/21-小程序功能点清单.md`](product/21-小程序功能点清单.md)                                                 |
 | 陪伴与记录第一期规格和实施验收 | [`product/33-陪伴与记录开发清单及实施计划.md`](product/33-陪伴与记录开发清单及实施计划.md)、[`delivery/09-陪伴与记录实施验收记录.md`](delivery/09-陪伴与记录实施验收记录.md) |
+| 宠物趣味测试首期内容与实现记录 | [`product/34-宠物趣味测试.md`](product/34-宠物趣味测试.md) |
 | 查 Web/后台/REST 入口与玩法 manifest      | [`product/15-功能入口清单.md`](product/15-功能入口清单.md)                                                     |
 | 情绪价值方向任务书（六项已完成，含实现记录）            | [`product/14-direction-review-emotional-value.md`](product/14-direction-review-emotional-value.md) |
 | 竞品分析与产品复盘（分析文档，非任务书；健康线十条红线在 3.8） | [`product/16-竞品分析与产品复盘.md`](product/16-竞品分析与产品复盘.md)                                               |
@@ -115,9 +116,9 @@ docs/
 - 同一事实只在一个文档中维护，其他文档通过链接引用；完成记录不作为新的开发待办。
 - 生产环境不得使用本地磁盘存储或模拟支付；只有显式 `APP_ENV=staging` 才允许测试机降级配置。
 
-## 当前状态（2026-09-23）
+## 当前状态（2026-09-28）
 
-**代码规模**（与工作区一致）：数据库迁移 `0000`～`0033`（34 份）、REST 路由 135 个、Web/H5 与后台页面 37 个（含 9 个后台）、小程序 23 页、内置玩法 manifest 10 条（7 live + 3 archived）、图片货架 9 个已登记入口 / 116 个模板（76 个冻结 live、40 个已完成本地素材映射但尚未上传的 `pending-review`；`human` 入口没有 live 项，因此公开 API 当前仍下发 8 个入口）、小程序主题 4 套 / 57 token / 18 个公共组件。
+**代码规模**（与工作区一致）：数据库迁移 `0000`～`0034`（35 份）、REST 路由 141 个、Web/H5 与后台页面 39 个（含 9 个后台）、小程序 24 页、内置玩法 manifest 10 条（7 live + 3 archived）、图片货架 9 个已登记入口 / 116 个模板（76 个冻结 live、40 个已完成本地素材映射但尚未上传的 `pending-review`；`human` 入口没有 live 项，因此公开 API 当前仍下发 8 个入口）、小程序主题 4 套 / 57 token / 18 个公共组件。
 
 **平台与上一轮小程序测试快照（2026-09-23）**：平台 `pnpm check` 通过（lint 0 错误 / 8 警告，typecheck、coverage、build 通过）；52 个测试文件、524 条用例，内存环境 522 通过 / 2 条真实成片用例跳过，真实 PostgreSQL + ffmpeg 环境 524 条全通过。覆盖率 Statements 79.11%、Branches 72.36%、Functions 86.09%、Lines 83.49%，范围以 Vitest 配置为准；[本地覆盖率报告](../apps/platform/coverage/index.html)。PostgreSQL + 真实 Worker 的移动浏览器 E2E 6 条通过，小程序十项校验及 45 条行为测试通过。命令、日志、截图、默认开发库误触事故与 A01–A18 待验项统一见 [实施验收记录](delivery/09-陪伴与记录实施验收记录.md)，不代表真机或发布已放行。
 

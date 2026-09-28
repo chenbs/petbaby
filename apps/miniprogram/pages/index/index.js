@@ -173,5 +173,6 @@ themedPage({
     if (category === "report") return wx.navigateTo({ url: "/pages/commerce/commerce" });
     wx.navigateTo({ url: "/pages/create/create?pluginId=" + encodeURIComponent(pluginId) + (this.data.pet ? "&petId=" + this.data.pet.id : "") });
   },
+  openFunTests() { wx.navigateTo({ url: "/pages/fun-tests/fun-tests" }); },
   openTheme() { wx.navigateTo({ url: "/pages/theme/theme" }); }
 });

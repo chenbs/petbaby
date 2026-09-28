@@ -22,7 +22,8 @@
     "pages/commerce/commerce",
     "pages/physical/physical",
     "pages/login/login",
-    "pages/theme/theme"
+    "pages/theme/theme",
+    "pages/fun-tests/fun-tests"
   ],
   "lazyCodeLoading": "requiredComponents",
   "window": {

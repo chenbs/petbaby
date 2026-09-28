@@ -1,0 +1,61 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+
+<view class="page fun-page">
+  <view class="fun-top"><view class="fun-brand">麻麻抱我 / 趣味测试</view><view class="fun-free">FREE</view></view>
+
+  <view wx:if="{{loading}}" class="fun-loading">正在打开测试…</view>
+  <view wx:if="{{error}}" class="fun-error" role="alert">{{error}}</view>
+
+  <block wx:if="{{!loading && stage === 'list'}}">
+    <view class="fun-heading"><text class="fun-eyebrow">PET PERSONALITY CLUB</text><view class="fun-title">它的小秘密，<text>你最懂。</text></view><view class="fun-subtitle">从每天都看得见的小动作里，发现你们自己的答案。</view></view>
+    <view class="fun-grid">
+      <view wx:for="{{tests}}" wx:for-item="test" wx:key="id" class="fun-test" data-id="{{test.id}}" bindtap="openTest">
+        <view class="fun-test-image"><image src="{{test.coverPath}}" mode="aspectFill" lazy-load /><text>0{{index + 1}}</text></view>
+        <view class="fun-test-copy"><text class="fun-test-category">{{test.category}} · {{test.questionCount}} 题</text><view class="fun-test-title">{{test.title}}</view><view class="fun-test-subtitle">{{test.subtitle}}</view><text class="fun-test-link">开始测试 →</text></view>
+      </view>
+    </view>
+    <view wx:if="{{history.length}}" class="fun-history"><view class="fun-section-title">测过的它</view><view wx:for="{{history}}" wx:for-item="saved" wx:key="id" class="fun-history-row" data-id="{{saved.id}}" bindtap="openSaved"><text>{{saved.petName}} · {{saved.testTitle}}</text><text>{{saved.outcome.name}} →</text></view></view>
+  </block>
+
+  <view wx:if="{{!loading && stage === 'intro' && test}}" class="fun-intro">
+    <view class="fun-back" bindtap="backToList">← 全部测试</view>
+    <image class="fun-intro-image" src="{{test.coverPath}}" mode="aspectFill" />
+    <text class="fun-eyebrow">{{test.category}} / {{test.questionCount}} 题</text>
+    <view class="fun-intro-title">{{test.title}}</view><view class="fun-intro-lead">{{test.subtitle}}</view><view class="fun-intro-desc">{{test.introduction}}</view>
+    <view wx:if="{{pets.length}}" class="fun-pet-picker"><view class="fun-label">给谁测</view><view class="fun-pet-list"><view wx:for="{{pets}}" wx:for-item="pet" wx:key="id" class="fun-pet {{petName === pet.name ? 'selected' : ''}}" data-index="{{index}}" bindtap="choosePet">{{pet.name}}</view></view></view>
+    <view class="fun-name-field"><view class="fun-label">宠物名字</view><input value="{{petName}}" maxlength="24" placeholder="例如：年糕" bindinput="nameInput" /></view>
+    <button class="fun-primary" bindtap="start" disabled="{{busy}}">{{busy ? '准备中…' : '开始测试 →'}}</button>
+    <view class="fun-disclaimer">{{test.disclaimer}}</view>
+  </view>
+
+  <view wx:if="{{!loading && stage === 'question' && test}}" class="fun-quiz">
+    <view class="fun-quiz-top"><view bindtap="previous">← 上一题</view><text>{{questionIndex + 1}} / {{test.questionCount}}</text></view>
+    <view class="fun-progress"><view style="width: {{progress}}%;"></view></view>
+    <text class="fun-eyebrow">想想 {{petName}} 平时的样子</text>
+    <view class="fun-question">{{question.prompt}}</view>
+    <view class="fun-choices"><button wx:for="{{question.choices}}" wx:key="*this" class="fun-choice" data-index="{{index}}" bindtap="chooseAnswer" disabled="{{busy}}"><text class="fun-choice-letter">{{index === 0 ? 'A' : index === 1 ? 'B' : 'C'}}</text><text class="fun-choice-text">{{item}}</text><text>→</text></button></view>
+    <view class="fun-hint">选最像它平时样子的答案就好。</view>
+  </view>
+
+  <view wx:if="{{!loading && stage === 'result' && result}}" class="fun-result">
+    <view class="fun-reveal">RESULT REVEAL · 结果揭晓</view>
+    <view class="fun-result-sheet">
+      <view class="fun-result-top"><text>麻麻抱我 / 趣味测试</text><text>01 / 01</text></view>
+      <view class="fun-result-kicker">{{result.petName}} · {{result.testTitle}}</view>
+      <view class="fun-result-name">{{result.outcome.name}}</view>
+      <view class="fun-result-lead">{{result.outcome.description}}</view>
+      <view class="fun-keywords"><text wx:for="{{result.outcome.keywords}}" wx:key="*this">#{{item}}</text></view>
+      <view class="fun-detail"><text>日常名场面</text><view>{{result.outcome.typical}}</view></view>
+      <view class="fun-detail"><text>你们之间</text><view>{{result.outcome.bond}}</view></view>
+      <view class="fun-detail"><text>今日小纸条</text><view>{{result.outcome.tip}}</view></view>
+      <view class="fun-closing">{{result.outcome.closing}}</view>
+      <view class="fun-disclaimer">{{result.disclaimer}}</view>
+    </view>
+    <view class="fun-result-actions"><button class="fun-primary" open-type="share">转发结果</button><button class="fun-secondary" bindtap="savePoster" disabled="{{busy}}">{{busy ? '生成中…' : '保存海报'}}</button></view>
+    <view class="fun-copy" bindtap="copyLink">复制网页链接</view>
+    <view class="fun-result-footer"><view bindtap="retry">再测一次</view><view wx:if="{{ownResult}}" bindtap="deleteResult">删除这份结果</view></view>
+  </view>
+
+  <view wx:if="{{!loading && stage === 'share-error'}}" class="fun-share-error"><view>这份结果已失效</view><text>它可能已经被删除，或分享链接不完整。</text><button class="fun-primary" bindtap="backToList">去测测我的宠物</button></view>
+  <canvas canvas-id="funTestPoster" class="fun-poster-canvas"></canvas>
+</view>

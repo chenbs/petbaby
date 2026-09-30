@@ -1,0 +1,12 @@
+{
+  "id": "starvoyage",
+  "group": "movie",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "prompt": "Use case: ads-marketing. Vertical 3:4 premium photographic pet space adventure film key art. A real cream corgi with complete natural body stands inside a grounded near-future spacecraft observation cabin, paws on a believable metal floor, looking out through a broad porthole toward a blue planet and a small field of stars. Soft amber cabin lights, tactile brushed metal, midnight blue and copper palette, quiet sense of discovery, realistic photography and pet fur, lower quarter visually quiet for later title. Entirely original spacecraft, no franchise helmets, weapons, logos, text, extra pets or anatomy errors.",
+  "finalPrompt": "Use case: ads-marketing. Vertical 3:4 premium photographic pet space adventure film key art. A real cream corgi with complete natural body stands inside a grounded near-future spacecraft observation cabin, paws on a believable metal floor, looking out through a broad porthole toward a blue planet and a small field of stars. Soft amber cabin lights, tactile brushed metal, midnight blue and copper palette, quiet sense of discovery, realistic photography and pet fur, lower quarter visually quiet for later title. Entirely original spacecraft, no franchise helmets, weapons, logos, text, extra pets or anatomy errors.",
+  "source": "tools/imagegen/out/movie-album-v2/movie-starvoyage-raw.jpg",
+  "output": "tools/imagegen/out/movie-album-v2/movie-starvoyage.jpg",
+  "sha256": "19dfa97ef64d6d1376dc7250048338b9a0cd700320b2be379c2f6e7a24d20bc4",
+  "review": "pending-visual-review"
+}

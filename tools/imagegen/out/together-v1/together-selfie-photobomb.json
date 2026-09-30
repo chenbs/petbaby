@@ -1,0 +1,14 @@
+{
+  "id": "together-selfie-photobomb",
+  "title": "抢镜自拍",
+  "mood": "funny",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "prompt": "Use case: photorealistic-natural. Asset type: an original self-owned frozen master for a pet-and-owner portrait effect. A spontaneous phone selfie on a sunny city sidewalk: an adult East Asian woman in a cream casual jacket is laughing at the camera while her own medium golden retriever leans its muzzle into the lower foreground, playfully stealing the frame. Both faces are fully visible and naturally proportioned, the dog's nose slightly closer to the lens without grotesque distortion. The woman is holding the phone with one anatomically correct hand; dog body and front paws remain visible. Their gaze and expressions make this a believable funny moment, not a staged portrait. Make a single vertical 9:16 35mm lifestyle photograph with a full coherent scene, physically plausible perspective, matching contact shadows and consistent natural light. Real skin texture and pet fur, moderate optical depth and gentle film grain. Keep both subjects within generous safe margins so neither face, hand, paw nor tail is cropped by a 9:16 frame. Their identities may later be replaced separately, so the owner and pet must remain clearly distinct and unobstructed. No real person's likeness, no public figure, no logo, no written text, no watermark, no extra humans or pets, no floating limbs, duplicate anatomy, plastic fur, overprocessed skin, pasted edges, fantasy glow or glossy AI illustration. Return one photograph only.",
+  "output": "tools/imagegen/out/together-v1/together-selfie-photobomb.jpg",
+  "sha256": "02c8d695814c08bb0e7a4613d113f6aa1852e778988262d1d5a6439c1bf0420a",
+  "review": "approved-local-visual",
+  "reviewedAt": "2026-09-29",
+  "master": "tools/imagegen/out/reference-v1/masters/together-selfie-photobomb_9x16_v01.webp",
+  "preview": "tools/imagegen/out/reference-v1/public-previews/together-selfie-photobomb_9x16_v01.webp"
+}

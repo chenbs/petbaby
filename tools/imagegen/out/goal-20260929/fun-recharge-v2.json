@@ -1,0 +1,9 @@
+{
+  "id": "fun-recharge-v2",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "prompt": "Use case: photorealistic-natural. Square editorial cover for a quiz about how a pet lifts the owner's mood. A real small caramel toy poodle rests on a rumpled pale mint sofa cushion in a sunny living room, awake and offering a slightly funny head tilt toward camera, a worn soft toy nearby. Complete head and front paws visible, natural pose, window light crossing realistic curls, comfortable lived-in room details. Mint, warm cream and butter-yellow palette, candid refined pet photography, inviting smile at thumbnail size. No text, logo, watermark, duplicate pet, extra limbs, plastic fur or CGI.",
+  "output": "tools/imagegen/out/goal-20260929/fun-recharge-v2.jpg",
+  "sha256": "dee450f6a034e5268a4e50c2a5e9c4e24d8b95ec80de5344b639e41b5bcb584d",
+  "review": "pending-visual-review"
+}

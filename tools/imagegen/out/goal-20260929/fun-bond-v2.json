@@ -1,0 +1,9 @@
+{
+  "id": "fun-bond-v2",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "prompt": "Use case: photorealistic-natural. Square editorial cover for a pet and owner companionship quiz. A real adult golden retriever rests its head softly against its owner's denim-clad knee on a park bench, one natural human hand gently touching its neck, no visible face. Dog's eyes and whole head prominent, torso and paws visible; candid unposed affection, believable body scale, genuine late-afternoon light, cream and soft sky-blue accents, shallow optical depth. Warm emotional realism suitable for a polished young pet app. No text, logo, watermark, extra people, extra dogs, extra hands, distorted paws or CGI.",
+  "output": "tools/imagegen/out/goal-20260929/fun-bond-v2.jpg",
+  "sha256": "f095aca6d5a96f1af2544981f84dae39f54c82e66b6258d36bd8865e3529bc62",
+  "review": "pending-visual-review"
+}

@@ -1,13 +1,17 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-flat art-film layout-matrix">
-  <view class="title">照片库</view>
+<view class="page page-flat art-film layout-matrix photo-library">
+  <view class="library-heading">
+    <view class="title">把可爱收好</view>
+    <text class="small">照片、故事和我的成长，都放在这里</text>
+  </view>
 
-  <view class="bar">
+  <view class="library-topbar">
     <picker range="{{pets}}" range-key="name" disabled="{{saving || preparing}}" bindchange="choosePet">
       <view class="picker">
-        <text class="small">当前宠物</text>
+        <text class="small">正在看</text>
         <text class="picker-value">{{petText || '暂无档案'}}</text>
+        <text class="picker-arrow" aria-hidden="true">⌄</text>
       </view>
     </picker>
     <t-button wx:if="{{photos.length}}" type="ghost" size="mini" anim="{{animType}}" bindtap="toggleManage">{{manage ? '完成' : '管理'}}</t-button>
@@ -17,83 +21,75 @@
   <t-button wx:if="{{error && !detail && !batchEditing}}" type="ghost" size="mini" bindtap="load">重新加载</t-button>
   <t-notice wx:if="{{message}}" type="success" message="{{message}}" class="block-gap"></t-notice>
 
-  <view wx:if="{{petId && !loading}}" class="bar">
-    <t-button type="primary" anim="{{animType}}" bindtap="goCreate">收好照片</t-button>
+  <view wx:if="{{petId && !loading && !recordMode}}" class="library-entry">
+    <view class="entry-copy"><view class="sub-title">留住今天的可爱</view><text class="small">先收照片，故事可以以后再补</text></view>
+    <t-button type="primary" anim="{{animType}}" bindtap="goCreate">添加照片</t-button>
   </view>
 
   <view wx:if="{{recordMode && petId && !loading}}" class="record-panel">
-    <view class="sub-title">为 {{petText}} 收好照片</view>
-    <text class="small">每批 1–9 张。选好后点「收好照片」才开始保存；文字和标签可以稍后再补。</text>
-    <text class="small">上传可能压缩照片，保存的是上传后的文件。</text>
-    <t-button type="secondary" anim="{{animType}}" disabled="{{uploading || preparing || uploadItems.length >= 9}}" bindtap="choosePhotos">{{preparing ? '正在整理照片' : '选择照片'}}</t-button>
-    <view wx:for="{{uploadItems}}" wx:key="requestId" class="upload-row">
-      <image wx:if="{{item.path && !item.thumbFailed}}" src="{{item.path}}" mode="aspectFill" class="upload-thumb" data-id="{{item.requestId}}" data-src="{{item.path}}" binderror="onUploadThumbError" />
-      <view wx:else class="upload-thumb upload-thumb-blank">预览失败</view>
-      <view class="upload-copy">
-        <text>{{petText}} · 第 {{index + 1}} 张 · {{item.stateText}}</text>
-        <text wx:if="{{item.state === 'uploading'}}" class="small">已发送 {{item.progress}}%，等待确认保存</text>
-        <text wx:if="{{item.error}}" class="small">{{item.error}}</text>
-        <text wx:if="{{item.duplicatePhotoId}}" class="small">照片库中可能已有这张照片，你可以保留或在图库中移除。</text>
-        <t-button wx:if="{{item.needsReselect || item.state === 'failed'}}" type="ghost" size="mini" data-id="{{item.requestId}}" bindtap="choosePhotos">重选这一张</t-button>
-        <t-button wx:if="{{!item.attempted}}" type="ghost" size="mini" data-id="{{item.requestId}}" bindtap="cancelSelected">取消这一张</t-button>
+    <view wx:if="{{!savedCount || pendingCount}}" class="record-head">
+      <view><view class="sub-title">本次记录</view><text class="small">最多 9 张 · 保存后可补文字和标签</text></view>
+      <text wx:if="{{uploadItems.length}}" class="record-count">{{uploadItems.length}} / 9</text>
+    </view>
+    <t-button wx:if="{{!uploadItems.length}}" type="primary" block anim="{{animType}}" disabled="{{preparing}}" bindtap="choosePhotos">{{preparing ? '正在整理照片' : '选择照片'}}</t-button>
+    <t-button wx:elif="{{pendingCount && uploadItems.length < 9}}" type="secondary" block anim="{{animType}}" disabled="{{uploading || preparing}}" bindtap="choosePhotos">再选几张</t-button>
+    <view wx:if="{{activeUploadItems.length}}" class="upload-grid">
+      <view wx:for="{{activeUploadItems}}" wx:key="requestId" class="upload-card">
+        <view class="upload-frame">
+          <image wx:if="{{item.path && !item.thumbFailed}}" src="{{item.path}}" mode="aspectFill" class="upload-thumb" data-id="{{item.requestId}}" data-src="{{item.path}}" binderror="onUploadThumbError" />
+          <view wx:else class="upload-thumb upload-thumb-blank">预览失败</view>
+          <text wx:if="{{!item.attempted}}" class="upload-remove" aria-role="button" aria-label="移除这张照片" data-id="{{item.requestId}}" catchtap="cancelSelected">×</text>
+          <text wx:if="{{item.needsReselect || item.state === 'failed'}}" class="upload-reselect" aria-role="button" data-id="{{item.requestId}}" catchtap="choosePhotos">重选</text>
+        </view>
+        <view wx:if="{{item.state !== 'ready'}}" class="upload-card-meta"><text>{{item.stateText}}</text><text wx:if="{{item.state === 'uploading'}}">{{item.progress}}%</text></view>
+        <text wx:if="{{item.error}}" class="upload-error">{{item.error}}</text>
+        <text wx:if="{{item.duplicatePhotoId}}" class="upload-error">图库中可能已有相同照片</text>
       </view>
     </view>
-    <text wx:if="{{uploadItems.length}}">已为 {{petText}} 收好 {{savedCount}} 张，{{pendingCount}} 张待处理</text>
-    <t-button wx:if="{{pendingCount}}" type="primary" anim="{{animType}}" disabled="{{uploading || preparing}}" bindtap="savePhotos">{{uploading ? '正在收好照片' : (savedCount ? '核对并重试剩余照片' : '收好照片')}}</t-button>
-    <block wx:if="{{savedCount}}">
-      <text class="small">照片已经收好了。想起什么时，再来补一句。</text>
-      <view class="record-actions">
-        <t-button type="secondary" size="mini" bindtap="viewSaved">查看这次记录</t-button>
-        <t-button type="ghost" size="mini" disabled="{{uploading}}" bindtap="editBatch">给本次成功照片补一句</t-button>
-        <t-button type="ghost" size="mini" disabled="{{pendingCount || uploading}}" bindtap="continueBatch">继续收好照片</t-button>
-        <t-button type="ghost" size="mini" bindtap="home">返回陪伴首页</t-button>
+    <t-button wx:if="{{pendingCount}}" type="primary" block anim="{{animType}}" disabled="{{uploading || preparing}}" bindtap="savePhotos">{{uploading ? '正在保存' : (savedCount ? '重试剩余照片' : '保存这批照片')}}</t-button>
+    <view wx:if="{{savedCount}}" class="saved-summary">
+      <view class="saved-copy"><view class="sub-title">已收好 {{savedCount}} 张</view><text class="small">想起什么，再补一句就好</text></view>
+      <view class="saved-actions">
+        <t-button type="secondary" size="mini" disabled="{{uploading}}" bindtap="editBatch">补一句话</t-button>
+        <t-button type="ghost" size="mini" disabled="{{pendingCount || uploading}}" bindtap="continueBatch">继续添加</t-button>
       </view>
-    </block>
+    </view>
   </view>
 
   <t-skeleton wx:if="{{loading}}" type="grid" count="9" class="block-gap"></t-skeleton>
-
-  <t-empty
-    wx:elif="{{!photos.length && !error}}"
-    icon="photo"
-    title="先收好第一张照片"
-    description="以后从这里接着记。不用先选择玩法，也可以只保存照片。"
-    action-text="{{petId ? '收好照片' : '先建宠物档案'}}"
-    anim="{{animType}}"
-    decor="{{decor}}"
-    bindaction="goCreate"
-  ></t-empty>
-
-  <block wx:else>
-    <view class="bar"><text class="small">{{petText}} 的照片库共 {{totalCount}} 张{{batchView ? ' · 正在看这次记录' : ''}}</text><t-button wx:if="{{batchView}}" type="ghost" size="mini" bindtap="load">全部照片</t-button></view>
-    <t-photo-grid
-      photos="{{photos}}"
-      columns="{{photos.length === 1 ? 1 : 2}}"
-      featured="{{photos.length === 1}}"
-      selected-ids="{{picked}}"
-      manageable="{{manage}}"
-      previewable="{{!manage}}"
-      anim="{{animType}}"
-      class="block-gap"
-      bindtoggle="togglePick"
-    ></t-photo-grid>
+  <view wx:else class="library-content">
+    <view class="gallery-heading"><view><view class="sub-title">{{batchView ? '本次记录' : '全部照片'}}</view><text class="small">{{batchView ? photos.length : totalCount}} 张</text></view><t-button wx:if="{{batchView}}" type="ghost" size="mini" bindtap="load">查看全部</t-button><t-button wx:elif="{{recordMode && savedCount && !manage}}" type="ghost" size="mini" bindtap="viewSaved">仅看本次</t-button></view>
+    <view wx:if="{{!photos.length && !error}}" class="gallery-empty"><text>{{petId ? '收好的照片会出现在这里' : '先为我建一份档案'}}</text><t-button wx:if="{{!petId}}" type="primary" size="mini" bindtap="newPet">新建宠物档案</t-button></view>
+    <view wx:else class="gallery-grid {{photos.length === 1 ? 'gallery-grid-single' : ''}}">
+      <t-photo-grid
+        photos="{{photos}}"
+        columns="{{photos.length === 1 ? 1 : 2}}"
+        image-mode="aspectFit"
+        featured="{{photos.length === 1}}"
+        selected-ids="{{picked}}"
+        manageable="{{manage}}"
+        previewable="{{!manage}}"
+        anim="{{animType}}"
+        bindtoggle="togglePick"
+      ></t-photo-grid>
+    </view>
     <t-button wx:if="{{nextCursor}}" class="block-gap" type="secondary" block disabled="{{loadingMore}}" bindtap="more">{{loadingMore ? '正在加载' : '加载更多'}}</t-button>
-    <text wx:elif="{{photos.length && !batchView}}" class="small end-note">没有更多照片了</text>
 
-    <!-- 管理模式下的批量删除条固定在底部 -->
     <view wx:if="{{manage}}" class="dock">
       <text class="small">已选 {{picked.length}} 张</text>
       <t-button type="danger" size="mini" anim="{{animType}}" disabled="{{!picked.length}}" bindtap="askRemove">删除所选</t-button>
     </view>
-  </block>
+  </view>
 
-  <view wx:if="{{petId && !loading}}" class="library-links">
-    <t-button type="ghost" size="mini" anim="{{animType}}" bindtap="timeline">查看时间线</t-button>
-    <view wx:if="{{totalCount}}" class="record-actions">
-      <t-button type="ghost" size="mini" bindtap="compare">免费成长对比（带水印）</t-button>
-      <t-button type="ghost" size="mini" data-kind="album" bindtap="makeWork">做成画册</t-button>
-      <t-button type="ghost" size="mini" data-kind="video" bindtap="makeWork">做成短片</t-button>
+  <view wx:if="{{petId && !loading && totalCount}}" class="library-links">
+    <view class="sub-title">用照片做点什么</view>
+    <view class="library-tool-grid">
+      <view class="library-tool" aria-role="button" bindtap="timeline">时间线<text>›</text></view>
+      <view class="library-tool" aria-role="button" bindtap="compare">成长对比<text>›</text></view>
+      <view class="library-tool" aria-role="button" data-kind="album" bindtap="makeWork">做成画册<text>›</text></view>
+      <view class="library-tool" aria-role="button" data-kind="video" bindtap="makeWork">做成短片<text>›</text></view>
     </view>
+    <text class="small">成长对比为带水印的免费作品</text>
   </view>
 </view>
 

@@ -13,7 +13,7 @@
 | 定价与会员权益 | `GET /api/pets/[id]/pricing`、`GET /api/membership-plans` | 下单前可见的分档价与「再攒多少进下一档」；套餐名/价格/权益文案的唯一来源，端上不留套餐常量 |
 | 生成作品 | `/api/generations/*`、`/api/works/*` | 任务、作品、版本、下载和分享 |
 | 支付订单 | `/api/orders/*`、`/api/payments/wechat/notify` | 下单、回调、退款和解锁 |
-| AI、模板与互动 | `/api/ai-runs/*`、`/api/image-templates`、`/api/image-templates/[id]/sample`、`/api/interactive-sessions/*`、`/api/interactive-share/*` | 共登记 9 个入口 / 116 个条目（76 live / 40 pending-review）；公开接口只下发 live 模板。普通模板样图读取 `sampleStorageKey`、生成读取 `masterStorageKey`；宠物人化上线后两者指向同一自有效果图对象。普通模板支持四选一和重抽；宠物人化固定二选一且不支持重抽。V2 图片、提示词和计划对象键已登记，尚未取得发布批准或上传对象 |
+| AI、模板与互动 | `/api/ai-runs/*`、`/api/image-templates`、`/api/image-templates/[id]/sample`、`/api/interactive-sessions/*`、`/api/interactive-share/*` | 当前规模见文档索引；公开接口只下发 live 模板。普通模板样图读取 `sampleStorageKey`、生成读取 `masterStorageKey`；宠物人化两者指向同一自有效果图对象。普通模板支持四选一和重抽；宠物人化固定二选一且不支持重抽。40 图已获用户审核并接入代码与本地对象，生产上传和真实调用仍待验证 |
 | 视频与纪念 | `/api/video-catalog`、`/api/video-projects/*`、`/api/video-renders/*`、`/api/annual-films`、`/api/memorials/*`、`/api/memorial-share/*` | 视频项目/渲染/高清解锁与纪念空间/三类产物/分享；`POST /api/annual-films` 建叙事型年度视频（`year` + 可选 `durationSeconds` 10/20/30） |
 | 复购与商业 | `/api/subscriptions/*`、`/api/addresses/*`、`/api/physical-skus`、`/api/physical-orders/*`、`/api/memberships/*`、`/api/growth-orders/*`、`/api/annual-reports/*`、`/api/annual-report-share/*` | 订阅、实体履约、会员权益和年度报告完整接口 |
 | 管理后台 | `/api/admin/dashboard`、`/api/admin/audit`、`/api/admin/users`、`/api/admin/config`、`/api/admin/plugins/*`、`/api/admin/experiments/*`、`/api/admin/experiments/metrics`、`/api/admin/interactive`、`/api/admin/video`、`/api/admin/memorials`、`/api/admin/business`、`/api/admin/operations`、`/api/admin/physical-orders/*` | 驾驶舱、统一审计、用户状态、配置版本、赛马指标、任务恢复、分享关闭、履约、权益和报告运营 |

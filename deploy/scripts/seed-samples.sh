@@ -71,11 +71,16 @@ done < "$REVIEWED_SAMPLES"
 [ -f "$IMAGE_ASSET_MANIFEST" ] || fail "缺少 $IMAGE_ASSET_MANIFEST，请先运行 node tools/imagegen/promote-frozen-master-remediation-20260819.mjs"
 template_count=0
 preview_count=0
+human_count=0
 while IFS="$(printf '\t')" read -r asset_kind storage_key source_path expected_sha256; do
   [ -n "$asset_kind" ] || continue
   case "$asset_kind" in \#*) continue ;; esac
-  case "$asset_kind" in master|preview) ;; *) fail "未知图片资产类型：$asset_kind" ;; esac
+  case "$asset_kind" in master|preview|human) ;; *) fail "未知图片资产类型：$asset_kind" ;; esac
   case "$storage_key" in samples/image-templates/*|samples/image-template-previews/*) ;; *) fail "图片对象键越界：$storage_key" ;; esac
+  if [ "$asset_kind" = "human" ]; then
+    case "$source_path" in tools/imagegen/out/pet-human-v2/effects/*.webp) ;; *) fail "人化效果图路径非法：$source_path" ;; esac
+    case "$storage_key" in samples/image-templates/human-effect-*.webp) ;; *) fail "人化效果图对象键非法：$storage_key" ;; esac
+  fi
   src="$REPO_DIR/$source_path"
   [ -f "$src" ] || fail "缺少图片资产 $src"
   actual_sha256=$(sha256_of "$src")
@@ -84,13 +89,17 @@ while IFS="$(printf '\t')" read -r asset_kind storage_key source_path expected_s
   mkdir -p "$(dirname "$target")"
   cp "$src" "$target"
   printf '{"contentType":"image/webp"}' > "$target.meta"
-  if [ "$asset_kind" = "master" ]; then template_count=$((template_count + 1))
-  else preview_count=$((preview_count + 1)); fi
+  case "$asset_kind" in
+    master) template_count=$((template_count + 1)) ;;
+    preview) preview_count=$((preview_count + 1)) ;;
+    human) human_count=$((human_count + 1)) ;;
+  esac
 done < "$IMAGE_ASSET_MANIFEST"
-[ "$template_count" = "76" ] || fail "冻结母版数量错误：$template_count/76"
-[ "$preview_count" = "76" ] || fail "公开展示图数量错误：$preview_count/76"
+[ "$template_count" = "80" ] || fail "冻结母版数量错误：$template_count/80"
+[ "$preview_count" = "80" ] || fail "公开展示图数量错误：$preview_count/80"
+[ "$human_count" = "40" ] || fail "人化效果图数量错误：$human_count/40"
 
-log "已在暂存目录摆好 $count 张插件样例图、$template_count 张冻结母版和 $preview_count 张公开展示图，开始写入 object-data 卷"
+log "已在暂存目录摆好 $count 张插件样例图、$template_count 张冻结母版、$preview_count 张公开展示图和 $human_count 张人化效果图，开始写入 object-data 卷"
 # 目标目录必须先建：应用只在写对象时才 mkdir，全新机器上 samples/ 还不存在，
 # 而 docker cp 到不存在的目录会直接失败。
 docker exec -u root "$WEB_CONTAINER" mkdir -p /app/.data/objects/samples

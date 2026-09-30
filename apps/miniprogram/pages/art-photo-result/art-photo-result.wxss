@@ -1,0 +1,22 @@
+.bundle-result-page { padding-bottom: calc(var(--page-bottom-safe) + env(safe-area-inset-bottom)); }
+.bundle-result-page .title { margin: var(--space-2) 0; }
+.bundle-notice { display: block; margin-top: var(--space-4); }
+.bundle-progress { display: grid; gap: var(--space-3); margin-top: var(--space-5); padding: var(--space-4); border: var(--card-border); border-radius: var(--card-radius); background: var(--surface); }
+.bundle-progress-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.bundle-progress-head .sub-title { margin: 0 0 var(--space-1); }
+.bundle-progress-count { flex: none; color: var(--primary); font-size: var(--font-h3); font-weight: var(--fw-bold); }
+.bundle-progress-track { overflow: hidden; height: var(--space-1); border-radius: var(--radius-pill); background: var(--divider); }
+.bundle-progress-fill { height: 100%; border-radius: var(--radius-pill); background: var(--button-primary); }
+.bundle-gallery { margin-top: var(--space-5); }
+.bundle-gallery-title { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-2); }
+.bundle-gallery-title .section-title { margin: 0; }
+.bundle-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4) var(--space-3); margin-top: var(--space-3); }
+.bundle-item { display: grid; min-width: 0; align-content: start; gap: var(--space-1); }
+.bundle-image-wrap { position: relative; overflow: hidden; aspect-ratio: var(--ratio-portrait); border-radius: var(--radius-image-thumb); background: var(--surface); }
+.bundle-image { display: block; width: 100%; height: 100%; }
+.bundle-image-empty { display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: var(--small-size); }
+.bundle-image-badge { position: absolute; top: var(--space-1); left: var(--space-1); padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); background: var(--button-secondary); color: var(--button-secondary-text); font-size: var(--eyebrow-size); }
+.bundle-image-badge-done { background: var(--button-primary); color: var(--button-primary-text); }
+.bundle-item-head { display: flex; justify-content: space-between; gap: var(--space-1); font-size: var(--small-size); font-weight: var(--fw-bold); }
+.bundle-item-head .small { flex: none; font-weight: var(--fw-normal); }
+.bundle-bottom-link { display: block; margin-top: var(--space-5); }

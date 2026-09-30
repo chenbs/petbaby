@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>麻麻抱我 · 四套主题重设计原型（2026-09-30）</title>
+<style>
+/* ===== 文档外壳 ===== */
+*{box-sizing:border-box}
+body{margin:0;background:#E9E5DF;color:#1F2540;font:14px/1.6 "PingFang SC","Microsoft YaHei","Noto Sans CJK SC",sans-serif}
+img{display:block}
+.doc{max-width:1860px;margin:0 auto;padding:32px 40px 80px}
+.doc-head h1{margin:0;font-size:30px;line-height:1.3}
+.doc-head p{margin:6px 0 0;color:#5B6178;max-width:1100px}
+.toolbar{display:flex;gap:10px;margin:16px 0 0;flex-wrap:wrap}
+.toolbar button{padding:7px 16px;border:0;border-radius:999px;background:#1F2540;color:#fff;font:inherit;font-size:13px;cursor:pointer}
+.toolbar button.off{background:#fff;color:#1F2540}
+.sec{margin-top:32px;padding:28px;border-radius:28px;background:#F6F3EE}
+.sec>h2{margin:0;font-size:22px}
+.sec>.lead{margin:4px 0 20px;color:#5B6178;max-width:1200px}
+.four{display:grid;grid-template-columns:repeat(4,395px);gap:24px;justify-content:space-between}
+.four>div>.label{margin:0 0 10px}
+.label b{font-size:16px}
+.label span{display:block;font-size:12px;color:#5B6178}
+body.gray .phone,body.gray .board{filter:grayscale(1)}
+
+/* ===== 手机外框（375×812，1px = 2rpx） ===== */
+.phone{position:relative;width:395px;height:832px;border:10px solid #16141A;border-radius:52px;overflow:hidden;box-shadow:0 30px 60px -30px rgba(40,20,10,.5);background:var(--bg);color:var(--text)}
+.status{height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 26px 0 30px;font-size:14px;font-weight:700}
+.status i{display:inline-block;width:18px;height:10px;margin-left:4px;border-radius:3px;background:currentColor}
+.nav{height:44px;display:flex;align-items:center;padding-left:16px;position:relative}
+.capsule{position:absolute;right:8px;top:6px;width:87px;height:32px;border-radius:16px;border:1px solid var(--capsule-line);background:var(--capsule-bg);display:flex;align-items:center;justify-content:space-around;font-size:15px}
+.brand{display:flex;align-items:center;gap:6px;font-size:17px;font-weight:var(--tw);font-family:var(--tf)}
+.brand svg{width:22px;height:22px;color:var(--primary)}
+.screen{position:absolute;top:88px;left:0;right:0;bottom:0;overflow-y:auto;padding:6px 16px 120px}
+.screen::-webkit-scrollbar{display:none}
+svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.fold{display:none}
+body.export .phone{height:auto;min-height:832px}
+body.export .screen{position:relative;top:0;overflow:visible}
+body.export .phone .fold{display:block;position:absolute;left:0;right:0;top:812px;border-top:2px dashed #FF5A36;z-index:30}
+body.export .phone .fold span{position:absolute;right:6px;top:-20px;padding:0 6px;border-radius:4px;background:#FF5A36;color:#fff;font-size:11px}
+
+/* ===== 共用结构（四套主题同一份 DOM） ===== */
+.st{display:flex;align-items:baseline;justify-content:space-between;margin:22px 0 10px}
+.st b{position:relative;font-size:18px;font-weight:var(--tw);font-family:var(--tf);line-height:1.35}
+.st span{font-size:12px;color:var(--text2)}
+.eb{font-size:11px;color:var(--text2)}
+.tag{display:inline-block;padding:1px 8px;border-radius:6px;font-size:11px;font-weight:700;line-height:18px}
+.t1{background:var(--stk1);color:var(--stk-ink)}.t2{background:var(--stk2);color:var(--stk-ink)}.t3{background:var(--stk3);color:var(--stk-ink)}
+
+/* 宠物名片 */
+.pc{position:relative;padding:14px;background:var(--card);border-radius:var(--rc);border:var(--bd);box-shadow:var(--sh)}
+.pc-top{display:flex;align-items:center;gap:12px}
+.pc-ava{position:relative;flex:none}
+.pc-ava img{width:60px;height:60px;border-radius:50%;object-fit:cover;object-position:50% 25%}
+.pc-main{flex:1;min-width:0}
+.pc-name{font-size:19px;font-weight:var(--tw);font-family:var(--tf)}
+.pc-name small{font-size:12px;font-weight:400;color:var(--text2);font-family:inherit;margin-left:4px}
+.pc-days{font-size:13px;color:var(--text2)}
+.pc-days b{font-size:24px;font-weight:900;color:var(--num);margin-right:2px}
+.pc-cam{width:44px;height:44px;display:flex;align-items:center;justify-content:center;flex:none;border-radius:50%;background:var(--surface);color:var(--text)}
+.pc-moment{display:flex;align-items:center;gap:10px;margin-top:12px;padding:9px 12px;border-radius:calc(var(--rc) - 6px);background:var(--surface);font-size:12px;color:var(--text2)}
+.pc-moment b{display:block;font-size:13px;color:var(--text)}
+.pc-moment div{flex:1}
+.pc-moment .go{font-weight:700;color:var(--primary)}
+.pc-stamp,.pc-stk{display:none}
+
+/* 人类转生计划 */
+.hm{position:relative;margin-top:14px;padding:14px;border-radius:var(--rc);background:var(--hm-bg);border:var(--bd);box-shadow:var(--sh);color:var(--hm-text)}
+.hm-head{display:flex;align-items:flex-end;justify-content:space-between}
+.hm-head b{display:block;font-size:20px;font-weight:var(--tw);font-family:var(--tf);line-height:1.3}
+.hm-head .eb{color:var(--hm-text2)}
+.hm-go{padding:6px 14px;border-radius:var(--rb);background:var(--btn);color:var(--btn-text);font-size:13px;font-weight:800;border:var(--btn-bd);box-shadow:var(--btn-sh);white-space:nowrap}
+.hm-imgs{position:relative;display:flex;gap:8px;margin-top:12px}
+.hm-imgs>img{flex:1;min-width:0;aspect-ratio:9/13;object-fit:cover;object-position:50% 20%;border-radius:var(--ri)}
+.hm-origin{position:absolute;left:8px;bottom:8px;z-index:3;display:flex;align-items:center;gap:6px;padding:3px 10px 3px 3px;border-radius:999px;background:rgba(255,255,255,.94);color:#1F2540;font-size:11px;font-weight:700}
+.hm-origin img{width:26px;height:26px;border-radius:50%;object-fit:cover;object-position:50% 25%}
+.hm-cap{margin-top:10px;font-size:12px;color:var(--hm-text2)}
+.hm-new{display:none}
+
+/* 麻麻精选 */
+.bs-stamp{display:none}
+.bs-lead{position:relative;border-radius:var(--rc);overflow:hidden;background:var(--card);border:var(--bd);box-shadow:var(--sh)}
+.bs-lead img{width:100%;aspect-ratio:16/9;object-fit:cover}
+.bs-lead .cap{display:flex;align-items:center;justify-content:space-between;padding:10px 12px}
+.bs-lead .cap b{font-size:15px}
+.bs-lead .cap span{font-size:12px;color:var(--text2)}
+.bs-strip{display:flex;gap:10px;overflow:hidden;margin:12px -16px 0;padding:4px 16px 6px}
+.bs-it{flex:none;width:96px}
+.bs-it img{width:96px;height:128px;object-fit:cover;border-radius:var(--ri);border:var(--bd-img)}
+.bs-it div{margin-top:5px;font-size:12px;font-weight:700;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bs-sub{margin-top:14px;font-size:13px;font-weight:700;color:var(--text2)}
+
+/* 分类瀑布流 */
+.chips{display:flex;gap:8px;overflow:hidden;margin:0 -16px;padding:2px 16px}
+.chip{flex:none;padding:5px 13px;border-radius:var(--rchip);background:var(--card);color:var(--text2);font-size:13px;border:var(--chip-bd)}
+.chip.on{background:var(--chip-on-bg);color:var(--chip-on-text);border:var(--chip-on-bd);font-weight:800}
+.fd{display:grid;grid-template-columns:1fr 1fr;gap:14px 12px;margin-top:12px}
+.fd-it{position:relative}
+.fd-it .ph{position:relative;border-radius:var(--ri);overflow:hidden;border:var(--bd-img)}
+.fd-it img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:50% 25%}
+.fd-it .tag{position:absolute;left:8px;top:8px;z-index:2}
+.fd-it b{display:block;margin-top:6px;font-size:14px;line-height:1.35}
+.fd-it>span{font-size:12px;color:var(--text2)}
+.fd-it.fun .ph{background:var(--stk1)}
+
+/* 底栏 */
+.tabbar{position:absolute;left:0;right:0;bottom:0;height:84px;padding-bottom:28px;display:flex;align-items:center;background:var(--tab-bg);border-top:var(--tab-line);z-index:20}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--text2);font-size:10px}
+.tab .ic{display:flex;align-items:center;justify-content:center;width:40px;height:28px;border-radius:14px}
+.tab svg{width:22px;height:22px}
+.tab.on{color:var(--tab-on);font-weight:800}
+.tab.on .ic{background:var(--tab-on-bg)}
+.tab.plus .ic{width:46px;height:46px;margin-top:-10px;border-radius:var(--rplus);background:var(--btn);color:var(--btn-text);border:var(--btn-bd);box-shadow:var(--btn-sh)}
+
+/* ================= 主题一：橘子汽水（默认，pet） ================= */
+.skin-soda{--bg:#FFFAF3;--surface:#FFF1E0;--card:#FFFFFF;--text:#1F2540;--text2:#5B6178;--primary:#B7401A;--num:#FF9A52;
+  --btn:#FF9A52;--btn-text:#1F2540;--btn-bd:0 solid transparent;--btn-sh:0 8px 16px -8px rgba(255,154,82,.75);
+  --stk1:#FFD45C;--stk2:#CFE6FF;--stk3:#BDEBCB;--stk-ink:#1F2540;
+  --rc:20px;--ri:16px;--rb:999px;--rchip:999px;--rplus:50%;--bd:0 solid transparent;--bd-img:0 solid transparent;
+  --sh:0 2px 8px -2px rgba(60,35,20,.10),0 16px 32px -18px rgba(60,35,20,.28);
+  --tw:800;--tf:inherit;--chip-bd:1px solid #F3E3D2;--chip-on-bg:#1F2540;--chip-on-text:#fff;--chip-on-bd:1px solid #1F2540;
+  --hm-bg:linear-gradient(150deg,#FFB273 0%,#FFD0A1 50%,#FFE8D2 100%);--hm-text:#1F2540;--hm-text2:#3B3F57;
+  --tab-bg:transparent;--tab-line:0;--tab-on:#1F2540;--tab-on-bg:#FFE3CC;--capsule-bg:rgba(255,255,255,.8);--capsule-line:rgba(0,0,0,.08)}
+.skin-soda .st b::before{content:"";display:inline-block;width:8px;height:8px;margin-right:6px;border-radius:50%;background:var(--num);vertical-align:3px}
+.skin-soda .pc-ava img{box-shadow:0 0 0 3px #fff,0 0 0 5px #FFD0A1}
+.skin-soda .pc-cam{background:#FF9A52}
+.skin-soda .pc-days b{color:#B7401A}
+.skin-soda .hm-imgs>img{border:3px solid #fff}
+.skin-soda .hm-imgs>img:nth-child(2){transform:translateY(-10px) scale(1.05);box-shadow:0 14px 24px -12px rgba(120,50,10,.5)}
+.skin-soda .bs-it img{box-shadow:0 8px 16px -10px rgba(60,35,20,.4)}
+.skin-soda .fd-it:nth-child(1) .tag{transform:rotate(-4deg)}
+.skin-soda .tabbar{left:12px;right:12px;bottom:14px;height:64px;padding:0;border-radius:32px;background:rgba(255,255,255,.96);box-shadow:0 12px 30px -12px rgba(60,35,20,.35)}
+.skin-soda .tab.plus .ic{margin-top:0}
+
+/* ================= 主题二：手账相册（film） ================= */
+.skin-journal{--bg:#F4EEE2;--surface:#EAE2D2;--card:#FFFDF8;--text:#211E1B;--text2:#6B6258;--primary:#C2381F;--num:#C2381F;
+  --btn:#211E1B;--btn-text:#FFFDF8;--btn-bd:0 solid transparent;--btn-sh:0 3px 0 rgba(33,30,27,.25);
+  --stk1:#F3D3C6;--stk2:#CFE3C8;--stk3:#FFF3B0;--stk-ink:#211E1B;
+  --rc:4px;--ri:2px;--rb:6px;--rchip:6px;--rplus:8px;--bd:1px solid #DDD3C2;--bd-img:0 solid transparent;
+  --sh:0 3px 0 rgba(33,30,27,.10);
+  --tw:700;--tf:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC",serif;
+  --chip-bd:1px dashed #BFB3A0;--chip-on-bg:transparent;--chip-on-text:#C2381F;--chip-on-bd:1.5px solid #C2381F;
+  --hm-bg:#FFFDF8;--hm-text:#211E1B;--hm-text2:#6B6258;
+  --tab-bg:#FFFDF8;--tab-line:1px dashed #CFC3AF;--tab-on:#C2381F;--tab-on-bg:transparent;--capsule-bg:rgba(255,253,248,.8);--capsule-line:rgba(0,0,0,.1);
+  background-image:radial-gradient(rgba(33,30,27,.05) 1px,transparent 1.2px),radial-gradient(rgba(33,30,27,.035) 1px,transparent 1.2px);background-size:7px 7px,11px 11px;background-position:0 0,3px 5px}
+.skin-journal .st b::after{content:"";position:absolute;left:-4px;right:-8px;bottom:0;height:9px;background:rgba(194,56,31,.18);transform:rotate(-1.5deg);z-index:-1}
+.skin-journal .pc-ava img{width:62px;height:70px;border-radius:0;padding:4px 4px 12px;background:#fff;box-shadow:0 2px 6px rgba(33,30,27,.2);transform:rotate(-4deg)}
+.skin-journal .pc-ava::before{content:"";position:absolute;left:14px;top:-7px;width:36px;height:13px;background:rgba(207,227,200,.9);transform:rotate(-8deg);z-index:2}
+.skin-journal .pc-stamp{display:flex;position:absolute;right:66px;top:12px;width:54px;height:54px;border:1.5px dashed #C2381F;border-radius:50%;align-items:center;justify-content:center;text-align:center;color:#C2381F;font-size:10px;line-height:1.2;font-weight:700;transform:rotate(12deg);font-family:var(--tf)}
+.skin-journal .pc-cam{border-radius:6px;border:1px solid #DDD3C2;background:#FFFDF8}
+.skin-journal .pc-moment{border-radius:2px;background:transparent;border-top:1px dashed #CFC3AF;margin-top:10px;padding:9px 2px 0}
+.skin-journal .hm{box-shadow:0 3px 0 rgba(33,30,27,.10)}
+.skin-journal .hm-imgs{gap:0;justify-content:center;padding:6px 0 4px}
+.skin-journal .hm-imgs>img{flex:none;width:112px;padding:5px 5px 18px;background:#fff;box-shadow:0 3px 8px rgba(33,30,27,.22)}
+.skin-journal .hm-imgs>img:nth-child(1){transform:rotate(-6deg) translateX(12px)}
+.skin-journal .hm-imgs>img:nth-child(2){transform:rotate(2deg) translateY(-6px);z-index:2}
+.skin-journal .hm-imgs>img:nth-child(3){transform:rotate(7deg) translateX(-12px)}
+.skin-journal .hm-imgs::after{content:"";position:absolute;left:50%;top:-2px;width:52px;height:14px;margin-left:-26px;background:rgba(243,211,198,.9);transform:rotate(-3deg);z-index:3}
+.skin-journal .hm-origin{left:2px;bottom:4px}
+.skin-journal .bs-stamp{display:flex;position:absolute;right:4px;top:-6px;width:58px;height:58px;border:2px solid #C2381F;border-radius:50%;align-items:center;justify-content:center;color:#C2381F;font-size:11px;font-weight:700;transform:rotate(-12deg);font-family:var(--tf);background:rgba(255,253,248,.6)}
+.skin-journal .bs{position:relative}
+.skin-journal .bs-lead{padding:6px 6px 0;transform:rotate(-.8deg)}
+.skin-journal .bs-lead img{border-radius:0}
+.skin-journal .bs-it img{padding:3px 3px 12px;background:#fff;height:132px;box-shadow:0 2px 6px rgba(33,30,27,.18)}
+.skin-journal .bs-it:nth-child(odd){transform:rotate(-2deg)}.skin-journal .bs-it:nth-child(even){transform:rotate(1.5deg)}
+.skin-journal .bs-it div,.skin-journal .fd-it b{font-family:var(--tf)}
+.skin-journal .fd-it .ph{padding:5px 5px 16px;background:#fff;box-shadow:0 2px 6px rgba(33,30,27,.16);border-radius:0}
+.skin-journal .fd-it:nth-child(1) .ph{transform:rotate(-1.2deg)}.skin-journal .fd-it:nth-child(4) .ph{transform:rotate(1deg)}
+.skin-journal .fd-it .tag{border:1.5px solid #C2381F;background:#FFFDF8;color:#C2381F;border-radius:999px}
+.skin-journal .tab.on .ic{border:1.5px solid #C2381F;border-radius:50%;width:34px;height:34px}
+
+/* ================= 主题三：赛博街机（brand，替代原「潮玩派对」） =================
+   克制的赛博：冷黑底 + 一种荧光柠檬主色，粉/青只做 1px 分色与状态点；
+   不用紫蓝渐变、不用大面积辉光——那是生成式设计里最常见的赛博套路。
+   识别度来自切角、网格底、等宽数字和 HUD 线框，而不是发光。 */
+.skin-cyber{--bg:#0E1016;--surface:#151922;--card:#1B2029;--text:#EAF2F5;--text2:#93A1AD;--primary:#D4FF3A;--num:#D4FF3A;
+  --btn:#D4FF3A;--btn-text:#0E1016;--btn-bd:0 solid transparent;--btn-sh:none;
+  --stk1:#D4FF3A;--stk2:#3DE8FF;--stk3:#FF4F9A;--stk-ink:#0E1016;
+  --rc:0;--ri:0;--rb:0;--rchip:0;--rplus:0;--bd:1px solid #2A3140;--bd-img:1px solid #2A3140;
+  --sh:none;--tw:800;--tf:inherit;--mono:"SF Mono","Menlo","Consolas","Roboto Mono",monospace;
+  --chip-bd:1px solid #2A3140;--chip-on-bg:#D4FF3A;--chip-on-text:#0E1016;--chip-on-bd:1px solid #D4FF3A;
+  --hm-bg:#151922;--hm-text:#EAF2F5;--hm-text2:#93A1AD;
+  --tab-bg:#0E1016;--tab-line:1px solid #2A3140;--tab-on:#D4FF3A;--tab-on-bg:transparent;--capsule-bg:rgba(255,255,255,.06);--capsule-line:rgba(255,255,255,.18);
+  --cut:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));
+  --cut-s:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,9px 100%,0 calc(100% - 9px));
+  background-image:linear-gradient(rgba(61,232,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(61,232,255,.045) 1px,transparent 1px);background-size:24px 24px}
+.skin-cyber .status{color:#EAF2F5}
+.skin-cyber .brand svg{color:#D4FF3A}
+.skin-cyber .pc,.skin-cyber .hm,.skin-cyber .bs-lead{clip-path:var(--cut)}
+.skin-cyber .st b{padding-left:10px;border-left:3px solid #D4FF3A}
+.skin-cyber .st span{font-family:var(--mono)}
+.skin-cyber .pc{border-left:3px solid #D4FF3A}
+.skin-cyber .pc-ava img{border-radius:0;outline:1px solid #3DE8FF;outline-offset:2px}
+.skin-cyber .pc-name small{font-family:inherit}
+.skin-cyber .pc-days b{font-family:var(--mono);color:#D4FF3A}
+.skin-cyber .pc-stk{display:block;position:absolute;right:66px;top:14px;font:700 10px/1 var(--mono);color:#3DE8FF;letter-spacing:1px}
+.skin-cyber .pc-cam{border-radius:0;background:transparent;border:1px solid #D4FF3A;color:#D4FF3A;clip-path:var(--cut-s)}
+.skin-cyber .pc-moment{border-radius:0;background:transparent;border:1px dashed #2A3140}
+.skin-cyber .pc-moment .go{color:#D4FF3A}
+.skin-cyber .hm{border:1px solid #2A3140}
+.skin-cyber .hm-new{display:block;margin-bottom:6px;font:700 10px/1 var(--mono);color:#FF4F9A;letter-spacing:1px}
+.skin-cyber .hm-go{clip-path:var(--cut-s)}
+.skin-cyber .hm-imgs{gap:4px}
+.skin-cyber .hm-imgs>img{border-radius:0;border:1px solid #2A3140}
+.skin-cyber .hm-imgs::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:#D4FF3A;z-index:3;animation:scan 3.2s linear infinite}
+@keyframes scan{from{top:0}to{top:calc(100% - 2px)}}
+.skin-cyber .hm-origin{border-radius:0;background:#0E1016;color:#EAF2F5;border:1px solid #D4FF3A}
+.skin-cyber .hm-origin img{border-radius:0}
+.skin-cyber .bs-strip{counter-reset:bs}
+.skin-cyber .bs-it{position:relative;counter-increment:bs}
+.skin-cyber .bs-it::before{content:counter(bs,decimal-leading-zero);position:absolute;left:1px;top:1px;z-index:2;padding:1px 5px;background:#D4FF3A;color:#0E1016;font:800 10px/1.4 var(--mono)}
+.skin-cyber .bs-lead .cap{border-top:1px solid #2A3140}
+.skin-cyber .bs-lead .cap span{color:#D4FF3A;font-family:var(--mono)}
+.skin-cyber .bs-sub{color:#EAF2F5;border-left:3px solid #3DE8FF;padding-left:8px}
+.skin-cyber .fd-it .tag{border-radius:0;font-family:var(--mono)}
+.skin-cyber .fd-it b{border-left:2px solid #D4FF3A;padding-left:6px}
+.skin-cyber .fd-it>span{font-family:var(--mono)}
+.skin-cyber .fd-it.fun .ph{background:#D4FF3A}
+.skin-cyber .tab{position:relative}
+.skin-cyber .tab.on::before{content:"";position:absolute;top:-9px;width:24px;height:2px;background:#D4FF3A}
+.skin-cyber .tab.plus .ic{clip-path:var(--cut-s)}
+
+/* ================= 主题四：星夜影院（night） ================= */
+.skin-cinema{--bg:#141218;--surface:#1E1B24;--card:#262230;--text:#F6F1E7;--text2:#B8AFA0;--primary:#FFC94A;--num:#FFC94A;
+  --btn:#FFC94A;--btn-text:#1A1508;--btn-bd:0 solid transparent;--btn-sh:0 0 18px rgba(255,201,74,.45);
+  --stk1:#FFC94A;--stk2:#7FE3C4;--stk3:#FF8A7A;--stk-ink:#141218;
+  --rc:14px;--ri:10px;--rb:999px;--rchip:999px;--rplus:50%;--bd:1px solid rgba(255,255,255,.08);--bd-img:0 solid transparent;
+  --sh:none;--tw:700;--tf:inherit;--chip-bd:1px solid rgba(255,255,255,.12);--chip-on-bg:transparent;--chip-on-text:#FFC94A;--chip-on-bd:1px solid #FFC94A;
+  --hm-bg:#1E1B24;--hm-text:#F6F1E7;--hm-text2:#B8AFA0;
+  --tab-bg:rgba(20,18,24,.82);--tab-line:1px solid rgba(255,255,255,.08);--tab-on:#FFC94A;--tab-on-bg:transparent;--capsule-bg:rgba(255,255,255,.08);--capsule-line:rgba(255,255,255,.18);
+  background-image:radial-gradient(1px 1px at 20% 12%,rgba(255,255,255,.5),transparent),radial-gradient(1px 1px at 70% 30%,rgba(255,255,255,.35),transparent),radial-gradient(1.5px 1.5px at 40% 60%,rgba(255,201,74,.35),transparent),radial-gradient(1px 1px at 85% 78%,rgba(255,255,255,.3),transparent);background-size:220px 260px}
+.skin-cinema .status{color:#F6F1E7}
+.skin-cinema .st b::after{content:"";display:inline-block;width:26px;height:2px;margin-left:8px;background:#FFC94A;vertical-align:5px;box-shadow:0 0 8px #FFC94A}
+.skin-cinema .pc{padding-right:74px}
+.skin-cinema .pc::before,.skin-cinema .pc::after{content:"";position:absolute;right:58px;width:16px;height:16px;border-radius:50%;background:#141218}
+.skin-cinema .pc::before{top:-8px}.skin-cinema .pc::after{bottom:-8px}
+.skin-cinema .pc-cam{position:absolute;right:12px;top:22px;background:transparent;border:1px solid #FFC94A;color:#FFC94A}
+.skin-cinema .pc-top{border-right:1px dashed rgba(255,255,255,.2);padding-right:10px}
+.skin-cinema .pc-ava img{box-shadow:0 0 0 2px #FFC94A}
+.skin-cinema .pc-days b{text-shadow:0 0 12px rgba(255,201,74,.6)}
+.skin-cinema .hm{background:linear-gradient(180deg,#262230,#1A1720);border:1px solid rgba(255,201,74,.3)}
+.skin-cinema .hm-imgs{display:grid;grid-template-columns:1.35fr 1fr;grid-template-rows:1fr 1fr;gap:6px;height:250px}
+.skin-cinema .hm-imgs>img{flex:none;width:100%;aspect-ratio:auto;height:100%;min-height:0;border:1px solid rgba(255,201,74,.35)}
+.skin-cinema .hm-imgs>img:first-child{grid-row:1 / 3}
+.skin-cinema .hm-new{display:block;position:absolute;left:14px;top:-9px;padding:0 8px;background:#141218;color:#FFC94A;font-size:11px;letter-spacing:2px}
+.skin-cinema .hm-origin{background:rgba(20,18,24,.85);color:#F6F1E7;border:1px solid rgba(255,201,74,.5)}
+.skin-cinema .bs-strip{margin:12px -16px 0;padding:12px 16px;background:#0D0C10;
+  background-image:repeating-linear-gradient(90deg,#3A3440 0 8px,transparent 8px 16px),repeating-linear-gradient(90deg,#3A3440 0 8px,transparent 8px 16px);background-size:100% 5px;background-position:0 3px,0 calc(100% - 3px);background-repeat:no-repeat}
+.skin-cinema .bs-it div{color:#F6F1E7}
+.skin-cinema .bs-lead .cap span{color:#FFC94A}
+.skin-cinema .fd-it .ph::after{content:"";position:absolute;left:0;right:0;bottom:0;height:45%;background:linear-gradient(transparent,rgba(10,9,12,.85))}
+.skin-cinema .fd-it b{position:absolute;left:10px;right:10px;bottom:24px;margin:0;z-index:2;color:#fff}
+.skin-cinema .fd-it>span{position:absolute;left:10px;bottom:6px;z-index:2;color:#FFC94A}
+.skin-cinema .tabbar{backdrop-filter:blur(12px)}
+.skin-cinema .tab.on svg{filter:drop-shadow(0 0 6px rgba(255,201,74,.8))}
+
+
+/* 小程序内的 AI 提示蒙层：只是界面层，不写进图片字节；保存 / 分享出去的文件本身没有它 */
+.aimask{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:22px 8px 7px;white-space:nowrap;background:linear-gradient(transparent,rgba(20,10,4,.66) 55%);color:#fff;font-size:11px;line-height:1.3;pointer-events:none;}
+.aimask.lg{padding:30px 12px 9px;font-size:12px}
+/* ===== 组件板 ===== */
+.board{padding:18px;border-radius:24px;background:var(--bg);color:var(--text);border:1px solid rgba(0,0,0,.06)}
+.board h4{margin:0 0 10px;font-size:13px;color:var(--text2);font-weight:700}
+.board .rowc{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px}
+.btn{display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 20px;border-radius:var(--rb);background:var(--btn);color:var(--btn-text);border:var(--btn-bd);box-shadow:var(--btn-sh);font-size:15px;font-weight:800}
+.btn2{display:inline-flex;align-items:center;height:44px;padding:0 18px;border-radius:var(--rb);background:var(--surface);color:var(--text);border:var(--chip-bd);font-size:14px;font-weight:700}
+.btnoff{display:inline-flex;align-items:center;height:44px;padding:0 16px;border-radius:var(--rb);background:var(--surface);color:var(--text2);font-size:13px;opacity:.9}
+.skin-journal .btn2{border:1px dashed #9E917C;background:#FFFDF8}
+.skin-cinema .btn2{background:transparent;border:1px solid #FFC94A;color:#FFC94A}
+.tile{position:relative;width:74px;height:74px;border-radius:var(--ri);overflow:hidden;border:var(--bd-img)}
+.tile img{width:100%;height:100%;object-fit:cover;object-position:50% 25%}
+.tile .ck{position:absolute;right:4px;top:4px;width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--num);color:var(--btn-text)}
+.tile .ck svg{width:13px;height:13px;stroke-width:3}
+.tile.on{box-shadow:0 0 0 3px var(--num)}
+.skin-journal .tile.on{box-shadow:none;outline:1.5px solid #C2381F;outline-offset:3px}
+.skin-journal .tile .ck{border-radius:4px;background:#C2381F;color:#fff}
+.skin-cyber .tile.on{outline:1px solid #D4FF3A;outline-offset:3px}.skin-cyber .tile .ck{border-radius:0;background:#D4FF3A;color:#0E1016}
+.skin-cyber .btn{clip-path:var(--cut-s)}
+.skin-cyber .btn2{background:transparent;border:1px solid #3DE8FF;color:#3DE8FF;clip-path:var(--cut-s)}
+.skin-cyber .btn2:hover,.skin-cyber .btn:hover{text-shadow:-1px 0 #FF4F9A,1px 0 #3DE8FF}
+.skin-cyber .btnoff{background:#151922;color:#93A1AD}
+.skin-cyber .emp .art{border-radius:0;border:1px dashed #D4FF3A;background:transparent;color:#D4FF3A}
+.skin-cyber .sheet{border-top:2px solid #D4FF3A}
+.skin-cinema .tile.on{box-shadow:0 0 0 2px #FFC94A,0 0 16px rgba(255,201,74,.5)}
+.emp{display:flex;align-items:center;gap:12px;padding:12px;border-radius:var(--rc);background:var(--card);border:var(--bd);flex:1;min-width:220px}
+.emp .art{width:52px;height:52px;flex:none;display:flex;align-items:center;justify-content:center;border-radius:var(--rc);background:var(--surface);color:var(--primary)}
+.emp .art svg{width:26px;height:26px}
+.emp b{display:block;font-size:14px}.emp span{font-size:12px;color:var(--text2)}
+.dots{display:flex;gap:6px}.dots i{width:10px;height:10px;border-radius:50%;background:var(--num);animation:hop 1s infinite}
+.dots i:nth-child(2){animation-delay:.15s;background:var(--stk2)}.dots i:nth-child(3){animation-delay:.3s;background:var(--stk1)}
+.skin-journal .dots i{border-radius:1px;animation:none;opacity:.8}
+.skin-cyber .dots i{border-radius:0;animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:.25}}
+.skin-cinema .dots i{box-shadow:0 0 8px currentColor}
+@keyframes hop{0%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
+.sheet{padding:14px;border-radius:var(--rc) var(--rc) 0 0;background:var(--card);border:var(--bd);box-shadow:var(--sh)}
+.skin-cinema .sheet{background:rgba(38,34,48,.8);backdrop-filter:blur(10px)}
+.skin-journal .sheet{border-top:0;background:linear-gradient(135deg,transparent 6px,#FFFDF8 0) top left/12px 8px repeat-x,#FFFDF8;padding-top:18px}
+.sheet .price{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.sheet .price b{font-size:15px}.sheet .price span{font-size:12px;color:var(--text2)}
+.sheet .btn{width:100%}
+
+/* ===== 主题选择页 ===== */
+.picker{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.pk{border-radius:18px;overflow:hidden;background:#fff;box-shadow:0 2px 8px -2px rgba(60,35,20,.12),0 14px 28px -18px rgba(60,35,20,.3);border:2px solid transparent}
+.pk.on{border-color:#FF9A52}
+.pk .mini-wrap{position:relative;height:230px;overflow:hidden;background:#eee}
+.pk .mini{position:absolute;left:0;top:0;width:375px;height:640px;transform:scale(.428);transform-origin:top left;pointer-events:none}
+.pk .mini .phone{border:0;border-radius:0;box-shadow:none;width:375px;height:640px}
+.pk .meta{padding:8px 10px 10px}
+.pk .meta b{display:block;font-size:14px}
+.pk .meta span{font-size:11px;color:#5B6178;line-height:1.4;display:block}
+.pk .use{float:right;font-size:11px;font-weight:800;color:#B7401A}
+.notes{max-width:380px}
+.notes li{margin-bottom:8px}
+table.cmp{border-collapse:collapse;width:100%;background:#fff;border-radius:16px;overflow:hidden;font-size:13px}
+table.cmp th,table.cmp td{padding:9px 12px;border-bottom:1px solid #EFE8E0;text-align:left;vertical-align:top}
+table.cmp th{background:#FBF8F4;font-weight:800}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 10.8 12 4.5l8 6.3V19a1.5 1.5 0 0 1-1.5 1.5H15v-5.2h-6v5.2H5.5A1.5 1.5 0 0 1 4 19z"/></symbol>
+    <symbol id="i-magic" viewBox="0 0 24 24"><path d="M11 3.5l1.7 4.6 4.8 1.7-4.8 1.7L11 16.1l-1.7-4.6-4.8-1.7 4.8-1.7z"/><path d="M18 14.5l.8 2.1 2.2.8-2.2.8-.8 2.3-.8-2.3-2.2-.8 2.2-.8z"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-gallery" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="3.5"/><path d="m4 16 4.5-4.5 3.5 3.5 2.5-2.5 5 4.5"/><circle cx="15.5" cy="9" r="1.6"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c.8-3.8 3.8-6 7.5-6s6.7 2.2 7.5 6"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8.5A2.5 2.5 0 0 1 6.5 6h1.8l1.4-2h4.6l1.4 2h1.8A2.5 2.5 0 0 1 20 8.5v8A2.5 2.5 0 0 1 17.5 19h-11A2.5 2.5 0 0 1 4 16.5z"/><circle cx="12" cy="12.3" r="3.3"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-paw" viewBox="0 0 24 24"><ellipse cx="7" cy="9" rx="1.8" ry="2.4"/><ellipse cx="11" cy="6.5" rx="1.8" ry="2.4"/><ellipse cx="15.5" cy="7" rx="1.8" ry="2.4"/><ellipse cx="18.5" cy="11" rx="1.6" ry="2.1"/><path d="M12 11.5c-3 0-5.5 3.3-5.5 5.6 0 1.6 1.3 2.4 2.8 2.4 1.1 0 1.8-.5 2.7-.5s1.6.5 2.7.5c1.5 0 2.8-.8 2.8-2.4 0-2.3-2.5-5.6-5.5-5.6z"/></symbol>
+    <symbol id="i-photo" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="3"/><circle cx="9" cy="10" r="1.8"/><path d="m4 17 5-4.5 4 3.5 2.5-2 4.5 3.5"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></symbol>
+  </defs>
+</svg>
+
+<div class="doc">
+  <header class="doc-head">
+    <h1>四套主题重设计：同一个家，四种宠物空间</h1>
+    <p>配合《主题系统重设计方案.md》使用。四台手机渲染的是同一份首页 DOM，只切换根节点的 skin 类。所以模块、顺序、文案完全一致，材质、形状、装饰、底栏和模块呈现方式各不相同。点「灰度对比」可以去掉颜色，只看结构差异。图片都引用仓库内已有素材，人像是已上线的人类转生计划效果图，价格和次数为示意。</p>
+    <div class="toolbar"><button data-gray class="off">灰度对比：关</button></div>
+  </header>
+
+  <section class="sec" id="homes" data-shot="themes-home">
+    <h2>1 首页在四套主题下</h2>
+    <p class="lead">模块顺序统一：宠物名片（含今日一格）→ 人类转生计划 → 麻麻精选（含「写真也值得收藏」）→ 分类瀑布流 → 底栏五格。变化的是呈现方式：宠物名片分别是软卡、档案页、角色面板和电影票根；人类转生计划分别是叠放卡、拍立得、扫描舱和海报墙；麻麻精选的横滑在赛博街机里带关卡编号，在星夜影院里是一条胶片。第三套「潮玩派对」已按反馈替换为「赛博街机」。</p>
+    <div class="four" data-homes></div>
+  </section>
+
+  <section class="sec" id="components" data-shot="themes-components">
+    <h2>2 组件语言</h2>
+    <p class="lead">按钮、chip、标签、选中态、空状态、加载、底部抽屉逐一对照。组件样式都读 <code>var(--skin-*, 默认值)</code>，没有单独设计的组件自动回落到默认样式。所有文字对比度都 ≥ 4.5:1，取值见方案文档 3.1。</p>
+    <div class="four" data-boards></div>
+  </section>
+
+  <section class="sec" id="picker" data-shot="themes-picker">
+    <h2>3 主题选择页与差异总表</h2>
+    <p class="lead">当前 <code>pages/theme</code> 的预览卡只是一张共用照片加几条色块，看不出四套主题的差别。改版后，每张预览卡直接渲染该主题下的真实首页缩略图，并写一句「空间」描述，点一下全局换肤。</p>
+    <div style="display:flex;gap:28px;align-items:flex-start;flex-wrap:wrap">
+      <div class="phone skin-soda">
+        <div class="status"><span>9:41</span><span><i></i><i></i></span></div>
+        <div class="nav"><span class="brand" style="font-size:16px">外观</span><span class="capsule">··· ◎</span></div>
+        <div class="screen" style="padding-bottom:40px">
+          <div style="font-size:22px;font-weight:800;margin-top:4px">选一个宠物空间</div>
+          <div style="font-size:13px;color:#5B6178">换了之后所有页面马上生效，随时可以换回来</div>
+          <div class="picker" data-picker></div>
+        </div>
+      </div>
+      <div style="flex:1;min-width:560px">
+        <table class="cmp">
+          <tr><th></th><th>橘子汽水</th><th>手账相册</th><th>赛博街机</th><th>星夜影院</th></tr>
+          <tr><td>材质</td><td>软糖、柔影</td><td>纸、胶带、相纸</td><td>冷黑金属面、网格底</td><td>丝绒暗场、毛玻璃</td></tr>
+          <tr><td>形状</td><td>大圆角 40rpx，胶囊按钮</td><td>近直角 8rpx，拍立得白边</td><td>直角 + 28rpx 切角，1px 线框</td><td>中圆角 28rpx，顶部高光边</td></tr>
+          <tr><td>阴影</td><td>暖褐柔影</td><td>下沿纸叠硬影</td><td>无阴影，靠线框分层</td><td>无投影，金色辉光</td></tr>
+          <tr><td>字体</td><td>无衬线 800</td><td>衬线标题 700</td><td>无衬线 800 + 等宽数字</td><td>无衬线 700</td></tr>
+          <tr><td>装饰</td><td>圆点、倾斜贴纸</td><td>胶带、邮戳、回形针</td><td>左侧荧光竖条、关卡编号、扫描线</td><td>齿孔、星尘、光晕</td></tr>
+          <tr><td>按压反馈</td><td>缩到 0.96</td><td>下沉 2rpx</td><td>粉青 1px 错位（故障感）</td><td>变暗</td></tr>
+          <tr><td>底栏</td><td>悬浮胶囊</td><td>贴底纸条，选中盖章</td><td>贴底线框，选中顶部荧光条</td><td>毛玻璃，选中发光</td></tr>
+          <tr><td>动效</td><td>bounce</td><td>fade</td><td>fade + 扫描线（仅人类转生卡）</td><td>glow</td></tr>
+          <tr><td>纪念页</td><td colspan="4">四套统一进入 <code>skin-quiet</code>：不倾斜、无贴纸、无弹跳，只保留各自的底色和字体</td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const R = "../../../";
+const T = (n) => R + "apps/miniprogram/assets/samples/templates/" + n + ".jpg";
+const S = (n) => R + "apps/miniprogram/assets/samples/scenes/" + n + ".jpg";
+const H = (n) => R + "tools/imagegen/out/pet-human-v2/effects/" + n + ".webp";
+const PET = R + "tools/imagegen/out/source/cat-british.jpg";
+const ico = (id) => '<svg class="i"><use href="#i-' + id + '"/></svg>';
+
+const SKINS = [
+  { id: "soda", name: "橘子汽水", tech: "默认 · pet", desc: "阳光很好的客厅，软糖一样圆", eb: "40 款造型 · 一次出 2 张", go: "去变身", bs: "麻麻每周挑的", bsStamp: "", hmNew: "" },
+  { id: "journal", name: "手账相册", tech: "film", desc: "书桌上摊开的相册，一页页贴好", eb: "40 款造型 · 贴进相册", go: "翻开看看", bs: "这一页是麻麻贴的", bsStamp: "麻麻<br>精选", hmNew: "" },
+  { id: "cyber", name: "赛博街机", tech: "brand", desc: "深夜的霓虹街区，宠物是这台街机的主角", eb: "40 款造型 · 一次出 2 张", go: "启动转生", bs: "本周热门 01–08", bsStamp: "", hmNew: "● 转生程序就绪", stk: "NO.0128 · 在线" },
+  { id: "cinema", name: "星夜影院", tech: "night", desc: "关灯后的家庭影院，只放你们的片子", eb: "正在上映 · 40 款造型", go: "入场", bs: "导演精选片单", bsStamp: "", hmNew: "正在上映" }
+];
+
+function home(s) {
+  return `
+  <div class="phone skin-${s.id}">
+    <div class="status"><span>9:41</span><span><i></i><i></i></span></div>
+    <div class="nav"><span class="brand">${ico("paw")}麻麻抱我</span><span class="capsule">··· ◎</span></div>
+    <div class="screen">
+      <div class="pc">
+        <span class="pc-stamp">第 128 天<br>收好了</span><span class="pc-stk">${s.stk || ""}</span>
+        <div class="pc-top">
+          <div class="pc-ava"><img src="${PET}"></div>
+          <div class="pc-main"><div class="pc-name">年糕<small>切换 ▾</small></div><div class="pc-days"><b>128</b>天 · 36 张照片</div></div>
+          <div class="pc-cam">${ico("camera")}</div>
+        </div>
+        <div class="pc-moment"><div><b>1 年前的今天</b>年糕第一次趴在窗台上</div><span class="go">回看 ›</span></div>
+      </div>
+
+      <div class="hm">
+        <span class="hm-new">${s.hmNew}</span>
+        <div class="hm-head"><div><span class="eb">${s.eb}</span><b>人类转生计划</b></div><span class="hm-go">${s.go}</span></div>
+        <div class="hm-imgs"><img src="${H(31)}"><img src="${H(5)}"><img src="${H(36)}"><span class="hm-origin"><img src="${PET}">年糕的照片 →</span></div>
+        <div class="hm-cap">上传一张我的正脸照，看看我变成人是什么样子</div>
+      </div>
+
+      <div class="bs" style="position:relative">
+        <div class="st"><b>麻麻精选</b><span>${s.bs}</span></div>
+        <span class="bs-stamp">${s.bsStamp}</span>
+        <div class="bs-lead"><img src="${T("animal-car-window-westie")}"><div class="cap"><b>车窗风中写真</b><span>风吹起来的这一刻 ›</span></div></div>
+        <div class="bs-strip">
+          <div class="bs-it"><img src="${T("fish-chase")}"><div>偷鱼大作战</div></div>
+          <div class="bs-it"><img src="${T("travel-glass-summer")}"><div>透明杯夏日</div></div>
+          <div class="bs-it"><img src="${T("pet-milk-tea-shopkeeper")}"><div>奶茶店主理人</div></div>
+          <div class="bs-it"><img src="${T("animal-pink-scooter")}"><div>粉色摩托夜行</div></div>
+        </div>
+        <div class="bs-sub">写真也值得收藏</div>
+        <div class="bs-strip">
+          <div class="bs-it"><img src="${S("window-morning")}"><div>蓝格睡衣卧室</div></div>
+          <div class="bs-it"><img src="${S("seaside-breeze")}"><div>柠檬黄日记</div></div>
+          <div class="bs-it"><img src="${S("library-whisper")}"><div>复古摄影师</div></div>
+          <div class="bs-it"><img src="${S("autumn-leaves")}"><div>蓝调杂志封面</div></div>
+        </div>
+      </div>
+
+      <div class="st"><b>挑一个玩法</b><span>全部 ›</span></div>
+      <div class="chips"><span class="chip on">全部</span><span class="chip">好笑出片</span><span class="chip">表情漫画</span><span class="chip">和我合照</span><span class="chip">旅行打卡</span></div>
+      <div class="fd">
+        <div class="fd-it"><div class="ph"><span class="tag t1">热门</span><img src="${T("pet-wanted-poster")}"></div><b>萌宠通缉令</b><span>2 选 1 · 满意再保存</span></div>
+        <div class="fd-it"><div class="ph"><span class="tag t2">新</span><img src="${R}apps/miniprogram/assets/samples/movie/classic.jpg"></div><b>宠物电影海报</b><span>免费预览</span></div>
+        <div class="fd-it"><div class="ph"><img src="${T("pet-expression-grid")}"></div><b>今日表情九宫格</b><span>表情漫画 · 7 款</span></div>
+        <div class="fd-it fun"><div class="ph"><span class="tag t3">免费</span><img src="${R}apps/miniprogram/assets/fun-tests/personality.jpg"></div><b>我的隐藏性格</b><span>趣味测试 · 10 题</span></div>
+      </div>
+      <div class="fold"><span>首屏 812px</span></div>
+    </div>
+    <nav class="tabbar">
+      <div class="tab on"><span class="ic">${ico("home")}</span>首页</div>
+      <div class="tab"><span class="ic">${ico("magic")}</span>创作</div>
+      <div class="tab plus"><span class="ic">${ico("plus")}</span></div>
+      <div class="tab"><span class="ic">${ico("gallery")}</span>作品</div>
+      <div class="tab"><span class="ic">${ico("user")}</span>我的</div>
+    </nav>
+  </div>`;
+}
+
+function board(s) {
+  return `
+  <div class="board skin-${s.id}">
+    <h4>按钮</h4>
+    <div class="rowc"><span class="btn">开始制作</span><span class="btn2">好了提醒我</span><span class="btnoff">请先选照片</span></div>
+    <h4>chip 与标签</h4>
+    <div class="rowc"><span class="chip on">全部</span><span class="chip">好笑出片</span><span class="tag t1">免费</span><span class="tag t2">新</span><span class="tag t3">麻麻推荐</span></div>
+    <h4>选照片</h4>
+    <div class="rowc"><div class="tile on"><img src="${PET}"><span class="ck">${ico("check")}</span></div><div class="tile"><img src="${R}tools/imagegen/out/source/dog-shiba.jpg"></div><div class="dots"><i></i><i></i><i></i></div><span style="font-size:12px;color:var(--text2)">正在准备</span></div>
+    <h4>空状态</h4>
+    <div class="rowc"><div class="emp"><span class="art">${ico("photo")}</span><div><b>还没有我的照片</b><span>拍一张或从相册选，马上就能玩</span></div></div></div>
+    <h4>生成结果（小程序内蒙层提示）</h4>
+    <div class="rowc"><div class="tile" style="width:96px;height:128px"><img src="${H(31)}"><span class="aimask">该内容由AI生成</span></div><div class="tile" style="width:96px;height:128px"><img src="${S("window-morning")}"><span class="aimask">该内容由AI生成</span></div><span style="font-size:12px;color:var(--text2);flex:1;min-width:120px">蒙层只在界面上，四套主题统一用深色渐变 + 白字，不跟主题变色</span></div>
+    <h4>底部抽屉</h4>
+    <div class="sheet"><div class="price"><b>蓝格睡衣卧室 · 第 1 张</b><span>预览图</span></div><span class="btn">${ico("lock")}&nbsp;保存高清原图 ¥16.9</span></div>
+  </div>`;
+}
+
+document.querySelector("[data-homes]").innerHTML = SKINS.map((s) => `<div><p class="label"><b>${s.name}</b><span>${s.tech} · ${s.desc}</span></p>${home(s)}</div>`).join("");
+document.querySelector("[data-boards]").innerHTML = SKINS.map((s) => `<div><p class="label"><b>${s.name}</b></p>${board(s)}</div>`).join("");
+document.querySelector("[data-picker]").innerHTML = SKINS.map((s, i) => `<div class="pk ${i === 0 ? "on" : ""}"><div class="mini-wrap"><div class="mini">${home(s)}</div></div><div class="meta">${i === 0 ? '<span class="use">使用中</span>' : ""}<b>${s.name}</b><span>${s.desc}</span></div></div>`).join("");
+
+const grayBtn = document.querySelector("[data-gray]");
+grayBtn.addEventListener("click", () => {
+  const on = document.body.classList.toggle("gray");
+  grayBtn.textContent = "灰度对比：" + (on ? "开" : "关");
+  grayBtn.classList.toggle("off", !on);
+});
+</script>
+</body>
+</html>

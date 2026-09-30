@@ -2,6 +2,8 @@
   "pages": [
     "pages/index/index",
     "pages/art-photo/art-photo",
+    "pages/art-photo-bundle/art-photo-bundle",
+    "pages/art-photo-result/art-photo-result",
     "pages/create/create",
     "pages/works/works",
     "pages/work/work",

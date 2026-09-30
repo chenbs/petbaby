@@ -6,6 +6,7 @@
     "t-notice": "../../components/notice/index",
     "t-empty": "../../components/empty/index",
     "t-skeleton": "../../components/skeleton/index",
-    "t-photo-grid": "../../components/photo-grid/index"
+    "t-photo-grid": "../../components/photo-grid/index",
+    "t-steps": "../../components/steps/index"
   }
 }

@@ -176,6 +176,34 @@
   border-radius: var(--radius-image-hero);
 }
 
+.home-main-play { margin-top: var(--space-6); }
+.main-play { display: block; }
+.home-play-swiper { height: 560rpx; margin-top: var(--space-3); }
+.home-play-swiper .hero-media { height: 400rpx; aspect-ratio: auto; }
+.hero-image-empty { display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: var(--small-size); }
+.home-play-dots { display: flex; justify-content: center; gap: var(--space-2); margin-top: var(--space-2); }
+.home-play-dot { width: var(--space-6); height: var(--space-2); border-radius: var(--radius-pill); background: var(--divider-soft); }
+.home-play-dot-active { background: var(--primary); }
+.human-section { margin-top: var(--space-5); }
+.human-heading { display: flex; align-items: end; justify-content: space-between; gap: var(--space-3); }
+.human-heading .sub-title { color: var(--text-primary); }
+.human-feature-arrow { flex: none; color: var(--primary); font-size: var(--small-size); font-weight: var(--fw-bold); }
+.human-track { width: 100%; margin-top: var(--space-3); white-space: nowrap; }
+.human-cover { display: inline-block; width: 226rpx; margin-right: var(--space-3); vertical-align: top; }
+.human-cover-image { display: block; width: 100%; height: 402rpx; border-radius: var(--radius-image-thumb); background: var(--surface); }
+.human-cover-empty { display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: var(--small-size); }
+.boss-section { margin-top: var(--space-5); }
+.boss-lead { display: block; margin-top: var(--space-3); }
+.boss-cover { display: block; width: 100%; height: 394rpx; border-radius: var(--radius-image-hero); background: var(--surface); }
+.boss-lead-copy { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); padding: var(--space-2) 0; }
+.boss-lead-copy .sub-title { margin: 0; }
+.boss-lead-copy .small { min-width: 0; text-align: right; }
+.boss-track { width: 100%; margin-top: var(--space-3); white-space: nowrap; }
+.boss-item { display: inline-block; width: 226rpx; margin-right: var(--space-3); vertical-align: top; white-space: normal; }
+.boss-thumb { display: block; width: 100%; height: 300rpx; border-radius: var(--radius-image-thumb); background: var(--surface); }
+.boss-name { overflow: hidden; padding: var(--space-2) 0; color: var(--text-primary); font-size: var(--small-size); font-weight: var(--fw-bold); text-overflow: ellipsis; white-space: nowrap; }
+.boss-art-heading { margin-top: var(--space-4); color: var(--text-secondary); font-size: var(--small-size); font-weight: var(--fw-bold); }
+
 .play-head {
   align-items: baseline;
   margin-top: var(--space-3);
@@ -268,7 +296,7 @@
 .featured-image {
   display: block;
   width: 100%;
-  height: 588rpx;
+  height: 440rpx;
   aspect-ratio: var(--ratio-portrait);
   border-radius: var(--radius-image-thumb);
   background: var(--surface);

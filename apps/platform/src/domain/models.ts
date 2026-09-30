@@ -33,7 +33,7 @@ export const generationInputSchema = z.object({
   idempotencyKey: z.string().min(8).max(100),
   sourceWorkId: z.string().uuid().optional(),
   options: z.object({
-    style: z.enum(["classic", "arthouse", "hongkong"]).optional(),
+    style: z.enum(["classic", "arthouse", "hongkong", "rooftop", "highseas", "musical", "webcity", "starvoyage"]).optional(),
     composition: z.enum(["portrait", "closeup", "ensemble"]).optional(),
     review: z.string().trim().max(120).optional(),
     voice: z.enum(["pet", "owner"]).optional(),

@@ -6,8 +6,7 @@ import {
   listPublicImageTemplateEntries,
 } from "@/server/image-template-registry";
 
-export async function GET(request: Request) {
-  const origin = new URL(request.url).origin;
+export async function GET() {
   const entries = listPublicImageTemplateEntries().map((entry) => ({
     ...entry,
     templates: entry.templates.map((template) => ({
@@ -21,7 +20,7 @@ export async function GET(request: Request) {
       status: template.status,
       candidateCount: getImageTemplateCandidateCount(template),
       rerollSupported: imageTemplateSupportsReroll(template),
-      sampleUrl: new URL(`/api/image-templates/${encodeURIComponent(template.templateId)}/sample`, origin).toString(),
+      sampleUrl: `/api/image-templates/${encodeURIComponent(template.templateId)}/sample`,
     })),
   }));
   return NextResponse.json({ data: { entries } });

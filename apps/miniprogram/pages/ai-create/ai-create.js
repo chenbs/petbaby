@@ -2,11 +2,13 @@ const api = require("../../services/api");
 const { displayMediaTree: withPrivatePreviews } = require("../../services/photo-files");
 const { themedPage } = require("../../theme/page-mixin");
 const { pluginSample, imageEntries } = require("../../services/sample-assets");
+const { selectBossTemplates } = require("../../services/home-effect-ids");
 
 themedPage({
   data: {
+    flowSteps: ["选效果", "选照片"],
     pets: [], petId: "", petText: "", photos: [], photoIds: [],
-    entries: [], entryId: "", entryTitle: "", templates: [], carouselTemplates: [], templateId: "", templateIndex: 0, activeTemplate: null,
+    entries: [], entryId: "", entryTitle: "", templates: [], carouselTemplates: [], templateId: "", effectScrollTarget: "", activeTemplate: null,
     artPlugin: null, sceneOptions: [], sceneId: "window-morning", selectedScene: null,
     stage: "samples",
     ownerPhotos: [], ownerPhotoIds: [], authorizationConfirmed: false,
@@ -38,7 +40,8 @@ themedPage({
       const entry = entries.find((item) => item.id === query.entryId)
         || entries.find((item) => item.templates.some((template) => template.templateId === query.templateId))
         || entries.find((item) => item.id === "art") || entries[0];
-      const template = entry && (entry.templates.find((item) => item.templateId === query.templateId) || entry.templates[0]);
+      const templates = entry && entry.id === "boss" ? selectBossTemplates(entries) : entry ? entry.templates : [];
+      const template = templates.find((item) => item.templateId === query.templateId) || templates[0];
       const sceneId = query && query.sceneId && sceneOptions.some((item) => item.id === query.sceneId)
         ? query.sceneId : sceneOptions.length ? sceneOptions[0].id : "window-morning";
       this.setData({
@@ -47,21 +50,21 @@ themedPage({
         petText: selectedPet ? selectedPet.name : "",
         entries,
         entryId: entry ? entry.id : "",
-        entryTitle: entry ? entry.title : "",
-        templates: entry ? entry.templates : [],
-        carouselTemplates: entry ? entry.templates.filter((item) => item.templateId !== "pet-art-photo") : [],
+        entryTitle: entry ? entry.id === "boss" ? "麻麻精选" : entry.title : "",
+        templates,
+        carouselTemplates: templates.filter((item) => item.templateId !== "pet-art-photo"),
         templateId: template ? template.templateId : "",
-        templateIndex: entry && template ? Math.max(0, entry.templates.filter((item) => item.templateId !== "pet-art-photo").findIndex((item) => item.templateId === template.templateId)) : 0,
+        effectScrollTarget: template && template.templateId !== "pet-art-photo" ? "effect-" + template.templateId : "",
         activeTemplate: template || null,
         artPlugin,
         sceneOptions,
         sceneId,
         selectedScene: sceneOptions.find((item) => item.id === sceneId) || null,
-        stage: template && template.templateId === "pet-art-photo" && !query.sceneId ? "samples" : "photos",
+        stage: (query && query.entryId === "human" && !query.templateId) || (template && template.templateId === "pet-art-photo" && !query.sceneId) ? "samples" : "photos",
         loading: false,
         catalogLoading: false
       });
-      if (wx.setNavigationBarTitle && template) wx.setNavigationBarTitle({ title: template.templateId === "pet-art-photo" ? "宠物艺术写真" : template.title });
+      if (wx.setNavigationBarTitle && template) wx.setNavigationBarTitle({ title: entry && entry.id === "human" && !query.templateId ? entry.title : template.templateId === "pet-art-photo" ? "宠物艺术写真" : template.title });
       if (selectedPet) this.loadPhotos(selectedPet.id);
       return withPrivatePreviews(results[2] || []);
     }).then((ownerPhotos) => this.setData({ ownerPhotos })).catch((error) => this.setData({ error: error.message, loading: false, catalogLoading: false }));
@@ -87,14 +90,15 @@ themedPage({
   chooseEntry(event) {
     const id = event.currentTarget.dataset.id;
     const entry = this.data.entries.find((item) => item.id === id);
-    const template = entry && entry.templates[0];
+    const templates = entry && entry.id === "boss" ? selectBossTemplates(this.data.entries) : entry ? entry.templates : [];
+    const template = templates[0];
     this.setData({
       entryId: id,
-      entryTitle: entry ? entry.title : "",
-      templates: entry ? entry.templates : [],
-      carouselTemplates: entry ? entry.templates.filter((item) => item.templateId !== "pet-art-photo") : [],
+      entryTitle: entry ? entry.id === "boss" ? "麻麻精选" : entry.title : "",
+      templates,
+      carouselTemplates: templates.filter((item) => item.templateId !== "pet-art-photo"),
       templateId: template ? template.templateId : "",
-      templateIndex: 0,
+      effectScrollTarget: template && template.templateId !== "pet-art-photo" ? "effect-" + template.templateId : "",
       activeTemplate: template || null,
       ownerPhotoIds: [],
       authorizationConfirmed: false
@@ -103,14 +107,10 @@ themedPage({
   chooseTemplate(event) {
     const id = event.currentTarget.dataset.id;
     const template = this.data.templates.find((item) => item.templateId === id);
-    this.setData({ templateId: id, templateIndex: this.data.templates.findIndex((item) => item.templateId === id), activeTemplate: template || null, ownerPhotoIds: [], authorizationConfirmed: false, stage: "photos", error: "" });
+    if (!template) return;
+    if (template.templateId === this.data.templateId && this.data.stage === "photos") return;
+    this.setData({ templateId: id, activeTemplate: template, ownerPhotoIds: [], authorizationConfirmed: false, stage: "photos", error: "" });
     if (wx.setNavigationBarTitle && template) wx.setNavigationBarTitle({ title: template.title });
-  },
-  swipeTemplate(event) {
-    const template = this.data.carouselTemplates[Number(event.detail.current)];
-    if (!template || template.templateId === this.data.templateId) return;
-    this.setData({ templateId: template.templateId, templateIndex: Number(event.detail.current), activeTemplate: template, ownerPhotoIds: [], authorizationConfirmed: false, error: "" });
-    if (wx.setNavigationBarTitle) wx.setNavigationBarTitle({ title: template.title });
   },
   onTemplateImageError(event) {
     const { id, src } = event.currentTarget.dataset;

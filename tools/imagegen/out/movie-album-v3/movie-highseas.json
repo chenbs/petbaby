@@ -1,0 +1,12 @@
+{
+  "id": "highseas",
+  "group": "movie",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "prompt": "Use case: ads-marketing. Vertical 3:4 premium photorealistic pet adventure film key art, cinematic wide establishing shot with strong foreground-to-horizon depth. In the foreground a real golden retriever, full body and paws clearly visible on the open deck of an original old sailing ship, occupies roughly 38 percent of frame height and looks alert toward the sunlit horizon. White sails tower diagonally overhead, turquoise sea stretches to distant sunlit islands and dramatic white clouds, a few ribbons of wind and spray suggest a voyage about to begin. Bright midday sunlight, luminous aqua and ivory palette with warm honey fur, crisp natural face and eyes, premium practical film lighting, large outdoor scale. Keep the bottom 20 percent visually simple for a separately added title without making the scene dark. No text, logos, skull flag, branded costume, recognizable franchise imagery, extra animals, cropped paws or distorted anatomy.",
+  "finalPrompt": "Use case: ads-marketing. Vertical 3:4 premium photorealistic pet adventure film key art, cinematic wide establishing shot with strong foreground-to-horizon depth. In the foreground a real golden retriever, full body and paws clearly visible on the open deck of an original old sailing ship, occupies roughly 38 percent of frame height and looks alert toward the sunlit horizon. White sails tower diagonally overhead, turquoise sea stretches to distant sunlit islands and dramatic white clouds, a few ribbons of wind and spray suggest a voyage about to begin. Bright midday sunlight, luminous aqua and ivory palette with warm honey fur, crisp natural face and eyes, premium practical film lighting, large outdoor scale. Keep the bottom 20 percent visually simple for a separately added title without making the scene dark. No text, logos, skull flag, branded costume, recognizable franchise imagery, extra animals, cropped paws or distorted anatomy.",
+  "source": "tools/imagegen/out/movie-album-v3/movie-highseas-raw.jpg",
+  "output": "tools/imagegen/out/movie-album-v3/movie-highseas.jpg",
+  "sha256": "c5d18e8e8bbcd29a6f8bb392518af1c4b8088a58100e84e2971173ec8e2440c2",
+  "review": "pending-visual-review"
+}

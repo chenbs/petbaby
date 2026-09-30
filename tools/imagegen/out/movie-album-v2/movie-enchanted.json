@@ -1,0 +1,12 @@
+{
+  "id": "enchanted",
+  "group": "movie",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "prompt": "Use case: ads-marketing. Vertical 3:4 premium photographic pet fantasy film key art. A real British Shorthair cat sits naturally on a low broad wooden table in an old botanical library, all paws visible, looking curiously at an open illustrated book. Deep violet twilight at tall arched windows, brass reading lamp, pressed flowers and small glass bottles, faint practical dust motes in warm light. Rich plum, olive and antique gold, cinematic but physically believable, cat face clear at thumbnail size, lower quarter darker and quiet for later title. Entirely original magical library, no school crests, wands, copyrighted props, text, logos, extra animals or distorted limbs.",
+  "finalPrompt": "Use case: ads-marketing. Vertical 3:4 premium photographic pet fantasy film key art. A real British Shorthair cat sits naturally on a low broad wooden table in an old botanical library, all paws visible, looking curiously at an open illustrated book. Deep violet twilight at tall arched windows, brass reading lamp, pressed flowers and small glass bottles, faint practical dust motes in warm light. Rich plum, olive and antique gold, cinematic but physically believable, cat face clear at thumbnail size, lower quarter darker and quiet for later title. Entirely original magical library, no school crests, wands, copyrighted props, text, logos, extra animals or distorted limbs.",
+  "source": "tools/imagegen/out/movie-album-v2/movie-enchanted-raw.jpg",
+  "output": "tools/imagegen/out/movie-album-v2/movie-enchanted.jpg",
+  "sha256": "d7873530067ad97a1dd6a7088f2860db7f941be16488eb4f51dcb8ac928badbb",
+  "review": "pending-visual-review"
+}

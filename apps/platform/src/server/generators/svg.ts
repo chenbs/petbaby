@@ -5,6 +5,9 @@ import type { GeneratorInput, GeneratorOutput } from "@/server/generators/types"
 import { anchorOf, dayIndexOf } from "@/domain/companion";
 import { effectivePhotoDate, photoLocalDate } from "@/domain/photo-memory";
 import { spanDaysBetween } from "@/domain/pricing";
+import { generateMoviePoster } from "@/server/generators/movie-poster";
+
+export { generateMoviePoster } from "@/server/generators/movie-poster";
 
 function escapeXml(value: string) {
   return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
@@ -52,36 +55,47 @@ export async function generateIdCard(input: GeneratorInput) {
   return baseOutput(input, svg, copy.title, copy.subtitle);
 }
 
-export async function generateMoviePoster(input: GeneratorInput) {
-  const copy = localCopy(input.plugin.id, input.pet, input.task);
-  const style = option(input, "style") || "classic";
-  const composition = option(input, "composition") || "portrait";
-  const review = option(input, "review") || "一部关于零食、午睡和无条件陪伴的诚意之作";
-  const palette = style === "hongkong" ? ["#e63d25", "#f4c941"] : style === "arthouse" ? ["#d8e8df", "#203b31"] : ["#101820", "#f56643"];
-  const photos = input.photos.slice(0, 3).map((photo, index) => {
-    if (composition === "closeup") return `<image href="${embeddedImage(photo.object)}" x="0" y="0" width="1080" height="1440" preserveAspectRatio="xMidYMid slice" opacity="${index ? 0 : 1}"/>`;
-    const width = composition === "ensemble" ? 360 : index ? 300 : 780;
-    const x = composition === "ensemble" ? index * 360 : index ? 780 : 0;
-    return `<image href="${embeddedImage(photo.object)}" x="${x}" y="0" width="${width}" height="1440" preserveAspectRatio="xMidYMid slice" opacity="${index ? 0.78 : 1}"/>`;
-  }).join("");
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1440"><rect width="1080" height="1440" fill="${palette[0]}"/>${photos}<defs><linearGradient id="g" x2="0" y2="1"><stop offset="20%" stop-color="${palette[0]}" stop-opacity="0"/><stop offset="100%" stop-color="${palette[0]}" stop-opacity=".98"/></linearGradient></defs><rect width="1080" height="1440" fill="url(#g)"/><text x="64" y="1030" fill="${palette[1]}" font-family="serif" font-size="88" font-weight="900">${escapeXml(copy.title)}</text><text x="68" y="1100" fill="#fff" font-family="sans-serif" font-size="30">${escapeXml(copy.subtitle)}</text><text x="68" y="1190" fill="#fff" font-family="sans-serif" font-size="24">“${escapeXml(review)}”</text><text x="68" y="1320" fill="#fff" font-family="sans-serif" font-size="24" letter-spacing="8">麻麻抱我 · 作品</text></svg>`;
-  return baseOutput(input, svg, copy.title, copy.subtitle);
-}
-
 export async function generateTimeAlbum(input: GeneratorInput) {
   const copy = localCopy(input.plugin.id, input.pet, input.task);
   const theme = option(input, "theme") || "growth";
-  const background = ({ growth: "#edf8f2", birthday: "#fff1b7", healing: "#e8f1ff", holiday: "#fff0ec" } as Record<string, string>)[theme] || "#edf8f2";
+  const themes: Record<string, { paper: string; accent: string; eyebrow: string; ornament: string }> = {
+    growth: { paper: "#e4f2e7", accent: "#37735a", eyebrow: "MY LITTLE DAYS", ornament: '<path d="M869 109q53-69 106 0q-53 53-106 0ZM870 110q-31 57-80 70" fill="none" stroke="#37735a" stroke-width="5"/>' },
+    birthday: { paper: "#fff0bb", accent: "#c95f53", eyebrow: "A DAY FOR YOU", ornament: '<circle cx="886" cy="102" r="15" fill="#c95f53"/><circle cx="948" cy="148" r="10" fill="#e8a965"/><path d="M810 80l22 26 25-20" fill="none" stroke="#c95f53" stroke-width="5"/>' },
+    healing: { paper: "#e4eef8", accent: "#5879a2", eyebrow: "SOFT DAYS TOGETHER", ornament: '<path d="M800 117q65-52 130 0t130 0M816 160q59-43 118 0" fill="none" stroke="#5879a2" stroke-width="5" opacity=".6"/>' },
+    holiday: { paper: "#f8e9e0", accent: "#b75f58", eyebrow: "OUR BRIGHTEST DAY", ornament: '<path d="M774 87q120 65 244-8M822 112l17 31 18-32M926 107l18 31 18-34" fill="none" stroke="#b75f58" stroke-width="5"/>' },
+  };
+  const visual = themes[theme] || themes.growth;
   const captions = stringArray(input, "pageCaptions");
-  const width = 1080;
-  const height = 520 + input.photos.length * 520;
-  const photos = input.photos.map((photo, index) => {
-    const x = index % 2 ? 420 : 70;
-    const rotation = index % 2 ? 2 : -2;
-    const caption = captions[index] || (index % 2 ? "一起发呆也很好" : "普通的一天，也在闪闪发光");
-    return `<g transform="translate(${x} ${400 + index * 500}) rotate(${rotation})"><rect x="-15" y="-15" width="675" height="455" rx="22" fill="#fffef9"/><image href="${embeddedImage(photo.object)}" width="645" height="400" preserveAspectRatio="xMidYMid slice"/><text x="20" y="430" fill="#53645b" font-family="sans-serif" font-size="20">DAY ${String(index + 1).padStart(2, "0")} · ${escapeXml(caption)}</text></g>`;
+  const photos = theme === "growth"
+    ? [...input.photos].sort((a, b) => effectivePhotoDate(a.metadata).date.localeCompare(effectivePhotoDate(b.metadata).date))
+    : input.photos;
+  const placements = [
+    { x: 72, y: 275, width: 446, height: 348, rotation: -2 },
+    { x: 562, y: 305, width: 442, height: 348, rotation: 2 },
+    { x: 254, y: 715, width: 570, height: 380, rotation: -1 },
+  ];
+  const pageHeight = 1250;
+  const pageCount = Math.ceil(photos.length / 3);
+  const height = pageCount * pageHeight;
+  const pages = Array.from({ length: pageCount }, (_, pageIndex) => {
+    const cards = photos.slice(pageIndex * 3, pageIndex * 3 + 3).map((photo, localIndex) => {
+      const placement = placements[localIndex];
+      const index = pageIndex * 3 + localIndex;
+      const rawCaption = captions[index] || effectivePhotoDate(photo.metadata).date.replaceAll("-", ".");
+      const caption = [...rawCaption].length > 15 ? [...rawCaption].slice(0, 14).join("") + "…" : rawCaption;
+      const imageWidth = placement.width - 32;
+      const imageHeight = placement.height - 65;
+      return `<g transform="translate(${placement.x} ${placement.y}) rotate(${placement.rotation} ${placement.width / 2} ${placement.height / 2})"><rect x="-7" y="-7" width="${placement.width + 14}" height="${placement.height + 14}" fill="#d2d2cd" opacity=".35"/><rect width="${placement.width}" height="${placement.height}" fill="#fffefa"/><rect x="16" y="16" width="${imageWidth}" height="${imageHeight}" fill="#f2f2ee"/><image href="${embeddedImage(photo.object)}" x="16" y="16" width="${imageWidth}" height="${imageHeight}" preserveAspectRatio="xMidYMid meet"/><text x="22" y="${placement.height - 18}" fill="#53645b" font-family="Noto Sans CJK SC,Microsoft YaHei,sans-serif" font-size="19">${String(index + 1).padStart(2, "0")} · ${escapeXml(caption)}</text><rect x="${placement.width / 2 - 52}" y="-24" width="104" height="34" fill="${visual.accent}" opacity=".48"/></g>`;
+    }).join("");
+    const pageTitle = pageIndex === 0 ? copy.title : `${input.pet.name}的日子 · ${pageIndex + 1}`;
+    const characters = [...pageTitle];
+    const titleSize = characters.length > 32 ? 30 : characters.length > 13 ? 48 : 66;
+    const lineLength = Math.floor(900 / titleSize);
+    const titleLines = [characters.splice(0, lineLength).join(""), characters.splice(0, lineLength).join("")].filter(Boolean);
+    const title = titleLines.map((line, index) => `<text x="68" y="${titleLines.length === 1 ? 184 : 157 + index * (titleSize + 10)}" fill="#243835" font-family="Noto Sans CJK SC,Microsoft YaHei,sans-serif" font-size="${titleSize}" font-weight="800">${escapeXml(line)}</text>`).join("");
+    return `<g transform="translate(0 ${pageIndex * pageHeight})"><rect width="1080" height="${pageHeight}" fill="${visual.paper}"/><path d="M55 42h970M55 1208h970" stroke="${visual.accent}" stroke-opacity=".28" stroke-width="2"/><text x="70" y="94" fill="${visual.accent}" font-family="sans-serif" font-size="23" letter-spacing="4">${visual.eyebrow}</text>${title}${visual.ornament}${cards}<text x="540" y="1180" text-anchor="middle" fill="${visual.accent}" font-family="Noto Sans CJK SC,Microsoft YaHei,sans-serif" font-size="22">麻麻抱我 · 时间画册  ${pageIndex + 1}/${pageCount}</text></g>`;
   }).join("");
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}"><rect width="100%" height="100%" fill="${background}"/><text x="70" y="130" fill="#14251c" font-family="serif" font-size="76" font-weight="900">${escapeXml(copy.title)}</text><text x="72" y="195" fill="#53645b" font-family="sans-serif" font-size="28">${escapeXml(copy.subtitle)}</text><path d="M70 245h940" stroke="#216844" stroke-width="4"/>${photos}<text x="540" y="${height - 70}" text-anchor="middle" fill="#216844" font-family="sans-serif" font-size="22">麻麻抱我 · 时间相册</text></svg>`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="${height}">${pages}</svg>`;
   const preview = await sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toBuffer();
   const output = baseOutput(input, svg, copy.title, copy.subtitle);
   output.files.push({ suffix: "png", body: new Uint8Array(preview), contentType: "image/png" });

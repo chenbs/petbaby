@@ -10,13 +10,13 @@ const TAGS = [
   { code: "learned", label: "学会了" }, { code: "keep", label: "只是想留着" }
 ];
 const SOURCES = { manual: "你设置的日期", exif: "照片里的拍摄时间", upload: "按上传时间记录" };
-const STATES = { ready: "待上传", uploading: "上传中", saved: "已收好", checking: "待核对", failed: "待重试", deleted: "已移除" };
+const STATES = { ready: "待保存", uploading: "上传中", saved: "已收好", checking: "待核对", failed: "待重试", deleted: "已移除" };
 
 themedPage({
   data: {
     pets: [], petId: "", petText: "", photos: [], totalCount: 0, nextCursor: "", error: "", loading: true, loadingMore: false,
     manage: false, picked: [], removeCount: 0, recordMode: false, batchView: false,
-    uploadItems: [], savedCount: 0, pendingCount: 0, uploading: false, preparing: false,
+    uploadItems: [], activeUploadItems: [], savedCount: 0, pendingCount: 0, uploading: false, preparing: false,
     detail: null, editCaption: "", editDate: "", editTags: [], tagOptions: TAGS, batchEditing: false, saving: false, albumDenied: false, message: ""
   },
   onLoad(query) {
@@ -80,7 +80,7 @@ themedPage({
     if (!pet || pet.id === this.data.petId) return;
     const change = () => {
       if (this._session) this._session.stop();
-      this.setData({ petId: pet.id, petText: pet.name, picked: [], manage: false, detail: null, uploadItems: [], savedCount: 0, pendingCount: 0, uploading: false, message: "" });
+      this.setData({ petId: pet.id, petText: pet.name, picked: [], manage: false, detail: null, uploadItems: [], activeUploadItems: [], savedCount: 0, pendingCount: 0, uploading: false, message: "" });
       this.load();
     };
     if (this.data.pendingCount) wx.showModal({ title: "切换宠物", content: "本批照片属于 " + this.data.petText + "。切换会停止当前上传，已发出的请求会保留待核对，不会改挂到另一只宠物。", success: (result) => { if (result.confirm) change(); } });
@@ -89,7 +89,13 @@ themedPage({
   newPet() {
     wx.navigateTo({ url: "/pages/pets/pets?mode=create&returnToRecord=1", events: { petCreated: (result) => this.setData({ petId: result.petId, recordMode: true }) } });
   },
-  goCreate() { if (!this.data.petId) this.newPet(); else { this.setData({ recordMode: true }); if (this._tracking) this._tracking.opened(this._entry, this.data.petId); } },
+  goCreate() {
+    if (!this.data.petId) return this.newPet();
+    if (this._session && this.data.savedCount && !this.data.pendingCount) this._session.reset();
+    this.setData({ recordMode: true });
+    if (this._tracking) this._tracking.opened(this._entry, this.data.petId);
+    this.choosePhotos();
+  },
   makeWork(event) {
     const petId = this.data.petId;
     if (!petId) return;
@@ -112,7 +118,8 @@ themedPage({
   },
   syncUpload(state) {
     const failed = new Set(this.data.uploadItems.filter((item) => item.thumbFailed).map((item) => item.requestId + "|" + item.path));
-    this.setData({ uploadItems: state.items.map((item) => Object.assign({}, item, { stateText: STATES[item.state], thumbFailed: failed.has(item.requestId + "|" + item.path) })), savedCount: state.savedCount, pendingCount: state.pendingCount, uploading: state.running });
+    const uploadItems = state.items.map((item) => Object.assign({}, item, { stateText: STATES[item.state], thumbFailed: failed.has(item.requestId + "|" + item.path) }));
+    this.setData({ uploadItems, activeUploadItems: uploadItems.filter((item) => item.state !== "saved"), savedCount: state.savedCount, pendingCount: state.pendingCount, uploading: state.running });
     if (state.pendingCount && wx.enableAlertBeforeUnload) wx.enableAlertBeforeUnload({ message: "未完成的上传将停止，已发出的照片会在回来后核对保存结果。" });
     else if (wx.disableAlertBeforeUnload) wx.disableAlertBeforeUnload();
   },
@@ -140,13 +147,14 @@ themedPage({
     await target.run();
     if (target !== this._session || !this._visible) return;
     this.syncUpload(target.snapshot());
-    this.setData({ message: this.data.savedCount ? "已收进 " + this.data.petText + " 的时间线，这次收好 " + this.data.savedCount + " 张" : "", batchView: false });
+    this.setData({ message: "", batchView: false });
     await this.loadPage(false);
   },
   continueBatch() {
     if (this.data.pendingCount) return this.setData({ error: "请先核对或重试本批未完成的照片" });
     if (this._session) this._session.reset();
     this.setData({ message: "", recordMode: true });
+    this.choosePhotos();
   },
   cancelSelected(event) { if (this._session) this._session.remove(event.currentTarget.dataset.id); },
   async viewSaved() {
@@ -200,7 +208,11 @@ themedPage({
   onUploadThumbError(event) {
     const { id, src } = event.currentTarget.dataset;
     const index = this.data.uploadItems.findIndex((item) => item.requestId === id && item.path === src);
-    if (index >= 0) this.setData({ ["uploadItems[" + index + "].thumbFailed"]: true });
+    if (index < 0) return;
+    const activeIndex = this.data.activeUploadItems.findIndex((item) => item.requestId === id && item.path === src);
+    const patch = { ["uploadItems[" + index + "].thumbFailed"]: true };
+    if (activeIndex >= 0) patch["activeUploadItems[" + activeIndex + "].thumbFailed"] = true;
+    this.setData(patch);
   },
   inputCaption(event) { this.setData({ editCaption: event.detail.value }); },
   chooseDate(event) { this.setData({ editDate: event.detail.value }); },

@@ -1,0 +1,12 @@
+{
+  "id": "holiday",
+  "group": "album",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "prompt": "Use case: product-mockup. Vertical 3:4 close overhead photograph of a festive pet scrapbook page on soft coral paper. Three neatly arranged real photographic prints show the SAME Shiba Inu enjoying a home celebration with paper garlands, wrapped gifts and warm string lights; consistent face and natural paws in every print. Small red and cream paper accents, a ribbon crossing one corner, tactile matte print surfaces and generous clean margins. Joyful refined editorial album design, not tied to any single holiday, bottom margin open for later title. No readable text, logos, people, extra limbs or excessive decoration.",
+  "finalPrompt": "Use case: product-mockup. Vertical 3:4 close overhead photograph of a festive pet scrapbook page on soft coral paper. Three neatly arranged real photographic prints show the SAME Shiba Inu enjoying a home celebration with paper garlands, wrapped gifts and warm string lights; consistent face and natural paws in every print. Small red and cream paper accents, a ribbon crossing one corner, tactile matte print surfaces and generous clean margins. Joyful refined editorial album design, not tied to any single holiday, bottom margin open for later title. No readable text, logos, people, extra limbs or excessive decoration.",
+  "source": "tools/imagegen/out/movie-album-v2/album-holiday-raw.jpg",
+  "output": "tools/imagegen/out/movie-album-v2/album-holiday.jpg",
+  "sha256": "e783a180aca0626427138124326a31caefca22b0067ca5a77bbd3724b0bd4b62",
+  "review": "pending-visual-review"
+}

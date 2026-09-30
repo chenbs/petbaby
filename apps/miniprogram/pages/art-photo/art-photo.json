@@ -1,6 +1,7 @@
 {
   "navigationBarTitleText": "宠物写真",
   "usingComponents": {
+    "t-button": "../../components/button/index",
     "t-notice": "../../components/notice/index",
     "t-skeleton": "../../components/skeleton/index"
   }

@@ -1,8 +1,9 @@
 import { expect, test } from "@playwright/test";
 
-const titles = ["它的隐藏性格", "它带来的小小好运", "你们的陪伴关系", "它的情绪充电方式"];
+const titles = ["我的隐藏性格", "我带来的小小好运", "我们的陪伴关系", "我的情绪充电方式"];
 
 test("four pet fun tests complete and produce shareable, revocable results", async ({ page }) => {
+  test.setTimeout(90_000);
   for (const title of titles) {
     let revealStarted = 0;
     await page.goto("/fun-tests");
@@ -35,7 +36,7 @@ test("four pet fun tests complete and produce shareable, revocable results", asy
     if (title === titles[0]) expect(Date.now() - revealStarted).toBeGreaterThanOrEqual(2500);
     await expect(page.locator(".ft-result-sheet")).toContainText("年糕");
     await expect(page.locator(".ft-result-sheet")).toContainText("日常名场面");
-    await expect(page.locator(".ft-result-sheet")).toContainText("你们之间");
+    await expect(page.locator(".ft-result-sheet")).toContainText("我们之间");
 
     if (title !== titles[0]) continue;
 

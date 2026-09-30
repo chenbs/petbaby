@@ -1,0 +1,13 @@
+{
+  "templateId": "together-rainy-umbrella",
+  "title": "雨天一把伞",
+  "size": "720x1280",
+  "source": "tools/imagegen/out/together-v1/together-rainy-umbrella.jpg",
+  "sourceSha256": "f3c0f0265f25d48389013c88bfdbaae0889b232b1ecb7e437b5c2892fa27a95f",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "prompt": "Use case: photorealistic-natural. Asset type: an original self-owned frozen master for a pet-and-owner portrait effect. An intimate candid street photograph just after rain: an adult East Asian woman in a simple tan trench coat holds a large transparent umbrella low over herself and her small cream poodle. She crouches beside the dog on a quiet wet sidewalk, smiling down at it; the dog looks up at her. Both faces and the dog's full body with paws on the pavement are visible. Natural reflections on wet stone, a few soft city lights in the distance, real rain droplets on the umbrella. A believable affectionate exchange, no staged studio lighting. Make a single vertical 9:16 35mm lifestyle photograph with a full coherent scene, physically plausible perspective, matching contact shadows and consistent natural light. Real skin texture and pet fur, moderate optical depth and gentle film grain. Keep both subjects within generous safe margins so neither face, hand, paw nor tail is cropped by a 9:16 frame. Their identities may later be replaced separately, so the owner and pet must remain clearly distinct and unobstructed. No real person's likeness, no public figure, no logo, no written text, no watermark, no extra humans or pets, no floating limbs, duplicate anatomy, plastic fur, overprocessed skin, pasted edges, fantasy glow or glossy AI illustration. Return one photograph only.",
+  "rights": "text-only-generated-generic-adults-and-pets-no-private-identity",
+  "visualReview": "pass",
+  "reviewedAt": "2026-09-29"
+}

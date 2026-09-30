@@ -1,0 +1,12 @@
+{
+  "id": "highseas",
+  "group": "movie",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "prompt": "Use case: ads-marketing. Vertical 3:4 premium photographic pet film key art, matching the polished realistic cinematic quality of a film poster. A real golden retriever is the sole protagonist on the deck of an old wooden sailing ship at dusk, paws naturally grounded, full head and body visible. Wind in its fur, brass compass and rolled sea chart nearby, tall weathered sails and rough teal sea behind it, warm lantern light against cool storm sky. Playful brave expression, dramatic but believable practical lighting, clear pet at thumbnail size, lower quarter visually quiet for later poster title. Entirely original adventure setting, no text, logos, skull flag, branded costume, copyrighted characters, extra animals or anatomy errors.",
+  "finalPrompt": "Use case: ads-marketing. Vertical 3:4 premium photographic pet film key art, matching the polished realistic cinematic quality of a film poster. A real golden retriever is the sole protagonist on the deck of an old wooden sailing ship at dusk, paws naturally grounded, full head and body visible. Wind in its fur, brass compass and rolled sea chart nearby, tall weathered sails and rough teal sea behind it, warm lantern light against cool storm sky. Playful brave expression, dramatic but believable practical lighting, clear pet at thumbnail size, lower quarter visually quiet for later poster title. Entirely original adventure setting, no text, logos, skull flag, branded costume, copyrighted characters, extra animals or anatomy errors.",
+  "source": "tools/imagegen/out/movie-album-v2/movie-highseas-raw.jpg",
+  "output": "tools/imagegen/out/movie-album-v2/movie-highseas.jpg",
+  "sha256": "acb39c5a94b5e246c7985b11e191b76aa4eeede18599d9893def9fe40f46638e",
+  "review": "pending-visual-review"
+}

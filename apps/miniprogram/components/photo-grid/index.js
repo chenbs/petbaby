@@ -22,6 +22,7 @@ Component({
     previewable: { type: Boolean, value: true },
     anim: { type: String, value: "fade" },
     columns: { type: Number, value: 3 },
+    imageMode: { type: String, value: "aspectFill" },
     featured: { type: Boolean, value: false }
   },
   data: { tiles: [], dragIndex: -1 },

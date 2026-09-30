@@ -1,0 +1,12 @@
+{
+  "id": "healing",
+  "group": "album",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "prompt": "Use case: product-mockup. Vertical 3:4 close overhead photograph of a calm pet daily-life scrapbook page on powder blue paper. Three neatly arranged real photographic prints show the SAME blue British Shorthair cat resting, stretching and watching afternoon sunlight at home, consistent face and amber eyes. Pale blue photo corners, a pressed tiny white flower and soft pencil-like rules, roomy white margin, paper grain and realistic photographic depth. Gentle collected-memory art direction, quiet and warm, bottom margin open for later title. No readable text, logos, hands, extra limbs or crowded decorations.",
+  "finalPrompt": "Use case: product-mockup. Vertical 3:4 close overhead photograph of a calm pet daily-life scrapbook page on powder blue paper. Three neatly arranged real photographic prints show the SAME blue British Shorthair cat resting, stretching and watching afternoon sunlight at home, consistent face and amber eyes. Pale blue photo corners, a pressed tiny white flower and soft pencil-like rules, roomy white margin, paper grain and realistic photographic depth. Gentle collected-memory art direction, quiet and warm, bottom margin open for later title. No readable text, logos, hands, extra limbs or crowded decorations.",
+  "source": "tools/imagegen/out/movie-album-v2/album-healing-raw.jpg",
+  "output": "tools/imagegen/out/movie-album-v2/album-healing.jpg",
+  "sha256": "27c907510a2054a7489900bed4abc7bb154beb7c423c243b2f547d25007d4aca",
+  "review": "pending-visual-review"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "fun-personality-v2",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "prompt": "Use case: photorealistic-natural. Square editorial cover for a playful pet personality quiz. A real Shiba Inu dog pauses at a fork in a sunlit garden path, one paw lifted, ears attentive, curious expression and complete natural body visible; two paths framed by peach and mint flowering shrubs. Eye-level 50mm pet photography, spontaneous action, soft morning sunlight and realistic shadows. Fresh coral and garden green palette, youthful and refined, clear subject at thumbnail size. No text, no cards, no costume, no duplicate pet, no logo, no plastic fur, no CGI or impossible anatomy.",
+  "output": "tools/imagegen/out/goal-20260929/fun-personality-v2.jpg",
+  "sha256": "bf4b19e7b75f951b98c73a3cfac47a12c8a1070d4594af90067b353cd30eacc6",
+  "review": "pending-visual-review"
+}

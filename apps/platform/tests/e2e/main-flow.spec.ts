@@ -17,7 +17,7 @@ test("completes generation, unlock, and public share flow", async ({ page }) => 
   await expect(page.getByRole("heading", { name: /每张照片/ })).toBeVisible();
   await page.getByRole("link", { name: /宠物电影海报/ }).click();
 
-  await page.getByLabel("它叫什么？").fill("年糕");
+  await page.getByLabel("我叫什么？").fill("年糕");
   await page.getByRole("button", { name: "保存档案，选择照片" }).click();
   await page.getByLabel(/追加新照片/).setInputFiles({ name: "pet.png", mimeType: "image/png", buffer: tinyPng });
   await page.getByRole("button", { name: "免费生成预览" }).click();

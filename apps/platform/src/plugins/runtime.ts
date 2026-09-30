@@ -62,6 +62,7 @@ const previousSampleDefaults: Record<string, { heroUrl?: string; styleUrls?: Rec
 };
 
 const previousV2SampleDefaults: Record<string, { heroUrl?: string; sceneUrls?: Record<string, string> }> = {
+  "pet-movie-poster": { heroUrl: "/api/plugin-samples/samples/mp26-pet-movie-poster-v3-0f9f70e6c032.jpg" },
   "pl-10": {
     heroUrl: "/api/plugin-samples/samples/mp26-pl-10-8bfc17d3b3b5.jpg",
     sceneUrls: {
@@ -80,6 +81,22 @@ const previousV2SampleDefaults: Record<string, { heroUrl?: string; sceneUrls?: R
     },
   },
   "pl-15": { heroUrl: "/api/plugin-samples/samples/mp26-pl-15-bd5db2c1f693.jpg" },
+};
+
+// 上一批已发布的 12 张扩展写真样片。仅这些默认键升级到新图，后台自定义值保留。
+const previousV4ArtSceneUrls: Record<string, string> = {
+  "railway-traveler": "/api/plugin-samples/samples/scene-railway-traveler-v4-af7a29506d35.jpg",
+  "tennis-champion": "/api/plugin-samples/samples/scene-tennis-champion-v4-4747aee4a90a.jpg",
+  "greenhouse-gardener": "/api/plugin-samples/samples/scene-greenhouse-gardener-v4-c96b83f9b34b.jpg",
+  "sailboat-holiday": "/api/plugin-samples/samples/scene-sailboat-holiday-v4-09c7ec74bcc6.jpg",
+  "berry-pastry-chef": "/api/plugin-samples/samples/scene-berry-pastry-chef-v4-f7f46fd4c271.jpg",
+  "paper-flower-window": "/api/plugin-samples/samples/scene-paper-flower-window-v4-b24f5e5c987f.jpg",
+  "mountain-cable-car": "/api/plugin-samples/samples/scene-mountain-cable-car-v4-92450690e202.jpg",
+  "laundry-day": "/api/plugin-samples/samples/scene-laundry-day-v4-12a2a8746e9d.jpg",
+  "museum-curator": "/api/plugin-samples/samples/scene-museum-curator-v4-ecba3a50b34d.jpg",
+  "poolside-vacation": "/api/plugin-samples/samples/scene-poolside-vacation-v4-742a01182dd2.jpg",
+  "post-office": "/api/plugin-samples/samples/scene-post-office-v4-539386983243.jpg",
+  "ballet-backstage": "/api/plugin-samples/samples/scene-ballet-backstage-v4-8e2f1641b5c0.jpg",
 };
 
 const manifestSchema: z.ZodType<PluginManifest> = z.object({
@@ -171,8 +188,51 @@ function matchesPreviousArtScenes(value: unknown) {
 
 async function ensurePluginConfigs() {
   const database = await getDatabase();
+  const previousDefaultCopy: Record<string, Partial<Pick<PluginManifest, "tagline" | "description">>> = {
+    "pet-id-card": { tagline: "今天起，它也是有证的小朋友" },
+    "pet-movie-poster": { tagline: "年度巨制，领衔主演是它" },
+    "pl-10": {
+      tagline: "换一个场景，看见它不一样的神态",
+      description: "选择宠物身份照和写真场景，生成两张保留它真实身份的艺术写真候选。",
+    },
+  };
   for (const plugin of plugins) {
     await database.query("INSERT INTO plugin_configs (id,manifest,version,active,updated_at) VALUES ($1,$2::jsonb,1,true,$3) ON CONFLICT (id) DO NOTHING", [plugin.id, JSON.stringify(plugin), new Date()]);
+    if (plugin.id === "pet-movie-poster") {
+      const stored = (await database.query<{ manifest: unknown }>("SELECT manifest FROM plugin_configs WHERE id=$1", [plugin.id]))[0];
+      const current = asRecord(stored?.manifest);
+      const generator = asRecord(current.generator);
+      const input = asRecord(current.input);
+      const photos = asRecord(input.photos);
+      const next = { ...current };
+      let changed = false;
+      if (generator.type === "html-template" && generator.template === "movie-poster-v1") {
+        next.generator = plugin.generator;
+        changed = true;
+      }
+      if (photos.min === 1 && photos.max === 3) {
+        next.input = { ...input, photos: plugin.input.photos };
+        changed = true;
+      }
+      if (current.description === "把日常照片排成一张有片名、有短评的竖版电影海报。") {
+        next.description = plugin.description;
+        changed = true;
+      }
+      if (changed) await database.query("UPDATE plugin_configs SET manifest=$2::jsonb,updated_at=$3 WHERE id=$1", [plugin.id, JSON.stringify(next), new Date()]);
+    }
+    const oldDefault = previousDefaultCopy[plugin.id];
+    if (oldDefault) {
+      const storedCopy = (await database.query<{ manifest: unknown }>("SELECT manifest FROM plugin_configs WHERE id=$1", [plugin.id]))[0];
+      const currentCopy = asRecord(storedCopy?.manifest);
+      let changedCopy = false;
+      for (const key of Object.keys(oldDefault) as Array<"tagline" | "description">) {
+        if (currentCopy[key] === oldDefault[key]) {
+          currentCopy[key] = plugin[key];
+          changedCopy = true;
+        }
+      }
+      if (changedCopy) await database.query("UPDATE plugin_configs SET manifest=$2::jsonb,updated_at=$3 WHERE id=$1", [plugin.id, JSON.stringify(currentCopy), new Date()]);
+    }
     // 样例图回填：老库里的 manifest 按旧结构写入，而上面的 DO NOTHING 不会更新它们。
     // 只在「库里没有 samples 而代码里有」时补一次，不整体覆盖 —— 后台发布过的配置属于
     // 运营决策，不能被一次部署重置。
@@ -195,7 +255,8 @@ async function ensurePluginConfigs() {
               const oldStyles = previousSampleDefaults[plugin.id]?.[key] || {};
               const v2Styles = key === "sceneUrls" ? previousV2SampleDefaults[plugin.id]?.sceneUrls || {} : {};
               for (const [style, url] of Object.entries(value as Record<string, string>)) {
-                if (nextStyles[style] === undefined || nextStyles[style] === oldStyles[style] || nextStyles[style] === v2Styles[style]) {
+                if (nextStyles[style] === undefined || nextStyles[style] === oldStyles[style] || nextStyles[style] === v2Styles[style] ||
+                    (plugin.id === "pl-10" && key === "sceneUrls" && nextStyles[style] === previousV4ArtSceneUrls[style])) {
                   if (nextStyles[style] !== url) { nextStyles[style] = url; changed = true; }
                 }
               }

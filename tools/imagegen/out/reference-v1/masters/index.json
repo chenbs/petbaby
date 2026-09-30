@@ -824,6 +824,46 @@
       "sha256": "cf9676c5dfdb50420dd9c836f4b31a57421cf986ac35ec27eff9893857c0580f",
       "metadata": "tools/imagegen/out/reference-v1/masters/metadata/archive-fish-anatomy_blue-british-cat_9x16_v02.json",
       "approvedAt": "2026-08-20T14:00:00+08:00"
+    },
+    {
+      "templateId": "together-selfie-photobomb",
+      "title": "抢镜自拍",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/together-selfie-photobomb_9x16_v01.webp",
+      "sha256": "a5b6e0167f3902db45da8e71bb7bc4576a35ee295c76aa8a28d8396372043450",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/together-selfie-photobomb_9x16_v01.json",
+      "approvedAt": "2026-09-29T00:00:00.000+08:00"
+    },
+    {
+      "templateId": "together-sofa-yawn",
+      "title": "同步打哈欠",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/together-sofa-yawn_9x16_v01.webp",
+      "sha256": "abcd58385c2fc4fbded6790b9d2622f086eb53556306ffc49312567160e85e0e",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/together-sofa-yawn_9x16_v01.json",
+      "approvedAt": "2026-09-29T00:00:00.000+08:00"
+    },
+    {
+      "templateId": "together-rainy-umbrella",
+      "title": "雨天一把伞",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/together-rainy-umbrella_9x16_v01.webp",
+      "sha256": "8fa325d1d45164570b66d4382c7bdca72fbf60fb1dd9c5df3e27bf1e4023a21b",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/together-rainy-umbrella_9x16_v01.json",
+      "approvedAt": "2026-09-29T00:00:00.000+08:00"
+    },
+    {
+      "templateId": "together-window-nap",
+      "title": "午后靠着你",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/together-window-nap_9x16_v01.webp",
+      "sha256": "1c3fd65a793a407b46f11feb9745e032fd4b8d9c656ccfa185b822a106b88212",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/together-window-nap_9x16_v01.json",
+      "approvedAt": "2026-09-29T00:00:00.000+08:00"
     }
   ],
   "updatedAt": "2026-08-22T15:02:20.036Z",

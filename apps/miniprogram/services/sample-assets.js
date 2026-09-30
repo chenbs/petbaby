@@ -1,10 +1,16 @@
 const config = require("../config");
-const manifest = require("../assets/samples/manifest");
+const rawManifest = require("../assets/samples/manifest");
 
 function publicUrl(url) {
   if (!url || typeof url !== "string") return "";
+  if (url.indexOf("/assets/") === 0) return url;
   if (url.charAt(0) === "/") return config.apiBaseUrl + url;
   return url;
+}
+
+const manifest = Object.assign({}, rawManifest);
+for (const group of ["plugins", "scenes", "templates", "movie", "album", "interactive", "funTests", "covers"]) {
+  manifest[group] = Object.fromEntries(Object.entries(rawManifest[group] || {}).map(([id, url]) => [id, publicUrl(url)]));
 }
 
 function pluginSample(plugin) {

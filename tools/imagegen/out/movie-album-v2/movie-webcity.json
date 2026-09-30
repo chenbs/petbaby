@@ -1,0 +1,12 @@
+{
+  "id": "webcity",
+  "group": "movie",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "prompt": "Use case: ads-marketing. Vertical 3:4 premium photographic pet urban hero film key art. A real orange tabby cat stands confidently on a safe wide rooftop ledge, all paws visible and naturally grounded, alert eyes facing camera. Rainy modern city skyline after dark, suspended bridge cables and delicate architectural wire lattice forming a web-like graphic rhythm behind, restrained crimson signage and cyan reflections, a plain dark red bandana collar only. Dynamic heroic framing but natural cat anatomy, cinematic practical light, lower quarter quiet for poster title. Original urban scene, no superhero suit, mask, emblem, logos, recognizable copyrighted imagery, text or extra limbs.",
+  "finalPrompt": "Use case: ads-marketing. Vertical 3:4 premium photographic pet urban hero film key art. A real orange tabby cat stands confidently on a safe wide rooftop ledge, all paws visible and naturally grounded, alert eyes facing camera. Rainy modern city skyline after dark, suspended bridge cables and delicate architectural wire lattice forming a web-like graphic rhythm behind, restrained crimson signage and cyan reflections, a plain dark red bandana collar only. Dynamic heroic framing but natural cat anatomy, cinematic practical light, lower quarter quiet for poster title. Original urban scene, no superhero suit, mask, emblem, logos, recognizable copyrighted imagery, text or extra limbs.",
+  "source": "tools/imagegen/out/movie-album-v2/movie-webcity-raw.jpg",
+  "output": "tools/imagegen/out/movie-album-v2/movie-webcity.jpg",
+  "sha256": "4c4bf3b513b23d9a0a30a0b01220ff28e8c5776886a6e5e89f5594c84379abd3",
+  "review": "pending-visual-review"
+}

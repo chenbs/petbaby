@@ -13,11 +13,15 @@ const credentials = {
 
 test("部署清单中的所有母版和预览均可按原始哈希找到", async () => {
   const plan = await buildPlan();
-  assert.deepEqual(plan.counts, { master: 76, preview: 76 });
+  assert.deepEqual(plan.counts, { master: 80, preview: 80, human: 40 });
   assert.equal(plan.plugins, 16);
   assert.equal(plan.styles, 4);
-  assert.equal(plan.scenes, 12);
-  assert.equal(plan.assets.size, 184);
+  assert.equal(plan.scenes, 24);
+  assert.equal(plan.assets.size, 244);
+  for (let number = 1; number <= 40; number++) {
+    const id = `human-effect-${String(number).padStart(2, "0")}`;
+    assert.equal([...plan.assets.keys()].filter((key) => key.startsWith(`samples/image-templates/${id}-`)).length, 1);
+  }
   assert.ok(plan.assets.has("samples/scene-snow-cabin-v4-76d611cfe07a.jpg"));
   assert.ok(plan.assets.has("samples/mp26-gray-toy-poodle-editorial-v1-7c583b9dcb50.jpg"));
   assert.ok(plan.assets.has("samples/mp26-pl-15-photographic-v2-d2e283f5b2eb.jpg"));

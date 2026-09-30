@@ -1,0 +1,12 @@
+{
+  "id": "growth",
+  "group": "album",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "prompt": "Use case: product-mockup. Vertical 3:4 close overhead photograph of a refined handmade pet growth scrapbook page on pale mint paper. Three neatly arranged real photographic prints show the SAME golden retriever at puppy, adolescent and adult stages, recognizable coat and eyes across ages. Washi tape, small hand-drawn timeline dots, one dried leaf, generous white margin, tactile paper, youthful and collectible editorial art direction. Clean page hierarchy and realistic printed photos, bright natural daylight. Leave bottom margin open for title added later. No readable text, logos, human hands, duplicate limbs or glossy plastic textures.",
+  "finalPrompt": "Use case: product-mockup. Vertical 3:4 close overhead photograph of a refined handmade pet growth scrapbook page on pale mint paper. Three neatly arranged real photographic prints show the SAME golden retriever at puppy, adolescent and adult stages, recognizable coat and eyes across ages. Washi tape, small hand-drawn timeline dots, one dried leaf, generous white margin, tactile paper, youthful and collectible editorial art direction. Clean page hierarchy and realistic printed photos, bright natural daylight. Leave bottom margin open for title added later. No readable text, logos, human hands, duplicate limbs or glossy plastic textures.",
+  "source": "tools/imagegen/out/movie-album-v2/album-growth-raw.jpg",
+  "output": "tools/imagegen/out/movie-album-v2/album-growth.jpg",
+  "sha256": "11659178e1db7d1cd11f3ef9d31a8a163df7d09e0cceb921e728fb020e437ae2",
+  "review": "pending-visual-review"
+}

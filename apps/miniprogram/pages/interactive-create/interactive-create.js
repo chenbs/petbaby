@@ -8,7 +8,7 @@ themedPage({
   data: {
     pets: [], petId: "", petText: "", photos: [], photoIds: [],
     title: "每一次想念，都在这里发光",
-    copy: "把它最熟悉的样子，轻轻放进星光里。",
+    copy: "把我最熟悉的样子，轻轻放进星光里。",
     theme: "stardust",
     // 场景主题是内容属性，与全局 UI 主题无关（见 theme/scene-presets.js）
     scenePresets: scenes.SCENE_PRESETS.map((item) => Object.assign({}, item, { sampleUrl: manifest.interactive[item.id] })),
@@ -55,10 +55,6 @@ themedPage({
   chooseScene(event) {
     const id = event.currentTarget.dataset.id;
     this.setData({ theme: id, sceneStyle: scenes.getSceneStyle(id) });
-  },
-  swipeScene(event) {
-    const scene = this.data.scenePresets[Number(event.detail.current)];
-    if (scene) this.setData({ theme: scene.id, sceneStyle: scenes.getSceneStyle(scene.id) });
   },
   openPhotos() { wx.navigateTo({ url: "/pages/photos/photos?petId=" + this.data.petId }); },
   create() {

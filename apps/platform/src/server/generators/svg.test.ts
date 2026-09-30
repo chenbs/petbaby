@@ -1,9 +1,18 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import sharp from "sharp";
 
-import { generateGrowthCompare } from "@/server/generators/svg";
+import { generateGrowthCompare, generateMoviePoster, generateTimeAlbum } from "@/server/generators/svg";
+import { imageProvider } from "@/server/ai/provider";
 import type { GeneratorInput } from "@/server/generators/types";
+import { generationInputSchema } from "@/domain/models";
 import type { GenerationTask, Pet, Photo, PluginManifest } from "@/domain/models";
+
+vi.mock("@/server/ai/provider", () => ({ imageProvider: { name: "test", generate: vi.fn() } }));
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+  vi.mocked(imageProvider.generate).mockReset();
+});
 
 async function jpeg(hue: number) {
   const body = await sharp({ create: { width: 300, height: 400, channels: 3, background: { r: hue, g: 120, b: 160 } } }).jpeg().toBuffer();
@@ -73,5 +82,55 @@ describe("generateGrowthCompare", () => {
   it("宠物名字进标题（换掉名字句子就不成立，这是不可替代性的判定）", async () => {
     const output = await generateGrowthCompare(await input(["2024-01-01T10:00:00Z", "2024-06-01T10:00:00Z"]));
     expect(output.title).toBe("年糕的变化");
+  });
+});
+
+describe("电影海报与时光画册主题", () => {
+  it("生成接口接受五套海报主题并兼容旧主题值", () => {
+    for (const style of ["rooftop", "highseas", "musical", "webcity", "starvoyage", "classic", "arthouse", "hongkong"]) {
+      expect(generationInputSchema.safeParse({ pluginId: "pet-movie-poster", petId: "pet", photoIds: ["photo"], idempotencyKey: "movie-test-key", options: { style } }).success).toBe(true);
+    }
+    expect(generationInputSchema.safeParse({ pluginId: "pet-movie-poster", petId: "pet", photoIds: ["photo"], idempotencyKey: "movie-test-key", options: { style: "enchanted" } }).success).toBe(false);
+  });
+
+  it("五套电影主题各使用对应母版和宠物身份图，输出完整竖版海报", async () => {
+    const master = await jpeg(200);
+    const generated = await sharp({ create: { width: 1024, height: 1536, channels: 3, background: { r: 45, g: 70, b: 85 } } }).png().toBuffer();
+    vi.stubGlobal("fetch", vi.fn(async () => ({ ok: true, arrayBuffer: async () => Buffer.from(master.body) })));
+    vi.mocked(imageProvider.generate).mockResolvedValue([{ body: new Uint8Array(generated), contentType: "image/png" }]);
+    const styles = ["rooftop", "highseas", "musical", "webcity", "starvoyage"];
+    const outputs = await Promise.all(styles.map(async (style) => {
+      const source = await input(["2026-01-01T10:00:00Z"]);
+      source.plugin = { id: "pet-movie-poster" } as PluginManifest;
+      source.task = { ...TASK, options: { style } };
+      return generateMoviePoster(source);
+    }));
+    expect(new Set(outputs.map((item) => item.title)).size).toBe(5);
+    expect(new Set(vi.mocked(fetch).mock.calls.map(([url]) => String(url)) ).size).toBe(5);
+    for (const [index, output] of outputs.entries()) {
+      expect(output.files[0].contentType).toBe("image/png");
+      expect(output.files[0].suffix).toBe("png");
+      const call = vi.mocked(imageProvider.generate).mock.calls[index];
+      expect(call[0]).toContain("Image 2 is the user's pet identity photo");
+      expect(call[2]).toHaveLength(2);
+      expect(call[3]).toMatchObject({ size: "1024x1536", inputFidelity: "high" });
+    }
+    expect(await sharp(Buffer.from(outputs[1].files[0].body)).metadata()).toMatchObject({ width: 1024, height: 1536 });
+  });
+
+  it("四套画册将六张照片排为两页主题拼贴，预览和 SVG 尺寸一致", async () => {
+    const colors = { growth: "#e4f2e7", birthday: "#fff0bb", healing: "#e4eef8", holiday: "#f8e9e0" };
+    for (const [theme, color] of Object.entries(colors)) {
+      const source = await input(["2026-01-01T10:00:00Z", "2026-02-01T10:00:00Z", "2026-03-01T10:00:00Z", "2026-04-01T10:00:00Z", "2026-05-01T10:00:00Z", "2026-06-01T10:00:00Z"]);
+      source.plugin = { id: "pet-time-album" } as PluginManifest;
+      source.task = { ...TASK, options: { theme, coverTitle: "我的画册" } };
+      const output = await generateTimeAlbum(source);
+      const svg = Buffer.from(output.files[0].body).toString();
+      expect(svg).toContain(color);
+      expect(svg).toContain("我的画册");
+      expect(svg.match(/data:image\/jpeg;base64,/g)).toHaveLength(6);
+      expect(output.files.some((file) => file.suffix === "png")).toBe(true);
+      expect(await sharp(Buffer.from(output.files.find((file) => file.suffix === "png")!.body)).metadata()).toMatchObject({ width: 1080, height: 2500 });
+    }
   });
 });

@@ -16,12 +16,22 @@ import {
 } from "@/server/image-template-registry";
 
 describe("image template registry", () => {
-  it("登记 9 个入口、116 个独立模板，并只公开已冻结模板", () => {
+  it("登记 11 个入口、120 个独立模板，并只公开已上线模板", () => {
     const catalog = listImageTemplates({ includePending: true });
-    expect(catalog).toHaveLength(116);
-    expect(listImageTemplates()).toHaveLength(76);
-    expect(imageTemplateEntries).toHaveLength(9);
-    expect(listPublicImageTemplateEntries()).toHaveLength(8);
+    expect(catalog).toHaveLength(120);
+    expect(listImageTemplates()).toHaveLength(116);
+    expect(imageTemplateEntries).toHaveLength(11);
+    expect(listPublicImageTemplateEntries()).toHaveLength(11);
+    const humanEntry = listPublicImageTemplateEntries().find((entry) => entry.id === "human");
+    expect(humanEntry?.title).toBe("人类转生计划");
+    expect(humanEntry?.templates.map((template) => template.templateId)).toEqual([
+      31, 32, 5, 8, 7, 36, 37, 20, 11, 10, 40, 15, 12, 14, 29, 30,
+      33, 34, 38, 39, 1, 25, 4, 3, 18, 16, 19, 17, 21, 26, 28, 27,
+      24, 13, 9, 6, 35, 2, 22, 23,
+    ].map((number) => `human-effect-${String(number).padStart(2, "0")}`));
+    expect(new Set(humanEntry?.templates.map((template) => template.templateId)).size).toBe(40);
+    expect(listPublicImageTemplateEntries().find((entry) => entry.id === "art")?.templates.map((template) => template.templateId))
+      .toEqual(["pet-art-photo", "ink-portrait", "decorative-art-portrait", "ink-silhouette", "ink-fullbody-flight", "ink-brush-avatar", "animal-watercolor-cat-closeup"]);
     expect(listImageTemplates().every((template) => template.masterStorageKey?.startsWith("samples/image-templates/"))).toBe(true);
     expect(listImageTemplates().every((template) => template.subjectMode === "pet-human"
       ? template.sampleStorageKey === template.masterStorageKey
@@ -29,11 +39,11 @@ describe("image template registry", () => {
     expect(listImageTemplates().every((template) => template.subjectMode === "pet-human"
       || template.masterStorageKey !== template.sampleStorageKey)).toBe(true);
     expect(catalog.filter((template) => template.status === "pending-master")).toHaveLength(0);
-    const pendingPetHuman = catalog.filter((template) => template.subjectMode === "pet-human" && template.status === "pending-review");
-    expect(catalog.filter((template) => template.status === "pending-review")).toHaveLength(40);
-    expect(pendingPetHuman).toHaveLength(40);
+    const livePetHuman = catalog.filter((template) => template.subjectMode === "pet-human" && template.status === "live");
+    expect(catalog.filter((template) => template.status === "pending-review")).toHaveLength(0);
+    expect(livePetHuman).toHaveLength(40);
     expect(new Set(catalog.map((template) => template.templateId)).size).toBe(catalog.length);
-    expect(pendingPetHuman.every((template) => template.masterStorageKey?.startsWith("samples/image-templates/human-effect-") && !template.sampleStorageKey)).toBe(true);
+    expect(livePetHuman.every((template) => template.masterStorageKey?.startsWith("samples/image-templates/human-effect-") && template.sampleStorageKey === template.masterStorageKey)).toBe(true);
     expect(getImageTemplate("animal-gold-ink-fox", { includePending: true })).toBeUndefined();
     expect(getImageTemplate("animal-robot-poster", { includePending: true })).toBeUndefined();
     expect(getImageTemplate("leaping-cover", { includePending: true })).toBeUndefined();
@@ -43,7 +53,7 @@ describe("image template registry", () => {
 
   it("艺术写真公开为独立单图模板，不改变历史母版目录", () => {
     const template = getImageTemplate("pet-art-photo");
-    expect(template).toMatchObject({ entryId: "art", subjectMode: "pet", status: "live", version: "v04", sampleStorageKey: "samples/scene-window-morning-v3-396d098a6999.jpg" });
+    expect(template).toMatchObject({ entryId: "art", subjectMode: "pet", status: "live", version: "v05", sampleStorageKey: "samples/scene-window-morning-v3-396d098a6999.jpg" });
     expect(template?.masterStorageKey).toBeUndefined();
     expect(listImageTemplates().some((item) => item.templateId === "pet-art-photo")).toBe(false);
     expect(listPublicImageTemplateEntries().find((entry) => entry.id === "art")?.templates[0]?.templateId).toBe("pet-art-photo");
@@ -51,15 +61,15 @@ describe("image template registry", () => {
     expect(imageTemplateSupportsReroll(template!)).toBe(true);
   });
 
-  it("宠物人化模板保持待审批，并使用固定提示词生成两张且禁止重抽", () => {
+  it("宠物人化使用统一提示词生成两张且禁止重抽", () => {
     const template = getImageTemplate("human-effect-01", { includePending: true });
     const anotherTemplate = getImageTemplate("human-effect-02", { includePending: true });
     if (!template) throw new Error("human-effect-01 missing");
     if (!anotherTemplate) throw new Error("human-effect-02 missing");
-    expect(template).toMatchObject({ subjectMode: "pet-human", status: "pending-review", version: "v01" });
+    expect(template).toMatchObject({ subjectMode: "pet-human", status: "live", version: "v01" });
     expect(template.masterStorageKey).toBe("samples/image-templates/human-effect-01-a927e036d08d.webp");
-    expect(template.sampleStorageKey).toBeUndefined();
-    expect(getImageTemplate(template.templateId)).toBeUndefined();
+    expect(template.sampleStorageKey).toBe(template.masterStorageKey);
+    expect(getImageTemplate(template.templateId)).toBeDefined();
     const prompt = buildImageTemplatePrompt(template);
     expect(prompt).toContain("以图二作为主要视觉参考，参考权重约 50%");
     expect(prompt).toContain("提取图一动物主体的核心视觉特征，参考权重约 50%");
@@ -91,8 +101,9 @@ describe("image template registry", () => {
       expect(metadata).toMatchObject({ format: "webp", width: 720, height: 1280 });
       expect(template).toMatchObject({
         templateId,
-        status: "pending-review",
+        status: "live",
         masterStorageKey: `samples/image-templates/${templateId}-${hash}.webp`,
+        sampleStorageKey: `samples/image-templates/${templateId}-${hash}.webp`,
       });
     }
   });
@@ -144,17 +155,24 @@ describe("image template registry", () => {
     const previewIndex = JSON.parse(readFileSync(path.join(referenceRoot, "public-previews/index.json"), "utf8")) as {
       templates: Array<{ templateId: string; path: string; sha256: string; sampleStorageKey: string }>;
     };
-    const live = listImageTemplates();
-    expect(masterIndex.templates).toHaveLength(live.length);
-    expect(previewIndex.templates).toHaveLength(live.length);
+    const live = listImageTemplates().filter((item) => item.subjectMode !== "pet-human");
+    expect(masterIndex.templates).toHaveLength(80);
+    expect(previewIndex.templates).toHaveLength(80);
+    const liveIds = new Set(live.map((item) => item.templateId));
+    const indexedMasters = masterIndex.templates.filter((item) => liveIds.has(item.templateId));
+    const indexedPreviews = previewIndex.templates.filter((item) => liveIds.has(item.templateId));
+    expect(indexedMasters).toHaveLength(live.length);
+    expect(indexedPreviews).toHaveLength(live.length);
     const masterFiles = readdirSync(path.join(referenceRoot, "masters"))
       .filter((filename) => /\.(?:png|webp)$/i.test(filename))
+      .filter((filename) => indexedMasters.some((item) => path.basename(item.path) === filename))
       .sort();
     const previewFiles = readdirSync(path.join(referenceRoot, "public-previews"))
       .filter((filename) => /\.(?:png|webp)$/i.test(filename))
+      .filter((filename) => indexedPreviews.some((item) => path.basename(item.path) === filename))
       .sort();
-    expect(masterFiles).toEqual(masterIndex.templates.map((item) => path.basename(item.path)).sort());
-    expect(previewFiles).toEqual(previewIndex.templates
+    expect(masterFiles).toEqual(indexedMasters.map((item) => path.basename(item.path)).sort());
+    expect(previewFiles).toEqual(indexedPreviews
       .filter((item) => item.path.includes("/public-previews/"))
       .map((item) => path.basename(item.path))
       .sort());

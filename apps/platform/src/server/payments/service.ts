@@ -6,6 +6,7 @@ import { isRealProduction } from "@/server/runtime-mode";
 import { selectPaymentChannel, virtualEnvironment, virtualProduct } from "./config";
 import { paymentProviderFor } from "./provider";
 import type { OrderKind, Payment, PaymentConfirmation, PaymentRefund } from "./types";
+import { activateArtPhotoBundle, cancelArtPhotoBundle } from "@/server/art-photo-bundle-service";
 
 const orderTables = { work: "orders", growth: "growth_orders", physical: "physical_orders" } as const;
 
@@ -62,6 +63,11 @@ async function grantPayment(database: Database, payment: Payment, order: SqlRow)
     await database.query("UPDATE physical_orders SET provider_order_id=$2 WHERE id=$1", [payment.order_id, payment.provider_transaction_id]);
     return;
   }
+  if (payment.order_kind === "growth" && order.kind === "art_photo_bundle") {
+    if (!order.resource_id) throw new AppError("ART_PHOTO_BATCH_NOT_FOUND", "写真套餐任务不存在", 409);
+    await activateArtPhotoBundle(database, payment.user_id, String(order.resource_id), payment.order_id);
+    return;
+  }
   if (order.kind === "membership") {
     const memberships = await database.query("UPDATE memberships SET status='active',quota=COALESCE((entitlements->>'monthlyQuota')::int,0),used=0,status_updated_at=now(),expires_at=now()+CASE WHEN plan='yearly' THEN interval '365 days' ELSE interval '30 days' END,quota_reset_at=now()+interval '30 days' WHERE id=$1 AND user_id=$2 RETURNING id", [order.resource_id, payment.user_id]);
     if (!memberships[0]) throw new AppError("MEMBERSHIP_NOT_FOUND", "会员记录不存在", 409);
@@ -105,7 +111,9 @@ async function revokePayment(database: Database, payment: Payment) {
     await database.query("UPDATE video_renders SET status='preview_ready' WHERE work_id=$1 AND status='ready'", [order.work_id]);
   } else if (payment.order_kind === "growth") {
     await database.query("UPDATE growth_orders SET refunded_at=now(),updated_at=now() WHERE id=$1", [payment.order_id]);
-    if (order.kind === "membership") {
+    if (order.kind === "art_photo_bundle") {
+      if (order.resource_id) await cancelArtPhotoBundle(database, String(order.resource_id));
+    } else if (order.kind === "membership") {
       await database.query("UPDATE memberships SET status='expired',quota=0,used=0,status_updated_at=now() WHERE id=$1", [order.resource_id]);
       const redeemed = await database.query("SELECT kind,resource_id FROM entitlement_ledger WHERE membership_id=$1 AND status='consumed'", [order.resource_id]);
       for (const item of redeemed) {

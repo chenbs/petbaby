@@ -127,7 +127,7 @@ export function FunTestResultView({ result, onRetry, onDelete }: { result: FunTe
       <div className="ft-keywords">{result.outcome.keywords.map((word) => <span key={word}>#{word}</span>)}</div>
       <div className="ft-result-details">
         <div><span>日常名场面</span><p>{result.outcome.typical}</p></div>
-        <div><span>你们之间</span><p>{result.outcome.bond}</p></div>
+        <div><span>我们之间</span><p>{result.outcome.bond}</p></div>
         <div><span>今日小纸条</span><p>{result.outcome.tip}</p></div>
       </div>
       <p className="ft-result-closing">{result.outcome.closing}</p>

@@ -1,9 +1,19 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
-<view class="page page-tabbar art-brand layout-matrix">
+<view class="page page-tabbar art-brand layout-matrix art-photo-page {{packageMode === 'single' ? '' : 'art-photo-page-bundle'}}">
   <view class="art-heading">
     <text class="eyebrow">宠物艺术写真</text>
-    <view class="title">每一面，都值得被珍藏</view>
-    <text class="muted">24 套场景，选一个今天最像它的样子。</text>
+    <view class="title">把我的每一面，都好好收藏</view>
+    <text class="muted">24 种惊喜，从今天的可爱到以后想念的瞬间。</text>
+  </view>
+  <view class="art-package-options">
+    <view class="art-package {{packageMode === 'single' ? 'art-package-on' : ''}}" data-mode="single" aria-role="radio" aria-checked="{{packageMode === 'single'}}" bindtap="choosePackage"><text>单张写真</text><text class="art-package-price">{{singlePriceText || '按当前价格'}}</text><text class="small">2 选 1</text></view>
+    <view class="art-package {{packageMode === 'ten' ? 'art-package-on' : ''}}" data-mode="ten" aria-role="radio" aria-checked="{{packageMode === 'ten'}}" bindtap="choosePackage"><text>任选 10 套</text><text class="art-package-price">¥9.9</text><text class="small">每套 1 张</text></view>
+    <view class="art-package {{packageMode === 'all' ? 'art-package-on' : ''}}" data-mode="all" aria-role="radio" aria-checked="{{packageMode === 'all'}}" bindtap="choosePackage"><text>收藏 24 套</text><text class="art-package-price">¥19.9</text><text class="small">每套 1 张</text></view>
+  </view>
+  <text class="small art-value">一张照片就能开拍，无需预约影棚；¥9.9 留住我的 10 种好看模样，想念时随时翻看。</text>
+  <view wx:if="{{recentBatches.length}}" class="art-recent">
+    <view class="section-title">接着看我的写真</view>
+    <view wx:for="{{recentBatches}}" wx:key="id" class="art-recent-item" data-id="{{item.id}}" bindtap="openBatch"><text>{{item.totalCount}} 套写真 · {{item.completedCount}} 张已完成</text><text>{{item.statusText}} ›</text></view>
   </view>
   <t-skeleton wx:if="{{loading}}" type="grid" count="4"></t-skeleton>
   <t-notice wx:elif="{{error}}" type="error" message="{{error}}"></t-notice>
@@ -14,9 +24,8 @@
         <text class="small">{{group.subtitle}}</text>
       </view>
       <view class="art-grid">
-        <view wx:for="{{group.scenes}}" wx:for-item="scene" wx:key="id" class="art-item" data-id="{{scene.id}}" aria-role="button" aria-label="选择{{scene.title}}写真" bindtap="chooseScene">
-          <image wx:if="{{scene.url}}" class="art-image" src="{{scene.url}}" mode="aspectFit" data-id="{{scene.id}}" binderror="onSceneImageError" lazy-load />
-          <view wx:else class="art-image art-image-empty">样片暂不可用</view>
+        <view wx:for="{{group.scenes}}" wx:for-item="scene" wx:key="id" class="art-item {{scene.selected ? 'art-item-selected' : ''}}" data-id="{{scene.id}}" aria-role="button" aria-label="选择{{scene.title}}写真" bindtap="chooseScene">
+          <view class="art-image-wrap"><image wx:if="{{scene.url}}" class="art-image" src="{{scene.url}}" mode="aspectFit" data-id="{{scene.id}}" binderror="onSceneImageError" lazy-load /><view wx:else class="art-image art-image-empty">样片暂不可用</view><text wx:if="{{packageMode !== 'single'}}" class="art-selection">{{scene.selected ? '✓ 已选' : '点选'}}</text></view>
           <view class="art-name">{{scene.title}}</view>
           <text class="small art-description">{{scene.description}}</text>
         </view>
@@ -24,3 +33,4 @@
     </view>
   </block>
 </view>
+<view wx:if="{{packageMode !== 'single'}}" class="art-bundle-dock"><t-button type="primary" block disabled="{{(packageMode === 'ten' && selectedCount !== 10) || (packageMode === 'all' && selectedCount !== 24)}}" bindtap="startBundle">{{packageMode === 'ten' ? '已选 ' + selectedCount + '/10 · 选择宠物照片' : '24 套已选 · 选择宠物照片'}}</t-button></view>

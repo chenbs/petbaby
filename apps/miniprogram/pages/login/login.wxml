@@ -4,7 +4,7 @@
   <view class="brand brand-{{themeId}}">
     <image class="brand-photo" src="/assets/theme-preview.jpg" mode="aspectFill" />
     <view class="brand-name">麻麻抱我</view>
-    <text class="brand-quote">把它的照片，做成只属于它的作品。</text>
+    <text class="brand-quote">把我的照片，做成只属于我的作品。</text>
     <view class="brand-rule"></view>
   </view>
 

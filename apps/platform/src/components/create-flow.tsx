@@ -72,7 +72,7 @@ export function CreateFlow({ plugin }: { plugin: PluginManifest }) {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [sharePath, setSharePath] = useState("");
-  const [style, setStyle] = useState("classic");
+  const [style, setStyle] = useState("rooftop");
   const [composition, setComposition] = useState("portrait");
   const [review, setReview] = useState("");
   const [documentType, setDocumentType] = useState("identity");
@@ -107,7 +107,7 @@ export function CreateFlow({ plugin }: { plugin: PluginManifest }) {
         if (!draftPet) return;
         setPet(draftPet);
         setSelectedExistingIds(draft.existingPhotoIds);
-        setStyle(draft.options.style || "classic");
+        setStyle(({ classic: "rooftop", arthouse: "musical", hongkong: "webcity", enchanted: "rooftop" } as Record<string, string>)[draft.options.style] || draft.options.style || "rooftop");
         setComposition(draft.options.composition || "portrait");
         setReview(draft.options.review || "");
         setDocumentType(draft.options.documentType || "identity");
@@ -342,7 +342,7 @@ export function CreateFlow({ plugin }: { plugin: PluginManifest }) {
         {pets.length ? <><span className="eyebrow">选择已有档案</span><div className="existing-pets">{pets.map((item) =>
           <button className="pet-choice" key={item.id} onClick={() => { setPet(item); setStage("photos"); }} type="button"><b>{item.name}</b><span>用这个档案</span></button>)}</div><div className="divider-label">或建立新档案</div></> : null}
         <form className="form-grid" onSubmit={submitPet}>
-          <div className="field"><label htmlFor="name">它叫什么？</label><input id="name" name="name" maxLength={20} required /></div>
+          <div className="field"><label htmlFor="name">我叫什么？</label><input id="name" name="name" maxLength={20} required /></div>
           <div className="field"><label htmlFor="species">物种</label><select id="species" name="species" defaultValue="cat"><option value="cat">猫咪</option><option value="dog">狗狗</option><option value="other">其他宠物</option></select></div>
           <div className="field"><label htmlFor="gender">性别</label><select id="gender" name="gender" defaultValue="unknown"><option value="unknown">暂不填写</option><option value="female">女孩子</option><option value="male">男孩子</option></select></div>
           <div className="field"><label htmlFor="dateType">日期类型</label><select id="dateType" name="dateType" defaultValue="birthday"><option value="birthday">生日</option><option value="got_home">到家日</option></select></div>
@@ -353,7 +353,7 @@ export function CreateFlow({ plugin }: { plugin: PluginManifest }) {
 
       {stage === "photos" ? <section className="panel">
         {plugin.id === "pet-id-card" ? <div className="field"><label htmlFor="document-type">证件 SKU</label><select id="document-type" value={documentType} onChange={(event) => setDocumentType(event.target.value)}><option value="identity">身份证</option><option value="passport">护照</option><option value="household">户口本</option><option value="vaccine">疫苗证</option><option value="bundle">四款套装</option></select></div> : null}
-        {plugin.id === "pet-movie-poster" ? <><div className="field"><label htmlFor="poster-style">海报风格</label><select id="poster-style" value={style} onChange={(event) => setStyle(event.target.value)}><option value="classic">大片</option><option value="arthouse">文艺</option><option value="hongkong">港片</option></select></div><div className="field"><label htmlFor="composition">构图</label><select id="composition" value={composition} onChange={(event) => setComposition(event.target.value)}><option value="portrait">主角肖像</option><option value="closeup">面部特写</option><option value="ensemble">群像拼贴</option></select></div><div className="field"><label htmlFor="review">影评人短评（选填）</label><input id="review" value={review} maxLength={120} onChange={(event) => setReview(event.target.value)} /></div></> : null}
+        {plugin.id === "pet-movie-poster" ? <><div className="field"><label htmlFor="poster-style">海报主题</label><select id="poster-style" value={style} onChange={(event) => setStyle(event.target.value)}><option value="rooftop">天生主角</option><option value="highseas">晴海远航</option><option value="musical">落日歌舞</option><option value="webcity">云端巡游</option><option value="starvoyage">星际远航</option></select></div><div className="field"><label htmlFor="review">影评人短评（选填）</label><input id="review" value={review} maxLength={120} onChange={(event) => setReview(event.target.value)} /></div></> : null}
         {plugin.id === "pet-time-album" ? <><div className="field"><label htmlFor="album-theme">画册主题</label><select id="album-theme" value={theme} onChange={(event) => setTheme(event.target.value)}><option value="growth">成长</option><option value="birthday">生日</option><option value="healing">治愈日常</option><option value="holiday">节日</option></select></div><div className="field"><label htmlFor="cover-title">封面标题（选填）</label><input id="cover-title" value={coverTitle} maxLength={60} onChange={(event) => setCoverTitle(event.target.value)} /></div><div className="field"><label htmlFor="page-captions">逐页文案（每行一页）</label><textarea id="page-captions" value={pageCaptions} onChange={(event) => setPageCaptions(event.target.value)} /></div>{pageCaptions.trim() ? <div className="settings-list" aria-label="分页文案预览">{pageCaptions.split("\n").filter(Boolean).slice(0, plugin.input.photos.max).map((caption, index) => <div key={`${index}-${caption}`}><b>第 {index + 1} 页</b><span>{caption}</span></div>)}</div> : null}</> : null}
 
         {existingPhotos.length ? <><div className="section-heading"><div><span className="eyebrow">照片库</span><h2>手动选择历史照片</h2></div><span>{selectedExistingIds.length} 张</span></div><div className="photo-thumbs">{existingPhotos.map((photo) => <button className={`photo-thumb ${selectedExistingIds.includes(photo.id) ? "selected" : ""}`} key={photo.id} onClick={() => toggleExistingPhoto(photo.id)} type="button"><Image alt={photo.filename} fill sizes="96px" src={photo.url} unoptimized /><span className="sr-only">{selectedExistingIds.includes(photo.id) ? "取消选择" : "选择"}</span></button>)}</div></> : null}

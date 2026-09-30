@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { z } from "zod";
+import sharp from "sharp";
 
 import { photoInputSchema, type Work } from "@/domain/models";
 import { AppError, routeError } from "@/server/errors";
@@ -191,7 +192,15 @@ describe("persistent platform service", () => {
     await database.exec("DELETE FROM generation_tasks; DELETE FROM daily_quotas;");
     const movie = await createGeneration(USER_A, { pluginId: "pet-movie-poster", petId: pet.id, photoIds: [photo.id], options: { style: "hongkong" }, idempotencyKey: "movie-0001" });
     await runWorkerUntilIdle();
-    expect((await getGeneration(USER_A, movie.id)).work?.title).toContain("风云");
+    const movieWork = (await getGeneration(USER_A, movie.id)).work!;
+    expect(movieWork.title).toContain("风云");
+    const [movieFiles] = await database.query<{ output_key: string; preview_key: string }>("SELECT output_key,preview_key FROM works WHERE id=$1", [movieWork.id]);
+    for (const key of [movieFiles.output_key, movieFiles.preview_key]) {
+      const stored = await objectStorage.get(key);
+      expect(stored).toBeTruthy();
+      const metadata = await sharp(Buffer.from(stored!.body)).metadata();
+      expect(Buffer.from(metadata.exif || []).toString("latin1")).toContain("AI-generated");
+    }
     const photos = [photo];
     for (let index = 0; index < 5; index += 1) {
       const storageKey = `private/${USER_A}/${crypto.randomUUID()}.png`; await objectStorage.put(storageKey, PNG, "image/png");

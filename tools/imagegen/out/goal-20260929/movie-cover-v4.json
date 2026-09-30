@@ -1,0 +1,9 @@
+{
+  "id": "movie-cover-v4",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "prompt": "Use case: ads-marketing. Create the photographic base for a premium wide pet movie poster, 16:10 landscape. A single real adult golden retriever is the clear film protagonist on the RIGHT half of a rain-washed city roof at blue hour, full head and body visible, standing naturally with paws grounded; subtle city lights and a warm practical spotlight behind, dramatic cinematic composition and believable lens perspective. LEFT half stays dark, uncluttered and empty for a large title to be added later. Rich midnight blue, warm amber and restrained rose accent, practical light on fur, realistic film grain and ordinary architecture. A convincing photographed film key art frame, emotional but playful, no text, no logos, no watermark, no extra animals or people, no CGI glow, no extra limbs.",
+  "output": "tools/imagegen/out/goal-20260929/movie-cover-v4.jpg",
+  "sha256": "0093d91af4d8f6c44f1bf6e1e1fc1e924088c4fd1aeed2c849e0ff11566b5045",
+  "review": "pending-visual-review"
+}

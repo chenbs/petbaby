@@ -2,9 +2,10 @@ const api = require("../../services/api");
 const config = require("../../config");
 const theme = require("../../theme/manager");
 const { themedPage } = require("../../theme/page-mixin");
+const { manifest } = require("../../services/sample-assets");
 const resultRevealMs = 2600;
 
-function coverPath(cover) { return "/assets/fun-tests/" + cover + ".jpg"; }
+function coverPath(cover) { return manifest.funTests[cover] || "/assets/fun-tests/" + cover + ".jpg"; }
 
 function visibleTest(test) {
   return Object.assign({}, test, { coverPath: coverPath(test.cover) });
@@ -73,7 +74,7 @@ themedPage({
       this.setData({ stage: "question", questionIndex: 0, progress: 100 / test.questions.length, question: test.questions[0], answers: [] });
     } catch (error) {
       if (error.statusCode === 401) {
-        this.setData({ error: "请先登录，再来测测它" });
+        this.setData({ error: "请先登录，再来测测我" });
         wx.navigateTo({ url: "/pages/login/login" });
       } else this.setData({ error: error.message });
     } finally { this.setData({ busy: false }); }

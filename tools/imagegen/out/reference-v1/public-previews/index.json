@@ -923,6 +923,54 @@
       "sourceKind": "frozen-master-byte-fallback",
       "publicVersion": "master-byte-fallback",
       "masterSha256": "cf9676c5dfdb50420dd9c836f4b31a57421cf986ac35ec27eff9893857c0580f"
+    },
+    {
+      "templateId": "together-selfie-photobomb",
+      "title": "抢镜自拍",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/public-previews/together-selfie-photobomb_9x16_v01.webp",
+      "sha256": "9443cc5636620b246d4df6b1b564831f03ddced50cf0cb46d0b54e139bc02341",
+      "sampleStorageKey": "samples/image-template-previews/together-selfie-photobomb-9443cc563662.webp",
+      "sourceKind": "text-only-original-public-preview",
+      "publicVersion": "v01",
+      "masterSha256": "a5b6e0167f3902db45da8e71bb7bc4576a35ee295c76aa8a28d8396372043450"
+    },
+    {
+      "templateId": "together-sofa-yawn",
+      "title": "同步打哈欠",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/public-previews/together-sofa-yawn_9x16_v01.webp",
+      "sha256": "526dcf4cecab165130aabf1e8c9eccd1f37da58bc439ce991418062349df78a0",
+      "sampleStorageKey": "samples/image-template-previews/together-sofa-yawn-526dcf4cecab.webp",
+      "sourceKind": "text-only-original-public-preview",
+      "publicVersion": "v01",
+      "masterSha256": "abcd58385c2fc4fbded6790b9d2622f086eb53556306ffc49312567160e85e0e"
+    },
+    {
+      "templateId": "together-rainy-umbrella",
+      "title": "雨天一把伞",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/public-previews/together-rainy-umbrella_9x16_v01.webp",
+      "sha256": "c5a30820b391db24100cff88356edf97defa625ff952f043bd5a0bad6b9210f8",
+      "sampleStorageKey": "samples/image-template-previews/together-rainy-umbrella-c5a30820b391.webp",
+      "sourceKind": "text-only-original-public-preview",
+      "publicVersion": "v01",
+      "masterSha256": "8fa325d1d45164570b66d4382c7bdca72fbf60fb1dd9c5df3e27bf1e4023a21b"
+    },
+    {
+      "templateId": "together-window-nap",
+      "title": "午后靠着你",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/public-previews/together-window-nap_9x16_v01.webp",
+      "sha256": "50e13798cd29f3e0d1aecf055e4e4ed6528d8b0feaccd7b7ba039c4afbab758d",
+      "sampleStorageKey": "samples/image-template-previews/together-window-nap-50e13798cd29.webp",
+      "sourceKind": "text-only-original-public-preview",
+      "publicVersion": "v01",
+      "masterSha256": "1c3fd65a793a407b46f11feb9745e032fd4b8d9c656ccfa185b822a106b88212"
     }
   ]
 }

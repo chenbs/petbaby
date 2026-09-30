@@ -1,0 +1,13 @@
+{
+  "id": "laundry-day",
+  "title": "彩色洗衣日",
+  "samplePet": "poodle",
+  "prompt": "Use case: photorealistic-natural. A finished premium pet editorial photograph, not a digital composite. Image 1 is the identity reference only, not a pose or background template. Keep the same adult gray toy poodle from Image 1, with charcoal curly coat, lighter muzzle, floppy ears and compact build. One pet only, no Ragdoll cat, no people. Build a physically coherent location and tell this exact moment: A tidy pastel laundry room with a front-loading machine, colorful folded towels and a low wicker basket of clean cloth. The pet wears a red gingham bandana, sits beside the basket and tilts its head playfully toward camera. Clean mint and butter-yellow palette, real domestic photography, no person, logos or text. The poodle gently pulls one small gingham towel from the wicker basket with its mouth while standing on the floor, an imperfect candid action with realistic fabric folds. Frame as a candid eye-level 35mm or 50mm pet photograph with natural optical depth, subtle grain, authentic imperfections and light falling consistently across fur, props and floor. The pet's weight must have believable contact shadows and scale relative to nearby objects. Vertical 3:4, complete pet including paws and tail where visible, safe margins, clear expressive face occupying about 45-60% of frame height. Keep the action obvious even at small thumbnail size. Avoid centered seated studio-portrait pose unless the described action requires it. No floating body, pasted edges, plastic fur, overly smooth render, impossible clothing, extra limbs, duplicate pets, fantasy glow, pseudo-text, logo or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/scenes-v3/identity-gray-toy-poodle-v1.jpg",
+  "referenceSha256": "f0db84c8923312412c2c63a4c5d3fdbb1d1bc14d3cca7febecf28d7cad906541",
+  "output": "tools/imagegen/out/scenes/scene-laundry-day-v5.jpg",
+  "sha256": "3e876d0040b87fd34c4ed71cc905b607bb7046e6b4c551b381f6c64f9c9f3c52",
+  "review": "accepted-2026-09-29"
+}

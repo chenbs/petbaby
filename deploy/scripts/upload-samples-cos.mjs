@@ -54,7 +54,7 @@ export async function buildPlan() {
     await addAsset(assets, `samples/${path.basename(relative, ".jpg")}-${hash.slice(0, 12)}.jpg`, filename, hash, "image/jpeg");
   }
 
-  const counts = { master: 0, preview: 0 };
+  const counts = { master: 0, preview: 0, human: 0 };
   const lines = (await readFile(manifest, "utf8")).split(/\r?\n/);
   for (const [index, line] of lines.entries()) {
     if (!line || line.startsWith("#")) continue;
@@ -65,17 +65,25 @@ export async function buildPlan() {
         !/^samples\/image-template-previews\/[a-zA-Z0-9_-]+\.webp$/.test(key)) {
       throw new Error(`部署清单第 ${index + 1} 行类型或对象键无效`);
     }
-    const prefix = kind === "master" ? "samples/image-templates/" : "samples/image-template-previews/";
-    if (!key.startsWith(prefix) || !/^tools\/imagegen\/out\/reference-v1\//.test(source) ||
+    const prefix = kind === "preview" ? "samples/image-template-previews/" : "samples/image-templates/";
+    const sourceAllowed = kind === "human"
+      ? /^tools\/imagegen\/out\/pet-human-v2\/effects\/(?:[1-9]|[1-3][0-9]|40)\.webp$/.test(source)
+      : /^tools\/imagegen\/out\/reference-v1\//.test(source);
+    if (!key.startsWith(prefix) || !sourceAllowed ||
         source.split("/").some((segment) => segment === "." || segment === "..") ||
         !/^[a-f0-9]{64}$/.test(hash)) {
       throw new Error(`部署清单第 ${index + 1} 行路径或哈希无效`);
     }
+    if (kind === "human") {
+      const number = Number(path.basename(source, ".webp"));
+      const expectedKey = `samples/image-templates/human-effect-${String(number).padStart(2, "0")}-${hash.slice(0, 12)}.webp`;
+      if (key !== expectedKey) throw new Error(`宠物人化素材与模板 ID 不匹配：${source}`);
+    }
     await addAsset(assets, key, path.join(root, source), hash, "image/webp");
     counts[kind]++;
   }
-  if (counts.master !== 76 || counts.preview !== 76) {
-    throw new Error(`部署清单数量错误：母版 ${counts.master}/76，预览 ${counts.preview}/76`);
+  if (counts.master !== 80 || counts.preview !== 80 || counts.human !== 40) {
+    throw new Error(`部署清单数量错误：母版 ${counts.master}/80，预览 ${counts.preview}/80，人化 ${counts.human}/40`);
   }
 
   const retiredKeys = (await readFile(retired, "utf8")).split(/\r?\n/).filter(Boolean);
@@ -153,7 +161,7 @@ async function main() {
   }
   const plan = await buildPlan();
   const size = [...plan.assets.values()].reduce((sum, asset) => sum + asset.size, 0);
-  console.log(`本地校验通过：${plan.plugins} 张插件图、${plan.styles} 张风格图、${plan.scenes} 张写真、${plan.counts.master} 张母版、${plan.counts.preview} 张预览，共 ${plan.assets.size} 个对象，${(size / 1048576).toFixed(2)} MiB`);
+  console.log(`本地校验通过：${plan.plugins} 张插件图、${plan.styles} 张风格图、${plan.scenes} 张写真、${plan.counts.master} 张母版、${plan.counts.preview} 张预览、${plan.counts.human} 张人化效果图，共 ${plan.assets.size} 个对象，${(size / 1048576).toFixed(2)} MiB`);
   if (mode === "--dry-run") return;
 
   const credentials = config();

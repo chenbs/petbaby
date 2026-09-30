@@ -48,15 +48,68 @@
       <image class="intro-image" src="{{introSampleUrl}}" mode="aspectFit" />
       <text class="example-label">示例作品 · 上传后换成你的宠物</text>
     </view>
-    <view class="title hero-title">从它的第一张照片开始</view>
-    <text class="muted">上传照片后，这里会出现它的封面和陪伴日常。</text>
+    <view class="title hero-title">从我的第一张照片开始</view>
+    <text class="muted">上传照片后，这里会出现我的封面和陪伴日常。</text>
   </view>
 
   <view wx:if="{{!petLoading && !recordError}}" class="section">
     <t-button block bindtap="record">{{recordAction}}</t-button>
   </view>
+  <view wx:if="{{bossTemplates.length}}" class="section boss-section">
+    <view class="section-title">麻麻精选</view>
+    <view class="boss-lead" data-entry="boss" data-template="animal-car-window-westie" aria-role="button" bindtap="startTemplate">
+      <image wx:if="{{bossCoverUrl}}" src="{{bossCoverUrl}}" mode="aspectFill" class="boss-cover" lazy-load />
+      <view class="boss-lead-copy"><view class="sub-title">车窗风中写真</view><text class="small">风吹起来的这一刻，也值得留下</text></view>
+    </view>
+    <scroll-view class="boss-track" scroll-x enable-flex show-scrollbar="false">
+      <view wx:for="{{bossTemplates}}" wx:key="templateId" class="boss-item" data-entry="{{item.entryId}}" data-template="{{item.templateId}}" aria-role="button" bindtap="startTemplate">
+        <image class="boss-thumb" src="{{item.sampleUrl}}" mode="aspectFit" lazy-load />
+        <view class="boss-name">{{item.title}}</view>
+      </view>
+    </scroll-view>
+    <view wx:if="{{bossScenes.length}}" class="boss-art-heading">写真也值得收藏</view>
+    <scroll-view wx:if="{{bossScenes.length}}" class="boss-track" scroll-x enable-flex show-scrollbar="false">
+      <view wx:for="{{bossScenes}}" wx:key="id" class="boss-item" data-id="{{item.id}}" aria-role="button" bindtap="startBossScene">
+        <image class="boss-thumb" src="{{item.sampleUrl}}" mode="aspectFit" lazy-load />
+        <view class="boss-name">{{item.title}}</view>
+      </view>
+    </scroll-view>
+  </view>
+  <view wx:if="{{humanCovers.length}}" class="section human-section">
+    <view class="human-heading" aria-role="button" aria-label="打开人类转生计划，挑选{{humanTemplateCount}}款造型" hover-class="pet-feature-hover" bindtap="openHuman">
+      <view>
+        <text class="eyebrow">{{humanTemplateCount}} 款人像造型</text>
+        <view class="sub-title">人类转生计划</view>
+      </view>
+      <text class="human-feature-arrow">立即去玩 →</text>
+    </view>
+    <scroll-view class="human-track" scroll-x enable-flex show-scrollbar="false">
+      <view wx:for="{{humanCovers}}" wx:key="templateId" class="human-cover" aria-role="button" aria-label="{{item.title}}，打开人类转生计划" bindtap="openHuman">
+        <image wx:if="{{item.sampleUrl}}" class="human-cover-image" src="{{item.sampleUrl}}" mode="aspectFill" lazy-load data-kind="human" data-id="{{item.templateId}}" data-src="{{item.sampleUrl}}" binderror="onImageError" />
+        <view wx:else class="human-cover-image human-cover-empty">样图暂不可用</view>
+      </view>
+    </scroll-view>
+  </view>
+  <view wx:if="{{carouselPlugins.length}}" class="section home-main-play">
+    <view class="section-title">今天想做点什么</view>
+    <swiper class="home-play-swiper" circular="{{carouselPlugins.length > 1}}" autoplay="{{carouselPlugins.length > 1}}" interval="4000" current="{{carouselIndex}}" bindchange="onCarouselChange">
+      <swiper-item wx:for="{{carouselPlugins}}" wx:key="id">
+        <view class="main-play" data-id="{{item.id}}" data-category="{{item.category}}" aria-role="button" aria-label="制作{{item.name}}" bindtap="start">
+          <view class="hero-media">
+            <image wx:if="{{item.samples.heroUrl}}" class="hero-image" src="{{item.samples.heroUrl}}" mode="aspectFill" data-kind="carousel" data-id="{{item.id}}" data-src="{{item.samples.heroUrl}}" binderror="onImageError" />
+            <view wx:else class="hero-image hero-image-empty">样片暂不可用</view>
+          </view>
+          <view class="play-head"><view class="hero-name">{{item.name}}</view><text class="play-price">{{item.pricing.unlockPrice ? '解锁 ¥' + item.pricing.unlockPrice : '免费体验'}}</text></view>
+          <text class="hero-tagline">{{item.tagline}}</text>
+        </view>
+      </swiper-item>
+    </swiper>
+    <view wx:if="{{carouselPlugins.length > 1}}" class="home-play-dots">
+      <view wx:for="{{carouselPlugins}}" wx:key="id" class="home-play-dot {{carouselIndex === index ? 'home-play-dot-active' : ''}}" data-index="{{index}}" aria-role="button" aria-label="查看{{item.name}}" bindtap="chooseCarousel"></view>
+    </view>
+  </view>
   <view wx:if="{{featuredTemplates.length}}" class="section">
-    <view class="section-title">更多好玩的出片方式</view>
+    <view class="section-title">按心情挑玩法</view>
     <view class="cards featured-cards">
       <view wx:for="{{featuredTemplates}}" wx:key="templateId" class="featured-item {{item.sampleShape === 'wide' ? 'featured-wide' : ''}}" data-entry="{{item.entryId}}" data-template="{{item.templateId}}" aria-role="button" aria-label="查看{{item.title}}" bindtap="startTemplate">
         <image class="featured-image {{item.sampleShape === 'wide' ? 'featured-image-wide' : ''}}" src="{{item.sampleUrl}}" mode="aspectFit" lazy-load />
@@ -65,7 +118,7 @@
     </view>
   </view>
   <view wx:if="{{recent.length}}" class="section">
-    <view class="section-title">最近收好</view>
+    <view class="section-title">最近收好的照片</view>
     <view wx:for="{{recent}}" wx:key="id" class="memory block-gap" data-id="{{item.id}}" bindtap="recentDetail">
       <image wx:if="{{item.url}}" class="memory-photo" src="{{item.url}}" mode="aspectFill" data-kind="recent" data-id="{{item.id}}" data-src="{{item.url}}" binderror="onImageError" />
       <view wx:else class="memory-photo memory-photo-blank">照片暂不可用</view>
@@ -105,7 +158,7 @@
 
   <view class="section fun-teaser" bindtap="openFunTests" aria-role="button" aria-label="打开宠物趣味测试">
     <image src="/assets/fun-tests/personality.jpg" mode="aspectFill" lazy-load />
-    <view><text class="eyebrow">NEW · 免费趣测</text><view class="sub-title">它的小秘密，你最懂</view><text class="small">4 份轻松测试 · 结果可分享</text></view>
+    <view><text class="eyebrow">NEW · 免费趣测</text><view class="sub-title">我的小秘密，你最懂</view><text class="small">4 份轻松测试 · 结果可分享</text></view>
     <text class="fun-teaser-arrow">→</text>
   </view>
 
@@ -128,24 +181,6 @@
     ></t-empty>
 
     <block wx:else>
-      <t-card
-        wx:if="{{heroPlugin}}"
-        variant="flat"
-        clickable
-        padded="{{false}}"
-        blur="{{false}}"
-        anim="{{animType}}"
-        data-id="{{heroPlugin.id}}"
-        data-category="{{heroPlugin.category}}"
-        bindtap="start"
-      >
-        <view class="hero-media">
-          <image class="hero-image" src="{{heroPlugin.samples.heroUrl}}" mode="aspectFill" data-kind="hero" data-id="{{heroPlugin.id}}" data-src="{{heroPlugin.samples.heroUrl}}" binderror="onImageError" lazy-load />
-        </view>
-        <view class="play-head"><view class="hero-name">{{heroPlugin.name}}</view><text class="play-price">{{heroPlugin.pricing.unlockPrice ? '解锁 ¥' + heroPlugin.pricing.unlockPrice : '免费体验'}}</text></view>
-        <text class="hero-tagline">{{heroPlugin.tagline}}</text>
-      </t-card>
-
       <view class="cards">
         <t-card
           wx:for="{{gridPlugins}}"

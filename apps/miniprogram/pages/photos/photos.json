@@ -1,9 +1,8 @@
 {
-  "navigationBarTitleText": "照片库",
+  "navigationBarTitleText": "照片记录",
   "usingComponents": {
     "t-button": "../../components/button/index",
     "t-notice": "../../components/notice/index",
-    "t-empty": "../../components/empty/index",
     "t-dialog": "../../components/dialog/index",
     "t-skeleton": "../../components/skeleton/index",
     "t-photo-grid": "../../components/photo-grid/index",

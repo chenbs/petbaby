@@ -5,8 +5,8 @@
   "miniprogramRoot": "./",
   "libVersion": "2.19.2",
   "setting": {
-    "es6": true,
-    "enhance": true,
+    "es6": false,
+    "enhance": false,
     "postcss": true,
     "minified": true,
     "urlCheck": true,
@@ -29,7 +29,72 @@
   },
   "simulatorPluginLibVersion": {},
   "packOptions": {
-    "ignore": [],
+    "ignore": [
+      {
+        "type": "folder",
+        "value": "output"
+      },
+      {
+        "type": "folder",
+        "value": "scripts"
+      },
+      {
+        "type": "file",
+        "value": "README.md"
+      },
+      {
+        "type": "file",
+        "value": "package.json"
+      },
+      {
+        "type": "file",
+        "value": "pnpm-lock.yaml"
+      },
+      {
+        "type": "file",
+        "value": "config.local.example.js"
+      },
+      {
+        "type": "file",
+        "value": "project.private.config.example.json"
+      },
+      {
+        "type": "folder",
+        "value": "assets/samples/plugins"
+      },
+      {
+        "type": "folder",
+        "value": "assets/samples/scenes"
+      },
+      {
+        "type": "folder",
+        "value": "assets/samples/templates"
+      },
+      {
+        "type": "folder",
+        "value": "assets/samples/movie"
+      },
+      {
+        "type": "folder",
+        "value": "assets/samples/album"
+      },
+      {
+        "type": "folder",
+        "value": "assets/samples/interactive"
+      },
+      {
+        "type": "file",
+        "value": "assets/fun-tests/recharge.jpg"
+      },
+      {
+        "type": "file",
+        "value": "assets/fun-tests/bond.jpg"
+      },
+      {
+        "type": "file",
+        "value": "assets/fun-tests/luck.jpg"
+      }
+    ],
     "include": []
   },
   "editorSetting": {}

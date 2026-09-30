@@ -25,6 +25,7 @@ function loadPage(request, wxOverrides, schedule) {
       if (name.endsWith("page-mixin")) return { themedPage: (page) => { definition = page; } };
       if (name.endsWith("manager")) return { getTheme: () => ({ navBarBackground: "#fff", primary: "#123", textPrimary: "#234", textSecondary: "#345" }) };
       if (name.endsWith("config")) return { apiBaseUrl: "https://example.test" };
+      if (name.endsWith("sample-assets")) return { manifest: { funTests: {} } };
       return { request };
     }, wx, console, Array, setTimeout: schedule || ((callback) => callback())
   });

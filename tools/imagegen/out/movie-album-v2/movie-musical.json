@@ -1,0 +1,12 @@
+{
+  "id": "musical",
+  "group": "movie",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "prompt": "Use case: ads-marketing. Vertical 3:4 premium photographic pet musical film key art. A real caramel toy poodle stands naturally on a rain-washed old city street outside a small jazz theater at blue hour, body and paws complete, looking toward a warm lit doorway. Glowing amber street lamps, subtle piano-key reflection in a shop window, cobalt blue pavement, a few pale pink flowers, music suggested through setting not floating notes. Romantic and lively cinematic lighting, realistic fur and wet street reflections, pet is unmistakable protagonist, lower quarter darker and uncluttered for later title. Entirely original scene, no text, logos, recognizable film pose, copyrighted characters or extra limbs.",
+  "finalPrompt": "Use case: ads-marketing. Vertical 3:4 premium photographic pet musical film key art. A real caramel toy poodle stands naturally on a rain-washed old city street outside a small jazz theater at blue hour, body and paws complete, looking toward a warm lit doorway. Glowing amber street lamps, subtle piano-key reflection in a shop window, cobalt blue pavement, a few pale pink flowers, music suggested through setting not floating notes. Romantic and lively cinematic lighting, realistic fur and wet street reflections, pet is unmistakable protagonist, lower quarter darker and uncluttered for later title. Entirely original scene, no text, logos, recognizable film pose, copyrighted characters or extra limbs.",
+  "source": "tools/imagegen/out/movie-album-v2/movie-musical-raw.jpg",
+  "output": "tools/imagegen/out/movie-album-v2/movie-musical.jpg",
+  "sha256": "b40737b6220ea6d7dcd54e27794bb32620a098a68ece2b53803b2f19194218b8",
+  "review": "pending-visual-review"
+}

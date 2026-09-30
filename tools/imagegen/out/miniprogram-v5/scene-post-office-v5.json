@@ -1,0 +1,13 @@
+{
+  "id": "post-office",
+  "title": "旧书邮局来信",
+  "samplePet": "british",
+  "prompt": "Use case: photorealistic-natural. A finished premium pet editorial photograph, not a digital composite. Image 1 is the identity reference only, not a pose or background template. Keep the same adult blue British Shorthair from Image 1, with round face, solid gray coat and copper-amber eyes. One pet only, no Ragdoll cat, no people. Build a physically coherent location and tell this exact moment: A charming old-fashioned postal sorting room with wooden pigeonholes, blank cream envelopes, twine-wrapped parcels and a green banker lamp. The pet wears a moss-green waistcoat and sits beside a small stack of sealed letters, facing camera with alert amber eyes. Warm paper and wood texture, no readable writing or logos. The cat reaches one paw toward the twine of a small parcel resting on the sorting table, other paws anchored firmly on the table, curious side profile and alert eyes. Frame as a candid eye-level 35mm or 50mm pet photograph with natural optical depth, subtle grain, authentic imperfections and light falling consistently across fur, props and floor. The pet's weight must have believable contact shadows and scale relative to nearby objects. Vertical 3:4, complete pet including paws and tail where visible, safe margins, clear expressive face occupying about 45-60% of frame height. Keep the action obvious even at small thumbnail size. Avoid centered seated studio-portrait pose unless the described action requires it. No floating body, pasted edges, plastic fur, overly smooth render, impossible clothing, extra limbs, duplicate pets, fantasy glow, pseudo-text, logo or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/source/cat-british.jpg",
+  "referenceSha256": "ddbdfb39b6cb3c6dddbfdd01555cd2fea299cfa927f76a1e7248d581152e0364",
+  "output": "tools/imagegen/out/scenes/scene-post-office-v5.jpg",
+  "sha256": "11ab721e08d4aa77342ac15e71f7ef4efe0f7b469779c9680a1e72036358ef68",
+  "review": "accepted-2026-09-29"
+}

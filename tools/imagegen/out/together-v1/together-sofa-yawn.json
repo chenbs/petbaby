@@ -1,0 +1,14 @@
+{
+  "id": "together-sofa-yawn",
+  "title": "同步打哈欠",
+  "mood": "funny",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "prompt": "Use case: photorealistic-natural. Asset type: an original self-owned frozen master for a pet-and-owner portrait effect. A candid photograph in a lived-in apartment: an adult East Asian man in a soft blue sweater sits at one end of a sofa while his short-haired orange tabby cat sits beside him, and both are caught mid-yawn at the same instant. One human and one cat only. The man's face remains attractive and clearly visible, the cat has a complete natural body and four paws touching the cushion; their parallel poses create the joke. Coffee table and window light provide real spatial depth. No exaggerated cartoon facial deformation. Make a single vertical 9:16 35mm lifestyle photograph with a full coherent scene, physically plausible perspective, matching contact shadows and consistent natural light. Real skin texture and pet fur, moderate optical depth and gentle film grain. Keep both subjects within generous safe margins so neither face, hand, paw nor tail is cropped by a 9:16 frame. Their identities may later be replaced separately, so the owner and pet must remain clearly distinct and unobstructed. No real person's likeness, no public figure, no logo, no written text, no watermark, no extra humans or pets, no floating limbs, duplicate anatomy, plastic fur, overprocessed skin, pasted edges, fantasy glow or glossy AI illustration. Return one photograph only.",
+  "output": "tools/imagegen/out/together-v1/together-sofa-yawn.jpg",
+  "sha256": "3c57331ce283b30777d8921f2ea12a2846fda1fca07f3946f29171eba209bddf",
+  "review": "approved-local-visual",
+  "reviewedAt": "2026-09-29",
+  "master": "tools/imagegen/out/reference-v1/masters/together-sofa-yawn_9x16_v01.webp",
+  "preview": "tools/imagegen/out/reference-v1/public-previews/together-sofa-yawn_9x16_v01.webp"
+}

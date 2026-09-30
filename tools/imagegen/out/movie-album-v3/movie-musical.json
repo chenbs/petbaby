@@ -1,0 +1,12 @@
+{
+  "id": "musical",
+  "group": "movie",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "prompt": "Use case: ads-marketing. Vertical 3:4 premium photorealistic pet musical film key art with a sweeping architectural setting. A real caramel toy poodle is the sole protagonist, full body and paws clearly visible on broad stone steps in the foreground, occupying roughly 38 percent of frame height. Beyond it a vast open-air theater plaza descends into the distance: curved terraces, an elegant unbranded stage canopy, small glowing festoon lights, soft silhouettes of a distant audience and petals caught in a dance-like breeze. Radiant golden-hour sun and peach, coral, rose and cream tones, joyous and romantic atmosphere, bright face and natural fur, dynamic diagonal leading lines, cinematic 35mm wide-angle sense of scale. Musical storytelling through the setting, no floating notes. Keep the bottom 20 percent clean for a separately added title while retaining natural brightness. Entirely original, no text, logos, recognizable film pose, copyrighted characters, extra animals or distorted limbs.",
+  "finalPrompt": "Use case: ads-marketing. Vertical 3:4 premium photorealistic pet musical film key art with a sweeping architectural setting. A real caramel toy poodle is the sole protagonist, full body and paws clearly visible on broad stone steps in the foreground, occupying roughly 38 percent of frame height. Beyond it a vast open-air theater plaza descends into the distance: curved terraces, an elegant unbranded stage canopy, small glowing festoon lights, soft silhouettes of a distant audience and petals caught in a dance-like breeze. Radiant golden-hour sun and peach, coral, rose and cream tones, joyous and romantic atmosphere, bright face and natural fur, dynamic diagonal leading lines, cinematic 35mm wide-angle sense of scale. Musical storytelling through the setting, no floating notes. Keep the bottom 20 percent clean for a separately added title while retaining natural brightness. Entirely original, no text, logos, recognizable film pose, copyrighted characters, extra animals or distorted limbs.",
+  "source": "tools/imagegen/out/movie-album-v3/movie-musical-raw.jpg",
+  "output": "tools/imagegen/out/movie-album-v3/movie-musical.jpg",
+  "sha256": "7836c5dc38d1052dbe9c481674de5ef3cbd777af58c93c986f707d62f8f1175b",
+  "review": "pending-visual-review"
+}

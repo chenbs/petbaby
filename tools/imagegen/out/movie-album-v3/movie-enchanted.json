@@ -1,0 +1,12 @@
+{
+  "id": "enchanted",
+  "group": "movie",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "prompt": "Use case: ads-marketing. Vertical 3:4 premium photorealistic pet fantasy film key art with grand architectural depth. A real blue British Shorthair cat is the sole protagonist in the foreground, full body and paws on a broad stone reading table, about 38 percent of frame height, gazing at a large open illustrated botanical book. Beyond the cat, a monumental glass-roofed botanical library opens through repeated arches into a lush sunlit conservatory garden and distant fountain. Morning shafts of sunlight, vibrant emerald leaves, jade glass, cream stone and small gold highlights, a few drifting paper pages imply the beginning of a story. Bright clear cat face, believable natural fur and props, cinematic 35mm perspective with foreground, middle arches and deep garden background. Keep bottom 20 percent visually simple for title without darkening the scene. Entirely original; no school crests, wands, branded or copyrighted props, text, logos, extra animals or distorted limbs.",
+  "finalPrompt": "Use case: ads-marketing. Vertical 3:4 premium photorealistic pet fantasy film key art with grand architectural depth. A real blue British Shorthair cat is the sole protagonist in the foreground, full body and paws on a broad stone reading table, about 38 percent of frame height, gazing at a large open illustrated botanical book. Beyond the cat, a monumental glass-roofed botanical library opens through repeated arches into a lush sunlit conservatory garden and distant fountain. Morning shafts of sunlight, vibrant emerald leaves, jade glass, cream stone and small gold highlights, a few drifting paper pages imply the beginning of a story. Bright clear cat face, believable natural fur and props, cinematic 35mm perspective with foreground, middle arches and deep garden background. Keep bottom 20 percent visually simple for title without darkening the scene. Entirely original; no school crests, wands, branded or copyrighted props, text, logos, extra animals or distorted limbs.",
+  "source": "tools/imagegen/out/movie-album-v3/movie-enchanted-raw.jpg",
+  "output": "tools/imagegen/out/movie-album-v3/movie-enchanted.jpg",
+  "sha256": "2180244740b27963386b7b20504576204657002970d6ce76d25ca1b012eaed82",
+  "review": "pending-visual-review"
+}

@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "我的写真套餐",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "t-button": "../../components/button/index",
+    "t-notice": "../../components/notice/index",
+    "t-skeleton": "../../components/skeleton/index"
+  }
+}

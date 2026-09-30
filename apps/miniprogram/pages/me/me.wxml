@@ -26,7 +26,7 @@
     >
       <view class="hero-media {{hero.imageUrl ? '' : 'hero-media-empty'}}">
         <image wx:if="{{hero.imageUrl}}" class="hero-image" src="{{hero.imageUrl}}" mode="aspectFit" data-src="{{hero.imageUrl}}" binderror="onHeroImageError" />
-        <view wx:else class="hero-image hero-image-blank">还没有它的照片</view>
+        <view wx:else class="hero-image hero-image-blank">还没有我的照片</view>
       </view>
       <view class="hero-caption">
         <view class="hero-name">{{hero.name}}</view>
@@ -105,7 +105,7 @@
           <text class="entry-arrow">›</text>
         </view>
         <view class="entry" hover-class="entry-hover" bindtap="openMemorials">
-          <view class="entry-text"><view class="entry-name">纪念空间</view><text class="small">为离开的它留一个位置</text></view>
+          <view class="entry-text"><view class="entry-name">纪念空间</view><text class="small">为离开的我留一个位置</text></view>
           <text class="entry-arrow">›</text>
         </view>
         <view class="entry" hover-class="entry-hover" bindtap="openCommerce">

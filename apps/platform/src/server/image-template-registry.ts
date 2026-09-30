@@ -3,7 +3,7 @@ import { PET_ART_PHOTO_TEMPLATE_ID, PET_ART_PHOTO_VERSION } from "@/domain/pet-a
 
 export type ImageTemplateSubjectMode = "pet" | "owner-pet" | "pet-human";
 export type ImageTemplateOrientation = "portrait" | "landscape";
-export type ImageTemplateStatus = "live" | "pending-master" | "pending-review";
+export type ImageTemplateStatus = "live" | "pending-master" | "pending-review" | "retired";
 export type ImageTemplateRerollReason = "owner-not-like" | "pet-not-like" | "too-animal" | "composition";
 
 export type ImageTemplateDefinition = {
@@ -36,6 +36,18 @@ const petHumanPrompt = [
 ].join("\n");
 
 const templatePromptExtensions: Partial<Record<string, readonly string[]>> = {
+  "together-selfie-photobomb": [
+    "Keep the candid phone-selfie perspective, the owner laughing behind the dog and the dog playfully closest to the camera. Both faces and the dog's paws must stay visible; preserve the daylight street scene.",
+  ],
+  "together-sofa-yawn": [
+    "Keep the owner and cat seated side by side on the same sofa, both naturally yawning at the same moment. Preserve their separate bodies, the window daylight and the candid home-photograph framing.",
+  ],
+  "together-rainy-umbrella": [
+    "Keep the crouching owner holding one clear umbrella over the poodle on the wet street. Preserve the mutual gaze, natural ground contact, rain droplets and evening reflections.",
+  ],
+  "together-window-nap": [
+    "Keep the owner and cat relaxing together on the window-side sofa, with one natural hand resting on the cat. Preserve both faces, the cat's body and paws, soft afternoon light and the quiet home setting.",
+  ],
   "dessert-shopkeeper": [
     "Keep the pet behind the strawberry cake, the pink shopkeeper outfit and bow, all surrounding strawberries, warm dessert-shop light and centered portrait framing.",
   ],
@@ -59,6 +71,10 @@ const templatePromptExtensions: Partial<Record<string, readonly string[]>> = {
 };
 
 const publicPreviewStorageKeyOverrides: Partial<Record<string, string>> = {
+  "together-selfie-photobomb": "samples/image-template-previews/together-selfie-photobomb-9443cc563662.webp",
+  "together-sofa-yawn": "samples/image-template-previews/together-sofa-yawn-526dcf4cecab.webp",
+  "together-rainy-umbrella": "samples/image-template-previews/together-rainy-umbrella-c5a30820b391.webp",
+  "together-window-nap": "samples/image-template-previews/together-window-nap-50e13798cd29.webp",
   "dessert-shopkeeper": "samples/image-template-previews/dessert-shopkeeper-d72ec372bf8d.webp",
   "original-magic-academy": "samples/image-template-previews/original-magic-academy-32b3092734f2.webp",
   "animal-giant-city-companion": "samples/image-template-previews/animal-giant-city-companion-41bbb8ca30f7.webp",
@@ -73,10 +89,12 @@ const publicPreviewStorageKeyOverrides: Partial<Record<string, string>> = {
 
 export const imageTemplateEntries = [
   { id: "fun", title: "好笑出片" },
+  { id: "comic", title: "表情漫画" },
   { id: "together", title: "和我合照" },
-  { id: "human", title: "如果它是人" },
+  { id: "human", title: "人类转生计划" },
   { id: "travel", title: "旅行打卡" },
   { id: "career", title: "职业反差" },
+  { id: "boss", title: "麻麻精选" },
   { id: "action", title: "动作剧情" },
   { id: "character", title: "角色设定" },
   { id: "archive", title: "图鉴与档案" },
@@ -85,11 +103,15 @@ export const imageTemplateEntries = [
 
 const registeredTemplates: ImageTemplateDefinition[] = [
   { entryId: "fun", templateId: "pet-wanted-poster", title: "萌宠通缉令", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/pet-wanted-poster-0171c933caae.webp" },
-  { entryId: "fun", templateId: "pet-expression-grid", title: "今日表情九宫格", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/pet-expression-grid-30c2d3341262.webp" },
+  { entryId: "comic", templateId: "pet-expression-grid", title: "今日表情九宫格", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/pet-expression-grid-30c2d3341262.webp" },
   { entryId: "together", templateId: "fish-chase", title: "偷鱼大作战", subjectMode: "owner-pet", orientation: "portrait", size: "720x1280", version: "v04", status: "live", masterStorageKey: "samples/image-templates/fish-chase-e1afae3de413.webp" },
   { entryId: "together", templateId: "garden-together", title: "和你在花园", subjectMode: "owner-pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/garden-together-005ea7abd8bb.webp" },
   { entryId: "together", templateId: "street-comic-together", title: "潮流漫画合照", subjectMode: "owner-pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/street-comic-together-f3df172173bd.webp" },
   { entryId: "together", templateId: "night-together", title: "夜间宠物合影", subjectMode: "owner-pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/night-together-424aeb7d8e1a.webp" },
+  { entryId: "together", templateId: "together-selfie-photobomb", title: "抢镜自拍", subjectMode: "owner-pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/together-selfie-photobomb-a5b6e0167f39.webp" },
+  { entryId: "together", templateId: "together-sofa-yawn", title: "同步打哈欠", subjectMode: "owner-pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/together-sofa-yawn-abcd58385c2f.webp" },
+  { entryId: "together", templateId: "together-rainy-umbrella", title: "雨天一把伞", subjectMode: "owner-pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/together-rainy-umbrella-8fa325d1d451.webp" },
+  { entryId: "together", templateId: "together-window-nap", title: "午后靠着你", subjectMode: "owner-pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/together-window-nap-1c3fd65a793a.webp" },
   { entryId: "travel", templateId: "travel-selfie", title: "海岛自拍", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v05", status: "live", masterStorageKey: "samples/image-templates/travel-selfie-7cddcdca2c12.webp" },
   { entryId: "travel", templateId: "landmark-adventure", title: "环球地标与户外探险", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/landmark-adventure-61ebb97fa9a7.webp" },
   { entryId: "career", templateId: "pet-barista", title: "咖啡主理人", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v05", status: "live", masterStorageKey: "samples/image-templates/pet-barista-c35b8c8b79e3.webp" },
@@ -97,8 +119,8 @@ const registeredTemplates: ImageTemplateDefinition[] = [
   { entryId: "career", templateId: "pet-runway", title: "宠物时装周", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v04", status: "live", masterStorageKey: "samples/image-templates/pet-runway-77a15753d65d.webp" },
   { entryId: "career", templateId: "original-magic-academy", title: "原创魔法学院", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "public-v02-master-v01", status: "live", masterStorageKey: "samples/image-templates/original-magic-academy-32b3092734f2.webp" },
   { entryId: "action", templateId: "roller-coaster", title: "过山车", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/roller-coaster-5b7a3eababd7.webp" },
-  { entryId: "action", templateId: "epic-ruins", title: "史诗遗迹探险", subjectMode: "pet", orientation: "landscape", size: "1280x720", version: "v02", status: "live", masterStorageKey: "samples/image-templates/epic-ruins-7a47743b445d.webp" },
-  { entryId: "character", templateId: "pet-character-sheet", title: "宠物角色设定集", subjectMode: "pet", orientation: "landscape", size: "1280x720", version: "v01", status: "live", masterStorageKey: "samples/image-templates/pet-character-sheet-d10172f389dc.webp" },
+  { entryId: "action", templateId: "epic-ruins", title: "史诗遗迹探险", subjectMode: "pet", orientation: "landscape", size: "1280x720", version: "v02", status: "retired", masterStorageKey: "samples/image-templates/epic-ruins-7a47743b445d.webp" },
+  { entryId: "character", templateId: "pet-character-sheet", title: "宠物角色设定集", subjectMode: "pet", orientation: "landscape", size: "1280x720", version: "v01", status: "retired", masterStorageKey: "samples/image-templates/pet-character-sheet-d10172f389dc.webp" },
   { entryId: "character", templateId: "mini-companion", title: "同宠大小分身", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v04", status: "live", masterStorageKey: "samples/image-templates/mini-companion-52fb067810d4.webp" },
   { entryId: "archive", templateId: "pet-encyclopedia", title: "本宠百科图鉴", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v02", status: "live", masterStorageKey: "samples/image-templates/pet-encyclopedia-4c9d456a080d.webp" },
   { entryId: "archive", templateId: "adventure-rules", title: "冒险生存法则", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v04", status: "live", masterStorageKey: "samples/image-templates/adventure-rules-c5b79e112180.webp" },
@@ -107,14 +129,14 @@ const registeredTemplates: ImageTemplateDefinition[] = [
   { entryId: "art", templateId: "decorative-art-portrait", title: "装饰艺术肖像", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v05", status: "live", masterStorageKey: "samples/image-templates/decorative-art-portrait-7113eeca312f.webp" },
 
   // 65 图扩展货架：34 张扩展模板均已获用户批准并冻结。
-  { entryId: "fun", templateId: "fun-chef-expression-grid", title: "厨师表情九宫格", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v02", status: "live", masterStorageKey: "samples/image-templates/fun-chef-expression-grid-d9c9d2584cde.webp" },
-  { entryId: "fun", templateId: "fun-breed-expression-grid", title: "品种表情九宫格", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/fun-breed-expression-grid-d1c4152bc5fc.webp" },
-  { entryId: "fun", templateId: "fun-bubble-cat", title: "气泡萌语", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/fun-bubble-cat-69710dea4cf2.webp" },
+  { entryId: "comic", templateId: "fun-chef-expression-grid", title: "厨师表情九宫格", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v02", status: "live", masterStorageKey: "samples/image-templates/fun-chef-expression-grid-d9c9d2584cde.webp" },
+  { entryId: "comic", templateId: "fun-breed-expression-grid", title: "品种表情九宫格", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/fun-breed-expression-grid-d1c4152bc5fc.webp" },
+  { entryId: "fun", templateId: "fun-bubble-cat", title: "气泡萌语", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v01", status: "retired", masterStorageKey: "samples/image-templates/fun-bubble-cat-69710dea4cf2.webp" },
   { entryId: "fun", templateId: "fun-scream-reaction", title: "尖叫瞬间", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v02", status: "live", masterStorageKey: "samples/image-templates/fun-scream-reaction-c3b2acd53a29.webp" },
   { entryId: "fun", templateId: "fun-comic-panels", title: "城堡巨型伙伴", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v03", status: "live", masterStorageKey: "samples/image-templates/fun-comic-panels-72dca582f7eb.webp" },
-  { entryId: "fun", templateId: "fun-beach-caption", title: "海边三格字幕", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v02", status: "live", masterStorageKey: "samples/image-templates/fun-beach-caption-c2518f34eb41.webp" },
-  { entryId: "fun", templateId: "fun-bunny-reaction", title: "情绪角色头像", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v02", status: "live", masterStorageKey: "samples/image-templates/fun-bunny-reaction-90c37c304654.webp" },
-  { entryId: "fun", templateId: "fun-heart-comic", title: "四格爱心漫画", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/fun-heart-comic-5f9f66be529f.webp" },
+  { entryId: "comic", templateId: "fun-beach-caption", title: "海边三格字幕", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v02", status: "live", masterStorageKey: "samples/image-templates/fun-beach-caption-c2518f34eb41.webp" },
+  { entryId: "fun", templateId: "fun-bunny-reaction", title: "情绪角色头像", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v02", status: "retired", masterStorageKey: "samples/image-templates/fun-bunny-reaction-90c37c304654.webp" },
+  { entryId: "comic", templateId: "fun-heart-comic", title: "四格爱心漫画", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/fun-heart-comic-5f9f66be529f.webp" },
   { entryId: "fun", templateId: "fun-fisheye-closeup", title: "鱼眼近脸", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v03", status: "live", masterStorageKey: "samples/image-templates/fun-fisheye-closeup-446494747c63.webp" },
   { entryId: "fun", templateId: "fun-handwritten-greeting", title: "手写问候头像", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/fun-handwritten-greeting-5595565a16c1.webp" },
   { entryId: "travel", templateId: "travel-rome-dog-selfie", title: "罗马地标自拍", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/travel-rome-dog-selfie-f6c0eb880908.webp" },
@@ -129,7 +151,7 @@ const registeredTemplates: ImageTemplateDefinition[] = [
   { entryId: "career", templateId: "pet-monocle-editorial", title: "单片眼镜绅士", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/pet-monocle-editorial-9d40c04b0935.webp" },
   { entryId: "action", templateId: "action-giant-companion", title: "巨型伙伴幻想", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/action-giant-companion-ee03411029a9.webp" },
   { entryId: "action", templateId: "action-original-sci-fi-poster", title: "原创科幻海报", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/action-original-sci-fi-poster-9c0f2b1f8cd4.webp" },
-  { entryId: "character", templateId: "character-outfit-grid", title: "穿搭动作设定九宫格", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v03", status: "live", masterStorageKey: "samples/image-templates/character-outfit-grid-6dd9f9f41a8d.webp" },
+  { entryId: "comic", templateId: "character-outfit-grid", title: "穿搭动作设定九宫格", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v03", status: "live", masterStorageKey: "samples/image-templates/character-outfit-grid-6dd9f9f41a8d.webp" },
   { entryId: "character", templateId: "character-product-blueprint", title: "宠物产品设定蓝图", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v04", status: "live", masterStorageKey: "samples/image-templates/character-product-blueprint-bb078b77ea8a.webp" },
   { entryId: "character", templateId: "character-snow-leopard", title: "雪豹幻想角色设定", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v05", status: "live", masterStorageKey: "samples/image-templates/character-snow-leopard-f399ef35aaa1.webp" },
   { entryId: "character", templateId: "character-white-tiger", title: "白虎多姿态设定", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v04", status: "live", masterStorageKey: "samples/image-templates/character-white-tiger-1223945670fe.webp" },
@@ -142,47 +164,47 @@ const registeredTemplates: ImageTemplateDefinition[] = [
   { entryId: "art", templateId: "ink-fullbody-flight", title: "立体情绪头像", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v02", status: "live", masterStorageKey: "samples/image-templates/ink-fullbody-flight-8800ea7f50c0.webp" },
   { entryId: "art", templateId: "ink-brush-avatar", title: "飞羽水墨全身像", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/ink-brush-avatar-8df38948469b.webp" },
 
-  // 宠物人化 V2：素材数字 ID N 稳定映射为 human-effect-NN，审批前不上传、不公开。
-  { entryId: "human", templateId: "human-effect-01", title: "宠物人化 01", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-01-a927e036d08d.webp" },
-  { entryId: "human", templateId: "human-effect-02", title: "宠物人化 02", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-02-30c797531c47.webp" },
-  { entryId: "human", templateId: "human-effect-03", title: "宠物人化 03", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-03-1b1a9db5a435.webp" },
-  { entryId: "human", templateId: "human-effect-04", title: "宠物人化 04", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-04-ccc17cf9c205.webp" },
-  { entryId: "human", templateId: "human-effect-05", title: "宠物人化 05", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-05-bd4a6e9079d6.webp" },
-  { entryId: "human", templateId: "human-effect-06", title: "宠物人化 06", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-06-82930d1920c4.webp" },
-  { entryId: "human", templateId: "human-effect-07", title: "宠物人化 07", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-07-290fc960f7cc.webp" },
-  { entryId: "human", templateId: "human-effect-08", title: "宠物人化 08", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-08-12f0dd2d6746.webp" },
-  { entryId: "human", templateId: "human-effect-09", title: "宠物人化 09", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-09-21e504d1316f.webp" },
-  { entryId: "human", templateId: "human-effect-10", title: "宠物人化 10", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-10-65bb836ea431.webp" },
-  { entryId: "human", templateId: "human-effect-11", title: "宠物人化 11", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-11-11b5aa226d33.webp" },
-  { entryId: "human", templateId: "human-effect-12", title: "宠物人化 12", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-12-77a2d28b95c1.webp" },
-  { entryId: "human", templateId: "human-effect-13", title: "宠物人化 13", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-13-6e8a5b6cc997.webp" },
-  { entryId: "human", templateId: "human-effect-14", title: "宠物人化 14", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-14-9486bbcc4644.webp" },
-  { entryId: "human", templateId: "human-effect-15", title: "宠物人化 15", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-15-771b705c8249.webp" },
-  { entryId: "human", templateId: "human-effect-16", title: "宠物人化 16", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-16-7780c8f70285.webp" },
-  { entryId: "human", templateId: "human-effect-17", title: "宠物人化 17", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-17-1b3593483479.webp" },
-  { entryId: "human", templateId: "human-effect-18", title: "宠物人化 18", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-18-294820366b14.webp" },
-  { entryId: "human", templateId: "human-effect-19", title: "宠物人化 19", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-19-a200dce06825.webp" },
-  { entryId: "human", templateId: "human-effect-20", title: "宠物人化 20", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-20-4a8541055192.webp" },
-  { entryId: "human", templateId: "human-effect-21", title: "宠物人化 21", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-21-90776adfd549.webp" },
-  { entryId: "human", templateId: "human-effect-22", title: "宠物人化 22", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-22-e487fd46400c.webp" },
-  { entryId: "human", templateId: "human-effect-23", title: "宠物人化 23", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-23-c648aa659485.webp" },
-  { entryId: "human", templateId: "human-effect-24", title: "宠物人化 24", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-24-3d5898c03757.webp" },
-  { entryId: "human", templateId: "human-effect-25", title: "宠物人化 25", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-25-2fc22e61a114.webp" },
-  { entryId: "human", templateId: "human-effect-26", title: "宠物人化 26", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-26-af4a29f85ef1.webp" },
-  { entryId: "human", templateId: "human-effect-27", title: "宠物人化 27", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-27-ccec562a1dc6.webp" },
-  { entryId: "human", templateId: "human-effect-28", title: "宠物人化 28", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-28-66ff11375df1.webp" },
-  { entryId: "human", templateId: "human-effect-29", title: "宠物人化 29", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-29-34e10c51ce58.webp" },
-  { entryId: "human", templateId: "human-effect-30", title: "宠物人化 30", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-30-42e99d930586.webp" },
-  { entryId: "human", templateId: "human-effect-31", title: "宠物人化 31", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-31-4f33700902a6.webp" },
-  { entryId: "human", templateId: "human-effect-32", title: "宠物人化 32", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-32-cf7a9549c795.webp" },
-  { entryId: "human", templateId: "human-effect-33", title: "宠物人化 33", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-33-d937d17790d0.webp" },
-  { entryId: "human", templateId: "human-effect-34", title: "宠物人化 34", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-34-c460841fd9c7.webp" },
-  { entryId: "human", templateId: "human-effect-35", title: "宠物人化 35", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-35-e5475d671682.webp" },
-  { entryId: "human", templateId: "human-effect-36", title: "宠物人化 36", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-36-e59958e39d32.webp" },
-  { entryId: "human", templateId: "human-effect-37", title: "宠物人化 37", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-37-cd8ed373733a.webp" },
-  { entryId: "human", templateId: "human-effect-38", title: "宠物人化 38", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-38-d50883eb1583.webp" },
-  { entryId: "human", templateId: "human-effect-39", title: "宠物人化 39", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-39-046d7a55f026.webp" },
-  { entryId: "human", templateId: "human-effect-40", title: "宠物人化 40", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "pending-review", masterStorageKey: "samples/image-templates/human-effect-40-4874f74e1026.webp" },
+  // 宠物人化 V2：素材数字 ID N 稳定映射为 human-effect-NN，使用同一张自有效果图展示与生成。
+  { entryId: "human", templateId: "human-effect-01", title: "宠物人化 01", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-01-a927e036d08d.webp" },
+  { entryId: "human", templateId: "human-effect-02", title: "宠物人化 02", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-02-30c797531c47.webp" },
+  { entryId: "human", templateId: "human-effect-03", title: "宠物人化 03", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-03-1b1a9db5a435.webp" },
+  { entryId: "human", templateId: "human-effect-04", title: "宠物人化 04", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-04-ccc17cf9c205.webp" },
+  { entryId: "human", templateId: "human-effect-05", title: "宠物人化 05", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-05-bd4a6e9079d6.webp" },
+  { entryId: "human", templateId: "human-effect-06", title: "宠物人化 06", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-06-82930d1920c4.webp" },
+  { entryId: "human", templateId: "human-effect-07", title: "宠物人化 07", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-07-290fc960f7cc.webp" },
+  { entryId: "human", templateId: "human-effect-08", title: "宠物人化 08", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-08-12f0dd2d6746.webp" },
+  { entryId: "human", templateId: "human-effect-09", title: "宠物人化 09", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-09-21e504d1316f.webp" },
+  { entryId: "human", templateId: "human-effect-10", title: "宠物人化 10", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-10-65bb836ea431.webp" },
+  { entryId: "human", templateId: "human-effect-11", title: "宠物人化 11", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-11-11b5aa226d33.webp" },
+  { entryId: "human", templateId: "human-effect-12", title: "宠物人化 12", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-12-77a2d28b95c1.webp" },
+  { entryId: "human", templateId: "human-effect-13", title: "宠物人化 13", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-13-6e8a5b6cc997.webp" },
+  { entryId: "human", templateId: "human-effect-14", title: "宠物人化 14", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-14-9486bbcc4644.webp" },
+  { entryId: "human", templateId: "human-effect-15", title: "宠物人化 15", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-15-771b705c8249.webp" },
+  { entryId: "human", templateId: "human-effect-16", title: "宠物人化 16", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-16-7780c8f70285.webp" },
+  { entryId: "human", templateId: "human-effect-17", title: "宠物人化 17", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-17-1b3593483479.webp" },
+  { entryId: "human", templateId: "human-effect-18", title: "宠物人化 18", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-18-294820366b14.webp" },
+  { entryId: "human", templateId: "human-effect-19", title: "宠物人化 19", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-19-a200dce06825.webp" },
+  { entryId: "human", templateId: "human-effect-20", title: "宠物人化 20", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-20-4a8541055192.webp" },
+  { entryId: "human", templateId: "human-effect-21", title: "宠物人化 21", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-21-90776adfd549.webp" },
+  { entryId: "human", templateId: "human-effect-22", title: "宠物人化 22", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-22-e487fd46400c.webp" },
+  { entryId: "human", templateId: "human-effect-23", title: "宠物人化 23", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-23-c648aa659485.webp" },
+  { entryId: "human", templateId: "human-effect-24", title: "宠物人化 24", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-24-3d5898c03757.webp" },
+  { entryId: "human", templateId: "human-effect-25", title: "宠物人化 25", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-25-2fc22e61a114.webp" },
+  { entryId: "human", templateId: "human-effect-26", title: "宠物人化 26", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-26-af4a29f85ef1.webp" },
+  { entryId: "human", templateId: "human-effect-27", title: "宠物人化 27", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-27-ccec562a1dc6.webp" },
+  { entryId: "human", templateId: "human-effect-28", title: "宠物人化 28", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-28-66ff11375df1.webp" },
+  { entryId: "human", templateId: "human-effect-29", title: "宠物人化 29", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-29-34e10c51ce58.webp" },
+  { entryId: "human", templateId: "human-effect-30", title: "宠物人化 30", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-30-42e99d930586.webp" },
+  { entryId: "human", templateId: "human-effect-31", title: "宠物人化 31", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-31-4f33700902a6.webp" },
+  { entryId: "human", templateId: "human-effect-32", title: "宠物人化 32", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-32-cf7a9549c795.webp" },
+  { entryId: "human", templateId: "human-effect-33", title: "宠物人化 33", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-33-d937d17790d0.webp" },
+  { entryId: "human", templateId: "human-effect-34", title: "宠物人化 34", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-34-c460841fd9c7.webp" },
+  { entryId: "human", templateId: "human-effect-35", title: "宠物人化 35", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-35-e5475d671682.webp" },
+  { entryId: "human", templateId: "human-effect-36", title: "宠物人化 36", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-36-e59958e39d32.webp" },
+  { entryId: "human", templateId: "human-effect-37", title: "宠物人化 37", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-37-cd8ed373733a.webp" },
+  { entryId: "human", templateId: "human-effect-38", title: "宠物人化 38", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-38-d50883eb1583.webp" },
+  { entryId: "human", templateId: "human-effect-39", title: "宠物人化 39", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-39-046d7a55f026.webp" },
+  { entryId: "human", templateId: "human-effect-40", title: "宠物人化 40", subjectMode: "pet-human", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/human-effect-40-4874f74e1026.webp" },
 
   // animal 目录扩展：24 张历史模板中 21 张当前 live，3 张已下架归档。
   { entryId: "career", templateId: "animal-desert-pilot", title: "沙漠飞行员", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/animal-desert-pilot-fc04632d29a1.webp" },
@@ -191,21 +213,21 @@ const registeredTemplates: ImageTemplateDefinition[] = [
   { entryId: "fun", templateId: "animal-capybara-snapshot", title: "日常快照萌宠", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v02", status: "live", masterStorageKey: "samples/image-templates/animal-capybara-snapshot-18aeb7bcc0d2.webp" },
   { entryId: "action", templateId: "animal-giant-city-companion", title: "巨型城市伙伴", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "public-v02-master-v01", status: "live", masterStorageKey: "samples/image-templates/animal-giant-city-companion-41bbb8ca30f7.webp" },
   { entryId: "fun", templateId: "animal-doodle-fisheye-chicken", title: "鱼眼涂鸦表情", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "public-v02-master-v01", status: "live", masterStorageKey: "samples/image-templates/animal-doodle-fisheye-chicken-43759e12d722.webp" },
-  { entryId: "career", templateId: "animal-car-window-westie", title: "车窗风中写真", subjectMode: "pet", orientation: "landscape", size: "1280x720", version: "public-v02-master-v01", status: "live", masterStorageKey: "samples/image-templates/animal-car-window-westie-ce10c248c6be.webp" },
+  { entryId: "boss", templateId: "animal-car-window-westie", title: "车窗风中写真", subjectMode: "pet", orientation: "landscape", size: "1280x720", version: "public-v02-master-v01", status: "live", masterStorageKey: "samples/image-templates/animal-car-window-westie-ce10c248c6be.webp" },
   { entryId: "character", templateId: "animal-enamel-dragon", title: "珐琅彩龙宠", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "stylebridge-v02", status: "live", masterStorageKey: "samples/image-templates/animal-enamel-dragon-ae44bbbcdb96.webp" },
   { entryId: "character", templateId: "animal-enamel-cat-beast", title: "流体珐琅猫神兽", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v02", status: "live", masterStorageKey: "samples/image-templates/animal-enamel-cat-beast-a29ec8b6d047.webp" },
   { entryId: "art", templateId: "animal-watercolor-cat-closeup", title: "金箔水彩猫咪", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "stylebridge-v03", status: "live", masterStorageKey: "samples/image-templates/animal-watercolor-cat-closeup-e1e6abeba4d4.webp" },
   { entryId: "fun", templateId: "animal-glass-paw-portrait", title: "玻璃爪印特写", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v02", status: "live", masterStorageKey: "samples/image-templates/animal-glass-paw-portrait-c1fb2e4903c7.webp" },
-  { entryId: "career", templateId: "animal-urban-takeover-poster", title: "城市潮流活动海报", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/animal-urban-takeover-poster-aab05fb3a5f5.webp" },
+  { entryId: "action", templateId: "animal-urban-takeover-poster", title: "城市潮流活动海报", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/animal-urban-takeover-poster-aab05fb3a5f5.webp" },
   { entryId: "action", templateId: "animal-giant-law-poster", title: "巨物法相海报", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v04", status: "live", masterStorageKey: "samples/image-templates/animal-giant-law-poster-8350536372ed.webp" },
   { entryId: "action", templateId: "animal-fantasy-double-exposure", title: "奇幻双重曝光", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "eastern-myth-v02", status: "live", masterStorageKey: "samples/image-templates/animal-fantasy-double-exposure-243baf5783f3.webp" },
   { entryId: "character", templateId: "animal-warrior-cat", title: "古风剑客宠物", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v02", status: "live", masterStorageKey: "samples/image-templates/animal-warrior-cat-75e8984bfb4b.webp" },
   { entryId: "fun", templateId: "animal-sunglasses-rabbit-alt", title: "草丛墨镜萌宠二", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v02", status: "live", masterStorageKey: "samples/image-templates/animal-sunglasses-rabbit-alt-8812cad9e909.webp" },
   { entryId: "action", templateId: "animal-tiger-storm", title: "风暴巨兽概念", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "stylebridge-v02", status: "live", masterStorageKey: "samples/image-templates/animal-tiger-storm-6b9dc5cd3c13.webp" },
-  { entryId: "career", templateId: "animal-pink-scooter", title: "粉色摩托夜行", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/animal-pink-scooter-1f0caec0e1df.webp" },
-  { entryId: "action", templateId: "animal-haunted-cctv-panels", title: "鬼屋监控四格", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/animal-haunted-cctv-panels-dd6e1a01e2ee.webp" },
-  { entryId: "action", templateId: "animal-sword-cat-alt", title: "古风剑客宠物二", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v02", status: "live", masterStorageKey: "samples/image-templates/animal-sword-cat-alt-08ff8046f31d.webp" },
-  { entryId: "action", templateId: "animal-rabbit-yokai", title: "古风妖灵宠物", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "stylebridge-v03", status: "live", masterStorageKey: "samples/image-templates/animal-rabbit-yokai-c0a115de22a5.webp" },
+  { entryId: "boss", templateId: "animal-pink-scooter", title: "粉色摩托夜行", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/animal-pink-scooter-1f0caec0e1df.webp" },
+  { entryId: "comic", templateId: "animal-haunted-cctv-panels", title: "鬼屋监控四格", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/animal-haunted-cctv-panels-dd6e1a01e2ee.webp" },
+  { entryId: "character", templateId: "animal-sword-cat-alt", title: "古风剑客宠物二", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v02", status: "live", masterStorageKey: "samples/image-templates/animal-sword-cat-alt-08ff8046f31d.webp" },
+  { entryId: "character", templateId: "animal-rabbit-yokai", title: "古风妖灵宠物", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "stylebridge-v03", status: "live", masterStorageKey: "samples/image-templates/animal-rabbit-yokai-c0a115de22a5.webp" },
 ];
 
 const templates = registeredTemplates.map((template) => {
@@ -221,6 +243,13 @@ const templates = registeredTemplates.map((template) => {
   };
 });
 
+const petHumanDisplayOrder = [
+  31, 32, 5, 8, 7, 36, 37, 20, 11, 10, 40, 15, 12, 14, 29, 30,
+  33, 34, 38, 39, 1, 25, 4, 3, 18, 16, 19, 17, 21, 26, 28, 27,
+  24, 13, 9, 6, 35, 2, 22, 23,
+];
+const petHumanDisplayRank = new Map(petHumanDisplayOrder.map((number, index) => [`human-effect-${String(number).padStart(2, "0")}`, index]));
+
 const artPhotoTemplate: ImageTemplateDefinition = {
   entryId: "art", templateId: PET_ART_PHOTO_TEMPLATE_ID, title: "宠物艺术写真",
   subjectMode: "pet", orientation: "portrait", size: "720x1280",
@@ -231,7 +260,7 @@ const artPhotoTemplate: ImageTemplateDefinition = {
 export function getImageTemplate(templateId: string, options: { includePending?: boolean } = {}) {
   if (templateId === PET_ART_PHOTO_TEMPLATE_ID) return artPhotoTemplate;
   const template = templates.find((item) => item.templateId === templateId);
-  if (!template || (!options.includePending && template.status !== "live")) return undefined;
+  if (!template || (!options.includePending && template.status !== "live" && template.status !== "retired")) return undefined;
   return template;
 }
 
@@ -244,7 +273,10 @@ export function listPublicImageTemplateEntries() {
   return imageTemplateEntries
     .map((entry) => ({ ...entry, templates: entry.id === "art"
       ? [artPhotoTemplate, ...live.filter((template) => template.entryId === entry.id)]
-      : live.filter((template) => template.entryId === entry.id) }))
+      : entry.id === "human"
+        ? live.filter((template) => template.entryId === entry.id)
+          .sort((left, right) => (petHumanDisplayRank.get(left.templateId) ?? Infinity) - (petHumanDisplayRank.get(right.templateId) ?? Infinity))
+        : live.filter((template) => template.entryId === entry.id) }))
     .filter((entry) => entry.templates.length > 0);
 }
 

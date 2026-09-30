@@ -3,31 +3,19 @@ const companion = require("../../services/companion");
 const { themedPage } = require("../../theme/page-mixin");
 const { displayMediaTree } = require("../../services/photo-files");
 const { manifest, pluginSample, imageEntries } = require("../../services/sample-assets");
+const { CATEGORY_COVERS, BOSS_TEMPLATE_IDS, BOSS_SCENE_IDS, HUMAN_COVER_IDS, selectBossTemplates } = require("../../services/home-effect-ids");
 
-/**
- * 拆出 Hero 位与网格位（UI 重构方案 A：1 大 + 2 列）。
- *
- * Hero 只给「有真实样例图」的玩法 —— A 方向的全部价值都压在这张大图上，
- * 拿一个没有出图的玩法占位会得到一块空底色，比不做 Hero 更差。
- * 全都没有样例图时 heroPlugin 为空，页面退回纯文字卡列表。
- *
- * 排序沿用后端 registry 顺序（即人工策划序）。方案要求「排序由数据驱动」，
- * 但转化数据目前只在 /api/admin/dashboard 后面、需要管理员鉴权，
- * 公开接口没有热度字段；接出来是后端改动，不在页面层任务范围内。
- */
-function splitHero(plugins) {
-  const list = plugins || [];
-  const heroIndex = list.findIndex((item) => item.samples && item.samples.heroUrl);
-  if (heroIndex < 0) return { heroPlugin: null, gridPlugins: list };
+function arrangePlays(plugins) {
+  const byId = Object.fromEntries((plugins || []).map((item) => [item.id, item]));
   return {
-    heroPlugin: list[heroIndex],
-    gridPlugins: list.filter((_, index) => index !== heroIndex)
+    carouselPlugins: ["pet-time-album", "pet-movie-poster"].map((id) => byId[id]).filter(Boolean),
+    gridPlugins: ["pl-10", "pl-19", "pl-23", "pet-id-card"].map((id) => byId[id]).filter(Boolean)
   };
 }
 
 themedPage({
   data: {
-    plugins: [], heroPlugin: null, gridPlugins: [], featuredTemplates: [], loading: true, error: "",
+    plugins: [], carouselPlugins: [], carouselIndex: 0, gridPlugins: [], featuredTemplates: [], bossTemplates: [], bossScenes: [], bossCoverUrl: "", humanTemplateCount: 0, humanCovers: [], loading: true, error: "",
     introSampleUrl: manifest.plugins["pl-10"],
     /*
      * 首屏的「对象」区块（改造项 E1）。
@@ -68,17 +56,29 @@ themedPage({
       .then((result) => {
         const plugins = (result[0] || []).map(pluginSample);
         const entries = imageEntries(result[1] && result[1].entries);
-        const featuredTemplates = entries.filter((entry) => entry.id !== "art" && entry.templates.length)
-          .map((entry) => ({
-            entryId: entry.id,
-            title: entry.title,
-            templateId: entry.templates[0].templateId,
-            sampleUrl: entry.templates[0].sampleUrl,
-            sampleShape: entry.templates[0].sampleShape
-          })).concat(entries.filter((entry) => entry.id === "art")
-            .reduce((list, entry) => list.concat(entry.templates.filter((template) => template.templateId !== "pet-art-photo")
-              .map((template) => ({ entryId: "art", title: template.title, templateId: template.templateId, sampleUrl: template.sampleUrl, sampleShape: template.sampleShape }))), []));
-        this.setData(Object.assign({ plugins, featuredTemplates, loading: false }, splitHero(plugins)));
+        const byId = {};
+        entries.forEach((entry) => entry.templates.forEach((template) => { byId[template.templateId] = Object.assign({ entryId: entry.id }, template); }));
+        const featuredTemplates = entries.filter((entry) => entry.id !== "boss" && entry.id !== "human" && entry.templates.length).map((entry) => {
+          const cover = byId[CATEGORY_COVERS[entry.id]] || entry.templates[0];
+          const artInk = entry.id === "art" && byId["ink-portrait"];
+          return { entryId: entry.id, title: artInk ? "黑白水墨肖像" : entry.title,
+            templateId: artInk ? artInk.templateId : cover.templateId,
+            sampleUrl: artInk ? (manifest.covers && manifest.covers["ink-portrait"]) || artInk.sampleUrl : cover.sampleUrl,
+            sampleShape: artInk ? "wide" : cover.sampleShape };
+        });
+        const selectedBossTemplates = selectBossTemplates(entries);
+        const humanEntry = entries.find((entry) => entry.id === "human");
+        const humanCovers = HUMAN_COVER_IDS.map((id) => byId[id]).filter((template) => template && template.sampleUrl);
+        const bossCover = selectedBossTemplates.find((item) => item.templateId === BOSS_TEMPLATE_IDS[0]);
+        const bossTemplates = selectedBossTemplates.filter((item) => item.templateId !== BOSS_TEMPLATE_IDS[0]);
+        const artPlugin = plugins.find((item) => item.id === "pl-10");
+        const samples = artPlugin && artPlugin.samples || {};
+        const bossScenes = BOSS_SCENE_IDS.map((id) => {
+          const scene = (samples.sceneOptions || []).find((item) => item.id === id);
+          return scene && { id, title: scene.title, sampleUrl: samples.sceneUrls && samples.sceneUrls[id] || "" };
+        }).filter(Boolean);
+        this.setData(Object.assign({ plugins, featuredTemplates, bossTemplates, bossScenes, humanTemplateCount: humanEntry ? humanEntry.templates.length : 0, humanCovers, carouselIndex: 0,
+          bossCoverUrl: bossCover ? bossCover.sampleUrl : "", loading: false }, arrangePlays(plugins)));
       })
       .catch((error) => this.setData({ error: error.message, loading: false }));
   },
@@ -143,11 +143,17 @@ themedPage({
       const index = this.data.gridPlugins.findIndex((item) => item.id === id && item.samples.heroUrl === src);
       if (index >= 0) this.setData({ ["gridPlugins[" + index + "].samples.heroUrl"]: "" });
     }
-    if (kind === "hero" && this.data.heroPlugin && this.data.heroPlugin.id === id && this.data.heroPlugin.samples.heroUrl === src) {
-      const fallback = Object.assign({}, this.data.heroPlugin, { samples: Object.assign({}, this.data.heroPlugin.samples, { heroUrl: "" }) });
-      this.setData({ heroPlugin: null, gridPlugins: [fallback].concat(this.data.gridPlugins) });
+    if (kind === "carousel") {
+      const index = this.data.carouselPlugins.findIndex((item) => item.id === id && item.samples.heroUrl === src);
+      if (index >= 0) this.setData({ ["carouselPlugins[" + index + "].samples.heroUrl"]: "" });
+    }
+    if (kind === "human") {
+      const index = this.data.humanCovers.findIndex((item) => item.templateId === id && item.sampleUrl === src);
+      if (index >= 0) this.setData({ ["humanCovers[" + index + "].sampleUrl"]: "" });
     }
   },
+  onCarouselChange(event) { this.setData({ carouselIndex: event.detail.current }); },
+  chooseCarousel(event) { this.setData({ carouselIndex: Number(event.currentTarget.dataset.index) }); },
   record() { wx.navigateTo({ url: "/pages/photos/photos?mode=record&entry=index" + (this.data.pet ? "&petId=" + this.data.pet.id : "") }); },
   recentDetail(event) { if (this.data.pet) wx.navigateTo({ url: "/pages/photos/photos?petId=" + this.data.pet.id + "&photoId=" + event.currentTarget.dataset.id }); },
   onHide() { this._view = (this._view || 0) + 1; },
@@ -207,6 +213,15 @@ themedPage({
     const templateId = event.currentTarget.dataset.template;
     const petQuery = this.data.pet ? "&petId=" + encodeURIComponent(this.data.pet.id) : "";
     wx.navigateTo({ url: "/pages/ai-create/ai-create?entryId=" + encodeURIComponent(entryId) + "&templateId=" + encodeURIComponent(templateId) + petQuery });
+  },
+  openHuman() {
+    const petQuery = this.data.pet ? "&petId=" + encodeURIComponent(this.data.pet.id) : "";
+    wx.navigateTo({ url: "/pages/ai-create/ai-create?entryId=human" + petQuery });
+  },
+  startBossScene(event) {
+    const sceneId = event.currentTarget.dataset.id;
+    const petQuery = this.data.pet ? "&petId=" + encodeURIComponent(this.data.pet.id) : "";
+    wx.navigateTo({ url: "/pages/ai-create/ai-create?entryId=art&templateId=pet-art-photo&sceneId=" + encodeURIComponent(sceneId) + petQuery });
   },
   openFunTests() { wx.navigateTo({ url: "/pages/fun-tests/fun-tests" }); },
   openTheme() { wx.navigateTo({ url: "/pages/theme/theme" }); }

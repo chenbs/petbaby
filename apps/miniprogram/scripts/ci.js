@@ -32,7 +32,7 @@ async function main() {
   const directory = await fs.mkdtemp(path.join(os.tmpdir(), "petbaby-miniprogram-"));
   const project = path.join(directory, "project");
   try {
-    const excluded = new Set(["node_modules", ".git", "scripts", "preview-qrcode.png", "project.private.config.json", "config.local.js"]);
+    const excluded = new Set(["node_modules", ".git", "output", "scripts", "preview-qrcode.png", "project.private.config.json", "config.local.js"]);
     await fs.cp(root, project, { recursive: true, filter: (source) => !excluded.has(path.basename(source)) && !path.basename(source).endsWith(".key") });
     await fs.writeFile(path.join(project, "project.config.json"), JSON.stringify({ ...currentConfig, appid: config.appid }, null, 2));
     let local = {};

@@ -1,0 +1,13 @@
+{
+  "id": "greenhouse-gardener",
+  "title": "温室小园丁",
+  "samplePet": "golden",
+  "prompt": "Use case: photorealistic-natural. A finished premium pet editorial photograph, not a digital composite. Image 1 is the identity reference only, not a pose or background template. Keep the same adult golden retriever from Image 1, with natural golden coat, floppy ears, dark eyes and black nose. One pet only, no Ragdoll cat, no people. Build a physically coherent location and tell this exact moment: A bright glass greenhouse with terracotta pots, hanging ferns, a low watering can and a clear aisle. The pet wears a simple faded-denim gardening apron over its chest, stands among the pots and gently tilts its head toward a sprig of rosemary. Fresh leaf green and warm clay tones, complete body visible, no text. The dog leans its head down to sniff a rosemary plant at muzzle height, shoulders and four paws visible on the greenhouse floor, pots surrounding but not covering the body. Frame as a candid eye-level 35mm or 50mm pet photograph with natural optical depth, subtle grain, authentic imperfections and light falling consistently across fur, props and floor. The pet's weight must have believable contact shadows and scale relative to nearby objects. Vertical 3:4, complete pet including paws and tail where visible, safe margins, clear expressive face occupying about 45-60% of frame height. Keep the action obvious even at small thumbnail size. Avoid centered seated studio-portrait pose unless the described action requires it. No floating body, pasted edges, plastic fur, overly smooth render, impossible clothing, extra limbs, duplicate pets, fantasy glow, pseudo-text, logo or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/source/dog-golden.jpg",
+  "referenceSha256": "1b6348ce4f6cd1d12f4c93d5f2a8a5c21847e0ce9bc43e4326c1ee89f7a89eef",
+  "output": "tools/imagegen/out/scenes/scene-greenhouse-gardener-v5.jpg",
+  "sha256": "a71fe9c8e0d01a40931c49dacf50caa8ad9639abfe886aa769bc4af4df1c4d0c",
+  "review": "accepted-2026-09-29"
+}

@@ -35,6 +35,6 @@ describe("隐式标识写入 PNG", () => {
 describe("标识范围对齐真实 registry", () => {
   it("只有 image-api 类玩法需要标识", () => {
     const labeled = plugins.filter((plugin) => needsAiLabel(plugin)).map((plugin) => plugin.id);
-    expect(labeled).toEqual(["pl-10"]);
+    expect(labeled).toEqual(["pet-movie-poster", "pl-10"]);
   });
 });

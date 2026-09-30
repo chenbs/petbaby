@@ -23,7 +23,7 @@ type ImageTemplate = {
 type TemplateEntry = { id: string; title: string; templates: ImageTemplate[] };
 type ArtScene = { id: string; title: string; description: string; url: string };
 
-export function AiCreateClient() {
+export function AiCreateClient({ initialEntryId = "" }: { initialEntryId?: string }) {
   const [pets, setPets] = useState<Pet[]>([]);
   const [petId, setPetId] = useState("");
   const [photos, setPhotos] = useState<Photo[]>([]);
@@ -53,7 +53,8 @@ export function AiCreateClient() {
       apiFetch<Array<{ id: string; samples?: { sceneOptions?: Array<Omit<ArtScene, "url">>; sceneUrls?: Record<string, string> } }>>("/api/plugins"),
     ]).then(([petItems, catalog, owners, plugins]) => {
       const defaultPet = petItems.find((item) => item.isDefault) || petItems[0];
-      const firstEntry = catalog.entries.find((entry) => entry.id === "art") || catalog.entries[0];
+      const firstEntry = catalog.entries.find((entry) => entry.id === initialEntryId)
+        || catalog.entries.find((entry) => entry.id === "art") || catalog.entries[0];
       const samples = plugins.find((plugin) => plugin.id === "pl-10")?.samples;
       const artScenes = (samples?.sceneOptions || []).map((scene) => ({ ...scene, url: samples?.sceneUrls?.[scene.id] || "" }));
       setPets(petItems);
@@ -65,7 +66,7 @@ export function AiCreateClient() {
       setSceneId(artScenes[0]?.id || "window-morning");
       setOwnerPhotos(owners);
     }).catch((loadError) => setError(loadError instanceof Error ? loadError.message : "制作页加载失败"));
-  }, []);
+  }, [initialEntryId]);
 
   useEffect(() => {
     if (!petId) return;
@@ -145,18 +146,18 @@ export function AiCreateClient() {
   }
 
   return <>
-    <section className="panel ai-brief-card"><span className="eyebrow">PET ART PHOTO</span><h2>宠物艺术写真</h2><p>选择场景、模板和身份照，生成保留它真实模样的作品。</p></section>
+    <section className="panel ai-brief-card"><span className="eyebrow">{entryId === "human" ? "PET HUMAN" : "PET ART PHOTO"}</span><h2>{entryId === "human" ? "人类转生计划" : "宠物艺术写真"}</h2><p>{entryId === "human" ? "挑一款人像造型，再选一张我的照片。" : "选择场景、模板和身份照，生成保留我真实模样的作品。"}</p></section>
     <section className="panel" style={{ marginTop: 18 }}><div className="form-grid">
       {templateId === "pet-art-photo" ? <div className="field"><span>写真场景 · {scenes.length} 套</span><div className="asset-choice-grid art-scene-grid">{scenes.map((scene) => <button aria-pressed={sceneId === scene.id} className={sceneId === scene.id ? "art-scene-choice selected" : "art-scene-choice"} key={scene.id} onClick={() => setSceneId(scene.id)} type="button"><span className="art-scene-image">{scene.url ? <Image alt={`${scene.title}：${scene.description}`} fill sizes="160px" src={scene.url} unoptimized /> : null}</span><strong>{scene.title}</strong><small>{scene.description}</small></button>)}</div></div> : null}
       <div className="field"><label htmlFor="ai-entry">玩法入口</label><select id="ai-entry" value={entryId} onChange={(event) => chooseEntry(event.target.value)}>{entries.map((entry) => <option key={entry.id} value={entry.id}>{entry.title}</option>)}</select></div>
-      <div className="field"><span>模板</span><div className="asset-choice-grid">{activeEntry?.templates.map((template) => <button aria-pressed={templateId === template.templateId} className={templateId === template.templateId ? "asset-choice selected" : "asset-choice"} key={template.templateId} onClick={() => setTemplateId(template.templateId)} type="button"><Image alt={template.title} fill sizes="160px" src={template.sampleUrl} unoptimized /><span>{template.title}</span></button>)}</div></div>
+      <div className="field"><span>模板</span><div className={entryId === "human" ? "asset-choice-grid human-choices" : "asset-choice-grid"}>{activeEntry?.templates.map((template) => <button aria-pressed={templateId === template.templateId} className={templateId === template.templateId ? "asset-choice selected" : "asset-choice"} key={template.templateId} onClick={() => setTemplateId(template.templateId)} type="button"><Image alt={template.title} fill sizes={entryId === "human" ? "(max-width: 520px) 42vw, 160px" : "160px"} src={template.sampleUrl} unoptimized /><span>{template.title}</span></button>)}</div></div>
       <div className="field"><label htmlFor="ai-pet">宠物</label><select id="ai-pet" value={petId} onChange={(event) => setPetId(event.target.value)}><option value="">选择宠物</option>{pets.map((pet) => <option key={pet.id} value={pet.id}>{pet.name}</option>)}</select></div>
       <div className="field"><span>宠物身份照（1 张）</span><div className="asset-choice-grid">{photos.map((photo) => <button aria-pressed={photoId === photo.id} className={photoId === photo.id ? "asset-choice selected" : "asset-choice"} key={photo.id} onClick={() => setPhotoId(photo.id)} type="button"><Image alt={photo.filename} fill sizes="120px" src={photo.url} unoptimized /><span>{photoId === photo.id ? "已选" : "选择"}</span></button>)}</div>{!photos.length ? <p className="field-hint">这只宠物还没有照片，请先去照片库上传。</p> : null}</div>
       {activeTemplate?.subjectMode === "owner-pet" ? <>
         <label className="field"><span>主人照片授权</span><span><input checked={authorizationConfirmed} onChange={(event) => setAuthorizationConfirmed(event.target.checked)} type="checkbox" /> 照片中的本人已同意将照片用于本次 AI 生图</span></label>
         <div className="field"><span>主人身份照（1 张）</span><input accept="image/jpeg,image/png,image/webp" disabled={busy || !authorizationConfirmed} onChange={(event) => uploadOwnerPhoto(event.target.files?.[0])} type="file" /><div className="asset-choice-grid">{ownerPhotos.map((photo) => <div key={photo.id}><button aria-pressed={ownerPhotoId === photo.id} className={ownerPhotoId === photo.id ? "asset-choice selected" : "asset-choice"} onClick={() => setOwnerPhotoId(photo.id)} type="button"><Image alt={photo.filename} fill sizes="120px" src={photo.url} unoptimized /><span>{ownerPhotoId === photo.id ? "已选" : "选择"}</span></button><button disabled={busy} onClick={() => removeOwnerPhoto(photo.id)} type="button">删除</button></div>)}</div></div>
       </> : null}
-      <button className="primary-button" disabled={busy || !activeTemplate || !photoId || activeTemplate.subjectMode === "owner-pet" && (!ownerPhotoId || !authorizationConfirmed)} onClick={create} type="button">{busy ? "正在建立生成任务…" : `生成 ${activeTemplate?.candidateCount || 2} 张候选`}</button>
+      <button className="primary-button" disabled={busy || !activeTemplate || !photoId || activeTemplate.subjectMode === "owner-pet" && (!ownerPhotoId || !authorizationConfirmed)} onClick={create} type="button">{busy ? "正在建立生成任务…" : "看看效果"}</button>
     </div></section>
     {error ? <div className="error-banner" role="alert">{error}</div> : null}
   </>;

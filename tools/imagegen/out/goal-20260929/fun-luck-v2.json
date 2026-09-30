@@ -1,0 +1,9 @@
+{
+  "id": "fun-luck-v2",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "prompt": "Use case: photorealistic-natural. Square editorial cover for a lighthearted quiz about little everyday luck. A real blue British Shorthair cat reaches one paw toward a small sunny patch beside a simple paper pinwheel on a home windowsill, relaxed complete body with paws and tail visible, amber eyes alert. Natural window light makes a soft golden reflection on fur and pale linen, believable contact and scale. Warm butter yellow, powder blue and cream, candid 50mm photography, charming without fantasy symbols. No text, no logos, no watermark, no floating objects, no extra limbs, no plastic fur or CGI.",
+  "output": "tools/imagegen/out/goal-20260929/fun-luck-v2.jpg",
+  "sha256": "1edfe59e68801280db5cb591e52ec02e75e77b5a5cccdfae93188b41cbd28dbb",
+  "review": "pending-visual-review"
+}

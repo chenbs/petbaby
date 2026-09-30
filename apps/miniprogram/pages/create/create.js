@@ -9,11 +9,13 @@ const SPECIES = { values: ["cat", "dog", "other"], labels: ["猫咪", "狗狗", 
 const GENDER = { values: ["unknown", "female", "male"], labels: ["未填写", "女孩子", "男孩子"] };
 const DATE_TYPE = { values: ["birthday", "got_home"], labels: ["生日", "到家日"] };
 const DOCUMENT = { values: ["identity", "passport", "household", "vaccine", "bundle"], labels: ["身份证", "护照", "户口页", "疫苗册", "全套证件"] };
-const STYLE = { values: ["classic", "arthouse", "hongkong"], labels: ["经典大片", "文艺影展", "港风复古"] };
+const STYLE = { values: ["rooftop", "highseas", "musical", "webcity", "starvoyage"], labels: ["天生主角", "晴海远航", "落日歌舞", "云端巡游", "星际远航"] };
 const COMPOSITION = { values: ["portrait", "closeup", "ensemble"], labels: ["竖版主角", "特写脸庞", "群像合照"] };
 const THEME = { values: ["growth", "birthday", "healing", "holiday"], labels: ["成长记录", "生日纪念", "治愈日常", "节日相册"] };
-const MOVIE_SAMPLES = STYLE.values.map((id, index) => ({ id, title: STYLE.labels[index], url: manifest.movie[id] }));
-const ALBUM_SAMPLES = THEME.values.map((id, index) => ({ id, title: THEME.labels[index], url: manifest.album[id] }));
+const MOVIE_NOTES = ["城市天台 · 暖光登场", "甲板海风 · 冒险开场", "爵士街灯 · 浪漫夜色", "都市高楼 · 夜间出发", "舷窗星海 · 宇宙旅程"];
+const ALBUM_NOTES = ["从小时候到现在", "把庆生那天收好", "收藏松弛的日常", "热闹的日子一起过"];
+const MOVIE_SAMPLES = STYLE.values.map((id, index) => ({ id, title: STYLE.labels[index], note: MOVIE_NOTES[index], featured: index === 0, url: manifest.movie[id] }));
+const ALBUM_SAMPLES = THEME.values.map((id, index) => ({ id, title: THEME.labels[index], note: ALBUM_NOTES[index], url: manifest.album[id] }));
 const STEPS = ["填档案", "选照片", "生成中", "完成"];
 const TIER_NAME = { basic: "基础", advanced: "进阶", annual: "年度" };
 const STAGE_INDEX = { profile: 0, photos: 1, generating: 2, result: 3 };
@@ -83,7 +85,7 @@ themedPage({
     selectedExistingIds: [],
     newPhotos: [],
     documentType: "identity",
-    style: "classic",
+    style: "rooftop",
     composition: "portrait",
     theme: "growth",
     review: "",
@@ -107,6 +109,9 @@ themedPage({
     Promise.all([api.request("/api/plugins"), api.request("/api/pets").then(displayMediaTree), api.request("/api/account")]).then((result) => {
       const sourcePlugin = result[0].find((item) => item.id === pluginId);
       const plugin = sourcePlugin && pluginSample(sourcePlugin);
+      if (pluginId === "pet-movie-poster" && plugin) {
+        plugin.input = Object.assign({}, plugin.input, { photos: { min: 1, max: 1 } });
+      }
       const pets = result[1];
       this._draftKey = "petbaby_create_" + result[2].id + "_" + pluginId;
       const draft = query.petId ? {} : wx.getStorageSync(this._draftKey) || {};
@@ -116,16 +121,18 @@ themedPage({
       const pet = pets.find((item) => item.id === (query.petId || draft.petId));
       if (query.petId && !pet) throw new Error("这只宠物的档案不可用，请重新选择");
       if (!plugin) throw new Error("这个玩法暂时不可用");
+      const selectedExistingIds = (query.photoIds ? query.photoIds.split(",").filter(Boolean) : draft.selectedExistingIds || []).slice(0, plugin.input.photos.max);
+      const newPhotos = (query.photoIds ? [] : draft.newPhotos || []).slice(0, plugin.input.photos.max - selectedExistingIds.length);
       this.setData({
         plugin,
         pets,
         pet: pet || null,
         stage: pendingTask && pet ? "generating" : pet ? "photos" : "profile",
         task: pendingTask,
-        selectedExistingIds: query.photoIds ? query.photoIds.split(",").filter(Boolean) : draft.selectedExistingIds || [],
-        newPhotos: draft.newPhotos || [],
+        selectedExistingIds,
+        newPhotos,
         documentType: draft.documentType || "identity",
-        style: draft.style || "classic",
+        style: STYLE.values.indexOf(draft.style) >= 0 ? draft.style : "rooftop",
         composition: draft.composition || "portrait",
         theme: draft.theme || "growth",
         review: draft.review || "",
@@ -218,14 +225,13 @@ themedPage({
     if (this.data.pluginId === "pet-movie-poster") this.chooseStyle(event);
     else if (this.data.pluginId === "pet-time-album") this.chooseTheme(event);
   },
-  swipeSample(event) {
-    const samples = this.data.pluginId === "pet-movie-poster" ? MOVIE_SAMPLES : ALBUM_SAMPLES;
-    const sample = samples[Number(event.detail.current)];
-    if (!sample) return;
-    if (this.data.pluginId === "pet-movie-poster") this.setData({ style: sample.id });
-    else this.setData({ theme: sample.id });
-    this.syncLabels();
-    this.saveDraft();
+  goToPhotosOrGenerate() {
+    const count = this.data.selectedExistingIds.length + this.data.newPhotos.length;
+    if ((this.data.pluginId === "pet-movie-poster" || this.data.pluginId === "pet-time-album") && count < this.data.plugin.input.photos.min) {
+      wx.pageScrollTo({ selector: "#photo-picker", duration: 300 });
+      return;
+    }
+    this.generate();
   },
   backToPhotos() { this.setData({ stage: "photos", error: "" }); this.syncLabels(); },
 
@@ -379,7 +385,7 @@ themedPage({
       if (this._closed) throw new Error("上传已暂停，回来后可继续");
       let options = {};
       if (this.data.pluginId === "pet-id-card") options = { documentType: this.data.documentType };
-      if (this.data.pluginId === "pet-movie-poster") options = { style: this.data.style, composition: this.data.composition, review: this.data.review || undefined };
+      if (this.data.pluginId === "pet-movie-poster") options = { style: this.data.style, review: this.data.review || undefined };
       if (this.data.pluginId === "pet-time-album") options = { voice: "pet", theme: this.data.theme, coverTitle: this.data.coverTitle || undefined };
       const input = { pluginId: this.data.pluginId, petId: this.data.pet.id, photoIds: this.data.selectedExistingIds.concat(uploaded.map((item) => item.id)), options };
       const signature = JSON.stringify(input);

@@ -34,14 +34,13 @@
 .scene-sample {
   display: block;
   width: 100%;
-  aspect-ratio: var(--ratio-card);
+  height: 220rpx;
   border-radius: var(--radius-image-thumb);
   background: var(--surface);
 }
 
-.scene-on .scene-sample {
-  box-shadow: 0 0 0 4rpx var(--primary);
-}
+.scene-image-wrap { position: relative; overflow: hidden; border: 4rpx solid transparent; border-radius: var(--radius-image-thumb); background: var(--surface); }
+.scene-on .scene-image-wrap { border-color: var(--primary); }
 
 .scene-name {
   display: flex;
@@ -53,13 +52,7 @@
   font-weight: var(--fw-bold);
 }
 
-.scene-selected {
-  color: var(--primary);
-}
-.scene-swiper { height: 440rpx; margin-top: var(--space-3); }
-.scene-slide { display: flex; height: 100%; flex-direction: column; align-items: center; }
-.scene-slide .scene-sample { width: 500rpx; height: 344rpx; }
-.scene-slide .scene-name { width: 500rpx; }
+.scene-selected { position: absolute; right: var(--space-1); bottom: var(--space-1); padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); background: var(--button-primary); color: var(--button-primary-text); font-size: var(--eyebrow-size); }
 
 .preview {
   padding: var(--space-6) var(--space-5);

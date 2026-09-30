@@ -49,7 +49,7 @@
       <text class="eyebrow">从 {{run.candidates.length || 2}} 张中选 1 张</text>
       <t-tag tone="{{run.status === 'failed' ? 'error' : run.status === 'succeeded' ? 'success' : 'accent'}}" size="mini" text="{{statusText}}"></t-tag>
     </view>
-    <view wx:if="{{run.status !== 'queued' && run.status !== 'processing'}}" class="title">{{run.status === 'succeeded' ? '挑一张最像它的' : 'AI 任务状态'}}</view>
+    <view wx:if="{{run.status !== 'queued' && run.status !== 'processing'}}" class="title">{{run.status === 'succeeded' ? '挑一张最像我的' : 'AI 任务状态'}}</view>
 
     <t-notice wx:if="{{message}}" type="{{messageType}}" message="{{message}}" class="block-gap"></t-notice>
 
@@ -58,7 +58,7 @@
       <view class="pending-image" aria-role="img" aria-label="作品正在生成">
         <view class="pending-image-inner">2 张<text>候选正在准备</text></view>
       </view>
-      <view class="pending-status">{{run.status === 'queued' ? '正在排队，第 ' + (run.queuePosition || 1) + ' 位' : '正在为它生成作品'}}</view>
+      <view class="pending-status">{{run.status === 'queued' ? '正在排队，第 ' + (run.queuePosition || 1) + ' 位' : '正在为我生成作品'}}</view>
       <text class="muted center block">{{run.status === 'queued' ? '预计 ' + (run.estimatedSeconds || 20) + ' 秒' : '可以先退出，完成后在作品柜查看'}}</text>
       <t-loading anim="{{animType}}" label="{{statusText}}"></t-loading>
       <t-button type="ghost" block anim="{{animType}}" class="block-gap" bindtap="askCancel">取消任务</t-button>

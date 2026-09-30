@@ -1,0 +1,12 @@
+{
+  "id": "birthday",
+  "group": "album",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "prompt": "Use case: product-mockup. Vertical 3:4 close overhead photograph of a refined pet birthday scrapbook page on soft butter-yellow paper. Three neatly arranged real photo prints of the SAME small caramel toy poodle wearing a simple ribbon, beside a pet-safe little cake and a single candle in the scene; consistent face and curls in each print. Sparse coral paper confetti, a folded invitation, subtle printed date marks without readable lettering, tactile paper and gentle window light. Playful, sophisticated editorial album art direction, clear photo subjects, open bottom margin for later title. No readable text, logos, hands, extra limbs or overloaded stickers.",
+  "finalPrompt": "Use case: product-mockup. Vertical 3:4 close overhead photograph of a refined pet birthday scrapbook page on soft butter-yellow paper. Three neatly arranged real photo prints of the SAME small caramel toy poodle wearing a simple ribbon, beside a pet-safe little cake and a single candle in the scene; consistent face and curls in each print. Sparse coral paper confetti, a folded invitation, subtle printed date marks without readable lettering, tactile paper and gentle window light. Playful, sophisticated editorial album art direction, clear photo subjects, open bottom margin for later title. No readable text, logos, hands, extra limbs or overloaded stickers.",
+  "source": "tools/imagegen/out/movie-album-v2/album-birthday-raw.jpg",
+  "output": "tools/imagegen/out/movie-album-v2/album-birthday.jpg",
+  "sha256": "b5401f6bf459abc8ad0ab47b99727ecad2211bd8ced0afa09b8c48d91fe9eef7",
+  "review": "pending-visual-review"
+}

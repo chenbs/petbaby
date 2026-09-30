@@ -8,15 +8,12 @@
 
   <view class="section">
     <view class="section-title">选择场景氛围</view>
-    <swiper class="scene-swiper" indicator-dots circular bindchange="swipeScene">
-      <swiper-item wx:for="{{scenePresets}}" wx:key="id">
-        <view class="scene-slide">
-          <image class="scene-sample" src="{{item.sampleUrl}}" mode="aspectFit" />
-          <view class="scene-name">{{item.name}}<text class="scene-selected">已选中</text></view>
-        </view>
-      </swiper-item>
-    </swiper>
-    <text class="small">左右滑动切换场景</text>
+    <view class="scenes">
+      <view wx:for="{{scenePresets}}" wx:key="id" class="scene {{theme === item.id ? 'scene-on' : ''}}" data-id="{{item.id}}" aria-role="radio" aria-checked="{{theme === item.id}}" bindtap="chooseScene">
+        <view class="scene-image-wrap"><image class="scene-sample" src="{{item.sampleUrl}}" mode="aspectFit" /><text wx:if="{{theme === item.id}}" class="scene-selected">✓ 已选</text></view>
+        <view class="scene-name">{{item.name}}</view>
+      </view>
+    </view>
   </view>
 
   <view class="section">
@@ -60,7 +57,7 @@
     <view class="section-title">文字</view>
     <view class="interactive-fields">
       <t-field label="标题" value="{{title}}" placeholder="给这一页起个名字" maxlength="60" show-count bindchange="inputTitle"></t-field>
-      <t-field label="页面文案" control="textarea" value="{{copy}}" placeholder="想对它说的话" maxlength="180" show-count bindchange="inputCopy"></t-field>
+      <t-field label="页面文案" control="textarea" value="{{copy}}" placeholder="想对我说的话" maxlength="180" show-count bindchange="inputCopy"></t-field>
     </view>
   </view>
 

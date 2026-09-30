@@ -12,7 +12,7 @@
 
   <!-- 步骤一：宠物档案 -->
   <view wx:if="{{stage === 'profile'}}" class="section-block">
-    <view class="sub-title">先认识一下它</view>
+    <view class="sub-title">先认识一下我</view>
 
     <view class="creation-fields">
       <block wx:if="{{pets.length}}">
@@ -23,7 +23,7 @@
       </block>
 
       <view class="stack">
-        <t-field label="名字" value="{{name}}" placeholder="它叫什么" maxlength="20" required bindchange="setName"></t-field>
+        <t-field label="名字" value="{{name}}" placeholder="我叫什么" maxlength="20" required bindchange="setName"></t-field>
         <picker range="{{speciesLabels}}" bindchange="setSpecies">
           <t-field label="种类" control="select" value="{{speciesText}}"></t-field>
         </picker>
@@ -44,20 +44,17 @@
   <!-- 步骤二：选照片 + 玩法参数 -->
   <block wx:elif="{{stage === 'photos'}}">
     <view wx:if="{{pluginId === 'pet-movie-poster' || pluginId === 'pet-time-album'}}" class="section-block">
-      <view class="sub-title">{{pluginId === 'pet-movie-poster' ? '选海报风格' : '选画册主题'}}</view>
-      <swiper class="sample-swiper" current="{{pluginId === 'pet-movie-poster' ? styleIndex : themeIndex}}" bindchange="swipeSample" indicator-dots circular>
-        <swiper-item wx:for="{{pluginId === 'pet-movie-poster' ? movieSamples : albumSamples}}" wx:key="id">
-          <view class="sample-slide">
-            <image class="sample-slide-image" src="{{item.url}}" mode="aspectFit" />
-            <view class="sample-option-name">{{item.title}}<text class="sample-check">已选中</text></view>
-          </view>
-        </swiper-item>
-      </swiper>
-      <text class="small">左右滑动切换效果</text>
+      <view class="sub-title">{{pluginId === 'pet-movie-poster' ? '选一部我的电影' : '选一本我的画册'}}</view>
+      <view class="sample-grid">
+        <view wx:for="{{pluginId === 'pet-movie-poster' ? movieSamples : albumSamples}}" wx:key="id" class="sample-option {{item.featured ? 'sample-option-featured' : ''}} {{(pluginId === 'pet-movie-poster' ? style : theme) === item.id ? 'sample-option-on' : ''}}" data-id="{{item.id}}" aria-role="radio" aria-checked="{{(pluginId === 'pet-movie-poster' ? style : theme) === item.id}}" bindtap="chooseSample">
+          <view class="sample-image-wrap"><image class="sample-option-image" src="{{item.url}}" mode="aspectFit" /><text wx:if="{{(pluginId === 'pet-movie-poster' ? style : theme) === item.id}}" class="sample-check">✓ 已选</text></view>
+          <view class="sample-option-copy"><view class="sample-option-name">{{item.title}}</view><text class="sample-option-note">{{item.note}}</text></view>
+        </view>
+      </view>
     </view>
-    <view class="section-block">
+    <view id="photo-picker" class="section-block">
       <view class="row">
-        <view class="sub-title flush">挑几张它的照片</view>
+        <view class="sub-title flush">挑几张我的照片</view>
         <text class="small {{selectedTileIds.length >= plugin.input.photos.max ? 'warn' : ''}}">{{photoHint}}</text>
       </view>
 
@@ -85,7 +82,7 @@
     </view>
 
     <view class="section-block">
-      <view class="sub-title">调一下风格</view>
+      <view class="sub-title">{{pluginId === 'pet-movie-poster' ? '海报文案' : pluginId === 'pet-time-album' ? '写在封面上' : '调一下风格'}}</view>
       <view class="creation-fields">
         <view class="stack">
           <picker wx:if="{{pluginId === 'pet-id-card'}}" range="{{documentLabels}}" bindchange="setDocumentType">
@@ -93,10 +90,7 @@
           </picker>
 
           <block wx:if="{{pluginId === 'pet-movie-poster'}}">
-            <picker range="{{compositionLabels}}" bindchange="setComposition">
-              <t-field label="构图" control="select" value="{{compositionText}}"></t-field>
-            </picker>
-            <t-field label="影评短评" control="textarea" value="{{review}}" placeholder="给它写一句影评，可留空" maxlength="60" show-count bindchange="setReview"></t-field>
+            <t-field label="影评短评" control="textarea" value="{{review}}" placeholder="给我写一句影评，可留空" maxlength="60" show-count bindchange="setReview"></t-field>
           </block>
 
           <block wx:if="{{pluginId === 'pet-time-album'}}">
@@ -135,8 +129,8 @@
       block
       anim="{{animType}}"
       loading="{{busy}}"
-      bindtap="generate"
-    >免费生成预览</t-button>
+      bindtap="goToPhotosOrGenerate"
+    >{{(pluginId === 'pet-movie-poster' || pluginId === 'pet-time-album') && selectedTileIds.length < plugin.input.photos.min ? '选好效果，挑照片' : '免费生成预览'}}</t-button>
   </view>
 </view>
 
@@ -153,7 +147,7 @@
       <view class="creation-pending-preview" aria-role="img" aria-label="作品正在生成">
         <text>{{task.progress || 0}}%</text>
       </view>
-      <view class="sub-title center">正在为它制作作品</view>
+      <view class="sub-title center">正在为我制作作品</view>
       <t-loading anim="{{animType}}" label="正在生成 {{plugin.name}}" progress="{{task.progress || 0}}"></t-loading>
       <text class="muted center block">排队第 {{task.queuePosition || 1}} 位，预计 {{task.estimatedSeconds || 15}} 秒</text>
       <view wx:if="{{uploadProgress > 0 && uploadProgress < 100}}" class="upload-line">

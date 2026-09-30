@@ -14,7 +14,7 @@
     wx:elif="{{!pets.length}}"
     icon="pet"
     title="还没有宠物档案"
-    description="先给它一个名字，收好第一张照片。"
+    description="先给我一个名字，收好第一张照片。"
     action-text="新建档案"
     anim="{{animType}}"
     decor="{{decor}}"
@@ -102,7 +102,7 @@
       <view class="chips">
         <view wx:for="{{stageLabels}}" wx:key="*this" class="chip tappable anim-{{animType}} {{editStageText === item ? 'chip-on' : ''}}" hover-class="chip-hover" data-index="{{index}}" bindtap="chooseStage">{{item}}</view>
       </view>
-      <text class="hint">切到「已离开」后，可以在纪念空间里为它建一个位置</text>
+      <text class="hint">切到「已离开」后，可以在纪念空间里为我建一个位置</text>
     </view>
   </view>
 

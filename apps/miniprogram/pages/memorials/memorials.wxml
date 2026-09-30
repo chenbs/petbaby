@@ -2,7 +2,7 @@
 
 <view class="page page-flat page-memorial art-film layout-bookshelf">
   <view class="title">纪念空间</view>
-  <text class="muted">一个安静的位置，留给已经离开的它。</text>
+  <text class="muted">一个安静的位置，留给已经离开的我。</text>
 
   <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
   <t-notice wx:if="{{message}}" type="success" message="{{message}}" class="block-gap"></t-notice>
@@ -17,7 +17,7 @@
     wx:elif="{{!items.length}}"
     icon="pet"
     title="还没有纪念空间"
-    description="可以为它建一个位置，把照片和故事放在一起。"
+    description="可以为我建一个位置，把照片和故事放在一起。"
     action-text="新建纪念空间"
     anim="fade"
     bindaction="openForm"
@@ -54,7 +54,7 @@
       <t-field label="宠物" control="select" value="{{petName}}" placeholder="请选择"></t-field>
     </picker>
     <t-field label="空间标题" value="{{title}}" placeholder="例如：给豆豆的一封信" maxlength="40" show-count required bindchange="onTitle"></t-field>
-    <t-field label="故事" control="textarea" value="{{story}}" placeholder="想对它说的话" maxlength="600" show-count bindchange="onStory"></t-field>
+    <t-field label="故事" control="textarea" value="{{story}}" placeholder="想对我说的话" maxlength="600" show-count bindchange="onStory"></t-field>
 
     <view wx:if="{{photos.length}}" class="stack-tight">
       <text class="small">选择照片（{{selected.length}}/9）</text>

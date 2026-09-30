@@ -38,6 +38,7 @@ import {
   resolvePetArtPhotoScene,
   type PetArtPhotoSceneId,
 } from "@/domain/pet-art-photo";
+import { completeArtPhotoBatchItem } from "@/server/art-photo-bundle-service";
 
 /** 宠物艺术写真场景的单一事实来源；旧 AI_STYLE_IDS 仅为历史请求兼容。 */
 export const AI_SCENE_IDS = PET_ART_PHOTO_SCENE_IDS;
@@ -89,7 +90,7 @@ async function createAiRunOperation(userId: string, input: unknown): Promise<AiR
   const plugin = await getRuntimePlugin(data.pluginId);
   if (!plugin || plugin.status !== "live" || plugin.category !== "ai-image") throw new AppError("AI_PLUGIN_UNAVAILABLE", "这个 AI 玩法暂未开放", 404);
   const template = getImageTemplate(data.templateId);
-  if (!template || (!template.masterStorageKey && template.templateId !== PET_ART_PHOTO_TEMPLATE_ID)) throw new AppError("IMAGE_TEMPLATE_UNAVAILABLE", "这个图片模板尚未开放", 404);
+  if (!template || template.status !== "live" || (!template.masterStorageKey && template.templateId !== PET_ART_PHOTO_TEMPLATE_ID)) throw new AppError("IMAGE_TEMPLATE_UNAVAILABLE", "这个图片模板尚未开放", 404);
   if (template?.subjectMode === "owner-pet" && (!data.authorizationConfirmed || data.ownerPhotoIds.length !== 1)) {
     throw new AppError("OWNER_AUTHORIZATION_REQUIRED", "人宠模板需要 1 张已获授权的主人照片并确认授权", 422);
   }
@@ -173,7 +174,7 @@ async function loadTemplateReferences(row: Record<string, unknown>) {
   const petId = String(row.pet_id);
   const roleInputs = mapAiRoleInputs(row.role_inputs);
   if (roleInputs.templateId === PET_ART_PHOTO_TEMPLATE_ID) {
-    if (!["v01", "v03", PET_ART_PHOTO_VERSION].includes(roleInputs.templateVersion || "") || roleInputs.subjectMode !== "pet" || roleInputs.petPhotoIds.length !== 1 || roleInputs.ownerPhotoIds.length) {
+    if (!["v01", "v03", "v04", PET_ART_PHOTO_VERSION].includes(roleInputs.templateVersion || "") || roleInputs.subjectMode !== "pet" || roleInputs.petPhotoIds.length !== 1 || roleInputs.ownerPhotoIds.length) {
       throw new AppError("AI_TEMPLATE_SNAPSHOT_INVALID", "写真任务输入已失效，请重新创建", 409);
     }
     const reference = await loadPetReference(userId, petId, roleInputs.petPhotoIds[0]);
@@ -205,16 +206,49 @@ async function loadTemplateReferences(row: Record<string, unknown>) {
   return { template, references };
 }
 
+async function claimNextAiRun() {
+  const capacity = Math.max(1, Math.min(8, Math.floor(Number(process.env.AI_MAX_CONCURRENCY || 1)) || 1));
+  return inTransaction(async (database) => {
+    const expired = await database.query("SELECT slot_id,run_id,attempt FROM ai_provider_slots WHERE run_id IS NOT NULL AND lease_until<now() FOR UPDATE SKIP LOCKED");
+    for (const slot of expired) {
+      await database.query("UPDATE ai_runs SET status='queued',locked_at=NULL,available_at=now() WHERE id=$1 AND attempt=$2 AND status='processing'", [slot.run_id, slot.attempt]);
+      await database.query("UPDATE art_photo_batch_items SET status='queued',locked_at=NULL,updated_at=now() WHERE run_id=$1 AND status='processing'", [slot.run_id]);
+      await database.query("UPDATE ai_provider_slots SET run_id=NULL,attempt=NULL,lease_until=NULL WHERE slot_id=$1", [slot.slot_id]);
+    }
+    const slots = await database.query("SELECT slot_id FROM ai_provider_slots WHERE slot_id<=$1 AND run_id IS NULL ORDER BY slot_id FOR UPDATE SKIP LOCKED LIMIT 1", [capacity]);
+    if (!slots[0]) return null;
+    const queued = await database.query("SELECT id FROM ai_runs WHERE status='queued' AND available_at<=now() ORDER BY created_at FOR UPDATE SKIP LOCKED LIMIT 1");
+    if (!queued[0]) return null;
+    const rows = await database.query("UPDATE ai_runs SET status='processing',attempt=attempt+1,locked_at=now() WHERE id=$1 AND status='queued' RETURNING *", [queued[0].id]);
+    if (!rows[0]) return null;
+    const row = rows[0];
+    await database.query("UPDATE ai_provider_slots SET run_id=$2,attempt=$3,lease_until=now()+interval '15 minutes' WHERE slot_id=$1", [slots[0].slot_id, row.id, row.attempt]);
+    const options = jsonObject<Record<string, unknown>>(row.options, {});
+    if (options.artPhotoBatchItemId) {
+      await database.query("UPDATE art_photo_batch_items SET status='processing',attempt=attempt+1,locked_at=now(),updated_at=now() WHERE id=$1 AND status='queued'", [String(options.artPhotoBatchItemId)]);
+      await database.query("UPDATE art_photo_batches SET status='processing',updated_at=now() WHERE id=$1 AND status='queued'", [String(options.artPhotoBatchId)]);
+    }
+    return { row, slotId: Number(slots[0].slot_id) };
+  });
+}
+
 export async function processNextAiRun() {
+  const claim = await claimNextAiRun();
+  if (!claim) return null;
   const database = await getDatabase();
-  const rows = await database.query("UPDATE ai_runs SET status='processing',attempt=attempt+1,locked_at=now() WHERE id=(SELECT id FROM ai_runs WHERE status='queued' AND available_at<=now() ORDER BY created_at FOR UPDATE SKIP LOCKED LIMIT 1) RETURNING *");
-  const row = rows[0]; if (!row) return null;
+  const { row, slotId } = claim;
   const runId = String(row.id); const userId = String(row.user_id); const prompt = String(row.prompt);
+  const attempt = Number(row.attempt);
+  const heartbeat = setInterval(() => {
+    database.query("UPDATE ai_provider_slots SET lease_until=now()+interval '15 minutes' WHERE slot_id=$1 AND run_id=$2 AND attempt=$3", [slotId, runId, attempt]).catch(() => undefined);
+    database.query("UPDATE ai_runs SET locked_at=now() WHERE id=$1 AND attempt=$2 AND status='processing'", [runId, attempt]).catch(() => undefined);
+  }, 60_000);
   try {
         const templateInput = await loadTemplateReferences(row);
     const [templateWidth, templateHeight] = templateInput.template.size.split("x").map(Number);
     const references = templateInput.references;
-    const candidateCount = getImageTemplateCandidateCount(templateInput.template);
+    const runOptions = jsonObject<Record<string, unknown>>(row.options, {});
+    const candidateCount = runOptions.artPhotoBatchItemId ? 1 : getImageTemplateCandidateCount(templateInput.template);
     const result = await generateWithFailover(
       prompt,
       candidateCount,
@@ -229,9 +263,9 @@ export async function processNextAiRun() {
       const normalized = new Uint8Array(await sharp(Buffer.from(image.body)).resize(templateWidth, templateHeight, { fit: "cover" }).png().toBuffer());
             const labeled = await applyAiLabel(normalized, `${runId}-${index}`);
       const extension = "png";
-      const outputKey = `private/${userId}/ai/${runId}-${index}.${extension}`;
+      const outputKey = `private/${userId}/ai/${runId}-a${attempt}-${index}.${extension}`;
       await objectStorage.put(outputKey, labeled, "image/png");
-      const previewKey = `private/${userId}/ai/${runId}-${index}-preview.png`;
+      const previewKey = `private/${userId}/ai/${runId}-a${attempt}-${index}-preview.png`;
       /*
        * 预览从**已打标的字节**缩，而不是从原始 image.body 缩 ——
        * 否则免费预览反而没有 AI 标识，付费版有，正好搞反。
@@ -258,17 +292,37 @@ export async function processNextAiRun() {
         aiGenerated: true as const,
       };
     }));
-    const completed = await database.query("UPDATE ai_runs SET status='succeeded',provider=$2,model_version=$3,candidates=$4::jsonb,cost=cost+$5,locked_at=NULL WHERE id=$1 AND status='processing' RETURNING id", [runId, result.provider.name, result.provider.modelVersion, JSON.stringify(candidates), generationCost]);
+    const completed = await inTransaction(async (transaction) => {
+      const rows = await transaction.query("UPDATE ai_runs SET status='succeeded',provider=$2,model_version=$3,candidates=$4::jsonb,cost=cost+$5,locked_at=NULL WHERE id=$1 AND status='processing' AND attempt=$6 RETURNING id", [runId, result.provider.name, result.provider.modelVersion, JSON.stringify(candidates), generationCost, attempt]);
+      if (rows[0] && runOptions.artPhotoBatchItemId) await completeArtPhotoBatchItem({ runId, status: "succeeded", outputKey: candidates[0]?.outputKey, previewKey: candidates[0]?.previewKey });
+      return rows;
+    });
     if (!completed[0]) { await Promise.all(candidates.flatMap((candidate) => [candidate.outputKey, candidate.previewKey].filter((key): key is string => Boolean(key)).map((key) => objectStorage.delete(key).catch(() => undefined)))); return { id: runId, status: "cancelled" as const }; }
     await database.query("INSERT INTO ai_cost_ledger (id,run_id,provider,model_version,units,amount,status,created_at) VALUES ($1,$2,$3,$4,$5,$6,'succeeded',now())", [crypto.randomUUID(), runId, result.provider.name, result.provider.modelVersion, candidates.length, generationCost]);
     await recordEvent(userId, "ai_succeeded", String(row.plugin_id), "worker", { provider: result.provider.name, cost: generationCost });
     return { id: runId, status: "succeeded" as const, provider: result.provider.name, candidates };
   } catch (error) {
     const message = error instanceof Error ? error.message.slice(0, 200) : "AI_PROVIDER_UNAVAILABLE";
-    const failed = await database.query("UPDATE ai_runs SET status='failed',error_code=$2,locked_at=NULL WHERE id=$1 AND status='processing' RETURNING id", [runId, message]);
+    const runOptions = jsonObject<Record<string, unknown>>(row.options, {});
+    if (runOptions.artPhotoBatchItemId && attempt < 2) {
+      const retried = await inTransaction(async (transaction) => {
+        const rows = await transaction.query("UPDATE ai_runs SET status='queued',error_code=$2,retry_count=retry_count+1,available_at=now()+interval '2 seconds',locked_at=NULL WHERE id=$1 AND status='processing' AND attempt=$3 RETURNING id", [runId, message, attempt]);
+        if (rows[0]) await transaction.query("UPDATE art_photo_batch_items SET status='queued',error_code=$2,locked_at=NULL,updated_at=now() WHERE id=$1 AND status='processing' AND run_id=$3", [String(runOptions.artPhotoBatchItemId), message, runId]);
+        return rows;
+      });
+      return { id: runId, status: retried[0] ? "retrying" as const : "cancelled" as const };
+    }
+    const failed = await inTransaction(async (transaction) => {
+      const rows = await transaction.query("UPDATE ai_runs SET status='failed',error_code=$2,locked_at=NULL WHERE id=$1 AND status='processing' AND attempt=$3 RETURNING id", [runId, message, attempt]);
+      if (rows[0] && runOptions.artPhotoBatchItemId) await completeArtPhotoBatchItem({ runId, status: "failed", errorCode: message });
+      return rows;
+    });
     if (!failed[0]) return { id: runId, status: "cancelled" as const };
     await database.query("INSERT INTO ai_cost_ledger (id,run_id,provider,model_version,units,amount,status,created_at) VALUES ($1,$2,'unknown','unknown',0,0,'failed',now())", [crypto.randomUUID(), runId]);
     return { id: runId, status: "failed" as const, errorCode: message };
+  } finally {
+    clearInterval(heartbeat);
+    await database.query("UPDATE ai_provider_slots SET run_id=NULL,attempt=NULL,lease_until=NULL WHERE slot_id=$1 AND run_id=$2 AND attempt=$3", [slotId, runId, attempt]);
   }
 }
 
@@ -318,7 +372,7 @@ export async function selectAiCandidate(userId: string, id: string, candidateId:
     await lockPhotoInputs(userId, run.petId, run.photoIds);
     const db = await getDatabase();
     const pets = await db.query("SELECT name FROM pets WHERE id=$1 AND user_id=$2", [run.petId, userId]);
-    const workId = crypto.randomUUID(); const now = new Date(); const title = `${String(pets[0]?.name || "它")}的${run.roleInputs.templateId === PET_ART_PHOTO_TEMPLATE_ID ? "宠物艺术写真" : "AI 肖像"}`;
+    const workId = crypto.randomUUID(); const now = new Date(); const title = `${String(pets[0]?.name || "我")}的${run.roleInputs.templateId === PET_ART_PHOTO_TEMPLATE_ID ? "宠物艺术写真" : "AI 肖像"}`;
     const selectionLabel = "二选一";
     const subtitle = `AI 生成内容 · 已选中的${selectionLabel}结果`;
     await db.query("INSERT INTO works (id,user_id,plugin_id,pet_id,photo_id,title,subtitle,serial_number,authority,output_key,preview_key,asset_kind,source_kind,source_id,locked,public,version,expires_at,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,'麻麻抱我 AI 工作室',$9,$10,'image','ai',$11,true,false,1,$12,$13)", [workId, userId, run.pluginId, run.petId, run.photoIds[0], title, subtitle, `AI-${id.slice(0, 8).toUpperCase()}`, candidate.outputKey, candidate.previewKey, id, new Date(Date.now() + 90 * 86400000), now]);

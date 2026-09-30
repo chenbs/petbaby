@@ -35,8 +35,9 @@ describe("玩法样例图与枚举对齐", () => {
       const bytes = readFileSync(file);
       const hash = createHash("sha256").update(bytes).digest("hex");
       const version = stem.match(/-v\d+$/)?.[0];
-      const batch = version === "-v4" && !["snow-cabin", "lakeside-sunset", "spring-picnic"].includes(id) ? "v4" : "v3";
-      const metadata = JSON.parse(readFileSync(path.resolve(process.cwd(), `../../tools/imagegen/out/miniprogram-${batch}`, `scenes-${id}${version}.json`), "utf8"));
+      const batch = version === "-v5" ? "v5" : version === "-v4" && !["snow-cabin", "lakeside-sunset", "spring-picnic"].includes(id) ? "v4" : "v3";
+      const metadataName = batch === "v5" ? `scene-${id}${version}.json` : `scenes-${id}${version}.json`;
+      const metadata = JSON.parse(readFileSync(path.resolve(process.cwd(), `../../tools/imagegen/out/miniprogram-${batch}`, metadataName), "utf8"));
       expect(hash.slice(0, 12)).toBe(match![2]);
       expect(metadata.sha256).toBe(hash);
       if (metadata.samplePet) {

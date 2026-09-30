@@ -1,0 +1,13 @@
+{
+  "id": "tennis-champion",
+  "title": "网球场冠军",
+  "samplePet": "golden",
+  "prompt": "Use case: photorealistic-natural. A finished premium pet editorial photograph, not a digital composite. Image 1 is the identity reference only, not a pose or background template. Keep the same adult golden retriever from Image 1, with natural golden coat, floppy ears, dark eyes and black nose. One pet only, no Ragdoll cat, no people. Build a physically coherent location and tell this exact moment: A sunlit turquoise tennis court with a white net, two loose yellow tennis balls and a wooden racket lying safely on the ground. The pet wears a white athletic neckerchief with mint trim, stands naturally near the baseline and looks into camera with an open-mouth smile. Dynamic editorial sports photography, no logos or text. The dog is trotting diagonally after a loose tennis ball, one front paw raised mid-step, the other paws connected to the court, racket resting safely beyond the dog's path. Frame as a candid eye-level 35mm or 50mm pet photograph with natural optical depth, subtle grain, authentic imperfections and light falling consistently across fur, props and floor. The pet's weight must have believable contact shadows and scale relative to nearby objects. Vertical 3:4, complete pet including paws and tail where visible, safe margins, clear expressive face occupying about 45-60% of frame height. Keep the action obvious even at small thumbnail size. Avoid centered seated studio-portrait pose unless the described action requires it. No floating body, pasted edges, plastic fur, overly smooth render, impossible clothing, extra limbs, duplicate pets, fantasy glow, pseudo-text, logo or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/source/dog-golden.jpg",
+  "referenceSha256": "1b6348ce4f6cd1d12f4c93d5f2a8a5c21847e0ce9bc43e4326c1ee89f7a89eef",
+  "output": "tools/imagegen/out/scenes/scene-tennis-champion-v5.jpg",
+  "sha256": "0ae23472a2219ecaf1aa3adba5354db433c1339c3ce19cdb7bfec94e0dd61ed7",
+  "review": "accepted-2026-09-29"
+}

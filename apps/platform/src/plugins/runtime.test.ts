@@ -62,6 +62,27 @@ describe("玩法样例图回填", () => {
     expect(target?.samples?.heroUrl).toBe(seeded.samples?.heroUrl);
   });
 
+  it("旧电影海报默认配置升级为单照片 AI 场景，自定义输入保留", async () => {
+    const poster = plugins.find((plugin) => plugin.id === "pet-movie-poster");
+    if (!poster) throw new Error("Movie poster plugin missing");
+    rows.set(poster.id, { manifest: {
+      ...poster,
+      input: { ...poster.input, photos: { min: 1, max: 3 } },
+      generator: { type: "html-template", template: "movie-poster-v1" },
+      description: "把日常照片排成一张有片名、有短评的竖版电影海报。",
+    } });
+    let result = await listRuntimePlugins();
+    let current = result.find((plugin) => plugin.id === poster.id);
+    expect(current?.generator.type).toBe("image-api");
+    expect(current?.input.photos).toEqual({ min: 1, max: 1 });
+    expect(current?.description).toBe(poster.description);
+
+    rows.set(poster.id, { manifest: { ...poster, input: { ...poster.input, photos: { min: 1, max: 2 } } } });
+    result = await listRuntimePlugins();
+    current = result.find((plugin) => plugin.id === poster.id);
+    expect(current?.input.photos.max).toBe(2);
+  });
+
   it("后台已发布的 samples 不被部署覆盖", async () => {
     const published = "/api/plugin-samples/samples/admin-choice-000000000000.jpg";
     for (const plugin of plugins) {
@@ -160,6 +181,23 @@ describe("玩法样例图回填", () => {
     rows.set("pl-10", { manifest: { ...portrait, samples: { ...portrait.samples, sceneOptions: custom } } });
     const preserved = await listRuntimePlugins();
     expect(preserved.find((plugin) => plugin.id === "pl-10")?.samples?.sceneOptions).toEqual(custom);
+  });
+
+  it("扩展写真 V4 默认图升级为 V5，人工改过的场景图保留", async () => {
+    const portrait = plugins.find((plugin) => plugin.id === "pl-10");
+    if (!portrait) throw new Error("PL-10 missing");
+    const custom = "/api/plugin-samples/samples/admin-choice-000000000000.jpg";
+    rows.set("pl-10", { manifest: { ...portrait, samples: { ...portrait.samples, sceneUrls: {
+      ...portrait.samples?.sceneUrls,
+      "railway-traveler": "/api/plugin-samples/samples/scene-railway-traveler-v4-af7a29506d35.jpg",
+      "tennis-champion": "/api/plugin-samples/samples/scene-tennis-champion-v4-4747aee4a90a.jpg",
+      "greenhouse-gardener": custom,
+    } } } });
+    const result = await listRuntimePlugins();
+    const urls = result.find((plugin) => plugin.id === "pl-10")?.samples?.sceneUrls;
+    expect(urls?.["railway-traveler"]).toBe(portrait.samples?.sceneUrls?.["railway-traveler"]);
+    expect(urls?.["tennis-champion"]).toBe(portrait.samples?.sceneUrls?.["tennis-champion"]);
+    expect(urls?.["greenhouse-gardener"]).toBe(custom);
   });
 
   /*

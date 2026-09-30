@@ -28,6 +28,7 @@ apps/miniprogram/config.local.js
 apps/miniprogram/project.private.config.json
 apps/miniprogram/private.*.key
 apps/miniprogram/preview-qrcode.png
+docs/ui-refactor/cos.txt
 
 # Authorized owner identity references: local validation only, never commit or publish.
 tools/imagegen/out/source/girl-sample.png
@@ -44,8 +45,15 @@ tools/imagegen/out/reference-v1/dual-subject/review/*-stability-review.png
 
 # Local IDE state
 .vs/
+.playwright-cli/
+
+# Regenerable local preview and visual-review captures
+apps/miniprogram/output/
+apps/platform/output/playwright/
+output/ui-review-20260929/
 
 # Logs and OS files
+NUL
 *.log
 /gui-sock-*
 .DS_Store

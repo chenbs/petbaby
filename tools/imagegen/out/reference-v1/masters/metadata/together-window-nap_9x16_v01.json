@@ -1,0 +1,13 @@
+{
+  "templateId": "together-window-nap",
+  "title": "午后靠着你",
+  "size": "720x1280",
+  "source": "tools/imagegen/out/together-v1/together-window-nap.jpg",
+  "sourceSha256": "3fac41cb45b62677e3d1eab3b2e0f8e76d804a22264e81e48d5c6cad89808ff8",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "prompt": "Use case: photorealistic-natural. Asset type: an original self-owned frozen master for a pet-and-owner portrait effect. A quiet documentary photograph at home: an adult East Asian man in a pale linen shirt sits by a sunlit window, gently resting one hand on a blue British Shorthair cat curled against his side on a wide sofa. The man's face and the cat's expressive round face are both clearly visible, their bodies make natural contact, the cat's paws rest on the cushion. Soft unmade throw blanket and houseplants create a warm real home without visual clutter. An honest tender moment, subtle smile, no posed catalogue look. Make a single vertical 9:16 35mm lifestyle photograph with a full coherent scene, physically plausible perspective, matching contact shadows and consistent natural light. Real skin texture and pet fur, moderate optical depth and gentle film grain. Keep both subjects within generous safe margins so neither face, hand, paw nor tail is cropped by a 9:16 frame. Their identities may later be replaced separately, so the owner and pet must remain clearly distinct and unobstructed. No real person's likeness, no public figure, no logo, no written text, no watermark, no extra humans or pets, no floating limbs, duplicate anatomy, plastic fur, overprocessed skin, pasted edges, fantasy glow or glossy AI illustration. Return one photograph only.",
+  "rights": "text-only-generated-generic-adults-and-pets-no-private-identity",
+  "visualReview": "pass",
+  "reviewedAt": "2026-09-29"
+}

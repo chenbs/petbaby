@@ -1,0 +1,13 @@
+{
+  "id": "ballet-backstage",
+  "title": "紫色芭蕾后台",
+  "samplePet": "british",
+  "prompt": "Use case: photorealistic-natural. A finished premium pet editorial photograph, not a digital composite. Image 1 is the identity reference only, not a pose or background template. Keep the same adult blue British Shorthair from Image 1, with round face, solid gray coat and copper-amber eyes. One pet only, no Ragdoll cat, no people. Build a physically coherent location and tell this exact moment: A real theater backstage corner with plum velvet curtain, ballet slippers laid on a low trunk and warm mirror bulbs. The pet wears a delicate lavender ribbon collar, sits naturally on the trunk and looks over one shoulder toward camera. Lilac and plum theatrical tones, full paws and tail visible, no tutu, human body or text. The cat steps out from between the velvet curtains onto a low wooden trunk with one forepaw raised, tail relaxed and real mirror bulbs receding behind it. Frame as a candid eye-level 35mm or 50mm pet photograph with natural optical depth, subtle grain, authentic imperfections and light falling consistently across fur, props and floor. The pet's weight must have believable contact shadows and scale relative to nearby objects. Vertical 3:4, complete pet including paws and tail where visible, safe margins, clear expressive face occupying about 45-60% of frame height. Keep the action obvious even at small thumbnail size. Avoid centered seated studio-portrait pose unless the described action requires it. No floating body, pasted edges, plastic fur, overly smooth render, impossible clothing, extra limbs, duplicate pets, fantasy glow, pseudo-text, logo or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/source/cat-british.jpg",
+  "referenceSha256": "ddbdfb39b6cb3c6dddbfdd01555cd2fea299cfa927f76a1e7248d581152e0364",
+  "output": "tools/imagegen/out/scenes/scene-ballet-backstage-v5.jpg",
+  "sha256": "1721da6836b70d69d246e40154eb9aa05a25c2eef9c07df2b5ad0485e9016fa2",
+  "review": "accepted-2026-09-29"
+}

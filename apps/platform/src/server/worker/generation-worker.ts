@@ -8,6 +8,7 @@ import { mapPet, mapPhoto, mapTask } from "@/server/db/rows";
 import { generatorRegistry } from "@/server/generators/svg";
 import { svgToPdf } from "@/server/generators/pdf";
 import { objectStorage } from "@/server/storage";
+import { aiLabelMetadata } from "@/server/media/ai-label";
 
 const MAX_ATTEMPTS = 2;
 
@@ -73,7 +74,8 @@ export async function processTask(task: ReturnType<typeof mapTask>) {
       const width = metadata.width || 1080;
       const height = metadata.height || 1440;
       const mark = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}"><g opacity=".62" transform="translate(40 80)"><rect width="${Math.min(700, width - 80)}" height="76" rx="14" fill="#14251c"/><text x="24" y="49" fill="#fff" font-family="sans-serif" font-size="30">麻麻抱我免费预览 · 小程序码</text><rect x="${Math.min(610, width - 170)}" y="10" width="56" height="56" fill="#fff"/><path d="M${Math.min(618, width - 162)} 18h16v16h-16zm24 0h16v16h-16zm-24 24h16v16h-16zm24 0h8v8h-8z" fill="#14251c"/></g></svg>`;
-      previewBody = new Uint8Array(await sharp(Buffer.from(previewSource.body)).composite([{ input: Buffer.from(mark), gravity: "northwest" }]).png().toBuffer());
+      const preview = sharp(Buffer.from(previewSource.body)).composite([{ input: Buffer.from(mark), gravity: "northwest" }]);
+      previewBody = new Uint8Array(await (task.pluginId === "pet-movie-poster" ? preview.withMetadata({ exif: { IFD0: aiLabelMetadata(task.id) } }) : preview).png().toBuffer());
     }
     const previewKey = `private/${task.userId}/works/${task.id}-preview.${previewSource.suffix}`;
     await objectStorage.put(previewKey, previewBody, previewSource.contentType);
@@ -124,7 +126,7 @@ export async function processTask(task: ReturnType<typeof mapTask>) {
     await database.query("UPDATE generation_tasks SET status='succeeded',progress=100,work_id=$2,locked_at=null,updated_at=now() WHERE id=$1", [task.id, workId]);
     await database.query("INSERT INTO events (id,user_id,plugin_id,name,created_at) VALUES ($1,$2,$3,'generation_succeeded',$4)", [crypto.randomUUID(), task.userId, task.pluginId, new Date()]);
     await database.query("INSERT INTO user_notifications (id,user_id,type,title,body,target_path,created_at) VALUES ($1,$2,'generation_ready',$3,$4,$5,$6)", [crypto.randomUUID(), task.userId, "作品已生成", `${plugin.name}已经准备好了`, `/works/${workId}`, new Date()]);
-    const estimatedCost = Number(process.env.LAYOUT_GENERATION_COST || 0.01);
+    const estimatedCost = Number(task.pluginId === "pet-movie-poster" ? process.env.AI_IMAGE_COST || 0.08 : process.env.LAYOUT_GENERATION_COST || 0.01);
     await database.query("INSERT INTO system_usage (usage_date,generation_count,estimated_cost,circuit_open,updated_at) VALUES ($1,1,$2,false,now()) ON CONFLICT (usage_date) DO UPDATE SET generation_count=system_usage.generation_count+1,estimated_cost=system_usage.estimated_cost+$2,updated_at=now()", [new Date().toISOString().slice(0, 10), estimatedCost]);
     return { status: "succeeded" as const, taskId: task.id, workId };
   } catch (error) {

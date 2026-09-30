@@ -23,6 +23,7 @@ const STYLES_OUT = path.resolve(import.meta.dirname, "out", "styles");
 const REPO_ROOT = path.resolve(import.meta.dirname, "../..");
 const MASTERS_INDEX = path.resolve(import.meta.dirname, "out", "reference-v1", "masters", "index.json");
 const PUBLIC_PREVIEWS_INDEX = path.resolve(import.meta.dirname, "out", "reference-v1", "public-previews", "index.json");
+const DEPLOY_ASSET_MANIFEST = path.resolve(import.meta.dirname, "out", "reference-v1", "deploy-assets.tsv");
 const REVIEWED_SAMPLES = path.resolve(import.meta.dirname, "reviewed-sample-files.txt");
 const PENDING_LOCAL_SAMPLES = path.resolve(import.meta.dirname, "pending-local-sample-files.txt");
 const STORAGE_DIR = process.env.LOCAL_STORAGE_DIR
@@ -130,8 +131,21 @@ for (const item of publicPreviewIndex.templates) {
   await pushExact(body, item.sampleStorageKey, "image/webp");
 }
 
+const humanAssets = (await readFile(DEPLOY_ASSET_MANIFEST, "utf8")).split(/\r?\n/)
+  .filter((line) => line.startsWith("human\t"));
+if (humanAssets.length !== 40) throw new Error(`宠物人化效果图数量不正确：${humanAssets.length}/40`);
+for (const line of humanAssets) {
+  const [kind, key, source, expectedHash] = line.split("\t");
+  if (kind !== "human" || !/^samples\/image-templates\/human-effect-\d{2}-[a-f0-9]{12}\.webp$/.test(key)
+    || !/^tools\/imagegen\/out\/pet-human-v2\/effects\/(?:[1-9]|[1-3][0-9]|40)\.webp$/.test(source)
+    || !/^[a-f0-9]{64}$/.test(expectedHash)) throw new Error(`宠物人化部署清单无效：${line}`);
+  const body = await readFile(path.resolve(REPO_ROOT, source));
+  if (createHash("sha256").update(body).digest("hex") !== expectedHash) throw new Error(`宠物人化素材哈希不一致：${source}`);
+  await pushExact(body, key, "image/webp");
+}
+
 entries.sort((a, b) => a.pluginId.localeCompare(b.pluginId));
-console.log(`\n共 ${entries.length + styleFiles.length + sceneFiles.length} 张插件/写真/历史风格图、${masterIndex.templates.length} 张冻结母版和 ${publicPreviewIndex.templates.length} 张独立键公开样图，落盘于 ${STORAGE_DIR}`);
+console.log(`\n共 ${entries.length + styleFiles.length + sceneFiles.length} 张插件/写真/历史风格图、${masterIndex.templates.length} 张冻结母版、${publicPreviewIndex.templates.length} 张独立键公开样图和 ${humanAssets.length} 张人化效果图，落盘于 ${STORAGE_DIR}`);
 console.log("把下面每段并入 registry.ts 里对应 plugin 的 manifest：\n");
 for (const entry of entries) {
   console.log(`  // ${entry.pluginId}`);

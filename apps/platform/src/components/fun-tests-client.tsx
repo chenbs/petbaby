@@ -104,12 +104,12 @@ export function FunTestsClient({ initialTests }: { initialTests: TestSummary[] }
   return <main className="screen ft-screen">
     <header className="ft-topbar"><Link href="/" aria-label="返回首页">←</Link><span>麻麻抱我 / 趣味测试</span><span>FREE</span></header>
     {view === "list" ? <>
-      <section className="ft-heading"><span className="ft-eyebrow">PET PERSONALITY CLUB</span><h1>它的小秘密，<br /><em>你最懂。</em></h1><p>从每天都看得见的小动作里，发现你们自己的答案。</p></section>
+      <section className="ft-heading"><span className="ft-eyebrow">PET PERSONALITY CLUB</span><h1>我的小秘密，<br /><em>你最懂。</em></h1><p>从每天都看得见的小动作里，发现我们自己的答案。</p></section>
       <div className="ft-catalog">{initialTests.map((item, index) => <button className={`ft-catalog-item ft-theme-${item.cover}`} type="button" onClick={() => openTest(item.id)} disabled={busy} key={item.id}>
         <div className="ft-cover"><Image src={`/fun-tests/${item.cover}.jpg`} alt="" fill sizes="(max-width: 600px) 45vw, 220px" loading="eager" unoptimized /><span>0{index + 1}</span></div>
         <div className="ft-catalog-copy"><small>{item.category} · {item.questionCount} 题</small><strong>{item.title}</strong><p>{item.subtitle}</p><span>开始测试 →</span></div>
       </button>)}</div>
-      {history.length ? <section className="ft-history"><h2>测过的它</h2><div>{history.map((item) => <button key={item.id} type="button" onClick={() => { setResult(item); setView("result"); }}><span>{item.petName} · {item.testTitle}</span><b>{item.outcome.name} →</b></button>)}</div></section> : null}
+      {history.length ? <section className="ft-history"><h2>我的测试记录</h2><div>{history.map((item) => <button key={item.id} type="button" onClick={() => { setResult(item); setView("result"); }}><span>{item.petName} · {item.testTitle}</span><b>{item.outcome.name} →</b></button>)}</div></section> : null}
     </> : null}
 
     {view === "intro" && test ? <section className={`ft-intro ft-theme-${test.cover}`}>
@@ -129,7 +129,7 @@ export function FunTestsClient({ initialTests }: { initialTests: TestSummary[] }
       <span className="ft-eyebrow">想想 {petName} 平时的样子</span>
       <h1>{test.questions[questionIndex].prompt}</h1>
       <div className="ft-choices">{test.questions[questionIndex].choices.map((choice, index) => <button type="button" key={choice} onClick={() => choose(index)} disabled={busy} aria-pressed={answers[questionIndex] === index}><span>{String.fromCharCode(65 + index)}</span>{choice}<b>→</b></button>)}</div>
-      <p className="ft-quiz-hint">选最像它平时样子的答案就好。</p>
+      <p className="ft-quiz-hint">选最像我平时样子的答案就好。</p>
     </section> : null}
 
     {view === "thinking" && test ? <section className={`ft-thinking ft-theme-${test.cover}`} role="status" aria-live="polite">
@@ -137,7 +137,7 @@ export function FunTestsClient({ initialTests }: { initialTests: TestSummary[] }
       <span className="ft-eyebrow">答案正在靠近</span>
       <h1>正在拼出 {petName} 的小答案</h1>
       <p>把你选的日常片段，轻轻放在一起。</p>
-      <div className="ft-thinking-steps"><span>翻翻它的小习惯</span><span>看看你们的默契</span><span>装进一张结果卡</span></div>
+      <div className="ft-thinking-steps"><span>翻翻我的小习惯</span><span>看看我们的默契</span><span>装进一张结果卡</span></div>
       <div className="ft-thinking-progress" aria-hidden="true"><span /></div>
     </section> : null}
 

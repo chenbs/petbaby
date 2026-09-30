@@ -1,0 +1,13 @@
+{
+  "id": "poolside-vacation",
+  "title": "蓝色泳池假日",
+  "samplePet": "british",
+  "prompt": "Use case: photorealistic-natural. A finished premium pet editorial photograph, not a digital composite. Image 1 is the identity reference only, not a pose or background template. Keep the same adult blue British Shorthair from Image 1, with round face, solid gray coat and copper-amber eyes. One pet only, no Ragdoll cat, no people. Build a physically coherent location and tell this exact moment: A real outdoor poolside terrace with clear blue pool water, striped parasol, white towels and a low deck chair safely away from the pool edge. The pet wears a light lemon-yellow linen collar and rests on the chair, eyes half-closed in sunlight. Complete pet visible, crisp summer color, no text, people or wet fur. The cat reclines lengthwise on the dry deck chair under the parasol, front paws stretched toward the camera, fur catching real midday sunlight; pool remains behind the chair. Frame as a candid eye-level 35mm or 50mm pet photograph with natural optical depth, subtle grain, authentic imperfections and light falling consistently across fur, props and floor. The pet's weight must have believable contact shadows and scale relative to nearby objects. Vertical 3:4, complete pet including paws and tail where visible, safe margins, clear expressive face occupying about 45-60% of frame height. Keep the action obvious even at small thumbnail size. Avoid centered seated studio-portrait pose unless the described action requires it. No floating body, pasted edges, plastic fur, overly smooth render, impossible clothing, extra limbs, duplicate pets, fantasy glow, pseudo-text, logo or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/source/cat-british.jpg",
+  "referenceSha256": "ddbdfb39b6cb3c6dddbfdd01555cd2fea299cfa927f76a1e7248d581152e0364",
+  "output": "tools/imagegen/out/scenes/scene-poolside-vacation-v5.jpg",
+  "sha256": "5972f6411c6617057dfa7719c49805337e7757ea2ca8bfe0d00394ef449ff473",
+  "review": "accepted-2026-09-29"
+}

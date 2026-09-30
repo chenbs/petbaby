@@ -1,0 +1,879 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>麻麻抱我 · 小程序改版原型（2026-09-29 评审）</title>
+<style>
+/* ===== 改版后设计 token（橘子汽水，默认主题）。奶油底、墨蓝字、橘子色按钮配墨蓝字、焦橘色作文字强调、奶黄与钴蓝点缀 ===== */
+:root{
+  --bg:#FFFAF3; --card:#FFFFFF; --subtle:#FFF1E0; --line:#F3E3D2;
+  --primary:#FF9A52; --on-primary:#1F2540; --primary-soft:#FFE3CF; --primary-ink:#9A3412;
+  --yellow:#FFD45C; --mint:#E3F4EA; --mint-ink:#23794A; --blue:#2A5FE8; --sky:#CFE6FF;
+  --text:#1F2540; --text2:#5B6178; --text3:#5B6178; --dark:#1F2540; --on-dark:#FFFAF3;
+  --shadow-card:0 2px 8px -2px rgba(60,35,20,.10),0 16px 32px -18px rgba(60,35,20,.28);
+  --shadow-float:0 8px 20px -6px rgba(60,35,20,.18),0 32px 60px -20px rgba(60,35,20,.38);
+  --r-card:20px; --r-img:16px; --r-thumb:12px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:#EFE7E1;color:var(--text);font:14px/1.6 "PingFang SC","Microsoft YaHei","Noto Sans CJK SC",sans-serif}
+img{display:block}
+.doc{max-width:1440px;margin:0 auto;padding:32px 40px 80px}
+.doc-head h1{margin:0;font-size:30px;line-height:1.3}
+.doc-head p{margin:6px 0 0;color:var(--text2)}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 8px}
+.toc a{padding:6px 14px;border-radius:999px;background:#fff;color:var(--text);text-decoration:none;font-size:13px}
+.sec{margin-top:36px;padding:28px;border-radius:28px;background:#FBF6F2}
+.sec>h2{margin:0;font-size:22px}
+.sec>.lead{margin:4px 0 20px;color:var(--text2);max-width:980px}
+.row{display:flex;gap:28px;align-items:flex-start;flex-wrap:wrap}
+.col-title{margin:0 0 10px;font-size:14px;font-weight:700}
+.col-title small{font-weight:400;color:var(--text2)}
+.tagline{display:inline-block;padding:2px 10px;border-radius:999px;font-size:12px;font-weight:700}
+.t-before{background:#E9E4E2;color:#5B4F4B}.t-after{background:var(--primary);color:var(--on-primary)}
+
+/* ===== 手机外框：375×812 CSS px = 750rpx 设计宽度 ===== */
+.phone{position:relative;width:395px;height:832px;flex:none;border:10px solid #1D1716;border-radius:52px;background:var(--bg);overflow:hidden;box-shadow:0 30px 60px -30px rgba(40,20,10,.5)}
+.status{height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 26px 0 30px;font-size:14px;font-weight:700}
+.status i{display:inline-block;width:18px;height:10px;margin-left:4px;border-radius:3px;background:var(--text)}
+.nav{height:44px;display:flex;align-items:center;justify-content:center;position:relative;font-size:16px;font-weight:700}
+.nav.left{justify-content:flex-start;padding-left:16px}
+.capsule{position:absolute;right:8px;top:6px;width:87px;height:32px;border-radius:16px;border:1px solid rgba(0,0,0,.08);background:rgba(255,255,255,.7);display:flex;align-items:center;justify-content:space-around;font-size:15px}
+.back{position:absolute;left:14px;top:9px;font-size:20px;font-weight:400}
+.screen{position:absolute;top:88px;left:0;right:0;bottom:0;overflow-y:auto;padding:4px 16px 110px}
+.screen::-webkit-scrollbar{display:none}
+.screen.dock-space{padding-bottom:150px}
+.tabbar{position:absolute;left:0;right:0;bottom:0;height:84px;padding-bottom:30px;display:flex;background:rgba(255,255,255,.96);border-top:1px solid var(--line)}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--text3);font-size:10px}
+.tab svg{width:24px;height:24px}
+.tab.on{color:var(--text);font-weight:800}
+.tab-plus{flex:1;display:flex;align-items:center;justify-content:center}
+.tab-plus span{width:46px;height:46px;margin-top:-14px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 16px -6px rgba(255,154,82,.7)}
+.tab-plus svg{width:24px;height:24px;color:var(--on-primary)}
+.dock{position:absolute;left:0;right:0;bottom:0;padding:12px 16px 34px;background:rgba(255,255,255,.97);border-top:1px solid var(--line);display:flex;align-items:center;gap:12px}
+.dock .meta{flex:1;min-width:0}
+.dock .meta b{display:block;font-size:17px}
+.dock .meta span{font-size:12px;color:var(--text2)}
+.fold{display:none}
+
+/* ===== 组件 ===== */
+svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:48px;padding:0 22px;border:0;border-radius:999px;background:var(--primary);color:var(--on-primary);font:inherit;font-size:16px;font-weight:700;white-space:nowrap}
+.btn.sm{height:34px;padding:0 14px;font-size:13px}
+.btn.soft{background:var(--primary-soft);color:var(--primary-ink)}
+.btn.ghost{background:var(--subtle);color:var(--text)}
+.btn.block{width:100%}
+.btn.off{background:#EFE6E0;color:#9C8A84}
+.link{color:var(--primary-ink);font-weight:700;font-size:13px}
+.chip{flex:none;padding:6px 14px;border-radius:999px;background:var(--card);color:var(--text2);font-size:13px;border:1px solid var(--line)}
+.chip.on{background:var(--text);color:#fff;border-color:var(--text);font-weight:700}
+.chips{display:flex;gap:8px;overflow-x:auto;margin:0 -16px;padding:2px 16px}
+.chips::-webkit-scrollbar{display:none}
+.badge{display:inline-block;padding:1px 7px;border-radius:6px;font-size:11px;font-weight:700;line-height:18px}
+.b-yellow{background:var(--yellow);color:var(--text)}
+.b-berry{background:var(--primary-soft);color:var(--primary-ink)}
+.b-mint{background:var(--mint);color:var(--mint-ink)}
+.b-dark{background:rgba(43,32,31,.82);color:#fff}
+.h2{display:flex;align-items:baseline;justify-content:space-between;margin:22px 0 10px}
+.h2 b{font-size:19px;line-height:1.35}
+.h2 span{font-size:13px;color:var(--text2)}
+.muted{color:var(--text2);font-size:13px}
+.cap{color:var(--text3);font-size:12px}
+.img{width:100%;object-fit:cover;border-radius:var(--r-img);background:var(--subtle)}
+
+/* 首页 */
+.brand{display:flex;align-items:center;gap:6px;font-size:17px;font-weight:800;letter-spacing:.5px}
+.brand svg{width:24px;height:24px}
+.petcard{padding:14px;border-radius:var(--r-card);background:var(--card);box-shadow:var(--shadow-card)}
+.pc-top{display:flex;align-items:center;gap:12px}
+.avatar{width:60px;height:60px;border-radius:50%;object-fit:cover;border:3px solid #fff;box-shadow:0 0 0 2px var(--primary-soft)}
+.pc-main{flex:1;min-width:0}
+.pc-name{font-size:19px;font-weight:800;display:flex;align-items:center;gap:6px}
+.pc-name small{font-size:12px;font-weight:400;color:var(--text2)}
+.pc-days{font-size:13px;color:var(--text2)}
+.pc-days b{font-size:22px;color:var(--primary-ink);font-weight:800;margin-right:2px}
+.pc-cam{width:44px;height:44px;border-radius:50%;background:var(--primary-soft);color:var(--primary-ink);display:flex;align-items:center;justify-content:center}
+.pc-cam svg{width:22px;height:22px}
+.moment{display:flex;align-items:center;gap:10px;margin-top:12px;padding:10px 12px;border-radius:14px;background:var(--subtle);font-size:13px}
+.moment .mt{flex:1;min-width:0}
+.moment .mt b{display:block;font-size:14px}
+.feature{margin-top:4px;border-radius:var(--r-card);overflow:hidden;background:var(--card);box-shadow:var(--shadow-card)}
+.feature img{width:100%;height:190px;object-fit:cover}
+.feature .fc{display:flex;align-items:center;gap:10px;padding:12px 14px}
+.feature .fc div{flex:1;min-width:0}
+.feature .fc b{display:block;font-size:17px}
+.dots{display:flex;gap:5px;justify-content:center;margin-top:8px}
+.dots i{width:6px;height:6px;border-radius:3px;background:#EAD9C6}.dots i.on{width:16px;background:var(--primary)}
+.fall{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.fall-col{display:grid;gap:14px;align-content:start}
+.w{position:relative}
+.w img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:var(--r-img);background:var(--subtle)}
+.w img.tall{aspect-ratio:3/4.6}
+.w .wb{position:absolute;left:8px;top:8px}
+.w .wt{margin-top:6px;font-size:14px;font-weight:700;line-height:1.35}
+.w .wm{font-size:12px;color:var(--text3)}
+.w.fun{padding:10px;border-radius:var(--r-img);background:var(--yellow)}
+.w.fun img{aspect-ratio:1/1}
+.w.fun .wm{color:var(--text)}
+
+/* 人类转生计划 + 麻麻精选 */
+.hm{margin-top:14px;padding:14px;border-radius:var(--r-card);background:linear-gradient(150deg,#FFB273 0%,#FFD0A1 50%,#FFE8D2 100%);box-shadow:var(--shadow-card)}
+.hm-head{display:flex;align-items:flex-end;justify-content:space-between}
+.hm-head b{display:block;font-size:20px;font-weight:800;line-height:1.3}
+.hm-head .cap{color:#3B3F57}
+.hm-imgs{position:relative;display:flex;gap:8px;margin-top:12px}
+.hm-imgs>img{flex:1;min-width:0;aspect-ratio:9/13;object-fit:cover;object-position:50% 20%;border-radius:14px;border:3px solid #fff}
+.hm-imgs>img:nth-child(2){transform:translateY(-8px) scale(1.05);box-shadow:0 14px 24px -12px rgba(120,50,10,.5)}
+.hm-origin{position:absolute;left:8px;bottom:8px;display:flex;align-items:center;gap:6px;padding:3px 10px 3px 3px;border-radius:999px;background:rgba(255,255,255,.94);font-size:11px;font-weight:700}
+.hm-origin img{width:26px;height:26px;border-radius:50%;object-fit:cover;object-position:50% 25%}
+.bs-lead{border-radius:var(--r-card);overflow:hidden;background:var(--card);box-shadow:var(--shadow-card)}
+.bs-lead img{width:100%;aspect-ratio:16/9;object-fit:cover}
+.bs-lead .fc{display:flex;align-items:center;justify-content:space-between;padding:10px 12px}
+.bs-strip{display:flex;gap:10px;overflow-x:auto;margin:10px -16px 0;padding:2px 16px 4px}
+.bs-strip::-webkit-scrollbar{display:none}
+.bs-it{flex:none;width:92px}
+.bs-it img{width:92px;height:122px;object-fit:cover;border-radius:12px}
+.bs-it div{margin-top:4px;font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bs-sub{display:flex;justify-content:space-between;margin-top:12px;font-size:13px;font-weight:800}
+.bs-sub span{font-weight:400;color:var(--text2);font-size:12px}
+.pal{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+.pal .p{padding:14px;border-radius:18px;border:2px solid transparent}
+.pal .p.rec{border-color:#FF9A52}
+.pal .p b{font-size:15px}
+.pal .p .row6{display:flex;gap:6px;margin:10px 0 8px}
+.pal .p .row6 i{flex:1;height:34px;border-radius:8px;border:1px solid rgba(0,0,0,.06)}
+.pal .p .demo{display:flex;gap:8px;align-items:center;margin-top:8px}
+.pal .p .demo span{padding:6px 14px;border-radius:999px;font-size:13px;font-weight:800}
+.pal .p p{margin:6px 0 0;font-size:12px;line-height:1.6}
+
+
+/* 小程序内的 AI 提示蒙层：只是界面层，不写进图片字节；保存 / 分享出去的文件本身没有它 */
+.aimask{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:22px 8px 7px;white-space:nowrap;background:linear-gradient(transparent,rgba(20,10,4,.66) 55%);color:#fff;font-size:11px;line-height:1.3;pointer-events:none;border-radius:0 0 inherit inherit}
+.aimask.lg{padding:30px 12px 9px;font-size:12px}
+/* 写真 / 创作 */
+.seg{display:flex;padding:3px;border-radius:999px;background:var(--subtle);margin:2px 0 0}
+.seg span{flex:1;text-align:center;padding:6px 0;border-radius:999px;font-size:14px;color:var(--text2)}
+.seg span.on{background:#fff;color:var(--text);font-weight:800;box-shadow:0 1px 4px rgba(60,35,20,.12)}
+.title{font-size:24px;font-weight:800;line-height:1.3;margin:14px 0 2px}
+.packs{display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:8px;margin-top:14px}
+.pack{position:relative;padding:12px 8px 10px;border-radius:16px;background:var(--card);border:1.5px solid var(--line);text-align:center;cursor:pointer}
+.pack b{display:block;font-size:14px}
+.pack .pp{display:block;margin-top:2px;font-size:20px;font-weight:800;color:var(--text)}
+.pack .pu{font-size:11px;color:var(--text3)}
+.pack.on{border-color:var(--primary);background:#FFF6EE}
+.pack.on .pp{color:var(--primary-ink)}
+.pack .rec{position:absolute;top:-9px;left:50%;transform:translateX(-50%);white-space:nowrap}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sc{position:relative}
+.sc img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:var(--r-img)}
+.sc .ck{position:absolute;right:8px;top:8px;width:26px;height:26px;border-radius:50%;border:2px solid #fff;background:rgba(43,32,31,.35);display:flex;align-items:center;justify-content:center}
+.sc.on .ck{background:var(--primary)}.sc.on .ck svg{color:var(--on-primary)}
+.sc .ck svg{width:15px;height:15px;color:#fff;stroke-width:2.6}
+.sc.on img{outline:3px solid var(--primary);outline-offset:-3px}
+.sc .st{margin-top:5px;font-size:13px;font-weight:700}
+
+/* 效果详情 */
+.preview{position:relative}
+.preview img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:var(--r-card)}
+.preview .pl{position:absolute;left:10px;bottom:10px}
+.strip{display:flex;gap:8px;overflow-x:auto;margin:10px -16px 0;padding:2px 16px}
+.strip::-webkit-scrollbar{display:none}
+.strip .th{flex:none;width:58px}
+.strip .th img{width:58px;height:78px;object-fit:cover;border-radius:10px;border:2px solid transparent}
+.strip .th.on img{border-color:var(--primary)}
+.strip .th span{display:block;font-size:10px;text-align:center;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.who{display:flex;gap:8px;margin-top:8px}
+.who .pet{display:flex;align-items:center;gap:6px;padding:4px 12px 4px 4px;border-radius:999px;background:#fff;border:1.5px solid var(--line);font-size:13px;font-weight:700}
+.who .pet img{width:28px;height:28px;border-radius:50%;object-fit:cover}
+.who .pet.on{border-color:var(--primary);color:var(--primary-ink)}
+.photos{display:flex;gap:8px;margin-top:10px}
+.photos .ph{position:relative;width:78px;height:78px;flex:none}
+.photos .ph img{width:78px;height:78px;border-radius:12px;object-fit:cover}
+.photos .ph.on img{outline:3px solid var(--primary);outline-offset:-3px}
+.photos .ph .ck{position:absolute;right:4px;top:4px;width:20px;height:20px;border-radius:50%;background:var(--primary);color:var(--on-primary);display:flex;align-items:center;justify-content:center}
+.photos .ph .ck svg{width:12px;height:12px;stroke-width:3}
+.photos .add{width:78px;height:78px;flex:none;border-radius:12px;border:1.5px dashed #D9C3B8;background:var(--subtle);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text2);font-size:11px;gap:2px}
+.tip{display:flex;gap:8px;align-items:center;margin-top:10px;padding:8px 10px;border-radius:12px;background:var(--mint);color:var(--mint-ink);font-size:12px}
+
+/* 等待与结果 */
+.wait{display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:10px}
+.wait .frame{position:relative;width:230px;height:306px;border-radius:24px;overflow:hidden;box-shadow:var(--shadow-float)}
+.wait .frame img{width:100%;height:100%;object-fit:cover;filter:blur(10px) saturate(1.1);transform:scale(1.15)}
+.wait .frame .shine{position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.55) 45%,transparent 60%);animation:shine 2.2s infinite}
+.wait .frame img.me{filter:none;transform:none;position:absolute;left:50%;top:50%;width:84px;height:84px;margin:-42px 0 0 -42px;border-radius:50%;object-fit:cover;border:4px solid #fff}
+@keyframes shine{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.stages{margin:18px 0 8px;display:grid;gap:8px;text-align:left;font-size:14px}
+.stages div{display:flex;align-items:center;gap:8px}
+.stages .d{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px}
+.stages .done .d{background:var(--mint);color:var(--mint-ink)}
+.stages .now{font-weight:800}.stages .now .d{background:var(--primary);color:var(--on-primary)}
+.stages .todo{color:var(--text3)}.stages .todo .d{border:1.5px solid #DCCBC2}
+.bar{width:230px;height:6px;border-radius:3px;background:#F0E3DA;overflow:hidden}
+.bar i{display:block;height:100%;width:62%;background:var(--primary);border-radius:3px}
+.cands{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.cand{position:relative;cursor:pointer;transition:transform .2s;border-radius:var(--r-img);overflow:hidden}
+.cand img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:var(--r-img)}
+.cand .ai{position:absolute;left:8px;bottom:8px;z-index:1}
+.cand .ck{position:absolute;z-index:1;right:8px;top:8px;width:28px;height:28px;border-radius:50%;background:rgba(43,32,31,.35);border:2px solid #fff;display:flex;align-items:center;justify-content:center}
+.cand .ck svg{width:15px;height:15px;color:#fff;stroke-width:2.6}
+.cand.on{transform:scale(1.02)}
+.cand.on img{box-shadow:0 0 0 3px var(--primary)}
+.cand.on .ck{background:var(--primary)}.cand.on .ck svg{color:var(--on-primary)}
+.cand:not(.on){opacity:.72}
+.sheet{position:absolute;left:0;right:0;bottom:0;padding:16px 16px 34px;border-radius:24px 24px 0 0;background:#fff;box-shadow:0 -10px 30px -12px rgba(60,35,20,.3)}
+.sheet .sr{display:flex;gap:10px;margin-top:10px}
+.sheet .sr .btn{flex:1}
+
+/* 作品 / 我的 */
+.prog{display:flex;gap:10px;overflow-x:auto;margin:10px -16px 0;padding:2px 16px}
+.prog::-webkit-scrollbar{display:none}
+.pg{flex:none;width:214px;display:flex;gap:10px;padding:10px;border-radius:16px;background:#fff;box-shadow:var(--shadow-card)}
+.pg img{width:48px;height:62px;border-radius:10px;object-fit:cover}
+.pg div{flex:1;min-width:0;font-size:12px;color:var(--text2)}
+.pg b{display:block;font-size:14px;color:var(--text)}
+.pg .bar{width:100%;margin-top:6px;height:5px}
+.stack{position:relative}
+.stack .sg{display:grid;grid-template-columns:1fr 1fr;gap:3px;border-radius:var(--r-img);overflow:hidden}
+.stack .sg img{width:100%;aspect-ratio:3/4;object-fit:cover}
+.me-head{display:flex;align-items:center;gap:12px;margin-top:6px}
+.me-head .avatar{width:56px;height:56px}
+.pets-row{display:flex;gap:14px;margin-top:16px}
+.pets-row div{text-align:center;font-size:12px;color:var(--text2)}
+.pets-row img,.pets-row .plus{width:52px;height:52px;border-radius:50%;object-fit:cover}
+.pets-row .on img{box-shadow:0 0 0 3px var(--primary)}
+.pets-row .on{color:var(--text);font-weight:700}
+.pets-row .plus{border:1.5px dashed #D9C3B8;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:22px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);margin-top:16px;padding:14px 0;border-radius:18px;background:#fff;box-shadow:var(--shadow-card);text-align:center}
+.stats b{display:block;font-size:22px;font-weight:800}
+.stats span{font-size:12px;color:var(--text2)}
+.quota{display:flex;align-items:center;gap:10px;margin-top:12px;padding:12px 14px;border-radius:16px;background:var(--yellow);font-size:13px}
+.quota div{flex:1}
+.quota b{font-size:14px}
+.group{margin-top:18px}
+.group>b{display:block;margin-bottom:6px;font-size:13px;color:var(--text3);font-weight:700}
+.list{border-radius:18px;background:#fff;overflow:hidden}
+.li{display:flex;align-items:center;gap:12px;padding:13px 14px;border-bottom:1px solid var(--line);font-size:15px}
+.li:last-child{border-bottom:0}
+.li .ic{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center}
+.li .ic svg{width:18px;height:18px}
+.li span{flex:1}
+.li em{font-style:normal;font-size:12px;color:var(--text3)}
+.li .arr{color:#C9B5AC}
+
+/* 分享卡 */
+.poster{width:300px;border-radius:24px;overflow:hidden;background:var(--bg);box-shadow:var(--shadow-float)}
+.poster .top{position:relative;height:230px;background:linear-gradient(160deg,#FFB36B,#FFE3CF 60%,#FFF1B8)}
+.poster .top img.cover{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35}
+.poster .top .face{position:absolute;left:50%;top:34px;width:140px;height:140px;margin-left:-70px;border-radius:50%;object-fit:cover;border:6px solid #fff;box-shadow:var(--shadow-card)}
+.poster .top .stk{position:absolute;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:800;box-shadow:0 4px 10px -4px rgba(60,35,20,.3)}
+.poster .body{padding:14px 20px 18px;text-align:center}
+.poster .who2{font-size:13px;color:var(--text2)}
+.poster .name{font-size:30px;font-weight:900;color:var(--primary-ink);line-height:1.2;margin:2px 0 6px}
+.poster .desc{font-size:13px;color:var(--text);line-height:1.7}
+.poster .foot{display:flex;align-items:center;gap:10px;margin-top:14px;padding-top:12px;border-top:1px dashed #E6D4C9;text-align:left}
+.qr{width:54px;height:54px;border-radius:50%;background:repeating-conic-gradient(var(--text) 0 25%,#fff 0 50%) 0 0/9px 9px;border:4px solid #fff;box-shadow:0 0 0 1px var(--line)}
+.oldposter{width:300px;height:500px;padding:24px;background:#fff;border-top:12px solid #C52D53;box-shadow:var(--shadow-card);font-size:13px;color:#23312D}
+.wxcard{width:300px;border-radius:12px;background:#fff;padding:12px;box-shadow:var(--shadow-card)}
+.wxcard .wx-t{font-size:14px;line-height:1.4;margin-bottom:8px}
+.wxcard .wx-i{position:relative;width:100%;aspect-ratio:5/4;border-radius:6px;overflow:hidden;background:var(--subtle)}
+.wxcard .wx-i img{width:100%;height:100%;object-fit:cover}
+.wxcard .wx-i .ov{position:absolute;left:0;right:0;bottom:0;padding:22px 10px 8px;background:linear-gradient(transparent,rgba(43,32,31,.8));color:#fff;font-size:13px;font-weight:700}
+.wxcard .wx-f{margin-top:8px;padding-top:6px;border-top:1px solid #eee;font-size:11px;color:#999;display:flex;align-items:center;gap:4px}
+
+/* 设计板 */
+.swatches{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.sw{border-radius:16px;overflow:hidden;background:#fff}
+.sw i{display:block;height:64px}
+.sw div{padding:8px 10px;font-size:12px;line-height:1.5}
+.sw b{display:block;font-size:13px}
+.board{display:grid;grid-template-columns:1.1fr 1fr;gap:20px}
+.panel{padding:18px;border-radius:20px;background:#fff}
+.panel h3{margin:0 0 12px;font-size:15px}
+.typerow{display:flex;align-items:baseline;gap:14px;padding:6px 0;border-bottom:1px solid var(--line)}
+.typerow code{width:150px;flex:none;font-size:11px;color:var(--text3)}
+.cmp{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.glyphs{display:flex;gap:18px;font-size:22px;color:#566B64}
+.glyphs span{display:flex;flex-direction:column;align-items:center;font-size:22px}
+.glyphs small{font-size:11px}
+.icons{display:flex;gap:18px;color:var(--text)}
+.icons span{display:flex;flex-direction:column;align-items:center;font-size:11px;gap:4px}
+.icons svg{width:26px;height:26px}
+.shot{width:180px;border-radius:14px;border:1px solid #ddd;background:#fff}
+.shots{display:flex;gap:10px;flex-wrap:wrap}
+.shots figure{margin:0}
+.shots figcaption{font-size:11px;color:var(--text2);margin-top:4px;max-width:180px}
+.notes{flex:1;min-width:300px;max-width:430px}
+.notes ol{margin:0;padding-left:20px}
+.notes li{margin-bottom:8px}
+.notes li b{color:var(--primary-ink)}
+.flow{display:grid;gap:14px}
+.fl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.fl .n{padding:8px 12px;border-radius:12px;background:#fff;font-size:13px;border:1px solid var(--line)}
+.fl .n.pain{background:#FDEBE7;border-color:#F4C7BD}
+.fl .n.good{background:var(--mint);border-color:#BFE3D8}
+.fl .a{color:var(--text3)}
+.fl .lab{width:120px;flex:none;font-weight:800}
+.hint{font-size:12px;color:var(--text3);margin-top:10px}
+
+/* 导出：去掉手机高度限制，长图展示完整页面，并标出首屏线 */
+body.export .phone{height:auto;min-height:832px}
+body.export .screen{position:relative;top:0;overflow:visible}
+body.export .phone .fold{display:block;position:absolute;left:0;right:0;top:812px;border-top:2px dashed #E4572E;z-index:9}
+body.export .phone .fold span{position:absolute;right:6px;top:-20px;padding:0 6px;border-radius:4px;background:#1F2540;color:#fff;font-size:11px}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 10.8 12 4.5l8 6.3V19a1.5 1.5 0 0 1-1.5 1.5H15v-5.2h-6v5.2H5.5A1.5 1.5 0 0 1 4 19z"/></symbol>
+    <symbol id="i-magic" viewBox="0 0 24 24"><path d="M11 3.5l1.7 4.6 4.8 1.7-4.8 1.7L11 16.1l-1.7-4.6-4.8-1.7 4.8-1.7z"/><path d="M18 14.5l.8 2.1 2.2.8-2.2.8-.8 2.3-.8-2.3-2.2-.8 2.2-.8z"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-gallery" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="3.5"/><path d="m4 16 4.5-4.5 3.5 3.5 2.5-2.5 5 4.5"/><circle cx="15.5" cy="9" r="1.6"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c.8-3.8 3.8-6 7.5-6s6.7 2.2 7.5 6"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8.5A2.5 2.5 0 0 1 6.5 6h1.8l1.4-2h4.6l1.4 2h1.8A2.5 2.5 0 0 1 20 8.5v8A2.5 2.5 0 0 1 17.5 19h-11A2.5 2.5 0 0 1 4 16.5z"/><circle cx="12" cy="12.3" r="3.3"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16.5V11a6 6 0 1 1 12 0v5.5l1.5 2h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 4v11M7.5 8.5 12 4l4.5 4.5"/><path d="M5 13v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 20h14"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 19.5s-7.5-4.4-7.5-10A4.3 4.3 0 0 1 12 7a4.3 4.3 0 0 1 7.5 2.5c0 5.6-7.5 10-7.5 10z"/></symbol>
+    <symbol id="i-paw" viewBox="0 0 24 24"><ellipse cx="7" cy="9" rx="1.8" ry="2.4"/><ellipse cx="11" cy="6.5" rx="1.8" ry="2.4"/><ellipse cx="15.5" cy="7" rx="1.8" ry="2.4"/><ellipse cx="18.5" cy="11" rx="1.6" ry="2.1"/><path d="M12 11.5c-3 0-5.5 3.3-5.5 5.6 0 1.6 1.3 2.4 2.8 2.4 1.1 0 1.8-.5 2.7-.5s1.6.5 2.7.5c1.5 0 2.8-.8 2.8-2.4 0-2.3-2.5-5.6-5.5-5.6z"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M5 5.5A1.5 1.5 0 0 1 6.5 4H19v14H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19"/></symbol>
+    <symbol id="i-cross" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/><rect x="3.5" y="3.5" width="17" height="17" rx="5"/></symbol>
+    <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></symbol>
+    <symbol id="i-crown" viewBox="0 0 24 24"><path d="m4 8 4 4 4-6 4 6 4-4-1.5 10h-13z"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2.2M12 18.3v2.2M20.5 12h-2.2M5.7 12H3.5M18 6l-1.6 1.6M7.6 16.4 6 18M18 18l-1.6-1.6M7.6 7.6 6 6"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  </defs>
+</svg>
+
+<div class="doc">
+  <header class="doc-head">
+    <h1>麻麻抱我 · 小程序改版原型</h1>
+    <p>配合《小程序产品与UIUX评审.md》使用。2026-09-30 已按最新代码更新：默认配色改为橘子汽水，首页纳入人类转生计划与麻麻精选，去掉 AI 角标与水印。四套主题对照见 <a href="./themes.html">themes.html</a>。「当前」为 2026-09-29 开发者工具截图，「改版」为 HTML 静态原型，按 375px 宽度绘制（1px = 2rpx）。原型中的价格、次数、宠物名均为示意，最终以服务端返回为准。卡片、套餐、候选图、分类 chip 可以点击。</p>
+    <nav class="toc">
+      <a href="./themes.html">★ 四套主题</a><a href="#board">1 设计方向板</a><a href="#home">2 首页</a><a href="#create">3 创作 / 写真</a><a href="#flow">4 生成链路</a><a href="#works">5 作品与我的</a><a href="#share">6 分享物</a><a href="#paths">7 路径对比</a>
+    </nav>
+  </header>
+
+  <!-- ========== 1 设计方向板 ========== -->
+  <section class="sec" id="board" data-shot="board">
+    <h2>1 设计方向板：橘子汽水（默认主题）</h2>
+    <p class="lead">默认主题改为「橘子汽水」：奶油暖底配墨蓝色文字，按钮用浅一档的橘子色 #FF9A52 加墨蓝字（不用白字），点缀色是奶黄和钴蓝。橘色给人阳光、零食、晒太阳的暖意，墨蓝让画面精致而不显幼稚。莓果色不再使用。另外 3 套主题见 <a href="./themes.html">themes.html</a>。对比度按 WCAG 公式用 node 计算。</p>
+    <div class="swatches">
+      <div class="sw"><i style="background:#FFFAF3;border-bottom:1px solid #eee"></i><div><b>奶油底 bg</b>#FFFAF3 · 墨蓝字 14.48:1</div></div>
+      <div class="sw"><i style="background:#FFF1E0"></i><div><b>杏色面 surface</b>#FFF1E0 · 次级字 5.52:1</div></div>
+      <div class="sw"><i style="background:#FF9A52"></i><div><b>橘子 button</b>#FF9A52 · 墨蓝字 7.16:1</div></div>
+      <div class="sw"><i style="background:#B7401A"></i><div><b>焦橘 primary</b>#B7401A · 作文字 5.38:1</div></div>
+      <div class="sw"><i style="background:#FFD45C"></i><div><b>奶黄 sticker</b>#FFD45C · 墨蓝字 10.61:1</div></div>
+      <div class="sw"><i style="background:#1F2540"></i><div><b>墨蓝 text</b>#1F2540 · 钴蓝 #2A5FE8 点缀</div></div>
+    </div>
+    <div class="pal">
+      <div class="p rec" style="background:#FFFAF3;color:#1F2540">
+        <b>A 橘子汽水（推荐）</b>
+        <div class="row6"><i style="background:#FFFAF3"></i><i style="background:#FFF1E0"></i><i style="background:#FF9A52"></i><i style="background:#FFD45C"></i><i style="background:#2A5FE8"></i><i style="background:#1F2540"></i></div>
+        <div class="demo"><span style="background:#FF9A52;color:#1F2540">开始制作</span><span style="background:#FFD45C;color:#1F2540">免费</span><span style="background:#CFE6FF;color:#1F2540">新</span></div>
+        <p>三套里最有活力。和宠物照片常见的毛色（橘、黄、棕、白）都协调，适合需要「晒」出去的产品。风险是橘色容易有促销感，要靠墨蓝字和大留白压住。</p>
+      </div>
+      <div class="p" style="background:#F7FAFF;color:#1B2440">
+        <b>B 蓝莓酸奶</b>
+        <div class="row6"><i style="background:#F7FAFF"></i><i style="background:#E6EEFF"></i><i style="background:#2356D6"></i><i style="background:#FFD45C"></i><i style="background:#FF9FC0"></i><i style="background:#1B2440"></i></div>
+        <div class="demo"><span style="background:#2356D6;color:#fff">开始制作</span><span style="background:#FFD45C;color:#1B2440">免费</span><span style="background:#FF9FC0;color:#1B2440">新</span></div>
+        <p>钴蓝主色配奶黄和泡泡粉，干净、潮，像年轻潮牌。白字在钴蓝上是 6.22:1。温暖感偏弱，离「麻麻抱我」的亲昵语气稍远。</p>
+      </div>
+      <div class="p" style="background:#FBF6EF;color:#2B211C">
+        <b>C 蜜桃乌龙</b>
+        <div class="row6"><i style="background:#FBF6EF"></i><i style="background:#FFE9D6"></i><i style="background:#FFB36B"></i><i style="background:#9A4A1C"></i><i style="background:#4F6B2C"></i><i style="background:#2B211C"></i></div>
+        <div class="demo"><span style="background:#FFB36B;color:#2B211C">开始制作</span><span style="background:#4F6B2C;color:#fff">免费</span><span style="background:#FFE9D6;color:#9A4A1C">新</span></div>
+        <p>蜜桃加抹茶绿，柔和、治愈，最贴近「陪伴」。但趣味性和辨识度是三套里最弱的，更适合作为手账相册主题的色彩基础。</p>
+      </div>
+    </div>
+    <div class="board" style="margin-top:20px">
+      <div class="panel">
+        <h3>字阶（中文不用负字距，标题用 800 字重拉开层级）</h3>
+        <div class="typerow"><code>页面标题 48rpx / 800</code><span style="font-size:24px;font-weight:800">给年糕做点好玩的</span></div>
+        <div class="typerow"><code>区块标题 38rpx / 800</code><span style="font-size:19px;font-weight:800">人类转生计划</span></div>
+        <div class="typerow"><code>卡片标题 28rpx / 700</code><span style="font-size:14px;font-weight:700">萌宠通缉令</span></div>
+        <div class="typerow"><code>正文 28rpx / 400</code><span style="font-size:14px">一张照片，拍出 24 种样子</span></div>
+        <div class="typerow"><code>辅助 24rpx / 400 #5B6178</code><span class="cap">2 选 1 · 满意再保存</span></div>
+        <div class="typerow"><code>数字强调 44rpx / 800</code><span style="font-size:22px;font-weight:800;color:var(--primary-ink)">128 <small style="font-size:13px;color:var(--text2);font-weight:400">天</small></span></div>
+      </div>
+      <div class="panel">
+        <h3>按钮与标签（每屏只有一个实心主按钮）</h3>
+        <div class="cmp">
+          <span class="btn">拍 2 张给我挑</span><span class="btn soft">好了提醒我</span><span class="btn ghost">先去逛逛</span><span class="btn off">请先选照片</span>
+        </div>
+        <div class="cmp" style="margin-top:14px">
+          <span class="badge b-yellow">免费</span><span class="badge" style="background:var(--sky);color:var(--text)">新</span><span class="badge b-berry">热门</span><span class="badge b-berry">待保存</span><span class="badge b-mint">已完成</span>
+          <span class="chip on">全部</span><span class="chip">好笑出片</span>
+        </div>
+        <h3 style="margin-top:18px">图标：Unicode 字形 → 统一 24px 线性图标</h3>
+        <div class="cmp">
+          <div class="glyphs"><span>✦<small>陪伴</small></span><span>▣<small>写真</small></span><span>◈<small>作品</small></span><span>◉<small>我的</small></span><span>◑<small>主题</small></span></div>
+          <span style="font-size:22px;color:var(--text3)">→</span>
+          <div class="icons">
+            <span><svg class="i"><use href="#i-home"/></svg>首页</span><span><svg class="i"><use href="#i-magic"/></svg>创作</span><span style="color:var(--primary-ink)"><svg class="i"><use href="#i-camera"/></svg>记录</span><span><svg class="i"><use href="#i-gallery"/></svg>作品</span><span><svg class="i"><use href="#i-user"/></svg>我的</span><span><svg class="i"><use href="#i-paw"/></svg>品牌</span>
+          </div>
+        </div>
+        <h3 style="margin-top:18px">卡片与图片</h3>
+        <p class="muted" style="margin:0">入口卡统一 3:4、<code>aspectFill</code> 顶部对齐、图片圆角 32rpx，文字放在图的下方。作品详情和挑选页仍按原比例完整显示。阴影继续用暖褐色的成品阴影串。图上不叠角标，也不加水印，详见《去AI文案与取消水印实施方案》。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 2 首页 ========== -->
+  <section class="sec" id="home" data-shot="home">
+    <h2>2 首页：宠物名片 → 人类转生计划 → 麻麻精选 → 分类瀑布流</h2>
+    <p class="lead">按 2026-09-30 的代码，首页从上到下依次是：宠物大图、全宽「开始记录」按钮、麻麻精选（车窗封面、9 款横滑、6 套写真横滑）、人类转生计划（8 张人像横滑）、「今天想做点什么」自动轮播（画册和电影海报）、按心情挑玩法（10 个分类卡）、最近收好的照片、今日里程碑、去年今日、趣测、作品玩法（写真、短片、成长对比、证件）。一共 11 个同级区块，首屏只能看到宠物。改版不删内容，只调整层级：两个运营重点（人类转生计划、麻麻精选）放到第一、二屏，其余内容收进分类瀑布流和「今日一格」。</p>
+    <div class="row">
+      <div>
+        <p class="col-title"><span class="tagline t-before">当前</span> <small>截图拍摄时「人类转生计划」还没上线，它现在在麻麻精选下方</small></p>
+        <div class="shots">
+          <figure><img class="shot" data-r="docs/ui-refactor/2026-09-29-产品UIUX评审/shots/before/home-1.jpg"><figcaption>① 宠物大图 ② 全宽记录按钮 ③ 麻麻精选封面</figcaption></figure>
+          <figure><img class="shot" data-r="docs/ui-refactor/2026-09-29-产品UIUX评审/shots/before/home-2.jpg"><figcaption>④ 精选横滑 9 款 ⑤ 写真横滑 6 套；现在两者之后插入了 ⑤' 人类转生计划（8 张横滑）</figcaption></figure>
+          <figure><img class="shot" data-r="docs/ui-refactor/2026-09-29-产品UIUX评审/shots/before/home-3.jpg"><figcaption>⑥ 自动轮播 ⑦ 按心情挑玩法（10 个分类卡）</figcaption></figure>
+          <figure><img class="shot" data-r="docs/ui-refactor/2026-09-29-产品UIUX评审/shots/before/home-4.jpg"><figcaption>⑧ 最近照片 ⑨ 趣测 ⑩ 作品玩法（写真在这里第 3 次出现）</figcaption></figure>
+        </div>
+        <div class="notes" style="margin-top:20px;max-width:760px">
+        <p class="col-title">改了什么</p>
+        <ol>
+          <li><b>宠物名片</b>高约 150px：圆形头像、名字、陪伴天数，多宠切换放在名字旁。相机按钮是记录的第二入口，主入口在底栏中间的「＋」。</li>
+          <li><b>今日一格</b>放在名片里，按里程碑 → 去年今日 → 生日倒计时 → 今日一拍提示的优先级只显示一条，版面不会跳动。</li>
+          <li><b>人类转生计划</b>作为第一主推：三张人像叠放，左下角是「年糕的照片 →」，一眼就能看懂「宠物变人」。整块可点，进入 40 款造型页。</li>
+          <li><b>麻麻精选</b>作为第二主推：车窗风中写真横版主卡，加 8 款精选横滑，再加「写真也值得收藏」写真横滑。现有 9 款精选和 6 套写真都保留。首页只留这两条横滑，自动轮播去掉。</li>
+          <li><b>分类 chip + 双列瀑布流</b>承接其余 10 个分类，以及电影海报、画册、短片、成长对比、证件、互动星尘页和趣测。点 chip 在当前页筛选，不跳页。</li>
+          <li>「最近收好的照片」移到时间线和照片库；◑ 主题入口移到「我的 › 外观」。</li>
+        </ol>
+      </div>
+      </div>
+      <div>
+        <p class="col-title"><span class="tagline t-after">改版</span> <small>可以在手机框内滚动</small></p>
+        <div class="phone" data-shot="after-home">
+          <div class="status"><span>9:41</span><span><i></i><i></i></span></div>
+          <div class="nav left"><span class="brand"><svg class="i" style="color:var(--primary)"><use href="#i-paw"/></svg>麻麻抱我</span><span class="capsule">··· ◎</span></div>
+          <div class="screen">
+            <div class="petcard">
+              <div class="pc-top">
+                <img class="avatar" data-r="tools/imagegen/out/source/cat-british.jpg" style="object-position:50% 25%;box-shadow:0 0 0 2px #FFD0A1">
+                <div class="pc-main">
+                  <div class="pc-name">年糕 <small>切换 ▾</small></div>
+                  <div class="pc-days"><b>128</b>天 · 36 张照片</div>
+                </div>
+                <div class="pc-cam" title="记录今天" style="background:var(--primary);color:var(--on-primary)"><svg class="i"><use href="#i-camera"/></svg></div>
+              </div>
+              <div class="moment">
+                <svg class="i" style="color:var(--primary-ink)"><use href="#i-magic"/></svg>
+                <div class="mt"><b>1 年前的今天</b><span class="cap">年糕第一次趴在窗台上</span></div>
+                <span class="link">回看 ›</span>
+              </div>
+            </div>
+
+            <div class="hm">
+              <div class="hm-head"><div><span class="cap">40 款人像造型 · 一次出 2 张</span><b>人类转生计划</b></div><span class="btn sm" style="background:#1F2540;color:#fff">去变身</span></div>
+              <div class="hm-imgs"><img data-r="tools/imagegen/out/pet-human-v2/effects/31.webp"><img data-r="tools/imagegen/out/pet-human-v2/effects/5.webp"><img data-r="tools/imagegen/out/pet-human-v2/effects/36.webp"><span class="hm-origin"><img data-r="tools/imagegen/out/source/cat-british.jpg">年糕的照片 →</span></div>
+            </div>
+
+            <div class="h2"><b>麻麻精选</b><span>每周更新</span></div>
+            <div class="bs-lead"><img data-m="templates/animal-car-window-westie.jpg"><div class="fc"><div><b style="font-size:15px">车窗风中写真</b><div class="cap">风吹起来的这一刻，也值得留下</div></div><span class="link">做同款 ›</span></div></div>
+            <div class="bs-strip">
+              <div class="bs-it"><img data-m="templates/fish-chase.jpg"><div>偷鱼大作战</div></div>
+              <div class="bs-it"><img data-m="templates/travel-glass-summer.jpg"><div>透明杯夏日</div></div>
+              <div class="bs-it"><img data-m="templates/pet-milk-tea-shopkeeper.jpg"><div>奶茶店主理人</div></div>
+              <div class="bs-it"><img data-m="templates/animal-pink-scooter.jpg"><div>粉色摩托夜行</div></div>
+              <div class="bs-it"><img data-m="templates/fun-fisheye-closeup.jpg"><div>鱼眼近脸</div></div>
+              <div class="bs-it"><img data-m="templates/animal-sword-cat-alt.jpg"><div>古风剑客</div></div>
+              <div class="bs-it"><img data-m="templates/mini-companion.jpg"><div>同宠大小分身</div></div>
+              <div class="bs-it"><img data-m="templates/character-outfit-grid.jpg"><div>穿搭九宫格</div></div>
+            </div>
+            <div class="bs-sub">写真也值得收藏<span>24 套 · ¥9.9 起 ›</span></div>
+            <div class="bs-strip">
+              <div class="bs-it"><img data-m="scenes/window-morning.jpg"><div>蓝格睡衣卧室</div></div>
+              <div class="bs-it"><img data-m="scenes/seaside-breeze.jpg"><div>柠檬黄日记</div></div>
+              <div class="bs-it"><img data-m="scenes/library-whisper.jpg"><div>复古摄影师</div></div>
+              <div class="bs-it"><img data-m="scenes/autumn-leaves.jpg"><div>蓝调杂志封面</div></div>
+              <div class="bs-it"><img data-m="scenes/berry-pastry-chef.jpg"><div>莓果甜品师</div></div>
+              <div class="bs-it"><img data-m="scenes/ballet-backstage.jpg"><div>紫色芭蕾后台</div></div>
+            </div>
+
+            <div class="h2"><b>挑一个玩法</b><span>全部 ›</span></div>
+            <div class="chips" data-chips="home">
+              <span class="chip on" data-k="all">全部</span><span class="chip" data-k="fun">好笑出片</span><span class="chip" data-k="comic">表情漫画</span><span class="chip" data-k="together">和我合照</span><span class="chip" data-k="travel">旅行打卡</span><span class="chip" data-k="art">艺术肖像</span>
+            </div>
+            <div class="fall">
+              <div class="fall-col">
+                <div class="w" data-k="fun"><img data-m="templates/pet-wanted-poster.jpg" style="object-position:50% 20%"><span class="wb badge b-berry">热门</span><div class="wt">萌宠通缉令</div><div class="wm">2 选 1 · 满意再保存</div></div>
+                <div class="w fun" data-k="fun"><img data-r="apps/miniprogram/assets/fun-tests/personality.jpg" style="border-radius:12px"><div class="wt">我的隐藏性格</div><div class="wm">免费趣测 · 10 题</div></div>
+                <div class="w" data-k="together"><img data-m="templates/together-sofa-yawn.jpg" style="object-position:50% 30%"><span class="wb badge b-yellow">主人 + 宠物</span><div class="wt">同步打哈欠</div><div class="wm">和我合照 · 8 款</div></div>
+                <div class="w" data-k="art"><img data-m="templates/decorative-art-portrait.jpg"><div class="wt">黑白水墨肖像</div><div class="wm">艺术肖像 · 6 款</div></div>
+              </div>
+              <div class="fall-col">
+                <div class="w" data-k="all"><img class="tall" data-m="movie/classic.jpg"><span class="wb badge" style="background:var(--sky);color:var(--text)">新</span><div class="wt">宠物电影海报</div><div class="wm">免费预览 · ¥12.9 保存</div></div>
+                <div class="w" data-k="comic"><img data-m="templates/pet-expression-grid.jpg" style="object-position:50% 40%"><div class="wt">今日表情九宫格</div><div class="wm">表情漫画 · 7 款</div></div>
+                <div class="w" data-k="travel"><img data-m="templates/travel-alpine-expedition.jpg"><div class="wt">雪山探险大片</div><div class="wm">旅行打卡 · 7 款</div></div>
+                <div class="w" data-k="all"><img data-m="album/growth.jpg"><div class="wt">宠物时光画册</div><div class="wm">把 36 张照片装订成书</div></div>
+              </div>
+            </div>
+            <div class="fold"><span>首屏 812px</span></div>
+          </div>
+          <nav class="tabbar">
+            <div class="tab on"><svg class="i"><use href="#i-home"/></svg>首页</div>
+            <div class="tab"><svg class="i"><use href="#i-magic"/></svg>创作</div>
+            <div class="tab-plus"><span><svg class="i"><use href="#i-plus"/></svg></span></div>
+            <div class="tab"><svg class="i"><use href="#i-gallery"/></svg>作品</div>
+            <div class="tab"><svg class="i"><use href="#i-user"/></svg>我的</div>
+          </nav>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========== 3 创作 / 写真 ========== -->
+  <section class="sec" id="create" data-shot="create">
+    <h2>3 创作 Tab：写真与全部玩法合一，套餐默认预选</h2>
+    <p class="lead">当前的问题：「单张 ¥16.9」比「任选 10 套 ¥9.9」还贵，价格阶梯反直觉；10 套要手动点满 10 次才能继续；选了「24 套」后点样片没有任何反馈；套餐价格写死在 WXML 里，不从服务端取。改版把三档改成总价与单价并列，默认推荐 10 套并预选，点图替换，底部固定栏始终显示「已选 / 总价 / 下一步」。</p>
+    <div class="row">
+      <div>
+        <p class="col-title"><span class="tagline t-before">当前</span></p>
+        <div class="shots">
+          <figure><img class="shot" data-r="docs/ui-refactor/2026-09-29-产品UIUX评审/shots/before/art-photo.jpg"><figcaption>写真 Tab：三档价格与单价不成阶梯</figcaption></figure>
+          <figure><img class="shot" data-r="docs/ui-refactor/2026-09-29-产品UIUX评审/shots/before/art-bundle.jpg"><figcaption>套餐第 2 步：宠物用下拉框选，身份照区不能就地上传</figcaption></figure>
+        </div>
+      </div>
+      <div>
+        <p class="col-title"><span class="tagline t-after">改版</span> <small>点套餐切换档位，点图片增删</small></p>
+        <div class="phone" data-shot="after-create">
+          <div class="status"><span>9:41</span><span><i></i><i></i></span></div>
+          <div class="nav">创作<span class="capsule">··· ◎</span></div>
+          <div class="screen dock-space">
+            <div class="seg"><span class="on">写真馆</span><span>全部玩法</span></div>
+            <div class="title">一张照片，拍出 24 种样子</div>
+            <div class="muted">影棚级布光与造型，不用预约。每套生成 1 张，可单独保存。</div>
+            <div class="packs" data-packs>
+              <div class="pack" data-n="1"><b>体验 1 套</b><span class="pp">¥6.9</span><span class="pu">2 张挑 1 张</span></div>
+              <div class="pack on" data-n="10"><span class="rec badge b-yellow">最多人选</span><b>精选 10 套</b><span class="pp">¥9.9</span><span class="pu">≈ ¥0.99 / 套</span></div>
+              <div class="pack" data-n="24"><b>全部 24 套</b><span class="pp">¥19.9</span><span class="pu">≈ ¥0.83 / 套</span></div>
+            </div>
+            <p class="cap" style="margin:8px 0 0">价格为示意，只说明阶梯关系：套餐越大，单价越低，总价越高。</p>
+            <div class="h2"><b>柔软日常</b><span>已为你挑好，点图可替换</span></div>
+            <div class="grid2" data-scenes>
+              <div class="sc on"><img data-m="scenes/window-morning.jpg"><span class="ck"><svg class="i"><use href="#i-check"/></svg></span><div class="st">蓝格睡衣卧室</div></div>
+              <div class="sc on"><img data-m="scenes/garden-curious.jpg"><span class="ck"><svg class="i"><use href="#i-check"/></svg></span><div class="st">绿幕恐龙朋友</div></div>
+              <div class="sc on"><img data-m="scenes/studio-confident.jpg"><span class="ck"><svg class="i"><use href="#i-check"/></svg></span><div class="st">薄荷领带影棚</div></div>
+              <div class="sc"><img data-m="scenes/cafe-afternoon.jpg"><span class="ck"><svg class="i"><use href="#i-check"/></svg></span><div class="st">玫红眼镜写真</div></div>
+            </div>
+            <div class="h2"><b>去看世界</b><span>4 套</span></div>
+            <div class="grid2">
+              <div class="sc on"><img data-m="scenes/seaside-breeze.jpg"><span class="ck"><svg class="i"><use href="#i-check"/></svg></span><div class="st">柠檬黄日记</div></div>
+              <div class="sc on"><img data-m="scenes/library-whisper.jpg"><span class="ck"><svg class="i"><use href="#i-check"/></svg></span><div class="st">复古摄影师</div></div>
+            </div>
+            <div class="fold"><span>首屏 812px</span></div>
+          </div>
+          <div class="dock" style="bottom:84px;padding-bottom:12px">
+            <div class="meta"><b data-picked>已选 10 / 10 · ¥9.9</b><span>下一步选年糕的照片</span></div>
+            <span class="btn">下一步</span>
+          </div>
+          <nav class="tabbar">
+            <div class="tab"><svg class="i"><use href="#i-home"/></svg>首页</div>
+            <div class="tab on"><svg class="i"><use href="#i-magic"/></svg>创作</div>
+            <div class="tab-plus"><span><svg class="i"><use href="#i-plus"/></svg></span></div>
+            <div class="tab"><svg class="i"><use href="#i-gallery"/></svg>作品</div>
+            <div class="tab"><svg class="i"><use href="#i-user"/></svg>我的</div>
+          </nav>
+        </div>
+      </div>
+      <div class="notes">
+        <p class="col-title">改了什么</p>
+        <ol>
+          <li><b>Tab 从「写真」改为「创作」</b>：顶部分段切换「写真馆 / 全部玩法」，写真仍是默认第一屏，首页那 11 个分类都收进「全部玩法」。</li>
+          <li><b>价格阶梯</b>：每档同时显示总价和单价。当前单张比 10 套贵，用户会以为是错价，需要运营重新定价。</li>
+          <li><b>默认预选</b>：进入就预选 10 套，用户只需替换不喜欢的，不用从 0 点满 10 次。24 套全选时，点图提示「全部已包含」。</li>
+          <li><b>固定操作栏</b>：选择数、总价、下一步始终可见，替代文字按钮「已选 x/10 · 选择宠物照片」。</li>
+          <li>价格从 `ART_PHOTO_BUNDLE_PACKAGES` 下发，不再写死在 WXML 里。</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 4 生成链路 ========== -->
+  <section class="sec" id="flow" data-shot="flow">
+    <h2>4 生成链路：选效果 → 选照片 → 等待 → 挑选解锁</h2>
+    <p class="lead">lingsuan 单张实测 46–62 秒，等待页却只有静态文字；页面写着「可以先退出，完成后在作品柜查看」，但作品柜只读普通生成任务，写真与人化任务在退出后找不到。改版以「写真单张」为例，做了三件事：效果与照片合成一页、照片区可以就地上传；等待页展示进度阶段并提供「好了提醒我」；结果页把价格写在解锁按钮上。</p>
+    <div class="row">
+      <div style="flex-basis:100%">
+        <p class="col-title"><span class="tagline t-before">当前</span></p>
+        <div class="shots" style="flex-wrap:nowrap">
+          <figure><img class="shot" data-r="docs/ui-refactor/2026-09-29-产品UIUX评审/shots/before/ai-create.jpg"><figcaption>效果横滑 + 宠物下拉 + 身份照；不显示价格和额度</figcaption></figure>
+          <figure><img class="shot" data-r="docs/ui-refactor/2026-09-29-产品UIUX评审/shots/before/ai-run.jpg"><figcaption>候选页：解锁按钮不带价格，重抽原因在主按钮下面</figcaption></figure>
+        </div>
+      </div>
+      <div class="phone" data-shot="after-effect">
+        <div class="status"><span>9:41</span><span><i></i><i></i></span></div>
+        <div class="nav"><span class="back">‹</span>蓝格睡衣卧室<span class="capsule">··· ◎</span></div>
+        <div class="screen dock-space" style="padding-bottom:130px">
+          <div class="preview"><img data-m="scenes/window-morning.jpg"><span class="pl badge b-dark">示例效果 · 换成年糕</span></div>
+          <div class="strip">
+            <div class="th on"><img data-m="scenes/window-morning.jpg"><span>睡衣卧室</span></div>
+            <div class="th"><img data-m="scenes/garden-curious.jpg"><span>恐龙朋友</span></div>
+            <div class="th"><img data-m="scenes/studio-confident.jpg"><span>领带影棚</span></div>
+            <div class="th"><img data-m="scenes/seaside-breeze.jpg"><span>柠檬黄日记</span></div>
+            <div class="th"><img data-m="scenes/library-whisper.jpg"><span>复古摄影师</span></div>
+          </div>
+          <div class="h2" style="margin-top:18px"><b>用谁的照片</b><span>选 1 张</span></div>
+          <div class="who">
+            <span class="pet on"><img data-r="tools/imagegen/out/source/cat-british.jpg">年糕</span>
+            <span class="pet"><img data-r="tools/imagegen/out/source/dog-shiba.jpg">豆豆</span>
+          </div>
+          <div class="photos">
+            <div class="add"><svg class="i"><use href="#i-camera"/></svg>拍照 / 相册</div>
+            <div class="ph on"><img data-r="tools/imagegen/out/source/cat-british.jpg" style="object-position:50% 20%"><span class="ck"><svg class="i"><use href="#i-check"/></svg></span></div>
+            <div class="ph"><img data-r="tools/imagegen/out/source/cat-british.jpg" style="object-position:50% 70%"></div>
+            <div class="ph"><img data-r="tools/imagegen/out/source/cat-british.jpg" style="object-position:20% 50%;transform:scaleX(-1)"></div>
+          </div>
+          <div class="tip"><svg class="i"><use href="#i-check"/></svg>正脸、光线清楚、只有年糕一只，效果最好</div>
+        </div>
+        <div class="dock">
+          <div class="meta"><b>拍 2 张给我挑</b><span>免费预览 · 满意再保存 ¥16.9</span></div>
+          <span class="btn">开始</span>
+        </div>
+      </div>
+      <div class="phone" data-shot="after-wait">
+        <div class="status"><span>9:42</span><span><i></i><i></i></span></div>
+        <div class="nav"><span class="back">‹</span>正在制作<span class="capsule">··· ◎</span></div>
+        <div class="screen">
+          <div class="wait">
+            <div class="frame"><img data-m="scenes/window-morning.jpg"><div class="shine"></div><img class="me" data-r="tools/imagegen/out/source/cat-british.jpg" style="object-position:50% 20%"></div>
+            <div class="stages">
+              <div class="done"><span class="d">✓</span>认出年糕的样子</div>
+              <div class="now"><span class="d">2</span>换上蓝格睡衣，布置卧室</div>
+              <div class="todo"><span class="d">3</span>精修细节，出 2 张</div>
+            </div>
+            <div class="bar"><i></i></div>
+            <p class="muted" style="margin:8px 0 14px">大约还要 30 秒</p>
+            <span class="btn soft"><svg class="i"><use href="#i-bell"/></svg>好了提醒我</span>
+            <p class="cap" style="margin:8px 0 0">离开也会继续做，在「作品 › 进行中」能找到</p>
+          </div>
+          <div class="h2" style="margin-top:22px"><b style="font-size:15px">等的时候，再挑几套写真</b><span>›</span></div>
+          <div class="strip" style="margin-top:0">
+            <div class="th"><img data-m="scenes/cafe-afternoon.jpg"><span>玫红眼镜</span></div>
+            <div class="th"><img data-m="scenes/night-playful.jpg"><span>星夜小王子</span></div>
+            <div class="th"><img data-m="scenes/museum-curator.jpg"><span>琥珀博物馆</span></div>
+            <div class="th"><img data-m="scenes/post-office.jpg"><span>旧书邮局</span></div>
+            <div class="th"><img data-m="scenes/autumn-leaves.jpg"><span>蓝调杂志</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="phone" data-shot="after-result">
+        <div class="status"><span>9:43</span><span><i></i><i></i></span></div>
+        <div class="nav"><span class="back">‹</span>挑一张<span class="capsule">··· ◎</span></div>
+        <div class="screen" style="padding-bottom:220px">
+          <div class="title" style="margin-top:6px">哪张最像年糕？</div>
+          <div class="muted">点图片选中，再点一下放大查看</div>
+          <div class="cands" data-cands>
+            <div class="cand on"><img data-m="scenes/window-morning.jpg"><span class="aimask">该内容由AI生成</span><span class="ck"><svg class="i"><use href="#i-check"/></svg></span></div>
+            <div class="cand"><img data-m="scenes/window-morning.jpg" style="transform:scaleX(-1);object-position:30% 60%"><span class="aimask">该内容由AI生成</span><span class="ck"><svg class="i"><use href="#i-check"/></svg></span></div>
+          </div>
+          <p class="cap" style="margin:8px 0 0;text-align:center">示意：用同一张样片镜像代替。图片本身不加水印；「该内容由AI生成」是小程序界面上的蒙层，保存到相册的文件里没有它</p>
+          <p class="muted" style="margin:10px 0 0;text-align:center">都不满意？<span class="link">换个方向重抽一组（剩 2 次）</span></p>
+        </div>
+        <div class="sheet">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:16px">第 1 张 · 蓝格睡衣卧室</b><span class="cap">预览图</span></div>
+          <span class="btn block" style="margin-top:10px"><svg class="i"><use href="#i-lock"/></svg>保存高清原图 ¥16.9</span>
+          <div class="sr"><span class="btn ghost sm"><svg class="i"><use href="#i-share"/></svg>发给朋友看</span></div><p class="cap" style="margin:8px 0 0;text-align:center">预览可以看、可以分享，会一直留在作品柜；保存到相册 = 高清原图</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 5 作品与我的 ========== -->
+  <section class="sec" id="works" data-shot="works">
+    <h2>5 作品柜与「我的」</h2>
+    <p class="lead">当前作品柜只读 `/api/generations`，漏掉三类产物：写真与人化任务（进行中和未选中都看不到）、写真套餐成片（只能从写真页的「接着看」进入），以及趣测结果。改版把所有产物收进一个作品柜，进行中的任务放在顶部横滑。「我的」页去掉重复的宠物大图和只显示「剩 0 次」的环形图，入口按用途分成三组。</p>
+    <div class="row">
+      <div>
+        <p class="col-title"><span class="tagline t-before">当前</span></p>
+        <div class="shots">
+          <figure><img class="shot" data-r="docs/ui-refactor/2026-09-29-产品UIUX评审/shots/before/works.jpg"><figcaption>3 个下拉筛选；副标题显示版本号 v2</figcaption></figure>
+          <figure><img class="shot" data-r="docs/ui-refactor/2026-09-29-产品UIUX评审/shots/before/me.jpg"><figcaption>宠物大图与首页重复；环形图显示「0 剩余次数」</figcaption></figure>
+        </div>
+      </div>
+      <div class="phone" data-shot="after-works">
+        <div class="status"><span>9:41</span><span><i></i><i></i></span></div>
+        <div class="nav">作品<span class="capsule">··· ◎</span></div>
+        <div class="screen">
+          <div class="chips" style="margin-top:4px"><span class="chip on">全部 12</span><span class="chip">进行中 2</span><span class="chip">待保存 1</span><span class="chip">写真</span><span class="chip">趣测</span></div>
+          <div class="h2" style="margin-top:16px"><b style="font-size:16px">进行中</b><span>好了会通知你</span></div>
+          <div class="prog">
+            <div class="pg"><img data-r="tools/imagegen/out/pet-human-v2/effects/31.webp"><div><b>人类转生计划</b>2 张 · 约 30 秒<div class="bar"><i style="width:62%"></i></div></div></div>
+            <div class="pg"><img data-m="scenes/garden-curious.jpg"><div><b>写真 10 套</b>已完成 7 / 10<div class="bar"><i style="width:70%"></i></div></div></div>
+          </div>
+          <div class="h2"><b style="font-size:16px">9 月</b><span>全部宠物</span></div>
+          <div class="fall" style="margin-top:0">
+            <div class="fall-col">
+              <div class="w"><img class="tall" data-m="movie/classic.jpg"><span class="wb badge b-berry">待保存</span><div class="wt">豆豆的电影海报</div><div class="wm">9 月 28 日</div></div>
+              <div class="w"><img data-m="album/growth.jpg"><div class="wt">年糕的时光画册</div><div class="wm">9 月 20 日</div></div>
+            </div>
+            <div class="fall-col">
+              <div class="w stack"><div class="sg"><img data-m="scenes/window-morning.jpg"><img data-m="scenes/studio-confident.jpg"><img data-m="scenes/seaside-breeze.jpg"><img data-m="scenes/library-whisper.jpg"></div><span class="wb badge b-mint">10 / 10</span><div class="wt">写真馆 · 精选 10 套</div><div class="wm">9 月 27 日 · 点开逐张保存</div></div>
+              <div class="w fun"><img data-r="apps/miniprogram/assets/fun-tests/personality.jpg" style="border-radius:12px;aspect-ratio:4/3"><div class="wt">安静侦探</div><div class="wm">趣测结果 · 可再次分享</div></div>
+            </div>
+          </div>
+        </div>
+        <nav class="tabbar">
+          <div class="tab"><svg class="i"><use href="#i-home"/></svg>首页</div>
+          <div class="tab"><svg class="i"><use href="#i-magic"/></svg>创作</div>
+          <div class="tab-plus"><span><svg class="i"><use href="#i-plus"/></svg></span></div>
+          <div class="tab on"><svg class="i"><use href="#i-gallery"/></svg>作品</div>
+          <div class="tab"><svg class="i"><use href="#i-user"/></svg>我的</div>
+        </nav>
+      </div>
+      <div class="phone" data-shot="after-me">
+        <div class="status"><span>9:41</span><span><i></i><i></i></span></div>
+        <div class="nav">我的<span class="capsule">··· ◎</span></div>
+        <div class="screen">
+          <div class="me-head">
+            <img class="avatar" data-r="tools/imagegen/out/source/cat-british.jpg" style="object-position:50% 25%">
+            <div style="flex:1"><div style="font-size:19px;font-weight:800">微信用户</div><div class="cap">已登录 · 普通用户</div></div>
+            <svg class="i" style="color:var(--text2)"><use href="#i-bell"/></svg>
+          </div>
+          <div class="pets-row">
+            <div class="on"><img data-r="tools/imagegen/out/source/cat-british.jpg" style="object-position:50% 25%">年糕</div>
+            <div><img data-r="tools/imagegen/out/source/dog-shiba.jpg" style="object-position:50% 30%">豆豆</div>
+            <div><span class="plus">＋</span>添加</div>
+          </div>
+          <div class="stats"><div><b>128</b><span>陪伴天数</span></div><div><b>36</b><span>照片</span></div><div><b>12</b><span>作品</span></div></div>
+          <div class="quota"><svg class="i"><use href="#i-magic"/></svg><div><b>今日免费生成 · 剩 1 次</b><br>每天 0 点刷新</div><span class="link" style="color:var(--text)">会员更多 ›</span></div>
+          <div class="group"><b>记录与照顾</b><div class="list">
+            <div class="li"><span class="ic" style="background:var(--primary-soft);color:var(--primary-ink)"><svg class="i"><use href="#i-camera"/></svg></span><span>照片库</span><em>36 张</em><span class="arr">›</span></div>
+            <div class="li"><span class="ic" style="background:#FFF1D6;color:#8A5A00"><svg class="i"><use href="#i-book"/></svg></span><span>成长时间线</span><span class="arr">›</span></div>
+            <div class="li"><span class="ic" style="background:var(--mint);color:var(--mint-ink)"><svg class="i"><use href="#i-cross"/></svg></span><span>健康助手</span><em>疫苗 10 月到期</em><span class="arr">›</span></div>
+          </div></div>
+          <div class="group"><b>订单与会员</b><div class="list">
+            <div class="li"><span class="ic" style="background:var(--subtle)"><svg class="i"><use href="#i-bag"/></svg></span><span>订单与退款</span><span class="arr">›</span></div>
+            <div class="li"><span class="ic" style="background:var(--subtle)"><svg class="i"><use href="#i-crown"/></svg></span><span>会员与年度报告</span><span class="arr">›</span></div>
+          </div></div>
+          <div class="group"><b>设置</b><div class="list">
+            <div class="li"><span class="ic" style="background:var(--subtle)"><svg class="i"><use href="#i-gear"/></svg></span><span>外观</span><em>橘子汽水</em><span class="arr">›</span></div>
+            <div class="li"><span class="ic" style="background:var(--subtle)"><svg class="i"><use href="#i-lock"/></svg></span><span>账户与隐私</span><span class="arr">›</span></div>
+          </div></div>
+          <div class="fold"><span>首屏 812px</span></div>
+        </div>
+        <nav class="tabbar">
+          <div class="tab"><svg class="i"><use href="#i-home"/></svg>首页</div>
+          <div class="tab"><svg class="i"><use href="#i-magic"/></svg>创作</div>
+          <div class="tab-plus"><span><svg class="i"><use href="#i-plus"/></svg></span></div>
+          <div class="tab"><svg class="i"><use href="#i-gallery"/></svg>作品</div>
+          <div class="tab on"><svg class="i"><use href="#i-user"/></svg>我的</div>
+        </nav>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 6 分享物 ========== -->
+  <section class="sec" id="share" data-shot="share">
+    <h2>6 分享物：让朋友圈里的那张图替产品拉新</h2>
+    <p class="lead">目标用户 A 的动机是「玩完就能晒」，但分享物目前最弱：趣测海报是纯文字 canvas，没有宠物照片也没有小程序码；作品分享卡的路径是 `/pages/work/work?id=`，接口按所有者校验，好友点开大概率是「作品暂时无法打开」（按代码推断，需真机确认）。首页、写真、人化结果页都没有分享卡。</p>
+    <div class="row">
+      <div>
+        <p class="col-title"><span class="tagline t-before">当前</span> <small>按 `savePoster()` 代码复原</small></p>
+        <div class="oldposter">
+          <div style="font-size:12px;margin-bottom:28px">麻麻抱我 · 宠物趣味测试</div>
+          <div style="font-size:15px">年糕的测试结果</div>
+          <div style="font-size:26px;font-weight:700;margin:10px 0 14px">安静侦探</div>
+          <div style="line-height:1.8">喜欢先观察再行动，家里的每一个角落都记在心里……</div>
+          <div style="height:1px;background:#C52D53;margin:18px 0"></div>
+          <div style="line-height:1.8">今天也谢谢你，一直看着我。</div>
+          <div style="margin-top:20px;font-size:11px;color:#566B64">#观察 #独立 #慢热</div>
+          <div style="margin-top:150px;font-size:11px;color:#566B64">仅供娱乐 · 转发结果邀请朋友来测</div>
+        </div>
+      </div>
+      <div>
+        <p class="col-title"><span class="tagline t-after">改版</span> <small>趣测结果海报（保存到相册 / 发朋友圈）</small></p>
+        <div class="poster">
+          <div class="top">
+            <img class="cover" data-r="apps/miniprogram/assets/fun-tests/personality.jpg">
+            <img class="face" data-r="tools/imagegen/out/source/cat-british.jpg" style="object-position:50% 22%">
+            <span class="stk" style="left:22px;top:40px;background:var(--yellow);transform:rotate(-8deg)">#观察家</span>
+            <span class="stk" style="right:20px;top:70px;background:#fff;color:var(--primary);transform:rotate(7deg)">#独立</span>
+            <span class="stk" style="left:36px;top:168px;background:var(--mint);color:var(--mint-ink);transform:rotate(5deg)">#慢热</span>
+          </div>
+          <div class="body">
+            <div class="who2">经过 10 道题，年糕的隐藏性格是</div>
+            <div class="name">安静侦探</div>
+            <div class="desc">喜欢先观察再行动，家里每个角落都记在心里。<br>日常名场面：蹲在门口，等你回家。</div>
+            <div class="foot"><span class="qr"></span><div><b style="font-size:13px">你家的是哪种主角？</b><div class="cap">长按识别，免费测一测 · 仅供娱乐</div></div></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p class="col-title"><span class="tagline t-after">改版</span> <small>作品分享卡（微信会话）</small></p>
+        <div class="wxcard">
+          <div class="wx-t">豆豆主演了一部电影，你家的也来试试？</div>
+          <div class="wx-i"><img data-m="movie/classic.jpg" style="object-position:50% 30%"><div class="ov">《豆豆的年度主角》· 宠物电影海报</div></div>
+          <div class="wx-f"><svg class="i" style="width:12px;height:12px;color:var(--primary)"><use href="#i-paw"/></svg>麻麻抱我</div>
+        </div>
+        <div class="notes" style="margin-top:18px;max-width:300px">
+          <ol>
+            <li>分享路径改为公开 token 页（小程序内新增只读分享页，或复用已有的 `/share/[token]`），好友无需登录就能看。</li>
+            <li>分享页底部放「给我家的也做一个」，直达同款效果并预填模板。</li>
+            <li>结果、写真、趣测都配 `onShareAppMessage` + `onShareTimeline`。</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 7 路径对比 ========== -->
+  <section class="sec" id="paths" data-shot="paths">
+    <h2>7 关键路径对比：新用户拿到第一张创作图</h2>
+    <p class="lead">点击次数按当前代码的页面跳转推算（假设已有宠物档案），不是埋点数据；改版后的数字是设计目标。</p>
+    <div class="flow">
+      <div class="fl"><span class="lab">当前 · 有照片</span>
+        <span class="n">首页</span><span class="a">→</span><span class="n pain">滚 1.5 屏找到分类卡</span><span class="a">→</span><span class="n">横滑选效果</span><span class="a">→</span><span class="n pain">下拉框确认宠物</span><span class="a">→</span><span class="n">选身份照</span><span class="a">→</span><span class="n">生成</span><span class="a">→</span><span class="n pain">静态等待约 1 分钟</span><span class="a">→</span><span class="n">选候选</span><span class="a">→</span><span class="n pain">解锁（点击前看不到价格）</span>
+      </div>
+      <div class="fl"><span class="lab">当前 · 无照片</span>
+        <span class="n">…选效果</span><span class="a">→</span><span class="n pain">空状态「去上传照片」</span><span class="a">→</span><span class="n pain">离开到照片库</span><span class="a">→</span><span class="n">记录模式上传</span><span class="a">→</span><span class="n pain">手动返回并重新找到效果</span><span class="a">→</span><span class="n">…</span>
+      </div>
+      <div class="fl"><span class="lab">改版</span>
+        <span class="n good">首页首屏「人类转生计划」</span><span class="a">→</span><span class="n good">效果页（宠物与最近照片已预选，可就地拍照 / 上传）</span><span class="a">→</span><span class="n good">开始</span><span class="a">→</span><span class="n good">等待，可离开，好了提醒</span><span class="a">→</span><span class="n good">选中 · 按钮上带价格 · 可分享</span>
+      </div>
+    </div>
+    <p class="hint">目标：有照片时从约 7 次点击降到 3 次；无照片时不离开当前页。</p>
+  </section>
+</div>
+
+<script>
+// 素材统一从仓库相对路径读取：data-m 指小程序内置样片，data-r 指仓库根目录。
+const ROOT = "../../../";
+document.querySelectorAll("img[data-m]").forEach((img) => { img.src = ROOT + "apps/miniprogram/assets/samples/" + img.dataset.m; });
+document.querySelectorAll("img[data-r]").forEach((img) => { img.src = ROOT + img.dataset.r; });
+
+// 首页分类 chip：在当前页筛选瀑布流
+document.querySelectorAll("[data-chips=home] .chip").forEach((chip) => chip.addEventListener("click", () => {
+  chip.parentElement.querySelectorAll(".chip").forEach((c) => c.classList.toggle("on", c === chip));
+  const key = chip.dataset.k;
+  document.querySelectorAll("[data-shot=after-home] .w").forEach((card) => { card.style.display = key === "all" || card.dataset.k === key || card.dataset.k === "all" ? "" : "none"; });
+}));
+
+// 写真套餐：切档位与点图增删
+const packLimit = { 1: 1, 10: 10, 24: 24 };
+const packPrice = { 1: "¥6.9", 10: "¥9.9", 24: "¥19.9" };
+let pack = 10, picked = 10;
+const picked$ = document.querySelector("[data-picked]");
+const render = () => { picked$.textContent = "已选 " + Math.min(picked, packLimit[pack]) + " / " + packLimit[pack] + " · " + packPrice[pack]; };
+document.querySelectorAll("[data-packs] .pack").forEach((el) => el.addEventListener("click", () => {
+  document.querySelectorAll("[data-packs] .pack").forEach((p) => p.classList.toggle("on", p === el));
+  pack = Number(el.dataset.n); picked = packLimit[pack]; render();
+}));
+document.querySelectorAll("#create .sc").forEach((sc) => sc.addEventListener("click", () => {
+  if (pack === 24) return alert("全部 24 套已包含");
+  sc.classList.toggle("on"); picked += sc.classList.contains("on") ? 1 : -1; render();
+}));
+
+// 候选：点选切换
+document.querySelectorAll("[data-cands] .cand").forEach((el) => el.addEventListener("click", () => {
+  document.querySelectorAll("[data-cands] .cand").forEach((c) => c.classList.toggle("on", c === el));
+}));
+</script>
+</body>
+</html>

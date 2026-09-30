@@ -240,7 +240,35 @@ img {
 }
 
 .catalog {
-  padding-top: 56px;
+  padding-top: 40px;
+}
+
+.home-human {
+  margin-top: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--line);
+}
+.home-human-heading { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+.home-human-heading .eyebrow { margin-bottom: 4px; color: var(--forest); }
+.home-human-heading h2 { margin: 0; color: var(--ink); font: 900 23px/1.2 var(--font-display); }
+.home-human-action { flex: none; color: var(--forest); font-size: 13px; font-weight: 800; text-decoration: none; }
+.home-human-action:focus-visible, .home-human-image:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+.home-human-track { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 4px; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.home-human-track::-webkit-scrollbar { display: none; }
+.home-human-image {
+  position: relative;
+  display: block;
+  flex: none;
+  width: 180px;
+  aspect-ratio: 9 / 16;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--blue-soft);
+  scroll-snap-align: start;
+}
+.home-human-image img { object-fit: cover; }
+@media (min-width: 521px) {
+  .home-human-image { width: 200px; }
 }
 
 .section-heading {
@@ -526,6 +554,12 @@ img {
 .asset-choice img { object-fit: cover; }
 .asset-choice span { position: absolute; right: 6px; bottom: 6px; border-radius: 999px; background: rgba(20,37,28,.86); padding: 5px 8px; color: white; font-size: 9px; }
 .asset-choice.selected { border-color: var(--orange); box-shadow: 0 0 0 3px var(--orange-soft); }
+.human-choices { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.human-choices .asset-choice { aspect-ratio: 9 / 16; border-radius: 8px; }
+.human-choices .asset-choice img { object-fit: contain; }
+@media (min-width: 521px) {
+  .human-choices { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
 .art-scene-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .art-scene-choice { min-width: 0; overflow: hidden; border: 2px solid transparent; border-radius: 8px; background: var(--paper-deep); padding: 0 0 9px; color: var(--ink); text-align: left; cursor: pointer; }
 .art-scene-choice.selected { border-color: var(--orange); box-shadow: 0 0 0 2px var(--orange-soft); }

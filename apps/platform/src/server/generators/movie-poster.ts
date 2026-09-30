@@ -61,7 +61,10 @@ export async function generateMoviePoster(input: GeneratorInput): Promise<Genera
   const composition = typeof input.task.options.composition === "string" ? input.task.options.composition : "portrait";
   const review = typeof input.task.options.review === "string" ? input.task.options.review.trim() : "";
 
-  const testProvider = process.env.NODE_ENV === "test" && imageProvider.name === "local";
+  const testProvider = imageProvider.name === "local" && (
+    process.env.NODE_ENV === "test" ||
+    (process.env.NODE_ENV === "development" && process.env.E2E_MOCK_IMAGE_PROVIDER === "1")
+  );
   if (!testProvider && (imageProvider.name === "local" || imageProvider.name === "unconfigured")) {
     throw new AppError("AI_PROVIDER_CONFIG_PENDING", "电影海报生成服务尚未配置", 503);
   }

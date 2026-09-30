@@ -26,6 +26,7 @@ export default defineConfig({
       OBJECT_STORAGE_PROVIDER: "local",
       LOCAL_STORAGE_DIR: process.env.E2E_DATABASE_URL ? ".data/e2e-postgres-objects" : ".data/e2e-memory-objects",
       PAYMENT_PROVIDER: "development",
+      E2E_MOCK_IMAGE_PROVIDER: "1",
     },
     url: "http://127.0.0.1:3100",
     reuseExistingServer: !process.env.CI,

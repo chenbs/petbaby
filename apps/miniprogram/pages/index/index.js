@@ -3,47 +3,69 @@ const companion = require("../../services/companion");
 const { themedPage } = require("../../theme/page-mixin");
 const { displayMediaTree } = require("../../services/photo-files");
 const { manifest, pluginSample, imageEntries } = require("../../services/sample-assets");
+const { HOME_COPY } = require("../../theme/home-copy");
 const { CATEGORY_COVERS, BOSS_TEMPLATE_IDS, BOSS_SCENE_IDS, HUMAN_COVER_IDS, selectBossTemplates } = require("../../services/home-effect-ids");
+
+/*
+ * 首页（2026-09 改版，方案见 docs/ui-refactor/2026-09-29-产品UIUX评审/小程序产品与UIUX评审.md 6.1）。
+ *
+ * 原首页是 11 个同级区块，首屏只能看到宠物大图和一个全宽按钮，写真入口出现三次。
+ * 改为四块，内容一个不删、只调层级：
+ *   1. 宠物名片 + 今日一格（里程碑 > 去年今日 > 今日一拍提示，只显示一条，版面不跳）
+ *   2. 如果我是人（第一主推）
+ *   3. 麻麻精选（车窗主卡 + 精选横滑 + 写真横滑；首页只保留这两条横滑，去掉自动轮播）
+ *   4. 挑一个玩法（分类 chip + 双列瀑布流，承接其余分类、图文 / 短片玩法与趣测）
+ * 「最近收好的照片」移到时间线与照片库；记录入口在底栏中间的「＋」；主题入口在我的 › 外观。
+ */
+
+/** 瀑布流里的图文 / 短片玩法（图片模板分类之外的那部分）。 */
+const PLUGIN_PLAYS = ["pet-movie-poster", "pet-time-album", "pl-19", "pl-23", "pet-id-card"];
+
+
+/*
+ * 瀑布流卡片的比例跟着素材走，不统一裁成 3:4（2026-10 修正）：
+ * 模板样片 9:16（tall）、玩法封面 16:10（wide）、趣测 1:1（square）。
+ * 容器与素材同比例，aspectFill 不会切掉宠物主体。分栏按估算高度放进较矮的一列，左右落差最小。
+ */
+const SHAPE_HEIGHT = { tall: 16 / 9, wide: 10 / 16, square: 1.12 };
+const CARD_TEXT_HEIGHT = 0.32;
 
 function arrangePlays(plugins) {
   const byId = Object.fromEntries((plugins || []).map((item) => [item.id, item]));
-  return {
-    carouselPlugins: ["pet-time-album", "pet-movie-poster"].map((id) => byId[id]).filter(Boolean),
-    gridPlugins: ["pl-10", "pl-19", "pl-23", "pet-id-card"].map((id) => byId[id]).filter(Boolean)
-  };
+  return PLUGIN_PLAYS.map((id) => byId[id]).filter(Boolean).map((plugin) => ({
+    key: "plugin-" + plugin.id, kind: "plugin", id: plugin.id, category: plugin.category, chip: "all", shape: "wide",
+    title: plugin.name, cover: plugin.samples && plugin.samples.heroUrl || "",
+    tag: plugin.id === "pet-movie-poster" ? "新" : "", tagTone: 2,
+    note: plugin.pricing && plugin.pricing.unlockPrice ? "免费预览 · ¥" + plugin.pricing.unlockPrice + " 保存" : "免费制作"
+  }));
+}
+
+function money(value) { return typeof value === "number" ? "¥" + value : ""; }
+
+/** 「写真也值得收藏」右侧的起价：取套餐里最低的总价，不在端上写死。 */
+function artPriceText(packages) {
+  const list = packages ? Object.keys(packages).map((key) => packages[key]).filter((item) => item && typeof item.amount === "number") : [];
+  if (!list.length) return "36 套 · 去写真馆";
+  const total = Math.max.apply(null, list.map((item) => item.count || 0)) || 24;
+  return total + " 套 · " + money(Math.min.apply(null, list.map((item) => item.amount))) + " 起";
 }
 
 themedPage({
   data: {
-    plugins: [], carouselPlugins: [], carouselIndex: 0, gridPlugins: [], featuredTemplates: [], bossTemplates: [], bossScenes: [], bossCoverUrl: "", humanTemplateCount: 0, humanCovers: [], loading: true, error: "",
+    plugins: [], loading: true, error: "",
+    humanTemplateCount: 0, humanCovers: [],
+    bossCoverUrl: "", bossTemplates: [], bossScenes: [], bossLead: null, bossNote: "", artPriceText: "36 套 · 去写真馆", copy: HOME_COPY,
+    chips: [{ id: "all", label: "全部" }], chip: "all", feed: [], feedLeft: [], feedRight: [],
     introSampleUrl: manifest.plugins["pl-10"],
-    /*
-     * 首屏的「对象」区块（改造项 E1）。
-     *
-     * 20 号文 2.2 的判断：情绪价值不是内容问题而是**分发问题** ——
-     * 服务端 8 项情绪能力全建成，而端上入口缺失或单端的有 6 项，
-     * 原首页全文 0 处出现宠物或陪伴字样，用户打开的动机只剩「做张图」。
-     *
-     * 所以第一屏先给默认宠物（封面 + 陪伴天数），玩法货架下移。
-     * 这是全批唯一改变「用户打开时先看到谁」的改动。
-     */
-    pet: null,
-    petDisplayUrl: "",
-    pets: [], petLoading: true, recordError: "", recent: [], recordAction: "开始记录",
-    /** 今天刚达成的里程碑（E3）。只在当天出现一次，不是常驻标签 */
-    milestone: "",
-    /** 去年今日（E4）。命中才有，没命中整块静默隐藏 */
-    onThisDay: null,
-    onThisDayMore: 0
+    pet: null, petDisplayUrl: "", pets: [], petLoading: true, recordError: "",
+    /** 今日一格：{ eyebrow, title, action, kind }。没有命中时给默认的今日一拍提示。 */
+    moment: null
   },
   onShow() {
     const tabbar = this.getTabBar && this.getTabBar();
     if (tabbar) tabbar.setData({ selected: 0 });
     api.request("/api/events", { method: "POST", data: { name: "visited", channel: "miniprogram", metadata: {} } }).catch(() => undefined);
-    /*
-     * 情绪区块在 onShow 而不是 onLoad 里刷：用户去建了档案 / 传了照片再回来，
-     * 首屏应该跟着变。玩法列表放在 onLoad —— 它不会因为用户的操作而变。
-     */
+    // 情绪区块在 onShow 里刷：用户建档 / 传照片回来后首屏应跟着变。玩法列表在 onLoad。
     this.loadPet();
   },
   onLoad() { this.load(); },
@@ -51,178 +73,223 @@ themedPage({
     this.setData({ loading: true, error: "" });
     Promise.all([
       api.request("/api/plugins"),
-      api.request("/api/image-templates").catch(() => ({ entries: [] }))
-    ])
-      .then((result) => {
-        const plugins = (result[0] || []).map(pluginSample);
-        const entries = imageEntries(result[1] && result[1].entries);
-        const byId = {};
-        entries.forEach((entry) => entry.templates.forEach((template) => { byId[template.templateId] = Object.assign({ entryId: entry.id }, template); }));
-        const featuredTemplates = entries.filter((entry) => entry.id !== "boss" && entry.id !== "human" && entry.templates.length).map((entry) => {
-          const cover = byId[CATEGORY_COVERS[entry.id]] || entry.templates[0];
-          const artInk = entry.id === "art" && byId["ink-portrait"];
-          return { entryId: entry.id, title: artInk ? "黑白水墨肖像" : entry.title,
-            templateId: artInk ? artInk.templateId : cover.templateId,
-            sampleUrl: artInk ? (manifest.covers && manifest.covers["ink-portrait"]) || artInk.sampleUrl : cover.sampleUrl,
-            sampleShape: artInk ? "wide" : cover.sampleShape };
-        });
-        const selectedBossTemplates = selectBossTemplates(entries);
-        const humanEntry = entries.find((entry) => entry.id === "human");
-        const humanCovers = HUMAN_COVER_IDS.map((id) => byId[id]).filter((template) => template && template.sampleUrl);
-        const bossCover = selectedBossTemplates.find((item) => item.templateId === BOSS_TEMPLATE_IDS[0]);
-        const bossTemplates = selectedBossTemplates.filter((item) => item.templateId !== BOSS_TEMPLATE_IDS[0]);
-        const artPlugin = plugins.find((item) => item.id === "pl-10");
-        const samples = artPlugin && artPlugin.samples || {};
-        const bossScenes = BOSS_SCENE_IDS.map((id) => {
-          const scene = (samples.sceneOptions || []).find((item) => item.id === id);
-          return scene && { id, title: scene.title, sampleUrl: samples.sceneUrls && samples.sceneUrls[id] || "" };
-        }).filter(Boolean);
-        this.setData(Object.assign({ plugins, featuredTemplates, bossTemplates, bossScenes, humanTemplateCount: humanEntry ? humanEntry.templates.length : 0, humanCovers, carouselIndex: 0,
-          bossCoverUrl: bossCover ? bossCover.sampleUrl : "", loading: false }, arrangePlays(plugins)));
-      })
-      .catch((error) => this.setData({ error: error.message, loading: false }));
+      api.request("/api/image-templates").catch(() => ({ entries: [] })),
+      // 麻麻精选由后台配置；接口不可用时回落到端上内置的默认清单。
+      api.request("/api/home-curation").catch(() => null),
+      api.request("/api/art-photo-bundles/packages").catch(() => null)
+    ]).then((result) => {
+      const curation = result[2] && result[2].lead ? result[2] : null;
+      const plugins = (result[0] || []).map(pluginSample);
+      const entries = imageEntries(result[1] && Array.isArray(result[1].entries) ? result[1].entries : []);
+      const byId = {};
+      entries.forEach((entry) => entry.templates.forEach((template) => { byId[template.templateId] = Object.assign({ entryId: entry.id }, template); }));
+
+      const humanEntry = entries.find((entry) => entry.id === "human");
+      const humanCovers = HUMAN_COVER_IDS.map((id) => byId[id]).filter((template) => template && template.sampleUrl);
+
+      const leadId = curation ? curation.lead.templateId : BOSS_TEMPLATE_IDS[0];
+      const bossTemplateIds = curation ? [leadId].concat(curation.templateIds) : BOSS_TEMPLATE_IDS;
+      const selectedBossTemplates = selectBossTemplates(entries, bossTemplateIds);
+      const bossCover = selectedBossTemplates.find((item) => item.templateId === leadId);
+      const bossTemplates = selectedBossTemplates.filter((item) => item.templateId !== leadId).map((item, index) => Object.assign({}, item, { level: String(index + 1).padStart(2, "0") }));
+      const artPlugin = plugins.find((item) => item.id === "pl-10");
+      const samples = artPlugin && artPlugin.samples || {};
+      const bossScenes = (curation ? curation.sceneIds : BOSS_SCENE_IDS).map((id) => {
+        const scene = (samples.sceneOptions || []).find((item) => item.id === id);
+        return scene && { id, title: scene.title, sampleUrl: samples.sceneUrls && samples.sceneUrls[id] || "" };
+      }).filter(Boolean);
+
+      // 瀑布流：每个图片模板分类一张封面卡 + 图文 / 短片玩法 + 趣测卡。
+      const categories = entries.filter((entry) => ["boss", "human"].indexOf(entry.id) < 0 && entry.templates.length);
+      const categoryCards = categories.map((entry, index) => {
+        const cover = byId[CATEGORY_COVERS[entry.id]] || entry.templates[0];
+        const artInk = entry.id === "art" && byId["ink-portrait"];
+        const inkCover = artInk && manifest.covers && manifest.covers["ink-portrait"];
+        return {
+          key: "entry-" + entry.id, kind: "template", chip: entry.id, entryId: entry.id,
+          templateId: artInk ? artInk.templateId : cover.templateId,
+          title: artInk ? "黑白水墨肖像" : entry.title,
+          // 水墨封面是专门做的 16:10 横图，其余用 9:16 模板样片
+          cover: artInk ? inkCover || artInk.sampleUrl : cover.sampleUrl,
+          shape: inkCover || cover.sampleShape === "wide" ? "wide" : "tall",
+          tag: index === 0 ? "热门" : entry.id === "together" ? "主人 + 宠物" : "", tagTone: index === 0 ? 1 : 2,
+          note: entry.templates.length + " 款 · 免费预览 · 满意再保存"
+        };
+      });
+      const funCard = { key: "fun-tests", kind: "fun", chip: "all", shape: "square", tag: "免费", tagTone: 1, title: "我的隐藏性格", cover: "/assets/fun-tests/personality.jpg", note: "免费趣测 · 10 题" };
+      const feed = categoryCards.concat(arrangePlays(plugins)).concat([funCard]);
+      const chips = [{ id: "all", label: "全部" }].concat(categories.map((entry) => ({ id: entry.id, label: entry.title })));
+      /*
+       * 选了分类 chip 时展开这一类的全部模板（2026-10）：原先只剩一张分类封面卡，像是没加载完。
+       * 写真模板（pet-art-photo）走写真馆，不在这里重复。
+       */
+      this._chipCards = Object.fromEntries(categories.map((entry) => [entry.id, entry.templates
+        .filter((template) => template.templateId !== "pet-art-photo")
+        .map((template) => ({
+          key: "tpl-" + template.templateId, kind: "template", chip: entry.id, entryId: entry.id, templateId: template.templateId,
+          title: template.title, cover: template.sampleUrl, shape: template.sampleShape === "wide" ? "wide" : "tall",
+          tag: entry.id === "together" ? "主人 + 宠物" : "", tagTone: 2, note: "免费预览 · 满意再保存"
+        }))]));
+
+      this.setData({
+        plugins, loading: false,
+        humanTemplateCount: humanEntry ? humanEntry.templates.length : 0, humanCovers,
+        bossCoverUrl: bossCover ? bossCover.sampleUrl : "", bossTemplates, bossScenes,
+        bossLead: { templateId: leadId, title: curation ? curation.lead.title : "车窗风中写真", subtitle: curation ? curation.lead.subtitle : "风吹起来的这一刻，也值得留下" },
+        // 运营没改过说明时按主题给一句；改过就以后台为准
+        bossNote: curation && curation.note && curation.note !== "每周更新" ? curation.note : "",
+        artPriceText: artPriceText(result[3]),
+        chips, feed
+      });
+      this.layoutFeed();
+    }).catch((error) => this.setData({ error: error.message, loading: false }));
+  },
+  chooseChip(event) {
+    this.setData({ chip: event.currentTarget.dataset.id || "all" });
+    this.layoutFeed();
+  },
+  /** 双列瀑布流：按估算高度放进较矮的一列；选「全部」看分类封面，选分类看这一类的全部模板，不跳页。 */
+  layoutFeed() {
+    const chip = this.data.chip;
+    const expanded = chip !== "all" && this._chipCards && this._chipCards[chip];
+    const visible = expanded && expanded.length ? expanded : this.data.feed.filter((item) => chip === "all" || item.chip === chip);
+    const left = [], right = [];
+    let leftHeight = 0, rightHeight = 0;
+    visible.forEach((item) => {
+      const height = (SHAPE_HEIGHT[item.shape] || SHAPE_HEIGHT.tall) + CARD_TEXT_HEIGHT;
+      if (leftHeight <= rightHeight) { left.push(item); leftHeight += height; }
+      else { right.push(item); rightHeight += height; }
+    });
+    this.setData({ feedLeft: left, feedRight: right });
   },
 
   /**
-   * 默认宠物 + 陪伴天数。
+   * 默认宠物 + 陪伴天数 + 今日一格。
    *
-   * **失败静默**：这是首屏的情绪区块，拉不到就不显示，不能挡住下面的玩法货架 ——
-   * 那是产品的主功能。同 pages/me 的 loadHero 口径。
-   *
-   * 天数一律走 `services/companion.js`，不在这里重算：纪念阶段要按
-   * memorialSince 封口，而那个判断（含「没有截止日就不给数字」）只在那里有。
+   * **失败静默**：这是首屏的情绪区块，拉不到就不显示，不能挡住下面的玩法。
+   * 天数一律走 `services/companion.js`：纪念阶段要按 memorialSince 封口。
    */
   async loadPet() {
     const view = this._view = (this._view || 0) + 1;
     const session = wx.getStorageSync("petbaby_session");
     if (session !== this._accountSession) this._petId = "";
     this._accountSession = session;
-    this.setData({ petLoading: true, recordError: "", pet: null, petDisplayUrl: "", recent: [], onThisDay: null, milestone: "" });
+    this.setData({ petLoading: true, recordError: "", moment: null });
     try {
       const pets = await api.request("/api/pets").then(displayMediaTree);
       if (view !== this._view) return;
       const pet = this._petId ? pets.find((item) => item.id === this._petId) : pets.find((item) => item.isDefault) || pets[0];
       this.setData({ pets });
       if (this._petId && !pet) throw new Error("所选档案不可用，请重新选择宠物");
-      if (!pet) return this.setData({ petLoading: false, recordAction: "开始记录" });
+      if (!pet) return this.setData({ pet: null, petDisplayUrl: "", petLoading: false });
       this._petId = pet.id;
       const days = companion.daysSince(companion.anchorOf(pet), pet.memorialSince);
-      this.setData({ pet: Object.assign({}, pet, { companionText: companion.companionText(pet, days) }), petDisplayUrl: pet.avatarUrl || "", petLoading: false,
-        recordAction: pet.lifeStage === "memorial" ? "收好照片" : pet.counts && pet.counts.photos ? "记录今天" : "收好第一张照片",
-        milestone: pet.lifeStage === "memorial" ? "" : companion.milestoneToday(pet, days) });
+      const memorial = pet.lifeStage === "memorial";
+      const milestone = memorial ? "" : companion.milestoneToday(pet, days);
+      this.setData({
+        pet: Object.assign({}, pet, {
+          companionText: companion.companionText(pet, days), days: days || 0, photoCount: pet.counts && pet.counts.photos || 0,
+          // 名片大号数字：纪念宠物只有封口日时才给数字，且用过去式；没有截止日就只显示文案
+          daysNumber: memorial && !pet.memorialSince ? 0 : days || 0,
+          daysPrefix: memorial ? "陪伴了 " : "",
+          serial: String(days || 0).padStart(4, "0")
+        }),
+        petDisplayUrl: pet.avatarUrl || "", petLoading: false,
+        moment: milestone ? { kind: "milestone", eyebrow: "今天", title: milestone, action: "回看 ›" } : this.defaultMoment(pet)
+      });
       const result = await Promise.all([
-        api.request("/api/photos?petId=" + pet.id + "&pageSize=3&order=uploaded").then(displayMediaTree),
-        api.request("/api/on-this-day?petId=" + pet.id).then(displayMediaTree)
+        pet.avatarUrl ? Promise.resolve({ items: [] }) : api.request("/api/photos?petId=" + pet.id + "&pageSize=1&order=uploaded").then(displayMediaTree),
+        api.request("/api/on-this-day?petId=" + pet.id).then(displayMediaTree).catch(() => ({ matches: [] }))
       ]);
       if (view !== this._view) return;
+      const cover = (result[0].items || []).find((item) => item.url);
       const first = (result[1].matches || [])[0];
-      const source = { manual: "你设置的日期", exif: "照片里的拍摄时间", upload: "按上传时间记录" };
-      const recent = result[0].items.map((item) => Object.assign({}, item, { savedOn: item.createdAt.slice(0, 10), sourceText: source[item.memoryDateSource] }));
-      this.setData({ recent, petDisplayUrl: this.data.pet.avatarUrl || (recent.find((item) => item.url) || {}).url || "",
-        onThisDay: first ? Object.assign({}, first, { eyebrow: first.yearsAgo === 1 ? "去年今日" : first.yearsAgo + " 年前的今天" }) : null,
-        onThisDayMore: Math.max(0, (result[1].matches || []).length - 1) });
+      const patch = {};
+      if (!pet.avatarUrl && cover) patch.petDisplayUrl = cover.url;
+      if (first && !milestone) {
+        const more = Math.max(0, (result[1].matches || []).length - 1);
+        patch.moment = { kind: "on-this-day", eyebrow: first.yearsAgo === 1 ? "去年今日" : first.yearsAgo + " 年前的今天", title: first.petName + "的第 " + first.day + " 天" + (more ? "，还有 " + more + " 张" : ""), action: "回看 ›", petId: first.petId };
+      }
+      this.setData(patch);
     } catch (error) { if (view === this._view) this.setData({ petLoading: false, recordError: error.message }); }
+  },
+  defaultMoment(pet) {
+    if (pet.lifeStage === "memorial") return { kind: "record", eyebrow: "今天", title: "想我的时候，就回来看看", action: "看看 ›" };
+    return pet.counts && pet.counts.photos
+      ? { kind: "record", eyebrow: "今日一拍", title: "今天也给" + pet.name + "拍一张吧", action: "去拍 ›" }
+      : { kind: "record", eyebrow: "从第一张开始", title: "先收好一张" + pet.name + "的照片", action: "去收 ›" };
+  },
+  openMoment() {
+    const moment = this.data.moment;
+    if (!moment) return;
+    if (moment.kind === "record") return this.record();
+    this.openTimeline(moment.petId);
   },
   choosePet(event) { const pet = this.data.pets[Number(event.detail.value)]; if (pet) { this._petId = pet.id; this.loadPet(); } },
   onImageError(event) {
     const { kind, id, src } = event.currentTarget.dataset;
-    if (kind === "pet" && this.data.petDisplayUrl === src) {
-      const patch = { petDisplayUrl: "" };
-      if (this.data.pet && this.data.pet.avatarUrl === src) patch["pet.avatarUrl"] = "";
-      const index = this.data.recent.findIndex((item) => item.url === src);
-      if (index >= 0) patch["recent[" + index + "].url"] = "";
-      patch.petDisplayUrl = (this.data.recent.find((item) => item.url && item.url !== src) || {}).url || "";
-      this.setData(patch);
-    }
-    if (kind === "recent") {
-      const index = this.data.recent.findIndex((item) => item.id === id && item.url === src);
-      if (index >= 0) this.setData({ ["recent[" + index + "].url"]: "", ["recent[" + index + "].imageError"]: "照片暂时无法显示" });
-    }
-    if (kind === "on-this-day" && this.data.onThisDay && this.data.onThisDay.photo.url === src) this.setData({ "onThisDay.photo.url": "" });
-    if (kind === "grid") {
-      const index = this.data.gridPlugins.findIndex((item) => item.id === id && item.samples.heroUrl === src);
-      if (index >= 0) this.setData({ ["gridPlugins[" + index + "].samples.heroUrl"]: "" });
-    }
-    if (kind === "carousel") {
-      const index = this.data.carouselPlugins.findIndex((item) => item.id === id && item.samples.heroUrl === src);
-      if (index >= 0) this.setData({ ["carouselPlugins[" + index + "].samples.heroUrl"]: "" });
-    }
+    if (kind === "pet" && this.data.petDisplayUrl === src) this.setData({ petDisplayUrl: "" });
     if (kind === "human") {
       const index = this.data.humanCovers.findIndex((item) => item.templateId === id && item.sampleUrl === src);
       if (index >= 0) this.setData({ ["humanCovers[" + index + "].sampleUrl"]: "" });
     }
+    if (kind === "feed") {
+      const index = this.data.feed.findIndex((item) => item.key === id);
+      if (index >= 0) { this.setData({ ["feed[" + index + "].cover"]: "" }); this.layoutFeed(); }
+    }
   },
-  onCarouselChange(event) { this.setData({ carouselIndex: event.detail.current }); },
-  chooseCarousel(event) { this.setData({ carouselIndex: Number(event.currentTarget.dataset.index) }); },
   record() { wx.navigateTo({ url: "/pages/photos/photos?mode=record&entry=index" + (this.data.pet ? "&petId=" + this.data.pet.id : "") }); },
-  recentDetail(event) { if (this.data.pet) wx.navigateTo({ url: "/pages/photos/photos?petId=" + this.data.pet.id + "&photoId=" + event.currentTarget.dataset.id }); },
   onHide() { this._view = (this._view || 0) + 1; },
 
-  /**
-   * 去年今日（E4）。Web 首页早有这一块，小程序没有 —— 而小程序是主端。
-   *
-   * **命中才显示，没命中静默隐藏**：不渲染「今天没有回忆」，
-   * 那是在提醒用户产品没内容。硬凑出来的回忆是产品的表演。
-   */
-  loadOnThisDay() {
-    api.request("/api/on-this-day")
-      .then((result) => {
-        // 接口在 E2 后返回 { matches, pushConsented }，授权状态这里用不上。
-        const matches = (result && result.matches) || [];
-        const first = matches[0];
-        if (!first) return this.setData({ onThisDay: null, onThisDayMore: 0 });
-        this.setData({
-          onThisDay: Object.assign({}, first, {
-            // 1 才说「去年今日」，2 以上说「N 年前的今天」——「去年」是个具体的词。
-            eyebrow: first.yearsAgo === 1 ? "去年今日" : first.yearsAgo + " 年前的今天"
-          }),
-          onThisDayMore: matches.length - 1
-        });
-      })
-      .catch(() => undefined);
-  },
-
-  openTimeline() {
-    const pet = this.data.pet;
-    if (!pet) return;
+  openTimeline(petId) {
+    const id = typeof petId === "string" && petId ? petId : this.data.pet && this.data.pet.id;
+    if (!id) return;
     // petId 必带：不带的话点非默认宠物会看到错的那只（见 CLAUDE.md）。
-    wx.navigateTo({ url: "/pages/timeline/timeline?petId=" + encodeURIComponent(pet.id) });
-  },
-  openOnThisDay() {
-    const hit = this.data.onThisDay;
-    if (!hit) return;
-    wx.navigateTo({ url: "/pages/timeline/timeline?petId=" + encodeURIComponent(hit.petId) });
+    wx.navigateTo({ url: "/pages/timeline/timeline?petId=" + encodeURIComponent(id) });
   },
   openPets() { wx.navigateTo({ url: "/pages/pets/pets" }); },
+  petQuery(prefix) { return this.data.pet ? prefix + "petId=" + encodeURIComponent(this.data.pet.id) : ""; },
 
+  openFeed(event) {
+    const key = event.currentTarget.dataset.id;
+    const item = this.data.feed.concat(this.data.feedLeft, this.data.feedRight).find((entry) => entry.key === key);
+    if (!item) return;
+    if (item.kind === "fun") return wx.navigateTo({ url: "/pages/fun-tests/fun-tests" });
+    if (item.kind === "template") return this.startTemplate({ currentTarget: { dataset: { entry: item.entryId, template: item.templateId } } });
+    this.start({ currentTarget: { dataset: { id: item.id, category: item.category } } });
+  },
   start(event) {
     const pluginId = event.currentTarget.dataset.id;
     const category = event.currentTarget.dataset.category;
-    const petQuery = this.data.pet ? "?petId=" + encodeURIComponent(this.data.pet.id) : "";
     api.request("/api/events", { method: "POST", data: { name: "plugin_selected", pluginId, channel: "miniprogram", metadata: {} } }).catch(() => undefined);
     if (pluginId === "pl-10") return wx.switchTab({ url: "/pages/art-photo/art-photo" });
-    if (category === "ai-image") return wx.navigateTo({ url: "/pages/ai-create/ai-create" + petQuery });
-    if (category === "interactive") return wx.navigateTo({ url: "/pages/interactive-create/interactive-create" + petQuery });
-    if (category === "video") return wx.navigateTo({ url: "/pages/video-create/video-create" + petQuery });
+    if (category === "ai-image") return wx.navigateTo({ url: "/pages/ai-create/ai-create" + this.petQuery("?") });
+    if (category === "video") return wx.navigateTo({ url: "/pages/video-create/video-create" + this.petQuery("?") });
     if (category === "memorial") return wx.navigateTo({ url: "/pages/memorials/memorials" });
     if (category === "report") return wx.navigateTo({ url: "/pages/commerce/commerce" });
-    wx.navigateTo({ url: "/pages/create/create?pluginId=" + encodeURIComponent(pluginId) + (this.data.pet ? "&petId=" + this.data.pet.id : "") });
+    wx.navigateTo({ url: "/pages/create/create?pluginId=" + encodeURIComponent(pluginId) + this.petQuery("&") });
   },
   startTemplate(event) {
     const entryId = event.currentTarget.dataset.entry;
     const templateId = event.currentTarget.dataset.template;
-    const petQuery = this.data.pet ? "&petId=" + encodeURIComponent(this.data.pet.id) : "";
-    wx.navigateTo({ url: "/pages/ai-create/ai-create?entryId=" + encodeURIComponent(entryId) + "&templateId=" + encodeURIComponent(templateId) + petQuery });
+    wx.navigateTo({ url: "/pages/ai-create/ai-create?entryId=" + encodeURIComponent(entryId) + "&templateId=" + encodeURIComponent(templateId) + this.petQuery("&") });
   },
-  openHuman() {
-    const petQuery = this.data.pet ? "&petId=" + encodeURIComponent(this.data.pet.id) : "";
-    wx.navigateTo({ url: "/pages/ai-create/ai-create?entryId=human" + petQuery });
+  /** 点人化封面直达那一款；点标题区进 40 款造型页。 */
+  openHuman(event) {
+    const templateId = event && event.currentTarget && event.currentTarget.dataset && event.currentTarget.dataset.id;
+    wx.navigateTo({ url: "/pages/ai-create/ai-create?entryId=human" + (templateId ? "&templateId=" + encodeURIComponent(templateId) : "") + this.petQuery("&") });
   },
   startBossScene(event) {
     const sceneId = event.currentTarget.dataset.id;
-    const petQuery = this.data.pet ? "&petId=" + encodeURIComponent(this.data.pet.id) : "";
-    wx.navigateTo({ url: "/pages/ai-create/ai-create?entryId=art&templateId=pet-art-photo&sceneId=" + encodeURIComponent(sceneId) + petQuery });
+    wx.navigateTo({ url: "/pages/ai-create/ai-create?entryId=art&templateId=pet-art-photo&sceneId=" + encodeURIComponent(sceneId) + this.petQuery("&") });
   },
-  openFunTests() { wx.navigateTo({ url: "/pages/fun-tests/fun-tests" }); },
-  openTheme() { wx.navigateTo({ url: "/pages/theme/theme" }); }
+  openArtStudio() { wx.switchTab({ url: "/pages/art-photo/art-photo" }); },
+  /** 「全部 ›」：创作是 tab 页，switchTab 不能带参数，用 globalData 告诉它打开「其他玩法」分段。 */
+  openAllPlays() {
+    const app = typeof getApp === "function" ? getApp() : null;
+    if (app && app.globalData) app.globalData.createSegment = "all";
+    wx.switchTab({ url: "/pages/art-photo/art-photo" });
+  },
+  onShareAppMessage() { return { title: "给你家的毛孩子也拍一组照片吧", path: "/pages/index/index" }; },
+  onShareTimeline() { return { title: "麻麻抱我 · 宠物照片创作与陪伴记录" }; }
 });

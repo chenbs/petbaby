@@ -1,0 +1,13 @@
+{
+  "id": "poolside-vacation",
+  "title": "纱帘逆光",
+  "samplePet": "british",
+  "prompt": "Use case: photorealistic fine-art pet portrait, shot by a professional pet photographer in a real studio or a real room. Image 1 is the identity reference only, not a pose or background template. Keep the same adult blue British Shorthair from Image 1, with round face, solid gray coat and copper-amber eyes. One pet only, no people. The pet wears no clothing, costume, hat, bow or collar. Set and light: Soft morning backlight through a white sheer linen curtain behind the cat fills the frame with diffused glow. A gentle rim of light outlines the fur and whiskers, and a white bounce card keeps the face readable. The cat sits on a plain windowsill in profile, then turns its eyes toward camera. Low contrast, airy, pale tones, no props, no clothing. The cat sits on the windowsill in near profile, eyes turned toward camera, fur rimmed by soft backlight. Photographic qualities: a single dominant light source with one consistent direction, natural soft falloff into shadow, true-to-life fur with individual strands and slight natural unevenness, realistic eye moisture with one small catchlight, believable contact shadow where the body meets the surface. Camera: full-frame camera with an 85mm portrait lens at about f/2.8, eye-level with the pet, shallow but natural depth of field, fine film-like grain, restrained true-to-life colors with low saturation, no HDR look, no heavy retouching. Vertical 3:4, complete pet with safe margins, the face occupying about 30-45% of frame height, simple uncluttered background with generous negative space. Avoid: anthropomorphic expressions or poses, clothing, glowing or rim light that looks painted, dramatic fantasy lighting, oversaturated colors, plastic or airbrushed fur, perfect symmetry, extra props, floating body, pasted edges, extra limbs, duplicate pets, CGI or illustration look, text, logos or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/source/cat-british.jpg",
+  "referenceSha256": "ddbdfb39b6cb3c6dddbfdd01555cd2fea299cfa927f76a1e7248d581152e0364",
+  "output": "tools/imagegen/out/scenes/scene-poolside-vacation-v6.jpg",
+  "sha256": "bf0a1f6d44239a6571670bb0c8c3c80cc5d98c1a41ae1a8566f990846b2649ca",
+  "review": "pending-visual-review"
+}

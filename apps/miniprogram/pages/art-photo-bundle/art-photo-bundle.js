@@ -2,10 +2,11 @@ const api = require("../../services/api");
 const { displayMediaTree, displayPhotos } = require("../../services/photo-files");
 const { themedPage } = require("../../theme/page-mixin");
 const { manifest } = require("../../services/sample-assets");
+const { uploadOnePhoto } = require("../../services/quick-upload");
 
 themedPage({
   data: {
-    packageMode: "ten", priceText: "¥9.9", sceneIds: [], scenes: [],
+    packageMode: "ten", priceText: "", sceneIds: [], scenes: [],
     pets: [], petId: "", petText: "", photos: [], photoIds: [],
     loading: true, photosLoading: false, busy: false, error: ""
   },
@@ -14,9 +15,11 @@ themedPage({
     let sceneIds;
     try { sceneIds = decodeURIComponent(query.sceneIds || "").split(",").filter(Boolean); }
     catch (error) { return this.setData({ loading: false, error: "写真场景链接无效，请返回写真页重新选择" }); }
-    const expected = mode === "all" ? 24 : 10;
+    const expected = mode === "all" ? 36 : 10;
     if (sceneIds.length !== expected || new Set(sceneIds).size !== expected || sceneIds.some((id) => !manifest.scenes[id])) return this.setData({ loading: false, error: "写真场景数量不对，请返回写真页重新选择" });
-    this.setData({ packageMode: mode, priceText: mode === "all" ? "¥19.9" : "¥9.9", sceneIds,
+    // 价格与下单同源，从服务端取（原先 ¥9.9 / ¥19.9 写死在端上，改价要发版）。
+    api.request("/api/art-photo-bundles/packages").then((packages) => { const pack = packages && packages[mode]; if (pack) this.setData({ priceText: "¥" + pack.amount }); }).catch(() => undefined);
+    this.setData({ packageMode: mode, sceneIds,
       scenes: sceneIds.map((id) => ({ id, url: manifest.scenes[id] || "" })) });
     api.request("/api/pets").then(displayMediaTree).then((pets) => {
       const pet = pets.find((item) => item.isDefault) || pets[0];
@@ -25,6 +28,18 @@ themedPage({
     }).catch((error) => this.setData({ loading: false, error: error.message }));
   },
   onShow() { if (this.data.petId && !this.data.loading && !this.data.busy) this.loadPhotos(this.data.petId); },
+  choosePetChip(event) { this.choosePet({ detail: { value: event.currentTarget.dataset.index } }); },
+  /** 首格「＋」就地上传：传完刷新列表并自动选中这一张（原先要跳去照片库再回来）。 */
+  uploadPetPhoto() {
+    const pet = this.data.pets.find((item) => item.id === this.data.petId);
+    if (!pet || this.data.busy) return;
+    this.setData({ busy: true, error: "" });
+    uploadOnePhoto(pet, "art-photo-bundle")
+      .then((photoId) => { if (!photoId) return; this._pickAfterLoad = photoId; this.loadPhotos(pet.id); })
+      .catch((error) => this.setData({ error: error.message }))
+      .finally(() => this.setData({ busy: false }));
+  },
+  openPets() { wx.navigateTo({ url: "/pages/pets/pets" }); },
   choosePet(event) {
     const pet = this.data.pets[Number(event.detail.value)];
     if (!pet || this.data.busy) return;
@@ -35,7 +50,7 @@ themedPage({
     const request = this._photoRequest = (this._photoRequest || 0) + 1;
     this.setData({ photosLoading: true });
     api.request("/api/photos?petId=" + encodeURIComponent(petId) + "&pageSize=50&order=library").then((page) => displayPhotos(page.items || []))
-      .then((photos) => { if (request === this._photoRequest && petId === this.data.petId) this.setData({ photos, photosLoading: false }); })
+      .then((photos) => { if (request !== this._photoRequest || petId !== this.data.petId) return; const picked = this._pickAfterLoad; this._pickAfterLoad = ""; const photoIds = picked && photos.some((item) => item.id === picked) ? [picked] : this.data.photoIds.length ? this.data.photoIds : photos[0] ? [photos[0].id] : []; this.setData({ photos, photoIds, photosLoading: false }); })
       .catch((error) => { if (request === this._photoRequest) this.setData({ error: error.message, photosLoading: false }); });
   },
   togglePhoto(event) {

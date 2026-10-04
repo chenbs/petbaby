@@ -78,6 +78,12 @@
   line-height: 1;
 }
 
+.add-icon {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 0;
+}
+
 .add-text {
   font-size: var(--small-size);
 }
@@ -92,7 +98,7 @@
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-pill);
-  background: var(--primary);
+  background: var(--button-primary);
   color: var(--button-primary-text);
   font-size: var(--eyebrow-size);
   font-weight: var(--fw-bold);
@@ -111,7 +117,7 @@
 
 .checkbox-on {
   border-color: var(--primary);
-  background: var(--primary);
+  background: var(--button-primary);
 }
 
 /*

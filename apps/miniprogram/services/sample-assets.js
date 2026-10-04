@@ -9,7 +9,7 @@ function publicUrl(url) {
 }
 
 const manifest = Object.assign({}, rawManifest);
-for (const group of ["plugins", "scenes", "templates", "movie", "album", "interactive", "funTests", "covers"]) {
+for (const group of ["plugins", "scenes", "templates", "movie", "album", "funTests", "covers"]) {
   manifest[group] = Object.fromEntries(Object.entries(rawManifest[group] || {}).map(([id, url]) => [id, publicUrl(url)]));
 }
 
@@ -27,9 +27,19 @@ function pluginSample(plugin) {
   });
 }
 
+/**
+ * 服务端模板样片存的是 WebP，小程序 <image> 默认不解 WebP（真机空白、模拟器正常）。
+ * 没有端上 manifest 映射的模板（如如果我是人 40 款）走服务端地址时，统一要 JPEG。
+ */
+function jpegSampleUrl(url) {
+  const absolute = publicUrl(url);
+  if (!absolute || absolute.indexOf("/api/image-templates/") < 0 || /[?&]format=/.test(absolute)) return absolute;
+  return absolute + (absolute.indexOf("?") >= 0 ? "&" : "?") + "format=jpeg";
+}
+
 function templateSample(template) {
   return Object.assign({}, template, {
-    sampleUrl: manifest.templates[template.templateId] || publicUrl(template.sampleUrl),
+    sampleUrl: manifest.templates[template.templateId] || jpegSampleUrl(template.sampleUrl),
     sampleShape: manifest.templateShapes[template.templateId] || "portrait"
   });
 }

@@ -5,7 +5,8 @@ import { AppError } from "@/server/errors";
 import { objectStorage } from "@/server/storage";
 import { compensateUpload } from "@/server/object-cleanup";
 
-type AssetKind = "work" | "interactive" | "memorial";
+/** "interactive" 只存在于历史行里（PL-15 已下线），新引用不再产生。 */
+type AssetKind = "work" | "memorial";
 
 /** 制作、删除使用相同锁顺序：宠物 → 按 ID 排序的照片。必须在事务中调用。 */
 export async function lockPhotoInputs(userId: string, petId: string, photoIds: string[]) {
@@ -41,7 +42,6 @@ export async function preservePhotoDeliverables(userId: string, petId: string, p
   const db = await getDatabase();
   const references = await db.query(
     `SELECT 'work' kind,id FROM works WHERE user_id=$1 AND deleted_at IS NULL AND (photo_id=$2 OR preview_key=$4 OR output_key=$4)
-     UNION ALL SELECT 'interactive',id FROM interactive_sessions WHERE user_id=$1 AND pet_id=$3 AND photo_ids @> $5::jsonb
      UNION ALL SELECT 'memorial',id FROM memorial_spaces WHERE user_id=$1 AND pet_id=$3 AND deleted_at IS NULL AND photo_ids @> $5::jsonb`,
     [userId, photoId, petId, originalKey, JSON.stringify([photoId])],
   );

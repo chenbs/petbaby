@@ -1,0 +1,13 @@
+{
+  "id": "greenhouse-gardener",
+  "title": "百叶光影",
+  "samplePet": "golden",
+  "prompt": "Use case: photorealistic fine-art pet portrait, shot by a professional pet photographer in a real studio or a real room. Image 1 is the identity reference only, not a pose or background template. Keep the same adult golden retriever from Image 1, with natural golden coat, floppy ears, dark eyes and black nose. One pet only, no people. Wear only the single garment or accessory named in the set description, fitted naturally and understated; if none is named, the pet wears nothing. Set and light: Late-afternoon sun through wooden venetian blinds out of frame casts soft diagonal stripes of warm light across a plain warm-white plaster wall and across the pet. The pet sits upright beside the wall, eyes half-closed, enjoying the warmth. Light stripes follow the body's form naturally. The dog wears a softly faded cream linen bandana tied at the neck. Warm but restrained tones, no other props. The dog sits upright beside the plaster wall with eyes half-closed in the warm striped light. Photographic qualities: a single dominant light source with one consistent direction, natural soft falloff into shadow, true-to-life fur with individual strands and slight natural unevenness, realistic eye moisture with one small catchlight, believable contact shadow where the body meets the surface. Camera: full-frame camera with an 85mm portrait lens at about f/2.8, eye-level with the pet, shallow but natural depth of field, fine film-like grain, restrained true-to-life colors with low saturation, no HDR look, no heavy retouching. Vertical 3:4, complete pet with safe margins, the face occupying about 30-45% of frame height, simple uncluttered background with generous negative space. Avoid: anthropomorphic expressions or poses, costumes, hats, glasses, multiple accessories, glowing or rim light that looks painted, dramatic fantasy lighting, oversaturated colors, plastic or airbrushed fur, perfect symmetry, extra props, floating body, pasted edges, extra limbs, duplicate pets, CGI or illustration look, text, logos or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/source/dog-golden.jpg",
+  "referenceSha256": "1b6348ce4f6cd1d12f4c93d5f2a8a5c21847e0ce9bc43e4326c1ee89f7a89eef",
+  "output": "tools/imagegen/out/scenes/scene-greenhouse-gardener-v7.jpg",
+  "sha256": "551e92fc624990ad5cc4f9b585b6ae42f9d81f9fe80f35627e7d457aac481790",
+  "review": "pending-visual-review"
+}

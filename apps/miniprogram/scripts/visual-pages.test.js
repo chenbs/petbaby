@@ -47,8 +47,8 @@ test("艺术写真展示二十四套场景并提交所选场景", async () => {
   assert.equal(submitted.options.scene, "ballet-backstage");
 });
 
-test("写真底栏按六组展示二十四套场景并直达照片选择", async () => {
-  const ids = ["window-morning", "garden-curious", "studio-confident", "cafe-afternoon", "seaside-breeze", "library-whisper", "autumn-leaves", "lakeside-sunset", "night-playful", "snow-cabin", "city-rain", "spring-picnic", "railway-traveler", "tennis-champion", "greenhouse-gardener", "sailboat-holiday", "berry-pastry-chef", "paper-flower-window", "mountain-cable-car", "laundry-day", "museum-curator", "poolside-vacation", "post-office", "ballet-backstage"];
+test("写真底栏按九组展示三十六套场景并直达照片选择", async () => {
+  const ids = ["window-morning", "garden-curious", "studio-confident", "cafe-afternoon", "seaside-breeze", "library-whisper", "autumn-leaves", "lakeside-sunset", "night-playful", "snow-cabin", "city-rain", "spring-picnic", "railway-traveler", "tennis-champion", "greenhouse-gardener", "sailboat-holiday", "berry-pastry-chef", "paper-flower-window", "mountain-cable-car", "laundry-day", "museum-curator", "poolside-vacation", "post-office", "ballet-backstage", "shorthair-armchair", "shorthair-books", "shorthair-night-rim", "shorthair-paper-bag", "corgi-denim", "corgi-crate", "corgi-sploot", "corgi-sweater", "calico-silk", "calico-bowl", "calico-rain-window", "calico-cane-stool"];
   const urls = [];
   const page = loadPage("art-photo", {
     api: { request: async () => [{ id: "pl-10", samples: {
@@ -58,12 +58,25 @@ test("写真底栏按六组展示二十四套场景并直达照片选择", async
   }, { navigateTo: ({ url }) => urls.push(url) });
   page.onLoad();
   await new Promise((resolve) => setImmediate(resolve));
-  assert.deepEqual(Array.from(page.data.collections, (group) => group.scenes.length), [4, 4, 4, 4, 4, 4]);
+  assert.deepEqual(Array.from(page.data.collections, (group) => group.scenes.length), [4, 4, 4, 4, 4, 4, 4, 4, 4]);
+  // 2026-09：默认 10 套并预选好，点图是替换而不是跳转
+  assert.equal(page.data.packageMode, "ten");
+  assert.equal(page.data.selectedSceneIds.length, 10);
+  page.chooseScene({ currentTarget: { dataset: { id: page.data.selectedSceneIds[0] } } });
+  assert.equal(page.data.selectedSceneIds.length, 9);
+  assert.equal(urls.length, 0);
+  // 全部 36 套：点图只提示「全部已包含」
+  const toasts = [];
+  page.choosePackage({ currentTarget: { dataset: { mode: "all" } } });
+  assert.equal(page.data.selectedSceneIds.length, 36);
+  // 单张：点图直达照片选择
+  page.choosePackage({ currentTarget: { dataset: { mode: "single" } } });
   page.chooseScene({ currentTarget: { dataset: { id: "post-office" } } });
   assert.match(urls[0], /templateId=pet-art-photo&sceneId=post-office/);
+  assert.equal(toasts.length, 0);
 });
 
-test("写真套餐页面解析页面跳转时编码的 24 个场景", async () => {
+test("写真套餐页面解析页面跳转时编码的 36 个场景", async () => {
   const ids = Object.keys(require("../assets/samples/manifest").scenes);
   const page = loadPage("art-photo-bundle", {
     api: { request: async (url) => {
@@ -75,8 +88,8 @@ test("写真套餐页面解析页面跳转时编码的 24 个场景", async () =
   page.onLoad({ package: "all", sceneIds: encodeURIComponent(ids.join(",")) });
   await new Promise((resolve) => setImmediate(resolve));
   assert.equal(page.data.error, "");
-  assert.equal(page.data.sceneIds.length, 24);
-  assert.equal(page.data.scenes.length, 24);
+  assert.equal(page.data.sceneIds.length, 36);
+  assert.equal(page.data.scenes.length, 36);
 });
 
 test("首页独立艺术模板直达指定样片", async () => {
@@ -111,7 +124,7 @@ test("人化首页入口展示全部造型并进入模板选择", async () => {
   }));
   const urls = [];
   const api = { request: async (url) => {
-    if (url === "/api/image-templates") return { entries: [{ id: "human", title: "人类转生计划", templates }] };
+    if (url === "/api/image-templates") return { entries: [{ id: "human", title: "如果我是人", templates }] };
     if (url === "/api/plugins" || url === "/api/pets" || url === "/api/owner-photos") return [];
     throw new Error(url);
   } };
@@ -119,11 +132,14 @@ test("人化首页入口展示全部造型并进入模板选择", async () => {
   home.load();
   await new Promise((resolve) => setImmediate(resolve));
   assert.equal(home.data.humanTemplateCount, 40);
-  assert.deepEqual(home.data.humanCovers.map((item) => item.templateId), [31, 32, 5, 8, 7, 36, 37, 20].map((number) => "human-effect-" + String(number).padStart(2, "0")));
-  assert.equal(home.data.featuredTemplates.length, 0);
+  assert.deepEqual(home.data.humanCovers.map((item) => item.templateId), [31, 5, 8, 32, 7, 36, 37, 20].map((number) => "human-effect-" + String(number).padStart(2, "0")));
+  assert.equal(home.data.feed.filter((item) => item.kind === "template").length, 0);
   home.data.pet = { id: "pet-1" };
   home.openHuman();
   assert.equal(urls[0], "/pages/ai-create/ai-create?entryId=human&petId=pet-1");
+  // 点某一张封面直达那一款
+  home.openHuman({ currentTarget: { dataset: { id: "human-effect-05" } } });
+  assert.equal(urls[1], "/pages/ai-create/ai-create?entryId=human&templateId=human-effect-05&petId=pet-1");
 
   const create = loadPage("ai-create", { api, "photo-files": { displayMediaTree: async (items) => items } }, { setNavigationBarTitle() {} });
   create.onLoad({ entryId: "human" });
@@ -201,28 +217,29 @@ test("纪念访客照解码失败后保留照片位置与错误提示", () => {
   assert.match(update["photos[0].imageError"], /无法显示/);
 });
 
-test("首页轮播单张图片失败时仍保留该玩法入口", () => {
+test("首页瀑布流单张图片失败时仍保留该玩法入口", () => {
   const page = loadPage("index", {}, {});
-  page.data.carouselPlugins = [
-    { id: "pet-time-album", samples: { heroUrl: "broken.jpg" } },
-    { id: "pet-movie-poster", samples: { heroUrl: "other.jpg" } }
+  page.data.feed = [
+    { key: "plugin-pet-time-album", kind: "plugin", chip: "all", cover: "broken.jpg" },
+    { key: "plugin-pet-movie-poster", kind: "plugin", chip: "all", cover: "other.jpg" }
   ];
-  page.onImageError({ currentTarget: { dataset: { kind: "carousel", id: "pet-time-album", src: "broken.jpg" } } });
-  assert.equal(page.data["carouselPlugins[0].samples.heroUrl"], "");
-  assert.equal(page.data.carouselPlugins[1].samples.heroUrl, "other.jpg");
+  page.onImageError({ currentTarget: { dataset: { kind: "feed", id: "plugin-pet-time-album", src: "broken.jpg" } } });
+  assert.equal(page.data["feed[0].cover"], "");
+  assert.equal(page.data.feed[1].cover, "other.jpg");
 });
 
-test("首页精选、四张玩法卡和双图轮播按指定顺序展示", async () => {
+test("首页：如果我是人、麻麻精选、分类 chip 瀑布流按指定顺序展示，chip 在当前页筛选", async () => {
   const bossIds = ["animal-car-window-westie", "animal-pink-scooter", "fun-fisheye-closeup", "fish-chase", "travel-glass-summer", "pet-milk-tea-shopkeeper", "animal-sword-cat-alt", "mini-companion", "character-outfit-grid"];
   const page = loadPage("index", {
     api: { request: async (url) => {
-      if (url === "/api/plugins") return ["pet-id-card", "pet-movie-poster", "pet-time-album", "pl-10", "pl-15", "pl-19", "pl-23"].map((id) => ({ id, category: "layout", samples: {
+      if (url === "/api/plugins") return ["pet-id-card", "pet-movie-poster", "pet-time-album", "pl-10", "pl-19", "pl-23"].map((id) => ({ id, name: id, category: "layout", pricing: { unlockPrice: id === "pet-movie-poster" ? 12.9 : 0 }, samples: {
         heroUrl: id + ".jpg",
         sceneOptions: id === "pl-10" ? require("../services/home-effect-ids").BOSS_SCENE_IDS.map((sceneId) => ({ id: sceneId, title: sceneId })) : [],
         sceneUrls: {}
       } }));
       if (url === "/api/image-templates") return { entries: [
         { id: "boss", title: "老板精选", templates: bossIds.map((id) => ({ templateId: id, title: id })) },
+        { id: "fun", title: "好笑出片", templates: [{ templateId: "pet-wanted-poster", title: "萌宠通缉令" }] },
         { id: "art", title: "艺术肖像", templates: [{ templateId: "pet-art-photo" }, { templateId: "ink-portrait" }] }
       ] };
       throw new Error(url);
@@ -230,15 +247,22 @@ test("首页精选、四张玩法卡和双图轮播按指定顺序展示", async
   }, {});
   page.load();
   await new Promise((resolve) => setImmediate(resolve));
-  assert.deepEqual(Array.from(page.data.carouselPlugins, (item) => item.id), ["pet-time-album", "pet-movie-poster"]);
-  assert.deepEqual(Array.from(page.data.gridPlugins, (item) => item.id), ["pl-10", "pl-19", "pl-23", "pet-id-card"]);
   assert.deepEqual(Array.from(page.data.bossTemplates, (item) => item.templateId), ["fish-chase", "character-outfit-grid", "animal-sword-cat-alt", "travel-glass-summer", "pet-milk-tea-shopkeeper", "fun-fisheye-closeup", "mini-companion", "animal-pink-scooter"]);
   assert.deepEqual(Array.from(page.data.bossScenes, (item) => item.id), ["window-morning", "seaside-breeze", "library-whisper", "autumn-leaves", "berry-pastry-chef", "ballet-backstage"]);
-  const ink = page.data.featuredTemplates.find((item) => item.templateId === "ink-portrait");
-  assert.equal(ink.sampleUrl, "/assets/home-effects/covers/ink-portrait.jpg");
-  assert.equal(ink.sampleShape, "wide");
-  page.onCarouselChange({ detail: { current: 1 } });
-  assert.equal(page.data.carouselIndex, 1);
+  // 瀑布流：分类封面卡 → 图文 / 短片玩法 → 趣测卡；不再有自动轮播和「作品玩法」重复网格
+  assert.deepEqual(Array.from(page.data.feed, (item) => item.key), ["entry-fun", "entry-art", "plugin-pet-movie-poster", "plugin-pet-time-album", "plugin-pl-19", "plugin-pl-23", "plugin-pet-id-card", "fun-tests"]);
+  const ink = page.data.feed.find((item) => item.templateId === "ink-portrait");
+  assert.equal(ink.cover, "/assets/home-effects/covers/ink-portrait.jpg");
+  assert.match(page.data.feed.find((item) => item.key === "plugin-pet-movie-poster").note, /¥12.9 保存/);
+  assert.deepEqual(Array.from(page.data.chips, (item) => item.id), ["all", "fun", "art"]);
+  assert.equal(page.data.feedLeft.length + page.data.feedRight.length, 8);
+  // 选分类 chip：展开这一类的全部模板卡，点卡直达该模板
+  page.chooseChip({ currentTarget: { dataset: { id: "fun" } } });
+  assert.deepEqual(Array.from(page.data.feedLeft.concat(page.data.feedRight), (item) => item.key), ["tpl-pet-wanted-poster"]);
+  page.chooseChip({ currentTarget: { dataset: { id: "art" } } });
+  assert.deepEqual(Array.from(page.data.feedLeft.concat(page.data.feedRight), (item) => item.key), ["tpl-ink-portrait"]);
+  page.chooseChip({ currentTarget: { dataset: { id: "all" } } });
+  assert.equal(page.data.feedLeft.length + page.data.feedRight.length, 8);
 });
 
 test("首页模板样片直接进入对应玩法，电影与画册网格点选保持所选参数", () => {
@@ -292,7 +316,10 @@ test("电影与画册选好样片后直达照片区，照片齐备才生成", ()
   const aiWxml = fs.readFileSync(path.join(__dirname, "../pages/ai-create/ai-create.wxml"), "utf8");
   assert.match(createWxml, /id="photo-picker"/);
   assert.match(aiWxml, /<t-steps steps="{{flowSteps}}"/);
-  assert.match(aiWxml, />看看效果<\/t-button>/);
+  // 2026-10：每次只出 1 张，底栏写「为我拍一张 / 满意再保存 ¥价格 / 开始」，不再出现「给我挑」
+  assert.match(aiWxml, /为{{petText || '我'}}拍一张/);
+  assert.doesNotMatch(aiWxml, /给我挑|2 选 1/);
+  assert.match(aiWxml, /bindtap="create">开始<\/t-button>/);
   assert.doesNotMatch(aiWxml, /生成\s*2\s*张候选|2\s*选照片/);
 });
 
@@ -314,19 +341,11 @@ test("非写真模板点选任意效果并保持照片阶段", () => {
   assert.equal(page.data.authorizationConfirmed, false);
 });
 
-test("互动场景网格点选即时更新场景与预览", () => {
-  const page = loadPage("interactive-create", { "scene-presets": { SCENE_PRESETS: [{ id: "stardust" }, { id: "meadow" }], getSceneStyle: (id) => "scene=" + id } }, {});
-  page.data.scenePresets = [{ id: "stardust" }, { id: "meadow" }];
-  page.chooseScene({ currentTarget: { dataset: { id: "meadow" } } });
-  assert.equal(page.data.theme, "meadow");
-  assert.equal(page.data.sceneStyle, "scene=meadow");
-});
-
 test("多效果页面同时渲染候选项并通过点击选择", () => {
-  for (const name of ["ai-create", "create", "interactive-create"]) {
+  for (const name of ["ai-create", "create"]) {
     const markup = fs.readFileSync(path.join(__dirname, "../pages", name, name + ".wxml"), "utf8");
     assert.doesNotMatch(markup, /<swiper[\s>]/);
-    assert.match(markup, /wx:for="\{\{(?:carouselTemplates|pluginId ===|scenePresets)/);
+    assert.match(markup, /wx:for="\{\{(?:carouselTemplates|pluginId ===)/);
     assert.match(markup, /aria-checked=/);
   }
 });

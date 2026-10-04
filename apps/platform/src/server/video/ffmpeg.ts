@@ -126,7 +126,7 @@ export async function processNextVideo() {
   if (!rows[0]) return null;
   const row = rows[0]; const directory = await mkdtemp(path.join(os.tmpdir(), "petbaby-video-")); const file = path.join(directory, `${String(row.id)}.mp4`);
   try {
-    const config = (row.config || {}) as { kind?: string; projectId?: string; photoIds?: unknown; photos?: unknown; captions?: unknown; bgm?: string; cover?: unknown; interactiveSessionId?: string; petId?: string; photoId?: string; durationSeconds?: unknown; snapshot?: { title?: string; copy?: string } };
+    const config = (row.config || {}) as { kind?: string; projectId?: string; photoIds?: unknown; photos?: unknown; captions?: unknown; bgm?: string; cover?: unknown; petId?: string; photoId?: string; durationSeconds?: unknown };
     /*
      * 叙事年度视频走另一条 filtergraph（四段结构，见 `video/narrative.ts`），
      * 但共用这一个队列与并发 1 —— 视频任务独占 CPU 时图文任务跟着延迟，
@@ -170,22 +170,6 @@ export async function processNextVideo() {
     const previewKey = `private/${String(row.user_id)}/videos/${String(row.id)}-preview.mp4`;
     await objectStorage.put(previewKey, body, "video/mp4");
     let workId: string | undefined;
-    if (config.interactiveSessionId && config.petId && config.photoId) {
-      const existing = await database.query("SELECT id,version FROM works WHERE source_kind='interactive' AND source_id=$1", [config.interactiveSessionId]);
-      workId = existing[0] ? String(existing[0].id) : crypto.randomUUID();
-      const title = String(config.snapshot?.title || "星尘互动纪念片").slice(0, 80);
-      const subtitle = String(config.snapshot?.copy || `${totalSeconds} 秒互动页导出`).slice(0, 160);
-      if (!existing[0]) {
-        const createdAt = new Date();
-        await database.query("INSERT INTO works (id,user_id,plugin_id,pet_id,photo_id,title,subtitle,serial_number,authority,output_key,preview_key,asset_kind,source_kind,source_id,locked,public,version,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,'麻麻抱我 · 互动工作室',$9,$10,'video','interactive',$11,false,false,1,$12)", [workId, row.user_id, row.plugin_id, config.petId, config.photoId, title, subtitle, `H5-${String(row.id).slice(0, 8).toUpperCase()}`, key, typeof config.cover === "string" ? config.cover : null, config.interactiveSessionId, createdAt]);
-        await database.query("INSERT INTO work_versions (id,work_id,version,title,subtitle,output_key,preview_key,created_at) VALUES ($1,$2,1,$3,$4,$5,$6,$7)", [crypto.randomUUID(), workId, title, subtitle, key, typeof config.cover === "string" ? config.cover : null, createdAt]);
-      } else {
-        const version = Number(existing[0].version || 1) + 1; const createdAt = new Date();
-        await database.query("UPDATE works SET output_key=$2,title=$3,subtitle=$4,locked=false,deleted_at=NULL,version=$5,photo_id=$6,preview_key=$7 WHERE id=$1", [workId, key, title, subtitle, version, config.photoId, typeof config.cover === "string" ? config.cover : null]);
-        await database.query("INSERT INTO work_versions (id,work_id,version,title,subtitle,output_key,preview_key,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)", [crypto.randomUUID(), workId, version, title, subtitle, key, typeof config.cover === "string" ? config.cover : null, createdAt]);
-      }
-      await database.query("UPDATE interactive_sessions SET state='ready',exported_key=$2,work_id=$3,updated_at=now() WHERE id=$1", [config.interactiveSessionId, key, workId]);
-    }
     if (config.projectId) {
       const projects = await database.query("SELECT * FROM video_projects WHERE id=$1 AND user_id=$2", [config.projectId, row.user_id]);
       const project = projects[0];
@@ -216,8 +200,7 @@ export async function processNextVideo() {
   } catch (error) {
     const message = error instanceof Error ? error.message.slice(0, 500) : "FFMPEG_FAILED";
     await database.query("UPDATE video_renders SET status='failed',progress=0,error_code=$2,locked_at=NULL WHERE id=$1", [row.id, message]);
-    const config = (row.config || {}) as { interactiveSessionId?: string; projectId?: string };
-    if (config.interactiveSessionId) await database.query("UPDATE interactive_sessions SET state='failed',updated_at=now() WHERE id=$1", [config.interactiveSessionId]);
+    const config = (row.config || {}) as { projectId?: string };
     if (config.projectId) await database.query("UPDATE video_projects SET status='failed',updated_at=now() WHERE id=$1", [config.projectId]);
     return { id: String(row.id), status: "failed", progress: 0, errorCode: message };
   } finally { await rm(directory, { recursive: true, force: true }).catch(() => undefined); }

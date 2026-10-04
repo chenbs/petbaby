@@ -1,6 +1,6 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-flat art-film layout-timeline">
+<view class="{{skinClass}} page page-flat art-film layout-timeline">
   <view class="title">{{companion || '成长时间线'}}</view>
   <text class="muted">按记录日期回看，日期来源会标在每张照片旁。</text>
   <t-button class="block-gap" bindtap="openPhotos">收好照片</t-button>
@@ -42,14 +42,14 @@
   <view wx:if="{{!loading && !error && !empty}}" class="section" wx:for="{{groups}}" wx:for-item="group" wx:key="year">
     <view class="section-title">{{group.year}}</view>
     <view class="line">
-      <view wx:for="{{group.items}}" wx:for-item="entry" wx:key="key" class="node" data-id="{{entry.photo.id}}" bindtap="openDetail">
+      <view wx:for="{{group.items}}" wx:for-item="entry" wx:key="key" class="node {{entry.dayStart ? '' : 'node-same-day'}}" data-id="{{entry.photo.id}}" bindtap="openDetail">
         <image wx:if="{{entry.photo.url}}" class="node-photo" src="{{entry.photo.url}}" mode="aspectFill" data-kind="timeline" data-id="{{entry.photo.id}}" data-src="{{entry.photo.url}}" binderror="onPhotoError" lazy-load />
         <view wx:else class="node-photo node-photo-blank">照片暂不可用</view>
         <view class="node-copy">
-          <view wx:if="{{entry.showDay}}" class="node-day">第 {{entry.day}} 天</view>
-          <text class="small">{{entry.date}}</text>
-          <!-- 没有 EXIF 的照片只有上传时间，标注出来，别把它当拍摄事实 -->
-          <text class="small">{{entry.sourceText}}</text>
+          <view wx:if="{{entry.dayStart && entry.showDay}}" class="node-day">第 {{entry.day}} 天</view>
+          <text wx:if="{{entry.dayStart}}" class="small">{{entry.date}}</text>
+          <!-- 没有 EXIF 的照片只有上传时间，每天标注一次，别把它当拍摄事实 -->
+          <text wx:if="{{entry.sourceText}}" class="small">{{entry.sourceText}}</text>
           <text wx:if="{{entry.photo.caption}}">{{entry.photo.caption}}</text>
           <text wx:if="{{entry.photo.imageError}}" class="small">{{entry.photo.imageError}}</text>
           <t-tag wx:for="{{entry.tagTexts}}" wx:key="*this" text="{{item}}" size="mini"></t-tag>

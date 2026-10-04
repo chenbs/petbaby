@@ -3,48 +3,9 @@
   margin-top: var(--space-4);
 }
 
-.block {
-  display: block;
-}
-
-.run-pending {
-  display: grid;
-  justify-items: center;
-  gap: var(--space-3);
-  min-height: 70vh;
-  align-content: center;
-}
-
-.pending-image {
-  display: flex;
-  width: 56%;
-  aspect-ratio: var(--ratio-card);
-  align-items: center;
-  justify-content: center;
-  margin-bottom: var(--space-4);
-  border-radius: var(--radius-image-thumb);
-  background: var(--surface);
-}
-
-.pending-image-inner {
-  display: grid;
-  justify-items: center;
-  gap: var(--space-2);
-  color: var(--secondary);
-  font-size: var(--font-h2);
-  font-weight: var(--fw-bold);
-}
-
-.pending-image-inner text {
-  color: var(--text-secondary);
-  font-size: var(--small-size);
-  font-weight: var(--fw-normal);
-}
-
-.pending-status {
-  color: var(--text-primary);
-  font-size: var(--font-h3);
-  font-weight: var(--fw-bold);
+/* 挑选态要给底部抽屉让位 */
+.run-page-sheet {
+  padding-bottom: calc(440rpx + env(safe-area-inset-bottom));
 }
 
 .state-title {
@@ -54,53 +15,375 @@
   font-weight: var(--title-weight);
 }
 
-/* 候选双列铺满；历史任务可能仍有四张。 */
-.candidates {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-3);
-  margin-bottom: var(--space-3);
+/* ---------- 等待 ---------- */
+.wait {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: var(--space-3);
+  text-align: center;
 }
 
-/*
- * 阴影从旧的 --card-shadow 换到 --shadow-card（方案 2.4）：
- * 旧 token 是单层、各主题自定色；新 token 是暖褐双层，方案称这是「廉价与高级的分水岭」。
- * 同屏的 t-card 已走新 token，这里不换就会出现两套投影语言。
- */
-.candidate {
+/* 样片按 3:4 原比例模糊铺满，中间是我的头像；一道高光从左往右扫过 */
+.wait-frame {
+  position: relative;
+  width: 460rpx;
+  aspect-ratio: var(--ratio-card);
   overflow: hidden;
-  border: 2rpx solid transparent;
-  border-radius: var(--radius-md);
-  background: var(--card-background);
-  box-shadow: var(--shadow-none);
-  transition: transform var(--transition-duration) var(--transition-easing), border-color var(--transition-duration) var(--transition-easing);
+  border-radius: var(--radius-xl);
+  background: var(--surface);
+  box-shadow: var(--shadow-float);
 }
 
-.candidate-hover {
-  transform: scale(.98);
-}
-
-.candidate-on {
-  border-color: var(--primary);
-}
-
-/*
- * 比例锁 3:4（方案 2.5）替代固定 340rpx —— 候选图并排比较，
- * 固定高在不同机型宽度下会得到不同比例，破坏「唯一变量是画面内容」的比较前提。
- * --shadow-clay-inset 让写实出图嵌进卡面（方案 J 落地要点），缓解容器与照片的割裂。
- */
-.candidate-image {
+.wait-cover {
   display: block;
   width: 100%;
+  height: 100%;
+  border-radius: 0;
+  filter: blur(20rpx) saturate(1.1);
+  transform: scale(1.15);
+}
+
+.wait-shine {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(115deg, transparent 30%, var(--skeleton-shine) 45%, transparent 60%);
+  animation: wait-shine 2.2s infinite;
+}
+
+@keyframes wait-shine {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}
+
+.skin-quiet .wait-shine {
+  animation: none;
+  opacity: 0;
+}
+
+.wait-me {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 168rpx;
+  height: 168rpx;
+  transform: translate(-50%, -50%);
+  border: 8rpx solid var(--card-background);
+  border-radius: var(--radius-pill);
+  background: var(--card-background);
+}
+
+.wait-me-empty {
+  display: flex;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  font-size: var(--font-h2);
+  font-weight: var(--fw-black);
+}
+
+.wait-me-paw {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 0;
+}
+
+.wait-loader {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: center;
+  margin-top: var(--space-4);
+}
+
+.wait-dot {
+  width: 18rpx;
+  height: 18rpx;
+  border-radius: var(--radius-pill);
+  background: var(--button-primary);
+  animation: wait-bounce 1.2s var(--ease-out) infinite;
+}
+
+.wait-dot:nth-child(2) { animation-delay: .15s; }
+.wait-dot:nth-child(3) { animation-delay: .3s; }
+
+@keyframes wait-bounce {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-14rpx); }
+}
+
+@keyframes wait-flip {
+  0%, 100% { transform: perspective(200rpx) rotateY(0deg); }
+  50% { transform: perspective(200rpx) rotateY(-180deg); }
+}
+
+@keyframes wait-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .2; }
+}
+
+@keyframes wait-reel {
+  from { background-position: 0 0; }
+  to { background-position: 56rpx 0; }
+}
+
+/* 手账：小纸页依次翻过去；拍立得相框 */
+.skin-film .wait-dot {
+  width: 22rpx;
+  height: 28rpx;
+  border: 2rpx solid var(--primary);
+  border-radius: var(--radius-xs);
+  background: var(--card-background);
+  animation-name: wait-flip;
+  animation-duration: 1.6s;
+}
+
+.skin-film .wait-frame {
+  box-sizing: border-box;
+  border: 14rpx solid var(--card-background);
+  border-bottom-width: 48rpx;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-image);
+}
+
+/* 赛博：方块步进闪烁、直角切角 */
+.skin-brand .wait-dot {
+  border-radius: 0;
+  background: var(--primary);
+  animation: wait-blink 1s steps(2) infinite;
+}
+
+.skin-brand .wait-frame {
+  border: 2rpx solid var(--primary);
+  border-radius: 0;
+  clip-path: var(--skin-clip, none);
+}
+
+.skin-brand .wait-me {
+  border-radius: 0;
+}
+
+.skin-brand .wait-bar,
+.skin-brand .wait-bar-fill {
+  border-radius: 0;
+}
+
+/* 影院：进度条换成走带的胶片齿孔，不再显示点 */
+.skin-night .wait-loader {
+  display: none;
+}
+
+.skin-night .wait-bar {
+  height: 20rpx;
+  border-radius: var(--radius-xs);
+}
+
+.skin-night .wait-bar-fill {
+  border-radius: 0;
+  background: repeating-linear-gradient(90deg, var(--button-primary) 0, var(--button-primary) 36rpx, transparent 36rpx, transparent 56rpx);
+  animation: wait-reel .8s linear infinite;
+}
+
+.skin-quiet .wait-dot,
+.skin-quiet .wait-bar-fill {
+  animation: none;
+}
+
+.wait-stages {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-5) 0 var(--space-3);
+  text-align: left;
+}
+
+.wait-stage {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--text-primary);
+  font-size: var(--body-size);
+}
+
+.wait-stage-dot {
+  display: flex;
+  flex: none;
+  width: 40rpx;
+  height: 40rpx;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  font-size: var(--eyebrow-size);
+  font-weight: var(--fw-bold);
+}
+
+.wait-stage-done .wait-stage-dot {
+  background: var(--success-surface);
+  color: var(--success);
+}
+
+.wait-stage-now {
+  font-weight: var(--fw-black);
+}
+
+.wait-stage-now .wait-stage-dot {
+  background: var(--button-primary);
+  color: var(--button-primary-text);
+}
+
+.wait-stage-todo {
+  color: var(--text-secondary);
+}
+
+.wait-stage-todo .wait-stage-dot {
+  border: 3rpx solid var(--border);
+}
+
+.wait-bar {
+  width: 460rpx;
+  height: 12rpx;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+}
+
+.wait-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--button-primary);
+  transition: width var(--dur-slow) var(--ease-out);
+}
+
+.wait-time {
+  margin: var(--space-2) 0 var(--space-4);
+}
+
+/* 「好了提醒我」：杏色软按钮 */
+.wait-remind {
+  display: inline-flex;
+  min-height: 88rpx;
+  box-sizing: border-box;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0 var(--space-5);
+  border: var(--card-border);
+  border-radius: var(--button-radius);
+  background: var(--button-secondary);
+  color: var(--button-secondary-text);
+  font-size: var(--body-size);
+  font-weight: var(--fw-bold);
+  clip-path: var(--skin-btn-clip, none);
+}
+
+.wait-remind-on {
+  opacity: .72;
+}
+
+.wait-remind-icon {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 0;
+}
+
+.wait-cap {
+  margin-top: var(--space-2);
+}
+
+.wait-more {
+  align-self: stretch;
+  margin-top: var(--space-6);
+  text-align: left;
+}
+
+.wait-more-title {
+  color: var(--text-primary);
+  font-size: var(--body-size);
+  font-weight: var(--fw-black);
+}
+
+.wait-strip {
+  width: 100%;
+  margin-top: var(--space-3);
+  white-space: nowrap;
+}
+
+.wait-thumb {
+  display: inline-block;
+  width: 136rpx;
+  margin-right: var(--space-2);
+  vertical-align: top;
+}
+
+.wait-thumb-image {
+  display: block;
+  width: 136rpx;
+  height: auto;
   aspect-ratio: var(--ratio-card);
-  background: var(--skeleton-base);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
 }
 
-.candidates-human .candidate-image {
+.wait-thumb-name {
+  display: block;
+  overflow: hidden;
+  padding-top: var(--space-1);
+  color: var(--text-secondary);
+  font-size: var(--eyebrow-size);
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wait-cancel {
+  margin-top: var(--space-6);
+  color: var(--text-primary);
+  padding: var(--space-2);
+  text-decoration: underline;
+}
+
+/* ---------- 挑选 ---------- */
+.run-title {
+  margin-bottom: var(--space-1);
+}
+
+/* 候选图是 9:16 竖图，容器同比例，人物和宠物都不被裁 */
+.cands {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+/* 单张结果：居中大图，不再并排 */
+.cands-single {
+  grid-template-columns: minmax(0, 1fr);
+  width: 64%;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.cand {
+  position: relative;
+  transition: transform var(--transition-duration) var(--transition-easing), opacity var(--transition-duration) var(--transition-easing);
+}
+
+.cand-photo {
+  border-radius: var(--radius-image-thumb);
+  background: var(--surface);
+}
+
+.cand-image {
+  display: block;
+  width: 100%;
+  height: auto;
   aspect-ratio: var(--ratio-portrait);
+  border-radius: 0;
 }
 
-.candidate-image-blank {
+.cand-image-blank {
   display: flex;
   box-sizing: border-box;
   align-items: center;
@@ -108,32 +391,174 @@
   padding: var(--space-3);
   color: var(--text-secondary);
   font-size: var(--small-size);
+}
+
+.cand-check {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  z-index: 4;
+  display: flex;
+  width: 56rpx;
+  height: 56rpx;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  border: 4rpx solid var(--on-image-primary);
+  border-radius: var(--radius-pill);
+  background: var(--mask);
+  color: var(--on-image-primary);
+  font-size: var(--small-size);
+  font-weight: var(--fw-black);
+}
+
+.cand-on {
+  z-index: 1;
+  transform: scale(1.04);
+}
+
+.cand-on .cand-photo {
+  box-shadow: 0 0 0 6rpx var(--primary);
+}
+
+.cand-on .cand-check {
+  border-color: var(--button-primary);
+  background: var(--button-primary);
+  color: var(--button-primary-text);
+}
+
+.cand-off {
+  opacity: .72;
+  transform: scale(.96);
+}
+
+.run-reroll {
+  display: block;
+  margin-top: var(--space-4);
   text-align: center;
 }
 
-.candidate-foot {
+.run-reroll-link {
+  color: var(--primary);
+  font-size: var(--body-size);
+  font-weight: var(--fw-bold);
+}
+
+/* ---------- 底部抽屉 ---------- */
+.run-sheet {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 20;
+  padding: var(--space-4) var(--page-padding) calc(var(--space-4) + env(safe-area-inset-bottom));
+  border-top: var(--card-border);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  background: var(--card-background);
+  box-shadow: var(--shadow-float);
+}
+
+.run-sheet-head {
   display: flex;
-  min-height: 72rpx;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.run-sheet-title {
+  overflow: hidden;
+  color: var(--text-primary);
+  font-family: var(--skin-title-font, inherit);
+  font-size: var(--font-h3);
+  font-weight: var(--fw-black);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.run-lock {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 0;
+}
+
+.run-sheet-row {
+  display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-2) var(--space-3);
-}
-
-.actions {
-  display: grid;
-  gap: var(--space-3);
-  margin-top: var(--space-5);
-}
-
-/* ---------- 沉浸式结果确认区 ---------- */
-.run-title {
-  margin: var(--space-2) 0;
-}
-
-/* .section-block 已提到 app.wxss 全局（create 的 C 表单变体同样要用） */
-
-.share-actions {
-  display: grid;
   gap: var(--space-3);
   margin-top: var(--space-3);
+}
+
+/* 「发给朋友看」是原生 button（open-type="share"），要清掉默认外观 */
+.run-share {
+  display: inline-flex;
+  min-height: 72rpx;
+  box-sizing: border-box;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: var(--button-radius);
+  background: var(--surface);
+  color: var(--text-primary);
+  font-size: var(--small-size);
+  font-weight: var(--fw-bold);
+  line-height: 1;
+}
+
+.run-share::after {
+  border: 0;
+}
+
+.run-share-icon {
+  width: 32rpx;
+  height: 32rpx;
+  border-radius: 0;
+}
+
+.run-work {
+  color: var(--primary);
+  font-size: var(--small-size);
+  font-weight: var(--fw-bold);
+}
+
+.run-sheet-cap {
+  display: block;
+  margin-top: var(--space-2);
+  text-align: center;
+  white-space: normal;
+  word-break: break-all;
+}
+
+/* 主题差异：手账撕边、赛博顶部荧光线、影院深色毛玻璃 */
+.skin-brand .run-sheet {
+  border-top: 4rpx solid var(--primary);
+  border-radius: 0;
+}
+
+.skin-brand .cand-photo,
+.skin-brand .cand-check {
+  border-radius: 0;
+}
+
+.skin-night .run-sheet {
+  background: var(--glass-background);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+}
+
+.skin-film .run-sheet {
+  border-radius: 0;
+}
+
+.skin-film .cand-photo {
+  padding: var(--space-1) var(--space-1) var(--space-4);
+  background: var(--card-background);
+  box-shadow: var(--shadow-image);
+}
+
+.skin-film .cand-on .cand-photo {
+  box-shadow: 0 0 0 4rpx var(--primary);
 }

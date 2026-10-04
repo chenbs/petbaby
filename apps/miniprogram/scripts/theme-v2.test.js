@@ -72,8 +72,9 @@ test("主题切换只写本机偏好并刷新导航，四主题预览用各自�
   assert.equal(manager.setTheme("night"), "night");
   assert.equal(storage.petbaby_theme, "night");
   assert.equal(navigation[0].frontColor, "#ffffff");
-  assert.match(manager.getCssVarsFor("film"), /--background:#F9F7F3/);
-  assert.match(manager.getCssVarsFor("night"), /--background:#171B1B/);
+  // 2026-09 重做：手账相册米纸底、星夜影院深紫黑底
+  assert.match(manager.getCssVarsFor("film"), /--background:#F4EEE2/);
+  assert.match(manager.getCssVarsFor("night"), /--background:#141218/);
   assert.equal(manager.setTheme("unknown"), "night");
 });
 
@@ -92,5 +93,27 @@ test("访客纪念 mood 使用当前主题，仅降低动效", () => {
   assert.equal(page.data.themeId, "night");
   assert.equal(page.data.animType, "fade");
   assert.equal(page.data.glow, false);
-  assert.match(page.data.themeStyle, /--background:#171B1B/);
+  assert.match(page.data.themeStyle, /--background:#141218/);
+  // 纪念场景在任何主题下都追加 skin-quiet：关掉倾斜、贴纸、底纹和按压位移
+  assert.equal(page.data.skinClass, "skin-night skin-quiet");
+});
+
+test("四套主题是独立的皮肤：结构变量彼此不同，且都不进 page-style 注入串", () => {
+  const byId = Object.fromEntries(themes.THEMES.map((theme) => [theme.id, theme]));
+  assert.deepEqual(themes.THEMES.map((theme) => theme.name).sort(), ["手账相册", "星夜影院", "橘子汽水", "赛博街机"].sort());
+  // 形状：大圆角 / 近直角 / 切角 / 中圆角
+  assert.notEqual(byId.pet.tokens.cardRadius, byId.film.tokens.cardRadius);
+  assert.notEqual(byId.brand.skin["--skin-clip"], byId.pet.skin["--skin-clip"]);
+  assert.ok(byId.brand.skin["--skin-clip"].startsWith("polygon("));
+  // 字体气质：手账衬线、赛博等宽
+  assert.match(byId.film.skin["--skin-title-font"], /serif/);
+  assert.match(byId.brand.skin["--skin-num-font"], /monospace/);
+  // 动效各不相同
+  assert.deepEqual(themes.THEMES.map((theme) => theme.id + ":" + theme.tokens.animationType).sort(), ["brand:fade", "film:fade", "night:glow", "pet:bounce"]);
+  for (const theme of themes.THEMES) {
+    const injected = themes.buildCssVars(theme.id, true);
+    assert.doesNotMatch(injected, /--skin-/, theme.id + " 皮肤变量不应进注入串");
+    assert.ok(Buffer.byteLength(injected, "utf8") <= 2048, theme.id + " 注入串超过 2KB");
+    assert.match(themes.buildSkinVars(theme.id), /--skin-texture:/);
+  }
 });

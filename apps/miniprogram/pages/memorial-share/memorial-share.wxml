@@ -1,6 +1,6 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-flat page-read art-film layout-bookshelf">
+<view class="{{skinClass}} page page-flat page-read art-film layout-bookshelf">
   <t-skeleton wx:if="{{loading}}" type="card" count="2"></t-skeleton>
 
   <t-empty

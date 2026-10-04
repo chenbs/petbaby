@@ -202,8 +202,9 @@ describe("历史作品在玩法合并后仍可打开", () => {
   it("老玩法不出现在 live 清单中", async () => {
     const { listRuntimePlugins } = await import("@/plugins/runtime");
     const live = (await listRuntimePlugins()).filter((plugin) => plugin.status === "live").map((plugin) => plugin.id);
-    expect(live).toHaveLength(7);
-    for (const archived of ["pl-20", "pl-21", "pl-22"]) {
+    // PL-15 互动星尘页 2026-09 下线（archived），live 从 7 个变为 6 个。
+    expect(live).toHaveLength(6);
+    for (const archived of ["pl-15", "pl-20", "pl-21", "pl-22"]) {
       expect(live).not.toContain(archived);
     }
   });

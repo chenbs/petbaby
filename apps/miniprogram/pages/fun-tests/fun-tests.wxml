@@ -1,13 +1,13 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page fun-page">
-  <view class="fun-top"><view class="fun-brand">麻麻抱我 / 趣味测试</view><view class="fun-free">FREE</view></view>
+<view class="{{skinClass}} page fun-page">
+  <view class="fun-top"><view class="fun-brand">麻麻抱我 / 趣味测试</view><view class="fun-free">免费</view></view>
 
   <view wx:if="{{loading}}" class="fun-loading">正在打开测试…</view>
   <view wx:if="{{error}}" class="fun-error" role="alert">{{error}}</view>
 
   <block wx:if="{{!loading && stage === 'list'}}">
-    <view class="fun-heading"><text class="fun-eyebrow">PET PERSONALITY CLUB</text><view class="fun-title">我的小秘密，<text>你最懂。</text></view><view class="fun-subtitle">从每天都看得见的小动作里，发现我们自己的答案。</view></view>
+    <view class="fun-heading"><text class="fun-eyebrow">4 份趣味测试 · 每份 10 题</text><view class="fun-title">我的小秘密，<text>你最懂。</text></view><view class="fun-subtitle">从每天都看得见的小动作里，发现我们自己的答案。</view></view>
     <view class="fun-grid">
       <view wx:for="{{tests}}" wx:for-item="test" wx:key="id" class="fun-test" data-id="{{test.id}}" bindtap="openTest">
         <view class="fun-test-image"><image src="{{test.coverPath}}" mode="aspectFill" lazy-load /><text>0{{index + 1}}</text></view>
@@ -47,7 +47,7 @@
   </view>
 
   <view wx:if="{{!loading && stage === 'result' && result}}" class="fun-result">
-    <view class="fun-reveal">RESULT REVEAL · 结果揭晓</view>
+    <view class="fun-reveal">结果揭晓</view>
     <view class="fun-result-sheet">
       <view class="fun-result-top"><text>麻麻抱我 / 趣味测试</text><text>01 / 01</text></view>
       <view class="fun-result-kicker">{{result.petName}} · {{result.testTitle}}</view>

@@ -2,7 +2,7 @@ import sharp from "sharp";
 import { describe, expect, it } from "vitest";
 
 import { plugins } from "@/plugins/registry";
-import { applyAiLabel, needsAiLabel } from "@/server/media/ai-label";
+import { applyAiMetadata, needsAiLabel } from "@/server/media/ai-label";
 
 /*
  * 隐式标识（《标识办法》第五条）的**实际写入**验证。
@@ -16,7 +16,7 @@ describe("隐式标识写入 PNG", () => {
     const base = await sharp({ create: { width: 512, height: 512, channels: 3, background: { r: 250, g: 250, b: 250 } } })
       .png()
       .toBuffer();
-    const labeled = await applyAiLabel(new Uint8Array(base), "work-verify-1");
+    const labeled = await applyAiMetadata(new Uint8Array(base), "work-verify-1");
     const metadata = await sharp(Buffer.from(labeled)).metadata();
 
     expect(metadata.exif, "PNG 未写入 EXIF —— 需改 XMP 或 tEXt 块").toBeTruthy();

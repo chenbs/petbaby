@@ -60,6 +60,7 @@ themedPage({
     pets: [],
     petIndex: 0,
     description: "",
+    symptomChips: ["不太吃东西", "吐了", "拉肚子", "精神差", "一直挠", "走路一瘸一拐", "喝水变多", "尿不出来"],
     sessions: [],
     result: null,
     loading: true,
@@ -287,6 +288,12 @@ themedPage({
 
   inputDescription(event) {
     this.setData({ description: event.detail.value });
+  },
+  addSymptom(event) {
+    const text = event.currentTarget.dataset.text;
+    const current = String(this.data.description || "").trim();
+    if (!text || current.indexOf(text) >= 0) return;
+    this.setData({ description: current ? current + "，" + text : text });
   },
 
   async submit() {

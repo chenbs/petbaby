@@ -68,7 +68,7 @@ describe("pet-human effect-reference generation", () => {
     ]);
   });
 
-  it("单次生成两张，严格按宠物图一和效果图二传参且只记一次账", async () => {
+  it("单次生成一张，严格按宠物图一和效果图二传参且只记一次账", async () => {
     const run = await createAiRun(USER, {
       pluginId: "pl-10",
       templateId: "test-pet-human",
@@ -80,15 +80,18 @@ describe("pet-human effect-reference generation", () => {
     expect((await processNextAiRun())?.status).toBe("succeeded");
     expect(generateWithFailoverMock).toHaveBeenCalledTimes(1);
     const references = generateWithFailoverMock.mock.calls[0][4] as ImageReference[];
-    expect(generateWithFailoverMock.mock.calls[0][1]).toBe(2);
+    expect(generateWithFailoverMock.mock.calls[0][1]).toBe(1);
     expect(references.map((item) => item.filename)).toEqual(["pet-identity.png", "effect-reference.png"]);
     expect(String(generateWithFailoverMock.mock.calls[0][0])).toContain("以图二作为主要视觉参考，参考权重约 50%");
     expect(String(generateWithFailoverMock.mock.calls[0][0])).toContain("提取图一动物主体的核心视觉特征，参考权重约 50%");
     expect(String(generateWithFailoverMock.mock.calls[0][0])).toContain("图二人物仍然是完整、自然、协调的人类角色");
 
     const ready = await getAiRun(USER, run.id);
-    expect(ready.candidates).toHaveLength(2);
-    expect(ready.cost).toBeCloseTo(0.2);
+    expect(ready.candidates).toHaveLength(1);
+    expect(ready.cost).toBeCloseTo(0.1);
+    // 单张出图即归档进作品柜，不再需要用户挑选
+    expect(ready.selectedId).toBe(ready.candidates[0].id);
+    expect(ready.workId).toBeTruthy();
     expect(ready.rerollRemaining).toBe(0);
     expect(ready.roleInputs).toMatchObject({ subjectMode: "pet-human" });
     expect(ready.roleInputs.petHumanIdentityPromptVersion).toBeUndefined();
@@ -99,7 +102,7 @@ describe("pet-human effect-reference generation", () => {
     expect(storedRuns[0].role_inputs).not.toHaveProperty("petHumanIdentityId");
     expect(await database.query("SELECT id FROM pet_human_identities WHERE user_id=$1", [USER])).toHaveLength(0);
     const ledger = await database.query("SELECT units,amount FROM ai_cost_ledger WHERE run_id=$1 ORDER BY units", [run.id]);
-    expect(ledger.map((row) => ({ units: Number(row.units), amount: Number(row.amount) }))).toEqual([{ units: 2, amount: 0.2 }]);
+    expect(ledger.map((row) => ({ units: Number(row.units), amount: Number(row.amount) }))).toEqual([{ units: 1, amount: 0.1 }]);
   });
 
   it("服务端拒绝宠物人化重抽，且不会再次调用 Provider", async () => {
@@ -116,9 +119,9 @@ describe("pet-human effect-reference generation", () => {
     expect(generateWithFailoverMock).toHaveBeenCalledTimes(1);
     const ready = await getAiRun(USER, run.id);
     expect(ready.status).toBe("succeeded");
-    expect(ready.cost).toBeCloseTo(0.2);
+    expect(ready.cost).toBeCloseTo(0.1);
     expect(ready.roleInputs.rerollReason).toBeUndefined();
     const ledger = await (await getDatabase()).query("SELECT units FROM ai_cost_ledger WHERE run_id=$1", [run.id]);
-    expect(ledger.map((row) => Number(row.units))).toEqual([2]);
+    expect(ledger.map((row) => Number(row.units))).toEqual([1]);
   });
 });

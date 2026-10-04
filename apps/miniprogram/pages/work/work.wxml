@@ -5,7 +5,7 @@
 <t-glass-sheet
   wx:if="{{loading || work}}"
   id="sheet"
-  class="art-brand layout-canvas"
+  class="{{skinClass}} art-brand layout-canvas"
   background-video="{{sheetBackgroundVideo}}"
   background-image="{{sheetBackgroundImage}}"
   poster="{{sheetPoster}}"
@@ -18,15 +18,19 @@
   bindbackgrounderror="onBackgroundError"
   bindstatechange="handleStateChange"
 >
-  <!-- 未解锁水印提示：自带实底容器，不把文字直接压在图片上 -->
-  <view slot="overlay" wx:if="{{work && work.locked}}">
-    <t-tag tone="warning" size="mini" text="预览版带水印"></t-tag>
+  <!--
+    顶部提示层：生成类作品显示「该内容由AI生成」（只在界面上，不写进图片文件）；
+    未保存原图时再提示一句预览状态。不再有水印，也不再提「带水印」。
+  -->
+  <view slot="overlay" wx:if="{{work && (work.aiGenerated || work.locked)}}" class="work-overlay">
+    <text wx:if="{{work.aiGenerated && work.aiNotice}}" class="ai-mask-inline">{{work.aiNotice}}</text>
+    <t-tag wx:if="{{work.locked}}" tone="accent" size="mini" text="预览图 · 保存高清原图后可存到相册"></t-tag>
   </view>
 
   <view slot="header" wx:if="{{work}}">
     <view class="row">
       <text class="glass-eyebrow">第 {{work.version}} 版</text>
-      <t-tag tone="{{work.locked ? 'warning' : 'success'}}" size="mini" text="{{work.locked ? '待解锁' : '已解锁'}}"></t-tag>
+      <t-tag tone="{{work.locked ? 'warning' : 'success'}}" size="mini" text="{{work.locked ? '待保存' : '已保存原图'}}"></t-tag>
     </view>
     <view class="glass-title work-title">{{work.title}}</view>
     <text class="glass-muted">{{work.subtitle}}</text>
@@ -56,7 +60,7 @@
     </view>
 
     <view wx:if="{{work.authority}}" class="section-block">
-      <view class="glass-sub-title">权威声明</view>
+      <view class="glass-sub-title">出品</view>
       <text class="glass-muted">{{work.authority}}</text>
     </view>
 
@@ -97,12 +101,12 @@
     -->
     <text wx:if="{{work.locked && priceHint}}" class="glass-small">{{priceHint}}</text>
     <t-button wx:if="{{work.locked}}" type="ai" block anim="{{animType}}" loading="{{busy}}" bindtap="unlock">{{priceText}}</t-button>
-    <t-button wx:elif="{{work.assetKind === 'video'}}" type="primary" block anim="{{animType}}" loading="{{busy}}" bindtap="downloadVideo">下载 MP4 到相册</t-button>
-    <t-button wx:else type="primary" block anim="{{animType}}" loading="{{busy}}" bindtap="saveImage">保存到相册</t-button>
+    <t-button wx:elif="{{work.assetKind === 'video'}}" type="primary" block anim="{{animType}}" loading="{{busy}}" bindtap="downloadVideo">保存高清视频到相册</t-button>
+    <t-button wx:else type="primary" block anim="{{animType}}" loading="{{busy}}" bindtap="saveImage">保存高清原图到相册</t-button>
   </view>
 </t-glass-sheet>
 
-<view wx:else class="page page-flat work-unavailable">
+<view wx:else class="{{skinClass}} page page-flat work-unavailable">
   <view class="title">作品暂时无法打开</view>
   <t-notice type="error" message="{{error || '作品不存在或已被删除'}}"></t-notice>
   <t-button type="secondary" anim="{{animType}}" bindtap="reload">重新加载</t-button>

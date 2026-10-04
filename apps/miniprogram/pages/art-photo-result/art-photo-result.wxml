@@ -1,5 +1,5 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
-<view class="page page-flat art-brand layout-matrix bundle-result-page">
+<view class="{{skinClass}} page page-flat art-brand layout-matrix bundle-result-page">
   <text class="eyebrow">我的写真套餐</text>
   <view class="title">{{!batch ? '正在读取写真' : !paid ? '写真等我来开启' : finished ? '这一组写真收好啦' : '我的写真正在诞生'}}</view>
   <text class="muted">{{!batch ? '稍等一下' : !paid ? '付款确认后才会开始制作，每套各有一张成片。' : finished ? '每一张都可以单独打开和保存。' : '一张张慢慢做好，随时回来查看进度。'}}</text>
@@ -11,7 +11,7 @@
 
   <block wx:if="{{batch}}">
     <view class="bundle-progress">
-      <view class="bundle-progress-head"><view><view class="sub-title">{{batch.package === 'all' ? '24 套珍藏写真' : '10 套精选写真'}}</view><text class="small">{{paid ? progressText : batch.order && batch.order.status === 'refunded' ? '订单已退款' : '等待付款'}}</text></view><text class="bundle-progress-count">{{batch.completedCount}} / {{batch.totalCount}}</text></view>
+      <view class="bundle-progress-head"><view><view class="sub-title">{{batch.package === 'all' ? batch.totalCount + ' 套珍藏写真' : '10 套精选写真'}}</view><text class="small">{{paid ? progressText : batch.order && batch.order.status === 'refunded' ? '订单已退款' : '等待付款'}}</text></view><text class="bundle-progress-count">{{batch.completedCount}} / {{batch.totalCount}}</text></view>
       <view class="bundle-progress-track"><view class="bundle-progress-fill" style="width:{{progressWidth}}"></view></view>
       <text wx:if="{{batch.failedCount}}" class="small">{{batch.failedCount}} 张制作未完成，其余成片仍可查看和保存。</text>
     </view>
@@ -24,10 +24,11 @@
             <image wx:if="{{item.previewUrl || item.sampleUrl}}" class="bundle-image" src="{{item.previewUrl || item.sampleUrl}}" mode="aspectFit" lazy-load />
             <view wx:else class="bundle-image bundle-image-empty">样片暂不可用</view>
             <text class="bundle-image-badge {{item.status === 'succeeded' ? 'bundle-image-badge-done' : ''}}">{{item.previewUrl ? '成片' : '样片'}}</text>
+            <text wx:if="{{item.previewUrl && aiNotice}}" class="ai-mask">{{aiNotice}}</text>
           </view>
           <view class="bundle-item-head"><text>{{item.title}}</text><text class="small">{{item.number}} / {{batch.totalCount}}</text></view>
           <text class="small">{{item.statusText}}</text>
-          <t-button wx:if="{{item.status === 'succeeded'}}" type="secondary" size="mini" data-id="{{item.id}}" loading="{{savingId === item.id}}" disabled="{{!!savingId}}" bindtap="save">保存这张</t-button>
+          <t-button wx:if="{{item.status === 'succeeded'}}" type="secondary" size="mini" data-id="{{item.id}}" loading="{{savingId === item.id}}" disabled="{{!!savingId}}" bindtap="save">保存高清原图</t-button>
         </view>
       </view>
     </view>

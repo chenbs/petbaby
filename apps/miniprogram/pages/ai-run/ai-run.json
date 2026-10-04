@@ -1,16 +1,12 @@
 {
-  "navigationBarTitleText": "AI 任务与候选",
-  "navigationStyle": "custom",
+  "navigationBarTitleText": "制作结果",
   "enablePullDownRefresh": true,
+  "enableShareAppMessage": true,
   "usingComponents": {
-    "t-glass-sheet": "../../components/glass-sheet/index",
-    "t-navbar": "../../components/navbar/index",
     "t-card": "../../components/card/index",
     "t-button": "../../components/button/index",
-    "t-tag": "../../components/tag/index",
     "t-notice": "../../components/notice/index",
     "t-dialog": "../../components/dialog/index",
-    "t-loading": "../../components/loading/index",
     "t-skeleton": "../../components/skeleton/index"
   }
 }

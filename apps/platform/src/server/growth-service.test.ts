@@ -1,10 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import sharp from "sharp";
 import { getDatabase, resetDatabaseForTest } from "@/server/db/client";
-import { createAiRun, getAiRun, processNextAiRun, selectAiCandidate, unlockAiCandidate, createInteractiveSession, appendInteractiveEvent, listInteractiveEvents, scheduleUpcomingReminders, createPhysicalOrder, createAnnualReport, payPhysicalOrder, createExperiment, updateExperiment, rollbackExperiment, updatePhysicalOrderStatus, expirePastDueMemberships } from "@/server/growth-service";
+import { createAiRun, getAiRun, rerollAiRun, listAiRuns, processNextAiRun, selectAiCandidate, unlockAiCandidate, scheduleUpcomingReminders, createPhysicalOrder, createAnnualReport, payPhysicalOrder, createExperiment, updateExperiment, rollbackExperiment, updatePhysicalOrderStatus, expirePastDueMemberships } from "@/server/growth-service";
 import { decryptAddress } from "@/server/commerce/address";
 import { objectStorage } from "@/server/storage";
-import { payOrder, deletePhoto } from "@/server/platform-service";
+import { payOrder, deletePhoto, getDownload, getWork } from "@/server/platform-service";
+import { acknowledgeAiDisclosure } from "@/server/ai-disclosure-service";
 import { listRuntimePlugins } from "@/plugins/runtime";
 
 const USER = "00000000-0000-4000-8000-00000000000c";
@@ -49,20 +50,53 @@ describe("stage two growth services", () => {
     expect(byId.get(cases[2].id)).toMatchObject({ status: "active", quota: 5, used: 1 });
   });
 
-  it("queues AI runs and persists two candidates with selectable unlock", async () => {
+  it("queues AI runs, generates one image and archives it as a work automatically", async () => {
     const run = await createAiRun(USER, { pluginId: "pl-10", petId: PET, photoIds: [PHOTO], prompt: "a cat", idempotencyKey: "ai-test-run-1" });
     expect(run.status).toBe("queued");
     expect(run.roleInputs).toMatchObject({ subjectMode: "pet", templateId: "pet-expression-grid", petPhotoIds: [PHOTO] });
     expect((await processNextAiRun())?.status).toBe("succeeded");
     const ready = await getAiRun(USER, run.id);
-    expect(ready.candidates).toHaveLength(2);
+    expect(ready.candidates).toHaveLength(1);
+    // 单张出图即自动选中并归档；再次选择（旧客户端）是幂等的
+    expect(ready.selectedId).toBe(ready.candidates[0].id);
+    expect(ready.workId).toBeTruthy();
     const selected = await Promise.all([selectAiCandidate(USER, run.id, ready.candidates[0].id), selectAiCandidate(USER, run.id, ready.candidates[0].id)]);
-    expect(selected[0].workId).toBe(selected[1].workId);
+    expect(selected[0].workId).toBe(ready.workId);
+    expect(selected[1].workId).toBe(ready.workId);
     expect(await (await getDatabase()).query("SELECT id FROM works WHERE source_id=$1", [run.id])).toHaveLength(1);
     const pending = await unlockAiCandidate(USER, run.id);
     expect(pending.order?.status).toBe("pending");
     await payOrder(USER, String(pending.order?.id));
     expect((await getAiRun(USER, run.id)).selectedUnlocked).toBe(true);
+
+    /*
+     * 2026-09 口径：图上不画可见标识，只写元数据；界面蒙层文案由服务端下发；
+     * 第一次交付原图前必须确认标识义务，确认后每次交付都留日志。
+     */
+    const unlocked = await getAiRun(USER, run.id);
+    expect(unlocked.aiNotice).toBe("该内容由AI生成");
+    const work = await getWork(USER, String(unlocked.workId));
+    expect(work.aiGenerated).toBe(true);
+    expect(work.title).not.toMatch(/AI/);
+    expect(work.authority).not.toMatch(/AI/);
+    expect(work.expiresAt).toBeUndefined();
+    const outputMeta = await sharp(Buffer.from((await objectStorage.get(String(work.outputKey)))!.body)).metadata();
+    expect(Buffer.from(outputMeta.exif as Buffer).toString("latin1")).toContain("AI-generated");
+    const previewMeta = await sharp(Buffer.from((await objectStorage.get(String(work.previewKey)))!.body)).metadata();
+    expect(previewMeta.exif, "预览缩图也必须保留隐式标识").toBeTruthy();
+    await expect(getDownload(USER, work.id, "image")).rejects.toMatchObject({ code: "AI_DISCLOSURE_REQUIRED", status: 428 });
+    await acknowledgeAiDisclosure(USER, "miniprogram");
+    await expect(getDownload(USER, work.id, "image")).resolves.toMatchObject({ key: work.outputKey });
+    expect(await (await getDatabase()).query("SELECT id FROM ai_original_deliveries WHERE user_id=$1 AND resource_id=$2", [USER, work.id])).toHaveLength(1);
+    expect((await listAiRuns(USER)).map((item) => item.id)).not.toContain(run.id);
+  });
+
+  it("进行中列表包含未选中的独立任务，不包含写真套餐逐张任务", async () => {
+    const run = await createAiRun(USER, { pluginId: "pl-10", petId: PET, photoIds: [PHOTO], idempotencyKey: "ai-test-in-progress" });
+    const listed = await listAiRuns(USER);
+    expect(listed.map((item) => item.id)).toContain(run.id);
+    expect(listed.find((item) => item.id === run.id)).toMatchObject({ status: "queued", aiNotice: "该内容由AI生成" });
+    expect(listed.find((item) => item.id === run.id)?.title).not.toMatch(/AI/);
   });
 
   it("必需母版缺失时明确失败，不回退文生图", async () => {
@@ -82,22 +116,34 @@ describe("stage two growth services", () => {
     expect(run.prompt).toContain("green dinosaur hoodie and leans against the plush toy");
     expect(run.prompt).toContain("Image 1 as the sole pet identity reference");
     expect((await processNextAiRun())?.status).toBe("succeeded");
-    expect((await getAiRun(USER, run.id)).candidates).toHaveLength(2);
+    expect((await getAiRun(USER, run.id)).candidates).toHaveLength(1);
   });
 
-  it("候选完成后删除原照，不能再创建引用该照片的新作品", async () => {
+  it("历史多候选任务未选中时删除原照，不能再创建引用该照片的新作品", async () => {
     const run = await createAiRun(USER, { pluginId: "pl-10", petId: PET, photoIds: [PHOTO], idempotencyKey: "deleted-ai-source" });
     await processNextAiRun();
+    // 还原成 2026-10 之前「出图后等用户挑」的状态：撤下自动归档的作品、清空选择
+    const database = await getDatabase();
+    await database.query("DELETE FROM work_versions WHERE work_id IN (SELECT id FROM works WHERE source_id=$1)", [run.id]);
+    await database.query("UPDATE ai_runs SET selected_id=NULL,work_id=NULL WHERE id=$1", [run.id]);
+    await database.query("DELETE FROM works WHERE source_id=$1", [run.id]);
     const ready = await getAiRun(USER, run.id);
     await deletePhoto(USER, PHOTO);
     await expect(selectAiCandidate(USER, run.id, ready.candidates[0].id)).rejects.toMatchObject({ code: "PHOTO_PET_MISMATCH" });
-    expect(await (await getDatabase()).query("SELECT id FROM works WHERE source_id=$1", [run.id])).toHaveLength(0);
+    expect(await database.query("SELECT id FROM works WHERE source_id=$1", [run.id])).toHaveLength(0);
   });
 
-  it("records interactive events and schedules a reminder seven days ahead", async () => {
-    const session = await createInteractiveSession(USER, { pluginId: "pl-15", petId: PET, photoIds: [PHOTO], snapshot: { title: "Milo 的星尘", copy: "一起生活的闪光时刻", theme: "stardust" } });
-    await appendInteractiveEvent(USER, session.id, { name: "stardust_collected", payload: { count: 1 } });
-    expect(await listInteractiveEvents(USER, session.id)).toHaveLength(1);
+  it("单张出图后未下单仍可重拍，重拍时撤下自动归档的未付费作品", async () => {
+    const run = await createAiRun(USER, { pluginId: "pl-10", petId: PET, photoIds: [PHOTO], idempotencyKey: "ai-reroll-after-archive" });
+    await processNextAiRun();
+    const ready = await getAiRun(USER, run.id);
+    expect(ready.workId).toBeTruthy();
+    const rerolled = await rerollAiRun(USER, run.id, "composition");
+    expect(rerolled).toMatchObject({ status: "queued", workId: undefined, selectedId: undefined });
+    expect((await (await getDatabase()).query("SELECT deleted_at FROM works WHERE id=$1", [ready.workId]))[0]?.deleted_at).toBeTruthy();
+  });
+
+  it("schedules a birthday reminder seven days ahead", async () => {
     const database = await getDatabase();
     await database.query("UPDATE pets SET birthday='2026-12-25' WHERE id=$1", [PET]);
     await database.query("INSERT INTO message_subscriptions (id,user_id,pet_id,event_type,status,consented_at,created_at) VALUES ($1,$2,$3,'birthday','active',now(),now())", [crypto.randomUUID(), USER, PET]);
@@ -105,7 +151,7 @@ describe("stage two growth services", () => {
     expect(scheduled[0].scheduledAt).toContain("2026-12-18");
   });
 
-  it("protects physical addresses and creates a watermarked annual preview", async () => {
+  it("protects physical addresses and creates a downscaled annual preview", async () => {
     const database = await getDatabase(); const workId=crypto.randomUUID();const outputKey=`private/${USER}/works/print.svg`;await objectStorage.put(outputKey,new TextEncoder().encode('<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1440"><rect width="1080" height="1440" fill="white"/></svg>'),"image/svg+xml");await database.query("INSERT INTO works (id,user_id,plugin_id,pet_id,photo_id,title,subtitle,serial_number,authority,output_key,locked,public,version,created_at) VALUES ($1,$2,'pet-id-card',$3,$4,'x','x','x','x',$5,false,false,1,now())",[workId,USER,PET,PHOTO,outputKey]);
     const order = await createPhysicalOrder(USER, { workId, sku: "art-print-a4", address: { name: "张三", phone: "13800000000", province: "上海", city: "上海", detail: "测试路 1 号" } });
     const rows = await database.query("SELECT address_ciphertext FROM physical_orders WHERE id=$1", [order.id]);

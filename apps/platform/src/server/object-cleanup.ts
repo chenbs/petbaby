@@ -26,7 +26,6 @@ export async function processObjectCleanupJob(id: string) {
        UNION ALL SELECT 1 FROM works WHERE (output_key=$1 OR preview_key=$1) AND deleted_at IS NULL
        UNION ALL SELECT 1 FROM photo_deliverable_assets a JOIN pets p ON p.id=a.pet_id WHERE a.storage_key=$1 AND p.deleted_at IS NULL
          AND ((a.kind='work' AND EXISTS(SELECT 1 FROM works w WHERE w.id=a.resource_id AND w.deleted_at IS NULL))
-           OR (a.kind='interactive' AND EXISTS(SELECT 1 FROM interactive_sessions s WHERE s.id=a.resource_id))
            OR (a.kind='memorial' AND EXISTS(SELECT 1 FROM memorial_spaces m WHERE m.id=a.resource_id AND m.deleted_at IS NULL))) LIMIT 1`, [key],
     );
     if (used.length) {

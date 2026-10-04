@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "宠物写真",
+  "navigationBarTitleText": "创作",
   "usingComponents": {
     "t-button": "../../components/button/index",
     "t-notice": "../../components/notice/index",

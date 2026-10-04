@@ -91,3 +91,5 @@
   gap: var(--space-0);
   min-width: 0;
 }
+
+.symptom-chips { margin-top: var(--space-2); }

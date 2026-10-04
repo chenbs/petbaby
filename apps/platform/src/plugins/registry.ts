@@ -21,7 +21,7 @@ export const plugins: PluginManifest[] = [
      * 抖音有成熟的「AI 萌宠证件照口令」玩法，还有教程教直接用 ChatGPT 做。
      * 9.9 撑不住这个竞争，它的价值在获客不在收入。
      */
-    pricing: { unlockPrice: 0, label: "免费下载（带水印）" },
+    pricing: { unlockPrice: 0, label: "免费保存" },
     output: { formats: ["image"] },
     samples: { heroUrl: "/api/plugin-samples/samples/mp26-pet-id-card-e7e1697450c7.jpg" },
     status: "live",
@@ -39,7 +39,7 @@ export const plugins: PluginManifest[] = [
       profileFields: ["name", "species"],
     },
     generator: { type: "image-api", template: "movie-poster-v1" },
-    pricing: { unlockPrice: 12.9, label: "竖版高清海报" },
+    pricing: { unlockPrice: 12.9, label: "保存高清原图" },
     output: { formats: ["image"] },
     samples: { heroUrl: "/api/plugin-samples/samples/mp26-pet-movie-poster-v4-8a4c189d768e.jpg" },
     status: "live",
@@ -62,7 +62,7 @@ export const plugins: PluginManifest[] = [
      * ≤20 张 19.9 / 21–60 张 39.9 / 跨度满年 49。
      * manifest 里留基础价，是为了不分档的路径（会员、纪念形态）有回落值。
      */
-    pricing: { unlockPrice: 19.9, label: "长图 + PDF" },
+    pricing: { unlockPrice: 19.9, label: "保存高清原图（含 PDF）" },
     output: { formats: ["image", "pdf"] },
     samples: { heroUrl: "/api/plugin-samples/samples/mp26-pet-time-album-8da9fa598537.jpg" },
     // 原 PL-20「纪念册」并入此处（改造方案 D3）。两者本来都是多照片图文册，
@@ -95,19 +95,19 @@ export const plugins: PluginManifest[] = [
     name: "宠物艺术写真",
     category: "ai-image",
     tagline: "换一个场景，看见我不一样的神态",
-    description: "选择宠物身份照和写真场景，生成两张保留我真实模样的艺术写真候选。",
+    description: "选择宠物身份照和写真场景，生成一张保留我真实模样的艺术写真。",
     accent: "orange",
     input: {
       photos: { min: 1, max: 1 },
       profileFields: ["name", "species"],
     },
     generator: { type: "image-api", template: "ai-portrait-v1" },
-    pricing: { unlockPrice: 16.9, label: "选中候选高清无水印" },
+    pricing: { unlockPrice: 16.9, label: "保存高清原图" },
     output: { formats: ["image"] },
     samples: {
       heroUrl: "/api/plugin-samples/samples/mp26-gray-toy-poodle-editorial-v1-7c583b9dcb50.jpg",
       /*
-       * 二十四套写真由布偶猫、金毛、泰迪和英短示范；用户身份仍只取其私有照片。
+       * 三十六套写真由布偶猫、金毛、泰迪、英短、美短、柯基、三花猫，以及无毛猫、阿富汗猎犬、意大利灵缇、金吉拉、暹罗示范；用户身份仍只取其私有照片。
        * 旧 styleUrls 不再作为默认字段；runtime.ts 仅为历史配置保留读取能力。
        */
       sceneUrls: {
@@ -123,18 +123,30 @@ export const plugins: PluginManifest[] = [
         "lakeside-sunset": "/api/plugin-samples/samples/scene-lakeside-sunset-v4-5cc0cb785432.jpg",
         "city-rain": "/api/plugin-samples/samples/scene-city-rain-v3-0ccde8661153.jpg",
         "spring-picnic": "/api/plugin-samples/samples/scene-spring-picnic-v4-274593d9cd4a.jpg",
-        "railway-traveler": "/api/plugin-samples/samples/scene-railway-traveler-v5-f24db13edc82.jpg",
-        "tennis-champion": "/api/plugin-samples/samples/scene-tennis-champion-v5-0ae23472a221.jpg",
-        "greenhouse-gardener": "/api/plugin-samples/samples/scene-greenhouse-gardener-v5-a71fe9c8e0d0.jpg",
-        "sailboat-holiday": "/api/plugin-samples/samples/scene-sailboat-holiday-v5-eaa6af812d7a.jpg",
-        "berry-pastry-chef": "/api/plugin-samples/samples/scene-berry-pastry-chef-v5-9286c659a9af.jpg",
-        "paper-flower-window": "/api/plugin-samples/samples/scene-paper-flower-window-v5-fe346facff9d.jpg",
-        "mountain-cable-car": "/api/plugin-samples/samples/scene-mountain-cable-car-v5-7e2293f53ae9.jpg",
-        "laundry-day": "/api/plugin-samples/samples/scene-laundry-day-v5-3e876d0040b8.jpg",
-        "museum-curator": "/api/plugin-samples/samples/scene-museum-curator-v5-3beffc285413.jpg",
-        "poolside-vacation": "/api/plugin-samples/samples/scene-poolside-vacation-v5-5972f6411c66.jpg",
-        "post-office": "/api/plugin-samples/samples/scene-post-office-v5-11ab721e08d4.jpg",
-        "ballet-backstage": "/api/plugin-samples/samples/scene-ballet-backstage-v5-1721da6836b7.jpg",
+        "railway-traveler": "/api/plugin-samples/samples/scene-railway-traveler-v7-f0a84c31cb26.jpg",
+        "tennis-champion": "/api/plugin-samples/samples/scene-tennis-champion-v8-5e19c038af7d.jpg",
+        "greenhouse-gardener": "/api/plugin-samples/samples/scene-greenhouse-gardener-v7-551e92fc6249.jpg",
+        "sailboat-holiday": "/api/plugin-samples/samples/scene-sailboat-holiday-v6-4a22e633a7a8.jpg",
+        "berry-pastry-chef": "/api/plugin-samples/samples/scene-berry-pastry-chef-v7-a9086e9f1beb.jpg",
+        "paper-flower-window": "/api/plugin-samples/samples/scene-paper-flower-window-v8-ab5124661b86.jpg",
+        "mountain-cable-car": "/api/plugin-samples/samples/scene-mountain-cable-car-v8-70b6325e355a.jpg",
+        "laundry-day": "/api/plugin-samples/samples/scene-laundry-day-v8-5509c49e6617.jpg",
+        "museum-curator": "/api/plugin-samples/samples/scene-museum-curator-v7-ddfec7859821.jpg",
+        "poolside-vacation": "/api/plugin-samples/samples/scene-poolside-vacation-v6-bf0a1f6d4423.jpg",
+        "post-office": "/api/plugin-samples/samples/scene-post-office-v8-39fcfcf4bee7.jpg",
+        "ballet-backstage": "/api/plugin-samples/samples/scene-ballet-backstage-v6-b34c002eee53.jpg",
+        "shorthair-armchair": "/api/plugin-samples/samples/scene-shorthair-armchair-v7-c566d0b61a0e.jpg",
+        "shorthair-books": "/api/plugin-samples/samples/scene-shorthair-books-v7-26a1786ebfb6.jpg",
+        "shorthair-night-rim": "/api/plugin-samples/samples/scene-shorthair-night-rim-v11-6d759271e937.jpg",
+        "shorthair-paper-bag": "/api/plugin-samples/samples/scene-shorthair-paper-bag-v8-970c4eec5358.jpg",
+        "corgi-denim": "/api/plugin-samples/samples/scene-corgi-denim-v11-12537d4acd2d.jpg",
+        "corgi-crate": "/api/plugin-samples/samples/scene-corgi-crate-v9-249049005c23.jpg",
+        "corgi-sploot": "/api/plugin-samples/samples/scene-corgi-sploot-v8-edf4739eb97b.jpg",
+        "corgi-sweater": "/api/plugin-samples/samples/scene-corgi-sweater-v8-357ccfaceb0a.jpg",
+        "calico-silk": "/api/plugin-samples/samples/scene-calico-silk-v7-00d1eb65bef0.jpg",
+        "calico-bowl": "/api/plugin-samples/samples/scene-calico-bowl-v8-2dba23841d9f.jpg",
+        "calico-rain-window": "/api/plugin-samples/samples/scene-calico-rain-window-v11-c34a877fa2ea.jpg",
+        "calico-cane-stool": "/api/plugin-samples/samples/scene-calico-cane-stool-v11-78fc47981c48.jpg",
       },
       sceneOptions: petArtPhotoScenes.map(({ id, title, description }) => ({ id, title, description })),
     },
@@ -155,7 +167,6 @@ export const plugins: PluginManifest[] = [
     generator: { type: "h5-theme", template: "stardust-v1" },
     pricing: { unlockPrice: 0, label: "互动页与 15 秒导出" },
     output: { formats: ["h5"] },
-    samples: { heroUrl: "/api/plugin-samples/samples/mp26-pl-15-photographic-v2-d2e283f5b2eb.jpg" },
     // 原 PL-22「星尘纪念页」并入此处（D5）。两者是同一个 h5-theme 模板的
     // 两套调性包装，都免费，没有理由占两张卡位。
     // senior 只换一句 tagline：星尘页本身已经足够安静，描述不必改。
@@ -163,7 +174,13 @@ export const plugins: PluginManifest[] = [
       senior: { tagline: "让此刻的星光慢慢发生" },
       memorial: { name: "星尘纪念页", tagline: "在一页星光里安静地记住", description: "克制、无留言与营销内容的公开纪念页。" },
     },
-    status: "live",
+    /*
+     * 2026-09 下线：互动星尘页的页面、接口和导出都已删除，manifest 只保留为 archived。
+     * **不能删**：纪念空间「星尘纪念页」与历史互动导出作品都以 plugin_id='pl-15' 入库，
+     * works 没有 plugin_snapshot，hydrateWork 现查 manifest，删掉会让这些作品打不开。
+     * toneVariants.memorial 提供纪念星尘页的显示名，同样保留。
+     */
+    status: "archived",
   },
   {
     id: "pl-19",
@@ -176,7 +193,7 @@ export const plugins: PluginManifest[] = [
     input: { photos: { min: 1, max: 20 }, profileFields: ["name", "species"] },
     generator: { type: "ffmpeg", template: "memory-film-v1" },
     // 基础价，实际按积累量分档（≤20 张 19.9 / 21–60 张 29.9 / 跨度满年 39.9）。
-    pricing: { unlockPrice: 19.9, label: "高清无水印视频" },
+    pricing: { unlockPrice: 19.9, label: "保存高清视频" },
     output: { formats: ["video"] },
     samples: { heroUrl: "/api/plugin-samples/samples/mp26-pl-19-713030e67164.jpg" },
     // 原 PL-21「纪念视频」并入此处（D4）。两者走同一条 ffmpeg 链路。
@@ -199,7 +216,7 @@ export const plugins: PluginManifest[] = [
      *
      * 样例图仅演示两张同一宠物不同阶段的并排构图；实际结果始终使用用户自己的两张照片。
      */
-    id: "pl-23", code: "PL-23", name: "成长对比图", category: "layout", tagline: "把两个时间点放在一起看", description: "同一只宠物两个时间点的并排对比，标注中间过了多少天。", accent: "yellow", input: { photos: { min: 2, max: 2 }, profileFields: ["name", "birthday"] }, generator: { type: "html-template", template: "growth-compare-v1" }, pricing: { unlockPrice: 0, label: "免费下载（带水印）" }, output: { formats: ["image"] }, samples: { heroUrl: "/api/plugin-samples/samples/mp26-pl-23-v4-e7a4b4054ae8.jpg" }, status: "live",
+    id: "pl-23", code: "PL-23", name: "成长对比图", category: "layout", tagline: "把两个时间点放在一起看", description: "同一只宠物两个时间点的并排对比，标注中间过了多少天。", accent: "yellow", input: { photos: { min: 2, max: 2 }, profileFields: ["name", "birthday"] }, generator: { type: "html-template", template: "growth-compare-v1" }, pricing: { unlockPrice: 0, label: "免费保存" }, output: { formats: ["image"] }, samples: { heroUrl: "/api/plugin-samples/samples/mp26-pl-23-v4-e7a4b4054ae8.jpg" }, status: "live",
   },
 
   /*

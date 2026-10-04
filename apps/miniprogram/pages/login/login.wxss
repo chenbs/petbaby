@@ -33,13 +33,10 @@
   background: var(--divider);
 }
 
-/* 夜间主题保留轻微强调，其他主题使用同一品牌结构 */
-.brand-night .brand-name {
-  text-shadow: 0 0 24rpx var(--ai-glow);
-}
-
-.brand-pet .brand-name {
+/* 品牌字标跟随皮肤的标题字体（手账相册是衬线）；强调色统一用文字安全的 --primary */
+.brand-name {
   color: var(--primary);
+  font-family: var(--skin-title-font, inherit);
 }
 
 /* ---------- 分段控件 ---------- */

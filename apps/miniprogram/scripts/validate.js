@@ -135,7 +135,11 @@ const CONTRAST_CHECKS = [
   { label: "textPrimary / background", foreground: "textPrimary", background: "background", min: 4.5 },
   { label: "textPrimary / cardBackground", foreground: "textPrimary", background: "cardBackground", min: 4.5 },
   { label: "buttonPrimaryText / buttonPrimary", foreground: "buttonPrimaryText", background: "buttonPrimary", min: 4.5 },
-  { label: "textSecondary / background", foreground: "textSecondary", background: "background", min: 3 }
+  { label: "textSecondary / background", foreground: "textSecondary", background: "background", min: 3 },
+  // 2026-09：primary 被当作文字强调色（价格、选中描边、链接、天数），必须能读；
+  // 浅色大色块只能走 buttonPrimary（橘子汽水的浅橘在白底上只有 2.1:1）。
+  { label: "primary / background", foreground: "primary", background: "background", min: 4.5 },
+  { label: "primary / cardBackground", foreground: "primary", background: "cardBackground", min: 4.5 }
 ];
 
 for (const theme of themeIndex.THEMES) {
@@ -227,6 +231,8 @@ const availableVars = new Set();
 for (const key of tokens.TOKEN_KEYS) availableVars.add(tokens.toCssVarName(key));
 for (const name of Object.keys(tokens.deriveScale(themeIndex.THEMES[0].tokens, themeIndex.THEMES[0].id))) availableVars.add(name);
 for (const name of Object.keys(tokens.CONSTANT_VARS)) availableVars.add(name);
+// 皮肤层变量由 app.wxss 的 .skin-<id>{} 按根节点类名提供（见第 11 项）
+for (const theme of themeIndex.THEMES) for (const name of Object.keys(theme.skin || {})) availableVars.add(name);
 // 场景配色是内容属性，由 scene-presets 以内联 style 注入，不进 token 体系
 for (const declaration of require("../theme/scene-presets").getSceneStyle().split(";")) {
   const name = declaration.split(":")[0].trim();
@@ -310,6 +316,32 @@ function scanWxml(directory) {
   }
 }
 scanWxml(root);
+
+// 11. 皮肤层完整性（2026-09）：四套主题的 skin 键集合一致；app.wxss 的 .skin-<id>{} 与 JS 逐字一致。
+//     皮肤不进注入串，只靠根节点类名生效 —— 两处漂移不会报错，只会让某套主题静默丢掉一块材质。
+{
+  const skinKeys = (theme) => Object.keys(theme.skin || {}).filter((name) => name.indexOf("--skin-") === 0).sort().join(",");
+  const baseline = skinKeys(themeIndex.THEMES[0]);
+  for (const theme of themeIndex.THEMES) {
+    const skin = theme.skin || {};
+    if (!Object.keys(skin).length) failures.push(`皮肤缺失 ${theme.id}: theme/themes/${theme.id}.js 没有 skin 对象`);
+    else if (skinKeys(theme) !== baseline) failures.push(`皮肤键不一致 ${theme.id}: 与 ${themeIndex.THEMES[0].id} 的 --skin-* 键集合不同`);
+    for (const [name, value] of Object.entries(skin)) {
+      if (name.indexOf("--") !== 0) failures.push(`皮肤键非法 ${theme.id}: ${name} 必须以 -- 开头`);
+      if (typeof value !== "string" || !value.trim()) failures.push(`皮肤取值为空 ${theme.id}: ${name}`);
+    }
+  }
+  if (appWxss.indexOf(require("./build-skin-css").render()) < 0) failures.push("皮肤区块未同步 app.wxss 的 .skin-<id>{} 与 theme/themes/*.js 不一致，请运行 node scripts/build-skin-css.js");
+}
+
+// 12. 每个页面的根节点都要挂 {{skinClass}}：漏挂的页面在所有主题下都只剩默认结构，不报错，只是「没换肤」。
+for (const page of allPages) {
+  const file = path.join(root, page + ".wxml");
+  if (!fs.existsSync(file)) continue;
+  const markup = fs.readFileSync(file, "utf8").replace(/<!--[\s\S]*?-->/g, "").replace(/<page-meta[^>]*>\s*<\/page-meta>/, "");
+  const first = markup.match(/<(view|t-glass-sheet)\b[^>]*>/);
+  if (!first || first[0].indexOf("{{skinClass}}") < 0) failures.push(`皮肤类缺失 ${page}.wxml: 根节点未挂 {{skinClass}}`);
+}
 
 if (failures.length) {
   console.error(failures.join("\n"));

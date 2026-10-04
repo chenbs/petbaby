@@ -55,10 +55,10 @@ test("A06/A14：年度入口先确认素材与实际价，用户再确认才以B
   const body = calls.find((call) => call[1])[1].data;
   assert.equal(body.petId, "B"); assert.deepEqual(Array.from(body.photoIds), ["b1"]);
 });
-test("A09：首页服务错误不伪装零档案；B的最近收好和去年今日分别按上传时间与宠物读取", async () => {
+test("A09：首页服务错误不伪装零档案；B 的封面照与去年今日都按 B 读取，纪念宠物不出里程碑", async () => {
   const calls = [];
   let fail = true;
-  const { instance } = page("index", async (url) => {
+  const { instance, navigation } = page("index", async (url) => {
     calls.push(url);
     if (fail) throw new Error("断网");
     if (url === "/api/pets") return [petA, petB];
@@ -67,13 +67,17 @@ test("A09：首页服务错误不伪装零档案；B的最近收好和去年今�
   });
   await instance.loadPet(); assert.equal(instance.data.recordError, "断网"); assert.equal(instance.data.pet, null);
   fail = false; instance._petId = "B"; await instance.loadPet();
-  assert.equal(instance.data.pet.id, "B"); assert.equal(instance.data.recordAction, "收好照片"); assert.equal(instance.data.milestone, "");
-  assert.ok(calls.some((url) => url.includes("petId=B&pageSize=3&order=uploaded")));
+  assert.equal(instance.data.pet.id, "B");
+  // 2026-09 首页改版：今日一格只放一条；纪念宠物不出里程碑，给安静的默认文案
+  assert.equal(instance.data.moment.kind, "record");
+  assert.doesNotMatch(instance.data.moment.title, /拍一张|第一张/);
+  assert.ok(calls.some((url) => url.includes("petId=B&pageSize=1&order=uploaded")));
   assert.ok(calls.includes("/api/on-this-day?petId=B"));
-  assert.equal(instance.data.recent[0].recordedDate, "2020-01-01");
   assert.equal(instance.data.petDisplayUrl, "https://example.test/b1.jpg");
   instance.onImageError({ currentTarget: { dataset: { kind: "pet", src: instance.data.petDisplayUrl } } });
   assert.equal(instance.data.petDisplayUrl, "");
+  instance.record();
+  assert.match(navigation[navigation.length - 1], /mode=record.*petId=B/);
 });
 test("个人中心头像缺失或失败时使用该宠物最近的记录照片", async () => {
   const pet = { ...petA, avatarUrl: "https://example.test/avatar.jpg", counts: { works: 0, photos: 1, memorials: 0 } };

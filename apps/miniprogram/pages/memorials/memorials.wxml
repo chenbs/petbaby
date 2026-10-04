@@ -1,6 +1,6 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-flat page-memorial art-film layout-bookshelf">
+<view class="{{skinClass}} page page-flat page-memorial art-film layout-bookshelf">
   <view class="title">纪念空间</view>
   <text class="muted">一个安静的位置，留给已经离开的我。</text>
 

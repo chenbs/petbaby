@@ -16,8 +16,6 @@
     "pages/health/health",
     "pages/ai-create/ai-create",
     "pages/ai-run/ai-run",
-    "pages/interactive-create/interactive-create",
-    "pages/interactive/interactive",
     "pages/video-create/video-create",
     "pages/video/video",
     "pages/memorials/memorials",
@@ -26,7 +24,8 @@
     "pages/physical/physical",
     "pages/login/login",
     "pages/theme/theme",
-    "pages/fun-tests/fun-tests"
+    "pages/fun-tests/fun-tests",
+    "pages/share/share"
   ],
   "lazyCodeLoading": "requiredComponents",
   "window": {
@@ -38,10 +37,22 @@
   "tabBar": {
     "custom": true,
     "list": [
-      { "pagePath": "pages/index/index", "text": "陪伴" },
-      { "pagePath": "pages/art-photo/art-photo", "text": "写真" },
-      { "pagePath": "pages/works/works", "text": "作品" },
-      { "pagePath": "pages/me/me", "text": "我的" }
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/art-photo/art-photo",
+        "text": "创作"
+      },
+      {
+        "pagePath": "pages/works/works",
+        "text": "作品"
+      },
+      {
+        "pagePath": "pages/me/me",
+        "text": "我的"
+      }
     ]
   },
   "style": "v2",

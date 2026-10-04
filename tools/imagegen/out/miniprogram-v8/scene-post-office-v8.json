@@ -1,0 +1,13 @@
+{
+  "id": "post-office",
+  "title": "珍珠与猫",
+  "samplePet": "british",
+  "prompt": "Use case: photorealistic, bright and charming lifestyle pet portrait, shot by a professional pet photographer in a real place. Image 1 is the identity reference only, not a pose or background template. Keep the same adult blue British Shorthair from Image 1, with round face, solid gray coat and copper-amber eyes. One pet only, no people. Wear only the single garment or accessory named in the set description, fitted naturally and understated; if none is named, the pet wears nothing. Set and light: A high-key studio with a soft cream silk backdrop and gentle wraparound light. The British Shorthair sits in an elegant three-quarter turn, chin slightly raised, eyes calm and luminous. The cat wears a delicate single-strand pearl necklace resting on its chest. Refined, bright, soft ivory and grey palette, no other props. The cat sits in an elegant three-quarter turn, chin slightly raised, eyes calm and luminous. Photographic qualities: a single dominant light source with one consistent direction, natural soft falloff into shadow, true-to-life fur with individual strands and slight natural unevenness, realistic eye moisture with one small catchlight, believable contact shadow where the body meets the surface. Camera: full-frame camera with an 85mm portrait lens at about f/2.8, eye-level with the pet, shallow natural depth of field. Bright, clean, well-exposed image with fresh natural colors that are lively but not oversaturated, soft pleasing light on the face, no HDR look, no heavy retouching. Expression matters most: the pet looks alive and endearing, with bright eyes and a natural, readable emotion, so that any pet owner would want the same photo of their own pet. Vertical 3:4, complete pet with safe margins, the face occupying about 35-50% of frame height, uncluttered background. Avoid: dull or dark muddy tones, blank or sleepy-stiff expression unless the scene says the pet is dozing, human-like poses, costumes, hats, glasses, multiple accessories, glowing or rim light that looks painted, dramatic fantasy lighting, oversaturated colors, plastic or airbrushed fur, perfect symmetry, extra props, floating body, pasted edges, extra limbs, duplicate pets, CGI or illustration look, text, logos or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/source/cat-british.jpg",
+  "referenceSha256": "ddbdfb39b6cb3c6dddbfdd01555cd2fea299cfa927f76a1e7248d581152e0364",
+  "output": "tools/imagegen/out/scenes/scene-post-office-v8.jpg",
+  "sha256": "39fcfcf4bee776a85c317716ee46ce6cd635aa8dd9dfbaef2dd10e52ec925f6f",
+  "review": "pending-visual-review"
+}

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import sharp from "sharp";
 
-import { REPORT_PHOTOS, buildReportSvg, rasterizeReport, withPreviewWatermark } from "@/server/annual/report";
+import { REPORT_PHOTOS, REPORT_PREVIEW_WIDTH, buildReportSvg, rasterizeReport, rasterizeReportPreview } from "@/server/annual/report";
 import type { AnnualAggregate } from "@/server/annual/aggregate";
 
 async function jpeg() {
@@ -104,16 +104,16 @@ describe("buildReportSvg", () => {
   });
 });
 
-describe("withPreviewWatermark", () => {
-  /** 预览与正式版版面必须一致，否则用户解锁后会发现「买到的和看到的不一样」 */
-  it("只叠水印，不改版面尺寸", async () => {
+describe("rasterizeReportPreview", () => {
+  /** 2026-09 起预览不叠水印：版面与正式版一致，只是缩到更小的宽度 */
+  it("不叠水印，只缩尺寸并保持版面比例", async () => {
     const svg = buildReportSvg({ aggregate: aggregate(), photos: await photos(3) });
-    const preview = withPreviewWatermark(svg);
-    const size = (input: string) => /width="(\d+)" height="(\d+)"/.exec(input)?.slice(1, 3);
-    expect(size(preview)).toEqual(size(svg));
-    expect(preview).toContain("解锁高清版");
     expect(svg).not.toContain("解锁高清版");
-  });
+    const [full, preview] = await Promise.all([rasterizeReport(svg), rasterizeReportPreview(svg)]);
+    const [fullMeta, previewMeta] = await Promise.all([sharp(Buffer.from(full)).metadata(), sharp(Buffer.from(preview)).metadata()]);
+    expect(previewMeta.width).toBe(REPORT_PREVIEW_WIDTH);
+    expect(Math.abs((previewMeta.height || 0) / REPORT_PREVIEW_WIDTH - (fullMeta.height || 0) / (fullMeta.width || 1))).toBeLessThan(0.01);
+  }, 60_000);
 });
 
 describe("rasterizeReport", () => {

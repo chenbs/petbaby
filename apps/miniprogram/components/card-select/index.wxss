@@ -72,7 +72,7 @@
   width: 32rpx;
   height: 32rpx;
   border-radius: 50%;
-  background: var(--primary);
+  background: var(--button-primary);
   box-shadow: var(--shadow-press);
 }
 

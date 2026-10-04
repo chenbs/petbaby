@@ -179,3 +179,55 @@
  * pages/pets 的四个枚举也改用 chip（CLAUDE.md 的「已知未收口」项），
  * 第二处要用时就该共用而不是复制一份。此处不再重复声明。
  */
+
+/* 宠物头像 chip（2026-09，替代下拉框） */
+.pet-chips { margin-top: var(--space-2); }
+.pet-chip { display: inline-flex; flex: none; align-items: center; gap: var(--space-2); padding: var(--space-1) var(--space-3) var(--space-1) var(--space-1); border: 2rpx solid var(--border); border-radius: var(--radius-pill); background: var(--card-background); color: var(--text-primary); font-size: var(--small-size); font-weight: var(--fw-bold); }
+.pet-chip-on { border-color: var(--primary); color: var(--primary); }
+.pet-chip-avatar { width: 56rpx; height: 56rpx; border-radius: var(--radius-pill); background: var(--surface); }
+.pet-chip-avatar-empty { display: flex; align-items: center; justify-content: center; overflow: hidden; color: var(--text-secondary); font-size: var(--eyebrow-size); }
+
+/* ---------- 选照片（2026-10 按 prototype.html after-effect）---------- */
+.ai-flow-photos { padding-top: var(--space-2); padding-bottom: calc(220rpx + env(safe-area-inset-bottom)); }
+
+/* 预览框比例跟素材走：card 3:4 铺满；portrait 在 3:4 框里完整显示 9:16 样片，两侧垫同图模糊底；wide 16:9 */
+.effect-preview { position: relative; width: 84%; margin: 0 auto; overflow: hidden; border-radius: var(--radius-image-hero); background: var(--surface); box-shadow: var(--shadow-image); }
+.effect-preview-card { aspect-ratio: var(--ratio-card); }
+/* 9:16 模板：框按素材比例收窄，样片完整显示且不留边 */
+.effect-preview-portrait { width: 60%; aspect-ratio: var(--ratio-portrait); }
+.effect-preview-wide { aspect-ratio: 16 / 9; }
+.effect-preview-image { position: relative; display: block; width: 100%; height: 100%; border-radius: 0; }
+.effect-preview-label { position: absolute; bottom: var(--space-3); left: var(--space-3); z-index: 2; }
+
+.effect-strip { width: 100%; margin-top: var(--space-3); white-space: nowrap; }
+.effect-thumb { display: inline-block; width: 134rpx; margin-right: var(--space-2); vertical-align: top; }
+.effect-thumb-image { display: block; box-sizing: border-box; width: 134rpx; height: auto; border: 4rpx solid transparent; border-radius: var(--radius-sm); background: var(--surface); }
+.effect-thumb-card { aspect-ratio: var(--ratio-card); }
+.effect-thumb-portrait { aspect-ratio: var(--ratio-portrait); }
+.effect-thumb-wide { aspect-ratio: var(--ratio-portrait); }
+.effect-thumb-on .effect-thumb-image { border-color: var(--primary); }
+.effect-thumb-name { display: block; overflow: hidden; padding-top: var(--space-1); color: var(--text-secondary); font-size: var(--eyebrow-size); text-align: center; text-overflow: ellipsis; white-space: nowrap; }
+/* 写真套餐入口卡 */
+.art-pack { margin-top: var(--space-3); padding: var(--space-3); border: var(--card-border); border-radius: var(--card-radius); background: var(--surface); }
+.art-pack-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-2); }
+.art-pack-title { flex: none; color: var(--text-primary); font-size: var(--body-size); font-weight: var(--fw-black); }
+.art-pack-head .small { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.art-pack-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2); margin-top: var(--space-2); }
+.art-pack-item { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); padding: var(--space-2) var(--space-3); border: 2rpx solid var(--border); border-radius: var(--radius-md); background: var(--card-background); }
+.art-pack-name { color: var(--text-primary); font-size: var(--small-size); font-weight: var(--fw-bold); }
+.art-pack-price { color: var(--primary); font-family: var(--skin-num-font, inherit); font-size: var(--small-size); font-weight: var(--fw-black); }
+.effect-thumb-on .effect-thumb-name { color: var(--text-primary); font-weight: var(--fw-bold); }
+
+.photo-head { margin-top: var(--space-5); }
+.pet-chip-on { border-color: var(--primary); color: var(--primary); }
+.pet-chip-avatar-empty { font-size: var(--small-size); font-weight: var(--fw-bold); }
+.photo-row { margin-top: var(--space-3); }
+
+/* 提示条：成功色浅底 + 勾，与原型的薄荷提示一致 */
+.photo-tip { display: flex; align-items: center; gap: var(--space-2); margin-top: var(--space-3); padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); background: var(--success-surface); color: var(--success); font-size: var(--small-size); }
+.photo-tip-mark { flex: none; font-weight: var(--fw-black); }
+
+/* 固定底栏：「为我拍一张 / 免费预览 · 满意再保存 ¥16.9 / 开始」 */
+.ai-dock { position: fixed; right: 0; bottom: 0; left: 0; z-index: 10; display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--page-padding) calc(var(--space-3) + env(safe-area-inset-bottom)); border-top: 2rpx solid var(--divider); background: var(--card-background); box-shadow: var(--shadow-float); }
+.ai-dock-meta { display: grid; flex: 1; gap: var(--space-0); min-width: 0; }
+.ai-dock-title { color: var(--text-primary); font-size: var(--font-h3); font-weight: var(--fw-black); }

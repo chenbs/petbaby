@@ -6,14 +6,14 @@ const root = path.resolve(__dirname, "../../..");
 const platform = path.join(root, "apps/platform");
 const sharp = require(require.resolve("sharp", { paths: [platform] }));
 const { CATEGORY_COVERS, BOSS_TEMPLATE_IDS, BOSS_SCENE_IDS } = require("../services/home-effect-ids");
-const { pluginSources, scenes, movieScenes, albumScenes, interactiveColors, templates, overrides, thumbnail, albumPage, moviePoster } = require("./build-sample-assets");
+const { pluginSources, scenes, movieScenes, albumScenes, templates, overrides, thumbnail, albumPage, moviePoster } = require("./build-sample-assets");
 
 const legacyRoot = path.join(root, "apps/miniprogram/assets/samples");
 const homeRoot = path.join(root, "apps/miniprogram/assets/home-effects");
 const stageRoot = path.join(platform, ".data/miniprogram-effects");
 const remoteRoot = path.join(stageRoot, "remote");
 const staticOrigin = "https://babykitty-static-one-1252454114.cos.ap-shanghai.myqcloud.com";
-const manifest = { plugins: {}, scenes: {}, templates: {}, movie: {}, album: {}, interactive: {}, funTests: {}, covers: {}, templateShapes: {} };
+const manifest = { plugins: {}, scenes: {}, templates: {}, movie: {}, album: {}, funTests: {}, covers: {}, templateShapes: {} };
 const plan = { version: 1, home: [], remote: [], manifest };
 
 const firstByEntry = new Map();
@@ -99,10 +99,6 @@ async function main() {
   manifest.movie.rooftop = manifest.plugins["pet-movie-poster"];
   for (const id of Object.keys(albumScenes)) {
     await record("album", id, albumScenes[id], false, (_source, target) => albumPage(id, target, 1.5));
-  }
-  for (const [id, color] of Object.entries(interactiveColors)) {
-    await record("interactive", id, path.join(root, "tools/imagegen/out/plugins", pluginSources["pl-15"]), false,
-      (source, target, width, height) => thumbnail(source, target, width, height, { frame: color, inset: Math.round(26 * 1.5), quality: 78 }));
   }
   for (const id of ["personality", "recharge", "bond", "luck"]) {
     const source = path.join(root, "tools/imagegen/out/goal-20260929", `fun-${id}-v2.jpg`);

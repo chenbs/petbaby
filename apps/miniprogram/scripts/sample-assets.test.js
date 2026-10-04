@@ -7,11 +7,13 @@ const sharp = require(require.resolve("sharp", { paths: [path.resolve(__dirname,
 
 test("首页样片留在包内，其他玩法样片从静态 COS 读取", () => {
   const root = path.resolve(__dirname, "..");
-  const paths = ["plugins", "scenes", "templates", "movie", "album", "interactive", "funTests", "covers"].flatMap((name) => Object.values(manifest[name]));
+  const paths = ["plugins", "scenes", "templates", "movie", "album", "funTests", "covers"].flatMap((name) => Object.values(manifest[name]));
   const local = new Set(paths.filter((url) => url.startsWith("/assets/")));
   const remote = paths.filter((url) => !url.startsWith("/assets/"));
-  assert.equal(local.size, 30);
-  assert.equal(remote.length, 93);
+  // 2026-09 互动星尘页（PL-15）下线，首页卡片图 pl-15.jpg 随之删除：30 → 29。
+  assert.equal(local.size, 29);
+  // 同上，互动组 3 张远程样片（stardust/meadow/sunset）移除：93 → 90。
+  assert.equal(remote.length, 90 + 12); // 2026-10：写真扩到 36 套，新增美短 / 柯基 / 三花各 4 张远程样片
   for (const id of ["berry-pastry-chef", "ballet-backstage"]) {
     assert.equal(manifest.scenes[id], "/assets/home-effects/scenes/" + id + ".jpg");
   }
@@ -29,7 +31,7 @@ test("首页样片留在包内，其他玩法样片从静态 COS 读取", () => 
     assert.match(url, /-[a-f0-9]{64}\.jpg$/);
   }
   const ignored = require("../project.config.json").packOptions.ignore;
-  for (const group of ["plugins", "scenes", "templates", "movie", "album", "interactive"]) {
+  for (const group of ["plugins", "scenes", "templates", "movie", "album"]) {
     assert.ok(ignored.some((item) => item.type === "folder" && item.value === "assets/samples/" + group));
   }
   for (const id of ["recharge", "bond", "luck"]) {
@@ -43,7 +45,7 @@ test("首页样片留在包内，其他玩法样片从静态 COS 读取", () => 
   const entries = imageEntries([{ id: "fun", templates: [{ templateId: "pet-wanted-poster", sampleUrl: "http://127.0.0.1:3000/sample" }] }]);
   assert.equal(entries[0].templates[0].sampleUrl, manifest.templates["pet-wanted-poster"]);
   const human = imageEntries([{ id: "human", templates: [{ templateId: "human-effect-31", sampleUrl: "/api/image-templates/human-effect-31/sample" }] }]);
-  assert.equal(human[0].templates[0].sampleUrl, require("../config").apiBaseUrl + "/api/image-templates/human-effect-31/sample");
+  assert.equal(human[0].templates[0].sampleUrl, require("../config").apiBaseUrl + "/api/image-templates/human-effect-31/sample?format=jpeg");
 });
 
 test("模板和场景缩略图保持来源方向及预期比例", async () => {

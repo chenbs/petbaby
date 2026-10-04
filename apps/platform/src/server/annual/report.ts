@@ -142,17 +142,12 @@ export function buildReportSvg(input: ReportInput) {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${height}"><rect width="${WIDTH}" height="${height}" fill="${PALETTE.paper}"/><defs>${clips.join("")}</defs>${body.join("")}</svg>`;
 }
 
-/**
- * 预览版：叠一条水印。
- *
- * 保留原实现的做法（在 `</svg>` 前插一组元素）而不是重新排版 ——
- * 水印必须压在内容之上，且预览与正式版的版面要完全一致，
- * 否则用户解锁后会发现「我买到的和我看到的不一样」。
- */
-export function withPreviewWatermark(svg: string) {
-  const height = Number(/height="(\d+)"/.exec(svg)?.[1] || 1920);
-  const band = Math.round(height * 0.42);
-  return svg.replace("</svg>", `<g opacity=".82"><rect x="80" y="${band}" width="920" height="120" rx="20" fill="${PALETTE.ink}"/><text x="540" y="${band + 76}" text-anchor="middle" font-size="38" fill="#fff" font-family="sans-serif">麻麻抱我免费预览 · 解锁高清版</text></g></svg>`);
+/** 预览长图的宽度。正式版是 1080px 宽（WIDTH），预览只缩尺寸、不叠任何标记（2026-09 起取消水印）。 */
+export const REPORT_PREVIEW_WIDTH = 640;
+
+/** 预览版：同一张长图缩到 REPORT_PREVIEW_WIDTH 宽。版面与正式版完全一致，只是分辨率低。 */
+export async function rasterizeReportPreview(svg: string) {
+  return new Uint8Array(await sharp(Buffer.from(svg)).resize({ width: REPORT_PREVIEW_WIDTH }).png({ compressionLevel: 9 }).toBuffer());
 }
 
 /** 长图转 PNG。SVG 直接下发时微信内置浏览器与部分客户端渲染不一致 */

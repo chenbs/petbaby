@@ -42,6 +42,7 @@
 .work-cover {
   display: block;
   width: 100%;
+  height: auto;
   aspect-ratio: var(--ratio-card);
   border-radius: var(--radius-image-thumb);
   background: var(--skeleton-base);

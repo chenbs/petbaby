@@ -1,0 +1,13 @@
+{
+  "id": "shorthair-armchair",
+  "title": "旧扶手椅",
+  "samplePet": "shorthair",
+  "prompt": "Use case: photorealistic fine-art pet portrait, shot by a professional pet photographer in a real studio or a real room. Image 1 is the identity reference only, not a pose or background template. Keep the same adult American Shorthair from Image 1, with silver tabby coat, bold black swirl markings, round face and copper-green eyes. One pet only, no people. Wear only the single garment or accessory named in the set description, fitted naturally and understated; if none is named, the pet wears nothing. Set and light: Soft north window light falls across a worn moss-green velvet armchair against a plain warm-grey plaster wall. The cat sits curled into the corner of the seat, paws tucked under, looking up toward camera. The cat wears a cream ribbed knit turtleneck sweater, fitted and simple. Muted green and cream palette, real velvet pile, no other props. The cat sits curled into the armchair corner, paws tucked under, eyes lifted toward camera. Photographic qualities: a single dominant light source with one consistent direction, natural soft falloff into shadow, true-to-life fur with individual strands and slight natural unevenness, realistic eye moisture with one small catchlight, believable contact shadow where the body meets the surface. Camera: full-frame camera with an 85mm portrait lens at about f/2.8, eye-level with the pet, shallow but natural depth of field, fine film-like grain, restrained true-to-life colors with low saturation, no HDR look, no heavy retouching. Vertical 3:4, complete pet with safe margins, the face occupying about 30-45% of frame height, simple uncluttered background with generous negative space. Avoid: anthropomorphic expressions or poses, costumes, hats, glasses, multiple accessories, glowing or rim light that looks painted, dramatic fantasy lighting, oversaturated colors, plastic or airbrushed fur, perfect symmetry, extra props, floating body, pasted edges, extra limbs, duplicate pets, CGI or illustration look, text, logos or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/scenes-v7/identity-shorthair-v1.jpg",
+  "referenceSha256": "d6d2b3eb93acd97aedff2bb7070d4b0f886c96d93da9e13a0989806a8d45610b",
+  "output": "tools/imagegen/out/scenes/scene-shorthair-armchair-v7.jpg",
+  "sha256": "c566d0b61a0ebfbcc7bd0b47aeff09501038addcfbc81ce28b35bdfbbaae695a",
+  "review": "pending-visual-review"
+}

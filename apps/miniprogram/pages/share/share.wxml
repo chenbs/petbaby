@@ -1,0 +1,29 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+
+<view class="{{skinClass}} page page-flat art-brand layout-canvas share-page">
+  <t-skeleton wx:if="{{loading}}" type="card" count="1"></t-skeleton>
+
+  <block wx:elif="{{work}}">
+    <text class="eyebrow">麻麻抱我 · 好友分享</text>
+    <view class="title">{{work.title}}</view>
+    <text wx:if="{{work.subtitle}}" class="muted">{{work.subtitle}}</text>
+
+    <view class="share-frame ai-mask-host" aria-role="img" aria-label="{{work.title}}" bindtap="preview">
+      <image wx:if="{{imageUrl}}" class="share-image" src="{{imageUrl}}" mode="widthFix" binderror="onImageError" />
+      <view wx:else class="share-image share-image-blank">作品图片暂不可用</view>
+      <text wx:if="{{work.aiGenerated && work.aiNotice && imageUrl}}" class="ai-mask ai-mask-lg">{{work.aiNotice}}</text>
+    </view>
+
+    <view class="share-cta">
+      <view class="sub-title">{{work.pet.name}}的{{work.pluginName}}</view>
+      <text class="muted">用一张你家宠物的照片，就能做同款。</text>
+      <t-button type="primary" block anim="{{animType}}" class="block-gap" bindtap="makeSame">给我家的也做一个</t-button>
+    </view>
+  </block>
+
+  <block wx:else>
+    <view class="title">作品暂时打不开</view>
+    <t-notice type="error" message="{{error || '分享已关闭或不存在'}}" class="block-gap"></t-notice>
+    <t-button type="secondary" block anim="{{animType}}" class="block-gap" bindtap="makeSame">去看看有哪些玩法</t-button>
+  </block>
+</view>

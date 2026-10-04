@@ -64,3 +64,10 @@
   display: grid;
   gap: var(--space-1);
 }
+
+.work-overlay {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}

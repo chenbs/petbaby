@@ -1,5 +1,5 @@
 /**
- * t-photo-grid：照片九宫格。被 create / ai-create / interactive-create / video-create / photos / memorials 复用。
+ * t-photo-grid：照片九宫格。被 create / ai-create / video-create / photos / memorials 复用。
  *
  * photos      [{ id, url, selected }]，由页面维护（不改页面既有数据字段语义）
  * selectedIds 选中顺序数组；ordered=true 时格内角标显示序号而非「已选」
@@ -15,6 +15,8 @@ Component({
     selectedIds: { type: Array, value: [] },
     max: { type: Number, value: 9 },
     addable: { type: Boolean, value: false },
+    addText: { type: String, value: "添加" },
+    addIcon: { type: String, value: "" },
     ordered: { type: Boolean, value: false },
     manageable: { type: Boolean, value: false },
     reorderable: { type: Boolean, value: false },

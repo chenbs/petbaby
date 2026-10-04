@@ -2,14 +2,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import sharp from "sharp";
 import { GET as media } from "@/app/api/media/[...key]/route";
 import { GET as shareMedia } from "@/app/api/share/[token]/media/[asset]/route";
-import { GET as interactiveMedia } from "@/app/api/interactive-share/[token]/media/[photoId]/route";
 import { GET as memorialMedia } from "@/app/api/memorial-share/[token]/media/[photoId]/route";
 import { signSession } from "@/server/auth/session";
 import { getDatabase, inTransaction, resetDatabaseForTest } from "@/server/db/client";
 import { createGeneration, createPet, createOrder, deletePet, getGeneration, getSharedWork, getWork, revokeShare, shareWork } from "@/server/platform-service";
 import { runWorkerUntilIdle } from "@/server/worker/generation-worker";
 import { deletePhoto, savePhoto, updatePhotoMetadata } from "@/server/photo-library-service";
-import { createInteractiveSession, createVideoRender, exportInteractiveSession, revokeInteractiveShare, shareInteractiveSession } from "@/server/growth-service";
+import { createVideoRender } from "@/server/growth-service";
 import { cancelVideoRender } from "@/server/video/service";
 import { ensurePhotoDeliverableAsset } from "@/server/photo-deliverable-assets";
 import { createMemorialSpace, getPublicMemorial, updateMemorialSpace } from "@/server/memorial-service";
@@ -65,7 +64,8 @@ describe("私人照片与交付物隔离（A10/A11/A16）", () => {
       await expect(createOrder(USER, completed.work!.id)).rejects.toMatchObject({ code: "ORDER_NOT_REQUIRED" });
       const output = await objectStorage.get(completed.work!.outputKey!);
       const preview = await objectStorage.get(completed.work!.previewKey!);
-      expect(output).toBeTruthy(); expect(Buffer.from(output!.body)).toEqual(Buffer.from(preview!.body));
+      // 2026-09 起免费作品直接给干净原图，预览是独立的缩图，不再用预览覆盖原图。
+      expect(output).toBeTruthy(); expect(preview).toBeTruthy(); expect(Buffer.from(output!.body).equals(Buffer.from(preview!.body))).toBe(false);
     } else {
       const order = await createOrder(USER, completed.work!.id);
       expect(order.status).toBe("pending"); expect(order.amount).toBeGreaterThan(0);
@@ -161,30 +161,21 @@ describe("私人照片与交付物隔离（A10/A11/A16）", () => {
     await expect(createGeneration(USER, { petId, photoIds: [photo.id], pluginId: "pet-id-card", idempotencyKey: crypto.randomUUID() })).rejects.toMatchObject({ code: "PHOTO_PET_MISMATCH" });
   });
 
-  it("互动/纪念独立出口不传播记录，保留已用图片；撤销和删宠即时拒绝新读取", async () => {
-    const session = await createInteractiveSession(USER, { petId, pluginId: "pl-15", photoIds: [photo.id], snapshot: { title: "记住", copy: "已确认的作品文案", theme: "stardust" } });
-    const shared = await shareInteractiveSession(USER, session.id, {});
-    const token = shared.shareToken!;
-    const interactive = () => interactiveMedia(request(), { params: Promise.resolve({ token, photoId: photo.id }) });
+  it("纪念独立出口不传播记录，保留已用图片；删宠即时拒绝新读取", async () => {
     const space = await createMemorialSpace(USER, { petId, title: "纪念", photoIds: [photo.id] });
     const memorial = await updateMemorialSpace(USER, String(space.id), { title: "纪念", story: "作品故事", theme: "stardust", photoIds: [photo.id], visibility: "shared" });
     const mt = String(memorial.share_token);
     const remembered = () => memorialMedia(request(), { params: Promise.resolve({ token: mt, photoId: photo.id }) });
-    expect((await interactive()).status).toBe(200);
     expect((await remembered()).status).toBe(200);
     expect(JSON.stringify(await getPublicMemorial(mt))).not.toContain("不能泄漏");
     await deletePhoto(USER, photo.id);
-    expect((await interactive()).status).toBe(200);
     expect((await remembered()).status).toBe(200);
-    await revokeInteractiveShare(USER, session.id);
-    expect((await interactive()).status).toBe(410);
     await deletePet(USER, petId);
     expect((await remembered()).status).toBe(410);
   });
 
-  it("互动任务在途阻止删除，整宠/注销的清理失败持久重试", async () => {
-    const session = await createInteractiveSession(USER, { petId, pluginId: "pl-15", photoIds: [photo.id], snapshot: { title: "记住", copy: "文案", theme: "stardust" } });
-    await exportInteractiveSession(USER, session.id);
+  it("视频任务在途阻止删除，整宠/注销的清理失败持久重试", async () => {
+    await createVideoRender(USER, { pluginId: "pl-19", photos: [photo.storageKey] });
     await expect(deletePhoto(USER, photo.id)).rejects.toMatchObject({ code: "PHOTO_IN_USE" });
     await expect(deletePet(USER, petId)).rejects.toMatchObject({ code: "PHOTO_IN_USE" });
     await (await getDatabase()).query("UPDATE video_renders SET status='cancelled' WHERE user_id=$1", [USER]);

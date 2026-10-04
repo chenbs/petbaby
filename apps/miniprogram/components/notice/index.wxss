@@ -66,6 +66,6 @@
 }
 
 .notice-info .notice-mark {
-  background: var(--primary);
+  background: var(--button-primary);
   color: var(--button-primary-text);
 }

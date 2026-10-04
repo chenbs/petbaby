@@ -235,13 +235,19 @@ describe("persistent platform service", () => {
     expect((await healthSnapshot()).database).toBe(true);
   });
 
-  it("cleans expired locked works", async () => {
+  /*
+   * 2026-09 起作品长期保存：维护任务不再按 expires_at 删除未付费作品。
+   * 即使历史行还带着过期时间，作品和文件都必须留下。
+   */
+  it("keeps locked works even past their legacy expiry", async () => {
     const { task } = await setupGeneration(); await runWorkerUntilIdle();
     const work = (await getGeneration(USER_A, task.id)).work!;
+    expect(work.expiresAt).toBeUndefined();
     const database = await getDatabase();
     await database.query("UPDATE works SET expires_at=now()-interval '1 day' WHERE id=$1", [work.id]);
-    expect((await cleanupExpiredContent()).works).toBe(1);
-    expect(await listWorks(USER_A)).toHaveLength(0);
+    expect((await cleanupExpiredContent()).works).toBe(0);
+    expect(await listWorks(USER_A)).toHaveLength(1);
+    expect(await objectStorage.get(work.previewKey!)).toBeTruthy();
   });
 });
 
@@ -383,19 +389,20 @@ describe("免费玩法", () => {
   });
 
   /*
-   * **免费不等于无水印。** 免费玩法的产物永久带营销水印与小程序码 ——
-   * 它的作用是传播（PL-23 是分享钩子），水印不是付费墙。
-   *
-   * getVisibleWork/getDownload 对未锁作品返回 outputKey，所以正式产物
-   * 本身必须已经是带水印的字节，否则免费玩法反而拿到比付费更干净的图。
+   * 2026-09 起取消营销水印：免费玩法直接拿到干净的正式产物，
+   * 预览只是缩小后的 PNG，不叠任何文字或小程序码。
    */
-  it("免费作品的正式产物仍带水印", async () => {
+  it("免费作品的正式产物不被预览字节覆盖，预览是不带标记的缩图", async () => {
     const work = await generateFree();
     const output = await objectStorage.get(work.outputKey!);
     const preview = await objectStorage.get(work.previewKey!);
     expect(output).toBeTruthy();
     expect(preview).toBeTruthy();
-    expect(Buffer.from(output!.body).equals(Buffer.from(preview!.body))).toBe(true);
+    expect(Buffer.from(output!.body).equals(Buffer.from(preview!.body))).toBe(false);
+    expect(new TextDecoder().decode(output!.body)).not.toContain("免费预览");
+    const meta = await sharp(Buffer.from(preview!.body)).metadata();
+    expect(meta.format).toBe("png");
+    expect(Math.max(meta.width || 0, meta.height || 0)).toBeLessThanOrEqual(1080);
   });
 
   it("付费玩法仍然锁定且可建订单", async () => {

@@ -24,6 +24,8 @@ import { confirmOrderPayment, prepareOrderPayment, refundOrderPayment } from "@/
 import { objectStorage } from "@/server/storage";
 import { runWorkerUntilIdle } from "@/server/worker/generation-worker";
 import { ensurePhotoDeliverableAsset } from "@/server/photo-deliverable-assets";
+import { AI_NOTICE_TEXT, needsAiLabel } from "@/server/media/ai-label";
+import { assertAiOriginalDelivery } from "@/server/ai-disclosure-service";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -233,7 +235,9 @@ async function hydrateWork(work: Work): Promise<PublicWork> {
   const sourceKey = work.locked ? work.previewKey : work.outputKey;
   const visibleKey = sourceKey === photo.storageKey ? coverKey : sourceKey;
   // 作品只需要封面；不要把后来补写的私人记录或上传标识嵌入作品响应。
-  return { ...work, pet, photo: { id: photo.id, url: `/api/media/${encodeURIComponent(coverKey)}` }, plugin, outputUrl: visibleKey ? `/api/media/${encodeURIComponent(visibleKey)}` : undefined };
+  // 生成合成内容在界面上叠「该内容由AI生成」蒙层；文案由服务端下发，端上不写死。
+  const aiGenerated = needsAiLabel(plugin);
+  return { ...work, pet, photo: { id: photo.id, url: `/api/media/${encodeURIComponent(coverKey)}` }, plugin, outputUrl: visibleKey ? `/api/media/${encodeURIComponent(visibleKey)}` : undefined, aiGenerated, ...(aiGenerated ? { aiNotice: AI_NOTICE_TEXT } : {}) };
 }
 
 export async function listWorks(userId: string, filters: { petId?: string; pluginId?: string; locked?: boolean } = {}) {
@@ -421,7 +425,7 @@ export async function createOrder(userId: string, workId: string, requestedSku?:
    * `price_tier` 记**计价档**：这一列的用途是对账时解释「为什么这单是这个数」，
    * 记规格档会让 amount 与 price_tier 对不上。规格档进 works.accumulation_snapshot。
    */
-  const entitlements = { formats: work.plugin.output.formats, watermarkRemoved: true, ...(pricing.memberSaving > 0 ? { memberSaving: pricing.memberSaving, listPrice: pricing.listPrice } : {}) };
+  const entitlements = { formats: work.plugin.output.formats, fullResolution: true, ...(pricing.memberSaving > 0 ? { memberSaving: pricing.memberSaving, listPrice: pricing.listPrice } : {}) };
   const rows = await database.query(
     "INSERT INTO orders (id,user_id,work_id,plugin_id,amount,sku,unit_price,entitlements,plugin_snapshot,status,price_tier,created_at) VALUES ($1,$2,$3,$4,$5,$6,$5,$7::jsonb,$8::jsonb,'pending',$10,$9) RETURNING *",
     [crypto.randomUUID(), userId, workId, work.pluginId, pricing.amount, sku, JSON.stringify(entitlements), JSON.stringify(work.plugin), new Date(), pricing.priceTier || null],
@@ -469,6 +473,8 @@ export async function getDownload(userId: string, id: string, format: "image" | 
   const base = work.outputKey?.replace(/\.[^.]+$/, "");
   const key = format === "pdf" ? `${base}.pdf` : work.outputKey;
   if (!key) throw new AppError("OUTPUT_NOT_FOUND", "作品文件不存在", 404);
+  // 生成类原图上没有可见标识：首次交付前确认标识义务，并留交付日志（第九条）。
+  if (work.aiGenerated) await assertAiOriginalDelivery(userId, { kind: "work", id: work.id, storageKey: key });
   return { key, filename: `${work.pet.name}-${work.plugin.name}.${format === "pdf" ? "pdf" : key.split(".").pop()}` };
 }
 

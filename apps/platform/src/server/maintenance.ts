@@ -1,7 +1,6 @@
 import "server-only";
 
 import { getDatabase } from "@/server/db/client";
-import { objectStorage } from "@/server/storage";
 import { processObjectCleanupJobs } from "@/server/object-cleanup";
 
 export async function closeExpiredOrders() {
@@ -10,21 +9,18 @@ export async function closeExpiredOrders() {
   return rows.length;
 }
 
+/**
+ * 运维清理。**不清理作品**：2026-09 起作品与照片一样长期保存，
+ * 未付费作品不再按 expires_at 过期删除（原规则会把文件和 works 行一起硬删）。
+ * 作品只在用户自己删除、删除宠物或注销账户时清理。
+ */
 export async function cleanupExpiredContent() {
   const database = await getDatabase();
-  const works = await database.query<{ id: string; output_key: string | null }>("SELECT id,output_key FROM works WHERE locked=true AND expires_at < now()");
-  for (const work of works) {
-    if (work.output_key) {
-      const base = work.output_key.replace(/\.[^.]+$/, "");
-      await Promise.allSettled([objectStorage.delete(work.output_key), objectStorage.delete(`${base}.svg`), objectStorage.delete(`${base}.png`), objectStorage.delete(`${base}.pdf`)]);
-    }
-    await database.query("DELETE FROM works WHERE id=$1", [work.id]);
-  }
   await database.query("DELETE FROM rate_limits WHERE window_start < now()-interval '2 days'");
   // 照片库是用户的记录，不是生成任务的临时素材；没有作品引用也必须保留。
   // 软删行也不能硬删：上传请求键的墓碑依赖它阻止旧请求复活。
   const objectCleanup = await processObjectCleanupJobs();
-  return { works: works.length, photos: 0, objectCleanup };
+  return { works: 0, photos: 0, objectCleanup };
 }
 
 export async function healthSnapshot() {

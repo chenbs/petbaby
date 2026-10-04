@@ -27,6 +27,7 @@
 .creation-sample {
   display: block;
   width: 100%;
+  height: auto;
   aspect-ratio: var(--ratio-hero);
   margin-bottom: var(--space-3);
   border-radius: var(--radius-image-hero);

@@ -8,7 +8,7 @@ describe("GET /api/image-templates", () => {
     const body = await response.json();
     const human = body.data.entries.find((entry: { id: string }) => entry.id === "human");
 
-    expect(human.title).toBe("人类转生计划");
+    expect(human.title).toBe("如果我是人");
     expect(human.templates).toHaveLength(40);
     expect(human.templates[0].templateId).toBe("human-effect-31");
     expect(human.templates[10].templateId).toBe("human-effect-40");

@@ -51,9 +51,16 @@ themedPage({
       this._entries = entries;
       if (this._tracking) this._tracking.viewed(petId, "timeline");
       const groups = [];
+      /*
+       * 同一天的照片合并成一个节点（2026-09）：只有当天第一张带日期抬头，其余作为同日照片并排；
+       * 日期来源只在「按上传时间记录」时标注一次（那不是拍摄事实，要说清），其余来源不逐条重复。
+       */
+      let previousDate = "";
       entries.forEach((entry) => {
         const year = entry.date.slice(0, 4);
-        const item = Object.assign({}, entry, { key: entry.photo.id, sourceText: SOURCES[entry.dateSource], tagTexts: (entry.photo.tags || []).map((code) => TAGS[code]) });
+        const dayStart = entry.date !== previousDate;
+        previousDate = entry.date;
+        const item = Object.assign({}, entry, { key: entry.photo.id, dayStart, sourceText: dayStart && entry.dateSource === "upload" ? SOURCES.upload : "", tagTexts: (entry.photo.tags || []).map((code) => TAGS[code]) });
         const last = groups[groups.length - 1];
         if (last && last.year === year) last.items.push(item); else groups.push({ year, items: [item] });
       });

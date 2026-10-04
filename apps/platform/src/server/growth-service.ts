@@ -5,20 +5,20 @@ import "server-only";
 import { z } from "zod";
 import sharp from "sharp";
 import { PDFDocument } from "pdf-lib";
-import type { AiRun, InteractiveSession, Membership, VideoRender } from "@/domain/models";
+import type { AiRun, Membership, VideoRender } from "@/domain/models";
 import { getDatabase, inTransaction } from "@/server/db/client";
 import { confirmOrderPayment, refundOrderPayment } from "@/server/payments/service";
 import { jsonIdArray, jsonObject, mapAiRoleInputs, mapOrder } from "@/server/db/rows";
 import { AppError } from "@/server/errors";
 import { generateWithFailover, type ImageReference } from "@/server/ai/provider";
-import { applyAiLabel } from "@/server/media/ai-label";
+import { AI_NOTICE_TEXT, applyAiMetadata } from "@/server/media/ai-label";
 import { objectStorage } from "@/server/storage";
 import { decryptAddress, encryptAddress } from "@/server/commerce/address";
 import { claimEntitlement, entitlementBalance, hasHealthExport, physicalDiscountRate } from "@/server/entitlements";
 import { HEALTH_ARCHIVE_PRICE } from "@/server/health-service";
 import { getRuntimePlugin } from "@/plugins/runtime";
 import { collectAnnualData } from "@/server/annual/aggregate";
-import { REPORT_PHOTOS, buildReportSvg, rasterizeReport, withPreviewWatermark } from "@/server/annual/report";
+import { REPORT_PHOTOS, buildReportSvg, rasterizeReport, rasterizeReportPreview } from "@/server/annual/report";
 import { createOrder, recordEvent } from "@/server/platform-service";
 import { recordAdminAudit } from "@/server/admin/audit";
 import { shortestDurationFor } from "@/domain/video-duration";
@@ -68,19 +68,14 @@ const aiInput = z.object({
   idempotencyKey: z.string().min(8).max(120),
   options: aiOptions,
 });
-const interactiveSnapshotSchema = z.object({
-  title: z.string().trim().min(1).max(60),
-  copy: z.string().trim().min(1).max(180),
-  theme: z.enum(["stardust", "meadow", "sunset"]),
-  stardust: z.number().int().min(0).max(99999).default(0),
-});
-const interactiveInput = z.object({
-  pluginId: z.string().min(1),
-  petId: z.string().uuid(),
-  photoIds: z.array(z.string().uuid()).min(1).max(6),
-  snapshot: interactiveSnapshotSchema,
-});
 const addressSchema = z.object({ name: z.string().min(1), phone: z.string().min(6), province: z.string().min(1), city: z.string().min(1), detail: z.string().min(1) });
+
+async function notifyRun(userId: string, runId: string, type: string, title: string, body: string) {
+  await (await getDatabase()).query("INSERT INTO user_notifications (id,user_id,type,title,body,target_path,created_at) VALUES ($1,$2,$3,$4,$5,$6,now())", [crypto.randomUUID(), userId, type, title, body, `/pages/ai-run/ai-run?id=${runId}`]);
+}
+
+/** 单个制作任务的预估耗时（秒）。lingsuan 单张实测 46–62 秒。 */
+const AI_SECONDS_PER_RUN = 55;
 
 async function createAiRunOperation(userId: string, input: unknown): Promise<AiRun> {
   const data = aiInput.parse(input);
@@ -88,7 +83,7 @@ async function createAiRunOperation(userId: string, input: unknown): Promise<AiR
   const existing = await database.query("SELECT id FROM ai_runs WHERE user_id=$1 AND idempotency_key=$2", [userId, data.idempotencyKey]);
   if (existing[0]) return getAiRun(userId, String(existing[0].id));
   const plugin = await getRuntimePlugin(data.pluginId);
-  if (!plugin || plugin.status !== "live" || plugin.category !== "ai-image") throw new AppError("AI_PLUGIN_UNAVAILABLE", "这个 AI 玩法暂未开放", 404);
+  if (!plugin || plugin.status !== "live" || plugin.category !== "ai-image") throw new AppError("AI_PLUGIN_UNAVAILABLE", "这个玩法暂未开放", 404);
   const template = getImageTemplate(data.templateId);
   if (!template || template.status !== "live" || (!template.masterStorageKey && template.templateId !== PET_ART_PHOTO_TEMPLATE_ID)) throw new AppError("IMAGE_TEMPLATE_UNAVAILABLE", "这个图片模板尚未开放", 404);
   if (template?.subjectMode === "owner-pet" && (!data.authorizationConfirmed || data.ownerPhotoIds.length !== 1)) {
@@ -174,7 +169,7 @@ async function loadTemplateReferences(row: Record<string, unknown>) {
   const petId = String(row.pet_id);
   const roleInputs = mapAiRoleInputs(row.role_inputs);
   if (roleInputs.templateId === PET_ART_PHOTO_TEMPLATE_ID) {
-    if (!["v01", "v03", "v04", PET_ART_PHOTO_VERSION].includes(roleInputs.templateVersion || "") || roleInputs.subjectMode !== "pet" || roleInputs.petPhotoIds.length !== 1 || roleInputs.ownerPhotoIds.length) {
+    if (!["v01", "v03", "v04", "v05", "v06", "v07", "v08", "v09", "v10", PET_ART_PHOTO_VERSION].includes(roleInputs.templateVersion || "") || roleInputs.subjectMode !== "pet" || roleInputs.petPhotoIds.length !== 1 || roleInputs.ownerPhotoIds.length) {
       throw new AppError("AI_TEMPLATE_SNAPSHOT_INVALID", "写真任务输入已失效，请重新创建", 409);
     }
     const reference = await loadPetReference(userId, petId, roleInputs.petPhotoIds[0]);
@@ -261,30 +256,21 @@ export async function processNextAiRun() {
     const generationCost = Number(process.env.AI_IMAGE_COST || 0.08) * result.images.length;
         const candidates = await Promise.all(result.images.map(async (image, index) => {
       const normalized = new Uint8Array(await sharp(Buffer.from(image.body)).resize(templateWidth, templateHeight, { fit: "cover" }).png().toBuffer());
-            const labeled = await applyAiLabel(normalized, `${runId}-${index}`);
+      const contentId = `${runId}-${index}`;
+      const output = await applyAiMetadata(normalized, contentId);
       const extension = "png";
       const outputKey = `private/${userId}/ai/${runId}-a${attempt}-${index}.${extension}`;
-      await objectStorage.put(outputKey, labeled, "image/png");
+      await objectStorage.put(outputKey, output, "image/png");
       const previewKey = `private/${userId}/ai/${runId}-a${attempt}-${index}-preview.png`;
       /*
-       * 预览从**已打标的字节**缩，而不是从原始 image.body 缩 ——
-       * 否则免费预览反而没有 AI 标识，付费版有，正好搞反。
-       * 原先两个分支的表达式逐字相同（sharp 自己认 SVG），已合并。
+       * 预览只缩图，不叠任何可见标记（2026-09 起取消营销水印与「AI 生成」角标，
+       * 提示改由小程序界面蒙层承担）。长边 640 是付费墙的依据：原图才是完整分辨率。
        *
-       * **水印 SVG 必须按缩放后的真实尺寸生成，不能写死 640×640。**
-       * `fit: "inside"` 只保证长边 640，非正方形的图短边会更小 ——
-       * 立绘是 3:4（1200×1600），缩完是 480×640，往上叠一张 640×640 会被 sharp
-       * 判为「composite 输入大于画布」并直接抛错，表现是整个任务 failed。
-       * 既有 provider 恰好都返回正方形图，所以这个坑一直没被踩到。
+       * 缩图会重新编码，sharp 默认丢 EXIF —— 所以对预览**再写一次**隐式元数据，
+       * 否则免费预览在文件层没有任何标识（第五条）。
        */
-      const resized = await sharp(Buffer.from(labeled)).resize(640, 640, { fit: "inside" }).png().toBuffer({ resolveWithObject: true });
-      const markWidth = resized.info.width;
-      const markHeight = resized.info.height;
-      const preview = await sharp(resized.data)
-        .composite([{ input: Buffer.from(`<svg width="${markWidth}" height="${markHeight}"><text x="${Math.round(markWidth / 2)}" y="${markHeight - 40}" text-anchor="middle" font-size="28" fill="white">麻麻抱我 · AI 预览</text></svg>`) }])
-        .png()
-        .toBuffer();
-      await objectStorage.put(previewKey, new Uint8Array(preview), "image/png");
+      const resized = await sharp(Buffer.from(output)).resize(640, 640, { fit: "inside" }).png().toBuffer();
+      await objectStorage.put(previewKey, await applyAiMetadata(new Uint8Array(resized), contentId), "image/png");
       return {
         id: `${runId}-${index}`,
         outputKey,
@@ -300,6 +286,13 @@ export async function processNextAiRun() {
     if (!completed[0]) { await Promise.all(candidates.flatMap((candidate) => [candidate.outputKey, candidate.previewKey].filter((key): key is string => Boolean(key)).map((key) => objectStorage.delete(key).catch(() => undefined)))); return { id: runId, status: "cancelled" as const }; }
     await database.query("INSERT INTO ai_cost_ledger (id,run_id,provider,model_version,units,amount,status,created_at) VALUES ($1,$2,$3,$4,$5,$6,'succeeded',now())", [crypto.randomUUID(), runId, result.provider.name, result.provider.modelVersion, candidates.length, generationCost]);
     await recordEvent(userId, "ai_succeeded", String(row.plugin_id), "worker", { provider: result.provider.name, cost: generationCost });
+    /*
+     * 单张出图（2026-10 取消 2 选 1）：出图即选中并归档进作品柜，用户不打开结果页作品也在。
+     * 归档失败（例如原照在出图期间被删）不影响任务成功，结果页仍可看到这张预览。
+     */
+    if (!runOptions.artPhotoBatchItemId && candidates.length === 1) await selectAiCandidate(userId, runId, candidates[0].id).catch(() => undefined);
+    // 独立制作任务完成后发站内通知；写真套餐的逐张任务由批次整体通知，这里不重复。
+    if (!runOptions.artPhotoBatchItemId) await notifyRun(userId, runId, "ai_run_ready", "照片拍好了", candidates.length > 1 ? `${candidates.length} 张已经出来了，去挑一张喜欢的` : "已经拍好了，去看看");
     return { id: runId, status: "succeeded" as const, provider: result.provider.name, candidates };
   } catch (error) {
     const message = error instanceof Error ? error.message.slice(0, 200) : "AI_PROVIDER_UNAVAILABLE";
@@ -319,6 +312,7 @@ export async function processNextAiRun() {
     });
     if (!failed[0]) return { id: runId, status: "cancelled" as const };
     await database.query("INSERT INTO ai_cost_ledger (id,run_id,provider,model_version,units,amount,status,created_at) VALUES ($1,$2,'unknown','unknown',0,0,'failed',now())", [crypto.randomUUID(), runId]);
+    if (!runOptions.artPhotoBatchItemId) await notifyRun(userId, runId, "ai_run_failed", "这次没有拍成", "免费次数已返还，可以重新试一次");
     return { id: runId, status: "failed" as const, errorCode: message };
   } finally {
     clearInterval(heartbeat);
@@ -328,7 +322,7 @@ export async function processNextAiRun() {
 
 export async function getAiRun(userId: string, id: string) {
   const database = await getDatabase(); const rows = await database.query("SELECT * FROM ai_runs WHERE id=$1 AND user_id=$2", [id,userId]);
-  if (!rows[0]) throw new AppError("NOT_FOUND", "AI task not found", 404);
+  if (!rows[0]) throw new AppError("NOT_FOUND", "制作任务不存在", 404);
   const row = rows[0];
   const [workRows, orderRows, queueRows] = await Promise.all([
     row.work_id ? database.query("SELECT locked FROM works WHERE id=$1", [row.work_id]) : Promise.resolve([]),
@@ -339,16 +333,44 @@ export async function getAiRun(userId: string, id: string) {
   const roleInputs = mapAiRoleInputs(row.role_inputs);
   return {
     id: String(row.id), userId: String(row.user_id), pluginId: String(row.plugin_id), petId: String(row.pet_id), photoIds: jsonIdArray(row.photo_ids),
-    status: row.status as AiRun["status"], candidates: (row.candidates || []) as AiRun["candidates"], selectedId: row.selected_id ? String(row.selected_id) : undefined,
+    status: row.status as AiRun["status"], candidates: (row.candidates || []) as AiRun["candidates"], aiNotice: AI_NOTICE_TEXT, selectedId: row.selected_id ? String(row.selected_id) : undefined,
     selectedUnlocked: workRows[0] ? !Boolean(workRows[0].locked) : false, provider: row.provider && row.provider !== "pending" ? String(row.provider) : undefined,
     modelVersion: row.model_version ? String(row.model_version) : undefined, prompt: String(row.prompt || ""), promptVersion: String(row.prompt_version || "v1"), options: jsonObject<Record<string, unknown>>(row.options, {}),
     roleInputs,
     errorCode: row.error_code ? String(row.error_code) : undefined, cost: Number(row.cost), attempt: Number(row.attempt || 0), retryCount: Number(row.retry_count || 0),
     rerollCount: Number(row.reroll_count || 0),
     rerollRemaining: roleInputs.subjectMode === "pet-human" ? 0 : Math.max(0, 2 - Number(row.reroll_count || 0)),
-    queuePosition, estimatedSeconds: queuePosition ? queuePosition * 20 : undefined,
+    // lingsuan 单张实测 46–62 秒；按每位 55 秒估算，比原来写死的 20 秒更接近真实等待。
+    queuePosition, estimatedSeconds: queuePosition ? queuePosition * AI_SECONDS_PER_RUN : row.status === "processing" ? AI_SECONDS_PER_RUN : undefined,
     workId: row.work_id ? String(row.work_id) : undefined, order: orderRows[0] ? mapOrder(orderRows[0]) : undefined, createdAt: new Date(String(row.created_at)).toISOString(),
   } satisfies AiRun;
+}
+
+/**
+ * 作品柜「进行中」：排队、制作中、失败待重试，以及已出图但还没选中的独立制作任务。
+ *
+ * 写真套餐的逐张任务（options.artPhotoBatchItemId）不在这里单列，由套餐批次整体展示；
+ * 已选中出作品的任务已进作品柜，也不重复。只取最近 30 天，避免老失败任务长期占位。
+ */
+export async function listAiRuns(userId: string) {
+  const rows = await (await getDatabase()).query(
+    `SELECT id,plugin_id,pet_id,status,role_inputs,candidates,created_at FROM ai_runs
+     WHERE user_id=$1 AND work_id IS NULL AND status IN ('queued','processing','succeeded','failed')
+       AND coalesce(options->>'artPhotoBatchItemId','')='' AND created_at > now() - interval '30 days'
+     ORDER BY created_at DESC LIMIT 20`,
+    [userId],
+  );
+  return rows.map((row) => {
+    const roleInputs = mapAiRoleInputs(row.role_inputs);
+    const template = roleInputs.templateId ? getImageTemplate(roleInputs.templateId, { includePending: true }) : undefined;
+    const candidates = (Array.isArray(row.candidates) ? row.candidates : []) as AiRun["candidates"];
+    return {
+      id: String(row.id), pluginId: String(row.plugin_id), petId: row.pet_id ? String(row.pet_id) : undefined,
+      status: String(row.status) as AiRun["status"], title: template?.title || "创意照片", subjectMode: roleInputs.subjectMode,
+      candidateCount: candidates.length, previewCandidateId: candidates[0]?.id, createdAt: new Date(String(row.created_at)).toISOString(),
+      aiNotice: AI_NOTICE_TEXT,
+    };
+  });
 }
 
 export async function selectAiCandidate(userId: string, id: string, candidateId: string) {
@@ -359,10 +381,10 @@ export async function selectAiCandidate(userId: string, id: string, candidateId:
     await database.query("SELECT id FROM ai_runs WHERE id=$1 AND user_id=$2 FOR UPDATE", [id, userId]);
     const run = await getAiRun(userId, id);
 
-    if (run.status !== "succeeded") throw new AppError("AI_NOT_READY", "AI 任务尚未完成", 409);
+    if (run.status !== "succeeded") throw new AppError("AI_NOT_READY", "还在制作中，请稍后再选", 409);
     const candidate = run.candidates.find((item) => item.id === candidateId);
-    if (!candidate?.outputKey || !candidate.previewKey) throw new AppError("AI_CANDIDATE_NOT_FOUND", "AI 候选结果不存在", 404);
-    if (run.order && run.selectedId !== candidateId) throw new AppError("AI_SELECTION_LOCKED", "订单已创建，不能再更换候选结果", 409);
+    if (!candidate?.outputKey || !candidate.previewKey) throw new AppError("AI_CANDIDATE_NOT_FOUND", "这张照片不存在", 404);
+    if (run.order && run.selectedId !== candidateId) throw new AppError("AI_SELECTION_LOCKED", "订单已创建，不能再更换这张照片", 409);
     if (run.workId) {
       await (await getDatabase()).query("UPDATE ai_runs SET selected_id=$3 WHERE id=$1 AND user_id=$2", [id, userId, candidateId]);
       return;
@@ -372,10 +394,14 @@ export async function selectAiCandidate(userId: string, id: string, candidateId:
     await lockPhotoInputs(userId, run.petId, run.photoIds);
     const db = await getDatabase();
     const pets = await db.query("SELECT name FROM pets WHERE id=$1 AND user_id=$2", [run.petId, userId]);
-    const workId = crypto.randomUUID(); const now = new Date(); const title = `${String(pets[0]?.name || "我")}的${run.roleInputs.templateId === PET_ART_PHOTO_TEMPLATE_ID ? "宠物艺术写真" : "AI 肖像"}`;
-    const selectionLabel = "二选一";
-    const subtitle = `AI 生成内容 · 已选中的${selectionLabel}结果`;
-    await db.query("INSERT INTO works (id,user_id,plugin_id,pet_id,photo_id,title,subtitle,serial_number,authority,output_key,preview_key,asset_kind,source_kind,source_id,locked,public,version,expires_at,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,'麻麻抱我 AI 工作室',$9,$10,'image','ai',$11,true,false,1,$12,$13)", [workId, userId, run.pluginId, run.petId, run.photoIds[0], title, subtitle, `AI-${id.slice(0, 8).toUpperCase()}`, candidate.outputKey, candidate.previewKey, id, new Date(Date.now() + 90 * 86400000), now]);
+    /*
+     * 作品标题用「宠物名 + 模板名」，不出现「AI」字样（2026-09 文案口径）；
+     * AI 提示由界面蒙层承担。作品长期保存，不写 expires_at。
+     */
+    const templateTitle = run.roleInputs.templateId === PET_ART_PHOTO_TEMPLATE_ID ? "宠物艺术写真" : getImageTemplate(String(run.roleInputs.templateId || ""), { includePending: true })?.title || "创意照片";
+    const workId = crypto.randomUUID(); const now = new Date(); const title = `${String(pets[0]?.name || "我")}的${templateTitle}`;
+    const subtitle = run.candidates.length > 1 ? `从 ${run.candidates.length} 张里挑中的这一张` : "为我拍的这一张";
+    await db.query("INSERT INTO works (id,user_id,plugin_id,pet_id,photo_id,title,subtitle,serial_number,authority,output_key,preview_key,asset_kind,source_kind,source_id,locked,public,version,expires_at,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,'麻麻抱我照相馆',$9,$10,'image','ai',$11,true,false,1,NULL,$12)", [workId, userId, run.pluginId, run.petId, run.photoIds[0], title, subtitle, `MB-${id.slice(0, 8).toUpperCase()}`, candidate.outputKey, candidate.previewKey, id, now]);
     await db.query("INSERT INTO work_versions (id,work_id,version,title,subtitle,output_key,preview_key,created_at) VALUES ($1,$2,1,$3,$4,$5,$6,$7)", [crypto.randomUUID(), workId, title, subtitle, candidate.outputKey, candidate.previewKey, now]);
     await db.query("UPDATE ai_runs SET selected_id=$3,work_id=$4 WHERE id=$1 AND user_id=$2", [id, userId, candidateId, workId]);
     await recordEvent(userId, "ai_candidate_selected", run.pluginId, "product", { runId: id, candidateId });
@@ -385,7 +411,7 @@ export async function selectAiCandidate(userId: string, id: string, candidateId:
 
 export async function unlockAiCandidate(userId: string, id: string) {
   const run = await getAiRun(userId, id);
-  if (!run.selectedId || !run.workId) throw new AppError("AI_CANDIDATE_NOT_SELECTED", "请先选择一个候选结果", 409);
+  if (!run.selectedId || !run.workId) throw new AppError("AI_CANDIDATE_NOT_SELECTED", "这张照片还没归档好，请稍后再试", 409);
   const order = await createOrder(userId, run.workId, `${run.pluginId}-single`);
   await (await getDatabase()).query("UPDATE ai_runs SET order_id=$3 WHERE id=$1 AND user_id=$2", [id, userId, order.id]);
   return getAiRun(userId, id);
@@ -396,7 +422,7 @@ async function rerollAiRunOperation(userId: string, id: string, reason: ImageTem
 
   const template = run.roleInputs.templateId ? getImageTemplate(run.roleInputs.templateId) : undefined;
   if (!template) throw new AppError("IMAGE_TEMPLATE_UNAVAILABLE", "这个图片模板已下架，不能继续重抽", 409);
-  if (!imageTemplateSupportsReroll(template)) throw new AppError("AI_REROLL_NOT_SUPPORTED", "宠物人化不支持重抽，请从两张候选中选择", 409);
+  if (!imageTemplateSupportsReroll(template)) throw new AppError("AI_REROLL_NOT_SUPPORTED", "「如果我是人」不支持重抽", 409);
   if (reason === "owner-not-like" && template.subjectMode !== "owner-pet") throw new AppError("REROLL_REASON_INVALID", "单宠模板不能选择主人不像", 422);
   if (reason === "too-animal" && template.subjectMode !== "pet-human") throw new AppError("REROLL_REASON_INVALID", "只有宠物人化模板可以选择太像动物", 422);
   const roleInputs = { ...run.roleInputs, rerollReason: reason };
@@ -407,8 +433,10 @@ async function rerollAiRunOperation(userId: string, id: string, reason: ImageTem
   const prompt = template.templateId === PET_ART_PHOTO_TEMPLATE_ID
     ? buildPetArtPhotoPrompt(scene, reason)
     : buildImageTemplatePrompt(template, reason);
-  const rows = await (await getDatabase()).query("UPDATE ai_runs SET status='queued',candidates='[]'::jsonb,selected_id=NULL,reroll_count=reroll_count+1,error_code=NULL,available_at=now(),locked_at=NULL,role_inputs=$3::jsonb,prompt=$4 WHERE id=$1 AND user_id=$2 AND status IN ('succeeded','failed') AND reroll_count<2 AND work_id IS NULL RETURNING id", [id, userId, JSON.stringify(roleInputs), prompt]);
-  if (!rows[0]) throw new AppError("AI_REROLL_LIMIT", "重抽次数已用完、任务仍在处理中或候选已经归档", 409);
+  const rows = await (await getDatabase()).query("UPDATE ai_runs SET status='queued',candidates='[]'::jsonb,selected_id=NULL,work_id=NULL,reroll_count=reroll_count+1,error_code=NULL,available_at=now(),locked_at=NULL,role_inputs=$3::jsonb,prompt=$4 WHERE id=$1 AND user_id=$2 AND status IN ('succeeded','failed') AND reroll_count<2 AND order_id IS NULL RETURNING id", [id, userId, JSON.stringify(roleInputs), prompt]);
+  if (!rows[0]) throw new AppError("AI_REROLL_LIMIT", "重抽次数已用完，或任务仍在制作中", 409);
+  // 出图时自动归档的那件作品还没付费，重抽后它引用的文件会被删掉，一并撤下
+  if (run.workId) await (await getDatabase()).query("UPDATE works SET deleted_at=now(),public=false,share_token=NULL WHERE id=$1 AND user_id=$2 AND locked=true AND deleted_at IS NULL", [run.workId, userId]);
   await Promise.all(run.candidates.flatMap((candidate) => [candidate.outputKey, candidate.previewKey].filter((key): key is string => Boolean(key)).map((key) => objectStorage.delete(key).catch(() => undefined))));
   return getAiRun(userId, id);
 }
@@ -423,112 +451,6 @@ export async function cancelAiRun(userId: string, id: string) {
   const rows = await (await getDatabase()).query("UPDATE ai_runs SET status='cancelled',cancelled_at=now(),locked_at=NULL WHERE id=$1 AND user_id=$2 AND status='queued' RETURNING id", [id, userId]);
   if (!rows[0]) throw new AppError("AI_NOT_CANCELLABLE", "任务已开始处理，请在处理结束后再删除照片", 409);
   return getAiRun(userId, id);
-}
-
-async function createInteractiveSessionOperation(userId: string, input: unknown): Promise<InteractiveSession> {
-  const data = interactiveInput.parse(input); const id = crypto.randomUUID(); const createdAt = new Date(); const database = await getDatabase();
-  const plugin = await getRuntimePlugin(data.pluginId);
-  if (!plugin || plugin.status !== "live" || plugin.category !== "interactive") throw new AppError("INTERACTIVE_PLUGIN_UNAVAILABLE", "这个互动玩法暂未开放", 404);
-  const [pets, photos] = await Promise.all([
-    database.query("SELECT id FROM pets WHERE id=$1 AND user_id=$2 AND deleted_at IS NULL", [data.petId, userId]),
-    database.query("SELECT id FROM photos WHERE id=ANY($1::uuid[]) AND pet_id=$2 AND user_id=$3 AND deleted_at IS NULL", [data.photoIds, data.petId, userId]),
-  ]);
-  if (!pets[0] || photos.length !== data.photoIds.length) throw new AppError("INTERACTIVE_ASSET_MISMATCH", "宠物或照片不存在，请重新选择", 422);
-  await database.query("INSERT INTO interactive_sessions (id,user_id,plugin_id,pet_id,photo_ids,state,snapshot,created_at,updated_at) VALUES ($1,$2,$3,$4,$5::jsonb,'active',$6::jsonb,$7,$7)", [id, userId, data.pluginId, data.petId, JSON.stringify(data.photoIds), JSON.stringify(data.snapshot), createdAt]);
-  await recordEvent(userId, "interactive_created", data.pluginId, "product", { petId: data.petId });
-  return getInteractiveSession(userId, id);
-}
-
-function mapInteractive(row: Record<string, unknown>): InteractiveSession {
-  return {
-    id: String(row.id), userId: String(row.user_id), pluginId: String(row.plugin_id), petId: String(row.pet_id), photoIds: jsonIdArray(row.photo_ids),
-    state: row.state as InteractiveSession["state"], snapshot: (row.snapshot || {}) as Record<string, unknown>, shareToken: row.share_token ? String(row.share_token) : undefined,
-    sharePath: row.share_token ? `/interactive/share/${String(row.share_token)}` : undefined, shareExpiresAt: row.share_expires_at ? new Date(String(row.share_expires_at)).toISOString() : undefined,
-    revokedAt: row.revoked_at ? new Date(String(row.revoked_at)).toISOString() : undefined, exportedKey: row.exported_key ? String(row.exported_key) : undefined,
-    exportRenderId: row.export_render_id ? String(row.export_render_id) : undefined, exportStatus: row.export_status ? row.export_status as VideoRender["status"] : undefined,
-    exportProgress: row.export_progress === undefined || row.export_progress === null ? undefined : Number(row.export_progress), workId: row.work_id ? String(row.work_id) : undefined,
-    createdAt: new Date(String(row.created_at)).toISOString(), updatedAt: new Date(String(row.updated_at || row.created_at)).toISOString(),
-  };
-}
-
-async function updateInteractiveSessionOperation(userId: string, id: string, input: unknown) {
-  const data = z.object({ snapshot: interactiveSnapshotSchema, photoIds: z.array(z.string().uuid()).min(1).max(6).optional() }).parse(input); const database = await getDatabase();
-  const session = await getInteractiveSession(userId, id); const photoIds = data.photoIds || session.photoIds;
-  const photos = await database.query("SELECT id FROM photos WHERE id=ANY($1::uuid[]) AND pet_id=$2 AND user_id=$3 AND deleted_at IS NULL", [photoIds, session.petId, userId]);
-  if (photos.length !== photoIds.length) throw new AppError("INTERACTIVE_ASSET_MISMATCH", "互动页照片不存在，请重新选择", 422);
-  const rows = await database.query("UPDATE interactive_sessions SET snapshot=$3::jsonb,photo_ids=$4::jsonb,state='active',export_render_id=NULL,exported_key=NULL,updated_at=now() WHERE id=$1 AND user_id=$2 RETURNING *", [id, userId, JSON.stringify(data.snapshot), JSON.stringify(photoIds)]);
-  if (!rows[0]) throw new AppError("INTERACTIVE_NOT_FOUND", "互动会话不存在", 404);
-  return getInteractiveSession(userId, id);
-}
-
-export async function getInteractiveSession(userId: string, id: string) {
-  const rows = await (await getDatabase()).query("SELECT s.*,v.status export_status,v.progress export_progress FROM interactive_sessions s LEFT JOIN video_renders v ON v.id=s.export_render_id WHERE s.id=$1 AND s.user_id=$2", [id, userId]);
-  if (!rows[0]) throw new AppError("INTERACTIVE_NOT_FOUND", "互动会话不存在", 404);
-  return mapInteractive(rows[0]);
-}
-
-export async function appendInteractiveEvent(userId: string, sessionId: string, input: unknown) {
-  const data = z.object({ name: z.string().trim().min(1).max(80), payload: z.record(z.string(), z.unknown()).default({}) }).parse(input);
-  await getInteractiveSession(userId, sessionId);
-  const row = (await getDatabase()).query("INSERT INTO interactive_events (id,session_id,user_id,name,payload,created_at) VALUES ($1,$2,$3,$4,$5::jsonb,$6) RETURNING *", [crypto.randomUUID(), sessionId, userId, data.name, JSON.stringify(data.payload), new Date()]);
-  return (await row)[0];
-}
-
-export async function listInteractiveEvents(userId: string, sessionId: string) {
-  await getInteractiveSession(userId, sessionId);
-  return (await getDatabase()).query("SELECT * FROM interactive_events WHERE session_id=$1 AND user_id=$2 ORDER BY created_at", [sessionId, userId]);
-}
-
-export async function revokeInteractiveShare(userId: string, sessionId: string) {
-  const rows = await (await getDatabase()).query("UPDATE interactive_sessions SET revoked_at=now(),updated_at=now() WHERE id=$1 AND user_id=$2 RETURNING id", [sessionId, userId]);
-  if (!rows[0]) throw new AppError("INTERACTIVE_NOT_FOUND", "互动会话不存在", 404);
-  return getInteractiveSession(userId, sessionId);
-}
-
-export async function shareInteractiveSession(userId: string, sessionId: string, input: unknown) {
-  const data = z.object({ expiresInHours: z.number().int().min(1).max(8760).default(168), resetToken: z.boolean().default(false) }).parse(input);
-  const session = await getInteractiveSession(userId, sessionId);
-  const token = !data.resetToken && session.shareToken && !session.revokedAt ? session.shareToken : crypto.randomUUID().replaceAll("-", "");
-  const expiresAt = new Date(Date.now() + data.expiresInHours * 3600000);
-  await (await getDatabase()).query("UPDATE interactive_sessions SET share_token=$3,share_expires_at=$4,revoked_at=NULL,updated_at=now() WHERE id=$1 AND user_id=$2", [sessionId, userId, token, expiresAt]);
-  await recordEvent(userId, "interactive_shared", session.pluginId, "product", { sessionId });
-  return getInteractiveSession(userId, sessionId);
-}
-
-export async function getPublicInteractiveSession(token: string) {
-  const rows = await (await getDatabase()).query("SELECT s.*,v.status export_status,v.progress export_progress FROM interactive_sessions s LEFT JOIN video_renders v ON v.id=s.export_render_id WHERE s.share_token=$1 AND EXISTS(SELECT 1 FROM pets p JOIN users u ON u.id=p.user_id WHERE p.id=s.pet_id AND p.deleted_at IS NULL AND u.deleted_at IS NULL)", [token]);
-  if (!rows[0]) throw new AppError("INTERACTIVE_SHARE_NOT_FOUND", "互动分享不存在", 404);
-  if (rows[0].revoked_at) throw new AppError("INTERACTIVE_SHARE_REVOKED", "这份互动分享已经撤销", 410);
-  if (rows[0].share_expires_at && new Date(String(rows[0].share_expires_at)).getTime() <= Date.now()) throw new AppError("INTERACTIVE_SHARE_EXPIRED", "这份互动分享已经过期", 410);
-  return mapInteractive(rows[0]);
-}
-
-export async function appendPublicInteractiveEvent(token: string, input: unknown) {
-  const data = z.object({ name: z.enum(["visit", "stardust_collected", "duration", "cta"]), visitorKey: z.string().min(8).max(80), source: z.string().max(80).default("share"), durationMs: z.number().int().min(0).max(86400000).optional(), payload: z.record(z.string(), z.unknown()).default({}) }).parse(input);
-  const session = await getPublicInteractiveSession(token);
-  const rows = await (await getDatabase()).query("INSERT INTO interactive_events (id,session_id,user_id,name,payload,visitor_key,source,duration_ms,created_at) VALUES ($1,$2,$3,$4,$5::jsonb,$6,$7,$8,$9) RETURNING id", [crypto.randomUUID(), session.id, session.userId, data.name, JSON.stringify(data.payload), data.visitorKey, data.source, data.durationMs || null, new Date()]);
-  return { id: String(rows[0].id), accepted: true };
-}
-
-async function exportInteractiveSessionOperation(userId: string, sessionId: string) {
-  const session = await getInteractiveSession(userId, sessionId);
-  if (session.exportRenderId && ["queued", "processing", "ready"].includes(session.exportStatus || "")) return session;
-  const database = await getDatabase();
-  const photos = await database.query("SELECT id,storage_key FROM photos WHERE id=ANY($1::uuid[]) AND user_id=$2 AND deleted_at IS NULL", [session.photoIds, userId]);
-  if (photos.length !== session.photoIds.length) throw new AppError("INTERACTIVE_ASSET_MISSING", "互动页照片已失效，请重新编辑", 409);
-  const byId = new Map(photos.map((row) => [String(row.id), String(row.storage_key)]));
-  const photoKeys = session.photoIds.map((id) => byId.get(id)).filter((item): item is string => Boolean(item));
-  const snapshot = interactiveSnapshotSchema.parse(session.snapshot); const renderId = crypto.randomUUID();
-  /*
-   * 互动页导出不给用户选时长（它不是剪片入口），但必须显式写进 config：
-   * 缺这个键会走 normalizeDuration 的缺省档，时长就成了隐式约定。
-   * 取能容下当前张数的最短档，成片不拖沓也不黑闪。
-   */
-  const config = { interactiveSessionId: session.id, petId: session.petId, photoId: session.photoIds[0], photoIds: session.photoIds, photos: photoKeys, cover: photoKeys[0], captions: [snapshot.title, snapshot.copy], bgm: snapshot.theme === "sunset" ? "calm" : "bright", durationSeconds: shortestDurationFor(photoKeys.length), snapshot };
-  await database.query("INSERT INTO video_renders (id,user_id,plugin_id,status,progress,config,available_at,created_at) VALUES ($1,$2,$3,'queued',5,$4::jsonb,now(),$5)", [renderId, userId, session.pluginId, JSON.stringify(config), new Date()]);
-  await database.query("UPDATE interactive_sessions SET state='exporting',export_render_id=$3,updated_at=now() WHERE id=$1 AND user_id=$2", [sessionId, userId, renderId]);
-  await recordEvent(userId, "interactive_export_queued", session.pluginId, "product", { sessionId, renderId });
-  return getInteractiveSession(userId, sessionId);
 }
 
 export async function createVideoRender(userId:string,input:unknown):Promise<VideoRender> {
@@ -705,7 +627,7 @@ export async function createAnnualReport(userId:string,year:number) {
   const key=`private/${userId}/reports/${year}-${id}.png`;
   await objectStorage.put(key, await rasterizeReport(svg), "image/png");
   const previewKey=`private/${userId}/reports/${year}-${id}-preview.png`;
-  await objectStorage.put(previewKey, await rasterizeReport(withPreviewWatermark(svg)), "image/png");
+  await objectStorage.put(previewKey, await rasterizeReportPreview(svg), "image/png");
 
   const rows=await database.query("INSERT INTO annual_reports (id,user_id,year,status,output_key,preview_key,data,template_version,locked,created_at) VALUES ($1,$2,$3,'ready',$4,$5,$6::jsonb,$7,true,$8) ON CONFLICT (user_id,year) DO UPDATE SET status='ready',output_key=$4,preview_key=$5,data=$6::jsonb,template_version=$7 RETURNING *",[id,userId,year,key,previewKey,JSON.stringify({...data,companionDays:aggregate.companionDays,petName:aggregate.petName,photoCount:photos.length,templateConfig:template.config}),templateVersion,new Date()]);const row=rows[0];return{id:String(row.id),userId:String(row.user_id),year:Number(row.year),status:String(row.status),outputKey:String(row.output_key),createdAt:new Date(String(row.created_at)).toISOString()};
 }
@@ -1050,31 +972,6 @@ export async function createAiRun(userId: string, input: unknown) {
     const data = aiInput.parse(input);
     await lockPhotoInputs(userId, data.petId, data.photoIds);
     return createAiRunOperation(userId, input);
-  });
-}
-
-export async function createInteractiveSession(userId: string, input: unknown) {
-  return inTransaction(async () => {
-    const data = interactiveInput.parse(input);
-    await lockPhotoInputs(userId, data.petId, data.photoIds);
-    return createInteractiveSessionOperation(userId, input);
-  });
-}
-
-export async function updateInteractiveSession(userId: string, id: string, input: unknown) {
-  return inTransaction(async () => {
-    const session = await getInteractiveSession(userId, id);
-    const data = z.object({ photoIds: z.array(z.string().uuid()).optional() }).parse(input);
-    await lockPhotoInputs(userId, session.petId, data.photoIds || session.photoIds);
-    return updateInteractiveSessionOperation(userId, id, input);
-  });
-}
-
-export async function exportInteractiveSession(userId: string, sessionId: string) {
-  return inTransaction(async () => {
-    const session = await getInteractiveSession(userId, sessionId);
-    await lockPhotoInputs(userId, session.petId, session.photoIds);
-    return exportInteractiveSessionOperation(userId, sessionId);
   });
 }
 

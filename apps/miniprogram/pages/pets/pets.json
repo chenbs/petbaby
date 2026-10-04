@@ -8,6 +8,7 @@
     "t-empty": "../../components/empty/index",
     "t-popup": "../../components/popup/index",
     "t-dialog": "../../components/dialog/index",
-    "t-skeleton": "../../components/skeleton/index"
+    "t-skeleton": "../../components/skeleton/index",
+    "t-action-sheet": "../../components/action-sheet/index"
   }
 }

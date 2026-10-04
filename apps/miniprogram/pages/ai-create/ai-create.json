@@ -1,8 +1,7 @@
 {
-  "navigationBarTitleText": "宠物艺术写真",
+  "navigationBarTitleText": "选效果",
   "usingComponents": {
     "t-button": "../../components/button/index",
-    "t-field": "../../components/field/index",
     "t-notice": "../../components/notice/index",
     "t-empty": "../../components/empty/index",
     "t-skeleton": "../../components/skeleton/index",

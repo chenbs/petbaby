@@ -23,9 +23,9 @@ describe("image template registry", () => {
     expect(imageTemplateEntries).toHaveLength(11);
     expect(listPublicImageTemplateEntries()).toHaveLength(11);
     const humanEntry = listPublicImageTemplateEntries().find((entry) => entry.id === "human");
-    expect(humanEntry?.title).toBe("人类转生计划");
+    expect(humanEntry?.title).toBe("如果我是人");
     expect(humanEntry?.templates.map((template) => template.templateId)).toEqual([
-      31, 32, 5, 8, 7, 36, 37, 20, 11, 10, 40, 15, 12, 14, 29, 30,
+      31, 5, 8, 32, 7, 36, 37, 20, 11, 10, 40, 15, 12, 14, 29, 30,
       33, 34, 38, 39, 1, 25, 4, 3, 18, 16, 19, 17, 21, 26, 28, 27,
       24, 13, 9, 6, 35, 2, 22, 23,
     ].map((number) => `human-effect-${String(number).padStart(2, "0")}`));
@@ -53,15 +53,15 @@ describe("image template registry", () => {
 
   it("艺术写真公开为独立单图模板，不改变历史母版目录", () => {
     const template = getImageTemplate("pet-art-photo");
-    expect(template).toMatchObject({ entryId: "art", subjectMode: "pet", status: "live", version: "v05", sampleStorageKey: "samples/scene-window-morning-v3-396d098a6999.jpg" });
+    expect(template).toMatchObject({ entryId: "art", subjectMode: "pet", status: "live", version: "v11", sampleStorageKey: "samples/scene-window-morning-v3-396d098a6999.jpg" });
     expect(template?.masterStorageKey).toBeUndefined();
     expect(listImageTemplates().some((item) => item.templateId === "pet-art-photo")).toBe(false);
     expect(listPublicImageTemplateEntries().find((entry) => entry.id === "art")?.templates[0]?.templateId).toBe("pet-art-photo");
-    expect(getImageTemplateCandidateCount(template!)).toBe(2);
+    expect(getImageTemplateCandidateCount(template!)).toBe(1);
     expect(imageTemplateSupportsReroll(template!)).toBe(true);
   });
 
-  it("宠物人化使用统一提示词生成两张且禁止重抽", () => {
+  it("宠物人化使用统一提示词生成一张且禁止重抽", () => {
     const template = getImageTemplate("human-effect-01", { includePending: true });
     const anotherTemplate = getImageTemplate("human-effect-02", { includePending: true });
     if (!template) throw new Error("human-effect-01 missing");
@@ -76,7 +76,7 @@ describe("image template registry", () => {
     expect(prompt).toContain("不得直接将动物的耳朵、鼻子、眼睛、嘴巴、爪子、毛发结构等动物器官原样移植到人物身上");
     expect(prompt).toContain("图二人物仍然是完整、自然、协调的人类角色");
     expect(buildImageTemplatePrompt(anotherTemplate)).toBe(prompt);
-    expect(getImageTemplateCandidateCount(template)).toBe(2);
+    expect(getImageTemplateCandidateCount(template)).toBe(1);
     expect(imageTemplateSupportsReroll(template)).toBe(false);
     expect(() => buildImageTemplatePrompt(template, "too-animal")).toThrow("PET_HUMAN_REROLL_NOT_SUPPORTED");
   });

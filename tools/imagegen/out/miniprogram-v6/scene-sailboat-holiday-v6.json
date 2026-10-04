@@ -1,0 +1,13 @@
+{
+  "id": "sailboat-holiday",
+  "title": "油画布肖像",
+  "samplePet": "golden",
+  "prompt": "Use case: photorealistic fine-art pet portrait, shot by a professional pet photographer in a real studio or a real room. Image 1 is the identity reference only, not a pose or background template. Keep the same adult golden retriever from Image 1, with natural golden coat, floppy ears, dark eyes and black nose. One pet only, no people. The pet wears no clothing, costume, hat, bow or collar. Set and light: A fine-art studio portrait in front of a hand-painted canvas backdrop in mottled warm grey and umber, softly out of focus. One large soft key light from camera left, low fill. The pet stands with its body side-on and turns its head back toward camera, one forepaw resting on a low weathered wooden stool. Painterly but photographic, muted palette, no clothing. The dog stands side-on and turns its head back toward camera, one forepaw resting on the low wooden stool. Photographic qualities: a single dominant light source with one consistent direction, natural soft falloff into shadow, true-to-life fur with individual strands and slight natural unevenness, realistic eye moisture with one small catchlight, believable contact shadow where the body meets the surface. Camera: full-frame camera with an 85mm portrait lens at about f/2.8, eye-level with the pet, shallow but natural depth of field, fine film-like grain, restrained true-to-life colors with low saturation, no HDR look, no heavy retouching. Vertical 3:4, complete pet with safe margins, the face occupying about 30-45% of frame height, simple uncluttered background with generous negative space. Avoid: anthropomorphic expressions or poses, clothing, glowing or rim light that looks painted, dramatic fantasy lighting, oversaturated colors, plastic or airbrushed fur, perfect symmetry, extra props, floating body, pasted edges, extra limbs, duplicate pets, CGI or illustration look, text, logos or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/source/dog-golden.jpg",
+  "referenceSha256": "1b6348ce4f6cd1d12f4c93d5f2a8a5c21847e0ce9bc43e4326c1ee89f7a89eef",
+  "output": "tools/imagegen/out/scenes/scene-sailboat-holiday-v6.jpg",
+  "sha256": "4a22e633a7a81d1c8d8190999cead1716e92a2cbd2000331a1747c6af20017e2",
+  "review": "pending-visual-review"
+}

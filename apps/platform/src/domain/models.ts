@@ -297,6 +297,9 @@ export type PublicWork = Work & {
   photo: Pick<Photo, "id" | "url">;
   plugin: PluginManifest;
   outputUrl?: string;
+  /** 生成合成内容（image-api）。端上据此在图片底部叠提示蒙层，文案取 aiNotice。 */
+  aiGenerated: boolean;
+  aiNotice?: string;
 };
 
 export type AiRun = {
@@ -307,6 +310,8 @@ export type AiRun = {
   photoIds: string[];
   status: "queued" | "processing" | "succeeded" | "failed" | "cancelled";
   candidates: Array<{ id: string; outputKey?: string; previewKey?: string; aiGenerated: true }>;
+  /** 界面蒙层文案（候选都是生成合成内容）。端上不写死。 */
+  aiNotice: string;
   selectedId?: string;
   selectedUnlocked?: boolean;
   provider?: string;
@@ -336,26 +341,6 @@ export type AiRun = {
   workId?: string;
   order?: Order;
   createdAt: string;
-};
-export type InteractiveSession = {
-  id: string;
-  userId: string;
-  pluginId: string;
-  petId: string;
-  photoIds: string[];
-  state: "active" | "exporting" | "ready" | "failed";
-  snapshot: Record<string, unknown>;
-  shareToken?: string;
-  sharePath?: string;
-  shareExpiresAt?: string;
-  revokedAt?: string;
-  exportedKey?: string;
-  exportRenderId?: string;
-  exportStatus?: VideoRender["status"];
-  exportProgress?: number;
-  workId?: string;
-  createdAt: string;
-  updatedAt: string;
 };
 export type VideoRender = { id: string; userId: string; pluginId: string; status: "queued" | "processing" | "preview_ready" | "ready" | "failed" | "cancelled"; progress: number; outputKey?: string; workId?: string; errorCode?: string; createdAt: string };
 export type Membership = { id: string; userId: string; plan: "monthly" | "yearly"; status: "pending" | "trial" | "active" | "past_due" | "expired"; quota: number; used: number; expiresAt: string; orderId?: string };

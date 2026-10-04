@@ -17,6 +17,7 @@ export function WorkPreview({ work }: { work: PublicWork }) {
            * 纪念册这类多页文件用封面照片做预览，实际内容走下载。
            */
           : <Image src={work.assetKind === "pdf" ? work.photo.url : (work.outputUrl || work.photo.url)} alt={`${work.pet.name}的照片`} fill sizes="320px" unoptimized />}
+        {work.aiGenerated && work.aiNotice ? <span className="ai-mask">{work.aiNotice}</span> : null}
       </div>
       <div className="preview-copy">
         <span>{isPoster ? "NOW SHOWING" : "居民姓名"}</span>
@@ -29,7 +30,6 @@ export function WorkPreview({ work }: { work: PublicWork }) {
         <div><dt>签发</dt><dd>{work.authority}</dd></div>
       </dl>
       <div className="preview-seal" aria-hidden="true">已认证<br />GOOD PET</div>
-      {work.locked ? <div className="preview-watermark">免费预览 · 麻麻抱我</div> : null}
     </article>
   );
 }

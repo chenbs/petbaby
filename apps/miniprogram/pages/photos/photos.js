@@ -3,6 +3,21 @@ const { recordSession } = require("../../services/record-events");
 const { themedPage } = require("../../theme/page-mixin");
 const { createUploadSession, preparePhoto } = require("../../services/photo-upload-session");
 const { displayPhotos, downloadPhoto, savePhotoToAlbum } = require("../../services/photo-files");
+const config = require("../../config");
+const { manifest } = require("../../services/sample-assets");
+
+/*
+ * 「用照片做点什么」（2026-10 重排）：按现有能力给出能直接用照库照片做的东西，带封面和一句说明。
+ * 选中照片时（管理模式）画册 / 短片 / 写真会把选中的照片带过去；写真与「如果我是人」只取第一张作身份照。
+ */
+const TOOLS = [
+  { kind: "art", title: "宠物艺术写真", note: "36 套场景 · 先看预览", cover: manifest.plugins["pl-10"] },
+  { kind: "human", title: "如果我是人", note: "40 款人像造型", cover: config.apiBaseUrl + "/api/image-templates/human-effect-31/sample?format=jpeg" },
+  { kind: "album", title: "做成画册", note: "挑几张排成一本", cover: manifest.plugins["pet-time-album"] },
+  { kind: "video", title: "做成短片", note: "配上音乐的小短片", cover: manifest.plugins["pl-19"] },
+  { kind: "compare", title: "成长对比", note: "免费 · 最早和最近一张", cover: manifest.plugins["pl-23"] },
+  { kind: "idcard", title: "宠物身份证", note: "一张照片就能做", cover: manifest.plugins["pet-id-card"] }
+].filter((item) => item.cover);
 
 const TAGS = [
   { code: "today", label: "今天的样子" }, { code: "first", label: "第一次" },
@@ -17,6 +32,7 @@ themedPage({
     pets: [], petId: "", petText: "", photos: [], totalCount: 0, nextCursor: "", error: "", loading: true, loadingMore: false,
     manage: false, picked: [], removeCount: 0, recordMode: false, batchView: false,
     uploadItems: [], activeUploadItems: [], savedCount: 0, pendingCount: 0, uploading: false, preparing: false,
+    tools: TOOLS,
     detail: null, editCaption: "", editDate: "", editTags: [], tagOptions: TAGS, batchEditing: false, saving: false, albumDenied: false, message: ""
   },
   onLoad(query) {
@@ -260,5 +276,18 @@ themedPage({
     await this.loadPage(false);
   },
   timeline() { if (this.data.petId) wx.navigateTo({ url: "/pages/timeline/timeline?petId=" + this.data.petId }); },
+  /** 「用照片做点什么」的卡片：画册 / 短片 / 成长对比沿用原有入口，其余带上宠物和第一张选中的照片。 */
+  useTool(event) {
+    const kind = event.currentTarget.dataset.kind;
+    const petId = this.data.petId;
+    if (!petId) return;
+    if (kind === "album" || kind === "video") return this.makeWork({ currentTarget: { dataset: { kind } } });
+    if (kind === "compare") return this.compare();
+    const first = this.data.picked[0];
+    const photo = first ? "&photoIds=" + encodeURIComponent(first) : "";
+    if (kind === "art") return wx.navigateTo({ url: "/pages/ai-create/ai-create?entryId=art&templateId=pet-art-photo&petId=" + petId + photo });
+    if (kind === "human") return wx.navigateTo({ url: "/pages/ai-create/ai-create?entryId=human&petId=" + petId + photo });
+    if (kind === "idcard") return wx.navigateTo({ url: "/pages/create/create?pluginId=pet-id-card&entry=record&petId=" + petId + photo });
+  },
   home() { wx.switchTab({ url: "/pages/index/index" }); }
 });

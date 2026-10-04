@@ -2,9 +2,9 @@
 title: 风格对比图为什么必须用同一只猫
 description: 官网上七张风格对比图全是同一只橘白猫。这不是懒，是换了宠物之后用户比较的就变成宠物而不是风格了。这篇讲这条约定和它的边界。
 publishedAt: 2026-08-03
-tags: [产品设计, AI 肖像]
+tags: [产品设计, 艺术写真]
 cover: ./images/style-comparison.jpg
-coverAlt: 暖调胶片风格的 AI 宠物肖像成品
+coverAlt: 暖调胶片风格的宠物艺术写真成品
 related: [pet-id-card-photo-guide]
 ---
 

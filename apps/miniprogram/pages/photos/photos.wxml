@@ -1,6 +1,6 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-flat art-film layout-matrix photo-library">
+<view class="{{skinClass}} page page-flat art-film layout-matrix photo-library">
   <view class="library-heading">
     <view class="title">把可爱收好</view>
     <text class="small">照片、故事和我的成长，都放在这里</text>
@@ -8,10 +8,10 @@
 
   <view class="library-topbar">
     <picker range="{{pets}}" range-key="name" disabled="{{saving || preparing}}" bindchange="choosePet">
-      <view class="picker">
-        <text class="small">正在看</text>
+      <view class="picker" aria-role="button" aria-label="切换宠物，当前是{{petText || '暂无档案'}}">
+        <text class="picker-label">正在看</text>
         <text class="picker-value">{{petText || '暂无档案'}}</text>
-        <text class="picker-arrow" aria-hidden="true">⌄</text>
+        <text wx:if="{{pets.length > 1}}" class="picker-arrow" aria-hidden="true">⌄</text>
       </view>
     </picker>
     <t-button wx:if="{{photos.length}}" type="ghost" size="mini" anim="{{animType}}" bindtap="toggleManage">{{manage ? '完成' : '管理'}}</t-button>
@@ -81,15 +81,17 @@
     </view>
   </view>
 
-  <view wx:if="{{petId && !loading && totalCount}}" class="library-links">
-    <view class="sub-title">用照片做点什么</view>
-    <view class="library-tool-grid">
-      <view class="library-tool" aria-role="button" bindtap="timeline">时间线<text>›</text></view>
-      <view class="library-tool" aria-role="button" bindtap="compare">成长对比<text>›</text></view>
-      <view class="library-tool" aria-role="button" data-kind="album" bindtap="makeWork">做成画册<text>›</text></view>
-      <view class="library-tool" aria-role="button" data-kind="video" bindtap="makeWork">做成短片<text>›</text></view>
+  <view wx:if="{{petId && !loading && totalCount && !manage}}" class="library-links">
+    <view class="library-links-head">
+      <view class="section-title">用照片做点什么</view>
+      <text class="library-timeline" aria-role="button" bindtap="timeline">按时间翻看 ›</text>
     </view>
-    <text class="small">成长对比为带水印的免费作品</text>
+    <view class="library-tool-grid">
+      <view wx:for="{{tools}}" wx:key="kind" class="library-tool" data-kind="{{item.kind}}" aria-role="button" aria-label="{{item.title}}" hover-class="chip-hover" bindtap="useTool">
+        <image class="library-tool-cover" src="{{item.cover}}" mode="aspectFill" webp lazy-load />
+        <view class="library-tool-copy"><text class="library-tool-title">{{item.title}}</text><text class="library-tool-note">{{item.note}}</text></view>
+      </view>
+    </view>
   </view>
 </view>
 

@@ -4,7 +4,7 @@ import { localCopy } from "@/server/generators/copy";
 import type { GeneratorInput, GeneratorOutput } from "@/server/generators/types";
 import { imageProvider } from "@/server/ai/provider";
 import { AppError } from "@/server/errors";
-import { applyAiLabel } from "@/server/media/ai-label";
+import { applyAiMetadata } from "@/server/media/ai-label";
 
 const assetBase = "https://babykitty-static-one-1252454114.cos.ap-shanghai.myqcloud.com/samples/miniprogram-effects/v3/movie-master";
 
@@ -91,7 +91,7 @@ export async function generateMoviePoster(input: GeneratorInput): Promise<Genera
   const shortReview = wrapText(review, 31, 1)[0] || "";
   const overlay = `<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1536"><defs><linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop offset="0.7" stop-color="${scene.color}" stop-opacity="0"/><stop offset="1" stop-color="${scene.color}" stop-opacity=".92"/></linearGradient></defs><rect width="1024" height="1536" fill="url(#shade)"/><text x="${titleX}" y="${titleY - 84}" fill="${scene.accent}" font-family="sans-serif" font-size="${sideTitle ? 17 : 24}" letter-spacing="${sideTitle ? 2 : 4}">A PET FILM / MAMA HOLD ME</text>${title}<text x="${sideTitle ? titleX : 70}" y="1365" fill="#fffaf1" font-family="Noto Sans CJK SC,Microsoft YaHei,sans-serif" font-size="${sideTitle ? 24 : 30}">${escapeXml(subtitle)}</text>${shortReview ? `<text x="${sideTitle ? titleX : 70}" y="1410" fill="#fffaf1" font-family="Noto Sans CJK SC,Microsoft YaHei,sans-serif" font-size="${sideTitle ? 22 : 25}">“${escapeXml(shortReview)}”</text>` : ""}<path d="M68 1450h888" stroke="${scene.accent}" stroke-width="2"/><text x="68" y="1490" fill="#fffaf1" font-family="Noto Sans CJK SC,Microsoft YaHei,sans-serif" font-size="23">麻麻抱我 · 原创电影海报</text></svg>`;
   const poster = await sharp(Buffer.from(generated[0].body)).rotate().resize(1024, 1536, { fit: "cover" }).composite([{ input: Buffer.from(overlay) }]).png().toBuffer();
-  const body = await applyAiLabel(new Uint8Array(poster), input.task.id);
+  const body = await applyAiMetadata(new Uint8Array(poster), input.task.id);
   return {
     title: copy.title,
     subtitle: copy.subtitle,

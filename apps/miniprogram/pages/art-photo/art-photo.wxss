@@ -6,19 +6,47 @@
 .art-package-on { border-color: var(--primary); background: var(--card-background); }
 .art-package-price { color: var(--primary); font-size: var(--body-size); }
 .art-value { display: block; margin-top: var(--space-3); }
-.art-recent { display: grid; gap: var(--space-2); margin-top: var(--space-5); }
-.art-recent .section-title { margin: 0; }
-.art-recent-item { display: flex; justify-content: space-between; gap: var(--space-2); padding: var(--space-3); border-radius: var(--radius-sm); background: var(--surface); color: var(--text-primary); font-size: var(--small-size); }
 .art-collection { margin-top: var(--space-6); }
 .art-section-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-2); margin-bottom: var(--space-3); }
-.art-section-head .section-title { margin: 0; }
+.art-section-head .section-title { flex: none; margin: 0; }
+.art-section-head .small { flex: 1; min-width: 0; overflow: hidden; text-align: right; text-overflow: ellipsis; white-space: nowrap; }
 .art-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap-item); }
 .art-item { min-width: 0; padding-bottom: var(--space-4); }
 .art-image-wrap { position: relative; overflow: hidden; border: 4rpx solid transparent; border-radius: var(--radius-image-thumb); }
 .art-item-selected .art-image-wrap { border-color: var(--primary); }
 .art-selection { position: absolute; right: var(--space-1); bottom: var(--space-1); padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); background: var(--button-primary); color: var(--button-primary-text); font-size: var(--eyebrow-size); }
 .art-bundle-dock { position: fixed; right: 0; bottom: calc(var(--space-8) + env(safe-area-inset-bottom)); left: 0; z-index: 10; padding: var(--space-3) var(--page-padding); border-top: 2rpx solid var(--divider-soft); background: var(--background); }
-.art-image { display: block; width: 100%; aspect-ratio: var(--ratio-card); border-radius: var(--radius-image-thumb); background: var(--surface); }
+.art-image { display: block; width: 100%; height: auto; aspect-ratio: var(--ratio-card); border-radius: var(--radius-image-thumb); background: var(--surface); }
 .art-image-empty { display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: var(--small-size); }
 .art-name { margin-top: var(--space-2); color: var(--text-primary); font-size: var(--body-size); font-weight: var(--fw-bold); }
 .art-description { display: block; margin-top: var(--space-1); }
+
+/* ---------- 创作 Tab（2026-09）---------- */
+.create-segments-bar { position: sticky; top: 0; z-index: 15; margin: calc(0rpx - var(--page-padding)) calc(0rpx - var(--page-padding)) 0; padding: var(--page-padding) var(--page-padding) var(--space-2); background: var(--background); }
+.create-segments { display: flex; padding: var(--space-1); border-radius: var(--radius-pill); background: var(--surface); }
+.create-segment { flex: 1; padding: var(--space-2) 0; border-radius: var(--radius-pill); color: var(--text-secondary); font-size: var(--body-size); text-align: center; }
+.create-segment-on { background: var(--card-background); color: var(--text-primary); font-weight: var(--fw-bold); box-shadow: var(--shadow-press); }
+.art-package { position: relative; }
+.art-package-badge { position: absolute; top: calc(0rpx - var(--space-3)); left: 50%; padding: var(--space-0) var(--space-2); border-radius: var(--radius-pill); background: var(--button-primary); color: var(--button-primary-text); font-size: var(--eyebrow-size); white-space: nowrap; transform: translateX(-50%); }
+.art-selection { top: var(--space-2); right: var(--space-2); bottom: auto; display: flex; align-items: center; justify-content: center; width: 48rpx; height: 48rpx; padding: 0; border-radius: var(--radius-pill); background: var(--mask); color: var(--on-image-primary); }
+.art-selection-on { background: var(--button-primary); color: var(--button-primary-text); }
+.art-bundle-dock { display: flex; align-items: center; gap: var(--space-3); }
+.dock-meta { display: grid; flex: 1; gap: var(--space-0); min-width: 0; }
+.dock-count { color: var(--text-primary); font-size: var(--body-size); font-weight: var(--fw-bold); }
+.human-tags { margin-top: var(--space-1); }
+.human-grid, .play-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap-item); margin-top: var(--space-4); }
+.human-pick, .play-card { min-width: 0; padding-bottom: var(--space-3); }
+.human-card-image { display: block; width: 100%; height: auto; aspect-ratio: var(--ratio-portrait); border-radius: var(--radius-image-thumb); background: var(--surface); }
+.play-card-image { display: block; width: 100%; height: auto; aspect-ratio: var(--ratio-portrait); border-radius: var(--radius-image-thumb); background: var(--surface); }
+
+/* 全部玩法：卡片比例跟着素材走（2026-10）——分类 9:16、图文 / 短片 16:10、趣测 1:1 */
+.play-shape-tall { aspect-ratio: var(--ratio-portrait); }
+.play-shape-wide { aspect-ratio: var(--ratio-hero); }
+.play-shape-square { aspect-ratio: var(--ratio-square); }
+.play-card-fun .play-card-image { border-radius: var(--radius-sm); }
+.play-card-fun { padding: var(--space-2); border-radius: var(--radius-lg); background: var(--skin-sticker-bg, var(--surface)); }
+/* 卡底是贴纸色（影院金、赛博柠檬），文字必须跟着贴纸文字色走，否则浅字压浅底 */
+.play-card-fun .art-name, .play-card-fun .small { color: var(--skin-sticker-text, var(--text-primary)); }
+.skin-brand .play-card-fun { border: 2rpx solid var(--primary); border-radius: 0; background: var(--card-background); }
+.skin-brand .play-card-fun .art-name { color: var(--text-primary); }
+.skin-brand .play-card-fun .small { color: var(--primary); }

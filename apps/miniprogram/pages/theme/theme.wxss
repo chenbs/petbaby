@@ -1,19 +1,21 @@
+/*
+ * 外观（2026-10 按 themes.html 第 3 节）：两列预览卡，卡内是该主题下的迷你首页。
+ * .mini 上挂的是「该主题」的变量串和 skin 类，卡内元素全部读到那套主题的取值。
+ */
 .theme-list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-3);
+  margin-top: var(--space-4);
 }
 
-/*
- * 预览卡的 style 上挂的是「该主题」的变量串，所以卡内元素全部读到对应主题的取值：
- * 底色、圆角、描边、阴影、按钮形状、字重都会跟着变，而不只是换个色块。
- */
 .preview {
   min-width: 0;
   overflow: hidden;
-  border: 2rpx solid var(--border);
-  border-radius: var(--card-radius);
-  background: var(--background);
+  border: 4rpx solid transparent;
+  border-radius: var(--radius-lg);
+  background: var(--card-background);
+  box-shadow: var(--shadow-card);
   transition: transform var(--transition-duration) var(--transition-easing);
 }
 
@@ -22,17 +24,198 @@
 }
 
 .preview-on {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 4rpx var(--ai-glow);
+  border-color: var(--button-primary);
 }
 
-.preview-inner {
-  padding: var(--space-3);
+/* ---------- 迷你首页 ---------- */
+.mini {
+  height: 460rpx;
+  overflow: hidden;
+  padding: var(--space-2);
+  background-color: var(--background);
+  background-image: var(--skin-texture, none);
+  background-size: var(--skin-texture-size, auto);
+}
+
+.mini-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--text-primary);
+  font-family: var(--skin-title-font, inherit);
+  font-size: var(--eyebrow-size);
+  font-weight: var(--fw-black);
+}
+
+.mini-paw {
+  width: 28rpx;
+  height: 28rpx;
+  border-radius: 0;
+}
+
+.mini-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  padding: var(--space-2);
+  border: var(--card-border);
+  border-radius: var(--card-radius-variant);
+  background: var(--card-background);
+  box-shadow: var(--shadow-press);
+  clip-path: var(--skin-clip, none);
+}
+
+.mini-avatar {
+  flex: none;
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: var(--radius-pill);
+  box-shadow: 0 0 0 4rpx var(--skin-avatar-ring, var(--surface));
+}
+
+.mini-card-main {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+
+.mini-name {
+  color: var(--text-primary);
+  font-family: var(--skin-title-font, inherit);
+  font-size: var(--eyebrow-size);
+  font-weight: var(--fw-black);
+}
+
+.mini-days {
+  color: var(--text-secondary);
+  font-size: var(--eyebrow-size);
+}
+
+.mini-days-num {
+  color: var(--primary);
+  font-family: var(--skin-num-font, inherit);
+  font-size: var(--small-size);
+  font-weight: var(--fw-black);
+}
+
+.mini-cam {
+  display: flex;
+  flex: none;
+  width: 44rpx;
+  height: 44rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  background: var(--button-primary);
+}
+
+/* 与首页 .pet-camera 同口径：手账是相纸底，赛博 / 影院是主色描边键（图标本身是主色，实心主色底会看不见） */
+.skin-film .mini-cam {
+  border: var(--card-border);
+  border-radius: var(--radius-sm);
+  background: var(--card-background);
+}
+
+.skin-brand .mini-cam,
+.skin-night .mini-cam {
+  border: 2rpx solid var(--primary);
+  background: transparent;
+}
+
+.skin-brand .mini-cam {
+  border-radius: 0;
+}
+
+.mini-cam-icon {
+  width: 24rpx;
+  height: 24rpx;
+  border-radius: 0;
+}
+
+.mini-human {
+  margin-top: var(--space-2);
+  padding: var(--space-2);
+  border: var(--card-border);
+  border-radius: var(--card-radius-variant);
+  background: var(--skin-hm-bg, var(--surface));
+  clip-path: var(--skin-clip, none);
+}
+
+.mini-human-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1);
+}
+
+.mini-human-title {
+  color: var(--text-primary);
+  font-family: var(--skin-title-font, inherit);
+  font-size: var(--eyebrow-size);
+  font-weight: var(--fw-black);
+}
+
+.mini-go {
+  flex: none;
+  padding: 0 var(--space-1);
+  border-radius: var(--button-radius);
+  background: var(--button-primary);
+  color: var(--button-primary-text);
+  font-size: var(--eyebrow-size);
+  font-weight: var(--fw-bold);
+  clip-path: var(--skin-btn-clip, none);
+}
+
+/* 9:16 样片按原比例并排三张 */
+.mini-human-row {
+  display: flex;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+}
+
+.mini-human-cover {
+  display: block;
+  flex: 1;
+  min-width: 0;
+  width: auto;
+  height: auto;
+  aspect-ratio: var(--ratio-portrait);
+  border-radius: var(--radius-xs);
+}
+
+.mini-mark {
+  margin-top: var(--space-2);
+}
+
+.mini-section {
+  margin: 0;
+  font-size: var(--eyebrow-size);
+}
+
+.mini-feed {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-1);
+  margin-top: var(--space-1);
+}
+
+.mini-feed-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: var(--ratio-card);
+  border-radius: var(--radius-xs);
+}
+
+/* ---------- 卡片说明 ---------- */
+.preview-meta {
+  padding: var(--space-2) var(--space-3) var(--space-3);
 }
 
 .preview-head {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: var(--space-2);
 }
@@ -40,85 +223,20 @@
 .preview-name {
   color: var(--text-primary);
   font-size: var(--body-size);
-  font-weight: var(--title-weight);
-  letter-spacing: var(--title-letter-spacing);
+  font-weight: var(--fw-black);
 }
 
-.preview-check {
-  flex-shrink: 0;
-  padding: var(--space-1);
-  border-radius: var(--radius-pill);
-  background: var(--primary);
-  color: var(--button-primary-text);
+.preview-use {
+  flex: none;
+  color: var(--primary);
   font-size: var(--eyebrow-size);
-  font-weight: 700;
+  font-weight: var(--fw-black);
 }
 
 .preview-desc {
   display: block;
-  margin-top: var(--space-1);
-  color: var(--text-secondary);
-  font-size: var(--small-size);
-}
-
-.preview-demo {
-  display: grid;
-  margin-top: var(--space-4);
-  gap: var(--space-2);
-}
-
-.demo-image {
-  display: block;
-  width: 100%;
-  height: 128rpx;
-  border-radius: var(--radius-image-thumb);
-  background: var(--secondary);
-}
-
-.demo-image-blank {
-  display: flex;
-  box-sizing: border-box;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-2);
+  margin-top: var(--space-0);
   color: var(--text-secondary);
   font-size: var(--eyebrow-size);
-  text-align: center;
-}
-
-.demo-card {
-  display: grid;
-  gap: var(--space-2);
-  padding: var(--space-4);
-  border: var(--card-border);
-  border-radius: var(--card-radius-variant);
-  background: var(--card-background);
-  box-shadow: var(--card-shadow);
-}
-
-.demo-line {
-  height: 14rpx;
-  border-radius: var(--radius-pill);
-  background: var(--divider);
-}
-
-.demo-line-title {
-  width: 62%;
-  height: 22rpx;
-  background: var(--text-secondary);
-}
-
-.demo-line-short {
-  width: 42%;
-}
-
-.demo-btn {
-  margin-top: var(--space-1);
-  padding: var(--space-2);
-  border-radius: var(--button-radius);
-  background: var(--button-primary);
-  color: var(--button-primary-text);
-  font-size: var(--eyebrow-size);
-  font-weight: 700;
-  text-align: center;
+  line-height: var(--lh-sm);
 }

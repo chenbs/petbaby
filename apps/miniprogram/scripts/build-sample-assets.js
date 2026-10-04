@@ -37,7 +37,6 @@ const pluginSources = {
   "pet-movie-poster": "mp26-pet-movie-poster-v4.jpg",
   "pet-time-album": "mp26-pet-time-album.jpg",
   "pl-10": "mp26-gray-toy-poodle-editorial-v1.jpg",
-  "pl-15": "mp26-pl-15-photographic-v2.jpg",
   "pl-19": "mp26-pl-19.jpg",
   "pl-23": "mp26-pl-23-v4.jpg"
 };
@@ -46,9 +45,12 @@ const scenes = {
   "night-playful": "v3", "seaside-breeze": "v3", "library-whisper": "v3",
   "autumn-leaves": "v3", "snow-cabin": "v4", "cafe-afternoon": "v3",
   "lakeside-sunset": "v4", "city-rain": "v3", "spring-picnic": "v4",
-  "railway-traveler": "v5", "tennis-champion": "v5", "greenhouse-gardener": "v5", "sailboat-holiday": "v5",
-  "berry-pastry-chef": "v5", "paper-flower-window": "v5", "mountain-cable-car": "v5", "laundry-day": "v5",
-  "museum-curator": "v5", "poolside-vacation": "v5", "post-office": "v5", "ballet-backstage": "v5"
+  "railway-traveler": "v7", "tennis-champion": "v8", "greenhouse-gardener": "v7", "sailboat-holiday": "v6",
+  "berry-pastry-chef": "v7", "paper-flower-window": "v8", "mountain-cable-car": "v8", "laundry-day": "v8",
+  "museum-curator": "v7", "poolside-vacation": "v6", "post-office": "v8", "ballet-backstage": "v6",
+  "shorthair-armchair": "v7", "shorthair-books": "v7", "shorthair-night-rim": "v11", "shorthair-paper-bag": "v8",
+  "corgi-denim": "v11", "corgi-crate": "v9", "corgi-sploot": "v8", "corgi-sweater": "v8",
+  "calico-silk": "v7", "calico-bowl": "v8", "calico-rain-window": "v11", "calico-cane-stool": "v11"
 };
 const movieScenes = {
   highseas: path.join(root, "tools/imagegen/out/movie-album-v3/movie-highseas.jpg"),
@@ -62,8 +64,7 @@ const albumScenes = {
   healing: path.join(root, "tools/imagegen/out/movie-album-v2/album-healing.jpg"),
   holiday: path.join(root, "tools/imagegen/out/movie-album-v2/album-holiday.jpg")
 };
-const interactiveColors = { stardust: "#141b3d", meadow: "#1c3326", sunset: "#3b1e2b" };
-const manifest = { plugins: {}, scenes: {}, templates: {}, movie: {}, album: {}, interactive: {}, templateShapes: {} };
+const manifest = { plugins: {}, scenes: {}, templates: {}, movie: {}, album: {}, templateShapes: {} };
 
 async function thumbnail(input, target, width, height, options = {}) {
   if (!fs.existsSync(input)) throw new Error("Missing public sample: " + input);
@@ -121,14 +122,9 @@ async function main() {
       manifest[group][id] = "/assets/samples/" + group + "/" + id + ".jpg";
     }
   }
-  for (const [id, color] of Object.entries(interactiveColors)) {
-    const target = path.join(output, "interactive", id + ".jpg");
-    await thumbnail(path.join(root, "tools/imagegen/out/plugins", pluginSources["pl-15"]), target, 320, 420, { frame: color, inset: 26 });
-    manifest.interactive[id] = "/assets/samples/interactive/" + id + ".jpg";
-  }
   fs.writeFileSync(path.join(output, "manifest.js"), "module.exports = " + JSON.stringify(manifest, null, 2) + ";\n");
-  console.log("Built " + ["plugins", "scenes", "templates", "movie", "album", "interactive"].reduce((sum, group) => sum + Object.keys(manifest[group]).length, 0) + " local sample images.");
+  console.log("Built " + ["plugins", "scenes", "templates", "movie", "album"].reduce((sum, group) => sum + Object.keys(manifest[group]).length, 0) + " local sample images.");
 }
 
-module.exports = { pluginSources, scenes, movieScenes, albumScenes, interactiveColors, templates, overrides, thumbnail, albumPage, moviePoster };
+module.exports = { pluginSources, scenes, movieScenes, albumScenes, templates, overrides, thumbnail, albumPage, moviePoster };
 if (require.main === module) main().catch((error) => { console.error(error); process.exitCode = 1; });

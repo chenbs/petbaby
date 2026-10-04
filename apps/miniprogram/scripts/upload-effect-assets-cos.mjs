@@ -90,7 +90,7 @@ async function main() {
   const plan = JSON.parse(planBody.toString("utf8"));
   if (plan.version !== 1 || plan.remote.length !== 94 || plan.home.length !== 30) throw new Error("效果图清单数量或版本不符，请重新生成");
   for (const item of plan.remote) {
-    if (!/^samples\/miniprogram-effects\/v[23]\/(?:scenes|templates|movie|album|interactive|funTests)\/[a-z0-9-]+-[a-f0-9]{64}\.jpg$/.test(item.key)) throw new Error("非法 COS 对象路径：" + item.key);
+    if (!/^samples\/miniprogram-effects\/v[23]\/(?:scenes|templates|movie|album|funTests)\/[a-z0-9-]+-[a-f0-9]{64}\.jpg$/.test(item.key)) throw new Error("非法 COS 对象路径：" + item.key);
     const filename = path.resolve(root, item.file);
     if (item.url !== `https://${staticBucket}.cos.${staticRegion}.myqcloud.com/${item.key}`) throw new Error("公开 URL 与静态桶不一致：" + item.key);
     if (!filename.startsWith(remoteRoot)) throw new Error("素材超出暂存目录：" + item.file);

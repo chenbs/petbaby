@@ -37,7 +37,7 @@
 .fun-pet.selected { border-color: var(--primary); background: var(--surface); color: var(--primary); font-weight: var(--fw-bold); }
 .fun-name-field { margin: var(--space-4) 0; }
 .fun-name-field input { height: 92rpx; margin-top: var(--space-2); padding: 0 var(--space-3); border: 2rpx solid var(--border); border-radius: var(--radius-xs); background: var(--card-background); color: var(--text-primary); font-size: var(--body-size); }
-.fun-primary, .fun-secondary { display: flex; min-height: 92rpx; align-items: center; justify-content: center; border-radius: var(--radius-xs); font-size: var(--body-size); font-weight: var(--fw-bold); }
+.fun-primary, .fun-secondary { display: flex; min-height: 92rpx; align-items: center; justify-content: center; border-radius: var(--button-radius); font-size: var(--body-size); font-weight: var(--fw-bold); }
 .fun-primary { background: var(--button-primary); color: var(--button-primary-text); }
 .fun-secondary { border: 2rpx solid var(--primary); background: var(--card-background); color: var(--primary); }
 .fun-disclaimer { margin-top: var(--space-3); color: var(--text-secondary); font-size: var(--eyebrow-size); line-height: var(--lh-sm); }

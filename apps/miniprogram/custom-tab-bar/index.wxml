@@ -1,15 +1,18 @@
 <view class="tabbar tabbar-{{themeId}}" style="{{themeStyle}}">
   <view
     wx:for="{{items}}"
-    wx:key="pagePath"
-    class="item anim-{{animType}} {{selected === index ? 'active' : ''}}"
+    wx:key="key"
+    class="item item-{{item.key}} anim-{{animType}} {{selected === item.tab ? 'active' : ''}}"
     data-index="{{index}}"
-    aria-role="tab"
-    aria-selected="{{selected === index}}"
+    aria-role="{{item.action ? 'button' : 'tab'}}"
+    aria-selected="{{selected === item.tab}}"
+    aria-label="{{item.action ? '记录照片' : item.text}}"
     hover-class="item-hover"
     bindtap="switchTab"
   >
-    <text class="item-glyph">{{item.glyph}}</text>
-    <text class="item-text">{{item.text}}</text>
+    <view class="item-icon-wrap">
+      <image class="item-icon" src="/assets/icons/{{themeId}}/{{item.key}}{{item.action ? '' : selected === item.tab ? '-on' : ''}}.png" mode="aspectFit" />
+    </view>
+    <text wx:if="{{!item.action}}" class="item-text">{{item.text}}</text>
   </view>
 </view>

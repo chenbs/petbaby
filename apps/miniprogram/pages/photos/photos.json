@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "照片记录",
+  "navigationBarTitleText": "照片库",
   "usingComponents": {
     "t-button": "../../components/button/index",
     "t-notice": "../../components/notice/index",

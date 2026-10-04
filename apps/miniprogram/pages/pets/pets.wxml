@@ -1,6 +1,6 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-flat art-pet layout-pet">
+<view class="{{skinClass}} page page-flat art-pet layout-pet">
   <view class="title">宠物档案</view>
   <t-button class="block-gap" type="primary" anim="{{animType}}" bindtap="newPet">新建宠物档案</t-button>
 
@@ -52,10 +52,9 @@
           没有弹窗、没有引导、不主动提起。晚年阶段的用户如果需要它，
           它就在那只宠物旁边；不需要的用户看不到它。
         -->
-        <t-button wx:if="{{item.showMemorial}}" type="ghost" size="mini" anim="{{animType}}" data-id="{{item.id}}" bindtap="memorial">纪念空间</t-button>
         <t-button type="ghost" size="mini" anim="{{animType}}" data-id="{{item.id}}" bindtap="edit">编辑</t-button>
-        <t-button wx:if="{{!item.isDefault}}" type="ghost" size="mini" anim="{{animType}}" data-id="{{item.id}}" bindtap="setDefault">设为默认</t-button>
-        <t-button type="ghost" size="mini" anim="{{animType}}" data-id="{{item.id}}" bindtap="askRemove">删除</t-button>
+        <!-- 设为默认 / 纪念空间 / 删除这类低频操作收进「…」（2026-09），一行只留三个按钮 -->
+        <t-button type="ghost" size="mini" anim="{{animType}}" data-id="{{item.id}}" aria-label="更多操作" bindtap="openMore">···</t-button>
       </view>
     </view>
   </view>
@@ -122,3 +121,5 @@
   bindconfirm="confirmRemove"
   bindcancel="cancelRemove"
 ></t-dialog>
+
+<t-action-sheet visible="{{moreVisible}}" title="{{morePetName}}" actions="{{moreActions}}" bindselect="chooseMore" bindclose="closeMore"></t-action-sheet>

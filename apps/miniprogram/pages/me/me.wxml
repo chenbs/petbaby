@@ -1,137 +1,74 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-tabbar art-pet layout-pet">
-  <view class="title">我的空间</view>
-
+<!--
+  我的（2026-09 改版；2026-10 按 prototype.html after-me 对齐）：
+  用户身份 → 宠物头像行 → 统计三格 → 额度信息条（贴纸色）→ 三组入口（小标题 + 白色列表卡 + 图标块）。
+-->
+<view class="{{skinClass}} page page-tabbar art-pet layout-pet me-page">
   <t-notice wx:if="{{error}}" type="error" message="{{error}}"></t-notice>
   <t-button wx:if="{{error}}" type="secondary" bindtap="loadAccount">重新加载账户资料</t-button>
 
   <t-skeleton wx:if="{{loading}}" type="card" count="2"></t-skeleton>
 
   <block wx:else>
-    <!--
-      方案 E：个人中心先给「对象」再给功能。默认宠物的封面 + 陪伴天数 + 统计条置顶，
-      用户第一眼看到的是自己的宠物，不是功能货架。
-      没有宠物时整块不出现 —— 方案点出 E 的缺点正是「无数据时页面是空的」，
-      这里的处理是干脆不占位，让下面的额度卡照常打头。
-    -->
-    <t-card
-      wx:if="{{hero}}"
-      variant="flat"
-      clickable
-      padded="{{false}}"
-      blur="{{false}}"
-      anim="{{animType}}"
-      bindtap="openPets"
-    >
-      <view class="hero-media {{hero.imageUrl ? '' : 'hero-media-empty'}}">
-        <image wx:if="{{hero.imageUrl}}" class="hero-image" src="{{hero.imageUrl}}" mode="aspectFit" data-src="{{hero.imageUrl}}" binderror="onHeroImageError" />
-        <view wx:else class="hero-image hero-image-blank">还没有我的照片</view>
+    <view class="me-head">
+      <image wx:if="{{hero && hero.imageUrl}}" class="me-avatar" src="{{hero.imageUrl}}" mode="aspectFill" data-src="{{hero.imageUrl}}" binderror="onHeroImageError" />
+      <view wx:else class="me-avatar me-avatar-empty">{{displayName[0]}}</view>
+      <view class="me-identity">
+        <view class="me-name">{{displayName}}</view>
+        <text class="small">{{status && status.refunds.length ? status.refunds.length + ' 笔退款处理中' : '已登录 · 照片和作品都会一直保存在这里'}}</text>
       </view>
-      <view class="hero-caption">
-        <view class="hero-name">{{hero.name}}</view>
-        <text wx:if="{{hero.companionDays}}" class="hero-days">{{hero.companionText}}</text>
-      </view>
-      <view class="hero-stats">
-        <view class="hero-stat">
-          <view class="hero-stat-value">{{hero.counts.works}}</view>
-          <text class="hero-stat-label">作品</text>
-        </view>
-        <view class="hero-stat">
-          <view class="hero-stat-value">{{hero.counts.photos}}</view>
-          <text class="hero-stat-label">照片</text>
-        </view>
-        <view class="hero-stat">
-          <view class="hero-stat-value">{{hero.counts.memorials}}</view>
-          <text class="hero-stat-label">纪念日</text>
-        </view>
-      </view>
-    </t-card>
-
-    <!-- 额度用环形进度呈现，一眼看出还剩多少 -->
-    <view wx:if="{{status}}" class="quota-section">
-      <view class="quota">
-        <t-progress
-          shape="ring"
-          tone="ai"
-          percent="{{status.quota.daily ? status.quota.remaining / status.quota.daily * 100 : 0}}"
-          value-text="{{status.quota.remaining}}"
-          label="剩余次数"
-        ></t-progress>
-        <view class="quota-copy">
-          <view class="sub-title">今日免费额度</view>
-          <text class="muted">还能免费生成 {{status.quota.remaining}} 次，每天 {{status.quota.daily}} 次，凌晨重置。</text>
-          <text wx:if="{{profile}}" class="small">{{profile.displayName || '我的账户'}}</text>
-        </view>
-      </view>
-      <view wx:if="{{status.refunds.length}}" class="quota-foot">
-        <t-tag tone="warning" size="mini" text="{{status.refunds.length}} 笔退款处理中"></t-tag>
+      <view class="me-bell" aria-role="button" aria-label="通知" bindtap="openNotifications">
+        <image class="me-bell-icon" src="/assets/icons/{{themeId}}/ic-bell.png" mode="aspectFit" />
+        <text wx:if="{{status.notifications.length}}" class="me-bell-dot"></text>
       </view>
     </view>
 
-    <view wx:if="{{status.notifications.length}}" class="section">
-      <view class="section-title">站内通知</view>
+    <!-- 宠物头像行：点头像看时间线，末尾「添加 / 管理」进档案页 -->
+    <scroll-view class="me-pets" scroll-x show-scrollbar="{{false}}"><view class="me-pets-track">
+      <view wx:for="{{pets}}" wx:key="id" class="me-pet {{item.isDefault ? 'me-pet-on' : ''}}" data-id="{{item.id}}" aria-role="button" aria-label="查看{{item.name}}的时间线" bindtap="openPet">
+        <image wx:if="{{item.avatarUrl}}" class="me-pet-avatar" src="{{item.avatarUrl}}" mode="aspectFill" />
+        <view wx:else class="me-pet-avatar me-pet-avatar-empty">{{item.name[0]}}</view>
+        <text class="me-pet-name">{{item.name}}</text>
+      </view>
+      <view class="me-pet" aria-role="button" aria-label="{{pets.length ? '管理宠物档案' : '添加宠物'}}" bindtap="openPets">
+        <view class="me-pet-avatar me-pet-add">＋</view>
+        <text class="me-pet-name">{{pets.length ? '添加' : '添加宠物'}}</text>
+      </view>
+    </view></scroll-view>
+
+    <view wx:if="{{hero}}" class="me-stats" aria-role="button" bindtap="openTimeline">
+      <view class="me-stat"><view class="me-stat-value">{{hero.companionDays || 0}}</view><text class="me-stat-label">{{hero.lifeStage === 'memorial' ? '陪伴了' : '陪伴天数'}}</text></view>
+      <view class="me-stat"><view class="me-stat-value">{{hero.counts.photos}}</view><text class="me-stat-label">照片</text></view>
+      <view class="me-stat"><view class="me-stat-value">{{hero.counts.works}}</view><text class="me-stat-label">作品</text></view>
+    </view>
+
+    <view wx:if="{{status}}" class="me-quota" aria-role="button" bindtap="openCommerce">
+      <image class="me-quota-icon" src="/assets/icons/{{themeId}}/ic-magic.png" mode="aspectFit" />
+      <view class="me-quota-copy">
+        <text class="me-quota-title">今日免费制作 · 剩 {{status.quota.remaining}} 次</text>
+        <text class="me-quota-sub">每天 {{status.quota.daily}} 次，0 点刷新</text>
+      </view>
+      <text class="me-quota-more">会员更多 ›</text>
+    </view>
+
+    <view wx:if="{{status.notifications.length}}" id="me-notices" class="me-group">
+      <text class="me-group-title">通知</text>
       <view class="stack-tight">
-        <t-notice wx:for="{{status.notifications}}" wx:key="id" type="info" message="{{item.title}}：{{item.body}}"></t-notice>
-      </view>
-    </view>
-
-    <view class="section">
-      <view class="section-title">常用功能</view>
-      <view class="entry-list">
-        <view class="entry" hover-class="entry-hover" bindtap="record">
-          <view class="entry-text"><view class="entry-name">收好照片</view><text class="small">先记录，随时回来补一句</text></view><text class="entry-arrow">›</text>
-        </view>
-        <view class="entry" hover-class="entry-hover" bindtap="openOrders">
-          <view class="entry-text"><view class="entry-name">订单与退款</view><text class="small">支付记录、发票与退款进度</text></view>
-          <text class="entry-arrow">›</text>
-        </view>
-        <view class="entry" hover-class="entry-hover" bindtap="openPets">
-          <view class="entry-text"><view class="entry-name">宠物档案</view><text class="small">名字、生日与生命阶段</text></view>
-          <text class="entry-arrow">›</text>
-        </view>
-        <view class="entry" hover-class="entry-hover" bindtap="openPhotos">
-          <view class="entry-text"><view class="entry-name">照片库</view><text class="small">已上传的照片与批量管理</text></view>
-          <text class="entry-arrow">›</text>
-        </view>
-        <!-- 健康助手：分诊 + 记录，不是问诊。副标题要说清边界。 -->
-        <view class="entry" hover-class="entry-hover" bindtap="openHealth">
-          <view class="entry-text"><view class="entry-name">健康助手</view><text class="small">要不要去医院、去之前准备什么</text></view>
-          <text class="entry-arrow">›</text>
-        </view>
-        <!-- 指首页的玩法货架（X2 删掉了中间那层「选择创作方式」页） -->
-        <view class="entry" hover-class="entry-hover" bindtap="openGrowth">
-          <view class="entry-text"><view class="entry-name">AI、互动与视频</view><text class="small">回到玩法货架挑一个</text></view>
-          <text class="entry-arrow">›</text>
-        </view>
-        <view class="entry" hover-class="entry-hover" bindtap="openMemorials">
-          <view class="entry-text"><view class="entry-name">纪念空间</view><text class="small">为离开的我留一个位置</text></view>
-          <text class="entry-arrow">›</text>
-        </view>
-        <view class="entry" hover-class="entry-hover" bindtap="openCommerce">
-          <view class="entry-text"><view class="entry-name">会员与年度报告</view><text class="small">订阅、权益与实体周边</text></view>
-          <text class="entry-arrow">›</text>
+        <view wx:for="{{status.notifications}}" wx:key="id" class="notice-entry" data-id="{{item.id}}" data-path="{{item.target_path}}" aria-role="button" hover-class="entry-hover" bindtap="openNotification">
+          <t-notice type="info" message="{{item.title}}：{{item.body}}"></t-notice>
         </view>
       </view>
     </view>
 
-    <view class="section">
-      <view class="section-title">设置</view>
-      <view class="entry-list">
-        <view class="entry" hover-class="entry-hover" bindtap="openTheme">
-          <view class="entry-text"><view class="entry-name">外观主题</view><text class="small">四套风格，随时切换</text></view>
-          <view class="entry-side">
-            <text class="small strong">{{themeName}}</text>
-            <text class="entry-arrow">›</text>
-          </view>
-        </view>
-        <view class="entry" hover-class="entry-hover" bindtap="openAccount">
-          <view class="entry-text"><view class="entry-name">账户与隐私</view><text class="small">数据导出与账号注销</text></view>
-          <text class="entry-arrow">›</text>
-        </view>
-        <view class="entry" hover-class="entry-hover" bindtap="openLogin">
-          <view class="entry-text"><view class="entry-name">登录与退出</view><text class="small">切换账号</text></view>
-          <text class="entry-arrow">›</text>
+    <view wx:for="{{groups}}" wx:for-item="group" wx:key="title" class="me-group">
+      <text class="me-group-title">{{group.title}}</text>
+      <view class="me-list">
+        <view wx:for="{{group.items}}" wx:key="key" class="me-row" data-key="{{item.key}}" aria-role="button" hover-class="entry-hover" bindtap="openEntry">
+          <view class="me-row-icon me-row-icon-{{item.tone}}"><image class="me-row-glyph" src="/assets/icons/{{themeId}}/{{item.icon}}.png" mode="aspectFit" /></view>
+          <view class="me-row-text"><text class="me-row-name">{{item.name}}</text><text wx:if="{{item.sub}}" class="me-row-sub">{{item.sub}}</text></view>
+          <text wx:if="{{item.side}}" class="me-row-side">{{item.side}}</text>
+          <text class="me-row-arrow">›</text>
         </view>
       </view>
     </view>

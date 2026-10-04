@@ -1,36 +1,89 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
-<view class="page page-tabbar art-brand layout-matrix art-photo-page {{packageMode === 'single' ? '' : 'art-photo-page-bundle'}}">
-  <view class="art-heading">
-    <text class="eyebrow">宠物艺术写真</text>
-    <view class="title">把我的每一面，都好好收藏</view>
-    <text class="muted">24 种惊喜，从今天的可爱到以后想念的瞬间。</text>
+<view class="{{skinClass}} page page-tabbar art-brand layout-matrix art-photo-page {{segment === 'art' && packageMode !== 'single' ? 'art-photo-page-bundle' : ''}}">
+  <!-- 分段吸顶：往下滑时仍可切换；外层垫页面底色，内容滑过时不透出来 -->
+  <view class="create-segments-bar">
+    <view class="create-segments" aria-role="tablist">
+      <view wx:for="{{segments}}" wx:key="id" class="create-segment {{segment === item.id ? 'create-segment-on' : ''}}" data-id="{{item.id}}" aria-role="tab" aria-selected="{{segment === item.id}}" bindtap="chooseSegment">{{item.label}}</view>
+    </view>
   </view>
-  <view class="art-package-options">
-    <view class="art-package {{packageMode === 'single' ? 'art-package-on' : ''}}" data-mode="single" aria-role="radio" aria-checked="{{packageMode === 'single'}}" bindtap="choosePackage"><text>单张写真</text><text class="art-package-price">{{singlePriceText || '按当前价格'}}</text><text class="small">2 选 1</text></view>
-    <view class="art-package {{packageMode === 'ten' ? 'art-package-on' : ''}}" data-mode="ten" aria-role="radio" aria-checked="{{packageMode === 'ten'}}" bindtap="choosePackage"><text>任选 10 套</text><text class="art-package-price">¥9.9</text><text class="small">每套 1 张</text></view>
-    <view class="art-package {{packageMode === 'all' ? 'art-package-on' : ''}}" data-mode="all" aria-role="radio" aria-checked="{{packageMode === 'all'}}" bindtap="choosePackage"><text>收藏 24 套</text><text class="art-package-price">¥19.9</text><text class="small">每套 1 张</text></view>
-  </view>
-  <text class="small art-value">一张照片就能开拍，无需预约影棚；¥9.9 留住我的 10 种好看模样，想念时随时翻看。</text>
-  <view wx:if="{{recentBatches.length}}" class="art-recent">
-    <view class="section-title">接着看我的写真</view>
-    <view wx:for="{{recentBatches}}" wx:key="id" class="art-recent-item" data-id="{{item.id}}" bindtap="openBatch"><text>{{item.totalCount}} 套写真 · {{item.completedCount}} 张已完成</text><text>{{item.statusText}} ›</text></view>
-  </view>
+
   <t-skeleton wx:if="{{loading}}" type="grid" count="4"></t-skeleton>
   <t-notice wx:elif="{{error}}" type="error" message="{{error}}"></t-notice>
-  <block wx:else>
+
+  <!-- 写真馆 -->
+  <block wx:elif="{{segment === 'art'}}">
+    <view class="art-heading">
+      <view class="title">一张照片，拍出 24 种样子</view>
+      <text class="muted">影棚级布光与造型，不用预约。每套 1 张，可以单独保存。</text>
+    </view>
+    <view class="art-package-options">
+      <view wx:for="{{['single', 'ten', 'all']}}" wx:key="*this" class="art-package {{packageMode === item ? 'art-package-on' : ''}}" data-mode="{{item}}" aria-role="radio" aria-checked="{{packageMode === item}}" bindtap="choosePackage">
+        <text wx:if="{{packages[item].recommended}}" class="art-package-badge">最多人选</text>
+        <text>{{packages[item].label}}</text>
+        <text class="art-package-price">{{packages[item].price || '—'}}</text>
+        <text class="small">{{packages[item].unit}}</text>
+      </view>
+    </view>
     <view wx:for="{{collections}}" wx:for-item="group" wx:key="id" class="art-collection">
       <view class="art-section-head">
         <view class="section-title">{{group.title}}</view>
-        <text class="small">{{group.subtitle}}</text>
+        <text class="small">{{packageMode === 'ten' ? '已为我挑好，点图可替换' : group.subtitle}}</text>
       </view>
       <view class="art-grid">
-        <view wx:for="{{group.scenes}}" wx:for-item="scene" wx:key="id" class="art-item {{scene.selected ? 'art-item-selected' : ''}}" data-id="{{scene.id}}" aria-role="button" aria-label="选择{{scene.title}}写真" bindtap="chooseScene">
-          <view class="art-image-wrap"><image wx:if="{{scene.url}}" class="art-image" src="{{scene.url}}" mode="aspectFit" data-id="{{scene.id}}" binderror="onSceneImageError" lazy-load /><view wx:else class="art-image art-image-empty">样片暂不可用</view><text wx:if="{{packageMode !== 'single'}}" class="art-selection">{{scene.selected ? '✓ 已选' : '点选'}}</text></view>
+        <view wx:for="{{group.scenes}}" wx:for-item="scene" wx:key="id" class="art-item {{scene.selected ? 'art-item-selected' : ''}}" data-id="{{scene.id}}" aria-role="{{packageMode === 'single' ? 'button' : 'checkbox'}}" aria-checked="{{scene.selected}}" aria-label="{{scene.title}}写真" bindtap="chooseScene">
+          <view class="art-image-wrap"><image wx:if="{{scene.url}}" class="art-image" src="{{scene.url}}" mode="aspectFit" data-id="{{scene.id}}" binderror="onSceneImageError" lazy-load /><view wx:else class="art-image art-image-empty">样片暂不可用</view><text wx:if="{{packageMode !== 'single'}}" class="art-selection {{scene.selected ? 'art-selection-on' : ''}}">{{scene.selected ? '✓' : '＋'}}</text></view>
           <view class="art-name">{{scene.title}}</view>
           <text class="small art-description">{{scene.description}}</text>
         </view>
       </view>
     </view>
   </block>
+
+  <!-- 如果我是人：40 款造型，按标签筛选，点哪张直达哪张 -->
+  <block wx:elif="{{segment === 'human'}}">
+    <view class="art-heading">
+      <view class="title">如果我是人</view>
+      <text class="muted">上传一张我的正脸照，看看我变成人的样子。每次出 1 张，不支持重拍。</text>
+    </view>
+    <scroll-view class="human-tags chip-scroll" scroll-x show-scrollbar="{{false}}"><view class="chip-track">
+      <view class="chip {{!humanTag ? 'chip-on' : ''}}" data-tag="" bindtap="chooseHumanTag">全部 {{humanTemplates.length}}</view>
+      <view wx:for="{{humanTags}}" wx:key="*this" class="chip {{humanTag === item ? 'chip-on' : ''}}" data-tag="{{item}}" bindtap="chooseHumanTag">{{item}}</view>
+    </view></scroll-view>
+    <view class="human-grid">
+      <view wx:for="{{humanVisible}}" wx:key="templateId" class="human-pick" data-id="{{item.templateId}}" aria-role="button" aria-label="{{item.title}}" hover-class="chip-hover" bindtap="openHumanTemplate">
+        <image wx:if="{{item.sampleUrl}}" class="human-card-image" src="{{item.sampleUrl}}" mode="aspectFill" webp data-id="{{item.templateId}}" binderror="onHumanImageError" lazy-load />
+        <view wx:else class="human-card-image art-image-empty">样图暂不可用</view>
+        <view class="art-name">{{item.title}}</view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 其他玩法：分类 + 图文 / 短片 / 趣测 -->
+  <block wx:else>
+    <view class="art-heading"><view class="title">其他玩法</view><text class="muted">挑一个，几分钟就能做好。</text></view>
+    <scroll-view class="human-tags chip-scroll" scroll-x show-scrollbar="{{false}}"><view class="chip-track">
+      <view wx:for="{{playChips}}" wx:key="id" class="chip {{playChip === item.id ? 'chip-on' : ''}}" data-id="{{item.id}}" aria-role="tab" aria-selected="{{playChip === item.id}}" hover-class="chip-hover" bindtap="choosePlayChip">{{item.label}}</view>
+    </view></scroll-view>
+    <view class="play-grid">
+      <view wx:for="{{visibleCategories}}" wx:key="id" class="play-card" data-id="{{item.id}}" data-template="{{item.templateId}}" aria-role="button" hover-class="chip-hover" bindtap="openCategory">
+        <image wx:if="{{item.cover}}" class="play-card-image play-shape-tall" src="{{item.cover}}" mode="aspectFill" lazy-load />
+        <view class="art-name">{{item.title}}</view>
+        <text class="small">{{item.count}} 款</text>
+      </view>
+      <view wx:for="{{visiblePlays}}" wx:key="id" class="play-card" data-id="{{item.id}}" data-category="{{item.category}}" aria-role="button" hover-class="chip-hover" bindtap="openPlay">
+        <image wx:if="{{item.cover}}" class="play-card-image play-shape-wide" src="{{item.cover}}" mode="aspectFill" lazy-load />
+        <view class="art-name">{{item.name}}</view>
+        <text class="small">{{item.priceText}}</text>
+      </view>
+      <view wx:if="{{playChip === 'all'}}" class="play-card play-card-fun" aria-role="button" hover-class="chip-hover" bindtap="openFunTests">
+        <image class="play-card-image play-shape-square" src="/assets/fun-tests/personality.jpg" mode="aspectFill" lazy-load />
+        <view class="art-name">宠物趣味测试</view>
+        <text class="small">免费 · 4 份测试</text>
+      </view>
+    </view>
+  </block>
 </view>
-<view wx:if="{{packageMode !== 'single'}}" class="art-bundle-dock"><t-button type="primary" block disabled="{{(packageMode === 'ten' && selectedCount !== 10) || (packageMode === 'all' && selectedCount !== 24)}}" bindtap="startBundle">{{packageMode === 'ten' ? '已选 ' + selectedCount + '/10 · 选择宠物照片' : '24 套已选 · 选择宠物照片'}}</t-button></view>
+<view wx:if="{{segment === 'art' && !loading && !error}}" class="{{skinClass}} art-bundle-dock">
+  <view class="dock-meta"><text class="dock-count">{{dockText}}</text><text class="small">{{packageMode === 'single' ? '先看预览，满意再保存' : '下一步选我的照片'}}</text></view>
+  <t-button wx:if="{{packageMode !== 'single'}}" type="primary" anim="{{animType}}" bindtap="startBundle">下一步</t-button>
+</view>

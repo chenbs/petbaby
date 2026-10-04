@@ -1,74 +1,57 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<t-navbar
-  title="AI 任务与候选"
-></t-navbar>
-
-<!-- 已选中候选：结果确认区改为沉浸式，选中图占满全屏 -->
-<t-glass-sheet
-  wx:if="{{immersive}}"
-  class="art-brand layout-canvas"
-  background-image="{{selectedUrl}}"
-  framed
-  title="确认这一张"
-  state="half"
-  blur="{{blurOk}}"
-  anim="{{animType}}"
-  bindbackgrounderror="onBackgroundError"
->
-  <view slot="header">
-    <text class="glass-eyebrow">已选中</text>
-    <view class="glass-title run-title">确认这一张</view>
-    <text class="glass-muted">{{humanMode ? '解锁只对这一张生效。' : '解锁只对这一张生效，重抽会作废当前选择。'}}</text>
-  </view>
-
-  <t-notice wx:if="{{message}}" type="{{messageType}}" message="{{message}}" class="block-gap"></t-notice>
-
-  <view wx:if="{{run.selectedUnlocked}}" class="section-block">
-    <view class="glass-sub-title">已解锁</view>
-    <view class="share-actions">
-      <t-button type="primary" block anim="{{animType}}" loading="{{busy}}" bindtap="save">保存高清图到相册</t-button>
-      <t-button type="secondary" block anim="{{animType}}" bindtap="share">创建 7 天分享链接</t-button>
-      <t-button type="ghost" block anim="{{animType}}" bindtap="openWork">查看作品档案</t-button>
-    </view>
-  </view>
-
-  <view slot="actions">
-    <t-button type="ai" block anim="{{animType}}" disabled="{{run.selectedUnlocked}}" loading="{{busy}}" bindtap="unlock">
-      {{run.order && run.order.status === 'pending' ? '继续支付解锁' : '解锁选中的这张'}}
-    </t-button>
-    <t-button wx:if="{{!humanMode}}" type="secondary" block anim="{{animType}}" class="block-gap" disabled="{{!run.rerollRemaining || run.workId}}" bindtap="reroll">重抽一组（剩 {{run.rerollRemaining}} 次）</t-button>
-  </view>
-</t-glass-sheet>
-
-<view wx:else class="page page-flat art-brand layout-workbench">
+<!--
+  制作与挑选（2026-10 按 prototype.html 第 4 节重做）：
+  - 等待：模糊的场景样片 + 我的头像、三段进度、「好了提醒我」、等的时候再挑几套写真；
+  - 结果：每次只出 1 张，大图展示、点一下放大；历史多候选任务仍并排挑选；重拍降级成一行文字链接；
+  - 底部抽屉：场景名 + 带价格的保存按钮 +「发给朋友看」。
+-->
+<view class="{{skinClass}} page page-flat art-brand layout-workbench run-page {{showSheet ? 'run-page-sheet' : ''}}">
   <t-skeleton wx:if="{{loading}}" type="card" count="2"></t-skeleton>
 
   <block wx:elif="{{run}}">
-    <view wx:if="{{run.status !== 'queued' && run.status !== 'processing'}}" class="row">
-      <text class="eyebrow">从 {{run.candidates.length || 2}} 张中选 1 张</text>
-      <t-tag tone="{{run.status === 'failed' ? 'error' : run.status === 'succeeded' ? 'success' : 'accent'}}" size="mini" text="{{statusText}}"></t-tag>
-    </view>
-    <view wx:if="{{run.status !== 'queued' && run.status !== 'processing'}}" class="title">{{run.status === 'succeeded' ? '挑一张最像我的' : 'AI 任务状态'}}</view>
-
     <t-notice wx:if="{{message}}" type="{{messageType}}" message="{{message}}" class="block-gap"></t-notice>
 
-    <!-- 排队/生成中 -->
-    <view wx:if="{{run.status === 'queued' || run.status === 'processing'}}" class="run-pending">
-      <view class="pending-image" aria-role="img" aria-label="作品正在生成">
-        <view class="pending-image-inner">2 张<text>候选正在准备</text></view>
+    <!-- 排队 / 制作中 -->
+    <view wx:if="{{run.status === 'queued' || run.status === 'processing'}}" class="wait">
+      <view class="wait-frame" aria-role="img" aria-label="正在制作">
+        <image wx:if="{{waitCoverUrl}}" class="wait-cover" src="{{waitCoverUrl}}" mode="aspectFill" />
+        <view class="wait-shine"></view>
+        <image wx:if="{{petAvatarUrl}}" class="wait-me" src="{{petAvatarUrl}}" mode="aspectFill" />
+        <view wx:else class="wait-me wait-me-empty"><image class="wait-me-paw" src="/assets/icons/{{themeId}}/paw.png" mode="aspectFit" /></view>
       </view>
-      <view class="pending-status">{{run.status === 'queued' ? '正在排队，第 ' + (run.queuePosition || 1) + ' 位' : '正在为我生成作品'}}</view>
-      <text class="muted center block">{{run.status === 'queued' ? '预计 ' + (run.estimatedSeconds || 20) + ' 秒' : '可以先退出，完成后在作品柜查看'}}</text>
-      <t-loading anim="{{animType}}" label="{{statusText}}"></t-loading>
-      <t-button type="ghost" block anim="{{animType}}" class="block-gap" bindtap="askCancel">取消任务</t-button>
+      <!-- 加载气质随主题（主题方案 3.2）：软糖弹跳 / 翻页 / 方块步进闪烁 / 胶片走带 -->
+      <view class="wait-loader" aria-hidden="true"><view class="wait-dot"></view><view class="wait-dot"></view><view class="wait-dot"></view></view>
+      <view class="wait-stages">
+        <view wx:for="{{waitStages}}" wx:key="id" class="wait-stage wait-stage-{{item.state}}">
+          <text class="wait-stage-dot">{{item.state === 'done' ? '✓' : index + 1}}</text>
+          <text>{{item.label}}</text>
+        </view>
+      </view>
+      <view class="wait-bar"><view class="wait-bar-fill" style="width:{{waitProgress}}%"></view></view>
+      <text class="muted wait-time">{{run.status === 'queued' && run.queuePosition > 1 ? '前面还有 ' + (run.queuePosition - 1) + ' 位，' : ''}}大约还要 {{run.estimatedSeconds || 55}} 秒</text>
+      <view class="wait-remind {{remindSet ? 'wait-remind-on' : ''}}" aria-role="button" hover-class="pet-feature-hover" bindtap="remindWhenReady">
+        <image class="wait-remind-icon" src="/assets/icons/{{themeId}}/ic-bell.png" mode="aspectFit" />
+        <text>{{remindSet ? '好了会在「我的」里提醒你' : '好了提醒我'}}</text>
+      </view>
+      <text class="small wait-cap">离开也会继续做，在「作品 › 进行中」能找到</text>
+
+      <view wx:if="{{suggestScenes.length}}" class="wait-more">
+        <view class="row wait-more-head" aria-role="button" bindtap="openArtStudio"><text class="wait-more-title">等的时候，再挑几套写真</text><text class="small">›</text></view>
+        <scroll-view class="wait-strip" scroll-x enable-flex show-scrollbar="{{false}}">
+          <view wx:for="{{suggestScenes}}" wx:key="id" class="wait-thumb" data-id="{{item.id}}" aria-role="button" aria-label="{{item.title}}" bindtap="openSuggestScene">
+            <image class="wait-thumb-image" src="{{item.url}}" mode="aspectFill" lazy-load />
+            <text class="wait-thumb-name">{{item.title}}</text>
+          </view>
+        </scroll-view>
+      </view>
+      <text class="small wait-cancel" aria-role="button" bindtap="askCancel">不想等了，取消这次制作</text>
     </view>
 
     <!-- 失败 -->
     <t-card wx:elif="{{run.status === 'failed'}}" blur="{{blurOk}}" anim="{{animType}}">
-      <view class="state-title">生成没有完成</view>
-      <text class="muted">额度已经返还。可以直接重试，用同样的照片和描述再跑一次。</text>
-      <text wx:if="{{run.errorCode}}" class="small">错误码 {{run.errorCode}}</text>
+      <view class="state-title">这次没有拍成</view>
+      <text class="muted">额度已经返还。可以直接重试，用同样的照片再拍一次。</text>
       <t-button type="primary" block anim="{{animType}}" loading="{{busy}}" class="block-gap" bindtap="retry">重试一次</t-button>
     </t-card>
 
@@ -78,49 +61,61 @@
       <text class="muted">没有产生订单，也没有扣减额度。</text>
     </t-card>
 
-    <!-- 候选比较：所有新任务二选一，历史四候选任务仍可显示。 -->
+    <!-- 结果：新任务只有 1 张（服务端已自动选中）；历史 2 / 4 候选任务仍可挑选 -->
     <block wx:else>
-      <view class="section">
-        <view class="candidates {{humanMode ? 'candidates-human' : ''}}">
-          <view
-            wx:for="{{candidates}}"
-            wx:key="id"
-            class="candidate {{run.selectedId === item.id ? 'candidate-on' : ''}}"
-            data-id="{{item.id}}"
-            aria-role="radio"
-            aria-checked="{{run.selectedId === item.id}}"
-            hover-class="candidate-hover"
-            bindtap="select"
-          >
-            <image wx:if="{{!item.imageFailed}}" class="candidate-image" src="{{item.url}}" mode="aspectFit" data-id="{{item.id}}" data-src="{{item.url}}" binderror="onCandidateImageError" lazy-load />
-            <view wx:else class="candidate-image candidate-image-blank">候选图片暂不可用</view>
-            <view class="candidate-foot">
-              <text class="small strong">0{{item.number}}</text>
-              <t-tag wx:if="{{run.selectedId === item.id}}" tone="success" size="mini" text="已选中"></t-tag>
-            </view>
+      <view class="title run-title">{{single ? (pet ? pet.name : '我') + '的这一张' : '哪张最像' + (pet ? pet.name : '我') + '？'}}</view>
+      <text class="muted">{{single ? '点图片放大查看' : '点图片选中，再点一下放大查看'}}</text>
+      <view class="cands {{single ? 'cands-single' : ''}}">
+        <view
+          wx:for="{{candidates}}"
+          wx:key="id"
+          class="cand {{run.selectedId === item.id ? 'cand-on' : run.selectedId ? 'cand-off' : ''}}"
+          data-id="{{item.id}}"
+          aria-role="radio"
+          aria-checked="{{run.selectedId === item.id}}"
+          aria-label="第 {{item.number}} 张"
+          bindtap="select"
+        >
+          <view class="ai-mask-host cand-photo">
+            <image wx:if="{{!item.imageFailed}}" class="cand-image" src="{{item.url}}" mode="aspectFill" data-id="{{item.id}}" data-src="{{item.url}}" binderror="onCandidateImageError" lazy-load />
+            <view wx:else class="cand-image cand-image-blank">图片暂不可用</view>
+            <text wx:if="{{run.aiNotice && !item.imageFailed}}" class="ai-mask">{{run.aiNotice}}</text>
+            <text wx:if="{{!single}}" class="cand-check">✓</text>
           </view>
         </view>
-        <text wx:if="{{!humanMode}}" class="small">还能重抽 {{run.rerollRemaining}} 次</text>
       </view>
-
-      <view class="actions">
-        <t-button type="ai" block anim="{{animType}}" disabled="{{!run.selectedId || run.selectedUnlocked}}" loading="{{busy}}" bindtap="unlock">
-          {{run.order && run.order.status === 'pending' ? '继续支付解锁' : '解锁选中的这张'}}
-        </t-button>
-        <view wx:if="{{!humanMode}}" class="chips">
-          <view wx:for="{{rerollReasons}}" wx:key="id" class="chip {{rerollReason === item.id ? 'chip-on' : ''}}" data-id="{{item.id}}" hover-class="chip-hover" bindtap="chooseRerollReason">{{item.label}}</view>
-        </view>
-        <t-button wx:if="{{!humanMode}}" type="secondary" block anim="{{animType}}" disabled="{{!run.rerollRemaining || run.workId}}" bindtap="reroll">重抽一组（剩 {{run.rerollRemaining}} 次）</t-button>
+      <view wx:if="{{canReroll}}" class="run-reroll">
+        <text class="muted">不太满意？</text><text class="run-reroll-link" aria-role="button" bindtap="chooseReroll">换个方向重拍一张（剩 {{run.rerollRemaining}} 次）</text>
       </view>
+      <text wx:elif="{{humanMode}}" class="small run-reroll">「如果我是人」不支持重拍</text>
     </block>
   </block>
 
   <t-notice wx:else type="error" message="{{message || '任务不存在'}}"></t-notice>
 </view>
 
+<!-- 底部抽屉：价格写在按钮上；预览可看可分享，保存到相册 = 高清原图 -->
+<view wx:if="{{showSheet}}" class="{{skinClass}} run-sheet">
+  <view class="run-sheet-head">
+    <text class="run-sheet-title">{{selectedLabel}}</text>
+    <text class="small">{{run.selectedUnlocked ? '高清原图已就绪' : '预览图'}}</text>
+  </view>
+  <t-button wx:if="{{run.selectedUnlocked}}" type="primary" block anim="{{animType}}" loading="{{busy}}" bindtap="save">保存高清原图到相册</t-button>
+  <t-button wx:else type="primary" block anim="{{animType}}" disabled="{{!run.selectedId}}" loading="{{busy}}" bindtap="unlock">
+    <image class="run-lock" src="/assets/icons/{{themeId}}/lock.png" mode="aspectFit" />{{run.order && run.order.status === 'pending' ? '继续支付' : priceText || '保存高清原图'}}
+  </t-button>
+  <view class="run-sheet-row">
+    <button class="run-share" open-type="share" disabled="{{!run.workId}}" hover-class="pet-feature-hover">
+      <image class="run-share-icon" src="/assets/icons/{{themeId}}/ic-share.png" mode="aspectFit" />发给朋友看
+    </button>
+    <view wx:if="{{run.workId}}" class="run-work" aria-role="button" bindtap="openWork">作品档案 ›</view>
+  </view>
+  <text class="small run-sheet-cap">预览可以看、可以分享，会一直留在作品柜；保存到相册 = 高清原图</text>
+</view>
+
 <t-dialog
   visible="{{confirmCancel}}"
-  title="取消这次生成？"
+  title="取消这次制作？"
   content="已经排进队列的任务会立刻停止，免费额度原样返还。"
   confirm-text="取消任务"
   danger

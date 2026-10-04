@@ -1,4 +1,4 @@
-/* 内容流使用贴底导航，选中态只改变图标和标签颜色。 */
+/* 底栏五格：首页 / 创作 / ＋记录 / 作品 / 我的。中间「＋」是记录照片的动作按钮。 */
 .tabbar {
   position: fixed;
   right: 0;
@@ -29,10 +29,19 @@
   transition: color var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
 }
 
-.item-glyph {
-  font-size: var(--font-h3);
-  line-height: 1;
-  transition: transform var(--dur-base) var(--ease-out);
+.item-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80rpx;
+  height: 56rpx;
+  border-radius: var(--radius-pill);
+  transition: background var(--dur-base) var(--ease-out);
+}
+
+.item-icon {
+  width: 44rpx;
+  height: 44rpx;
 }
 
 .item-text {
@@ -40,31 +49,71 @@
 }
 
 .item.active {
-  color: var(--primary);
+  color: var(--text-primary);
   font-weight: var(--fw-bold);
 }
 
-.item.active .item-glyph {
-  transform: scale(1.12);
+/* 「＋记录」：主按钮色的圆形按钮，略高出底栏 */
+.item-plus .item-icon-wrap {
+  width: 92rpx;
+  height: 92rpx;
+  margin-top: calc(0rpx - var(--space-3));
+  border-radius: var(--radius-pill);
+  background: var(--button-primary);
+  box-shadow: var(--shadow-float);
+}
+
+.item-plus .item-icon {
+  width: 48rpx;
+  height: 48rpx;
 }
 
 .item-hover.anim-bounce { transform: scale(.94); }
 .item-hover.anim-fade { opacity: .8; }
-.item-hover.anim-glow { color: var(--primary); }
-.item-hover.anim-neon { color: var(--primary); }
+.item-hover.anim-glow { opacity: .8; }
+.item-hover.anim-neon { opacity: .8; }
 
-/* 其余主题沿用同一贴底结构，只变换材质与颜色。 */
-.tabbar-glass {
+/* 橘子汽水：悬浮胶囊，选中项有浅色圆底 */
+.tabbar-pet {
+  right: var(--space-3);
+  bottom: calc(var(--space-1) + env(safe-area-inset-bottom) * .5);
+  left: var(--space-3);
+  padding-bottom: 0;
+  border-top: 0;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-float);
+}
+
+.tabbar-pet .item.active .item-icon-wrap {
   background: var(--surface);
-  backdrop-filter: blur(var(--card-blur));
-  -webkit-backdrop-filter: blur(var(--card-blur));
 }
 
-.tabbar-glass .item.active {
-  color: var(--secondary);
+/* 手账相册：贴底纸条，选中项像盖了个章 */
+.tabbar-film .item.active .item-icon-wrap {
+  width: 68rpx;
+  height: 68rpx;
+  border: 3rpx solid var(--primary);
+  /* 手账皮肤把 --radius-pill 改成了小圆角，印章要真圆，直接用 50% */
+  border-radius: 50%;
 }
 
-/* dark：选中图标带霓虹微光，与该皮肤的 neon 动效呼应 */
-.tabbar-dark .item.active .item-glyph {
-  text-shadow: 0 0 18rpx var(--ai-glow);
+/* 赛博街机：贴底线框，选中项顶部一条短亮线 */
+.tabbar-brand .item.active::before {
+  position: absolute;
+  top: 0;
+  width: 48rpx;
+  height: 4rpx;
+  background: var(--primary);
+  content: "";
+}
+
+.tabbar-brand .item-plus .item-icon-wrap {
+  border-radius: var(--radius-sm);
+}
+
+/* 星夜影院：毛玻璃底栏 */
+.tabbar-night {
+  background: var(--glass-background);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
 }

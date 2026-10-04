@@ -7,6 +7,7 @@ import { useEffect } from "react";
 
 import type { PublicWork } from "@/domain/models";
 import { WorkPreview } from "@/components/work-preview";
+import { AiDisclosureLink } from "@/components/ai-disclosure-link";
 import { apiFetch } from "@/lib/api";
 
 /** `GET /api/pets/[id]/pricing` 的返回形状。服务端在 platform-service.getDeliveryPricing */
@@ -52,7 +53,8 @@ export function WorkDetailClient({ initialWork }: { initialWork: PublicWork }) {
    * 这个数字还会因积累量在 19.9 到 49 之间变动。
    */
   const [pricing, setPricing] = useState<DeliveryPricing>();
-  const remakePath = work.plugin.category === "ai-image" ? "/ai/create" : work.plugin.category === "interactive" ? "/interactive/create" : `/create/${work.pluginId}?sourceWorkId=${work.id}&petId=${work.petId}`;
+  // 已下线玩法（archived，如 PL-15 互动星尘页的历史导出）没有制作入口，不显示「重新生成」。
+  const remakePath = work.plugin.status === "archived" || work.plugin.category === "interactive" ? "" : work.plugin.category === "ai-image" ? "/ai/create" : `/create/${work.pluginId}?sourceWorkId=${work.id}&petId=${work.petId}`;
   const reloadVersions = () => apiFetch<Array<{ id: string; version: number; title: string; created_at: string }>>(`/api/works/${work.id}/versions`).then(setVersions).catch(() => undefined);
   useEffect(() => { reloadVersions(); }, [work.id]); // eslint-disable-line react-hooks/exhaustive-deps
   /*
@@ -112,7 +114,7 @@ export function WorkDetailClient({ initialWork }: { initialWork: PublicWork }) {
       const order = await apiFetch<{ id: string }>("/api/orders", { method: "POST", body: JSON.stringify({ workId: work.id, sku: `${work.pluginId}-single` }) });
       const result = await payWebOrder<{ work: PublicWork }>("work", order.id);
       setWork(result.work);
-      setMessage("已解锁高清无水印版本");
+      setMessage("已解锁高清原图");
     } catch (error) { setMessage(error instanceof Error ? error.message : "解锁失败"); }
     finally { setBusy(false); }
   }
@@ -145,7 +147,7 @@ export function WorkDetailClient({ initialWork }: { initialWork: PublicWork }) {
         {pricing.tiered && pricing.accumulation ? <p className="privacy-note">已积累 {pricing.accumulation.photoCount} 张照片，跨度 {pricing.accumulation.spanDays} 天。</p> : null}
         {pricing.isMember && pricing.memberSaving > 0 ? <p className="privacy-note">会员价，比单买省 ¥{pricing.memberSaving}。</p> : null}
         {!pricing.isMember && nextTierCopy(pricing) ? <p className="privacy-note">{nextTierCopy(pricing)}</p> : null}
-        <button className="primary-button" disabled={!webPaymentEnabled || busy} onClick={unlock} type="button" title={!webPaymentEnabled ? webPaymentNotice : undefined}>{busy ? "正在解锁…" : `支付 ¥${pricing.amount} 解锁高清无水印`}</button>
+        <button className="primary-button" disabled={!webPaymentEnabled || busy} onClick={unlock} type="button" title={!webPaymentEnabled ? webPaymentNotice : undefined}>{busy ? "正在解锁…" : `支付 ¥${pricing.amount} 保存高清原图`}</button>
       </section> : null}
       {versions.length > 1 ? <section className="panel" style={{ marginTop: 20 }}><b>历史版本</b><div className="button-row" style={{ marginTop: 12 }}>{versions.map((version) => <button className={version.version === work.version ? "primary-button" : "secondary-button"} disabled={busy || version.version === work.version} key={version.id} onClick={() => restore(version.id)} type="button">v{version.version} · {version.title}</button>)}</div></section> : null}
       <section className="panel" style={{ marginTop: 26 }}>
@@ -156,11 +158,11 @@ export function WorkDetailClient({ initialWork }: { initialWork: PublicWork }) {
         </div>
       </section>
       <div className="button-row">
-        <Link className="secondary-button" href={remakePath}>换照片重新生成</Link>
+        {remakePath ? <Link className="secondary-button" href={remakePath}>换照片重新生成</Link> : null}
         {work.public ? <button className="primary-button" disabled={busy} onClick={revoke} type="button">关闭分享</button> : <button className="primary-button" disabled={busy} onClick={() => share(false)} type="button">创建分享页</button>}
       </div>
       <section className="panel"><div className="form-grid"><div className="field"><label htmlFor="share-code">访问码（选填，4-8 位数字）</label><input id="share-code" inputMode="numeric" maxLength={8} value={shareCode} onChange={(event) => setShareCode(event.target.value.replace(/\D/g, ""))} /></div><div className="field"><label htmlFor="share-hours">有效期</label><select id="share-hours" value={shareHours} onChange={(event) => setShareHours(event.target.value)}><option value="24">1 天</option><option value="168">7 天</option><option value="720">30 天</option><option value="8760">1 年</option></select></div>{work.public ? <button className="secondary-button" disabled={busy || Boolean(shareCode) && shareCode.length < 4} onClick={() => share(true)} type="button">重置分享令牌与设置</button> : null}</div></section>
-      {!work.locked ? <div className="button-row"><a className="secondary-button" href={`/api/works/${work.id}/download?format=${work.assetKind === "video" ? "video" : "image"}`}>{work.assetKind === "video" ? "下载 MP4" : "下载高清图"}</a>{work.plugin.output.formats.includes("pdf") ? <a className="primary-button" href={`/api/works/${work.id}/download?format=pdf`}>下载 PDF</a> : null}</div> : null}
+      {!work.locked ? <div className="button-row"><AiDisclosureLink aiGenerated={work.aiGenerated} className="secondary-button" href={`/api/works/${work.id}/download?format=${work.assetKind === "video" ? "video" : "image"}`}>{work.assetKind === "video" ? "下载 MP4" : "下载高清原图"}</AiDisclosureLink>{work.plugin.output.formats.includes("pdf") ? <a className="primary-button" href={`/api/works/${work.id}/download?format=pdf`}>下载 PDF</a> : null}</div> : null}
       <div className="button-row"><button className="secondary-button" disabled={busy} onClick={copy} type="button">复制作品</button><button className="secondary-button" disabled={busy} onClick={remove} type="button">删除作品</button></div>
       {message ? <div className="error-banner" role="status">{message}</div> : null}
     </>

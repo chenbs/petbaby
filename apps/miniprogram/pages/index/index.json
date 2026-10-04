@@ -1,11 +1,12 @@
 {
-  "navigationBarTitleText": "陪伴",
+  "navigationBarTitleText": "麻麻抱我",
+  "navigationStyle": "custom",
   "usingComponents": {
+    "t-navbar": "../../components/navbar/index",
     "t-button": "../../components/button/index",
-    "t-card": "../../components/card/index",
-    "t-tag": "../../components/tag/index",
     "t-notice": "../../components/notice/index",
     "t-empty": "../../components/empty/index",
     "t-skeleton": "../../components/skeleton/index"
-  }
+  },
+  "enableShareAppMessage": true
 }

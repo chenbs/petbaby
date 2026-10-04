@@ -1,13 +1,14 @@
 import sharp from "sharp";
 import { describe, expect, it } from "vitest";
 
-import { AI_LABEL_TEXT, aiLabelMetadata, applyAiLabel, needsAiLabel } from "@/server/media/ai-label";
+import { AI_NOTICE_TEXT, aiLabelMetadata, applyAiMetadata, needsAiLabel } from "@/server/media/ai-label";
 
 /*
  * AI 生成内容标识（《标识办法》第四、五条）。
  *
- * 原实现只有营销水印且付费即移除，方向恰好与法规相反 ——
- * 这一组把「谁需要标识」和「付费后标识还在吗」钉住。
+ * 2026-09 口径：文件像素不画任何可见标记，只写隐式元数据；
+ * 可见提示由小程序界面蒙层承担（文案由服务端下发）。
+ * 这一组把「谁需要标识」「像素不被改动」「元数据确实写入」钉住。
  */
 
 async function solidPng(width = 512, height = 512) {
@@ -48,49 +49,26 @@ describe("隐式标识元数据（第五条）", () => {
   });
 });
 
-describe("显式标识叠加", () => {
+describe("只写元数据，不改像素", () => {
+  async function rawPixels(body: Uint8Array) {
+    return sharp(Buffer.from(body)).raw().toBuffer();
+  }
+
   it("产出仍是可解析的图片，尺寸不变", async () => {
     const source = await solidPng(600, 400);
-    const labeled = await applyAiLabel(source, "work-1");
-    const metadata = await sharp(Buffer.from(labeled)).metadata();
+    const output = await applyAiMetadata(source, "work-1");
+    const metadata = await sharp(Buffer.from(output)).metadata();
     expect(metadata.width).toBe(600);
     expect(metadata.height).toBe(400);
   });
 
-  it("确实改变了像素（标识真的画上去了）", async () => {
-    const source = await solidPng();
-    const labeled = await applyAiLabel(source, "work-1");
-    // 纯色底图叠上深色底衬 + 白字后，字节必然不同。
-    expect(Buffer.from(labeled).equals(Buffer.from(source))).toBe(false);
-  });
-
-  it("右下角区域颜色变深（底衬存在，不是半透明白字直接压图）", async () => {
+  it("像素与原图逐字节一致（图上没有任何可见标记）", async () => {
     const source = await solidPng(512, 512);
-    const labeled = await applyAiLabel(source, "work-1");
-    /*
-     * 取右下角一小块的平均亮度。原图是 240 的浅灰，
-     * 叠上 #14251c/.72 的底衬后必须显著变暗 —— 只用半透明白字的话
-     * 这块几乎不变，而那正是「在白猫或过曝天空上标识消失」的成因。
-     */
-    const { data } = await sharp(Buffer.from(labeled))
-      .extract({ left: 400, top: 460, width: 80, height: 30 })
-      .greyscale()
-      .raw()
-      .toBuffer({ resolveWithObject: true });
-    const average = data.reduce((sum, value) => sum + value, 0) / data.length;
-    expect(average).toBeLessThan(200);
+    const output = await applyAiMetadata(source, "work-1");
+    expect((await rawPixels(output)).equals(await rawPixels(source))).toBe(true);
   });
 
-  it("字号随图片尺寸放大，小图仍有下限", async () => {
-    // 只断言两种尺寸都能正常出图 —— 字号公式本身是 max(20, h*0.02)。
-    for (const size of [200, 2048]) {
-      const labeled = await applyAiLabel(await solidPng(size, size), `work-${size}`);
-      const metadata = await sharp(Buffer.from(labeled)).metadata();
-      expect(metadata.width).toBe(size);
-    }
-  }, 60_000);
-
-  it("标识文案是「AI 生成」", () => {
-    expect(AI_LABEL_TEXT).toBe("AI 生成");
+  it("界面蒙层文案由服务端统一提供", () => {
+    expect(AI_NOTICE_TEXT).toBe("该内容由AI生成");
   });
 });

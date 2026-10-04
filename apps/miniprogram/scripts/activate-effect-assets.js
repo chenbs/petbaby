@@ -16,7 +16,7 @@ const manifestPath = path.join(mini, "assets/samples/manifest.js");
 const projectPath = path.join(mini, "project.config.json");
 const project = JSON.parse(fs.readFileSync(projectPath, "utf8"));
 const ignore = project.packOptions.ignore || [];
-for (const group of ["plugins", "scenes", "templates", "movie", "album", "interactive"]) {
+for (const group of ["plugins", "scenes", "templates", "movie", "album"]) {
   const value = "assets/samples/" + group;
   if (!ignore.some((item) => item.type === "folder" && item.value === value)) ignore.push({ type: "folder", value });
 }

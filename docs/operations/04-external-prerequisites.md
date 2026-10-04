@@ -93,7 +93,7 @@ Provider 一律**失败关闭**：不会静默降级到模拟支付或本地存�
 | 腾讯云 COS Bucket / Region | `OSS_BUCKET`、`STORAGE_REGION` | ☐ 待补   | 私有 Bucket，无匿名读取               |
 | 最小权限 AccessKey                   | `OSS_ACCESS_KEY_ID`、`OSS_ACCESS_KEY_SECRET`  | ☐ 待补   | 仅允许指定 Bucket 前缀读写删            |
 | CDN 域名                           | 反代 / CDN 配置                                  | ☐ 可选   | 分享首屏达标且私图不泄漏                  |
-| 生命周期规则                           | 云控制台                                         | ☐ 待补   | 免费作品 90 天自动清理                 |
+| 生命周期规则                           | 云控制台                                         | ✗ 取消   | **不要配置**：2026-09-30 起作品长期保存，生命周期规则会绕过数据库删掉作品文件                 |
 
 生产使用腾讯云 COS 私有 Bucket；若填写 `OSS_ENDPOINT`，必须是由 Bucket 与地域生成的完整 COS HTTPS 地址，凭据不得授予账户级管理权限。
 

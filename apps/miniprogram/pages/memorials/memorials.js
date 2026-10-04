@@ -10,7 +10,7 @@ const VISIBILITY_TEXT = { public: "公开", private: "私密" };
 const PRODUCT_ACTIONS = [
   { key: "album", label: "生成纪念册", description: "把照片与故事排成可翻阅的册子" },
   { key: "video", label: "生成纪念视频", description: "照片与字幕合成一段短片" },
-  { key: "stardust", label: "生成星尘页", description: "可点击收集星尘的互动页" }
+  { key: "stardust", label: "生成星尘页", description: "一页星光里的安静纪念" }
 ];
 
 function sceneName(id) {

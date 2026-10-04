@@ -1,6 +1,7 @@
 const api = require("../../services/api");
 const config = require("../../config");
 const payment = require("../../services/payment");
+const originals = require("../../services/originals");
 const { manifest } = require("../../services/sample-assets");
 const { themedPage } = require("../../theme/page-mixin");
 
@@ -30,7 +31,7 @@ function downloadItem(batchId, itemId, preview) {
 themedPage({
   data: {
     batch: null, items: [], loading: true, busy: false, savingId: "", error: "", message: "", albumDenied: false,
-    progressText: "", progressWidth: "0%", paid: false, finished: false
+    progressText: "", progressWidth: "0%", paid: false, finished: false, aiNotice: ""
   },
   onLoad(query) { this.batchId = query.id || ""; },
   onShow() { this._visible = true; this.load(); },
@@ -60,7 +61,7 @@ themedPage({
         previewUrl: paid && this._previewPaths && this._previewPaths[item.id] || "",
         statusText: ITEM_STATUS[item.status] || item.status
       }));
-      this.setData({ batch, items, paid, finished: FINAL_STATUS.indexOf(batch.status) >= 0,
+      this.setData({ batch, items, paid, aiNotice: batch.aiNotice || "", finished: FINAL_STATUS.indexOf(batch.status) >= 0,
         progressText: done + " / " + batch.totalCount + " 张已处理", progressWidth: batch.totalCount ? Math.round(done / batch.totalCount * 100) + "%" : "0%",
         loading: false, error: "" });
       this.schedulePoll(batch);
@@ -106,12 +107,10 @@ themedPage({
     const item = this.data.items.find((entry) => entry.id === event.currentTarget.dataset.id);
     if (!item || item.status !== "succeeded" || !this.data.paid || this.data.savingId) return;
     this.setData({ savingId: item.id, error: "", message: "", albumDenied: false });
-    downloadItem(this.batchId, item.id, false).then((filePath) => new Promise((resolve, reject) => wx.saveImageToPhotosAlbum({ filePath, success: resolve, fail: reject })))
-      .then(() => this.setData({ message: item.title + "已保存到手机相册" }))
-      .catch((error) => {
-        const denied = /auth|deny|denied/i.test(error.errMsg || "");
-        this.setData({ error: denied ? "尚未获得相册权限，请在设置中允许后重试" : error.message || "保存失败，请重试", albumDenied: denied });
-      })
+    // 原图交付：首次保存会先确认标识说明（服务端 428），用户放弃时不保存。
+    originals.saveOriginal("/api/art-photo-bundles/" + encodeURIComponent(this.batchId) + "/items/" + encodeURIComponent(item.id))
+      .then((result) => { if (result === "saved") this.setData({ message: item.title + "已保存到手机相册" }); })
+      .catch((error) => this.setData({ error: error.message || "保存失败，请重试", albumDenied: error.code === "ALBUM_DENIED" }))
       .finally(() => this.setData({ savingId: "" }));
   },
   albumSettings() { wx.openSetting({}); },

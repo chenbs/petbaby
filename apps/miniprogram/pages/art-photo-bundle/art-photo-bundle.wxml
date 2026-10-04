@@ -1,15 +1,15 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
-<view class="page page-flat art-brand layout-matrix bundle-page">
+<view class="{{skinClass}} page page-flat art-brand layout-matrix bundle-page">
   <text class="eyebrow">写真套餐 · 第 2 步</text>
   <view class="title">选一张我的身份照</view>
   <text class="muted">{{sceneIds.length}} 套效果已经选好。只用这一张照片识别我的样子，付款后逐张制作。</text>
-  <view class="bundle-summary"><view><view class="sub-title">{{packageMode === 'all' ? '24 套珍藏' : '10 套精选'}}</view><text class="small">每套生成 1 张 · 生成结果可逐张保存</text></view><text class="bundle-price">{{priceText}}</text></view>
+  <view class="bundle-summary"><view><view class="sub-title">{{packageMode === 'all' ? '36 套珍藏' : '10 套精选'}}</view><text class="small">每套生成 1 张 · 生成结果可逐张保存</text></view><text class="bundle-price">{{priceText}}</text></view>
   <scroll-view class="bundle-scenes" scroll-x enable-flex show-scrollbar="false"><image wx:for="{{scenes}}" wx:key="id" class="bundle-scene" src="{{item.url}}" mode="aspectFit" /></scroll-view>
   <t-notice wx:if="{{error}}" type="error" message="{{error}}"></t-notice>
   <t-skeleton wx:if="{{loading}}" type="grid" count="4"></t-skeleton>
   <block wx:else>
-    <view class="bundle-section"><view class="section-title">这次谁出镜</view><picker range="{{pets}}" range-key="name" bindchange="choosePet"><t-field label="宠物" control="select" value="{{petText}}" placeholder="请选择宠物"></t-field></picker></view>
-    <view class="bundle-section"><view class="bundle-section-head"><view class="section-title">宠物身份照</view><text class="small">选 1 张清晰正脸照</text></view><t-skeleton wx:if="{{photosLoading}}" type="grid" count="6"></t-skeleton><t-empty wx:elif="{{!photos.length}}" icon="photo" title="还没有宠物照片" description="先添加一张，再回来制作写真。" action-text="添加照片" bindaction="openPhotos"></t-empty><t-photo-grid wx:else photos="{{photos}}" selected-ids="{{photoIds}}" max="1" previewable="{{false}}" bindtoggle="togglePhoto"></t-photo-grid></view>
+    <view class="bundle-section"><view class="section-title">这次谁出镜</view><text wx:if="{{!pets.length}}" class="small" bindtap="openPets">先建一个档案 ›</text><scroll-view wx:else class="pet-chips" scroll-x enable-flex show-scrollbar="false"><view wx:for="{{pets}}" wx:key="id" class="pet-chip {{petId === item.id ? 'pet-chip-on' : ''}}" data-index="{{index}}" aria-role="radio" aria-checked="{{petId === item.id}}" bindtap="choosePetChip"><image wx:if="{{item.avatarUrl}}" class="pet-chip-avatar" src="{{item.avatarUrl}}" mode="aspectFill" /><view wx:else class="pet-chip-avatar pet-chip-avatar-empty">{{item.name}}</view><text>{{item.name}}</text></view></scroll-view></view>
+    <view class="bundle-section"><view class="bundle-section-head"><view class="section-title">宠物身份照</view><text class="small">选 1 张清晰正脸照</text></view><t-skeleton wx:if="{{photosLoading}}" type="grid" count="6"></t-skeleton><t-photo-grid wx:elif="{{petId}}" photos="{{photos}}" selected-ids="{{photoIds}}" max="1" addable previewable="{{false}}" bindadd="uploadPetPhoto" bindtoggle="togglePhoto"></t-photo-grid></view>
   </block>
 </view>
-<view class="bundle-dock"><t-button type="primary" block loading="{{busy}}" disabled="{{!photoIds.length || loading || photosLoading}}" bindtap="submit">支付 {{priceText}}，开始制作 {{sceneIds.length}} 张</t-button></view>
+<view class="{{skinClass}} bundle-dock"><t-button type="primary" block loading="{{busy}}" disabled="{{!photoIds.length || loading || photosLoading}}" bindtap="submit">{{priceText ? "支付 " + priceText + "，" : ""}}开始制作 {{sceneIds.length}} 张</t-button></view>

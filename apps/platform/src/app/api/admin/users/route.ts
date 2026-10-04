@@ -66,7 +66,6 @@ export async function POST(request: Request) {
     if (input.action === "suspend") {
       await Promise.all([
         database.query("UPDATE works SET public=false,share_token=NULL,share_expires_at=NULL,share_access_code_hash=NULL WHERE user_id=$1 AND public=true", [input.userId]),
-        database.query("UPDATE interactive_sessions SET share_token=NULL,revoked_at=now(),updated_at=now() WHERE user_id=$1 AND share_token IS NOT NULL", [input.userId]),
         database.query("UPDATE memorial_spaces SET visibility='private',share_token=NULL,updated_at=now() WHERE user_id=$1 AND share_token IS NOT NULL", [input.userId]),
         database.query("UPDATE annual_reports SET share_token=NULL,revoked_at=now() WHERE user_id=$1 AND share_token IS NOT NULL", [input.userId]),
       ]);

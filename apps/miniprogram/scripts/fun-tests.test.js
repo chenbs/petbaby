@@ -112,19 +112,35 @@ test("访客通过分享 token 直接读公开结果，不请求私人档案", a
   assert.equal(page.data.ownResult, false);
 });
 
-test("结果海报可生成并交给系统相册保存", () => {
+test("结果海报带宠物照片、关键词贴纸和小程序码，并交给系统相册保存", async () => {
   let saved = "";
+  const drawn = { images: [], texts: [] };
+  const noop = () => {};
   const context = {
-    setFillStyle() {}, fillRect() {}, setFontSize() {}, fillText() {},
+    setFillStyle: noop, fillRect: noop, setFontSize: noop, setGlobalAlpha: noop, setTextAlign: noop,
+    setStrokeStyle: noop, setLineWidth: noop, setLineDash: noop, beginPath: noop, arc: noop, clip: noop,
+    stroke: noop, moveTo: noop, lineTo: noop, save: noop, restore: noop, translate: noop, rotate: noop,
+    drawImage(path) { drawn.images.push(path); },
+    fillText(text) { drawn.texts.push(text); },
     draw(_reserve, callback) { callback(); }
   };
+  const downloads = [];
   const page = loadPage(async () => [], {
     createCanvasContext: () => context,
+    getImageInfo: ({ src, success }) => success({ width: 600, height: 600, path: src }),
+    downloadFile: ({ url, success }) => { downloads.push(url); success({ statusCode: 200, tempFilePath: "tmp-" + downloads.length + ".png" }); },
     canvasToTempFilePath: ({ success }) => success({ tempFilePath: "poster.png" }),
-    saveImageToPhotosAlbum: ({ filePath, success, complete }) => { saved = filePath; success(); complete(); }
+    saveImageToPhotosAlbum: ({ filePath, success }) => { saved = filePath; success(); },
+    getStorageSync: () => "session-token"
   });
-  page.setData({ result, stage: "result" });
-  page.savePoster();
+  page.setData({ result, stage: "result", pets: [{ name: "年糕", avatarUrl: "/api/media/avatar.png" }] });
+  await page.savePoster();
   assert.equal(saved, "poster.png");
   assert.equal(page.data.busy, false);
+  // 宠物照片 + 分享小程序码都参与绘制；关键词以贴纸形式出现
+  assert.ok(downloads.some((url) => url.endsWith("/api/media/avatar.png")));
+  assert.ok(downloads.some((url) => url.endsWith("/api/fun-test-share/" + result.shareToken + "/code")));
+  assert.ok(drawn.texts.includes("#好奇"));
+  assert.ok(drawn.texts.includes(result.outcome.name));
+  assert.ok(drawn.images.length >= 2);
 });

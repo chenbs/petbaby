@@ -1,6 +1,5 @@
 const api = require("../../services/api");
 const config = require("../../config");
-const theme = require("../../theme/manager");
 const { themedPage } = require("../../theme/page-mixin");
 const { manifest } = require("../../services/sample-assets");
 const resultRevealMs = 2600;
@@ -19,6 +18,77 @@ function drawParagraph(context, text, x, y, maxChars, lineHeight, maxLines) {
   return y + lines.length * lineHeight;
 }
 
+const POSTER = { bg: "#FFFAF3", band: "#FFD0A1", ink: "#1F2540", ink2: "#5B6178", accent: "#B7401A", stickers: ["#FFD45C", "#CFE6FF", "#BDEBCB"] };
+
+/** 取得海报可用的本地图片（含尺寸）。任何一步失败都返回 null，海报照样能画，只是少一张图。 */
+function posterImage(src, withSession) {
+  const info = (path) => new Promise((resolve) => wx.getImageInfo({ src: path, success: (image) => resolve({ path, width: image.width, height: image.height }), fail: () => resolve(null) }));
+  if (!src) return Promise.resolve(null);
+  if (src.indexOf("/assets/") === 0) return info(src);
+  return new Promise((resolve) => wx.downloadFile({
+    url: src,
+    header: withSession ? { authorization: "Bearer " + wx.getStorageSync("petbaby_session"), "x-petbaby-client": "miniprogram" } : {},
+    success: (result) => resolve(result.statusCode === 200 ? info(result.tempFilePath) : null),
+    fail: () => resolve(null)
+  }));
+}
+
+/** 按 cover 方式把图片画进指定区域（居中裁切，不拉伸）。 */
+function drawCover(context, image, x, y, w, h) {
+  const scale = Math.max(w / image.width, h / image.height);
+  const sw = w / scale; const sh = h / scale;
+  context.drawImage(image.path, (image.width - sw) / 2, (image.height - sh) / 2, sw, sh, x, y, w, h);
+}
+
+function drawPoster(context, options) {
+  const { width, height, result, coverImage, petImage, codeImage } = options;
+  const band = Math.round(height * 0.44);
+  context.setFillStyle(POSTER.bg);
+  context.fillRect(0, 0, width, height);
+  context.setFillStyle(POSTER.band);
+  context.fillRect(0, 0, width, band);
+  if (coverImage) { context.setGlobalAlpha(0.28); drawCover(context, coverImage, 0, 0, width, band); context.setGlobalAlpha(1); }
+  const radius = Math.round(width * 0.24); const cx = width / 2; const cy = Math.round(band * 0.5);
+  if (petImage) {
+    context.save(); context.beginPath(); context.arc(cx, cy, radius, 0, Math.PI * 2); context.clip();
+    drawCover(context, petImage, cx - radius, cy - radius, radius * 2, radius * 2);
+    context.restore();
+  }
+  context.beginPath(); context.arc(cx, cy, radius, 0, Math.PI * 2); context.setStrokeStyle("#FFFFFF"); context.setLineWidth(6); context.stroke();
+  const spots = [[0.1, 0.16, -0.14], [0.66, 0.26, 0.12], [0.16, 0.72, 0.09]];
+  (result.outcome.keywords || []).slice(0, 3).forEach((word, index) => {
+    const label = "#" + word; const [px, py, angle] = spots[index];
+    context.setFontSize(12);
+    const w = label.length * 12 + 20;
+    context.save(); context.translate(width * px, band * py); context.rotate(angle);
+    context.setFillStyle(POSTER.stickers[index]); context.fillRect(0, 0, w, 24);
+    context.setFillStyle(POSTER.ink); context.fillText(label, 10, 17);
+    context.restore();
+  });
+  context.setTextAlign("center");
+  context.setFillStyle(POSTER.ink2); context.setFontSize(12);
+  context.fillText("经过 10 道题，" + result.petName + "的隐藏性格是", cx, band + 30);
+  context.setFillStyle(POSTER.accent); context.setFontSize(28);
+  context.fillText(result.outcome.name, cx, band + 68);
+  context.setTextAlign("left");
+  context.setFillStyle(POSTER.ink); context.setFontSize(13);
+  const textWidth = width - 40;
+  let y = drawParagraph(context, result.outcome.description, 20, band + 98, Math.floor(textWidth / 13), 21, 3);
+  context.setFillStyle(POSTER.ink2); context.setFontSize(12);
+  drawParagraph(context, result.outcome.closing, 20, y + 10, Math.floor(textWidth / 12), 19, 2);
+  const footTop = height - 86;
+  context.setStrokeStyle("#E9D6C2"); context.setLineWidth(1); context.setLineDash && context.setLineDash([4, 4]);
+  context.beginPath(); context.moveTo(20, footTop); context.lineTo(width - 20, footTop); context.stroke();
+  context.setLineDash && context.setLineDash([]);
+  const codeSize = 62;
+  if (codeImage) context.drawImage(codeImage.path, 20, footTop + 12, codeSize, codeSize);
+  const textX = codeImage ? 20 + codeSize + 12 : 20;
+  context.setFillStyle(POSTER.ink); context.setFontSize(14);
+  context.fillText("你家的是哪种主角？", textX, footTop + 38);
+  context.setFillStyle(POSTER.ink2); context.setFontSize(11);
+  context.fillText("长按识别，免费测一测 · 仅供娱乐", textX, footTop + 60);
+}
+
 themedPage({
   data: {
     stage: "list", tests: [], history: [], pets: [], test: null, petName: "",
@@ -26,7 +96,11 @@ themedPage({
     ownResult: false, loading: true, busy: false, error: ""
   },
   onLoad(query) {
-    if (query.shareToken) this.loadShared(query.shareToken);
+    // resultId：从作品柜「趣测」直达某一次结果（2026-09 作品柜收纳趣测结果）。
+    this._openResultId = query.resultId || "";
+    // 扫海报上的小程序码进入时，分享 token 在 scene 里（微信 scene 上限 32 字符）。
+    const scene = query.scene ? decodeURIComponent(query.scene) : "";
+    if (query.shareToken || scene) this.loadShared(query.shareToken || scene);
     else this.load();
   },
   async load() {
@@ -41,6 +115,11 @@ themedPage({
         const pets = values[0];
         const preferred = pets.find((pet) => pet.isDefault) || pets[0];
         this.setData({ pets, history: values[1], petName: this.data.petName || (preferred && preferred.name) || "" });
+        if (this._openResultId) {
+          const saved = (values[1] || []).find((item) => item.id === this._openResultId);
+          this._openResultId = "";
+          if (saved) this.setData({ result: saved, stage: "result", ownResult: true, error: "" });
+        }
       });
     } catch (error) { this.setData({ loading: false, error: error.message }); }
   },
@@ -137,45 +216,38 @@ themedPage({
       }
     });
   },
-  savePoster() {
+  /*
+   * 结果海报（2026-09 改版）：宠物照片 + 结果名 + 三个关键词贴纸 + 小程序码。
+   * 原海报只有文字，发到朋友圈没有照片、也扫不进小程序，拉新能力几乎为零。
+   * 海报是品牌物料，配色固定为橘子汽水，不跟随用户当前主题。
+   */
+  async savePoster() {
     const result = this.data.result;
     if (!result || this.data.busy) return;
     this.setData({ busy: true, error: "" });
-    const width = Math.round(wx.getSystemInfoSync().windowWidth * 0.8);
-    const height = Math.round(width * 5 / 3);
-    const colors = theme.getTheme();
-    const context = wx.createCanvasContext("funTestPoster", this);
-    context.setFillStyle(colors.navBarBackground);
-    context.fillRect(0, 0, width, height);
-    context.setFillStyle(colors.primary);
-    context.fillRect(0, 0, width, 12);
-    context.setFontSize(13);
-    context.fillText("麻麻抱我 · 宠物趣味测试", 24, 43);
-    context.setFillStyle(colors.textPrimary);
-    context.setFontSize(17);
-    drawParagraph(context, result.petName + "的测试结果", 24, 91, Math.floor((width - 48) / 17), 22, 2);
-    context.setFontSize(27);
-    let y = drawParagraph(context, result.outcome.name, 24, 136, 10, 33, 2);
-    context.setFontSize(14);
-    y = drawParagraph(context, result.outcome.description, 24, y + 20, Math.floor((width - 48) / 14), 23, 4);
-    context.setFillStyle(colors.primary);
-    context.fillRect(24, y + 6, width - 48, 1);
-    context.setFontSize(13);
-    y = drawParagraph(context, result.outcome.closing, 24, y + 34, Math.floor((width - 48) / 13), 21, 3);
-    context.setFillStyle(colors.textSecondary);
-    context.setFontSize(11);
-    context.fillText(result.outcome.keywords.map((word) => "#" + word).join("  "), 24, Math.min(y + 25, height - 57));
-    context.fillText("仅供娱乐 · 转发结果邀请朋友来测", 24, height - 25);
-    context.draw(false, () => {
-      wx.canvasToTempFilePath({ canvasId: "funTestPoster", destWidth: width * 3, destHeight: height * 3,
-        success: (file) => wx.saveImageToPhotosAlbum({ filePath: file.tempFilePath,
-          success: () => wx.showToast({ title: "海报已保存" }),
-          fail: () => { this.setData({ error: "保存失败，请在小程序设置中允许保存到相册" }); wx.previewImage({ urls: [file.tempFilePath] }); },
-          complete: () => this.setData({ busy: false })
-        }),
-        fail: () => this.setData({ busy: false, error: "海报生成失败，请重试" })
-      }, this);
-    });
+    try {
+      const pet = (this.data.pets || []).find((item) => item.name === result.petName && item.avatarUrl);
+      const [coverImage, petImage, codeImage] = await Promise.all([
+        posterImage(coverPath(result.cover)),
+        pet ? posterImage(config.apiBaseUrl + pet.avatarUrl, true) : Promise.resolve(null),
+        result.shareToken ? posterImage(config.apiBaseUrl + "/api/fun-test-share/" + encodeURIComponent(result.shareToken) + "/code") : Promise.resolve(null)
+      ]);
+      const width = Math.round(wx.getSystemInfoSync().windowWidth * 0.8);
+      const height = Math.round(width * 5 / 3);
+      const context = wx.createCanvasContext("funTestPoster", this);
+      drawPoster(context, { width, height, result, coverImage, petImage: petImage || coverImage, codeImage });
+      await new Promise((resolve) => context.draw(false, resolve));
+      const file = await new Promise((resolve, reject) => wx.canvasToTempFilePath({ canvasId: "funTestPoster", destWidth: width * 3, destHeight: height * 3, success: resolve, fail: reject }, this));
+      await new Promise((resolve) => wx.saveImageToPhotosAlbum({
+        filePath: file.tempFilePath,
+        success: () => { wx.showToast({ title: "海报已保存" }); resolve(); },
+        fail: () => { this.setData({ error: "保存失败，请在小程序设置中允许保存到相册" }); wx.previewImage({ urls: [file.tempFilePath] }); resolve(); }
+      }));
+    } catch (error) {
+      this.setData({ error: "海报生成失败，请重试" });
+    } finally {
+      this.setData({ busy: false });
+    }
   },
   onShareAppMessage() {
     const result = this.data.result;

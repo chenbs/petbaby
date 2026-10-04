@@ -1,0 +1,13 @@
+{
+  "id": "tennis-champion",
+  "title": "泡泡时光",
+  "samplePet": "golden",
+  "prompt": "Use case: photorealistic, bright and charming lifestyle pet portrait, shot by a professional pet photographer in a real place. Image 1 is the identity reference only, not a pose or background template. Keep the same adult golden retriever from Image 1, with natural golden coat, floppy ears, dark eyes and black nose. One pet only, no people. Wear only the single garment or accessory named in the set description, fitted naturally and understated; if none is named, the pet wears nothing. Set and light: A sunny backyard lawn in soft morning light with a pale sky-blue painted fence behind. A few iridescent soap bubbles float around the dog's head. The golden retriever sits on the grass with its mouth open in a big relaxed happy pant, eyes bright and following a bubble. Fresh, airy, cheerful colors, no other props, no clothing. The dog sits on the grass with a big happy open-mouth pant, eyes bright, gaze following a floating bubble. Photographic qualities: a single dominant light source with one consistent direction, natural soft falloff into shadow, true-to-life fur with individual strands and slight natural unevenness, realistic eye moisture with one small catchlight, believable contact shadow where the body meets the surface. Camera: full-frame camera with an 85mm portrait lens at about f/2.8, eye-level with the pet, shallow natural depth of field. Bright, clean, well-exposed image with fresh natural colors that are lively but not oversaturated, soft pleasing light on the face, no HDR look, no heavy retouching. Expression matters most: the pet looks alive and endearing, with bright eyes and a natural, readable emotion, so that any pet owner would want the same photo of their own pet. Vertical 3:4, complete pet with safe margins, the face occupying about 35-50% of frame height, uncluttered background. Avoid: dull or dark muddy tones, blank or sleepy-stiff expression unless the scene says the pet is dozing, human-like poses, costumes, hats, glasses, multiple accessories, glowing or rim light that looks painted, dramatic fantasy lighting, oversaturated colors, plastic or airbrushed fur, perfect symmetry, extra props, floating body, pasted edges, extra limbs, duplicate pets, CGI or illustration look, text, logos or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/source/dog-golden.jpg",
+  "referenceSha256": "1b6348ce4f6cd1d12f4c93d5f2a8a5c21847e0ce9bc43e4326c1ee89f7a89eef",
+  "output": "tools/imagegen/out/scenes/scene-tennis-champion-v8.jpg",
+  "sha256": "5e19c038af7d18078c17a6a48e91d7d76d8f120368927a4d036688a857237f41",
+  "review": "pending-visual-review"
+}

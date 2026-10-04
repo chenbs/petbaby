@@ -4,6 +4,7 @@ import { getDatabase } from "@/server/db/client";
 import { routeError, AppError } from "@/server/errors";
 import { objectStorage } from "@/server/storage";
 import { z } from "zod";
+import { assertAiOriginalDelivery } from "@/server/ai-disclosure-service";
 
 export async function GET(request: Request, context: { params: Promise<{ id: string; itemId: string }> }) {
   try {
@@ -17,6 +18,7 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
     const preview = new URL(request.url).searchParams.get("preview") === "1";
     const key = preview ? rows[0].preview_key : rows[0].output_key;
     if (!key || !["succeeded"].includes(String(rows[0].status))) throw new AppError("ART_PHOTO_ITEM_NOT_READY", "这张写真还在生成中", 409);
+    if (!preview) await assertAiOriginalDelivery(userId, { kind: "art_photo_item", id: itemId, storageKey: String(key) });
     const object = await objectStorage.get(String(key));
     if (!object) throw new AppError("ART_PHOTO_OUTPUT_NOT_FOUND", "写真文件暂时不可用", 404);
     return new NextResponse(Buffer.from(object.body), { headers: { "Content-Type": object.contentType, "Cache-Control": "private, max-age=300" } });

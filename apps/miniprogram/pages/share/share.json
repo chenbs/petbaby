@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "好友的作品",
+  "usingComponents": {
+    "t-button": "../../components/button/index",
+    "t-notice": "../../components/notice/index",
+    "t-skeleton": "../../components/skeleton/index"
+  }
+}

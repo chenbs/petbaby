@@ -150,6 +150,27 @@ themedPage({
       });
     } });
   },
+  /** 「…」菜单：纪念空间只对 senior / memorial 出现（与原规则一致），删除标为危险项。 */
+  openMore(event) {
+    const id = event.currentTarget.dataset.id;
+    const pet = (this.data.pets || []).find((item) => item.id === id);
+    if (!pet) return;
+    const actions = [];
+    if (!pet.isDefault) actions.push({ key: "default", label: "设为默认" });
+    if (pet.showMemorial) actions.push({ key: "memorial", label: "纪念空间", description: "把一起的日子安静地收好" });
+    actions.push({ key: "remove", label: "删除档案", danger: true });
+    this._moreId = id;
+    this.setData({ moreVisible: true, morePetName: pet.name, moreActions: actions });
+  },
+  closeMore() { this.setData({ moreVisible: false }); },
+  chooseMore(event) {
+    const key = event.detail.key;
+    const target = { currentTarget: { dataset: { id: this._moreId } } };
+    this.setData({ moreVisible: false });
+    if (key === "default") this.setDefault(target);
+    if (key === "memorial") this.memorial(target);
+    if (key === "remove") this.askRemove(target);
+  },
   setDefault(event) { api.request("/api/pets/" + event.currentTarget.dataset.id, { method: "POST" }).then(displayMediaTree).then(() => this.reload()); },
   askRemove(event) {
     const target = this.data.pets.find((item) => item.id === event.currentTarget.dataset.id);

@@ -1,312 +1,1034 @@
-.fun-teaser { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3); border: 2rpx solid var(--border); border-radius: var(--radius-sm); background: var(--card-background); }
-.fun-teaser image { width: 124rpx; height: 124rpx; flex: none; border-radius: var(--radius-xs); }
-.fun-teaser > view { min-width: 0; flex: 1; }
-.fun-teaser .sub-title { color: var(--text-primary); }
-.fun-teaser .small { color: var(--text-secondary); }
-.fun-teaser-arrow { color: var(--primary); font-size: var(--font-h2); }
-
-.hero-top,
-.pet-identity,
-.play-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-}
-
-.hero-theme {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  color: var(--text-secondary);
-  font-size: var(--font-h3);
-}
-
-.pet-feature {
-  margin-top: var(--space-2);
-  transition: opacity var(--dur-fast) var(--ease-out);
+/*
+ * 首页（2026-09 改版；2026-10 按 themes.html 补齐四套主题的模块呈现）。
+ *
+ * 四套主题共用一份 DOM：橘子汽水软卡 / 手账档案页 / 赛博角色面板 / 影院票根，
+ * 转生卡分别是叠放卡 / 拍立得 / 扫描舱 / 海报墙。颜色一律走 token 与 --skin-*，结构值可以直接写。
+ *
+ * 图片比例跟着素材走，不再统一裁成 3:4：模板样片是 9:16，玩法封面是 16:10，写真场景是 3:4，
+ * 趣测是 1:1。容器比例与素材一致，aspectFill 就不会切掉主体。
+ */
+.home-page {
+  padding-top: 0;
 }
 
 .pet-feature-hover {
   opacity: .88;
 }
 
-.pet-media,
-.hero-media,
-.grid-media {
-  overflow: hidden;
-  background: var(--surface);
-}
-
-.pet-media {
-  aspect-ratio: var(--ratio-cover);
-  border-radius: var(--radius-image-hero);
-}
-
-.pet-media-empty {
-  aspect-ratio: var(--ratio-hero);
-}
-
-.example-image,
-.intro-preview {
+/* ---------- 1. 宠物名片 ---------- */
+.pet-card {
   position: relative;
-  overflow: hidden;
-  background: var(--surface);
+  margin-top: var(--space-2);
+  padding: var(--space-4) var(--space-3);
+  border: var(--card-border);
+  border-radius: var(--card-radius);
+  background: var(--card-background);
+  box-shadow: var(--shadow-card);
 }
 
-.intro-preview {
-  aspect-ratio: var(--ratio-hero);
-  margin-top: var(--space-3);
-  border-radius: var(--radius-image-hero);
+.pet-card-top,
+.pet-card-empty {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
 }
 
-.intro-image {
+.pet-avatar-wrap {
+  position: relative;
+  flex: none;
+}
+
+.pet-avatar {
   display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.example-label {
-  position: absolute;
-  right: var(--space-2);
-  bottom: var(--space-2);
-  left: var(--space-2);
-  padding: var(--space-2);
-  border-radius: var(--radius-image-thumb);
-  background: var(--background);
-  color: var(--text-primary);
-  font-size: var(--small-size);
-  text-align: center;
-}
-
-.pet-image,
-.hero-image,
-.grid-image {
-  display: block;
-  width: 100%;
-  height: 100%;
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: var(--radius-pill);
   background: var(--surface);
+  box-shadow: 0 0 0 6rpx var(--card-background), 0 0 0 10rpx var(--skin-avatar-ring, var(--surface));
 }
 
-.pet-image-blank,
-.memory-photo-blank {
+.pet-avatar-empty {
   display: flex;
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
-  padding: var(--space-3);
   color: var(--text-secondary);
-  font-size: var(--small-size);
-  text-align: center;
+  font-size: var(--font-h2);
+  font-weight: var(--fw-black);
 }
 
-.pet-caption {
+.pet-card-sample {
+  flex: none;
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: var(--radius-md);
+}
+
+.pet-card-main {
   display: grid;
+  flex: 1;
   gap: var(--space-0);
-  padding: var(--space-3) 0;
+  min-width: 0;
 }
 
 .pet-name {
-  min-width: 0;
+  overflow: hidden;
   color: var(--text-primary);
-  font-size: var(--title-size);
-  font-weight: var(--fw-bold);
-  line-height: var(--lh-h1);
-  word-break: break-all;
+  font-size: var(--font-h2);
+  font-weight: var(--title-weight);
+  line-height: var(--lh-h2);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.pet-days,
-.pet-hint {
+.pet-switch {
+  margin-left: var(--space-2);
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: var(--small-size);
+  font-weight: var(--fw-normal);
+}
+
+.pet-days {
   color: var(--text-secondary);
   font-size: var(--small-size);
   line-height: var(--lh-sm);
 }
 
-.pet-hint {
-  flex: none;
+/* 天数是名片的主角：焦橘 / 番茄 / 荧光 / 金色大号数字，赛博用等宽字 */
+.pet-days-num {
+  margin-right: var(--space-0);
+  color: var(--primary);
+  font-family: var(--skin-num-font, inherit);
+  font-size: var(--title-size);
+  font-weight: var(--fw-black);
+  line-height: 1;
 }
 
-.empty-intro {
-  padding: var(--space-5) 0 var(--space-2);
-}
-
-.hero-title {
-  max-width: 14em;
-  margin-top: var(--space-3);
-}
-
-.milestone-row {
+.pet-camera {
   display: flex;
-  min-height: 88rpx;
+  flex: none;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  padding: var(--space-3) 0;
-  border-bottom: 2rpx solid var(--divider-soft);
+  justify-content: center;
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: var(--radius-pill);
+  background: var(--button-primary);
+  box-shadow: var(--skin-btn-shadow, none);
 }
 
-.stone-main,
-.memory-copy {
+.pet-camera-icon {
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 0;
+}
+
+.pet-moment {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
+.pet-moment-copy {
   display: grid;
+  flex: 1;
   gap: var(--space-0);
   min-width: 0;
 }
 
-.memory {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  padding: var(--space-2) 0;
-}
-
-.memory-photo {
-  flex: none;
-  width: calc(var(--space-8) + var(--space-6));
-  height: calc(var(--space-8) + var(--space-6));
-  border-radius: var(--radius-image-thumb);
-  background: var(--surface);
-}
-
-.memory-copy {
-  flex: 1;
-}
-
-.hero-media {
-  aspect-ratio: var(--ratio-hero);
-  border-radius: var(--radius-image-hero);
-}
-
-.home-main-play { margin-top: var(--space-6); }
-.main-play { display: block; }
-.home-play-swiper { height: 560rpx; margin-top: var(--space-3); }
-.home-play-swiper .hero-media { height: 400rpx; aspect-ratio: auto; }
-.hero-image-empty { display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: var(--small-size); }
-.home-play-dots { display: flex; justify-content: center; gap: var(--space-2); margin-top: var(--space-2); }
-.home-play-dot { width: var(--space-6); height: var(--space-2); border-radius: var(--radius-pill); background: var(--divider-soft); }
-.home-play-dot-active { background: var(--primary); }
-.human-section { margin-top: var(--space-5); }
-.human-heading { display: flex; align-items: end; justify-content: space-between; gap: var(--space-3); }
-.human-heading .sub-title { color: var(--text-primary); }
-.human-feature-arrow { flex: none; color: var(--primary); font-size: var(--small-size); font-weight: var(--fw-bold); }
-.human-track { width: 100%; margin-top: var(--space-3); white-space: nowrap; }
-.human-cover { display: inline-block; width: 226rpx; margin-right: var(--space-3); vertical-align: top; }
-.human-cover-image { display: block; width: 100%; height: 402rpx; border-radius: var(--radius-image-thumb); background: var(--surface); }
-.human-cover-empty { display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: var(--small-size); }
-.boss-section { margin-top: var(--space-5); }
-.boss-lead { display: block; margin-top: var(--space-3); }
-.boss-cover { display: block; width: 100%; height: 394rpx; border-radius: var(--radius-image-hero); background: var(--surface); }
-.boss-lead-copy { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); padding: var(--space-2) 0; }
-.boss-lead-copy .sub-title { margin: 0; }
-.boss-lead-copy .small { min-width: 0; text-align: right; }
-.boss-track { width: 100%; margin-top: var(--space-3); white-space: nowrap; }
-.boss-item { display: inline-block; width: 226rpx; margin-right: var(--space-3); vertical-align: top; white-space: normal; }
-.boss-thumb { display: block; width: 100%; height: 300rpx; border-radius: var(--radius-image-thumb); background: var(--surface); }
-.boss-name { overflow: hidden; padding: var(--space-2) 0; color: var(--text-primary); font-size: var(--small-size); font-weight: var(--fw-bold); text-overflow: ellipsis; white-space: nowrap; }
-.boss-art-heading { margin-top: var(--space-4); color: var(--text-secondary); font-size: var(--small-size); font-weight: var(--fw-bold); }
-
-.play-head {
-  align-items: baseline;
-  margin-top: var(--space-3);
-}
-
-.hero-name {
-  min-width: 0;
+.pet-moment-title {
   color: var(--text-primary);
-  font-size: var(--font-h2);
+  font-size: var(--body-size);
   font-weight: var(--fw-bold);
-  line-height: var(--lh-h2);
-  word-break: break-all;
 }
 
-.play-price {
+.pet-moment-sub {
+  overflow: hidden;
+  color: var(--text-secondary);
+  font-size: var(--small-size);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pet-moment-action {
   flex: none;
   color: var(--primary);
   font-size: var(--small-size);
   font-weight: var(--fw-bold);
 }
 
-.hero-tagline {
-  display: block;
-  margin-top: var(--space-0);
-  color: var(--text-secondary);
-  font-size: var(--small-size);
-  line-height: var(--lh-sm);
+/* 装饰节点默认隐藏，由主题决定是否出现 */
+.pet-stamp,
+.pet-serial,
+.human-card-tag,
+.human-card-scan,
+.boss-stamp,
+.boss-level {
+  display: none;
 }
 
-.cards {
+/* ---------- 2. 如果我是人 ---------- */
+.human-card {
+  position: relative;
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  border: var(--card-border);
+  border-radius: var(--card-radius);
+  background: var(--skin-hm-bg, var(--surface));
+  box-shadow: var(--shadow-card);
+}
+
+.human-card-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.human-card-heading {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--gap-item);
+  gap: var(--space-0);
+  min-width: 0;
+}
+
+.human-card-eyebrow {
+  color: var(--skin-hm-sub, var(--text-secondary));
+  font-size: var(--eyebrow-size);
+  font-weight: var(--fw-bold);
+}
+
+.human-card-title {
+  color: var(--text-primary);
+  font-size: var(--font-h2);
+  font-weight: var(--title-weight);
+  line-height: var(--lh-h2);
+}
+
+/* 主按钮：橘子汽水浅橘底墨蓝字，手账墨黑底，赛博柠檬切角，影院金色外发光 */
+.human-card-go {
+  flex: none;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--button-radius);
+  background: var(--button-primary);
+  color: var(--button-primary-text);
+  font-size: var(--small-size);
+  font-weight: var(--fw-black);
+  white-space: nowrap;
+  box-shadow: var(--skin-btn-shadow, none);
+  clip-path: var(--skin-btn-clip, none);
+}
+
+/*
+ * 三张人像并排，比例与素材一致（9:16），不裁脸也不裁衣服。
+ * 中间一张抬高放大做焦点；各主题在下面改排法。
+ */
+.human-card-stack {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-2);
   margin-top: var(--space-5);
 }
 
-.grid-media {
-  aspect-ratio: var(--ratio-hero);
+.human-card-cover {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  border: 6rpx solid var(--card-background);
+  border-radius: var(--radius-lg);
+  background: var(--card-background);
+}
+
+.human-card-cover-1 {
+  z-index: 1;
+  transform: translateY(calc(0rpx - var(--space-3))) scale(1.05);
+  box-shadow: var(--shadow-image);
+}
+
+.human-card-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: var(--ratio-portrait);
+  border-radius: 0;
+}
+
+.human-card-origin {
+  position: absolute;
+  bottom: var(--space-2);
+  left: var(--space-2);
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3) var(--space-1) var(--space-1);
+  border-radius: var(--radius-pill);
+  background: var(--card-background);
+  color: var(--text-primary);
+  font-size: var(--eyebrow-size);
+  font-weight: var(--fw-bold);
+  box-shadow: var(--shadow-press);
+}
+
+.human-card-origin-image {
+  width: 52rpx;
+  height: 52rpx;
+  border-radius: var(--radius-pill);
+}
+
+.human-card-cap {
+  display: block;
+  margin-top: var(--space-3);
+  color: var(--skin-hm-sub, var(--text-secondary));
+  font-size: var(--small-size);
+}
+
+/* ---------- 3. 麻麻精选 ---------- */
+.boss-section {
+  position: relative;
+  margin-top: var(--space-6);
+}
+
+.boss-head {
+  margin-bottom: var(--space-3);
+}
+
+.boss-lead {
+  display: block;
+  overflow: hidden;
+  border: var(--card-border);
+  border-radius: var(--card-radius);
+  background: var(--card-background);
+  box-shadow: var(--shadow-card);
+}
+
+/* 主卡样片是 16:9 横图，容器同比例 */
+.boss-cover {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border-radius: 0;
+  background: var(--surface);
+}
+
+.boss-lead-copy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3);
+}
+
+.boss-lead-text {
+  display: grid;
+  flex: 1;
+  gap: var(--space-0);
+  min-width: 0;
+}
+
+.boss-lead-title {
+  color: var(--text-primary);
+  font-family: var(--skin-title-font, inherit);
+  font-size: var(--font-h3);
+  font-weight: var(--fw-black);
+}
+
+.boss-lead-sub {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.boss-lead-go {
+  flex: none;
+  color: var(--primary);
+  font-family: var(--skin-num-font, inherit);
+  font-size: var(--small-size);
+  font-weight: var(--fw-bold);
+}
+
+.boss-track {
+  width: 100%;
+  margin-top: var(--space-3);
+  white-space: nowrap;
+}
+
+.boss-item {
+  display: inline-block;
+  width: 184rpx;
+  margin-right: var(--space-3);
+  vertical-align: top;
+  white-space: normal;
+}
+
+.boss-thumb-wrap {
+  position: relative;
+}
+
+/* 模板样片 9:16、写真场景 3:4，各按原比例展示 */
+.boss-thumb {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-image-thumb);
+  background: var(--surface);
+  box-shadow: var(--shadow-press);
+}
+
+.boss-thumb-portrait {
+  aspect-ratio: var(--ratio-portrait);
+}
+
+.boss-thumb-wide {
+  aspect-ratio: 16 / 9;
+}
+
+.boss-thumb-scene {
+  aspect-ratio: var(--ratio-card);
+}
+
+.boss-name {
+  overflow: hidden;
+  padding: var(--space-2) 0 0;
+  color: var(--text-primary);
+  font-size: var(--small-size);
+  font-weight: var(--fw-bold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.boss-art-row {
+  margin-top: var(--space-4);
+}
+
+.boss-art-heading {
+  color: var(--text-primary);
+  font-size: var(--body-size);
+  font-weight: var(--fw-black);
+}
+
+/* ---------- 4. 挑一个玩法 ---------- */
+.home-chips {
+  margin: var(--space-2) 0;
+}
+
+.feed {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap-item);
+}
+
+.feed-col {
+  display: grid;
+  flex: 1;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.feed-item {
+  min-width: 0;
+}
+
+.feed-photo {
+  position: relative;
+  overflow: hidden;
   border-radius: var(--radius-image-thumb);
 }
 
-.grid-copy {
-  display: grid;
-  gap: var(--space-0);
-  padding: var(--space-2) 0 var(--space-4);
+.feed-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-image-thumb);
+  background: var(--surface);
 }
 
-.grid-name {
+.feed-shape-tall {
+  aspect-ratio: var(--ratio-portrait);
+}
+
+.feed-shape-wide {
+  aspect-ratio: var(--ratio-hero);
+}
+
+.feed-shape-square {
+  aspect-ratio: var(--ratio-square);
+}
+
+.feed-image-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  font-size: var(--small-size);
+}
+
+/* 趣测卡：奶黄底卡（各主题取自己的贴纸色） */
+.feed-item-fun .feed-photo {
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  background: var(--skin-sticker-bg, var(--surface));
+}
+
+.skin-brand .feed-item-fun .feed-photo {
+  border: 2rpx solid var(--primary);
+  border-radius: 0;
+  background: var(--card-background);
+}
+
+.feed-item-fun .feed-image {
+  border-radius: var(--radius-sm);
+}
+
+/* 角标：贴纸色小块，轻微倾斜 */
+.feed-tag {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: 2;
+  padding: var(--space-0) var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--skin-sticker-bg, var(--surface));
+  color: var(--skin-sticker-text, var(--text-primary));
+  font-family: var(--skin-num-font, inherit);
+  font-size: var(--eyebrow-size);
+  font-weight: var(--fw-bold);
+  transform: rotate(var(--skin-sticker-tilt, 0deg));
+}
+
+.feed-tag-2 {
+  background: var(--skin-sticker-alt, var(--surface));
+}
+
+.feed-item-fun .feed-tag {
+  top: var(--space-3);
+  left: var(--space-3);
+  background: var(--card-background);
+  /* 角标底换成卡面色后，字也要换回正文色；贴纸文字色在影院 / 赛博是深色，压深卡面会看不见 */
+  color: var(--text-primary);
+}
+
+.feed-title {
+  margin-top: var(--space-2);
   color: var(--text-primary);
   font-size: var(--body-size);
   font-weight: var(--fw-bold);
   line-height: var(--lh-h3);
-  word-break: break-all;
 }
 
-.grid-price {
+.feed-note {
   color: var(--text-secondary);
-  font-size: var(--small-size);
+  font-size: var(--eyebrow-size);
 }
 
-.card-top {
+/* =====================================================================
+ * 手账相册：档案页名片、散落的拍立得、「本周贴页」印章
+ * ===================================================================== */
+.skin-film .pet-avatar {
+  width: 112rpx;
+  height: 128rpx;
+  padding: var(--space-1) var(--space-1) var(--space-3);
+  border-radius: 0;
+  background: var(--card-background);
+  box-shadow: var(--shadow-image);
+  transform: rotate(-4deg);
+}
+
+.skin-film .pet-avatar-wrap::before {
+  position: absolute;
+  top: calc(0rpx - var(--space-2));
+  left: var(--space-4);
+  z-index: 2;
+  width: 64rpx;
+  height: 24rpx;
+  background: var(--skin-tape);
+  transform: rotate(-8deg);
+  content: "";
+}
+
+.skin-film .pet-stamp {
+  position: absolute;
+  top: var(--space-3);
+  right: 128rpx;
   display: flex;
+  width: 96rpx;
+  height: 96rpx;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2);
-}
-
-.card-title {
-  margin: var(--space-5) 0 var(--space-2);
-  color: var(--text-primary);
-  font-size: var(--font-h3);
-  font-weight: var(--fw-bold);
-}
-
-.card-foot {
-  margin-top: var(--space-4);
+  justify-content: center;
+  border: 3rpx dashed var(--primary);
+  border-radius: var(--radius-pill);
   color: var(--primary);
-  font-size: var(--small-size);
+  font-family: var(--skin-title-font, inherit);
+  font-size: var(--eyebrow-size);
   font-weight: var(--fw-bold);
+  line-height: 1.2;
+  text-align: center;
+  flex-direction: column;
+  transform: rotate(12deg);
 }
 
-.featured-cards {
-  margin-top: var(--space-3);
+.skin-film .pet-camera {
+  border: var(--card-border);
+  border-radius: var(--radius-md);
+  background: var(--card-background);
+  box-shadow: none;
 }
 
-.featured-item {
-  min-width: 0;
+.skin-film .pet-moment {
+  padding: var(--space-3) var(--space-0) 0;
+  border-top: 2rpx dashed var(--border);
+  border-radius: 0;
+  background: transparent;
 }
 
-.featured-image {
+.skin-film .human-card-stack {
+  justify-content: center;
+  gap: 0;
+  padding: var(--space-2) 0 var(--space-1);
+}
+
+.skin-film .human-card-stack::after {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 4;
+  width: 96rpx;
+  height: 26rpx;
+  margin-left: -48rpx;
+  background: var(--skin-tape-alt);
+  transform: rotate(-3deg);
+  content: "";
+}
+
+.skin-film .human-card-cover {
+  flex: none;
+  width: 30%;
+  padding: var(--space-1) var(--space-1) var(--space-5);
+  border: 0;
+  border-radius: 0;
+  box-shadow: var(--shadow-image);
+}
+
+.skin-film .human-card-cover-0 {
+  transform: rotate(-6deg) translateX(var(--space-3));
+}
+
+.skin-film .human-card-cover-1 {
+  transform: rotate(2deg) translateY(calc(0rpx - var(--space-2)));
+}
+
+.skin-film .human-card-cover-2 {
+  transform: rotate(7deg) translateX(calc(0rpx - var(--space-3)));
+}
+
+.skin-film .human-card-origin {
+  left: 0;
+  bottom: var(--space-1);
+}
+
+.skin-film .boss-note {
+  padding-right: 120rpx;
+}
+
+.skin-film .boss-stamp {
+  position: absolute;
+  top: calc(0rpx - var(--space-2));
+  right: var(--space-1);
+  z-index: 2;
+  display: flex;
+  width: 104rpx;
+  height: 104rpx;
+  align-items: center;
+  justify-content: center;
+  border: 4rpx solid var(--primary);
+  border-radius: var(--radius-pill);
+  background: var(--card-background);
+  color: var(--primary);
+  font-family: var(--skin-title-font, inherit);
+  font-size: var(--eyebrow-size);
+  font-weight: var(--fw-bold);
+  line-height: 1.25;
+  text-align: center;
+  flex-direction: column;
+  transform: rotate(-12deg);
+}
+
+.skin-film .boss-note {
+  margin-right: 120rpx;
+}
+
+.skin-film .boss-lead {
+  padding: var(--space-2) var(--space-2) 0;
+  transform: rotate(-.8deg);
+}
+
+.skin-film .boss-thumb,
+.skin-film .feed-photo {
+  box-sizing: border-box;
+  padding: var(--space-1) var(--space-1) var(--space-4);
+  border-radius: 0;
+  background: var(--card-background);
+  box-shadow: var(--shadow-image);
+}
+
+.skin-film .feed-image {
+  border-radius: 0;
+}
+
+.skin-film .boss-item:nth-child(odd) .boss-thumb {
+  transform: rotate(-2deg);
+}
+
+.skin-film .boss-item:nth-child(even) .boss-thumb {
+  transform: rotate(1.5deg);
+}
+
+.skin-film .feed-col:first-child .feed-item:first-child .feed-photo {
+  transform: rotate(-1.2deg);
+}
+
+.skin-film .feed-col:last-child .feed-item:nth-child(2) .feed-photo {
+  transform: rotate(1deg);
+}
+
+.skin-film .boss-name,
+.skin-film .feed-title {
+  font-family: var(--skin-title-font, inherit);
+}
+
+.skin-film .feed-tag {
+  border: 3rpx solid var(--primary);
+  border-radius: var(--radius-pill);
+  background: var(--card-background);
+  color: var(--primary);
+}
+
+/* =====================================================================
+ * 赛博街机：角色面板名片、扫描舱、选关编号
+ * ===================================================================== */
+.skin-brand .pet-card {
+  border-left: 6rpx solid var(--primary);
+}
+
+.skin-brand .pet-avatar {
+  border-radius: 0;
+  box-shadow: 0 0 0 4rpx var(--card-background), 0 0 0 6rpx var(--skin-avatar-ring);
+}
+
+.skin-brand .pet-serial {
+  position: absolute;
+  top: var(--space-3);
+  right: 128rpx;
   display: block;
-  width: 100%;
-  height: 440rpx;
-  aspect-ratio: var(--ratio-portrait);
-  border-radius: var(--radius-image-thumb);
-  background: var(--surface);
-}
-.featured-wide { grid-column: span 2; }
-.featured-image-wide { height: 420rpx; aspect-ratio: var(--ratio-hero); }
-
-.featured-name {
-  padding: var(--space-2) 0 var(--space-3);
-  color: var(--text-primary);
-  font-size: var(--body-size);
+  color: var(--secondary);
+  font-family: var(--skin-num-font, inherit);
+  font-size: var(--eyebrow-size);
   font-weight: var(--fw-bold);
+}
+
+.skin-brand .pet-camera {
+  border: 2rpx solid var(--primary);
+  border-radius: 0;
+  background: transparent;
+  clip-path: var(--skin-btn-clip, none);
+}
+
+.skin-brand .pet-moment {
+  border: 2rpx dashed var(--border);
+  border-radius: 0;
+  background: transparent;
+}
+
+.skin-brand .human-card-tag {
+  display: block;
+  margin-bottom: var(--space-1);
+  color: var(--skin-alert);
+  font-family: var(--skin-num-font, inherit);
+  font-size: var(--eyebrow-size);
+  font-weight: var(--fw-bold);
+}
+
+.skin-brand .human-card-stack {
+  gap: var(--space-1);
+  overflow: hidden;
+}
+
+.skin-brand .human-card-cover {
+  border: 2rpx solid var(--border);
+  border-radius: 0;
+}
+
+.skin-brand .human-card-cover-1 {
+  transform: none;
+  box-shadow: none;
+}
+
+/* 扫描线：唯一的动效，3.2 秒自上而下，纪念页与「减少动态效果」下关闭 */
+.skin-brand .human-card-scan {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 3;
+  display: block;
+  height: 4rpx;
+  background: var(--primary);
+  animation: home-scan 3.2s linear infinite;
+}
+
+@keyframes home-scan {
+  from { top: 0; }
+  to { top: calc(100% - 4rpx); }
+}
+
+.skin-quiet .human-card-scan {
+  display: none;
+}
+
+.skin-brand .human-card-origin {
+  border: 2rpx solid var(--primary);
+  border-radius: 0;
+  background: var(--background);
+}
+
+.skin-brand .human-card-origin-image {
+  border-radius: 0;
+}
+
+.skin-brand .boss-track {
+  counter-reset: level;
+}
+
+.skin-brand .boss-level {
+  position: absolute;
+  top: 2rpx;
+  left: 2rpx;
+  z-index: 2;
+  display: block;
+  padding: 0 var(--space-1);
+  background: var(--primary);
+  color: var(--button-primary-text);
+  font-family: var(--skin-num-font, inherit);
+  font-size: var(--eyebrow-size);
+  font-weight: var(--fw-black);
+}
+
+.skin-brand .boss-thumb {
+  border: 2rpx solid var(--border);
+  box-shadow: none;
+}
+
+.skin-brand .boss-lead-copy {
+  border-top: 2rpx solid var(--border);
+}
+
+.skin-brand .boss-art-heading {
+  padding-left: var(--space-2);
+  border-left: 6rpx solid var(--secondary);
+}
+
+.skin-brand .feed-image {
+  border: 2rpx solid var(--border);
+}
+
+.skin-brand .feed-title {
+  padding-left: var(--space-2);
+  border-left: 4rpx solid var(--primary);
+}
+
+.skin-brand .feed-note {
+  font-family: var(--skin-num-font, inherit);
+}
+
+.skin-brand .feed-tag {
+  border-radius: 0;
+  transform: none;
+}
+
+/* =====================================================================
+ * 星夜影院：电影票根名片、「正在上映」海报墙、导演精选胶片条
+ * ===================================================================== */
+.skin-night .pet-card {
+  padding-right: 148rpx;
+}
+
+/* 票根两侧的打孔 */
+.skin-night .pet-card::before,
+.skin-night .pet-card::after {
+  position: absolute;
+  right: 116rpx;
+  width: 32rpx;
+  height: 32rpx;
+  border-radius: var(--radius-pill);
+  background: var(--background);
+  content: "";
+}
+
+.skin-night .pet-card::before {
+  top: -16rpx;
+}
+
+.skin-night .pet-card::after {
+  bottom: -16rpx;
+}
+
+.skin-night .pet-card-top {
+  padding-right: var(--space-3);
+  border-right: 2rpx dashed var(--border);
+}
+
+.skin-night .pet-camera {
+  position: absolute;
+  top: var(--space-5);
+  right: var(--space-3);
+  border: 2rpx solid var(--primary);
+  background: transparent;
+  box-shadow: none;
+}
+
+.skin-night .pet-days-num {
+  text-shadow: 0 0 24rpx var(--skin-glow);
+}
+
+.skin-night .human-card {
+  border: 2rpx solid var(--border);
+}
+
+.skin-night .human-card-tag {
+  position: absolute;
+  top: -18rpx;
+  left: var(--space-4);
+  display: block;
+  padding: 0 var(--space-2);
+  background: var(--background);
+  color: var(--primary);
+  font-size: var(--eyebrow-size);
+  font-weight: var(--fw-bold);
+}
+
+/* 「正在上映」海报墙（themes.html .skin-cinema .hm-imgs）：左侧大图跨两行，右侧两张小图 */
+.skin-night .human-card-stack {
+  display: grid;
+  /* 右列收窄约 12%：小图按宽度排出时整体缩小，同一格里能露出从头顶到肩的完整半身 */
+  grid-template-columns: 1.6fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  /* 基础样式是 flex-end（三张底边对齐），在 grid 里会让格子按内容收缩成 0 高，必须改回拉伸 */
+  align-items: stretch;
+  gap: var(--space-1);
+  height: 500rpx;
+}
+
+.skin-night .human-card-cover {
+  position: relative;
+  min-height: 0;
+  border: 2rpx solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.skin-night .human-card-cover-0 {
+  grid-row: 1 / 3;
+  border-color: var(--primary);
+}
+
+.skin-night .human-card-cover-1 {
+  transform: none;
+  box-shadow: none;
+}
+
+/* 图片绝对定位铺满格子：百分比高度在拉伸的 grid 项里不一定能解析 */
+.skin-night .human-card-cover .human-card-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+}
+
+/* 右侧两张小图：widthFix 按原比例排出，略往上提一点留出头顶上方的呼吸空间，下半身由格子裁掉 */
+.skin-night .human-card-cover-1 .human-card-image,
+.skin-night .human-card-cover-2 .human-card-image {
+  top: -2%;
+  height: auto;
+}
+
+.skin-night .human-card-origin {
+  border: 2rpx solid var(--primary);
+  background: var(--background);
+}
+
+.skin-night .boss-track {
+  box-sizing: border-box;
+  margin-right: calc(0rpx - var(--page-padding));
+  margin-left: calc(0rpx - var(--page-padding));
+  padding: var(--space-3) var(--page-padding);
+  background-color: var(--background);
+  background-image: repeating-linear-gradient(90deg, var(--border) 0 16rpx, transparent 16rpx 32rpx), repeating-linear-gradient(90deg, var(--border) 0 16rpx, transparent 16rpx 32rpx);
+  background-position: 0 6rpx, 0 calc(100% - 6rpx);
+  background-repeat: no-repeat;
+  background-size: 100% 10rpx;
+}
+
+.skin-night .boss-lead-go {
+  color: var(--primary);
+}
+
+/* 海报：标题压在图底部暗区 */
+.skin-night .feed-item-template .feed-photo::after,
+.skin-night .feed-item-plugin .feed-photo::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 62%;
+  /* 浅色海报（画册、证件、成长对比）上的白字也要读得清：两层遮罩 + 底部一段实色压暗，themes.html 原型取 .85 */
+  background: var(--veil-image), var(--veil-image), linear-gradient(to top, var(--mask) 0%, var(--mask) 30%, transparent 55%);
+  content: "";
+}
+
+.skin-night .feed-item-template,
+.skin-night .feed-item-plugin {
+  position: relative;
+}
+
+.skin-night .feed-item-template .feed-title,
+.skin-night .feed-item-plugin .feed-title {
+  position: absolute;
+  right: var(--space-3);
+  bottom: var(--space-6);
+  left: var(--space-3);
+  z-index: 2;
+  margin: 0;
+  color: var(--on-image-primary);
+}
+
+/* 横版小卡（16:10）太矮，压图标题会盖住大半张图：这类卡标题回到图下，遮罩去掉 */
+/* 选择器多一级 .feed-item：要压过后面 .feed-item-template / .feed-item-plugin 的压图定位 */
+.skin-night .feed-item.feed-item-wide .feed-photo::after {
+  display: none;
+}
+
+.skin-night .feed-item.feed-item-wide .feed-title,
+.skin-night .feed-item.feed-item-wide .feed-note {
+  position: static;
+  z-index: auto;
+}
+
+.skin-night .feed-item.feed-item-wide .feed-title {
+  margin-top: var(--space-2);
+  color: var(--text-primary);
+}
+
+.skin-night .feed-item-template .feed-note,
+.skin-night .feed-item-plugin .feed-note {
+  position: absolute;
+  bottom: var(--space-2);
+  left: var(--space-3);
+  z-index: 2;
+  color: var(--primary);
 }

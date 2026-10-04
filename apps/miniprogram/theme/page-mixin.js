@@ -6,7 +6,7 @@
  *   themedPage({ mood: "memorial" }, { ...pageOptions }) 纪念场景，动效强制 fade、禁用装饰（需求 9.5）
  *   themedPage({ immersive: true }, { ... })             沉浸式页面，跳过导航栏同步（见 theme-2.md 5.4）
  *
- * 注入的 data：themeStyle / themeId / navBg / navFront / animType / glow / decor / blurOk
+ * 注入的 data：themeStyle / themeId / navBg / navFront / animType / glow / decor / blurOk / skinClass
  */
 const manager = require("./manager");
 const themes = require("./index");
@@ -22,8 +22,10 @@ function buildThemeData(options) {
     navFront: tokens.navBarTextStyle === "white" ? "#ffffff" : "#000000",
     animType: memorial ? "fade" : tokens.animationType,
     glow: memorial ? false : tokens.glowAnimation,
-    decor: !memorial && id === "pet",
-    blurOk: manager.isBlurSupported()
+    decor: !memorial,
+    blurOk: manager.isBlurSupported(),
+    // 皮肤类挂在页面根节点上：.skin-<id> 提供该主题的结构变量；纪念场景追加 skin-quiet，关掉倾斜、装饰与底纹。
+    skinClass: "skin-" + id + (memorial ? " skin-quiet" : "")
   };
 }
 

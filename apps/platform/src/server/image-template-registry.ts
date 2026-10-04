@@ -1,5 +1,6 @@
 import "server-only";
 import { PET_ART_PHOTO_TEMPLATE_ID, PET_ART_PHOTO_VERSION } from "@/domain/pet-art-photo";
+import { petHumanLabelFor } from "@/server/pet-human-effect-labels";
 
 export type ImageTemplateSubjectMode = "pet" | "owner-pet" | "pet-human";
 export type ImageTemplateOrientation = "portrait" | "landscape";
@@ -17,6 +18,8 @@ export type ImageTemplateDefinition = {
   status: ImageTemplateStatus;
   masterStorageKey?: string;
   sampleStorageKey?: string;
+  /** 展示用筛选标签（目前只有「如果我是人」用）。 */
+  tags?: readonly string[];
 };
 
 const petHumanPrompt = [
@@ -91,7 +94,7 @@ export const imageTemplateEntries = [
   { id: "fun", title: "好笑出片" },
   { id: "comic", title: "表情漫画" },
   { id: "together", title: "和我合照" },
-  { id: "human", title: "人类转生计划" },
+  { id: "human", title: "如果我是人" },
   { id: "travel", title: "旅行打卡" },
   { id: "career", title: "职业反差" },
   { id: "boss", title: "麻麻精选" },
@@ -231,6 +234,9 @@ const registeredTemplates: ImageTemplateDefinition[] = [
 ];
 
 const templates = registeredTemplates.map((template) => {
+  // 人化造型的展示名来自 pet-human-effect-labels.ts（原「宠物人化 NN」只有编号）。
+  const humanLabel = template.subjectMode === "pet-human" ? petHumanLabelFor(template.templateId) : undefined;
+  if (humanLabel) template = { ...template, title: humanLabel.title, tags: humanLabel.tags };
   if (template.status !== "live" || !template.masterStorageKey) return template;
   const masterFilename = template.masterStorageKey.slice("samples/image-templates/".length);
   return {
@@ -244,7 +250,7 @@ const templates = registeredTemplates.map((template) => {
 });
 
 const petHumanDisplayOrder = [
-  31, 32, 5, 8, 7, 36, 37, 20, 11, 10, 40, 15, 12, 14, 29, 30,
+  31, 5, 8, 32, 7, 36, 37, 20, 11, 10, 40, 15, 12, 14, 29, 30,
   33, 34, 38, 39, 1, 25, 4, 3, 18, 16, 19, 17, 21, 26, 28, 27,
   24, 13, 9, 6, 35, 2, 22, 23,
 ];
@@ -280,9 +286,10 @@ export function listPublicImageTemplateEntries() {
     .filter((entry) => entry.templates.length > 0);
 }
 
-export function getImageTemplateCandidateCount(template: ImageTemplateDefinition): 2 {
+/** 2026-10 起所有玩法每次只出 1 张（取消 2 选 1）；历史任务的多张候选仍按原样读取。 */
+export function getImageTemplateCandidateCount(template: ImageTemplateDefinition): 1 {
   void template;
-  return 2;
+  return 1;
 }
 
 export function imageTemplateSupportsReroll(template: ImageTemplateDefinition) {

@@ -94,7 +94,7 @@ class HttpImageProvider implements ImageProvider {
  * 直接改 HttpImageProvider 会打断仍在用旧格式的备用通道，因此另起一个实现。
  *
  * `n` 按文档建议固定为 1，所以 count 张要发 count 次请求 ——
- * 新任务是二选一；历史任务仍可能保留四张候选，因此保持通用并发上限。
+ * 新任务每次只出 1 张；历史任务仍可能保留两张或四张候选，因此保持通用并发上限。
  *
  * **不传 `response_format`**：lingsuan 接受它（传 `b64_json` 实测真给 base64），
  * 但默认的 url 形态更省内存 —— 单张 high 质量约 3.8MB，base64 化后 ~5MB 要整个进堆，
@@ -240,7 +240,7 @@ class LingsuanImageProvider implements ImageProvider {
      * `generate()` 各建一个工作池：同一进程内的 PL-10和并行任务会共享
      * 同一组供应商槽位，环境变量即使误配为大于 20 也会被硬截断。
      *
-     * 任一张失败仍整体抛错：新任务承诺两张完整候选，部分成功属于降级交付，
+     * 任一张失败仍整体抛错：多张请求时部分成功属于降级交付，
      * 交给上层熔断/主备重跑更合适。失败任务的槽位由队列 finally 释放。
      */
     return Promise.all(Array.from(
@@ -262,7 +262,7 @@ class UnconfiguredImageProvider implements ImageProvider {
   modelVersion = "unconfigured";
 
   async generate(): Promise<ImageOutput[]> {
-    throw new AppError("AI_PROVIDER_CONFIG_PENDING", "AI 图片服务尚未配置", 503);
+    throw new AppError("AI_PROVIDER_CONFIG_PENDING", "制作服务暂不可用", 503);
   }
 }
 

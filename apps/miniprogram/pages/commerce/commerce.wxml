@@ -1,6 +1,6 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-flat art-brand layout-workbench">
+<view class="{{skinClass}} page page-flat art-brand layout-workbench">
   <view class="title">会员与年度报告</view>
 
   <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>

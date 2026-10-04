@@ -45,7 +45,7 @@ export async function inTransaction<T>(operation: (database: Database) => Promis
 
 export async function resetDatabaseForTest() {
   const database = await getDatabase();
-  await database.exec("TRUNCATE object_cleanup_jobs, payment_refund_inquiries, payment_refunds, payment_transactions, wechat_sessions, user_notifications, pet_human_identities, owner_photos, plugin_config_versions, plugin_configs, refunds, rate_limits, system_usage, ai_cost_ledger, interactive_events, experiment_metrics, events, daily_quotas, health_daily_quotas, health_sessions, health_reminders, health_documents, pet_care_records, pet_weight_records, audit_logs, operation_audit_logs, orders, growth_orders, physical_orders, generation_tasks, works, photos, pets, users CASCADE;");
+  await database.exec("TRUNCATE home_curation, ai_original_deliveries, ai_disclosure_acknowledgements, object_cleanup_jobs, payment_refund_inquiries, payment_refunds, payment_transactions, wechat_sessions, user_notifications, pet_human_identities, owner_photos, plugin_config_versions, plugin_configs, refunds, rate_limits, system_usage, ai_cost_ledger, interactive_events, experiment_metrics, events, daily_quotas, health_daily_quotas, health_sessions, health_reminders, health_documents, pet_care_records, pet_weight_records, audit_logs, operation_audit_logs, orders, growth_orders, physical_orders, generation_tasks, works, photos, pets, users CASCADE;");
   await database.exec("INSERT INTO ai_provider_slots (slot_id) SELECT generate_series(1,8) ON CONFLICT DO NOTHING;");
   await database.exec(await readFile(path.join(process.cwd(), "drizzle", "0013_admin_completion.sql"), "utf8"));
   await database.exec(await readFile(path.join(process.cwd(), "drizzle", "0014_password_auth.sql"), "utf8"));

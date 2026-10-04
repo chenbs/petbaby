@@ -79,10 +79,6 @@
         "value": "assets/samples/album"
       },
       {
-        "type": "folder",
-        "value": "assets/samples/interactive"
-      },
-      {
         "type": "file",
         "value": "assets/fun-tests/recharge.jpg"
       },

@@ -57,3 +57,13 @@
   font-weight: var(--fw-bold);
   letter-spacing: var(--ls-tight);
 }
+
+/* 同一天的第二张起：不再重复日期抬头，缩进贴在前一张下面 */
+.node-same-day {
+  margin-top: calc(0rpx - var(--space-3));
+  padding-top: 0;
+}
+
+.node-same-day::before {
+  display: none;
+}

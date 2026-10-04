@@ -4,7 +4,7 @@
  */
 const tokens = require("./tokens");
 
-const THEMES = [require("./themes/film"), require("./themes/pet"), require("./themes/brand"), require("./themes/night")];
+const THEMES = [require("./themes/pet"), require("./themes/film"), require("./themes/brand"), require("./themes/night")];
 const DEFAULT_THEME_ID = "pet";
 const INDEX = {};
 for (const theme of THEMES) INDEX[theme.id] = theme;
@@ -34,9 +34,20 @@ function resolveTokens(id, blurSupported) {
   return resolved;
 }
 
+/**
+ * 皮肤层（2026-09）：各主题的结构差异（材质、形状、装饰、底纹、字体气质）。
+ *
+ * 不进 page-style 注入串（注入串有 2KB 门禁）：页面由 app.wxss 的 `.skin-<id>{}` 按根节点类名提供，
+ * 这里的 JS 串只给渲染在页面树之外的自定义 tabbar 用。validate 第 11 项比对两处逐字一致。
+ */
+function buildSkinVars(id) {
+  const skin = getThemeDefinition(id).skin || {};
+  return Object.keys(skin).map((name) => `${name}:${skin[name]}`).join(";");
+}
+
 function buildCssVars(id, blurSupported) {
   const theme = getThemeDefinition(id);
   return tokens.buildCssVars(resolveTokens(id, blurSupported), theme.id);
 }
 
-module.exports = { THEMES, DEFAULT_THEME_ID, isValidThemeId, getThemeDefinition, listThemes, resolveTokens, buildCssVars, buildConstantVars: tokens.buildConstantVars, TOKEN_KEYS: tokens.TOKEN_KEYS };
+module.exports = { THEMES, DEFAULT_THEME_ID, isValidThemeId, getThemeDefinition, listThemes, resolveTokens, buildCssVars, buildSkinVars, buildConstantVars: tokens.buildConstantVars, TOKEN_KEYS: tokens.TOKEN_KEYS };

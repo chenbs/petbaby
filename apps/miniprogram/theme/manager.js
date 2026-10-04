@@ -90,6 +90,8 @@ const manager = {
 
   /** 常量变量串：只有渲染在页面视图树之外的自定义 tabbar 需要，页面由 app.wxss 提供。 */
   getConstantVars() { return themes.buildConstantVars(); },
+  /** 当前主题的皮肤变量串：同样只有自定义 tabbar 需要，页面由 app.wxss 的 .skin-<id> 提供。 */
+  getSkinVars() { return themes.buildSkinVars(currentId); },
   listThemes() { return themes.listThemes(); },
   isBlurSupported() { return blurSupported; },
 

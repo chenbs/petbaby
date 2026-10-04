@@ -1,7 +1,8 @@
 <view class="grid {{featured ? 'grid-featured' : ''}}" style="grid-template-columns:repeat({{columns}},1fr)">
   <view wx:if="{{addable}}" class="tile tile-add anim-{{anim}}" aria-role="button" aria-label="追加照片" hover-class="tile-hover" bindtap="handleAdd">
-    <text class="add-mark">＋</text>
-    <text class="add-text">添加</text>
+    <image wx:if="{{addIcon}}" class="add-icon" src="{{addIcon}}" mode="aspectFit" />
+    <text wx:else class="add-mark">＋</text>
+    <text class="add-text">{{addText}}</text>
   </view>
 
   <view

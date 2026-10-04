@@ -1,0 +1,13 @@
+{
+  "id": "calico-silk",
+  "title": "香槟绸布",
+  "samplePet": "calico",
+  "prompt": "Use case: photorealistic fine-art pet portrait, shot by a professional pet photographer in a real studio or a real room. Image 1 is the identity reference only, not a pose or background template. Keep the same adult calico cat from Image 1, with white, orange and black patches, white chest and paws, and green-amber eyes. One pet only, no people. Wear only the single garment or accessory named in the set description, fitted naturally and understated; if none is named, the pet wears nothing. Set and light: A champagne silk drape falls in soft natural folds over a low plinth and the floor, against a dusty-rose painted backdrop. One large soft key light from camera left. The calico cat lies elegantly on the silk, front paws crossed, and looks back toward camera. The cat wears a delicate cream silk ribbon collar tied in a small bow. Soft sheen on fabric, restrained warm palette, no other props. The cat lies on the silk with front paws crossed and looks back toward camera. Photographic qualities: a single dominant light source with one consistent direction, natural soft falloff into shadow, true-to-life fur with individual strands and slight natural unevenness, realistic eye moisture with one small catchlight, believable contact shadow where the body meets the surface. Camera: full-frame camera with an 85mm portrait lens at about f/2.8, eye-level with the pet, shallow but natural depth of field, fine film-like grain, restrained true-to-life colors with low saturation, no HDR look, no heavy retouching. Vertical 3:4, complete pet with safe margins, the face occupying about 30-45% of frame height, simple uncluttered background with generous negative space. Avoid: anthropomorphic expressions or poses, costumes, hats, glasses, multiple accessories, glowing or rim light that looks painted, dramatic fantasy lighting, oversaturated colors, plastic or airbrushed fur, perfect symmetry, extra props, floating body, pasted edges, extra limbs, duplicate pets, CGI or illustration look, text, logos or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/scenes-v7/identity-calico-v1.jpg",
+  "referenceSha256": "2a1289ecf552a6faf2879cfd13faf5cf4cd8cc2446e589e8566f1af8cca4f048",
+  "output": "tools/imagegen/out/scenes/scene-calico-silk-v7.jpg",
+  "sha256": "00d1eb65bef0a2394dbcbf41d646613386f7d8a59405cd65a0441eed546a0480",
+  "review": "pending-visual-review"
+}

@@ -3,113 +3,234 @@
   margin-top: var(--space-4);
 }
 
-.filters {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-2);
-  margin-top: var(--space-3);
+/* 作品柜（2026-10 按 prototype.html after-works 对齐） */
+.works-tabs {
+  margin-top: 0;
 }
 
-.filter {
+.chip-count {
+  margin-left: var(--space-0);
+}
+
+.works-section {
+  margin-top: var(--space-5);
+}
+
+.works-head {
+  align-items: baseline;
+  margin-bottom: var(--space-3);
+}
+
+.works-head-title {
+  color: var(--text-primary);
+  font-family: var(--skin-title-font, inherit);
+  font-size: var(--font-h3);
+  font-weight: var(--fw-black);
+}
+
+/* ---------- 进行中横滑：缩略图 + 标题 + 进度条 ---------- */
+.progress-track {
+  width: 100%;
+  white-space: nowrap;
+}
+
+.progress-card {
+  display: inline-flex;
+  box-sizing: border-box;
+  width: 428rpx;
+  gap: var(--space-2);
+  margin-right: var(--space-3);
+  padding: var(--space-2);
+  vertical-align: top;
+  border: var(--card-border);
+  border-radius: var(--radius-lg);
+  background: var(--card-background);
+  box-shadow: var(--shadow-card);
+  white-space: normal;
+}
+
+.progress-thumb {
+  flex: none;
+  width: 96rpx;
+  height: 124rpx;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.progress-copy {
   display: grid;
-  min-height: 88rpx;
+  flex: 1;
   align-content: center;
   gap: var(--space-1);
-  padding: var(--space-2) 0;
-  border-bottom: 2rpx solid var(--divider-soft);
+  min-width: 0;
 }
 
-.filter-label {
-  color: var(--text-secondary);
-  font-size: var(--eyebrow-size);
-}
-
-.filter-value {
+.progress-title {
   overflow: hidden;
   color: var(--text-primary);
-  font-size: var(--small-size);
-  font-weight: 700;
+  font-size: var(--body-size);
+  font-weight: var(--fw-bold);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.task-entry {
-  padding: var(--space-4) 0;
-  border-bottom: 2rpx solid var(--divider-soft);
+.progress-hint-error {
+  color: var(--error);
 }
 
-.pending-works {
-  padding-top: var(--space-4);
+.progress-bar {
+  height: 10rpx;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--surface);
 }
 
-.task-progress {
-  margin-top: var(--space-4);
+.progress-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--button-primary);
 }
 
-/* 作品用双列图片网格，让画面本身成为主视觉 */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+/* ---------- 按月分组的双列瀑布流 ---------- */
+.works-fall {
+  display: flex;
+  align-items: flex-start;
   gap: var(--gap-item);
 }
 
-/*
- * 比例由 aspect-ratio 锁定，不再写死 height。
- * 固定像素高在不同机型宽度下会得到不同比例，网格随之参差 —— 这正是方案 2.5
- * 要求「比例严格固定」的原因。
- */
-.cover-wrap {
-  position: relative;
-  overflow: hidden;
-  aspect-ratio: var(--ratio-card);
-  border-radius: var(--radius-image-thumb);
+.works-col {
+  display: grid;
+  flex: 1;
+  gap: var(--space-4);
+  min-width: 0;
 }
 
-.cover {
+.work {
+  min-width: 0;
+}
+
+.work-photo {
+  border-radius: var(--radius-image-thumb);
+  background: var(--surface);
+}
+
+/* widthFix：按原图比例显示，不裁切；高度由图片本身决定 */
+.work-image {
   display: block;
   width: 100%;
-  height: 100%;
-  background: var(--skeleton-base);
-  border-radius: inherit;
+  border-radius: 0;
 }
 
-.cover-fallback {
+.work-image-blank {
   display: flex;
   box-sizing: border-box;
+  min-height: 240rpx;
   align-items: center;
   justify-content: center;
-  padding: var(--space-4);
+  padding: var(--space-3);
   color: var(--text-secondary);
   font-size: var(--small-size);
   text-align: center;
 }
 
-/* 压图文字必读性靠遮罩保证；基色是暖褐而非纯黑，见方案 A 落地要点 */
-.cover-tag {
+/* 写真套餐：2×2 拼图，每格 3:4 与场景样片同比例 */
+.work-stack {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-0);
+}
+
+.work-stack-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: var(--ratio-card);
+  border-radius: 0;
+  background: var(--divider);
+}
+
+/* 趣测结果：贴纸色底卡 */
+.work-fun .work-photo {
+  padding: var(--space-2);
+  border-radius: var(--radius-lg);
+  background: var(--skin-sticker-bg, var(--surface));
+}
+
+.skin-brand .work-fun .work-photo {
+  border: 2rpx solid var(--primary);
+  border-radius: 0;
+  background: var(--card-background);
+}
+
+.work-fun .work-image {
+  border-radius: var(--radius-sm);
+}
+
+.work-badge {
   position: absolute;
   top: var(--space-2);
   left: var(--space-2);
+  z-index: 4;
+  padding: var(--space-0) var(--space-2);
+  border-radius: var(--radius-sm);
+  font-family: var(--skin-num-font, inherit);
+  font-size: var(--eyebrow-size);
+  font-weight: var(--fw-bold);
 }
 
-.work-meta {
-  display: grid;
-  gap: var(--space-0);
-  padding: var(--space-2) 0 var(--space-4);
+.work-badge-warm {
+  background: var(--button-primary);
+  color: var(--button-primary-text);
 }
 
-/*
- * 压在图上的文字固定用玻璃态亮色，不跟随 --text-primary：
- * 遮罩之下永远是暗底，浅色主题若沿用深色正文会彻底看不见。
- */
+.work-badge-mint {
+  background: var(--success-surface);
+  color: var(--success);
+}
+
 .work-title {
+  overflow: hidden;
+  margin-top: var(--space-2);
   color: var(--text-primary);
   font-size: var(--body-size);
   font-weight: var(--fw-bold);
   line-height: var(--lh-h3);
-  word-break: break-all;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.cover-sub {
+.work-meta {
   color: var(--text-secondary);
   font-size: var(--eyebrow-size);
+}
+
+/* 主题差异：手账拍立得白边、赛博线框、影院标题压图 */
+.skin-film .work-photo {
+  padding: var(--space-1) var(--space-1) var(--space-4);
+  border-radius: 0;
+  background: var(--card-background);
+  box-shadow: var(--shadow-image);
+}
+
+.skin-film .work-title {
+  font-family: var(--skin-title-font, inherit);
+}
+
+.skin-brand .work-photo,
+.skin-brand .progress-card,
+.skin-brand .progress-thumb {
+  border-radius: 0;
+}
+
+.skin-brand .work-photo {
+  border: 2rpx solid var(--border);
+}
+
+.skin-brand .work-title {
+  padding-left: var(--space-2);
+  border-left: 4rpx solid var(--primary);
+}
+
+.skin-brand .work-badge {
+  border-radius: 0;
 }

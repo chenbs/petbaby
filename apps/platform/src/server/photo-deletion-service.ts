@@ -30,7 +30,6 @@ export async function softDeletePetResources(userId: string, petId: string) {
   await db.query("UPDATE pets SET deleted_at=now(),is_default=false WHERE id=$1", [petId]);
   await db.query("UPDATE photos SET deleted_at=coalesce(deleted_at,now()) WHERE pet_id=$1", [petId]);
   await db.query("UPDATE works SET deleted_at=coalesce(deleted_at,now()),public=false,share_token=NULL WHERE pet_id=$1", [petId]);
-  await db.query("UPDATE interactive_sessions SET revoked_at=now(),share_token=NULL WHERE pet_id=$1", [petId]);
   await db.query("UPDATE memorial_spaces SET deleted_at=coalesce(deleted_at,now()),visibility='private',share_token=NULL WHERE pet_id=$1", [petId]);
   await db.query("DELETE FROM pet_human_identities WHERE user_id=$1 AND pet_id=$2", [userId, petId]);
   const ids: string[] = [];

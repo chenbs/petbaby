@@ -170,13 +170,32 @@ describe("玩法样例图回填", () => {
     expect(samples?.sceneUrls?.["garden-curious"]).toBe(custom);
   });
 
-  it("旧十二套默认写真自动扩到二十四套，人工编辑过的十二套仍保留", async () => {
+  it("后十二套旧版默认名称与样片自动升级到当前棚拍版", async () => {
+    const portrait = plugins.find((plugin) => plugin.id === "pl-10");
+    if (!portrait?.samples?.sceneOptions || !portrait.samples.sceneUrls) throw new Error("PL-10 scenes missing");
+    rows.set("pl-10", { manifest: { ...portrait, samples: { ...portrait.samples, sceneUrls: { ...portrait.samples.sceneUrls, "railway-traveler": "/api/plugin-samples/samples/scene-railway-traveler-v5-f24db13edc82.jpg" } } } });
+    const upgraded = (await listRuntimePlugins()).find((plugin) => plugin.id === "pl-10");
+    expect(upgraded?.samples?.sceneUrls?.["railway-traveler"]).toMatch(/scene-railway-traveler-v7-/);
+    expect(upgraded?.samples?.sceneOptions?.find((scene) => scene.id === "railway-traveler")?.title).toBe("暗调伦勃朗");
+  });
+
+  it("v6 的二十四套默认写真自动扩到三十六套，重拍过的场景换成当前版本", async () => {
+    const portrait = plugins.find((plugin) => plugin.id === "pl-10");
+    if (!portrait?.samples?.sceneOptions || !portrait.samples.sceneUrls) throw new Error("PL-10 scenes missing");
+    const v6Urls = { ...portrait.samples.sceneUrls, "post-office": "/api/plugin-samples/samples/scene-post-office-v6-5e43a0e22c26.jpg" };
+    rows.set("pl-10", { manifest: { ...portrait, samples: { ...portrait.samples, sceneOptions: portrait.samples.sceneOptions.slice(0, 24), sceneUrls: v6Urls } } });
+    const upgraded = (await listRuntimePlugins()).find((plugin) => plugin.id === "pl-10");
+    expect(upgraded?.samples?.sceneOptions).toHaveLength(36);
+    expect(upgraded?.samples?.sceneUrls?.["post-office"]).toMatch(/scene-post-office-v8-/);
+  });
+
+  it("旧十二套默认写真自动扩到全部套数，人工编辑过的十二套仍保留", async () => {
     const portrait = plugins.find((plugin) => plugin.id === "pl-10");
     if (!portrait?.samples?.sceneOptions) throw new Error("PL-10 scenes missing");
     const twelve = portrait.samples.sceneOptions.slice(0, 12);
     rows.set("pl-10", { manifest: { ...portrait, samples: { ...portrait.samples, sceneOptions: twelve } } });
     const upgraded = await listRuntimePlugins();
-    expect(upgraded.find((plugin) => plugin.id === "pl-10")?.samples?.sceneOptions).toHaveLength(24);
+    expect(upgraded.find((plugin) => plugin.id === "pl-10")?.samples?.sceneOptions).toHaveLength(36);
     const custom = twelve.map((scene, index) => index === 0 ? { ...scene, title: "运营自定标题" } : scene);
     rows.set("pl-10", { manifest: { ...portrait, samples: { ...portrait.samples, sceneOptions: custom } } });
     const preserved = await listRuntimePlugins();

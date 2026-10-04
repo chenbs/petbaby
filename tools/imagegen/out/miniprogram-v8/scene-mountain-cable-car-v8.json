@@ -1,0 +1,13 @@
+{
+  "id": "mountain-cable-car",
+  "title": "花店门口",
+  "samplePet": "poodle",
+  "prompt": "Use case: photorealistic, bright and charming lifestyle pet portrait, shot by a professional pet photographer in a real place. Image 1 is the identity reference only, not a pose or background template. Keep the same adult gray toy poodle from Image 1, with charcoal curly coat, lighter muzzle, floppy ears and compact build. One pet only, no people. Wear only the single garment or accessory named in the set description, fitted naturally and understated; if none is named, the pet wears nothing. Set and light: Outside a small flower shop in soft morning light, zinc buckets of fresh tulips and ranunculus in pastel colors on a pale stone step. The poodle sits neatly beside the buckets, looking calmly toward camera with soft eyes. The poodle wears a thin sage-green linen scarf. Fresh, elegant, airy palette. The poodle sits neatly beside the flower buckets, looking calmly toward camera with soft eyes. Photographic qualities: a single dominant light source with one consistent direction, natural soft falloff into shadow, true-to-life fur with individual strands and slight natural unevenness, realistic eye moisture with one small catchlight, believable contact shadow where the body meets the surface. Camera: full-frame camera with an 85mm portrait lens at about f/2.8, eye-level with the pet, shallow natural depth of field. Bright, clean, well-exposed image with fresh natural colors that are lively but not oversaturated, soft pleasing light on the face, no HDR look, no heavy retouching. Expression matters most: the pet looks alive and endearing, with bright eyes and a natural, readable emotion, so that any pet owner would want the same photo of their own pet. Vertical 3:4, complete pet with safe margins, the face occupying about 35-50% of frame height, uncluttered background. Avoid: dull or dark muddy tones, blank or sleepy-stiff expression unless the scene says the pet is dozing, human-like poses, costumes, hats, glasses, multiple accessories, glowing or rim light that looks painted, dramatic fantasy lighting, oversaturated colors, plastic or airbrushed fur, perfect symmetry, extra props, floating body, pasted edges, extra limbs, duplicate pets, CGI or illustration look, text, logos or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/scenes-v3/identity-gray-toy-poodle-v1.jpg",
+  "referenceSha256": "f0db84c8923312412c2c63a4c5d3fdbb1d1bc14d3cca7febecf28d7cad906541",
+  "output": "tools/imagegen/out/scenes/scene-mountain-cable-car-v8.jpg",
+  "sha256": "70b6325e355aa8f3555e24e6a5b128e085eec2ed620eb09850f44336f7926f54",
+  "review": "pending-visual-review"
+}

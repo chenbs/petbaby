@@ -1,0 +1,13 @@
+{
+  "id": "museum-curator",
+  "title": "旧皮箱",
+  "samplePet": "british",
+  "prompt": "Use case: photorealistic fine-art pet portrait, shot by a professional pet photographer in a real studio or a real room. Image 1 is the identity reference only, not a pose or background template. Keep the same adult blue British Shorthair from Image 1, with round face, solid gray coat and copper-amber eyes. One pet only, no people. Wear only the single garment or accessory named in the set description, fitted naturally and understated; if none is named, the pet wears nothing. Set and light: A charcoal hand-painted canvas backdrop with subtle cloudy texture. One soft key light from camera left, deep but open shadows. The cat sits upright on the lid of a single worn brown leather suitcase with scuffed corners and brass clasps, tail wrapped around its paws, looking calmly past the camera. The cat wears a thin vintage brown leather collar with a small worn brass tag. Muted, timeless portrait mood. The cat sits upright on the suitcase lid, tail wrapped around its paws, gazing calmly past the camera. Photographic qualities: a single dominant light source with one consistent direction, natural soft falloff into shadow, true-to-life fur with individual strands and slight natural unevenness, realistic eye moisture with one small catchlight, believable contact shadow where the body meets the surface. Camera: full-frame camera with an 85mm portrait lens at about f/2.8, eye-level with the pet, shallow but natural depth of field, fine film-like grain, restrained true-to-life colors with low saturation, no HDR look, no heavy retouching. Vertical 3:4, complete pet with safe margins, the face occupying about 30-45% of frame height, simple uncluttered background with generous negative space. Avoid: anthropomorphic expressions or poses, costumes, hats, glasses, multiple accessories, glowing or rim light that looks painted, dramatic fantasy lighting, oversaturated colors, plastic or airbrushed fur, perfect symmetry, extra props, floating body, pasted edges, extra limbs, duplicate pets, CGI or illustration look, text, logos or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/source/cat-british.jpg",
+  "referenceSha256": "ddbdfb39b6cb3c6dddbfdd01555cd2fea299cfa927f76a1e7248d581152e0364",
+  "output": "tools/imagegen/out/scenes/scene-museum-curator-v7.jpg",
+  "sha256": "ddfec7859821c4de807d566b29bb111ed0eebcb2b382811efcb841719d145ab6",
+  "review": "pending-visual-review"
+}

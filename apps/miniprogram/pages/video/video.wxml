@@ -1,6 +1,6 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-flat art-film layout-canvas">
+<view class="{{skinClass}} page page-flat art-film layout-canvas">
   <t-skeleton wx:if="{{loading}}" type="card" count="2"></t-skeleton>
 
   <block wx:elif="{{project}}">

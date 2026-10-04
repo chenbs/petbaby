@@ -9,7 +9,7 @@ const tinyPng = Buffer.from(
  * 付费主链路用**电影海报**（12.9）而不是身份证。
  *
  * 2026-08-03 起 `pet-id-card` 转免费（改造方案 C6：证件照的免费替代太密），
- * 免费玩法不再有「支付并去水印」这一步 —— 用它测解锁链路会测不到付费分支。
+ * 免费玩法不再有「支付并保存原图」这一步 —— 用它测解锁链路会测不到付费分支。
  * 免费路径由下面那条用例覆盖。
  */
 test("completes generation, unlock, and public share flow", async ({ page }) => {
@@ -22,8 +22,8 @@ test("completes generation, unlock, and public share flow", async ({ page }) => 
   await page.getByLabel(/追加新照片/).setInputFiles({ name: "pet.png", mimeType: "image/png", buffer: tinyPng });
   await page.getByRole("button", { name: "免费生成预览" }).click();
 
-  await page.getByRole("button", { name: "支付并去水印" }).click({ timeout: 20_000 });
-  await expect(page.getByText("已解锁高清版本")).toBeVisible();
+  await page.getByRole("button", { name: "支付并保存原图" }).click({ timeout: 20_000 });
+  await expect(page.getByText("已解锁高清原图")).toBeVisible();
   await page.getByRole("button", { name: "生成分享页" }).click();
   await page.getByRole("link", { name: /打开分享页/ }).click();
 
@@ -38,7 +38,7 @@ test("completes generation, unlock, and public share flow", async ({ page }) => 
  * 复用而保留，改成先跑免费再跑付费也只是换一个失败的那条。
  *
  * 该行为由 `platform-service.test.ts` 的「免费玩法」一组覆盖：
- * locked=false 入库、createOrder 拒绝、产物仍带水印。
+ * locked=false 入库、createOrder 拒绝、正式产物不被预览覆盖（2026-09 起不带水印）。
  */
 
 /*
@@ -145,7 +145,6 @@ test("loads every administrator workspace through the formal navigation", async 
   const workspaces = [
     ["/admin/experiments", "玩法赛马"],
     ["/admin/plugins", "玩法配置与回滚"],
-    ["/admin/interactive", "互动会话与服务端导出"],
     ["/admin/video", "视频模板与渲染任务"],
     ["/admin/memorials", "纪念产品管理"],
     ["/admin/business", "订阅、履约与权益"],

@@ -4,11 +4,13 @@ import { z } from "zod";
 import type { Database, SqlRow } from "@/server/db/client";
 import { getDatabase, inTransaction } from "@/server/db/client";
 import { AppError } from "@/server/errors";
+import { AI_NOTICE_TEXT } from "@/server/media/ai-label";
 import { buildPetArtPhotoPrompt, petArtPhotoScenes, PET_ART_PHOTO_SCENE_IDS, PET_ART_PHOTO_TEMPLATE_ID, PET_ART_PHOTO_VERSION, type PetArtPhotoSceneId } from "@/domain/pet-art-photo";
 
 export const ART_PHOTO_BUNDLE_PACKAGES = {
   ten: { count: 10, amount: 9.9, sku: "pet-art-photo-bundle-10" },
-  all: { count: 24, amount: 19.9, sku: "pet-art-photo-bundle-24" },
+  // 2026-10 起「全部」= 36 套；历史 24 套订单的 SKU pet-art-photo-bundle-24 仍在支付白名单里
+  all: { count: 36, amount: 26.9, sku: "pet-art-photo-bundle-36" },
 } as const;
 
 const sceneIdSchema = z.enum(PET_ART_PHOTO_SCENE_IDS);
@@ -16,7 +18,7 @@ const createInputSchema = z.object({
   package: z.enum(["ten", "all"]),
   petId: z.string().uuid(),
   photoId: z.string().uuid(),
-  sceneIds: z.array(sceneIdSchema).min(1).max(24),
+  sceneIds: z.array(sceneIdSchema).min(1).max(36),
   idempotencyKey: z.string().min(8).max(120),
 });
 
@@ -27,6 +29,8 @@ function mapBatch(row: SqlRow, items: SqlRow[], order: SqlRow) {
     completedCount: Number(row.completed_count || 0), failedCount: Number(row.failed_count || 0),
     createdAt: new Date(String(row.created_at)).toISOString(), updatedAt: new Date(String(row.updated_at)).toISOString(),
     order: { id: String(order.id), status: String(order.status), amount: Number(order.amount), sku: String(order.sku) },
+    // 写真成片都是生成合成内容，界面蒙层文案由服务端下发。
+    aiNotice: AI_NOTICE_TEXT,
     items: items.map((item) => ({
       id: String(item.id), sceneId: String(item.scene_id) as PetArtPhotoSceneId, title: petArtPhotoScenes.find((scene) => scene.id === item.scene_id)?.title || String(item.scene_id), position: Number(item.position),
       status: String(item.status), errorCode: item.error_code ? String(item.error_code) : undefined,
@@ -119,6 +123,16 @@ export async function completeArtPhotoBatchItem(input: { runId: string; status: 
     const count = counts[0];
     const status = Number(count.pending) > 0 ? "processing" : Number(count.failed) > 0 ? (Number(count.completed) > 0 ? "partial" : "failed") : "completed";
     await database.query("UPDATE art_photo_batches SET status=$2,completed_count=$3,failed_count=$4,updated_at=now() WHERE id=$1", [item.batch_id, status, Number(count.completed), Number(count.failed)]);
+    // 整批结束时发一条站内通知（2026-09：「好了提醒我」，作品柜与我的页通知可见）。逐张不发，避免 24 条刷屏。
+    if (status !== "processing") {
+      const done = Number(count.completed); const failed = Number(count.failed);
+      await database.query("INSERT INTO user_notifications (id,user_id,type,title,body,target_path,created_at) VALUES ($1,$2,'art_photo_ready',$3,$4,$5,now())", [
+        crypto.randomUUID(), item.user_id,
+        failed && !done ? "写真没有拍成" : "写真拍好了",
+        failed ? `${done} 张已完成，${failed} 张没有拍成，可以在结果页重试` : `${done} 张写真都好了，快去看看`,
+        `/pages/art-photo-result/art-photo-result?id=${item.batch_id}`,
+      ]);
+    }
   });
 }
 

@@ -1,6 +1,6 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-flat art-pet layout-workbench">
+<view class="{{skinClass}} page page-flat art-pet layout-workbench">
   <view class="title">健康助手</view>
   <!--
     定位说明必须在最前面。「分诊」不是「问诊」——
@@ -42,6 +42,10 @@
           maxlength="600"
           bindchange="inputDescription"
         ></t-field>
+        <!-- 常见情况快捷填入（2026-09）：只描述看到的现象，不出现病名或药名；点一下追加到描述里 -->
+        <view class="chips symptom-chips">
+          <view wx:for="{{symptomChips}}" wx:key="*this" class="chip tappable anim-{{animType}}" hover-class="chip-hover" data-text="{{item}}" bindtap="addSymptom">{{item}}</view>
+        </view>
       </view>
 
       <t-button type="primary" block anim="{{animType}}" loading="{{busy}}" bindtap="submit">看看要不要去医院</t-button>
@@ -53,7 +57,7 @@
 
       <view class="row block-gap">
         <t-tag tone="{{result.levelTone}}" size="mini" text="{{result.levelText}}"></t-tag>
-        <text class="small">AI 生成</text>
+        <text class="small">智能分诊建议，非诊断</text>
       </view>
       <view class="sub-title">{{result.advisory.summary}}</view>
 

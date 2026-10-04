@@ -1,139 +1,61 @@
-.quota-section {
-  margin-top: var(--space-5);
-  padding: var(--space-4) 0;
-  border-bottom: 2rpx solid var(--divider-soft);
-}
+/*
+ * 我的（2026-09 改版；2026-10 按 prototype.html after-me 对齐）：
+ * 用户身份 → 宠物头像行 → 统计三格 → 额度信息条 → 三组入口（灰色小标题 + 白色列表卡 + 图标块）。
+ */
+.me-head { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-2) 0; }
+.me-avatar { display: block; flex: none; width: 112rpx; height: 112rpx; border-radius: var(--radius-pill); background: var(--surface); box-shadow: 0 0 0 6rpx var(--card-background), 0 0 0 10rpx var(--skin-avatar-ring, var(--surface)); }
+.me-avatar-empty { display: flex; align-items: center; justify-content: center; background: var(--button-primary); color: var(--button-primary-text); font-size: var(--font-h2); font-weight: var(--fw-black); }
+.me-identity { display: grid; flex: 1; gap: var(--space-0); min-width: 0; }
+.me-name { overflow: hidden; color: var(--text-primary); font-family: var(--skin-title-font, inherit); font-size: var(--font-h2); font-weight: var(--fw-black); text-overflow: ellipsis; white-space: nowrap; }
+.me-bell { position: relative; display: flex; flex: none; width: 72rpx; height: 72rpx; align-items: center; justify-content: center; }
+.me-bell-icon { width: 44rpx; height: 44rpx; border-radius: 0; }
+.me-bell-dot { position: absolute; top: var(--space-2); right: var(--space-2); width: 16rpx; height: 16rpx; border-radius: var(--radius-pill); background: var(--skin-alert, var(--error)); }
 
-.quota {
-  display: flex;
-  align-items: center;
-  gap: var(--space-5);
-}
+/*
+ * 宠物头像行：选中环是向外 6rpx 的 box-shadow，scroll-view 会把画到盒子外的部分裁掉（首个头像左侧、顶部缺一截）。
+ * 内层轨道四周留出环的宽度，外层用负边距抵消，头像仍与页边对齐。
+ */
+.me-pets { width: calc(100% + var(--space-3)); margin: var(--space-3) 0 0 calc(0rpx - var(--space-2)); white-space: nowrap; }
+.me-pets-track { display: inline-flex; flex-direction: row; gap: var(--space-4); padding: var(--space-2); vertical-align: top; }
+.me-pet { display: inline-flex; flex: none; flex-direction: column; align-items: center; gap: var(--space-1); }
+.me-pet-avatar { width: 104rpx; height: 104rpx; border-radius: var(--radius-pill); background: var(--surface); }
+.me-pet-avatar-empty, .me-pet-add { display: flex; box-sizing: border-box; align-items: center; justify-content: center; overflow: hidden; color: var(--text-secondary); font-size: var(--font-h3); font-weight: var(--fw-bold); }
+.me-pet-add { border: 3rpx dashed var(--border); background: transparent; font-size: var(--font-h2); font-weight: var(--fw-normal); }
+.me-pet-on .me-pet-avatar { box-shadow: 0 0 0 6rpx var(--primary); }
+.me-pet-name { max-width: 120rpx; overflow: hidden; color: var(--text-secondary); font-size: var(--eyebrow-size); text-overflow: ellipsis; white-space: nowrap; }
+.me-pet-on .me-pet-name { color: var(--text-primary); font-weight: var(--fw-bold); }
 
-.quota-copy {
-  display: grid;
-  flex: 1;
-  gap: var(--space-1);
-}
+.me-stats { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: var(--space-4); padding: var(--space-4) 0; border: var(--card-border); border-radius: var(--card-radius); background: var(--card-background); box-shadow: var(--shadow-card); clip-path: var(--skin-clip, none); text-align: center; }
+.me-stat-value { color: var(--text-primary); font-family: var(--skin-num-font, inherit); font-size: var(--font-h2); font-weight: var(--fw-black); }
+.me-stat-label { color: var(--text-secondary); font-size: var(--eyebrow-size); }
 
-.quota-foot {
-  margin-top: var(--space-4);
-}
+/* 额度条：贴纸色底（橘子汽水奶黄、赛博柠檬、影院金），文字用配套的贴纸文字色 */
+.me-quota { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-3); padding: var(--space-3); border: var(--card-border); border-radius: var(--card-radius); background: var(--skin-sticker-bg, var(--surface)); color: var(--skin-sticker-text, var(--text-primary)); clip-path: var(--skin-clip, none); }
+.skin-brand .me-quota { border: 2rpx solid var(--primary); background: var(--card-background); color: var(--text-primary); }
+.skin-brand .me-quota-title { color: var(--primary); }
+.me-quota-icon { flex: none; width: 44rpx; height: 44rpx; border-radius: 0; }
+.me-quota-copy { display: grid; flex: 1; gap: var(--space-0); min-width: 0; }
+.me-quota-title { font-size: var(--body-size); font-weight: var(--fw-black); }
+.me-quota-sub { font-size: var(--small-size); }
+.me-quota-more { flex: none; font-size: var(--small-size); font-weight: var(--fw-bold); }
 
-.entry-list {
-  border-top: 2rpx solid var(--divider-soft);
-}
+.me-group { margin-top: var(--space-5); }
+.me-group-title { display: block; margin: 0 0 var(--space-2) var(--space-1); color: var(--text-secondary); font-size: var(--small-size); font-weight: var(--fw-bold); }
+.skin-brand .me-group-title { padding-left: var(--space-2); border-left: 4rpx solid var(--primary); color: var(--text-primary); }
+.me-list { overflow: hidden; border: var(--card-border); border-radius: var(--card-radius); background: var(--card-background); box-shadow: var(--shadow-card); clip-path: var(--skin-clip, none); }
+.me-row { display: flex; min-height: 104rpx; align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-3); border-bottom: 2rpx solid var(--divider); }
+.me-row:last-child { border-bottom: 0; }
+.me-row-icon { display: flex; flex: none; width: 64rpx; height: 64rpx; align-items: center; justify-content: center; border-radius: var(--radius-md); background: var(--surface); }
+.me-row-icon-sun { background: var(--divider); }
+.me-row-icon-mint { background: var(--success-surface); }
+.me-row-glyph { width: 36rpx; height: 36rpx; border-radius: 0; }
+.me-row-text { display: grid; flex: 1; gap: var(--space-0); min-width: 0; }
+.me-row-name { color: var(--text-primary); font-size: var(--body-size); font-weight: var(--fw-bold); }
+.me-row-sub { overflow: hidden; color: var(--text-secondary); font-size: var(--eyebrow-size); text-overflow: ellipsis; white-space: nowrap; }
+.me-row-side { flex: none; color: var(--text-secondary); font-size: var(--small-size); }
+.me-row-arrow { flex: none; color: var(--text-secondary); font-size: var(--font-h3); line-height: 1; }
+.entry-hover { opacity: .72; }
 
-.entry {
-  display: flex;
-  min-height: 112rpx;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  padding: var(--space-3) 0;
-  border-bottom: 2rpx solid var(--divider-soft);
-}
-
-.entry-hover {
-  opacity: .72;
-}
-
-.entry-text {
-  display: grid;
-  gap: var(--space-1);
-  min-width: 0;
-}
-
-.entry-name {
-  color: var(--text-primary);
-  font-size: var(--body-size);
-  font-weight: 700;
-}
-
-.entry-side {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.entry-arrow {
-  color: var(--text-secondary);
-  font-size: var(--font-h3);
-  line-height: 1;
-}
-
-/* ---------- 方案 E 区块：默认宠物置顶 ---------- */
-
-.hero-media {
-  overflow: hidden;
-  aspect-ratio: var(--ratio-cover);
-  border-radius: var(--radius-image-hero);
-  background: var(--surface);
-}
-
-.hero-media-empty {
-  height: var(--space-8);
-  aspect-ratio: auto;
-}
-
-.hero-image {
-  display: block;
-  width: 100%;
-  height: 100%;
-  background: var(--surface);
-}
-
-.hero-image-blank {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--surface);
-  color: var(--text-secondary);
-  font-size: var(--small-size);
-}
-
-.hero-caption {
-  display: grid;
-  gap: var(--space-0);
-  padding: var(--space-3) 0;
-}
-
-.hero-days {
-  color: var(--text-secondary);
-  font-size: var(--small-size);
-  line-height: var(--lh-sm);
-}
-
-.hero-name {
-  color: var(--text-primary);
-  font-size: var(--font-h2);
-  font-weight: var(--fw-bold);
-  line-height: var(--lh-h2);
-  word-break: break-all;
-}
-
-.hero-stats {
-  display: grid;
-  padding: var(--space-3) 0;
-  grid-template-columns: repeat(3, 1fr);
-}
-
-.hero-stat {
-  display: grid;
-  justify-items: start;
-  gap: var(--space-0);
-}
-
-.hero-stat-value {
-  color: var(--text-primary);
-  font-size: var(--font-h3);
-  font-weight: var(--fw-bold);
-  font-variant-numeric: tabular-nums;
-  line-height: var(--lh-h3);
-}
-
-.hero-stat-label {
-  color: var(--text-secondary);
-  font-size: var(--eyebrow-size);
-  letter-spacing: var(--eyebrow-tracking);
-}
+/* 赛博街机：方形头像、直角图标块；手账相册：拍立得头像 */
+.skin-brand .me-avatar, .skin-brand .me-pet-avatar, .skin-brand .me-row-icon { border-radius: 0; }
+.skin-film .me-avatar { border-radius: 0; padding: var(--space-1) var(--space-1) var(--space-3); background: var(--card-background); box-shadow: var(--shadow-image); transform: rotate(-4deg); }

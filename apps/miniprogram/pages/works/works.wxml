@@ -1,29 +1,24 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-tabbar art-brand layout-matrix">
-  <view class="title">我的作品柜</view>
-
-  <!-- 三个筛选器横排，节省纵向空间 -->
-  <view class="filters">
-    <picker range="{{petNames}}" bindchange="choosePet">
-      <view class="filter">
-        <text class="filter-label">宠物</text>
-        <text class="filter-value">{{petText}}</text>
-      </view>
-    </picker>
-    <picker range="{{pluginNames}}" bindchange="choosePlugin">
-      <view class="filter">
-        <text class="filter-label">玩法</text>
-        <text class="filter-value">{{pluginText}}</text>
-      </view>
-    </picker>
-    <picker range="{{statusLabels}}" bindchange="chooseStatus">
-      <view class="filter">
-        <text class="filter-label">状态</text>
-        <text class="filter-value">{{statusText}}</text>
-      </view>
-    </picker>
-  </view>
+<!--
+  作品柜（2026-09 改版；2026-10 按 prototype.html after-works 对齐）：
+  chip 带计数 → 进行中横滑（缩略图 + 进度条）→ 按月分组的双列瀑布流。
+  写真套餐成片是 2×2 拼图卡，趣测结果是贴纸色卡，和作品混排在同一个瀑布流里。
+  作品图用 widthFix 按原图比例显示，不裁切。
+-->
+<view class="{{skinClass}} page page-tabbar art-brand layout-matrix works-page">
+  <scroll-view class="works-tabs chip-scroll" scroll-x show-scrollbar="{{false}}"><view class="chip-track">
+    <view
+      wx:for="{{tabs}}"
+      wx:key="id"
+      class="chip {{tab === item.id ? 'chip-on' : ''}}"
+      data-id="{{item.id}}"
+      aria-role="tab"
+      aria-selected="{{tab === item.id}}"
+      hover-class="chip-hover"
+      bindtap="chooseTab"
+    >{{item.label}}<text wx:if="{{counts[item.id]}}" class="chip-count"> {{counts[item.id]}}</text></view>
+  </view></scroll-view>
 
   <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
 
@@ -31,84 +26,58 @@
   <t-button wx:elif="{{error}}" type="secondary" bindtap="load">重新加载作品</t-button>
 
   <block wx:else>
-    <!-- 进行中的任务置顶，失败项给重试入口 -->
-    <view wx:if="{{tasks.length}}" class="section">
-      <view class="section-title">进行中</view>
-      <view class="list">
-        <view wx:for="{{tasks}}" wx:key="id" class="task-entry">
-          <view class="row">
-            <view>
-              <view class="sub-title">{{item.statusText}}</view>
-              <text class="small">{{item.pluginName}}</text>
-            </view>
-            <t-tag tone="{{item.status === 'failed' ? 'error' : 'accent'}}" text="{{item.statusText}}"></t-tag>
+    <!-- 进行中：普通生成、独立制作、写真套餐、短片草稿都在这里，点击回到对应页面 -->
+    <view wx:if="{{progress.length}}" class="works-section">
+      <view class="row works-head"><text class="works-head-title">进行中</text><text class="small">好了会通知你</text></view>
+      <scroll-view class="progress-track" scroll-x enable-flex show-scrollbar="{{false}}">
+        <view wx:for="{{progress}}" wx:key="id" class="progress-card" data-id="{{item.id}}" aria-role="button" hover-class="chip-hover" bindtap="openProgress">
+          <image wx:if="{{item.thumb}}" class="progress-thumb" src="{{item.thumb}}" mode="aspectFill" lazy-load />
+          <view wx:else class="progress-thumb"></view>
+          <view class="progress-copy">
+            <text class="progress-title">{{item.title}}</text>
+            <text class="small progress-hint {{item.status === 'failed' ? 'progress-hint-error' : ''}}">{{item.hint}}</text>
+            <view wx:if="{{item.status !== 'failed' && item.status !== 'draft'}}" class="progress-bar"><view class="progress-bar-fill" style="width:{{item.percent}}%"></view></view>
           </view>
-          <view wx:if="{{item.status !== 'failed'}}" class="task-progress">
-            <t-progress percent="{{item.progress}}" tone="ai" label="生成进度" show-value></t-progress>
-          </view>
-          <t-button wx:else type="secondary" size="mini" anim="{{animType}}" class="block-gap" data-id="{{item.id}}" bindtap="retry">重新尝试</t-button>
         </view>
+      </scroll-view>
+    </view>
+
+    <t-empty
+      wx:if="{{!groups.length && !progress.length}}"
+      icon="work"
+      title="{{filtered ? '这里还没有作品' : '还没有作品'}}"
+      description="{{filtered ? '换个分类看看，或者回到全部。' : '挑一个玩法，几分钟就能做出第一件作品。'}}"
+      action-text="{{filtered ? '看全部' : '去做一个'}}"
+      anim="{{animType}}"
+      decor="{{decor}}"
+      clay="{{!filtered}}"
+      bindaction="handleEmptyAction"
+    ></t-empty>
+
+    <!-- 按月分组；标题用「宠物名 + 玩法名」，不显示版本号 -->
+    <view wx:for="{{groups}}" wx:for-item="group" wx:for-index="groupIndex" wx:key="month" class="works-section">
+      <view class="row works-head">
+        <text class="works-head-title">{{group.month}}</text>
+        <picker wx:if="{{groupIndex === 0 && pets.length > 1}}" range="{{petNames}}" bindchange="choosePet"><text class="small strong">{{petText}} ▾</text></picker>
+        <text wx:elif="{{groupIndex === 0}}" class="small">{{petText}}</text>
       </view>
-    </view>
-
-    <view wx:if="{{tasks.length && !works.length}}" class="section pending-works">
-      <view class="section-title">作品正在路上</view>
-      <text class="muted">完成后，就能在这里查看、保存和分享。</text>
-      <t-button type="ghost" anim="{{animType}}" class="block-gap" bindtap="goCreate">看看其他玩法 →</t-button>
-    </view>
-
-    <view wx:if="{{works.length || !tasks.length}}" class="section">
-      <view class="section-title">已完成</view>
-
-      <!--
-        clay 只在「真的还没有作品」时开（方案 J 只用于结果页与空状态）。
-        筛选无结果是一次操作反馈、不是情感时刻，此时保持方案 3.6 的克制线条，
-        否则每次换筛选条件都弹一块黏土底座，反而显得廉价。
-      -->
-      <t-empty
-        wx:if="{{!works.length && !tasks.length}}"
-        icon="work"
-        title="{{filtered ? '没有符合条件的作品' : '还没有作品'}}"
-        description="{{filtered ? '换个筛选条件，或者清空重看。' : '挑一个玩法，几分钟就能做出第一件作品。'}}"
-        action-text="{{filtered ? '清空筛选' : '去做一个'}}"
-        anim="{{animType}}"
-        decor="{{decor}}"
-        clay="{{!filtered}}"
-        bindaction="handleEmptyAction"
-      ></t-empty>
-
-      <!--
-        A 方向作品墙：图占满卡片，文字压在渐变遮罩里。
-        比例锁 3:4（--ratio-card），避免不同玩法的产出把网格撑得参差。
-      -->
-      <view wx:else class="grid">
-        <t-card
-          wx:for="{{works}}"
-          wx:key="id"
-          variant="flat"
-          clickable
-          padded="{{false}}"
-          blur="{{blurOk}}"
-          anim="{{animType}}"
-          data-id="{{item.id}}"
-          bindtap="open"
-        >
-          <view class="cover-wrap">
-            <image wx:if="{{!item.imageFailed && item.coverUrl}}" class="cover" src="{{item.coverUrl}}" mode="aspectFill" data-id="{{item.id}}" data-src="{{item.coverUrl}}" binderror="onCoverError" lazy-load />
-            <view wx:else class="cover cover-fallback">作品预览暂不可用</view>
-            <t-tag
-              wx:if="{{item.statusTone !== 'success'}}"
-              class="cover-tag"
-              tone="{{item.statusTone}}"
-              size="mini"
-              text="{{item.statusText}}"
-            ></t-tag>
-          </view>
-          <view class="work-meta">
+      <view class="works-fall">
+        <view wx:for="{{[group.left, group.right]}}" wx:for-item="column" wx:for-index="columnIndex" wx:key="columnIndex" class="works-col">
+          <view wx:for="{{column}}" wx:key="key" class="work work-{{item.kind}}" data-key="{{item.key}}" aria-role="button" aria-label="{{item.title}}" hover-class="chip-hover" bindtap="openItem">
+            <view class="work-photo ai-mask-host">
+              <!-- 写真套餐：前四张成片拼成 2×2 -->
+              <view wx:if="{{item.kind === 'bundle'}}" class="work-stack">
+                <image wx:for="{{item.stack}}" wx:for-item="url" wx:key="*this" class="work-stack-image" src="{{url}}" mode="aspectFill" lazy-load />
+              </view>
+              <image wx:elif="{{item.cover && !item.imageFailed}}" class="work-image" src="{{item.cover}}" mode="widthFix" data-key="{{item.key}}" binderror="onCoverError" lazy-load />
+              <view wx:else class="work-image work-image-blank">{{item.kind === 'fun' ? '趣测结果' : '作品预览暂不可用'}}</view>
+              <text wx:if="{{item.badge}}" class="work-badge work-badge-{{item.badgeTone}}">{{item.badge}}</text>
+              <text wx:if="{{item.aiNotice && !item.imageFailed}}" class="ai-mask">{{item.aiNotice}}</text>
+            </view>
             <view class="work-title">{{item.title}}</view>
-            <text class="cover-sub">{{item.plugin.name}} · v{{item.version}}</text>
+            <text class="work-meta">{{item.meta}}</text>
           </view>
-        </t-card>
+        </view>
       </view>
     </view>
   </block>

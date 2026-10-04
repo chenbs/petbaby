@@ -2,17 +2,17 @@ export const BRAND_NAME = "麻麻抱我";
 
 export const SITE_URL = (import.meta.env.SITE_URL || "https://www.babykitty.cn").replace(/\/+$/, "");
 
-export const SITE_TAGLINE = "宠物AI照片创作、宠物人化与陪伴记录小程序";
+export const SITE_TAGLINE = "宠物照片创作、宠物人化与陪伴记录小程序";
 
 export const SITE_DESCRIPTION =
-  "麻麻抱我是宠物照片创作与陪伴记录微信小程序，支持宠物身份证、海报、画册、AI宠物肖像和「人类转生计划」宠物人化，还可制作互动短片、记录成长、创建纪念空间。从一张照片开始，保存和分享专属作品。具体开放功能与费用以小程序内展示为准。";
+  "麻麻抱我是宠物照片创作与陪伴记录微信小程序，支持宠物身份证、海报、画册、宠物艺术写真和「如果我是人」宠物人化，还可制作陪伴短片、记录成长、创建纪念空间。从一张照片开始，保存和分享专属作品。具体开放功能与费用以小程序内展示为准。";
 
 export const SITE_KEYWORDS = [
   BRAND_NAME,
   "宠物照片创作",
-  "AI宠物肖像",
+  "宠物艺术写真",
   "宠物人化",
-  "人类转生计划",
+  "如果我是人",
   "宠物身份证",
   "宠物成长记录",
   "宠物纪念空间",
@@ -22,7 +22,7 @@ export const NAV_ITEMS: ReadonlyArray<{ label: string; href: string }> = [
   { label: "首页", href: "/#home" },
   { label: "核心玩法", href: "/#plays" },
   { label: "三类玩法", href: "/#services" },
-  { label: "AI 肖像", href: "/#portrait" },
+  { label: "艺术写真", href: "/#portrait" },
   { label: "作品展示", href: "/#works" },
   { label: "星尘纪念", href: "/#memorial" },
   { label: "联系我们", href: "/#contact" },
@@ -41,7 +41,7 @@ export const FOOTER_COLUMNS: ReadonlyArray<{
       { label: "宠物身份证", href: "/#plays" },
       { label: "宠物电影海报", href: "/#plays" },
       { label: "宠物时光画册", href: "/#plays" },
-      { label: "AI 宠物肖像", href: "/#portrait" },
+      { label: "宠物艺术写真", href: "/#portrait" },
       { label: "宠物记忆短片", href: "/#services" },
     ],
   },

@@ -1,0 +1,13 @@
+{
+  "id": "corgi-sploot",
+  "title": "蜜桃趴趴",
+  "samplePet": "corgi",
+  "prompt": "Use case: photorealistic, bright and charming lifestyle pet portrait, shot by a professional pet photographer in a real place. Image 1 is the identity reference only, not a pose or background template. Keep the same adult Pembroke Welsh Corgi from Image 1, with red-and-white coat, large upright ears, white chest and short legs. One pet only, no people. Wear only the single garment or accessory named in the set description, fitted naturally and understated; if none is named, the pet wears nothing. Set and light: Bright peach seamless paper sweeping from wall to floor, high-key and evenly lit. The corgi lies in a classic sploot with both hind legs stretched flat behind, chin up, ears perked, mouth slightly open with the tip of its tongue showing. A single small pastel-mint ball rests beside its paw. Cheerful and playful, no clothing. The corgi lies in a sploot, chin up, ears perked, mouth slightly open with the tongue tip showing. Photographic qualities: a single dominant light source with one consistent direction, natural soft falloff into shadow, true-to-life fur with individual strands and slight natural unevenness, realistic eye moisture with one small catchlight, believable contact shadow where the body meets the surface. Camera: full-frame camera with an 85mm portrait lens at about f/2.8, eye-level with the pet, shallow natural depth of field. Bright, clean, well-exposed image with fresh natural colors that are lively but not oversaturated, soft pleasing light on the face, no HDR look, no heavy retouching. Expression matters most: the pet looks alive and endearing, with bright eyes and a natural, readable emotion, so that any pet owner would want the same photo of their own pet. Vertical 3:4, complete pet with safe margins, the face occupying about 35-50% of frame height, uncluttered background. Avoid: dull or dark muddy tones, blank or sleepy-stiff expression unless the scene says the pet is dozing, human-like poses, costumes, hats, glasses, multiple accessories, glowing or rim light that looks painted, dramatic fantasy lighting, oversaturated colors, plastic or airbrushed fur, perfect symmetry, extra props, floating body, pasted edges, extra limbs, duplicate pets, CGI or illustration look, text, logos or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/source/dog-corgi.jpg",
+  "referenceSha256": "750c43038e21f8601be8b903889100c6b165d2b35cea3b7c0b55c0edce7ca9c2",
+  "output": "tools/imagegen/out/scenes/scene-corgi-sploot-v8.jpg",
+  "sha256": "edf4739eb97bb1ea96a0ffdd93998fd15aec192257f679edd5f70a45cb2b4bb1",
+  "review": "pending-visual-review"
+}

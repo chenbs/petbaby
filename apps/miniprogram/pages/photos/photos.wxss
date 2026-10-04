@@ -3,9 +3,11 @@
 .library-heading { display: grid; gap: var(--space-1); }
 .library-heading .title { margin: 0; }
 .library-topbar { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); margin: var(--space-3) 0; }
-.picker { display: flex; align-items: baseline; gap: var(--space-2); padding: var(--space-2) 0; }
+/* 宠物切换做成胶囊，一眼看出是可以点的 */
+.picker { display: inline-flex; align-items: center; gap: var(--space-2); padding: var(--space-1) var(--space-3); border: 2rpx solid var(--border); border-radius: var(--radius-pill); background: var(--card-background); }
+.picker-label { color: var(--text-secondary); font-size: var(--eyebrow-size); }
 .picker-value { color: var(--text-primary); font-size: var(--body-size); font-weight: var(--fw-bold); }
-.picker-arrow { color: var(--primary); font-size: var(--body-size); font-weight: var(--fw-bold); }
+.picker-arrow { color: var(--primary); font-size: var(--small-size); font-weight: var(--fw-bold); }
 
 .library-entry { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-4); border: var(--card-border); border-radius: var(--card-radius); background: var(--surface); }
 .entry-copy { display: grid; min-width: 0; gap: var(--space-1); }
@@ -37,11 +39,17 @@
 .gallery-grid { margin-top: var(--space-3); }
 .gallery-grid-single { width: 520rpx; max-width: 100%; margin-right: auto; margin-left: auto; }
 
-.library-links { display: grid; gap: var(--space-3); margin-top: var(--space-5); padding-top: var(--space-4); border-top: 2rpx solid var(--divider-soft); }
-.library-links .sub-title { margin: 0; }
-.library-tool-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2); }
-.library-tool { display: flex; align-items: center; justify-content: space-between; min-width: 0; padding: var(--space-3); border: var(--card-border); border-radius: var(--radius-sm); background: var(--surface); color: var(--text-primary); font-size: var(--body-size); font-weight: var(--fw-bold); }
-.library-tool text { color: var(--primary); }
+/* 用照片做点什么：两列封面卡（封面 4:3 + 标题 + 一句说明） */
+.library-links { margin-top: var(--space-6); padding-top: var(--space-5); border-top: 2rpx solid var(--divider-soft); }
+.library-links-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-2); margin-bottom: var(--space-3); }
+.library-links-head .section-title { margin: 0; }
+.library-timeline { flex: none; color: var(--primary); font-size: var(--small-size); font-weight: var(--fw-bold); }
+.library-tool-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap-item); }
+.library-tool { min-width: 0; overflow: hidden; border: var(--card-border); border-radius: var(--card-radius); background: var(--card-background); box-shadow: var(--shadow-card); clip-path: var(--skin-clip, none); }
+.library-tool-cover { display: block; width: 100%; height: auto; aspect-ratio: var(--ratio-cover); border-radius: 0; background: var(--surface); }
+.library-tool-copy { display: grid; gap: var(--space-0); padding: var(--space-2) var(--space-3) var(--space-3); }
+.library-tool-title { overflow: hidden; color: var(--text-primary); font-size: var(--body-size); font-weight: var(--fw-bold); text-overflow: ellipsis; white-space: nowrap; }
+.library-tool-note { overflow: hidden; color: var(--text-secondary); font-size: var(--eyebrow-size); text-overflow: ellipsis; white-space: nowrap; }
 
 .dock { position: fixed; right: var(--page-padding); bottom: calc(var(--space-4) + env(safe-area-inset-bottom)); left: var(--page-padding); display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-3) var(--space-4); border: var(--card-border); border-radius: var(--radius-pill); background: var(--card-background); box-shadow: var(--card-shadow); }
 .record-stack { display: flex; flex-direction: column; gap: var(--space-3); }

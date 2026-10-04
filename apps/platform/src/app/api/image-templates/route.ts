@@ -13,6 +13,7 @@ export async function GET() {
       entryId: template.entryId,
       templateId: template.templateId,
       title: template.title,
+      tags: template.tags || [],
       subjectMode: template.subjectMode,
       orientation: template.orientation,
       size: template.size,

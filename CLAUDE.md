@@ -55,7 +55,7 @@ pnpm db:migrate              # 对 DATABASE_URL 指向的 PostgreSQL 执行迁�
 
 ### 玩法（plugin）是数据驱动的
 
-`src/plugins/registry.ts` 是内置 manifest 清单（PL-01/02/03 图文、PL-10 AI 肖像、PL-15 互动页、PL-19 视频、PL-20/21/22 纪念产品）。`src/plugins/runtime.ts` 才是运行时来源：首次访问把内置 manifest 播种进 `plugin_configs` / `plugin_config_versions`，之后从库里读，并叠加 `experiment_variants` 中 `status='live'` 的赛马变体；所有 manifest 都用同一个 Zod schema 校验，后台发布/回滚走 `updateRuntimePlugin` / `rollbackRuntimePlugin`（版本号自增 + 审计）。任务入库时会快照 `plugin_snapshot`，保证发布后不影响在途任务。
+`src/plugins/registry.ts` 是内置 manifest 清单（PL-01/02/03 图文、PL-10 艺术写真与图片模板、PL-19 视频、PL-15 与 PL-20/21/22 为 archived 的历史玩法）。`src/plugins/runtime.ts` 才是运行时来源：首次访问把内置 manifest 播种进 `plugin_configs` / `plugin_config_versions`，之后从库里读，并叠加 `experiment_variants` 中 `status='live'` 的赛马变体；所有 manifest 都用同一个 Zod schema 校验，后台发布/回滚走 `updateRuntimePlugin` / `rollbackRuntimePlugin`（版本号自增 + 审计）。任务入库时会快照 `plugin_snapshot`，保证发布后不影响在途任务。
 
 `manifest.generator.template` 映射到具体生成器：`src/server/generators/svg.ts` 的 `generatorRegistry`（`id-card-v1` / `movie-poster-v1` / `time-album-v1`，输出 SVG，必要时用 sharp 转 PNG、`generators/pdf.ts` 转 PDF）、`server/video/ffmpeg.ts`（视频）、`server/ai/*`（AI 图）。新增玩法 = 加 manifest + 加 registry 条目，不改路由。
 
@@ -64,7 +64,7 @@ pnpm db:migrate              # 对 DATABASE_URL 指向的 PostgreSQL 执行迁�
 REST route handler 在 `src/app/api/**/route.ts`，它们只做「守卫 → 限频 → 调 service → 包 envelope」，几乎不含业务规则。准确路由数只在 `docs/README.md` 维护。规则集中在少数大 service：
 
 - `server/platform-service.ts` —— 阶段一主链路：宠物、照片、生成、作品/版本/分享、订单、支付、退款。
-- `server/growth-service.ts` —— 最大的一个：AI 四选一、互动页、视频项目、订阅消息、会员、年度报告、实体商品。
+- `server/growth-service.ts` —— 最大的一个：图片模板单张出图（`ai_runs`）、视频项目、订阅消息、会员、年度报告、实体商品。
 - `server/memorial-service.ts`、`server/account-service.ts`、`server/user-status-service.ts`、`server/maintenance.ts`。
 - `server/timeline-service.ts` —— 成长时间线按有效记录日期分页；「去年今日」仍按 EXIF 命中，手工日期与 EXIF 不一致时排除。
 
@@ -101,11 +101,13 @@ await Promise.all([enforceRateLimit(...), assertGenerationCircuit()]);
 `apps/miniprogram` 的全部样式走 CSS 变量，**`.wxss` 里写死颜色/圆角/阴影/间距/字号会被 `pnpm validate` 拒绝**（`app.wxss` 是唯一豁免文件，承载 `var()` 兜底值）。四层结构：
 
 - `theme/tokens.js` —— `TOKEN_SPEC` 是 57 个 token 的键名+类型真源。新增 token 必须先登记在此，四套皮肤缺键或类型不符时 validate 失败。**与主题无关的常量放 `CONSTANT_VARS`**（`--radius-pill`、`--glass-easing`、`--glass-blur-degraded`），只在 `app.wxss` 的 `page{}` 声明一次——注入串有 2KB 硬门禁，`glass` 主题曾因此超限。
-- `theme/index.js` —— `THEMES` 清单（`cute` 默认 / `glass` / `light` / `dark`）+ `resolveTokens()`（缺键回落默认主题同名键，`blurSupported=false` 时叠加皮肤的 `degrade`）。加皮肤只改这一个数组。
+- `theme/index.js` —— `THEMES` 清单（`pet` 橘子汽水默认 / `film` 手账相册 / `brand` 赛博街机 / `night` 星夜影院，2026-09 重做）+ `resolveTokens()`（缺键回落默认主题同名键，`blurSupported=false` 时叠加皮肤的 `degrade`）。加皮肤只改这一个数组。
 - `theme/manager.js` —— 单例，`init()` 在 `app.js` 的 `onLaunch` **早于任何网络请求**调用以避免首屏闪变。切换只走内存 + `wx.setStorageSync` + 订阅广播，不发请求。`detectBlurSupport()` 按平台/基础库推断 `backdrop-filter`（Android 需基础库 2.10+ 且系统 ≥10），结果缓存，不逐帧检测。
 - `theme/page-mixin.js` —— 所有页面全部接入，注入变量串并在 `onShow` 用 `wx.setNavigationBarColor` 同步导航栏（没用 `<navigation-bar>` 组件，它需要基础库 2.29.2，与 2.19.2 下限冲突）。
 
 变量注入靠 `page-meta`，但虚拟支付要求更高版本，所以**基础库下限是 2.19.2**（`project.config.json` 的 `libVersion`）。低版本显示升级提示，其他页面仍由 `app.wxss` 的 `var()` 兜底接管。
+
+**皮肤层（2026-09）**：四套主题除 57 个 token 外，还有一组结构变量 `skin`（底纹、切角、标题 / 数字字体、区块标记、倾斜、按压、chip 选中色，以及覆盖同名常量的圆角与阴影）。它**不进注入串**：`scripts/build-skin-css.js` 把 `theme/themes/*.js` 的 `skin` 生成到 `app.wxss` 的 `.skin-<id>{}`，页面根节点挂 `{{skinClass}}`（page-mixin 下发，纪念场景追加 `skin-quiet`），自定义 tabbar 用 `getSkinVars()` 自己注入。validate 第 11 项比对 JS 与 wxss 逐字一致，第 12 项检查每页根节点都挂了 `{{skinClass}}`，另外 `primary` 作为文字色要对底色 ≥ 4.5:1（浅色大色块只能走 `buttonPrimary`）。改 skin 后必须重跑 `node scripts/build-skin-css.js`。底栏图标由 `scripts/build-tab-icons.js` 生成到 `assets/icons/<theme>/`。
 
 `components/glass-sheet/` 是沉浸式玻璃面板，接入 `pages/work` 和 `pages/ai-run`。**拖动期间零 `setData`**：位移、遮罩、`actions` 反向平移全在 `index.wxs` 里改样式，逻辑层只在手指抬起时收到一次 `onGestureEnd`。面板内的文本层级类（`glass-title` 等）放在 `app.wxss` 而非组件 `.wxss`，因为 slot 内容归页面作用域。
 
@@ -131,9 +133,11 @@ await Promise.all([enforceRateLimit(...), assertGenerationCircuit()]);
 
 **生图接口 2026-08-06 从 packy 换到 lingsuan（`https://lingsuan.top`，OpenAI images 兼容）**，四处实测差异都在代码里有对应处理，换回去或再换站时逐条复核：① 默认返回 **url 而非 b64_json**，且**下载主机与 API 主机不同**（`img.junliai.org`）—— 出网白名单要放两个域名，只放 API 域名的症状是「生成成功、取字节全失败」；② `response_format` 接口**接受**（packy 不接受），但仍不传，默认 url 形态省内存；③ `size` **只对方形生效**（`1600x1000` 实测返回 `2048x1376`），所以 `crop.mjs` 的本地裁切不能省；④ `background=transparent` 返 200 但可能不生效，使用透明素材时须回读 alpha 通道。单张实测 46–62 秒（`quality=low`），比 packy 慢，超时默认已提到 180s。
 
-**图片玩法现在是模板货架，不再是旧的玩法/风格/气质预设组合。** `server/image-template-registry.ts` 是已登记入口、模板状态、尺寸、主体模式和运行时提示词的单一事实源；只有 `status="live"` 且有 `masterStorageKey` 的模板才由 `/api/image-templates` 下发。当前登记 9 个入口，但 `human` 下的 V2 模板全部 `pending-review`，所以公开 API 仍只返回 8 个入口。单宠运行时输入固定为「冻结母版 → 宠物身份图」，人宠模板固定为「冻结母版 → 主人身份图 → 宠物身份图」；缺任一角色或母版必须明确失败，不能静默回落文生图。主人照片走迁移 `0025` 与 `owner-photo-service.ts` 独立存储，上传必须确认本人授权，读取/删除/账户清理都校验归属。
+**图片玩法现在是模板货架，不再是旧的玩法/风格/气质预设组合。** `server/image-template-registry.ts` 是已登记入口、模板状态、尺寸、主体模式和运行时提示词的单一事实源；只有 `status="live"` 且有 `masterStorageKey` 的模板才由 `/api/image-templates` 下发。当前登记 11 个入口（含 `human` 如果我是人与 `boss` 麻麻精选），公开 API 只下发有 live 模板的入口；准确计数看 `docs/README.md`。单宠运行时输入固定为「冻结母版 → 宠物身份图」，人宠模板固定为「冻结母版 → 主人身份图 → 宠物身份图」；缺任一角色或母版必须明确失败，不能静默回落文生图。主人照片走迁移 `0025` 与 `owner-photo-service.ts` 独立存储，上传必须确认本人授权，读取/删除/账户清理都校验归属。
 
-**宠物人化已经切到直接效果图方案。** 新任务只调用一次 lingsuan，参考顺序固定为「图一：用户宠物原图 → 图二：自有效果图」，一次生成 2 张，只输出完整自然真人，不生成或缓存人物身份卡，也不支持重抽。效果图在上线后由同一个对象同时承担公开展示图与运行时图二；模板专属提示词归一到 `server/pet-human-effect-prompts.json`，固定第一、三部分在 `server/image-template-registry.ts`。迁移 `0026` 与 `pet-human-identity-service.ts` 仅保留历史数据兼容和删除清理，不得重新接回生成链路。2026-08-21 V2 新图已在 `tools/imagegen/out/pet-human-v2/effects/` 完成本地规范化，数字 ID `N` 固定映射为 `human-effect-NN`，提示词和计划对象键均已登记；不得重复生图。全部条目维持 `pending-review`，明确发布批准前不得上传生产、seed、冻结或改 `live`。完整交接见 `docs/product/31-宠物人化两阶段执行与审批记录.md`。
+**宠物人化已经切到直接效果图方案。** 新任务只调用一次 lingsuan，参考顺序固定为「图一：用户宠物原图 → 图二：自有效果图」，一次生成 1 张，只输出完整自然真人，不生成或缓存人物身份卡，也不支持重抽。效果图在上线后由同一个对象同时承担公开展示图与运行时图二；模板专属提示词归一到 `server/pet-human-effect-prompts.json`，固定第一、三部分在 `server/image-template-registry.ts`。迁移 `0026` 与 `pet-human-identity-service.ts` 仅保留历史数据兼容和删除清理，不得重新接回生成链路。2026-08-21 V2 新图已在 `tools/imagegen/out/pet-human-v2/effects/` 完成本地规范化，数字 ID `N` 固定映射为 `human-effect-NN`，提示词和计划对象键均已登记；不得重复生图。**2026-09-30 已确认上线**：40 款 `human-effect-NN` 均为 `live`，首页「如果我是人」入口打开全部造型。新增或替换人化效果图仍需单独审批，不得直接改 `live`。完整交接见 `docs/product/31-宠物人化两阶段执行与审批记录.md`。
+
+**所有生成类玩法每次只出 1 张（2026-10 取消 2 选 1）。** 张数唯一来源是 `getImageTemplateCandidateCount()`（返回 1）；Worker 出图成功后对单张任务直接调 `selectAiCandidate` 归档进作品柜，用户不打开结果页作品也在。重拍条件是 `order_id IS NULL`（不再是 `work_id IS NULL`），重拍时撤下那件自动归档的未付费作品。历史 `ai_runs` 仍可能有 2 / 4 张未选候选，挑选接口与端上并排分支都要保留。
 
 **lingsuan 请求必须经过共享 FIFO 队列。** 运行时在 `server/ai/concurrency-queue.ts`，离线工具在 `tools/imagegen/request-queue.mjs`；两边并发硬上限都是 20。运行时默认 20，离线工具默认串行、可用 `LINGSUAN_IMAGE_CONCURRENCY` 或 `--concurrency=` 提高；429/5xx/网络错误最多重试 3 次，明确不可恢复的 4xx 立即失败。不要在单个生成脚本里再造一套并发或重试逻辑。
 
@@ -185,25 +189,33 @@ await Promise.all([enforceRateLimit(...), assertGenerationCircuit()]);
 
 **免疫记录的项目名由用户自己填，不给候选清单** —— 给清单等于在推荐具体疫苗或驱虫药（红线 2）。
 
-### AI 生成内容标识（合规硬要求）
+### AI 生成内容标识（合规硬要求，2026-09 口径）
 
-《人工智能生成合成内容标识办法》2025-09-01 已施行。**营销水印与 AI 标识命运相反**：前者付费移除（那是用户买走的东西），后者付费也必须保留（第四条要求导出文件也带）。实现在 `server/media/ai-label.ts`。
+《人工智能生成合成内容标识办法》2025-09-01 已施行。实现在 `server/media/ai-label.ts` 与 `server/ai-disclosure-service.ts`，方案全文见 `docs/ui-refactor/2026-09-29-产品UIUX评审/去AI文案与取消水印实施方案.md`。
+
+- **文件像素不画任何可见标记**：没有营销水印，也没有「AI 生成」角标。预览与原图的区别只有分辨率与「能否保存到相册」。
+- **隐式元数据必须写**（第五条，`applyAiMetadata`）：原图和预览都要写，**每次重新编码后都要再写一次**（sharp 重新编码默认丢 EXIF）。这是文件层唯一的标识，第十条禁止删除。
+- **界面蒙层**：生成类内容在小程序 / Web 里叠「该内容由AI生成」（`.ai-mask`）。文案由服务端 `aiNotice` 下发，端上不写死；作品上是 `aiGenerated` + `aiNotice`，候选任务上是 `aiNotice`。
+- **保存原图前确认标识义务**（第九条）：生成类原图交付前走 `assertAiOriginalDelivery`，未确认返回 428 `AI_DISCLOSURE_REQUIRED`；确认记录与交付日志在 `ai_disclosure_acknowledgements` / `ai_original_deliveries`，不参与任何自动清理。改确认文案必须升级 `AI_DISCLOSURE_POLICY_VERSION`。
+- 页面标题、按钮、错误信息、作品标题、官网宣传不出现「AI」字样；后台保留 Provider 等排障用语。
 
 **`needsAiLabel` 只对 `generator.type === "image-api"` 为真。** 排版类是 SVG 模板套用户原照片、视频是 ffmpeg 模板合成，都不是生成合成内容——给它们打标是错误标注，既误导用户又损害观感。
 
-标识**必须有深色底衬**，不能只用半透明白字：白字压在白猫/雪地/过曝天空上等于没有标识，而「显著」是法条用词。隐式标识走 sharp 的 `withMetadata`，实测能写进 PNG 的 EXIF（`ai-label-metadata.test.ts` 从产物回读验证）。
-
-**AI 候选图的预览要从已打标字节缩**，不是从原始字节缩——否则免费预览没标识、付费版有，正好搞反。
+界面蒙层**必须有深色底衬**（暖黑 .66 渐变），不能只用半透明白字：白字压在白猫/雪地/过曝天空上等于没有提示。隐式标识走 sharp 的 `withMetadata`，实测能写进 PNG 的 EXIF（`ai-label-metadata.test.ts` 从产物回读验证，`growth-service.test.ts` 验证候选原图与预览都带）。
 
 ### 玩法调性按生命阶段切换（不是删 manifest）
 
-画册/短片/互动页各自合并了纪念形态，靠 `PluginManifest.toneVariants` + `resolveManifestTone`。`lifeStage` 三态 `active` / `senior` / `memorial`，**只能用户手动设置，不按年龄推断**（品种寿命差异极大）。
+画册/短片/星尘页各自合并了纪念形态，靠 `PluginManifest.toneVariants` + `resolveManifestTone`。`lifeStage` 三态 `active` / `senior` / `memorial`，**只能用户手动设置，不按年龄推断**（品种寿命差异极大）。
 
 **老 manifest（PL-20/21/22）保留为 `status: "archived"`，不能删。** `works` 表**没有** `plugin_snapshot` 列（只有 `generation_tasks` 和 `orders` 有），`hydrateWork` 一律 `getRuntimePlugin(work.pluginId)` 现查——删条目会让历史纪念作品抛 `WORK_INCOMPLETE`，打不开也删不掉。archived 同时满足「新用户看不到」（`/api/plugins` 只输出 live）与「老作品读得出」。
 
 **`hydrateWork` 里也要解析调性**：`createOrder` 的基础价取自 `work.plugin.pricing.unlockPrice`，漏了就会把纪念册按画册的基础价收费。
 
-**免费玩法（`unlockPrice: 0`）的正式产物也要带水印。** `locked=false` 时 `getDownload` 返回 `outputKey`，不覆写的话免费玩法反而拿到比付费更干净的图。水印在这里不是付费墙，是传播载体。
+**免费玩法（`unlockPrice: 0`）直接给干净的正式产物**（2026-09 起取消水印）。拉新改由分享卡、公开落地页（小程序 `pages/share`、`/api/share/[token]`）和带小程序码的分享海报承担，作品本身不带任何标记。付费点只有「保存高清原图」。
+
+**作品长期保存。** 未付费作品不再 90 天后硬删除：`cleanupExpiredContent` 不清理作品，新作品 `expires_at` 写 NULL（迁移 `0036` 清空存量）。作品只在用户删除、删宠物或注销时清理；不要在云控制台配对象存储生命周期规则，那会绕过数据库直接删掉作品文件。
+
+**PL-15 互动星尘页已下线（2026-09）**：页面、接口、后台与导出分支已删除，但 manifest 必须保留为 `archived`——纪念空间「星尘纪念页」与历史互动导出都以 `plugin_id='pl-15'` 入库。表 `interactive_sessions` / `interactive_events` 暂留，下一个发布周期再删（方案见 `docs/ui-refactor/2026-09-29-产品UIUX评审/互动星尘页下线实施方案.md`）。
 
 **定价按积累量分档**在 `domain/pricing.ts`（放 `domain/` 因为 Web 端选择器要用），**下单时算不是生成时算**（用户可能隔几天才付，期间又上传了照片）。跨度用 `coalesce(shot_at, created_at)` 的 max−min，与 `timeline-service.ts` 同口径。纪念形态不分档——纪念场景比价是冒犯。
 
@@ -227,7 +239,7 @@ await Promise.all([enforceRateLimit(...), assertGenerationCircuit()]);
 
 Vitest 只收 `src/**/*.test.ts`（`fileParallelism: false`，因为共享 PGlite 单例），并把 `server-only` alias 到 `tests/server-only.ts`。覆盖率阈值（lines/functions/statements 75%、branches 65%）只作用于 `vitest.config.ts` 的 `include` 白名单（domain、plugins、errors、platform-service、request-guard、storage/index、generation-worker、entitlements、media/ai-label、health-service 与 `health/{triage,reminders,document}.ts`）——给这些文件加分支时要同步补测试，否则 `pnpm check` 会挂。健康线那几个进白名单是因为它们承载红线（药物过滤、memorial 排除、档案不给结论），漏测的后果是给出致害建议或对已离开的宠物推提醒。
 
-Playwright 只有 `tests/e2e/main-flow.spec.ts` 两个用例：完整生成→解锁→分享主链路，以及遍历 8 个后台工作台并断言没有 `/api/admin/*` 4xx/5xx。加后台页面时记得补进那个列表。
+Playwright 只有 `tests/e2e/main-flow.spec.ts` 两个用例：完整生成→解锁→分享主链路，以及遍历后台工作台并断言没有 `/api/admin/*` 4xx/5xx。加后台页面时记得补进那个列表。
 
 ## 环境与部署
 
@@ -237,7 +249,7 @@ Playwright 只有 `tests/e2e/main-flow.spec.ts` 两个用例：完整生成→�
 
 `server/config.ts` 的 `inspectConfiguration()` 按模式列出必需环境变量并给出 `productionReady` 判断，`/api/health` 暴露健康快照。变量清单见 `.env.example` 与 `docs/delivery/04-environment-reference.md`；本地容器用根目录 `compose.yaml`，测试机与生产编排、宿主机 **Nginx** 配置（`deploy/nginx/petbaby.conf` 与官网的 `petbaby-website.conf`）和部署脚本在 `deploy/`：**首次部署** `deploy/scripts/bootstrap.sh <域名>`，**日常发布** `deploy/scripts/release.sh staging`（拉代码 → 备份 → 迁移 → 灌样例图 → 健康检查 → 冒烟），**官网单独发布** `deploy/scripts/release-website.sh`。样例图**不在镜像里**（构建上下文是 `apps/platform`，素材在仓库根 `tools/imagegen/out/`），必须由 `seed-samples.sh` 灌进 `object-data` 卷；漏灌时 `/api/plugins` 与 `/api/health` 均正常，只有 `<image>` 取字节时 404，端上表现为大面积裂图且不报错，所以 `smoke-test.sh` 会逐张校验。
 
-`src/proxy.ts`（Next 16 的 proxy 约定，取代旧的 `middleware.ts`）只在 `NODE_ENV=production` 生效：未携带 `petbaby_session` Cookie 且访问非公开页面时重定向到 `/login`（公开前缀为 `/login`、`/legal`、`/share`、`/interactive/share`、`/memorial/share`、`/annual-report/share`），因此本地开发与 Playwright E2E 完全不受影响。
+`src/proxy.ts`（Next 16 的 proxy 约定，取代旧的 `middleware.ts`）只在 `NODE_ENV=production` 生效：未携带 `petbaby_session` Cookie 且访问非公开页面时重定向到 `/login`（公开前缀为 `/login`、`/legal`、`/share`、`/memorial/share`、`/annual-report/share`、`/fun-tests/share`），因此本地开发与 Playwright E2E 完全不受影响。
 
 ## 文档索引
 

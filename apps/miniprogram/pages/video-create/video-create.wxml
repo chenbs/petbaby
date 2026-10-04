@@ -1,6 +1,6 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 
-<view class="page page-flat art-film layout-workbench">
+<view class="{{skinClass}} page page-flat art-film layout-workbench">
   <view class="title">剪一段回忆短片</view>
   <view class="video-sample">
     <image class="video-sample-image" src="{{sampleUrl}}" mode="aspectFit" />

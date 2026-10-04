@@ -11,7 +11,7 @@ export function requiredPaymentConfig(name: string): string {
 }
 
 export function selectPaymentChannel(kind: OrderKind, sku: string): PaymentChannel {
-  const virtual = kind === "work" || (kind === "growth" && /^(membership-(monthly|yearly)-v\d+|annual-report-hd|health-archive-pdf|pet-art-photo-bundle-(10|24))$/.test(sku));
+  const virtual = kind === "work" || (kind === "growth" && /^(membership-(monthly|yearly)-v\d+|annual-report-hd|health-archive-pdf|pet-art-photo-bundle-(10|24|36))$/.test(sku));
   if (kind !== "physical" && !virtual) throw new AppError("PAYMENT_SKU_UNSUPPORTED", "商品尚未配置支付类型", 422);
   const setting = kind === "physical" ? (process.env.PHYSICAL_PAYMENT_PROVIDER || process.env.PAYMENT_PROVIDER) : process.env.PAYMENT_PROVIDER;
   if (!isRealProduction() && (setting === "development" || (!setting && !isStaging()))) return "development";

@@ -33,16 +33,33 @@ scenes/scene-cafe-afternoon-v3.jpg
 scenes/scene-lakeside-sunset-v4.jpg
 scenes/scene-city-rain-v3.jpg
 scenes/scene-spring-picnic-v4.jpg
-# Reviewed on 2026-09-29: 4 golden retriever, 4 toy poodle, 4 British Shorthair scenes.
-scenes/scene-railway-traveler-v5.jpg
-scenes/scene-tennis-champion-v5.jpg
-scenes/scene-greenhouse-gardener-v5.jpg
-scenes/scene-sailboat-holiday-v5.jpg
-scenes/scene-berry-pastry-chef-v5.jpg
-scenes/scene-paper-flower-window-v5.jpg
-scenes/scene-mountain-cable-car-v5.jpg
-scenes/scene-laundry-day-v5.jpg
-scenes/scene-museum-curator-v5.jpg
-scenes/scene-poolside-vacation-v5.jpg
-scenes/scene-post-office-v5.jpg
-scenes/scene-ballet-backstage-v5.jpg
+# Reviewed on 2026-10-03 (v6, studio / window-light fine-art rework): 4 golden retriever, 4 toy poodle, 4 British Shorthair scenes.
+scenes/scene-railway-traveler-v7.jpg
+scenes/scene-tennis-champion-v8.jpg
+scenes/scene-greenhouse-gardener-v7.jpg
+scenes/scene-sailboat-holiday-v6.jpg
+scenes/scene-berry-pastry-chef-v7.jpg
+scenes/scene-paper-flower-window-v8.jpg
+scenes/scene-mountain-cable-car-v8.jpg
+scenes/scene-laundry-day-v8.jpg
+scenes/scene-museum-curator-v7.jpg
+scenes/scene-poolside-vacation-v6.jpg
+scenes/scene-post-office-v8.jpg
+scenes/scene-ballet-backstage-v6.jpg
+# Reviewed on 2026-10-03 (v7): 6 accent re-shoots above, plus 4 American Shorthair, 4 Corgi, 4 calico scenes.
+scenes/scene-shorthair-armchair-v7.jpg
+scenes/scene-shorthair-books-v7.jpg
+scenes/scene-shorthair-night-rim-v11.jpg
+scenes/scene-shorthair-paper-bag-v8.jpg
+scenes/scene-corgi-denim-v11.jpg
+scenes/scene-corgi-crate-v9.jpg
+scenes/scene-corgi-sploot-v8.jpg
+scenes/scene-corgi-sweater-v8.jpg
+scenes/scene-calico-silk-v7.jpg
+scenes/scene-calico-bowl-v8.jpg
+scenes/scene-calico-rain-window-v11.jpg
+scenes/scene-calico-cane-stool-v11.jpg
+# 2026-10-04 (v8): 14 scenes above re-shot brighter and livelier after user review; 10 v6/v7 scenes kept.
+# 2026-10-04 (v9): 5 scenes above re-shot as indoor fashion-magazine editorials (Sphynx, Afghan Hound, Italian Greyhound, Chinchilla Persian, Siamese).
+# 2026-10-04 (v10): 4 fashion scenes re-shot to the approved 丝绒王座 standard (indoor set, one garment or accessory, pet under half the frame).
+# 2026-10-05 (v11): 4 fashion scenes re-shot as half-body magazine covers (tuxedo, biker jacket, gold chain, sunglasses + trench).

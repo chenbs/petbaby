@@ -350,6 +350,126 @@ const previousV10SceneOptions = [
   { id: "calico-cane-stool", title: "黑胶时光", description: "复古丝巾 · 唱机旁回眸" },
 ];
 
+// 2026-10 v12：13–36 里除 4 套时尚大片外的 20 套改成「宠物瞬间」，这 20 个 v11 默认键与 v11 的 36 套名称表视为上一版默认值。
+const previousV11ArtSceneUrls: Record<string, string> = {
+  "railway-traveler": "/api/plugin-samples/samples/scene-railway-traveler-v7-f0a84c31cb26.jpg",
+  "tennis-champion": "/api/plugin-samples/samples/scene-tennis-champion-v8-5e19c038af7d.jpg",
+  "greenhouse-gardener": "/api/plugin-samples/samples/scene-greenhouse-gardener-v7-551e92fc6249.jpg",
+  "sailboat-holiday": "/api/plugin-samples/samples/scene-sailboat-holiday-v6-4a22e633a7a8.jpg",
+  "berry-pastry-chef": "/api/plugin-samples/samples/scene-berry-pastry-chef-v7-a9086e9f1beb.jpg",
+  "paper-flower-window": "/api/plugin-samples/samples/scene-paper-flower-window-v8-ab5124661b86.jpg",
+  "mountain-cable-car": "/api/plugin-samples/samples/scene-mountain-cable-car-v8-70b6325e355a.jpg",
+  "laundry-day": "/api/plugin-samples/samples/scene-laundry-day-v8-5509c49e6617.jpg",
+  "museum-curator": "/api/plugin-samples/samples/scene-museum-curator-v7-ddfec7859821.jpg",
+  "poolside-vacation": "/api/plugin-samples/samples/scene-poolside-vacation-v6-bf0a1f6d4423.jpg",
+  "post-office": "/api/plugin-samples/samples/scene-post-office-v8-39fcfcf4bee7.jpg",
+  "ballet-backstage": "/api/plugin-samples/samples/scene-ballet-backstage-v6-b34c002eee53.jpg",
+  "shorthair-armchair": "/api/plugin-samples/samples/scene-shorthair-armchair-v7-c566d0b61a0e.jpg",
+  "shorthair-books": "/api/plugin-samples/samples/scene-shorthair-books-v7-26a1786ebfb6.jpg",
+  "shorthair-paper-bag": "/api/plugin-samples/samples/scene-shorthair-paper-bag-v8-970c4eec5358.jpg",
+  "corgi-sploot": "/api/plugin-samples/samples/scene-corgi-sploot-v8-edf4739eb97b.jpg",
+  "corgi-sweater": "/api/plugin-samples/samples/scene-corgi-sweater-v8-357ccfaceb0a.jpg",
+  "calico-silk": "/api/plugin-samples/samples/scene-calico-silk-v7-00d1eb65bef0.jpg",
+  "calico-bowl": "/api/plugin-samples/samples/scene-calico-bowl-v8-2dba23841d9f.jpg",
+  "calico-rain-window": "/api/plugin-samples/samples/scene-calico-rain-window-v11-c34a877fa2ea.jpg",
+};
+const previousV11SceneOptions = [
+  { id: "window-morning", title: "蓝格睡衣卧室", description: "床上打哈欠 · 慵懒放松" },
+  { id: "garden-curious", title: "绿幕恐龙朋友", description: "抱住玩偶 · 天真好奇" },
+  { id: "studio-confident", title: "薄荷领带影棚", description: "端坐回望 · 自信从容" },
+  { id: "night-playful", title: "星夜小王子", description: "披风坐定 · 安静幻想" },
+  { id: "seaside-breeze", title: "柠檬黄日记", description: "柠檬入镜 · 俏皮大笑" },
+  { id: "library-whisper", title: "复古摄影师", description: "相机在旁 · 慢慢观察" },
+  { id: "autumn-leaves", title: "蓝调杂志封面", description: "耳机与领带 · 俏皮凝视" },
+  { id: "snow-cabin", title: "黑白经典肖像", description: "黑白影棚 · 温柔凝视" },
+  { id: "cafe-afternoon", title: "玫红眼镜写真", description: "衬衫领带 · 轻松回眸" },
+  { id: "lakeside-sunset", title: "草地花环午后", description: "花束相伴 · 温柔凝视" },
+  { id: "city-rain", title: "街头雨衣", description: "雨后水洼 · 小心探步" },
+  { id: "spring-picnic", title: "软玩具野餐", description: "野餐垫上 · 伸爪拨带" },
+  { id: "railway-traveler", title: "暗调伦勃朗", description: "单灯侧光 · 沉静凝望" },
+  { id: "tennis-champion", title: "泡泡时光", description: "追着泡泡 · 咧嘴大笑" },
+  { id: "greenhouse-gardener", title: "百叶光影", description: "斜阳条纹 · 眯眼晒暖" },
+  { id: "sailboat-holiday", title: "油画布肖像", description: "手绘背景 · 侧身回望" },
+  { id: "berry-pastry-chef", title: "奶油纸静物", description: "陶罐相伴 · 乖巧端坐" },
+  { id: "paper-flower-window", title: "雏菊花冠", description: "花冠歪头 · 甜甜一笑" },
+  { id: "mountain-cable-car", title: "花店门口", description: "花香里 · 安静等待" },
+  { id: "laundry-day", title: "云朵毛毯", description: "毯子卷卷 · 软萌一团" },
+  { id: "museum-curator", title: "旧皮箱", description: "炭灰布景 · 端坐皮箱" },
+  { id: "poolside-vacation", title: "纱帘逆光", description: "逆光轮廓 · 柔和剪影" },
+  { id: "post-office", title: "珍珠与猫", description: "珍珠项链 · 优雅侧颜" },
+  { id: "ballet-backstage", title: "藤篮蓝调", description: "深蓝布景 · 藤篮里探头" },
+  { id: "shorthair-armchair", title: "旧扶手椅", description: "窗光丝绒 · 蜷坐抬眼" },
+  { id: "shorthair-books", title: "一摞旧书", description: "布面书堆 · 歪头端详" },
+  { id: "shorthair-night-rim", title: "黑金礼服", description: "昂首睥睨 · 礼服绅士" },
+  { id: "shorthair-paper-bag", title: "毛线球游戏", description: "伸爪拨球 · 机灵俏皮" },
+  { id: "corgi-denim", title: "机车先生", description: "皮衣回眸 · 酷感气场" },
+  { id: "corgi-crate", title: "丝绒王座", description: "端坐高背椅 · 贵族气质" },
+  { id: "corgi-sploot", title: "蜜桃趴趴", description: "青蛙趴 · 吐舌卖萌" },
+  { id: "corgi-sweater", title: "小绅士", description: "领结端坐 · 骄傲挺胸" },
+  { id: "calico-silk", title: "香槟绸布", description: "丝缎侧卧 · 慵懒回眸" },
+  { id: "calico-bowl", title: "草莓早餐", description: "舔舔鼻子 · 早餐时间" },
+  { id: "calico-rain-window", title: "金链名伶", description: "侧颜微扬 · 冷艳贵气" },
+  { id: "calico-cane-stool", title: "墨镜风衣", description: "立领风衣 · 墨镜压低" },
+];
+
+// 2026-10 v13：v12 的 16 套生活情景改回棚拍逻辑（保留半空接球、气球派对、抱着玩偶睡、冰淇淋舔舔），这 16 个 v12 默认键与 v12 的 36 套名称表视为上一版默认值。
+const previousV12ArtSceneUrls: Record<string, string> = {
+  "railway-traveler": "/api/plugin-samples/samples/scene-railway-traveler-v12-67267f22d3d7.jpg",
+  "tennis-champion": "/api/plugin-samples/samples/scene-tennis-champion-v12-792b7220deb6.jpg",
+  "greenhouse-gardener": "/api/plugin-samples/samples/scene-greenhouse-gardener-v12-bdb43989b741.jpg",
+  "sailboat-holiday": "/api/plugin-samples/samples/scene-sailboat-holiday-v12-86a1a51e3e81.jpg",
+  "paper-flower-window": "/api/plugin-samples/samples/scene-paper-flower-window-v12-30fdfec0586a.jpg",
+  "mountain-cable-car": "/api/plugin-samples/samples/scene-mountain-cable-car-v12-d4ce85e8500f.jpg",
+  "laundry-day": "/api/plugin-samples/samples/scene-laundry-day-v12-d97924684584.jpg",
+  "museum-curator": "/api/plugin-samples/samples/scene-museum-curator-v12-3fddae388a05.jpg",
+  "poolside-vacation": "/api/plugin-samples/samples/scene-poolside-vacation-v12-5961fb055876.jpg",
+  "post-office": "/api/plugin-samples/samples/scene-post-office-v12-d4011c411fc2.jpg",
+  "shorthair-armchair": "/api/plugin-samples/samples/scene-shorthair-armchair-v12-3c3a01e5eed5.jpg",
+  "shorthair-books": "/api/plugin-samples/samples/scene-shorthair-books-v12-cb1d4a329723.jpg",
+  "shorthair-paper-bag": "/api/plugin-samples/samples/scene-shorthair-paper-bag-v12-db73ac5910f5.jpg",
+  "corgi-sploot": "/api/plugin-samples/samples/scene-corgi-sploot-v12-74c030fd5fbe.jpg",
+  "corgi-sweater": "/api/plugin-samples/samples/scene-corgi-sweater-v12-8161a640b11b.jpg",
+  "calico-rain-window": "/api/plugin-samples/samples/scene-calico-rain-window-v12-8b54761f8139.jpg",
+};
+const previousV12SceneOptions = [
+  { id: "window-morning", title: "蓝格睡衣卧室", description: "床上打哈欠 · 慵懒放松" },
+  { id: "garden-curious", title: "绿幕恐龙朋友", description: "抱住玩偶 · 天真好奇" },
+  { id: "studio-confident", title: "薄荷领带影棚", description: "端坐回望 · 自信从容" },
+  { id: "night-playful", title: "星夜小王子", description: "披风坐定 · 安静幻想" },
+  { id: "seaside-breeze", title: "柠檬黄日记", description: "柠檬入镜 · 俏皮大笑" },
+  { id: "library-whisper", title: "复古摄影师", description: "相机在旁 · 慢慢观察" },
+  { id: "autumn-leaves", title: "蓝调杂志封面", description: "耳机与领带 · 俏皮凝视" },
+  { id: "snow-cabin", title: "黑白经典肖像", description: "黑白影棚 · 温柔凝视" },
+  { id: "cafe-afternoon", title: "玫红眼镜写真", description: "衬衫领带 · 轻松回眸" },
+  { id: "lakeside-sunset", title: "草地花环午后", description: "花束相伴 · 温柔凝视" },
+  { id: "city-rain", title: "街头雨衣", description: "雨后水洼 · 小心探步" },
+  { id: "spring-picnic", title: "软玩具野餐", description: "野餐垫上 · 伸爪拨带" },
+  { id: "railway-traveler", title: "肉垫贴玻璃", description: "隔着玻璃 · 粉嫩肉垫" },
+  { id: "tennis-champion", title: "喷嚏前一秒", description: "蒲公英飘过 · 皱鼻挤眼" },
+  { id: "greenhouse-gardener", title: "生日偷袭", description: "派对帽歪了 · 偷舔奶油" },
+  { id: "sailboat-holiday", title: "快递箱之王", description: "箱子太小 · 硬要坐进去" },
+  { id: "berry-pastry-chef", title: "半空接球", description: "腾空一跃 · 张嘴接住" },
+  { id: "paper-flower-window", title: "零食袋的声音", description: "歪头 · 竖起耳朵听" },
+  { id: "mountain-cable-car", title: "刚洗完澡", description: "裹着浴巾 · 一脸不服" },
+  { id: "laundry-day", title: "晒衣篮午睡", description: "睡进衣服堆 · 袜子盖头" },
+  { id: "museum-curator", title: "镜子里的我", description: "对镜举爪 · 一脸疑惑" },
+  { id: "poolside-vacation", title: "四脚朝天", description: "翻肚皮睡 · 肉垫朝天" },
+  { id: "post-office", title: "花瓣落鼻尖", description: "对眼 · 盯着花瓣" },
+  { id: "ballet-backstage", title: "气球派对", description: "抬头望气球 · 眼睛亮晶晶" },
+  { id: "shorthair-armchair", title: "拆家现场", description: "纸巾雪 · 理直气壮" },
+  { id: "shorthair-books", title: "奶油胡子", description: "舔完奶油杯 · 白胡子" },
+  { id: "shorthair-night-rim", title: "黑金礼服", description: "昂首睥睨 · 礼服绅士" },
+  { id: "shorthair-paper-bag", title: "围巾只露眼睛", description: "大围巾裹住 · 只剩眼睛" },
+  { id: "corgi-denim", title: "机车先生", description: "皮衣回眸 · 酷感气场" },
+  { id: "corgi-crate", title: "丝绒王座", description: "端坐高背椅 · 贵族气质" },
+  { id: "corgi-sploot", title: "拍泡泡", description: "站起来 · 双爪拍泡泡" },
+  { id: "corgi-sweater", title: "门后偷看", description: "探出半张脸 · 偷偷观察" },
+  { id: "calico-silk", title: "抱着玩偶睡", description: "搂紧玩偶 · 睡到吐舌" },
+  { id: "calico-bowl", title: "冰淇淋舔舔", description: "伸舌头够 · 专注对眼" },
+  { id: "calico-rain-window", title: "窗台监工", description: "趴窗看鸟 · 玻璃倒影" },
+  { id: "calico-cane-stool", title: "墨镜风衣", description: "立领风衣 · 墨镜压低" },
+];
+
 const manifestSchema: z.ZodType<PluginManifest> = z.object({
   id: z.string().min(1).max(80),
   code: z.string().min(1).max(80),
@@ -508,7 +628,7 @@ async function ensurePluginConfigs() {
               const v2Styles = key === "sceneUrls" ? previousV2SampleDefaults[plugin.id]?.sceneUrls || {} : {};
               for (const [style, url] of Object.entries(value as Record<string, string>)) {
                 if (nextStyles[style] === undefined || nextStyles[style] === oldStyles[style] || nextStyles[style] === v2Styles[style] ||
-                    (plugin.id === "pl-10" && key === "sceneUrls" && (nextStyles[style] === previousV4ArtSceneUrls[style] || nextStyles[style] === previousV5ArtSceneUrls[style] || nextStyles[style] === previousV6ArtSceneUrls[style] || nextStyles[style] === previousV7ArtSceneUrls[style] || nextStyles[style] === previousV8ArtSceneUrls[style] || nextStyles[style] === previousV9ArtSceneUrls[style] || nextStyles[style] === previousV10ArtSceneUrls[style]))) {
+                    (plugin.id === "pl-10" && key === "sceneUrls" && (nextStyles[style] === previousV4ArtSceneUrls[style] || nextStyles[style] === previousV5ArtSceneUrls[style] || nextStyles[style] === previousV6ArtSceneUrls[style] || nextStyles[style] === previousV7ArtSceneUrls[style] || nextStyles[style] === previousV8ArtSceneUrls[style] || nextStyles[style] === previousV9ArtSceneUrls[style] || nextStyles[style] === previousV10ArtSceneUrls[style] || nextStyles[style] === previousV11ArtSceneUrls[style] || nextStyles[style] === previousV12ArtSceneUrls[style]))) {
                   if (nextStyles[style] !== url) { nextStyles[style] = url; changed = true; }
                 }
               }
@@ -517,7 +637,7 @@ async function ensurePluginConfigs() {
               const previousTwelve = (value as typeof previousV2ArtSceneOptions).slice(0, 12);
               const previousV4 = [...previousTwelve, ...previousV4ExtendedSceneOptions];
               const previousV5 = [...previousTwelve, ...previousV5ExtendedSceneOptions];
-              if (merged[key] === undefined || matchesPreviousArtScenes(merged[key]) || matchesArtSceneOptions(merged[key], previousTwelve) || matchesArtSceneOptions(merged[key], previousV4) || matchesArtSceneOptions(merged[key], previousV5) || matchesArtSceneOptions(merged[key], (value as typeof previousV2ArtSceneOptions).slice(0, 24)) || matchesArtSceneOptions(merged[key], previousV7SceneOptions) || matchesArtSceneOptions(merged[key], previousV7SceneOptions.slice(0, 24)) || matchesArtSceneOptions(merged[key], previousV8SceneOptions) || matchesArtSceneOptions(merged[key], previousV9SceneOptions) || matchesArtSceneOptions(merged[key], previousV10SceneOptions)) { merged[key] = value; changed = true; }
+              if (merged[key] === undefined || matchesPreviousArtScenes(merged[key]) || matchesArtSceneOptions(merged[key], previousTwelve) || matchesArtSceneOptions(merged[key], previousV4) || matchesArtSceneOptions(merged[key], previousV5) || matchesArtSceneOptions(merged[key], (value as typeof previousV2ArtSceneOptions).slice(0, 24)) || matchesArtSceneOptions(merged[key], previousV7SceneOptions) || matchesArtSceneOptions(merged[key], previousV7SceneOptions.slice(0, 24)) || matchesArtSceneOptions(merged[key], previousV8SceneOptions) || matchesArtSceneOptions(merged[key], previousV9SceneOptions) || matchesArtSceneOptions(merged[key], previousV10SceneOptions) || matchesArtSceneOptions(merged[key], previousV11SceneOptions) || matchesArtSceneOptions(merged[key], previousV12SceneOptions)) { merged[key] = value; changed = true; }
             } else if (value !== undefined && (merged[key] === undefined || merged[key] === previousSampleDefaults[plugin.id]?.[key as "heroUrl"] || merged[key] === previousV2SampleDefaults[plugin.id]?.[key as "heroUrl"])) {
               if (merged[key] !== value) { merged[key] = value; changed = true; }
             }

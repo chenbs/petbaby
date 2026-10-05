@@ -169,7 +169,7 @@ async function loadTemplateReferences(row: Record<string, unknown>) {
   const petId = String(row.pet_id);
   const roleInputs = mapAiRoleInputs(row.role_inputs);
   if (roleInputs.templateId === PET_ART_PHOTO_TEMPLATE_ID) {
-    if (!["v01", "v03", "v04", "v05", "v06", "v07", "v08", "v09", "v10", PET_ART_PHOTO_VERSION].includes(roleInputs.templateVersion || "") || roleInputs.subjectMode !== "pet" || roleInputs.petPhotoIds.length !== 1 || roleInputs.ownerPhotoIds.length) {
+    if (!["v01", "v03", "v04", "v05", "v06", "v07", "v08", "v09", "v10", "v11", "v12", PET_ART_PHOTO_VERSION].includes(roleInputs.templateVersion || "") || roleInputs.subjectMode !== "pet" || roleInputs.petPhotoIds.length !== 1 || roleInputs.ownerPhotoIds.length) {
       throw new AppError("AI_TEMPLATE_SNAPSHOT_INVALID", "写真任务输入已失效，请重新创建", 409);
     }
     const reference = await loadPetReference(userId, petId, roleInputs.petPhotoIds[0]);

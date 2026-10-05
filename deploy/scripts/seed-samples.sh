@@ -95,8 +95,8 @@ while IFS="$(printf '\t')" read -r asset_kind storage_key source_path expected_s
     human) human_count=$((human_count + 1)) ;;
   esac
 done < "$IMAGE_ASSET_MANIFEST"
-[ "$template_count" = "80" ] || fail "冻结母版数量错误：$template_count/80"
-[ "$preview_count" = "80" ] || fail "公开展示图数量错误：$preview_count/80"
+[ "$template_count" = "96" ] || fail "冻结母版数量错误：$template_count/96"
+[ "$preview_count" = "96" ] || fail "公开展示图数量错误：$preview_count/96"
 [ "$human_count" = "40" ] || fail "人化效果图数量错误：$human_count/40"
 
 log "已在暂存目录摆好 $count 张插件样例图、$template_count 张冻结母版、$preview_count 张公开展示图和 $human_count 张人化效果图，开始写入 object-data 卷"

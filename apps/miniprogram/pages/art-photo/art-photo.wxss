@@ -50,3 +50,11 @@
 .skin-brand .play-card-fun { border: 2rpx solid var(--primary); border-radius: 0; background: var(--card-background); }
 .skin-brand .play-card-fun .art-name { color: var(--text-primary); }
 .skin-brand .play-card-fun .small { color: var(--primary); }
+
+/* 写真馆二级切换：宠物写真 / 人宠写真（2026-10） */
+.art-modes { margin-top: var(--space-3); }
+.art-mode-count { margin-left: var(--space-1); font-family: var(--skin-num-font, inherit); font-size: var(--eyebrow-size); opacity: .7; }
+/* 人宠写真母版是 9:16 竖图，两人一宠同框，按原比例完整展示，不裁掉任何一张脸 */
+.duo-image { display: block; width: 100%; height: auto; aspect-ratio: var(--ratio-portrait); border-radius: var(--radius-image-thumb); background: var(--surface); }
+.duo-badge { position: absolute; left: var(--space-2); bottom: var(--space-2); padding: var(--space-0) var(--space-2); border-radius: var(--radius-pill); background: var(--mask); color: var(--on-image-primary); font-size: var(--eyebrow-size); }
+.duo-group .art-section-head .small { text-align: right; }

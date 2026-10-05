@@ -864,6 +864,166 @@
       "sha256": "1c3fd65a793a407b46f11feb9745e032fd4b8d9c656ccfa185b822a106b88212",
       "metadata": "tools/imagegen/out/reference-v1/masters/metadata/together-window-nap_9x16_v01.json",
       "approvedAt": "2026-09-29T00:00:00.000+08:00"
+    },
+    {
+      "templateId": "duo-new-year-lucky",
+      "title": "大吉大利",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/duo-new-year-lucky_9x16_v01.webp",
+      "sha256": "ddcd26cdd77ae65a9dc35ac047bcbb1380505f918214d3ff3e036aec9592b97f",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/duo-new-year-lucky_9x16_v01.json",
+      "approvedAt": "2026-10-05T00:00:00.000+08:00"
+    },
+    {
+      "templateId": "duo-new-year-balance",
+      "title": "头顶橘子",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/duo-new-year-balance_9x16_v01.webp",
+      "sha256": "d973bba202133b6b073c7c7984e0a98902a11bbd5d73e6dc412f15e971d9e779",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/duo-new-year-balance_9x16_v01.json",
+      "approvedAt": "2026-10-05T00:00:00.000+08:00"
+    },
+    {
+      "templateId": "duo-christmas-antlers",
+      "title": "戴上鹿角",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/duo-christmas-antlers_9x16_v01.webp",
+      "sha256": "e3816f5860312b1c27de5e9053e80a0172fc5c1d58ed8bc35b6494a9fa0ab07d",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/duo-christmas-antlers_9x16_v01.json",
+      "approvedAt": "2026-10-05T00:00:00.000+08:00"
+    },
+    {
+      "templateId": "duo-christmas-kiss",
+      "title": "圣诞偷亲",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/duo-christmas-kiss_9x16_v01.webp",
+      "sha256": "42d6f57152342c2e906dcb9687aba11dd357648ac10caff3ca900c1467cf0472",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/duo-christmas-kiss_9x16_v01.json",
+      "approvedAt": "2026-10-05T00:00:00.000+08:00"
+    },
+    {
+      "templateId": "duo-halloween-familiar",
+      "title": "小黑猫助手",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/duo-halloween-familiar_9x16_v01.webp",
+      "sha256": "11b9e4aa482ea5232eed4ddcbc1f7afc9985eafeb43aeac7f4039132466c3300",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/duo-halloween-familiar_9x16_v01.json",
+      "approvedAt": "2026-10-05T00:00:00.000+08:00"
+    },
+    {
+      "templateId": "duo-halloween-hat",
+      "title": "躲进巫师帽",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/duo-halloween-hat_9x16_v01.webp",
+      "sha256": "72e1b1633eed5e0dce571211fc9e3e3629fd51e3d4d0eb1081e6497b4773494a",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/duo-halloween-hat_9x16_v01.json",
+      "approvedAt": "2026-10-05T00:00:00.000+08:00"
+    },
+    {
+      "templateId": "duo-caramel-chair",
+      "title": "藤椅下仰望",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/duo-caramel-chair_9x16_v01.webp",
+      "sha256": "0ed17e4374736923be0e33650b9c77ac50f7e31d09ee64cd62b32d616a98e121",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/duo-caramel-chair_9x16_v01.json",
+      "approvedAt": "2026-10-05T00:00:00.000+08:00"
+    },
+    {
+      "templateId": "duo-caramel-nose",
+      "title": "碰碰鼻子",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/duo-caramel-nose_9x16_v01.webp",
+      "sha256": "9ff5a57ecb7d952deae176810196f1a66700f8218f139620b88cffcbb39ed476",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/duo-caramel-nose_9x16_v01.json",
+      "approvedAt": "2026-10-05T00:00:00.000+08:00"
+    },
+    {
+      "templateId": "duo-monochrome-profile",
+      "title": "同款侧脸",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/duo-monochrome-profile_9x16_v01.webp",
+      "sha256": "f388f0ce5b420c305ee6b990a03f0b32f7bb544578302e3daed7f197af707ed8",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/duo-monochrome-profile_9x16_v01.json",
+      "approvedAt": "2026-10-05T00:00:00.000+08:00"
+    },
+    {
+      "templateId": "duo-monochrome-laugh",
+      "title": "搭肩大笑",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/duo-monochrome-laugh_9x16_v01.webp",
+      "sha256": "0f7a46a2367e51abf73f9b9b059947396d3cf30920dfbe1776f5fd0370a97b7f",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/duo-monochrome-laugh_9x16_v01.json",
+      "approvedAt": "2026-10-05T00:00:00.000+08:00"
+    },
+    {
+      "templateId": "duo-ballet-barre",
+      "title": "把杆前",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/duo-ballet-barre_9x16_v01.webp",
+      "sha256": "192e56dfebb98027a67e0a80d961777563fbd3753ff4caa69cd3895324ac3804",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/duo-ballet-barre_9x16_v01.json",
+      "approvedAt": "2026-10-05T00:00:00.000+08:00"
+    },
+    {
+      "templateId": "duo-ballet-stretch",
+      "title": "坐在腿上",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/duo-ballet-stretch_9x16_v01.webp",
+      "sha256": "444948cab5bb32b7bb263f062070089ab77aee0d8a84d29d76d0c928f1bf298c",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/duo-ballet-stretch_9x16_v01.json",
+      "approvedAt": "2026-10-05T00:00:00.000+08:00"
+    },
+    {
+      "templateId": "duo-denim-crates",
+      "title": "木箱并排",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/duo-denim-crates_9x16_v01.webp",
+      "sha256": "320acc02e8bbf90fb280ebe9ad80447e8596b0ffd584ca1b0fa9b289a173c91b",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/duo-denim-crates_9x16_v01.json",
+      "approvedAt": "2026-10-05T00:00:00.000+08:00"
+    },
+    {
+      "templateId": "duo-denim-fly",
+      "title": "举高飞起来",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/duo-denim-fly_9x16_v01.webp",
+      "sha256": "82fb77ce341ba0df8858bce104a08d3ba19e90ec2b6ee931b366f17da79990eb",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/duo-denim-fly_9x16_v01.json",
+      "approvedAt": "2026-10-05T00:00:00.000+08:00"
+    },
+    {
+      "templateId": "duo-tulips-lap",
+      "title": "花里抱猫",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/duo-tulips-lap_9x16_v01.webp",
+      "sha256": "f68f40ac4711d327bc3b5d42d46d602c7c16a4fd2a9b5776fa4933b10e4e562d",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/duo-tulips-lap_9x16_v01.json",
+      "approvedAt": "2026-10-05T00:00:00.000+08:00"
+    },
+    {
+      "templateId": "duo-tulips-sniff",
+      "title": "闻一闻",
+      "orientation": "portrait",
+      "size": "720x1280",
+      "path": "tools/imagegen/out/reference-v1/masters/duo-tulips-sniff_9x16_v01.webp",
+      "sha256": "27a79b0f3e13127481b3d5f4592ea915ce27af9d949cc23674c7452f59f5eacf",
+      "metadata": "tools/imagegen/out/reference-v1/masters/metadata/duo-tulips-sniff_9x16_v01.json",
+      "approvedAt": "2026-10-05T00:00:00.000+08:00"
     }
   ],
   "updatedAt": "2026-08-22T15:02:20.036Z",

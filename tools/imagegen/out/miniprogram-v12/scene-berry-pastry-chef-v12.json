@@ -1,0 +1,13 @@
+{
+  "id": "berry-pastry-chef",
+  "title": "半空接球",
+  "samplePet": "golden",
+  "prompt": "Use case: photorealistic candid pet photograph by a top pet photographer, natural and full of personality, the kind of photo an owner would call the best picture of their pet ever. Image 1 is the identity reference only, not a pose or background template. Keep the same adult golden retriever from Image 1, with natural golden coat, floppy ears, dark eyes and black nose. One pet only, no people, no human hands. The pet wears only the garments or accessories named in the scene, and nothing at all if the scene says no clothing. Scene and moment: A vivid lime-green seamless studio backdrop with crisp high-speed flash. The pet is frozen mid-air in a joyful leap, all four paws off the ground, mouth wide open about to catch a soft red fabric ball right in front of its face, ears flipped up and flying, fur rippling with motion. The pet wears a small sunflower-yellow bandana. Energetic, sharp, perfectly frozen action with a soft shadow on the floor below. Framing: Full body in mid-air: the pet is about 60-75% of frame height with visible space between its paws and the floor. The photograph must capture one specific, fleeting and adorable moment with a little story and one memorable detail, such as paw pads, a tongue tip, a squished cheek, a tilted head or a guilty glance, so that any owner instantly thinks: so cute, I want this photo of my pet. The expression is lively and specific, never blank or stiff. Photographic qualities: one consistent natural light direction, true-to-life fur with individual strands and slight unevenness, moist eyes with small catchlights, believable contact shadows, a 50-85mm lens with natural depth of field, refined but natural colour grading and gentle film grain. Avoid: stiff studio posing, symmetric passport-style composition, dull or muddy tones, plastic or airbrushed fur, CGI or illustration look, cartoonish costumes, extra limbs, duplicate pets, floating body, pasted edges, text, letters, numbers, logos or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/source/dog-golden.jpg",
+  "referenceSha256": "1b6348ce4f6cd1d12f4c93d5f2a8a5c21847e0ce9bc43e4326c1ee89f7a89eef",
+  "output": "tools/imagegen/out/scenes/scene-berry-pastry-chef-v12.jpg",
+  "sha256": "f063d9ca752d150828e12abd3e711812631a04c079e59c6d95759907cd502bfd",
+  "review": "pending-visual-review"
+}

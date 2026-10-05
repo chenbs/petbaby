@@ -11,9 +11,11 @@ test("首页样片留在包内，其他玩法样片从静态 COS 读取", () => 
   const local = new Set(paths.filter((url) => url.startsWith("/assets/")));
   const remote = paths.filter((url) => !url.startsWith("/assets/"));
   // 2026-09 互动星尘页（PL-15）下线，首页卡片图 pl-15.jpg 随之删除：30 → 29。
+  // 2026-10：人宠写真封面不进首页包，首页写真样片键不变 → 仍是 29。
   assert.equal(local.size, 29);
   // 同上，互动组 3 张远程样片（stardust/meadow/sunset）移除：93 → 90。
-  assert.equal(remote.length, 90 + 12); // 2026-10：写真扩到 36 套，新增美短 / 柯基 / 三花各 4 张远程样片
+  // 2026-10：写真扩到 36 套（+12），人宠写真 8 组 × 2 镜头（+16）
+  assert.equal(remote.length, 90 + 12 + 16);
   for (const id of ["berry-pastry-chef", "ballet-backstage"]) {
     assert.equal(manifest.scenes[id], "/assets/home-effects/scenes/" + id + ".jpg");
   }

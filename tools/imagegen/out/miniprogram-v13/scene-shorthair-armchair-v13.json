@@ -1,0 +1,13 @@
+{
+  "id": "shorthair-armchair",
+  "title": "滑板少年",
+  "samplePet": "husky",
+  "prompt": "Use case: a real photograph from a professional pet photo studio session, shot on a full-frame camera by an experienced pet photographer, the kind of image studios print and frame. Image 1 is the identity reference only, not a pose or background template. Keep the same adult Siberian Husky from Image 1, with grey-and-white coat, classic face mask, upright ears and ice-blue eyes. One pet only, no people, no human hands. The pet wears only the garments or accessories named in the scene, and nothing at all if the scene says no clothing. Studio set and moment: A real pet photo studio with a light grey seamless paper backdrop curving into the floor and a smooth grey floor. The husky stands confidently on a pastel-green skateboard rolling across the studio floor, the wheels slightly motion-blurred, ears back in the wind, mouth open in a happy pant. It wears a small orange bandana. A panned shot with a sense of motion and a sharp face. Framing: Side view, full body: the dog and skateboard fill about 60-70% of the frame width. This is studio pet portraiture, not a lifestyle scene: only the seamless backdrop, the floor and the one or two props named above; no rooms, furniture, windows, plants, shelves or decorations beyond them. The fun comes from the pet's own action and expression with the prop, caught at a real, slightly imperfect moment. Make it look like a genuine camera photograph, not AI art: slightly asymmetric natural composition, the pet not perfectly centred, fur a little messy where it naturally would be, real stray hairs, believable weight and contact with the floor, a soft natural shadow from one key light, 85mm lens at about f/2.8 with focus on the eyes and gentle falloff, honest colours with mild contrast, faint paper wrinkles and floor scuffs on the backdrop, fine sensor grain. Avoid: glossy over-sharpened AI look, plastic or airbrushed fur, glowing rim light, overly saturated colours, perfect symmetry, staged lifestyle sets, prop clutter, extra props, cartoonish costumes, human-like poses, extra limbs, duplicate pets, floating body, pasted edges, text, letters, numbers, logos or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/source/dog-husky.jpg",
+  "referenceSha256": "41280a50599eb23fa200e8851d1c6a12762398d62f868fe29e18c315eff87a8d",
+  "output": "tools/imagegen/out/scenes/scene-shorthair-armchair-v13.jpg",
+  "sha256": "aa756fb2baa92681f604c1ea1fe2c358104eb94bc205a301ffe1692da4e7ae83",
+  "review": "pending-visual-review"
+}

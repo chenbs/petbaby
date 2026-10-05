@@ -1,0 +1,13 @@
+{
+  "id": "museum-curator",
+  "title": "第一天上学",
+  "samplePet": "calico",
+  "prompt": "Use case: a real photograph from a professional pet photo studio session, shot on a full-frame camera by an experienced pet photographer, the kind of image studios print and frame. Image 1 is the identity reference only, not a pose or background template. Keep the same adult calico cat from Image 1, with white, orange and black patches, white chest and paws, and green-amber eyes. One pet only, no people, no human hands. The pet wears only the garments or accessories named in the scene, and nothing at all if the scene says no clothing. Studio set and moment: A real pet photo studio with a pale sky-blue seamless paper backdrop curving into the floor and soft even light. The cat sits upright on a small natural-wood children's chair, wearing a tiny round yellow school hat and a small red backpack, front paws together, looking up at the camera with big curious eyes, a little unsure. Nothing else in the frame. Framing: Vertical 3:4 photograph; the pet is the clear hero at about 45-65% of frame height, with plenty of plain backdrop around it. This is studio pet portraiture, not a lifestyle scene: only the seamless backdrop, the floor and the one or two props named above; no rooms, furniture, windows, plants, shelves or decorations beyond them. The fun comes from the pet's own action and expression with the prop, caught at a real, slightly imperfect moment. Make it look like a genuine camera photograph, not AI art: slightly asymmetric natural composition, the pet not perfectly centred, fur a little messy where it naturally would be, real stray hairs, believable weight and contact with the floor, a soft natural shadow from one key light, 85mm lens at about f/2.8 with focus on the eyes and gentle falloff, honest colours with mild contrast, faint paper wrinkles and floor scuffs on the backdrop, fine sensor grain. Avoid: glossy over-sharpened AI look, plastic or airbrushed fur, glowing rim light, overly saturated colours, perfect symmetry, staged lifestyle sets, prop clutter, extra props, cartoonish costumes, human-like poses, extra limbs, duplicate pets, floating body, pasted edges, text, letters, numbers, logos or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/scenes-v7/identity-calico-v1.jpg",
+  "referenceSha256": "2a1289ecf552a6faf2879cfd13faf5cf4cd8cc2446e589e8566f1af8cca4f048",
+  "output": "tools/imagegen/out/scenes/scene-museum-curator-v13.jpg",
+  "sha256": "d872cde76870b2117614ec7beb81175331b622bde0340218e2486efdd2eb5678",
+  "review": "pending-visual-review"
+}

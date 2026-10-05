@@ -1,0 +1,13 @@
+{
+  "id": "shorthair-books",
+  "title": "吹风机造型",
+  "samplePet": "afghan",
+  "prompt": "Use case: a real photograph from a professional pet photo studio session, shot on a full-frame camera by an experienced pet photographer, the kind of image studios print and frame. Image 1 is the identity reference only, not a pose or background template. Keep the same adult Afghan Hound from Image 1, with a long silky cream-and-golden coat, darker muzzle and long narrow head. One pet only, no people, no human hands. The pet wears only the garments or accessories named in the scene, and nothing at all if the scene says no clothing. Studio set and moment: A real pet photo studio with a soft peach seamless paper backdrop curving into the floor and flattering soft light. A small retro mint-green hair dryer rests on the floor just out of the dog's way and blows a gentle stream of air at it, so the long silky ears and the fur on its head lift and flow sideways in the breeze, while the dog keeps its chin up and gives the camera a calm, elegant side glance, completely unbothered. It wears a thin gold-tone collar. Funny but elegant. Framing: Medium close-up: head and shoulders fill about 60-70% of the frame, the flowing fur clearly visible. This is studio pet portraiture, not a lifestyle scene: only the seamless backdrop, the floor and the one or two props named above; no rooms, furniture, windows, plants, shelves or decorations beyond them. The fun comes from the pet's own action and expression with the prop, caught at a real, slightly imperfect moment. Make it look like a genuine camera photograph, not AI art: slightly asymmetric natural composition, the pet not perfectly centred, fur a little messy where it naturally would be, real stray hairs, believable weight and contact with the floor, a soft natural shadow from one key light, 85mm lens at about f/2.8 with focus on the eyes and gentle falloff, honest colours with mild contrast, faint paper wrinkles and floor scuffs on the backdrop, fine sensor grain. Avoid: glossy over-sharpened AI look, plastic or airbrushed fur, glowing rim light, overly saturated colours, perfect symmetry, staged lifestyle sets, prop clutter, extra props, cartoonish costumes, human-like poses, extra limbs, duplicate pets, floating body, pasted edges, text, letters, numbers, logos or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/scenes-v9/identity-afghan-v1.jpg",
+  "referenceSha256": "add22e25f03efdc94ff271912311ce0cecc1305c4b0cfea90ce2b1436f534bce",
+  "output": "tools/imagegen/out/scenes/scene-shorthair-books-v13.jpg",
+  "sha256": "ce3a51957ec758317aa9f92a8835acfeda3ce9a1e00afaf1b35df86e21052e6d",
+  "review": "pending-visual-review"
+}

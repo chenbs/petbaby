@@ -1,5 +1,5 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
-<view class="{{skinClass}} page page-tabbar art-brand layout-matrix art-photo-page {{segment === 'art' && packageMode !== 'single' ? 'art-photo-page-bundle' : ''}}">
+<view class="{{skinClass}} page page-tabbar art-brand layout-matrix art-photo-page {{segment === 'art' && artMode === 'pet' && packageMode !== 'single' ? 'art-photo-page-bundle' : ''}}">
   <!-- 分段吸顶：往下滑时仍可切换；外层垫页面底色，内容滑过时不透出来 -->
   <view class="create-segments-bar">
     <view class="create-segments" aria-role="tablist">
@@ -10,11 +10,37 @@
   <t-skeleton wx:if="{{loading}}" type="grid" count="4"></t-skeleton>
   <t-notice wx:elif="{{error}}" type="error" message="{{error}}"></t-notice>
 
-  <!-- 写真馆 -->
+  <!-- 写真馆：宠物写真 / 人宠写真（2026-10）。两种写真共用一个写真馆，用二级切换分开 -->
   <block wx:elif="{{segment === 'art'}}">
+    <view wx:if="{{duoCount}}" class="art-modes chips" aria-role="tablist">
+      <view wx:for="{{artModes}}" wx:key="id" class="chip {{artMode === item.id ? 'chip-on' : ''}}" data-id="{{item.id}}" aria-role="tab" aria-selected="{{artMode === item.id}}" hover-class="chip-hover" bindtap="chooseArtMode">{{item.label}}<text class="art-mode-count">{{item.id === 'duo' ? duoCount : sceneCount}}</text></view>
+    </view>
+    <block wx:if="{{artMode === 'duo'}}">
     <view class="art-heading">
-      <view class="title">一张照片，拍出 24 种样子</view>
-      <text class="muted">影棚级布光与造型，不用预约。每套 1 张，可以单独保存。</text>
+      <view class="title">我和我家的，同框一组</view>
+      <text class="muted">上传一张我的照片和一张宠物照，换成我们俩。{{duoPriceText}}</text>
+    </view>
+    <view wx:for="{{duoGroups}}" wx:for-item="group" wx:key="id" class="art-collection duo-group">
+      <view class="art-section-head">
+        <view class="section-title">{{group.title}}</view>
+        <text class="small">{{group.description}}</text>
+      </view>
+      <view class="art-grid">
+        <view wx:for="{{group.shots}}" wx:key="templateId" class="art-item duo-shot" data-id="{{item.templateId}}" aria-role="button" aria-label="人宠写真{{group.title}} · {{item.title}}" hover-class="chip-hover" bindtap="openDuoTemplate">
+          <view class="art-image-wrap">
+            <image wx:if="{{item.sampleUrl}}" class="duo-image" src="{{item.sampleUrl}}" mode="aspectFill" webp data-id="{{item.templateId}}" binderror="onDuoImageError" lazy-load />
+            <view wx:else class="duo-image art-image-empty">样片暂不可用</view>
+            <text class="duo-badge">主人 + 宠物</text>
+          </view>
+          <view class="art-name">{{item.title}}</view>
+        </view>
+      </view>
+    </view>
+    </block>
+    <block wx:else>
+    <view class="art-heading">
+      <view class="title">一张照片，拍出 {{sceneCount}} 种样子</view>
+      <text class="muted">布景、造型和那一下的小表情都准备好了，不用预约。每套 1 张，可以单独保存。</text>
     </view>
     <view class="art-package-options">
       <view wx:for="{{['single', 'ten', 'all']}}" wx:key="*this" class="art-package {{packageMode === item ? 'art-package-on' : ''}}" data-mode="{{item}}" aria-role="radio" aria-checked="{{packageMode === item}}" bindtap="choosePackage">
@@ -37,6 +63,7 @@
         </view>
       </view>
     </view>
+    </block>
   </block>
 
   <!-- 如果我是人：40 款造型，按标签筛选，点哪张直达哪张 -->
@@ -83,7 +110,7 @@
     </view>
   </block>
 </view>
-<view wx:if="{{segment === 'art' && !loading && !error}}" class="{{skinClass}} art-bundle-dock">
+<view wx:if="{{segment === 'art' && artMode === 'pet' && !loading && !error}}" class="{{skinClass}} art-bundle-dock">
   <view class="dock-meta"><text class="dock-count">{{dockText}}</text><text class="small">{{packageMode === 'single' ? '先看预览，满意再保存' : '下一步选我的照片'}}</text></view>
   <t-button wx:if="{{packageMode !== 'single'}}" type="primary" anim="{{animType}}" bindtap="startBundle">下一步</t-button>
 </view>

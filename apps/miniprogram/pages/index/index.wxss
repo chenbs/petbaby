@@ -1032,3 +1032,85 @@
   z-index: 2;
   color: var(--primary);
 }
+
+
+/* ---------- 4. 写真馆（2026-10）：宠物写真 / 人宠写真两张入口卡 ---------- */
+.studio-section {
+  margin-top: var(--space-6);
+}
+
+.studio-head {
+  margin-bottom: var(--space-3);
+}
+
+.studio-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--gap-item);
+}
+
+.studio-card {
+  position: relative;
+  overflow: hidden;
+  border: var(--card-border);
+  border-radius: var(--card-radius);
+  background: var(--card-background);
+  box-shadow: var(--shadow-card);
+}
+
+/* 两张卡同高：写真场景 3:4，人宠母版 9:16 也裁进同一个 3:4 框（人物与宠物都在画面中部） */
+.studio-card-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: var(--ratio-card);
+  background: var(--surface);
+}
+
+.studio-card-copy {
+  display: grid;
+  gap: var(--space-0);
+  padding: var(--space-2) var(--space-3) var(--space-3);
+}
+
+.studio-card-title {
+  color: var(--text-primary);
+  font-family: var(--skin-title-font, inherit);
+  font-size: var(--font-h3);
+  font-weight: var(--fw-black);
+}
+
+.studio-card-sub {
+  overflow: hidden;
+  color: var(--text-secondary);
+  font-size: var(--small-size);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.studio-card-tag {
+  top: var(--space-2);
+  left: var(--space-2);
+}
+
+.studio-strip-tag {
+  position: absolute;
+  left: var(--space-1);
+  bottom: var(--space-1);
+  z-index: 2;
+  padding: var(--space-0) var(--space-1);
+  border-radius: var(--radius-sm);
+  background: var(--mask);
+  color: var(--on-image-primary);
+  font-size: var(--eyebrow-size);
+}
+
+.skin-brand .studio-card {
+  border: 2rpx solid var(--border);
+  border-radius: 0;
+}
+
+.skin-brand .studio-card-title {
+  padding-left: var(--space-2);
+  border-left: 6rpx solid var(--secondary);
+}

@@ -7,6 +7,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   buildImageTemplatePrompt,
+  duoPhotoGroups,
   getImageTemplate,
   getImageTemplateCandidateCount,
   imageTemplateEntries,
@@ -16,12 +17,12 @@ import {
 } from "@/server/image-template-registry";
 
 describe("image template registry", () => {
-  it("登记 11 个入口、120 个独立模板，并只公开已上线模板", () => {
+  it("登记 12 个入口、136 个独立模板，并只公开已上线模板", () => {
     const catalog = listImageTemplates({ includePending: true });
-    expect(catalog).toHaveLength(120);
-    expect(listImageTemplates()).toHaveLength(116);
-    expect(imageTemplateEntries).toHaveLength(11);
-    expect(listPublicImageTemplateEntries()).toHaveLength(11);
+    expect(catalog).toHaveLength(136);
+    expect(listImageTemplates()).toHaveLength(132);
+    expect(imageTemplateEntries).toHaveLength(12);
+    expect(listPublicImageTemplateEntries()).toHaveLength(12);
     const humanEntry = listPublicImageTemplateEntries().find((entry) => entry.id === "human");
     expect(humanEntry?.title).toBe("如果我是人");
     expect(humanEntry?.templates.map((template) => template.templateId)).toEqual([
@@ -53,7 +54,7 @@ describe("image template registry", () => {
 
   it("艺术写真公开为独立单图模板，不改变历史母版目录", () => {
     const template = getImageTemplate("pet-art-photo");
-    expect(template).toMatchObject({ entryId: "art", subjectMode: "pet", status: "live", version: "v11", sampleStorageKey: "samples/scene-window-morning-v3-396d098a6999.jpg" });
+    expect(template).toMatchObject({ entryId: "art", subjectMode: "pet", status: "live", version: "v13", sampleStorageKey: "samples/scene-window-morning-v3-396d098a6999.jpg" });
     expect(template?.masterStorageKey).toBeUndefined();
     expect(listImageTemplates().some((item) => item.templateId === "pet-art-photo")).toBe(false);
     expect(listPublicImageTemplateEntries().find((entry) => entry.id === "art")?.templates[0]?.templateId).toBe("pet-art-photo");
@@ -156,8 +157,8 @@ describe("image template registry", () => {
       templates: Array<{ templateId: string; path: string; sha256: string; sampleStorageKey: string }>;
     };
     const live = listImageTemplates().filter((item) => item.subjectMode !== "pet-human");
-    expect(masterIndex.templates).toHaveLength(80);
-    expect(previewIndex.templates).toHaveLength(80);
+    expect(masterIndex.templates).toHaveLength(96);
+    expect(previewIndex.templates).toHaveLength(96);
     const liveIds = new Set(live.map((item) => item.templateId));
     const indexedMasters = masterIndex.templates.filter((item) => liveIds.has(item.templateId));
     const indexedPreviews = previewIndex.templates.filter((item) => liveIds.has(item.templateId));
@@ -197,5 +198,25 @@ describe("image template registry", () => {
       expect(template.sampleStorageKey).toBe(preview?.sampleStorageKey);
       expect(template.sampleStorageKey).toMatch(/\.webp$/);
     }
+  });
+
+  it("人宠写真 8 组 × 2 镜头都走主人 + 宠物链路，并按组下发", () => {
+    const entry = listPublicImageTemplateEntries().find((item) => item.id === "duo");
+    expect(entry?.title).toBe("人宠写真");
+    expect(duoPhotoGroups).toHaveLength(8);
+    expect(entry?.templates).toHaveLength(16);
+    for (const group of duoPhotoGroups) {
+      const shots = entry!.templates.filter((template) => template.groupId === group.id);
+      expect(shots, group.id).toHaveLength(2);
+    }
+    for (const template of entry!.templates) {
+      expect(template).toMatchObject({ subjectMode: "owner-pet", status: "live", size: "720x1280" });
+      expect(template.sampleStorageKey).not.toBe(template.masterStorageKey);
+      const prompt = buildImageTemplatePrompt(template);
+      expect(prompt).toContain("Image 2 is the owner's identity reference. Image 3 is the pet's identity reference.");
+      expect(prompt).toContain("pet-and-owner studio art portrait session");
+      expect(imageTemplateSupportsReroll(template)).toBe(true);
+    }
+    expect(buildImageTemplatePrompt(getImageTemplate("together-sofa-yawn")!)).not.toContain("pet-and-owner studio art portrait session");
   });
 });

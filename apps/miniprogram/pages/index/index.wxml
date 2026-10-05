@@ -2,7 +2,7 @@
 
 <!--
   首页（2026-09 改版，2026-10 按 themes.html 补齐四套主题的模块呈现）：
-  宠物名片（含今日一格）→ 如果我是人 → 麻麻精选 → 挑一个玩法。
+  宠物名片（含今日一格）→ 如果我是人 → 麻麻精选 → 写真馆（宠物写真 / 人宠写真）→ 挑一个玩法。
   四套主题共用这一份 DOM；软卡 / 档案页 / 角色面板 / 电影票根这类差异全部由 .skin-<id> 的样式决定，
   装饰节点（邮戳、编号、扫描线、胶带）写在这里，由各主题决定显示与否。
 -->
@@ -72,8 +72,8 @@
     <text class="human-card-cap">上传一张我的正脸照，看看我变成人是什么样子</text>
   </view>
 
-  <!-- 3. 麻麻精选：主卡 + 精选横滑 + 写真横滑（首页只保留这两条横滑） -->
-  <view wx:if="{{bossTemplates.length || bossScenes.length}}" class="section boss-section">
+  <!-- 3. 麻麻精选：主卡 + 精选横滑 -->
+  <view wx:if="{{bossTemplates.length}}" class="section boss-section">
     <view class="row boss-head"><view class="section-title flush">麻麻精选</view><text class="small boss-note">{{bossNote || copy[themeId].note}}</text></view>
     <view class="boss-stamp" aria-hidden="true"><text>麻麻</text><text>精选</text></view>
     <view wx:if="{{bossCoverUrl && bossLead}}" class="boss-lead" data-entry="boss" data-template="{{bossLead.templateId}}" aria-role="button" hover-class="pet-feature-hover" bindtap="startTemplate">
@@ -89,18 +89,34 @@
         <view class="boss-name">{{item.title}}</view>
       </view>
     </scroll-view>
-    <view wx:if="{{bossScenes.length}}" class="row boss-art-row" aria-role="button" bindtap="openArtStudio">
-      <text class="boss-art-heading">写真也值得收藏</text><text class="small">{{artPriceText}} ›</text>
+  </view>
+
+  <!--
+    4. 写真馆（2026-10，原「写真也值得收藏」）：两种写真并排成两张入口卡，一眼看出既有宠物写真、也有主人 + 宠物同框的人宠写真。
+    下面一条横滑把两种样片混排，人宠样片带「人宠」角标；点样片直达制作页，点卡片进写真馆对应的那一栏。
+  -->
+  <view wx:if="{{bossScenes.length || duoCovers.length}}" class="section studio-section">
+    <view class="row studio-head" aria-role="button" data-mode="pet" bindtap="openArtStudio"><view class="section-title flush">写真馆</view><text class="small">{{duoCovers.length ? '单宠 · 人宠同框' : artPriceText}} ›</text></view>
+    <view class="studio-cards">
+      <view wx:if="{{bossScenes.length}}" class="studio-card" data-mode="pet" aria-role="button" aria-label="宠物写真，{{artPriceText}}" hover-class="pet-feature-hover" bindtap="openArtStudio">
+        <image class="studio-card-image" src="{{bossScenes[0].sampleUrl}}" mode="aspectFill" lazy-load />
+        <view class="studio-card-copy"><view class="studio-card-title">宠物写真</view><text class="studio-card-sub">{{artPriceText}}</text></view>
+      </view>
+      <view wx:if="{{duoCovers.length}}" class="studio-card studio-card-duo" data-mode="duo" aria-role="button" aria-label="人宠写真，{{duoGroupCount}} 组" hover-class="pet-feature-hover" bindtap="openArtStudio">
+        <text class="feed-tag studio-card-tag">新</text>
+        <image class="studio-card-image" src="{{duoCovers[0].sampleUrl}}" mode="aspectFill" lazy-load />
+        <view class="studio-card-copy"><view class="studio-card-title">人宠写真</view><text class="studio-card-sub">{{duoGroupCount}} 组 · 我和{{pet ? pet.name : '它'}}同框</text></view>
+      </view>
     </view>
-    <scroll-view wx:if="{{bossScenes.length}}" class="boss-track" scroll-x enable-flex show-scrollbar="{{false}}">
-      <view wx:for="{{bossScenes}}" wx:key="id" class="boss-item" data-id="{{item.id}}" aria-role="button" aria-label="{{item.title}}" bindtap="startBossScene">
-        <view class="boss-thumb-wrap"><image class="boss-thumb boss-thumb-scene" src="{{item.sampleUrl}}" mode="aspectFill" lazy-load /></view>
+    <scroll-view class="boss-track" scroll-x enable-flex show-scrollbar="{{false}}">
+      <view wx:for="{{studioStrip}}" wx:key="key" class="boss-item" data-kind="{{item.kind}}" data-id="{{item.id}}" aria-role="button" aria-label="{{item.kind === 'duo' ? '人宠写真 ' : ''}}{{item.title}}" bindtap="openStudioItem">
+        <view class="boss-thumb-wrap"><text wx:if="{{item.kind === 'duo'}}" class="studio-strip-tag">人宠</text><image class="boss-thumb {{item.kind === 'duo' ? 'boss-thumb-portrait' : 'boss-thumb-scene'}}" src="{{item.sampleUrl}}" mode="aspectFill" lazy-load /></view>
         <view class="boss-name">{{item.title}}</view>
       </view>
     </scroll-view>
   </view>
 
-  <!-- 4. 挑一个玩法：分类 chip 在当前页筛选；双列瀑布流按每张图的原始比例排，不裁切 -->
+  <!-- 5. 挑一个玩法：分类 chip 在当前页筛选；双列瀑布流按每张图的原始比例排，不裁切 -->
   <view class="section">
     <view class="row"><view class="section-title flush">挑一个玩法</view><text class="small" aria-role="button" bindtap="openAllPlays">全部 ›</text></view>
     <scroll-view class="home-chips chip-scroll" scroll-x show-scrollbar="{{false}}"><view class="chip-track">

@@ -22,7 +22,7 @@
       </view>
       <view wx:elif="{{activeTemplate && templateId !== 'pet-art-photo'}}" class="section">
         <view class="section-title">看看成品风格</view>
-        <image class="solo-template-image {{activeTemplate.sampleShape === 'wide' ? 'solo-wide' : ''}}" src="{{activeTemplate.sampleUrl}}" mode="aspectFit" />
+        <image class="solo-template-image {{activeTemplate.sampleShape === 'wide' ? 'solo-wide' : ''}}" src="{{activeTemplate.hdUrl || activeTemplate.sampleUrl}}" mode="aspectFit" />
       </view>
       <view wx:if="{{templateId === 'pet-art-photo' && sceneOptions.length}}" class="section">
         <view class="section-title">写真场景 · {{sceneOptions.length}} 套</view>

@@ -28,7 +28,7 @@
       <view class="art-grid">
         <view wx:for="{{group.shots}}" wx:key="templateId" class="art-item duo-shot" data-id="{{item.templateId}}" aria-role="button" aria-label="人宠写真{{group.title}} · {{item.title}}" hover-class="chip-hover" bindtap="openDuoTemplate">
           <view class="art-image-wrap">
-            <image wx:if="{{item.sampleUrl}}" class="duo-image" src="{{item.sampleUrl}}" mode="aspectFill" webp data-id="{{item.templateId}}" binderror="onDuoImageError" lazy-load />
+            <image wx:if="{{item.sampleUrl}}" class="duo-image" src="{{item.hdUrl || item.sampleUrl}}" mode="aspectFill" webp data-id="{{item.templateId}}" binderror="onDuoImageError" lazy-load />
             <view wx:else class="duo-image art-image-empty">样片暂不可用</view>
             <text class="duo-badge">主人 + 宠物</text>
           </view>

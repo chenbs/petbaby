@@ -97,7 +97,7 @@ themedPage({
       const samples = artPlugin && artPlugin.samples || {};
       const bossScenes = (curation ? curation.sceneIds : BOSS_SCENE_IDS).map((id) => {
         const scene = (samples.sceneOptions || []).find((item) => item.id === id);
-        return scene && { id, title: scene.title, sampleUrl: samples.sceneUrls && samples.sceneUrls[id] || "" };
+        return scene && { id, title: scene.title, sampleUrl: samples.sceneUrls && samples.sceneUrls[id] || "", hdUrl: samples.sceneHdUrls && samples.sceneHdUrls[id] || "" };
       }).filter(Boolean);
 
       // 人宠写真：每组取第一个镜头作封面（同一组是同一场拍摄的两个镜头）

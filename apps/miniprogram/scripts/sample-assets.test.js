@@ -65,3 +65,30 @@ test("模板和场景缩略图保持来源方向及预期比例", async () => {
     assert.ok(Math.abs(meta.width / meta.height - 0.75) < 0.02, id);
   }
 });
+
+test("写真、全部图片模板与玩法封面都有高清样片，大图位置优先用高清版", () => {
+  // 制作页大预览按 2–3 倍屏要 ~900 像素宽，缩略图（420 / 330 宽）放大后会发虚
+  assert.deepEqual(Object.keys(manifest.scenesHd).sort(), Object.keys(manifest.scenes).sort());
+  const duo = Object.keys(manifest.templates).filter((id) => id.startsWith("duo-"));
+  assert.equal(duo.length, 16);
+  // 其他玩法详情页（如果我是人、和我合照等）同样是大预览，所以全部模板都有高清版
+  const templateIds = Object.keys(manifest.templates).filter((id) => id !== "pet-art-photo");
+  for (const id of templateIds) assert.ok(manifest.templatesHd[id], id + " 缺少高清样片");
+  // 「如果我是人」40 款没有端上缩略图（走服务端样片），但详情页大预览同样用高清版
+  assert.equal(Object.keys(manifest.templatesHd).filter((id) => id.startsWith("human-effect-")).length, 40);
+  assert.equal(Object.keys(manifest.templatesHd).length, templateIds.length + 40);
+  // 图文 / 短片详情页的全宽封面
+  assert.deepEqual(Object.keys(manifest.pluginsHd).sort(), Object.keys(manifest.plugins).sort());
+  for (const url of Object.values(manifest.scenesHd).concat(Object.values(manifest.templatesHd), Object.values(manifest.pluginsHd))) {
+    assert.match(url, /^https:\/\/babykitty-static-one-1252454114\.cos\.ap-shanghai\.myqcloud\.com\/samples\/miniprogram-effects\/v2\/(?:scenesHd|templatesHd|pluginsHd)\/[a-z0-9-]+-[a-f0-9]{64}\.jpg$/);
+  }
+  assert.equal(pluginSample({ id: "pl-19", samples: {} }).samples.heroHdUrl, manifest.pluginsHd["pl-19"]);
+  const plugin = pluginSample({ id: "pl-10", samples: { sceneUrls: { "window-morning": "/x.jpg" } } });
+  assert.equal(plugin.samples.sceneHdUrls["window-morning"], manifest.scenesHd["window-morning"]);
+  const [entry] = imageEntries([{ id: "duo", templates: [{ templateId: duo[0], sampleUrl: "/s" }, { templateId: "pet-wanted-poster", sampleUrl: "/s" }] }]);
+  assert.equal(entry.templates[0].hdUrl, manifest.templatesHd[duo[0]]);
+  assert.equal(entry.templates[1].hdUrl, manifest.templatesHd["pet-wanted-poster"]);
+  // 不在清单里的模板回落到服务端样片
+  const [unknown] = imageEntries([{ id: "fun", templates: [{ templateId: "not-registered", sampleUrl: "/api/image-templates/not-registered/sample" }] }]);
+  assert.equal(unknown.templates[0].hdUrl, unknown.templates[0].sampleUrl);
+});

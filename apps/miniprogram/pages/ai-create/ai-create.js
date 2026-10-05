@@ -44,7 +44,11 @@ themedPage({
       const artPlugin = artSource ? pluginSample(artSource) : null;
       const unlockPrice = artSource && artSource.pricing && artSource.pricing.unlockPrice || null;
       const sceneOptions = artPlugin && artPlugin.samples && artPlugin.samples.sceneOptions
-        ? artPlugin.samples.sceneOptions.map((item) => Object.assign({}, item, { url: artPlugin.samples.sceneUrls && artPlugin.samples.sceneUrls[item.id] || "" }))
+        ? artPlugin.samples.sceneOptions.map((item) => Object.assign({}, item, {
+          url: artPlugin.samples.sceneUrls && artPlugin.samples.sceneUrls[item.id] || "",
+          // 大预览用原图分辨率的高清样片，缩略图条继续用小图
+          hdUrl: artPlugin.samples.sceneHdUrls && artPlugin.samples.sceneHdUrls[item.id] || ""
+        }))
         : [];
       const selectedPet = query && query.petId ? pets.find((item) => item.id === query.petId) : pets.find((item) => item.isDefault) || pets[0];
       if (query && query.petId && !selectedPet) throw new Error("这只宠物的档案不可用，请重新选择");
@@ -91,7 +95,8 @@ themedPage({
     const template = this.data.activeTemplate;
     const art = this.data.templateId === "pet-art-photo";
     const scene = this.data.selectedScene;
-    const previewUrl = art ? scene && scene.url || "" : template && template.sampleUrl || "";
+    // 大预览按 2–3 倍屏要 ~900 像素宽，用高清样片；缩略图只有 420 / 330 宽，放大后会发虚
+    const previewUrl = art ? scene && (scene.hdUrl || scene.url) || "" : template && (template.hdUrl || template.sampleUrl) || "";
     const previewShape = art ? "card" : template && template.sampleShape === "wide" ? "wide" : "portrait";
     this.setData({ previewUrl, previewShape, effectScrollTarget: "effect-" + (art ? this.data.sceneId : this.data.templateId), effectScrollLeft: this.centeredScrollLeft(art) });
   },

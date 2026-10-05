@@ -4,13 +4,15 @@ import { AsyncLocalStorage } from "node:async_hooks";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { createDatabase, databaseContext, type Database } from "./connection";
-import { migrateDatabase } from "./migrate";
+import { listMigrationNames, migrateDatabase } from "./migrate";
 export type { Database, SqlRow } from "./connection";
 
 declare global {
   var __petbabyDatabasePromise: Promise<Database> | undefined;
   var __petbabyDatabaseReady: Promise<void> | undefined;
   var __petbabyRollbackEffects: AsyncLocalStorage<Array<() => Promise<void>>> | undefined;
+  var __petbabyMigrationNames: string | undefined;
+  var __petbabyMigrationCheckedAt: number | undefined;
 }
 
 export async function getDatabase(): Promise<Database> {
@@ -20,7 +22,28 @@ export async function getDatabase(): Promise<Database> {
   const database = await globalThis.__petbabyDatabasePromise;
   globalThis.__petbabyDatabaseReady ??= migrateDatabase(database);
   await globalThis.__petbabyDatabaseReady;
+  if (process.env.NODE_ENV === "development") await migrateWhenAdded(database);
   return database;
+}
+
+/*
+ * 开发态补跑新增迁移（2026-10）。
+ *
+ * 迁移只在进程首次访问数据库时跑一次（结果挂在 globalThis 上，热重载不会重跑）。
+ * 于是 `pnpm dev` 开着时拉代码或合并分支带进来的新迁移不会执行，
+ * 症状是新接口一律 500「服务暂时不可用」，而老接口一切正常——日常记录上线时就这样踩过。
+ * 开发态每 2 秒最多看一次 drizzle/ 目录，文件清单变了就再跑一遍（已登记的迁移会跳过）。
+ * 生产与测试不走这里：生产由发布脚本先迁移再起服务，测试由 resetDatabaseForTest 控制。
+ */
+async function migrateWhenAdded(database: Database) {
+  const now = Date.now();
+  if (now - (globalThis.__petbabyMigrationCheckedAt ?? 0) < 2_000) return;
+  globalThis.__petbabyMigrationCheckedAt = now;
+  const names = (await listMigrationNames()).join(",");
+  if (names === globalThis.__petbabyMigrationNames) return;
+  globalThis.__petbabyDatabaseReady = migrateDatabase(database);
+  await globalThis.__petbabyDatabaseReady;
+  globalThis.__petbabyMigrationNames = names;
 }
 
 const rollbackEffects = globalThis.__petbabyRollbackEffects ??= new AsyncLocalStorage<Array<() => Promise<void>>>();

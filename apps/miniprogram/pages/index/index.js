@@ -13,8 +13,9 @@ const { CATEGORY_COVERS, BOSS_TEMPLATE_IDS, BOSS_SCENE_IDS, HUMAN_COVER_IDS, sel
  * 改为四块，内容一个不删、只调层级：
  *   1. 宠物名片 + 今日一格（里程碑 > 去年今日 > 今日一拍提示，只显示一条，版面不跳）
  *   2. 如果我是人（第一主推）
- *   3. 麻麻精选（车窗主卡 + 精选横滑 + 写真横滑；首页只保留这两条横滑，去掉自动轮播）
- *   4. 挑一个玩法（分类 chip + 双列瀑布流，承接其余分类、图文 / 短片玩法与趣测）
+ *   3. 麻麻精选（车窗主卡 + 精选横滑，去掉自动轮播）
+ *   4. 写真馆（2026-10，原「写真也值得收藏」）：宠物写真 / 人宠写真两张入口卡 + 两种样片混排的横滑
+ *   5. 挑一个玩法（分类 chip + 双列瀑布流，承接其余分类、图文 / 短片玩法与趣测）
  * 「最近收好的照片」移到时间线与照片库；记录入口在底栏中间的「＋」；主题入口在我的 › 外观。
  */
 
@@ -54,7 +55,7 @@ themedPage({
   data: {
     plugins: [], loading: true, error: "",
     humanTemplateCount: 0, humanCovers: [],
-    bossCoverUrl: "", bossTemplates: [], bossScenes: [], bossLead: null, bossNote: "", artPriceText: "36 套 · 去写真馆", copy: HOME_COPY,
+    bossCoverUrl: "", bossTemplates: [], bossScenes: [], duoCovers: [], duoGroupCount: 0, studioStrip: [], bossLead: null, bossNote: "", artPriceText: "36 套 · 去写真馆", copy: HOME_COPY,
     chips: [{ id: "all", label: "全部" }], chip: "all", feed: [], feedLeft: [], feedRight: [],
     introSampleUrl: manifest.plugins["pl-10"],
     pet: null, petDisplayUrl: "", pets: [], petLoading: true, recordError: "",
@@ -98,11 +99,25 @@ themedPage({
       const samples = artPlugin && artPlugin.samples || {};
       const bossScenes = (curation ? curation.sceneIds : BOSS_SCENE_IDS).map((id) => {
         const scene = (samples.sceneOptions || []).find((item) => item.id === id);
-        return scene && { id, title: scene.title, sampleUrl: samples.sceneUrls && samples.sceneUrls[id] || "" };
+        return scene && { id, title: scene.title, sampleUrl: samples.sceneUrls && samples.sceneUrls[id] || "", hdUrl: samples.sceneHdUrls && samples.sceneHdUrls[id] || "" };
       }).filter(Boolean);
 
-      // 瀑布流：每个图片模板分类一张封面卡 + 图文 / 短片玩法 + 趣测卡。
-      const categories = entries.filter((entry) => ["boss", "human"].indexOf(entry.id) < 0 && entry.templates.length);
+      // 人宠写真：每组取第一个镜头作封面（同一组是同一场拍摄的两个镜头）
+      const duoEntry = entries.find((entry) => entry.id === "duo");
+      const duoCovers = [];
+      (duoEntry ? duoEntry.templates : []).forEach((template) => {
+        const groupId = template.groupId || template.templateId;
+        if (template.sampleUrl && !duoCovers.some((item) => item.groupId === groupId)) duoCovers.push(Object.assign({ groupId }, template, { title: template.groupTitle || template.title }));
+      });
+      // 写真馆横滑：宠物写真与人宠写真交替排，两种都能一眼看到
+      const studioStrip = [];
+      for (let index = 0; index < Math.max(bossScenes.length, duoCovers.length); index += 1) {
+        if (bossScenes[index]) studioStrip.push({ key: "scene-" + bossScenes[index].id, kind: "scene", id: bossScenes[index].id, title: bossScenes[index].title, sampleUrl: bossScenes[index].sampleUrl });
+        if (duoCovers[index]) studioStrip.push({ key: "duo-" + duoCovers[index].templateId, kind: "duo", id: duoCovers[index].templateId, title: duoCovers[index].title, sampleUrl: duoCovers[index].sampleUrl });
+      }
+
+      // 瀑布流：每个图片模板分类一张封面卡 + 图文 / 短片玩法 + 趣测卡。人宠写真在写真馆里，不在瀑布流重复。
+      const categories = entries.filter((entry) => ["boss", "human", "duo"].indexOf(entry.id) < 0 && entry.templates.length);
       const categoryCards = categories.map((entry, index) => {
         const cover = byId[CATEGORY_COVERS[entry.id]] || entry.templates[0];
         const artInk = entry.id === "art" && byId["ink-portrait"];
@@ -136,7 +151,7 @@ themedPage({
       this.setData({
         plugins, loading: false,
         humanTemplateCount: humanEntry ? humanEntry.templates.length : 0, humanCovers,
-        bossCoverUrl: bossCover ? bossCover.sampleUrl : "", bossTemplates, bossScenes,
+        bossCoverUrl: bossCover ? bossCover.sampleUrl : "", bossTemplates, bossScenes, duoCovers, duoGroupCount: duoCovers.length, studioStrip,
         bossLead: { templateId: leadId, title: curation ? curation.lead.title : "车窗风中写真", subtitle: curation ? curation.lead.subtitle : "风吹起来的这一刻，也值得留下" },
         // 运营没改过说明时按主题给一句；改过就以后台为准
         bossNote: curation && curation.note && curation.note !== "每周更新" ? curation.note : "",
@@ -308,7 +323,18 @@ themedPage({
     const sceneId = event.currentTarget.dataset.id;
     wx.navigateTo({ url: "/pages/ai-create/ai-create?entryId=art&templateId=pet-art-photo&sceneId=" + encodeURIComponent(sceneId) + this.petQuery("&") });
   },
-  openArtStudio() { wx.switchTab({ url: "/pages/art-photo/art-photo" }); },
+  /** 写真馆入口卡：switchTab 不能带参数，用 globalData 告诉创作页打开「宠物写真」还是「人宠写真」。 */
+  openArtStudio(event) {
+    const mode = event && event.currentTarget && event.currentTarget.dataset && event.currentTarget.dataset.mode;
+    const app = typeof getApp === "function" ? getApp() : null;
+    if (app && app.globalData) app.globalData.artMode = mode === "duo" ? "duo" : "pet";
+    wx.switchTab({ url: "/pages/art-photo/art-photo" });
+  },
+  openStudioItem(event) {
+    const { kind, id } = event.currentTarget.dataset;
+    if (kind === "duo") return this.startTemplate({ currentTarget: { dataset: { entry: "duo", template: id } } });
+    this.startBossScene({ currentTarget: { dataset: { id } } });
+  },
   /** 「全部 ›」：创作是 tab 页，switchTab 不能带参数，用 globalData 告诉它打开「其他玩法」分段。 */
   openAllPlays() {
     const app = typeof getApp === "function" ? getApp() : null;

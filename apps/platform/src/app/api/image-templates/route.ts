@@ -1,10 +1,13 @@
 import { NextResponse } from "next/server";
 
 import {
+  duoPhotoGroups,
   getImageTemplateCandidateCount,
   imageTemplateSupportsReroll,
   listPublicImageTemplateEntries,
 } from "@/server/image-template-registry";
+
+const duoGroupById = new Map<string, (typeof duoPhotoGroups)[number]>(duoPhotoGroups.map((group) => [group.id, group]));
 
 export async function GET() {
   const entries = listPublicImageTemplateEntries().map((entry) => ({
@@ -14,6 +17,10 @@ export async function GET() {
       templateId: template.templateId,
       title: template.title,
       tags: template.tags || [],
+      // 人宠写真按组展示：组名与一句话说明由服务端下发，端上不写死
+      groupId: template.groupId,
+      groupTitle: template.groupId ? duoGroupById.get(template.groupId)?.title : undefined,
+      groupDescription: template.groupId ? duoGroupById.get(template.groupId)?.description : undefined,
       subjectMode: template.subjectMode,
       orientation: template.orientation,
       size: template.size,

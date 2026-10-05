@@ -1,0 +1,13 @@
+{
+  "id": "corgi-sweater",
+  "title": "西瓜啃啃",
+  "samplePet": "shiba",
+  "prompt": "Use case: a real photograph from a professional pet photo studio session, shot on a full-frame camera by an experienced pet photographer, the kind of image studios print and frame. Image 1 is the identity reference only, not a pose or background template. Keep the same adult red Shiba Inu from Image 1, with red-and-cream coat, white cheeks, upright triangular ears and dark eyes. One pet only, no people, no human hands. The pet wears only the garments or accessories named in the scene, and nothing at all if the scene says no clothing. Studio set and moment: A real pet photo studio with a mint-green seamless paper backdrop curving into the floor and bright soft light. A thick triangle slice of seedless red watermelon lies on the floor; the Shiba bites into the tip of it, eyes squinting with joy, a little juice on its chin. It wears a thin red-and-white striped bandana. Fresh summer colours. Framing: Vertical 3:4 photograph; the pet is the clear hero at about 45-65% of frame height, with plenty of plain backdrop around it. This is studio pet portraiture, not a lifestyle scene: only the seamless backdrop, the floor and the one or two props named above; no rooms, furniture, windows, plants, shelves or decorations beyond them. The fun comes from the pet's own action and expression with the prop, caught at a real, slightly imperfect moment. Make it look like a genuine camera photograph, not AI art: slightly asymmetric natural composition, the pet not perfectly centred, fur a little messy where it naturally would be, real stray hairs, believable weight and contact with the floor, a soft natural shadow from one key light, 85mm lens at about f/2.8 with focus on the eyes and gentle falloff, honest colours with mild contrast, faint paper wrinkles and floor scuffs on the backdrop, fine sensor grain. Avoid: glossy over-sharpened AI look, plastic or airbrushed fur, glowing rim light, overly saturated colours, perfect symmetry, staged lifestyle sets, prop clutter, extra props, cartoonish costumes, human-like poses, extra limbs, duplicate pets, floating body, pasted edges, text, letters, numbers, logos or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/source/dog-shiba.jpg",
+  "referenceSha256": "fbe7fcef9561979da3d66090d3e9f0bd693c1e1dbfa92820e7942d93a92d29a6",
+  "output": "tools/imagegen/out/scenes/scene-corgi-sweater-v13.jpg",
+  "sha256": "5a2dbfdd359d3717ce544f750c14d7f516f754bdcdca223384c8b4843f75cb8c",
+  "review": "pending-visual-review"
+}

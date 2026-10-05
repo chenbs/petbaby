@@ -1,0 +1,13 @@
+{
+  "id": "calico-rain-window",
+  "title": "害羞捂眼",
+  "samplePet": "greyhound",
+  "prompt": "Use case: a real photograph from a professional pet photo studio session, shot on a full-frame camera by an experienced pet photographer, the kind of image studios print and frame. Image 1 is the identity reference only, not a pose or background template. Keep the same adult Italian Greyhound from Image 1, with a short sleek blue-grey coat, white chest patch and slender legs. One pet only, no people, no human hands. The pet wears only the garments or accessories named in the scene, and nothing at all if the scene says no clothing. Studio set and moment: A real pet photo studio with a warm cream seamless paper backdrop curving into the floor and soft light. The dog lies on the floor with its chin down and covers its eyes with one front paw, peeking out from under it with one eye, looking shy and adorable. A small red plush heart cushion lies beside its paws. No clothing. Framing: Low camera at floor level: the dog's head and paws fill about 55-70% of the frame. This is studio pet portraiture, not a lifestyle scene: only the seamless backdrop, the floor and the one or two props named above; no rooms, furniture, windows, plants, shelves or decorations beyond them. The fun comes from the pet's own action and expression with the prop, caught at a real, slightly imperfect moment. Make it look like a genuine camera photograph, not AI art: slightly asymmetric natural composition, the pet not perfectly centred, fur a little messy where it naturally would be, real stray hairs, believable weight and contact with the floor, a soft natural shadow from one key light, 85mm lens at about f/2.8 with focus on the eyes and gentle falloff, honest colours with mild contrast, faint paper wrinkles and floor scuffs on the backdrop, fine sensor grain. Avoid: glossy over-sharpened AI look, plastic or airbrushed fur, glowing rim light, overly saturated colours, perfect symmetry, staged lifestyle sets, prop clutter, extra props, cartoonish costumes, human-like poses, extra limbs, duplicate pets, floating body, pasted edges, text, letters, numbers, logos or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/scenes-v9/identity-greyhound-v1.jpg",
+  "referenceSha256": "cb5fd44c4554de559651c3875cbf6fbcc910a5d5aeee3be418d132908acc8268",
+  "output": "tools/imagegen/out/scenes/scene-calico-rain-window-v13.jpg",
+  "sha256": "e856e390ced3973bf31e7bbd94d89a173cc8dccdf7b838a4b6a045c5b708a5be",
+  "review": "pending-visual-review"
+}

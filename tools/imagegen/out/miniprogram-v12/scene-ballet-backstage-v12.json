@@ -1,0 +1,13 @@
+{
+  "id": "ballet-backstage",
+  "title": "气球派对",
+  "samplePet": "greyhound",
+  "prompt": "Use case: photorealistic candid pet photograph by a top pet photographer, natural and full of personality, the kind of photo an owner would call the best picture of their pet ever. Image 1 is the identity reference only, not a pose or background template. Keep the same adult Italian Greyhound from Image 1, with a short sleek blue-grey coat, white chest patch and slender legs. One pet only, no people, no human hands. The pet wears only the garments or accessories named in the scene, and nothing at all if the scene says no clothing. Scene and moment: A sunny mustard-yellow painted wall and a pale floor. A bunch of five pastel balloons on ribbons is tied gently to the pet's harness and floats above it. The pet sits and looks straight up at the balloons with wide sparkling eyes and an open happy mouth, one front paw lifting slightly as if hoping to float away. Bright, playful, joyful colour story. Plain balloons with no print. Framing: The seated pet is about 50-60% of frame height, with the balloons visible above its head. The photograph must capture one specific, fleeting and adorable moment with a little story and one memorable detail, such as paw pads, a tongue tip, a squished cheek, a tilted head or a guilty glance, so that any owner instantly thinks: so cute, I want this photo of my pet. The expression is lively and specific, never blank or stiff. Photographic qualities: one consistent natural light direction, true-to-life fur with individual strands and slight unevenness, moist eyes with small catchlights, believable contact shadows, a 50-85mm lens with natural depth of field, refined but natural colour grading and gentle film grain. Avoid: stiff studio posing, symmetric passport-style composition, dull or muddy tones, plastic or airbrushed fur, CGI or illustration look, cartoonish costumes, extra limbs, duplicate pets, floating body, pasted edges, text, letters, numbers, logos or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/scenes-v9/identity-greyhound-v1.jpg",
+  "referenceSha256": "cb5fd44c4554de559651c3875cbf6fbcc910a5d5aeee3be418d132908acc8268",
+  "output": "tools/imagegen/out/scenes/scene-ballet-backstage-v12.jpg",
+  "sha256": "a6336d6b5100c9102faff7a0c436938043c351bf009130353f1e4a2f67d96d1a",
+  "review": "pending-visual-review"
+}

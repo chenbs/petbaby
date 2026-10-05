@@ -20,7 +20,31 @@ export type ImageTemplateDefinition = {
   sampleStorageKey?: string;
   /** 展示用筛选标签（目前只有「如果我是人」用）。 */
   tags?: readonly string[];
+  /** 人宠写真的分组：同一组是同一场拍摄的两个镜头，端上按组展示。 */
+  groupId?: string;
 };
+
+/**
+ * 人宠写真（2026-10 v2，艺术棚拍）：8 组 × 2 个镜头，「1 位真人 + 1 只宠物」。
+ * 每组是一套可控的棚拍布景（无缝纸背景 + 一两件道具），人与宠物服饰同色系呼应；部分组是春节 / 圣诞 / 万圣节主题。
+ * 母版是自有文生图（示例人物 2 男 6 女，均非真实人物），运行时按 owner-pet 链路替换成用户本人与自家宠物。
+ * v1（骑行、厨房、海边等生活情景）未上线即撤下。组的顺序就是写真馆里的展示顺序。
+ */
+export const duoPhotoGroups = [
+  { id: "duo-new-year", title: "新春红", description: "红灯笼 · 橘子大吉" },
+  { id: "duo-christmas", title: "圣诞毛衣", description: "同款毛衣 · 戴上鹿角" },
+  { id: "duo-halloween", title: "万圣节", description: "小黑猫 · 躲进巫师帽" },
+  { id: "duo-caramel", title: "焦糖同色", description: "同色系 · 藤椅下仰望" },
+  { id: "duo-monochrome", title: "黑白经典", description: "黑西装 · 斑点狗" },
+  { id: "duo-ballet", title: "芭蕾粉", description: "把杆前 · 小纱裙" },
+  { id: "duo-denim", title: "丹宁复古", description: "木箱并排 · 举高飞起来" },
+  { id: "duo-tulips", title: "一抱郁金香", description: "白衬衫 · 猫在花里" },
+] as const;
+
+const duoPromptExtension = [
+  "This is a pet-and-owner studio art portrait session. Keep the seamless backdrop, the few studio props, the coordinated wardrobe colours, the light and the exact physical interaction between the person and the pet from Image 1. Do not add rooms, furniture or scenery.",
+  "If the owner in Image 2 differs from the Image 1 person in gender, age or hairstyle, keep the owner true to Image 2 and adapt the outfit cut naturally while keeping its colours and style. Both faces must stay clearly visible and natural.",
+];
 
 const petHumanPrompt = [
   "1、以图二作为主要视觉参考，参考权重约 50%。",
@@ -88,12 +112,30 @@ const publicPreviewStorageKeyOverrides: Partial<Record<string, string>> = {
   "animal-sword-cat-alt": "samples/image-template-previews/animal-sword-cat-alt-cf590e99fc55.webp",
   "mini-companion": "samples/image-template-previews/mini-companion-347ec9958433.webp",
   "pet-milk-tea-shopkeeper": "samples/image-template-previews/pet-milk-tea-shopkeeper-c88f2aafc907.webp",
+  // 人宠写真：公开展示图是独立压缩的 WebP，与冻结母版分键
+  "duo-new-year-lucky": "samples/image-template-previews/duo-new-year-lucky-95ab5c5bf827.webp",
+  "duo-new-year-balance": "samples/image-template-previews/duo-new-year-balance-2df8ebb6a452.webp",
+  "duo-christmas-antlers": "samples/image-template-previews/duo-christmas-antlers-a4b2c09e5413.webp",
+  "duo-christmas-kiss": "samples/image-template-previews/duo-christmas-kiss-c38b26bf36e1.webp",
+  "duo-halloween-familiar": "samples/image-template-previews/duo-halloween-familiar-df0b8d3d9b8f.webp",
+  "duo-halloween-hat": "samples/image-template-previews/duo-halloween-hat-8d1a7c75a2eb.webp",
+  "duo-caramel-chair": "samples/image-template-previews/duo-caramel-chair-d7d0b21799cf.webp",
+  "duo-caramel-nose": "samples/image-template-previews/duo-caramel-nose-d69fd9968343.webp",
+  "duo-monochrome-profile": "samples/image-template-previews/duo-monochrome-profile-23a0402285e7.webp",
+  "duo-monochrome-laugh": "samples/image-template-previews/duo-monochrome-laugh-826dbf402dbe.webp",
+  "duo-ballet-barre": "samples/image-template-previews/duo-ballet-barre-1138c9108060.webp",
+  "duo-ballet-stretch": "samples/image-template-previews/duo-ballet-stretch-302f83038b2e.webp",
+  "duo-denim-crates": "samples/image-template-previews/duo-denim-crates-687c58341e99.webp",
+  "duo-denim-fly": "samples/image-template-previews/duo-denim-fly-07932c9ecaec.webp",
+  "duo-tulips-lap": "samples/image-template-previews/duo-tulips-lap-f8fb1f4bd55d.webp",
+  "duo-tulips-sniff": "samples/image-template-previews/duo-tulips-sniff-17f2f242a2d2.webp",
 };
 
 export const imageTemplateEntries = [
   { id: "fun", title: "好笑出片" },
   { id: "comic", title: "表情漫画" },
   { id: "together", title: "和我合照" },
+  { id: "duo", title: "人宠写真" },
   { id: "human", title: "如果我是人" },
   { id: "travel", title: "旅行打卡" },
   { id: "career", title: "职业反差" },
@@ -105,6 +147,22 @@ export const imageTemplateEntries = [
 ] as const;
 
 const registeredTemplates: ImageTemplateDefinition[] = [
+  { entryId: "duo", templateId: "duo-new-year-lucky", title: "大吉大利", subjectMode: "owner-pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/duo-new-year-lucky-ddcd26cdd77a.webp", groupId: "duo-new-year" },
+  { entryId: "duo", templateId: "duo-new-year-balance", title: "头顶橘子", subjectMode: "owner-pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/duo-new-year-balance-d973bba20213.webp", groupId: "duo-new-year" },
+  { entryId: "duo", templateId: "duo-christmas-antlers", title: "戴上鹿角", subjectMode: "owner-pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/duo-christmas-antlers-e3816f586031.webp", groupId: "duo-christmas" },
+  { entryId: "duo", templateId: "duo-christmas-kiss", title: "圣诞偷亲", subjectMode: "owner-pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/duo-christmas-kiss-42d6f5715234.webp", groupId: "duo-christmas" },
+  { entryId: "duo", templateId: "duo-halloween-familiar", title: "小黑猫助手", subjectMode: "owner-pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/duo-halloween-familiar-11b9e4aa482e.webp", groupId: "duo-halloween" },
+  { entryId: "duo", templateId: "duo-halloween-hat", title: "躲进巫师帽", subjectMode: "owner-pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/duo-halloween-hat-72e1b1633eed.webp", groupId: "duo-halloween" },
+  { entryId: "duo", templateId: "duo-caramel-chair", title: "藤椅下仰望", subjectMode: "owner-pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/duo-caramel-chair-0ed17e437473.webp", groupId: "duo-caramel" },
+  { entryId: "duo", templateId: "duo-caramel-nose", title: "碰碰鼻子", subjectMode: "owner-pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/duo-caramel-nose-9ff5a57ecb7d.webp", groupId: "duo-caramel" },
+  { entryId: "duo", templateId: "duo-monochrome-profile", title: "同款侧脸", subjectMode: "owner-pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/duo-monochrome-profile-f388f0ce5b42.webp", groupId: "duo-monochrome" },
+  { entryId: "duo", templateId: "duo-monochrome-laugh", title: "搭肩大笑", subjectMode: "owner-pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/duo-monochrome-laugh-0f7a46a2367e.webp", groupId: "duo-monochrome" },
+  { entryId: "duo", templateId: "duo-ballet-barre", title: "把杆前", subjectMode: "owner-pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/duo-ballet-barre-192e56dfebb9.webp", groupId: "duo-ballet" },
+  { entryId: "duo", templateId: "duo-ballet-stretch", title: "坐在腿上", subjectMode: "owner-pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/duo-ballet-stretch-444948cab5bb.webp", groupId: "duo-ballet" },
+  { entryId: "duo", templateId: "duo-denim-crates", title: "木箱并排", subjectMode: "owner-pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/duo-denim-crates-320acc02e8bb.webp", groupId: "duo-denim" },
+  { entryId: "duo", templateId: "duo-denim-fly", title: "举高飞起来", subjectMode: "owner-pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/duo-denim-fly-82fb77ce341b.webp", groupId: "duo-denim" },
+  { entryId: "duo", templateId: "duo-tulips-lap", title: "花里抱猫", subjectMode: "owner-pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/duo-tulips-lap-f68f40ac4711.webp", groupId: "duo-tulips" },
+  { entryId: "duo", templateId: "duo-tulips-sniff", title: "闻一闻", subjectMode: "owner-pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/duo-tulips-sniff-27a79b0f3e13.webp", groupId: "duo-tulips" },
   { entryId: "fun", templateId: "pet-wanted-poster", title: "萌宠通缉令", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/pet-wanted-poster-0171c933caae.webp" },
   { entryId: "comic", templateId: "pet-expression-grid", title: "今日表情九宫格", subjectMode: "pet", orientation: "portrait", size: "720x1280", version: "v01", status: "live", masterStorageKey: "samples/image-templates/pet-expression-grid-30c2d3341262.webp" },
   { entryId: "together", templateId: "fish-chase", title: "偷鱼大作战", subjectMode: "owner-pet", orientation: "portrait", size: "720x1280", version: "v04", status: "live", masterStorageKey: "samples/image-templates/fish-chase-e1afae3de413.webp" },
@@ -320,7 +378,7 @@ export function buildImageTemplatePrompt(template: ImageTemplateDefinition, rero
       "Replace only the pet identity with Image 2 while preserving every pose and expression instance from Image 1.",
     );
   }
-  shared.push(...(templatePromptExtensions[template.templateId] || []));
+  shared.push(...(template.entryId === "duo" ? duoPromptExtension : []), ...(templatePromptExtensions[template.templateId] || []));
   if (rerollReason === "owner-not-like") shared.push("Strengthen only the owner's facial identity match to Image 2; do not change the pet or composition.");
   if (rerollReason === "pet-not-like") shared.push(`Strengthen only the pet's identity match to Image ${template.subjectMode === "owner-pet" ? "3" : "2"}; do not change the owner or composition.`);
   if (rerollReason === "composition") shared.push("Restore the composition and role positions to Image 1; do not redesign either identity.");

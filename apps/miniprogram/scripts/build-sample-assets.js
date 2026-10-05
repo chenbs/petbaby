@@ -45,12 +45,12 @@ const scenes = {
   "night-playful": "v3", "seaside-breeze": "v3", "library-whisper": "v3",
   "autumn-leaves": "v3", "snow-cabin": "v4", "cafe-afternoon": "v3",
   "lakeside-sunset": "v4", "city-rain": "v3", "spring-picnic": "v4",
-  "railway-traveler": "v7", "tennis-champion": "v8", "greenhouse-gardener": "v7", "sailboat-holiday": "v6",
-  "berry-pastry-chef": "v7", "paper-flower-window": "v8", "mountain-cable-car": "v8", "laundry-day": "v8",
-  "museum-curator": "v7", "poolside-vacation": "v6", "post-office": "v8", "ballet-backstage": "v6",
-  "shorthair-armchair": "v7", "shorthair-books": "v7", "shorthair-night-rim": "v11", "shorthair-paper-bag": "v8",
-  "corgi-denim": "v11", "corgi-crate": "v9", "corgi-sploot": "v8", "corgi-sweater": "v8",
-  "calico-silk": "v7", "calico-bowl": "v8", "calico-rain-window": "v11", "calico-cane-stool": "v11"
+  "railway-traveler": "v13", "tennis-champion": "v13", "greenhouse-gardener": "v13", "sailboat-holiday": "v13",
+  "berry-pastry-chef": "v12", "paper-flower-window": "v13", "mountain-cable-car": "v13", "laundry-day": "v13",
+  "museum-curator": "v13", "poolside-vacation": "v13", "post-office": "v13", "ballet-backstage": "v12",
+  "shorthair-armchair": "v13", "shorthair-books": "v13", "shorthair-night-rim": "v11", "shorthair-paper-bag": "v13",
+  "corgi-denim": "v11", "corgi-crate": "v9", "corgi-sploot": "v13", "corgi-sweater": "v13",
+  "calico-silk": "v12", "calico-bowl": "v12", "calico-rain-window": "v13", "calico-cane-stool": "v11"
 };
 const movieScenes = {
   highseas: path.join(root, "tools/imagegen/out/movie-album-v3/movie-highseas.jpg"),

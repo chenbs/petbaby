@@ -2,7 +2,7 @@
 
 <view wx:if="{{formStage}}" class="{{skinClass}} page page-flat art-film layout-workbench creation-page">
   <view class="creation-header">
-    <image wx:if="{{plugin && plugin.samples && plugin.samples.heroUrl && (stage === 'profile' || pluginId === 'pet-id-card')}}" class="creation-sample" src="{{plugin.samples.heroUrl}}" mode="aspectFit" />
+    <image wx:if="{{plugin && plugin.samples && plugin.samples.heroUrl && (stage === 'profile' || pluginId === 'pet-id-card')}}" class="creation-sample" src="{{plugin.samples.heroHdUrl || plugin.samples.heroUrl}}" mode="aspectFit" />
     <text class="eyebrow">第 {{stepIndex + 1}} 步 / 共 {{steps.length}} 步</text>
     <view class="title">{{plugin ? plugin.name : '准备玩法'}}</view>
     <t-steps steps="{{steps}}" current="{{stepIndex}}" class="block-gap"></t-steps>

@@ -7,6 +7,7 @@ const { CATEGORY_COVERS } = require("../../services/home-effect-ids");
  * 「创作」Tab（2026-09 改版，原「写真」Tab）。
  *
  * 顶部分段：写真馆 / 如果我是人 / 其他玩法。写真馆仍是默认第一屏。
+ * - 写真馆内再分「宠物写真 / 人宠写真」（2026-10）：人宠写真是主人 + 宠物同框，8 组、每组 2 个镜头，点镜头直达制作页。
  * - 写真馆：价格从服务端下发（原先 ¥9.9 / ¥19.9 写死在 WXML），默认预选 10 套，用户只需替换；
  *   选全部套餐时点图提示「全部已包含」，不再毫无反馈。
  * - 如果我是人：40 款造型带名字与筛选标签，点哪张就直达哪张。
@@ -16,22 +17,23 @@ const collections = [
   { id: "everyday", title: "柔软日常", subtitle: "光线里最熟悉的我", ids: ["window-morning", "garden-curious", "studio-confident", "cafe-afternoon"] },
   { id: "outside", title: "去看世界", subtitle: "每一步都像故事开场", ids: ["seaside-breeze", "library-whisper", "autumn-leaves", "lakeside-sunset"] },
   { id: "story", title: "奇妙时刻", subtitle: "为我留一帧特别的画面", ids: ["night-playful", "snow-cabin", "city-rain", "spring-picnic"] },
-  { id: "journey", title: "光影肖像", subtitle: "一盏灯、一扇窗，就够了", ids: ["railway-traveler", "tennis-champion", "greenhouse-gardener", "sailboat-holiday"] },
-  { id: "little-days", title: "静物棚拍", subtitle: "干净的底色，只留下我", ids: ["berry-pastry-chef", "paper-flower-window", "mountain-cable-car", "laundry-day"] },
-  { id: "cat-story", title: "胶片与布景", subtitle: "像老照片一样耐看", ids: ["museum-curator", "poolside-vacation", "post-office", "ballet-backstage"] },
-  { id: "cozy-room", title: "屋里的光", subtitle: "扶手椅、旧书和一束夜光", ids: ["shorthair-armchair", "shorthair-books", "shorthair-night-rim", "shorthair-paper-bag"] },
-  { id: "sunny-floor", title: "暖色布景", subtitle: "笑一笑，趴一趴", ids: ["corgi-denim", "corgi-crate", "corgi-sploot", "corgi-sweater"] },
-  { id: "quiet-still", title: "安静的静物", subtitle: "绸布、陶碗和雨天窗台", ids: ["calico-silk", "calico-bowl", "calico-rain-window", "calico-cane-stool"] }
+  /*
+   * 13–36 套（2026-10 v12 重做为「宠物瞬间」）暂不分类、按场景表原顺序平铺；用户审完模板后再定分类与排序。
+   * 旧的「光影肖像 / 静物棚拍 / 胶片与布景 / 屋里的光 / 安静的静物」等分组已撤下。
+   */
+  { id: "more", title: "更多写真", subtitle: "抓住我最可爱的那一下", ids: ["railway-traveler", "tennis-champion", "greenhouse-gardener", "sailboat-holiday", "berry-pastry-chef", "paper-flower-window", "mountain-cable-car", "laundry-day", "museum-curator", "poolside-vacation", "post-office", "ballet-backstage", "shorthair-armchair", "shorthair-books", "shorthair-night-rim", "shorthair-paper-bag", "corgi-denim", "corgi-crate", "corgi-sploot", "corgi-sweater", "calico-silk", "calico-bowl", "calico-rain-window", "calico-cane-stool"] }
 ];
 const SEGMENTS = [{ id: "art", label: "写真馆" }, { id: "human", label: "如果我是人" }, { id: "all", label: "其他玩法" }];
 const PLUGIN_PLAYS = ["pet-movie-poster", "pet-time-album", "pl-19", "pl-23", "pet-id-card"];
 const PACKAGE_COUNT = { single: 1, ten: 10, all: 36 };
+const ART_MODES = [{ id: "pet", label: "宠物写真" }, { id: "duo", label: "人宠写真" }];
 
 function money(value) { return typeof value === "number" ? "¥" + value : ""; }
 
 themedPage({
   data: {
-    segments: SEGMENTS, segment: "art",
+    segments: SEGMENTS, segment: "art", artModes: ART_MODES, artMode: "pet", sceneCount: 0,
+    duoGroups: [], duoCount: 0, duoPriceText: "",
     collections: [], loading: true, error: "",
     packageMode: "ten", packages: null, selectedSceneIds: [], selectedCount: 0, dockText: "",
     humanTags: [], humanTag: "", humanTemplates: [], humanVisible: [],
@@ -39,6 +41,7 @@ themedPage({
   },
   onLoad(query) {
     if (query && SEGMENTS.some((item) => item.id === query.segment)) this.setData({ segment: query.segment });
+    if (query && ART_MODES.some((item) => item.id === query.mode)) this.setData({ segment: "art", artMode: query.mode });
     this.load();
   },
   onShow() {
@@ -51,6 +54,16 @@ themedPage({
       app.globalData.createSegment = "";
       if (SEGMENTS.some((item) => item.id === segment)) this.setData({ segment });
     }
+    // 首页写真馆的两张入口卡切过来时，带上要打开的是宠物写真还是人宠写真
+    if (app && app.globalData && app.globalData.artMode) {
+      const mode = app.globalData.artMode;
+      app.globalData.artMode = "";
+      if (ART_MODES.some((item) => item.id === mode)) this.setData({ segment: "art", artMode: mode });
+    }
+  },
+  chooseArtMode(event) {
+    const id = event.currentTarget.dataset.id;
+    if (ART_MODES.some((item) => item.id === id)) this.setData({ artMode: id });
   },
   chooseSegment(event) {
     const id = event.currentTarget.dataset.id;
@@ -88,7 +101,18 @@ themedPage({
       const humanTemplates = human ? human.templates : [];
       const tags = [];
       humanTemplates.forEach((item) => (item.tags || []).forEach((tag) => { if (tags.indexOf(tag) < 0) tags.push(tag); }));
-      const categories = entries.filter((entry) => ["human", "boss"].indexOf(entry.id) < 0 && entry.templates.length).map((entry) => {
+      // 人宠写真按「组」展示：同一组是同一场拍摄的两个镜头
+      const duo = entries.find((entry) => entry.id === "duo");
+      const duoTemplates = duo ? duo.templates : [];
+      const duoGroups = [];
+      duoTemplates.forEach((item) => {
+        const groupId = item.groupId || item.templateId;
+        let group = duoGroups.find((entry) => entry.id === groupId);
+        if (!group) { group = { id: groupId, title: item.groupTitle || item.title, description: item.groupDescription || "", shots: [] }; duoGroups.push(group); }
+        group.shots.push(item);
+      });
+      // 人宠写真在写真馆里，「其他玩法」不再重复
+      const categories = entries.filter((entry) => ["human", "boss", "duo"].indexOf(entry.id) < 0 && entry.templates.length).map((entry) => {
         // 水墨样片大面积留白，缩成分类卡后只剩一笔墨，艺术分类改用装饰艺术肖像作封面
         const coverId = entry.id === "art" ? "decorative-art-portrait" : CATEGORY_COVERS[entry.id];
         const cover = entry.templates.find((item) => item.templateId === coverId) || entry.templates[0];
@@ -103,6 +127,8 @@ themedPage({
       const preselected = this._allSceneIds.slice(0, 10);
       // 其他玩法：第一个 chip 是「麻麻精选」，后面是各分类，与首页瀑布流同源（评审 5.2）
       const playChips = (entries.some((entry) => entry.id === "boss") ? [{ id: "boss", label: "麻麻精选" }] : []).concat([{ id: "all", label: "全部" }], categories.map((item) => ({ id: item.id, label: item.title })));
+      const unlock = source.pricing && source.pricing.unlockPrice;
+      this.setData({ duoGroups, duoCount: duoTemplates.length, duoPriceText: "每张免费预览" + (unlock ? " · 满意再 ¥" + unlock + " 保存" : " · 满意再保存"), sceneCount: this._allSceneIds.length });
       this.setData({ loading: false, packages, humanTemplates, humanVisible: humanTemplates, humanTags: tags, categories, plays, playChips, visibleCategories: categories, visiblePlays: plays,
         selectedSceneIds: this.data.packageMode === "all" ? this._allSceneIds.slice() : this.data.packageMode === "ten" ? preselected : [] });
       this.showSelection();
@@ -165,6 +191,13 @@ themedPage({
     const id = event.currentTarget.dataset.id;
     const clear = (list) => list.map((item) => item.templateId === id ? Object.assign({}, item, { sampleUrl: "" }) : item);
     this.setData({ humanTemplates: clear(this.data.humanTemplates), humanVisible: clear(this.data.humanVisible) });
+  },
+  onDuoImageError(event) {
+    const id = event.currentTarget.dataset.id;
+    this.setData({ duoGroups: this.data.duoGroups.map((group) => Object.assign({}, group, { shots: group.shots.map((item) => item.templateId === id ? Object.assign({}, item, { sampleUrl: "" }) : item) })) });
+  },
+  openDuoTemplate(event) {
+    wx.navigateTo({ url: "/pages/ai-create/ai-create?entryId=duo&templateId=" + encodeURIComponent(event.currentTarget.dataset.id) });
   },
   openHumanTemplate(event) {
     wx.navigateTo({ url: "/pages/ai-create/ai-create?entryId=human&templateId=" + encodeURIComponent(event.currentTarget.dataset.id) });

@@ -1,0 +1,13 @@
+{
+  "id": "sailboat-holiday",
+  "title": "礼物盒惊喜",
+  "samplePet": "british",
+  "prompt": "Use case: a real photograph from a professional pet photo studio session, shot on a full-frame camera by an experienced pet photographer, the kind of image studios print and frame. Image 1 is the identity reference only, not a pose or background template. Keep the same adult blue British Shorthair from Image 1, with round face, solid gray coat and copper-amber eyes. One pet only, no people, no human hands. The pet wears only the garments or accessories named in the scene, and nothing at all if the scene says no clothing. Studio set and moment: A real pet photo studio with a tomato-red seamless paper backdrop curving into the floor and soft frontal light. A plain white square gift box sits on the floor; the cat has just pushed up the lid with its head, the lid tilted on top of its round face, a loose cream satin ribbon draped over one ear. Only its head and front paws on the box rim are visible, eyes wide and round. No clothing. Framing: Vertical 3:4 photograph; the pet is the clear hero at about 45-65% of frame height, with plenty of plain backdrop around it. This is studio pet portraiture, not a lifestyle scene: only the seamless backdrop, the floor and the one or two props named above; no rooms, furniture, windows, plants, shelves or decorations beyond them. The fun comes from the pet's own action and expression with the prop, caught at a real, slightly imperfect moment. Make it look like a genuine camera photograph, not AI art: slightly asymmetric natural composition, the pet not perfectly centred, fur a little messy where it naturally would be, real stray hairs, believable weight and contact with the floor, a soft natural shadow from one key light, 85mm lens at about f/2.8 with focus on the eyes and gentle falloff, honest colours with mild contrast, faint paper wrinkles and floor scuffs on the backdrop, fine sensor grain. Avoid: glossy over-sharpened AI look, plastic or airbrushed fur, glowing rim light, overly saturated colours, perfect symmetry, staged lifestyle sets, prop clutter, extra props, cartoonish costumes, human-like poses, extra limbs, duplicate pets, floating body, pasted edges, text, letters, numbers, logos or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/source/cat-british.jpg",
+  "referenceSha256": "ddbdfb39b6cb3c6dddbfdd01555cd2fea299cfa927f76a1e7248d581152e0364",
+  "output": "tools/imagegen/out/scenes/scene-sailboat-holiday-v13.jpg",
+  "sha256": "348202af21745969249ef179641243c47e54e0a795bc78358ca87b38f76a31d7",
+  "review": "pending-visual-review"
+}

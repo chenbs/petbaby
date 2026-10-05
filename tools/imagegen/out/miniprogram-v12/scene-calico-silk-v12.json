@@ -1,0 +1,13 @@
+{
+  "id": "calico-silk",
+  "title": "抱着玩偶睡",
+  "samplePet": "golden",
+  "prompt": "Use case: photorealistic candid pet photograph by a top pet photographer, natural and full of personality, the kind of photo an owner would call the best picture of their pet ever. Image 1 is the identity reference only, not a pose or background template. Keep the same adult golden retriever from Image 1, with natural golden coat, floppy ears, dark eyes and black nose. One pet only, no people, no human hands. The pet wears only the garments or accessories named in the scene, and nothing at all if the scene says no clothing. Scene and moment: Soft morning light on a white bed with a rumpled lavender duvet. The pet sleeps on its side hugging a soft plush bear almost as big as its head with both front paws, cheek squished against the plush, the tip of its tongue peeking out. Sleepy, innocent and heart-melting. Pastel lavender and cream palette, no clothing. Framing: Vertical 3:4 photograph; the pet is the clear hero at about 45-65% of frame height, with the props and the set clearly readable. The photograph must capture one specific, fleeting and adorable moment with a little story and one memorable detail, such as paw pads, a tongue tip, a squished cheek, a tilted head or a guilty glance, so that any owner instantly thinks: so cute, I want this photo of my pet. The expression is lively and specific, never blank or stiff. Photographic qualities: one consistent natural light direction, true-to-life fur with individual strands and slight unevenness, moist eyes with small catchlights, believable contact shadows, a 50-85mm lens with natural depth of field, refined but natural colour grading and gentle film grain. Avoid: stiff studio posing, symmetric passport-style composition, dull or muddy tones, plastic or airbrushed fur, CGI or illustration look, cartoonish costumes, extra limbs, duplicate pets, floating body, pasted edges, text, letters, numbers, logos or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/source/dog-golden.jpg",
+  "referenceSha256": "1b6348ce4f6cd1d12f4c93d5f2a8a5c21847e0ce9bc43e4326c1ee89f7a89eef",
+  "output": "tools/imagegen/out/scenes/scene-calico-silk-v12.jpg",
+  "sha256": "7a8bd8325eb03155c23d5291d4967163f947964d5293d6fc33ae75326313e51e",
+  "review": "pending-visual-review"
+}

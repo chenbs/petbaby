@@ -1,0 +1,13 @@
+{
+  "id": "shorthair-paper-bag",
+  "title": "毛线帽",
+  "samplePet": "sphynx",
+  "prompt": "Use case: a real photograph from a professional pet photo studio session, shot on a full-frame camera by an experienced pet photographer, the kind of image studios print and frame. Image 1 is the identity reference only, not a pose or background template. Keep the same adult Sphynx cat from Image 1, hairless with warm pinkish-beige wrinkled skin, large ears and lemon-green eyes. One pet only, no people, no human hands. The pet wears only the garments or accessories named in the scene, and nothing at all if the scene says no clothing. Studio set and moment: A real pet photo studio with a mustard-yellow seamless paper backdrop curving into the floor and soft side light. The Sphynx cat wears a chunky knitted cream beanie with a big fluffy pom-pom, its large ears pushed sideways under the knit, the wrinkly forehead peeking out beneath the brim. It tilts its head to one side and looks into the camera with wide curious eyes. Framing: Close-up: the head and beanie fill about 60-70% of the frame. This is studio pet portraiture, not a lifestyle scene: only the seamless backdrop, the floor and the one or two props named above; no rooms, furniture, windows, plants, shelves or decorations beyond them. The fun comes from the pet's own action and expression with the prop, caught at a real, slightly imperfect moment. Make it look like a genuine camera photograph, not AI art: slightly asymmetric natural composition, the pet not perfectly centred, fur a little messy where it naturally would be, real stray hairs, believable weight and contact with the floor, a soft natural shadow from one key light, 85mm lens at about f/2.8 with focus on the eyes and gentle falloff, honest colours with mild contrast, faint paper wrinkles and floor scuffs on the backdrop, fine sensor grain. Avoid: glossy over-sharpened AI look, plastic or airbrushed fur, glowing rim light, overly saturated colours, perfect symmetry, staged lifestyle sets, prop clutter, extra props, cartoonish costumes, human-like poses, extra limbs, duplicate pets, floating body, pasted edges, text, letters, numbers, logos or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/scenes-v9/identity-sphynx-v1.jpg",
+  "referenceSha256": "94f3d9e90172a7758d352a9b2287fd94a58ad88b69489bb72926ac89e812a4c3",
+  "output": "tools/imagegen/out/scenes/scene-shorthair-paper-bag-v13.jpg",
+  "sha256": "7dee6fca465a0196563630d36e1497baf9f9321d25e0a012eb822a8c7c43286c",
+  "review": "pending-visual-review"
+}

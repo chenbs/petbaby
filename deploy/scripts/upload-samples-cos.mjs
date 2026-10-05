@@ -82,8 +82,8 @@ export async function buildPlan() {
     await addAsset(assets, key, path.join(root, source), hash, "image/webp");
     counts[kind]++;
   }
-  if (counts.master !== 80 || counts.preview !== 80 || counts.human !== 40) {
-    throw new Error(`部署清单数量错误：母版 ${counts.master}/80，预览 ${counts.preview}/80，人化 ${counts.human}/40`);
+  if (counts.master !== 96 || counts.preview !== 96 || counts.human !== 40) {
+    throw new Error(`部署清单数量错误：母版 ${counts.master}/96，预览 ${counts.preview}/96，人化 ${counts.human}/40`);
   }
 
   const retiredKeys = (await readFile(retired, "utf8")).split(/\r?\n/).filter(Boolean);

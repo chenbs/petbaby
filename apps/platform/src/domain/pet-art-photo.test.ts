@@ -12,7 +12,8 @@ describe("宠物艺术写真", () => {
       expect(prompt).toContain("sole pet identity reference");
       expect(prompt).toContain("expression");
       expect(prompt).toContain("photorealistic editorial pet photograph");
-      expect(prompt).toContain("45-65% of frame height");
+      // v12 的瞬间类场景自带取景（特写、俯拍等），其余沿用通用取景
+      expect(prompt).toContain("framing" in scene && scene.framing ? `Framing: ${scene.framing}` : "45-65% of frame height");
       expect(prompt).toContain("No human hands");
     }
   });
@@ -23,8 +24,8 @@ describe("宠物艺术写真", () => {
       all[scene.samplePet] = (all[scene.samplePet] || 0) + 1;
       return all;
     }, {});
-    // 2026-10 v9：五套时尚杂志风换成无毛猫、阿富汗猎犬、意大利灵缇、金吉拉、暹罗各 1 套
-    expect(counts).toEqual({ golden: 4, poodle: 4, british: 4, shorthair: 3, corgi: 2, calico: 2, sphynx: 1, afghan: 1, greyhound: 1, persian: 1, siamese: 1 });
+    // 2026-10 v13：16 套改回棚拍，示范宠物 17 种（4 套时尚大片与 4 套保留的 v12 不变）
+    expect(counts).toEqual({ tuxedo: 1, cream: 1, corgi: 2, british: 1, golden: 2, poodle: 1, blacklab: 1, shorthair: 1, calico: 1, persian: 1, siamese: 2, greyhound: 3, husky: 1, afghan: 2, sphynx: 2, blackcat: 1, shiba: 1 });
     const extended = petArtPhotoScenes.slice(12);
     const plain = extended.filter((scene) => /no clothing/i.test(scene.prompt));
     expect(plain.length).toBeGreaterThan(0);

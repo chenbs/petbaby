@@ -1,0 +1,13 @@
+{
+  "id": "paper-flower-window",
+  "title": "叼一束花",
+  "samplePet": "poodle",
+  "prompt": "Use case: a real photograph from a professional pet photo studio session, shot on a full-frame camera by an experienced pet photographer, the kind of image studios print and frame. Image 1 is the identity reference only, not a pose or background template. Keep the same adult gray toy poodle from Image 1, with charcoal curly coat, lighter muzzle, floppy ears and compact build. One pet only, no people, no human hands. The pet wears only the garments or accessories named in the scene, and nothing at all if the scene says no clothing. Studio set and moment: A real pet photo studio with a blush-pink seamless paper backdrop curving into the floor and soft window-like light. The poodle sits neatly and gently holds a small bouquet of three pastel tulips wrapped in brown kraft paper in its mouth, eyes looking up at the camera, a little proud and hopeful. It wears a small cream satin bow tie. Two tulip petals lie on the floor. Framing: Vertical 3:4 photograph; the pet is the clear hero at about 45-65% of frame height, with plenty of plain backdrop around it. This is studio pet portraiture, not a lifestyle scene: only the seamless backdrop, the floor and the one or two props named above; no rooms, furniture, windows, plants, shelves or decorations beyond them. The fun comes from the pet's own action and expression with the prop, caught at a real, slightly imperfect moment. Make it look like a genuine camera photograph, not AI art: slightly asymmetric natural composition, the pet not perfectly centred, fur a little messy where it naturally would be, real stray hairs, believable weight and contact with the floor, a soft natural shadow from one key light, 85mm lens at about f/2.8 with focus on the eyes and gentle falloff, honest colours with mild contrast, faint paper wrinkles and floor scuffs on the backdrop, fine sensor grain. Avoid: glossy over-sharpened AI look, plastic or airbrushed fur, glowing rim light, overly saturated colours, perfect symmetry, staged lifestyle sets, prop clutter, extra props, cartoonish costumes, human-like poses, extra limbs, duplicate pets, floating body, pasted edges, text, letters, numbers, logos or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/scenes-v3/identity-gray-toy-poodle-v1.jpg",
+  "referenceSha256": "f0db84c8923312412c2c63a4c5d3fdbb1d1bc14d3cca7febecf28d7cad906541",
+  "output": "tools/imagegen/out/scenes/scene-paper-flower-window-v13.jpg",
+  "sha256": "f9056cc77d008c4feb186e4fb757eddfb9b476eb1faa239698733e161880f6de",
+  "review": "pending-visual-review"
+}

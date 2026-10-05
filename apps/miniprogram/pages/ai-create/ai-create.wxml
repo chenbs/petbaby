@@ -22,7 +22,7 @@
       </view>
       <view wx:elif="{{activeTemplate && templateId !== 'pet-art-photo'}}" class="section">
         <view class="section-title">看看成品风格</view>
-        <image class="solo-template-image {{activeTemplate.sampleShape === 'wide' ? 'solo-wide' : ''}}" src="{{activeTemplate.sampleUrl}}" mode="aspectFit" />
+        <image class="solo-template-image {{activeTemplate.sampleShape === 'wide' ? 'solo-wide' : ''}}" src="{{activeTemplate.hdUrl || activeTemplate.sampleUrl}}" mode="aspectFit" />
       </view>
       <view wx:if="{{templateId === 'pet-art-photo' && sceneOptions.length}}" class="section">
         <view class="section-title">写真场景 · {{sceneOptions.length}} 套</view>
@@ -102,7 +102,7 @@
 
       <view class="ai-dock">
         <view class="ai-dock-meta">
-          <text class="ai-dock-title">为{{petText || '我'}}拍一张</text>
+          <text class="ai-dock-title">{{activeTemplate && activeTemplate.subjectMode === 'owner-pet' ? '为我和' + (petText || '它') + '拍一张' : '为' + (petText || '我') + '拍一张'}}</text>
           <text class="small">{{activeTemplate && activeTemplate.subjectMode === 'pet-human' ? '不支持重拍 · ' : '免费预览 · '}}满意再保存{{unlockPrice ? ' ¥' + unlockPrice : ''}}</text>
         </view>
         <t-button type="primary" anim="{{animType}}" loading="{{busy}}" disabled="{{!activeTemplate || !photoIds.length || (activeTemplate.subjectMode === 'owner-pet' && (!ownerPhotoIds.length || !authorizationConfirmed))}}" bindtap="create">开始</t-button>

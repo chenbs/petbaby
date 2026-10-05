@@ -1,0 +1,13 @@
+{
+  "id": "railway-traveler",
+  "title": "放大镜大眼",
+  "samplePet": "tuxedo",
+  "prompt": "Use case: a real photograph from a professional pet photo studio session, shot on a full-frame camera by an experienced pet photographer, the kind of image studios print and frame. Image 1 is the identity reference only, not a pose or background template. Keep the same adult black-and-white tuxedo cat from Image 1, with black coat, white muzzle, white chest and paws, pink nose and green eyes. One pet only, no people, no human hands. The pet wears only the garments or accessories named in the scene, and nothing at all if the scene says no clothing. Studio set and moment: A real pet photo studio with a sage-green seamless paper backdrop curving into the floor and one large softbox from the left. A big old brass magnifying glass stands on a small wooden stand right in front of the cat's face, so through the lens one eye and part of the nose look comically huge while the rest of the face stays normal size. The cat sits still and stares curiously into the lens, ears forward. No clothing. Framing: Close-up at the cat's eye level: the head and the magnifying glass fill about 60-70% of the frame. This is studio pet portraiture, not a lifestyle scene: only the seamless backdrop, the floor and the one or two props named above; no rooms, furniture, windows, plants, shelves or decorations beyond them. The fun comes from the pet's own action and expression with the prop, caught at a real, slightly imperfect moment. Make it look like a genuine camera photograph, not AI art: slightly asymmetric natural composition, the pet not perfectly centred, fur a little messy where it naturally would be, real stray hairs, believable weight and contact with the floor, a soft natural shadow from one key light, 85mm lens at about f/2.8 with focus on the eyes and gentle falloff, honest colours with mild contrast, faint paper wrinkles and floor scuffs on the backdrop, fine sensor grain. Avoid: glossy over-sharpened AI look, plastic or airbrushed fur, glowing rim light, overly saturated colours, perfect symmetry, staged lifestyle sets, prop clutter, extra props, cartoonish costumes, human-like poses, extra limbs, duplicate pets, floating body, pasted edges, text, letters, numbers, logos or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/source/cat-tuxedo.jpg",
+  "referenceSha256": "c4b2ebaac7dd5d59fffd83a827d94fdc03e1befd3e1108f337de8ba5488a7d39",
+  "output": "tools/imagegen/out/scenes/scene-railway-traveler-v13.jpg",
+  "sha256": "ceb6b51f13acdcba042e166d27cdb7a718f6d28241aef41e50a7034baab310c9",
+  "review": "pending-visual-review"
+}

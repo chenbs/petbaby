@@ -331,7 +331,8 @@ scanWxml(root);
       if (typeof value !== "string" || !value.trim()) failures.push(`皮肤取值为空 ${theme.id}: ${name}`);
     }
   }
-  if (appWxss.indexOf(require("./build-skin-css").render()) < 0) failures.push("皮肤区块未同步 app.wxss 的 .skin-<id>{} 与 theme/themes/*.js 不一致，请运行 node scripts/build-skin-css.js");
+  // Windows 工作区的 app.wxss 可能是 CRLF（core.autocrlf），render() 输出 LF；只比内容不比换行符
+  if (appWxss.replace(/\r\n/g, "\n").indexOf(require("./build-skin-css").render().replace(/\r\n/g, "\n")) < 0) failures.push("皮肤区块未同步 app.wxss 的 .skin-<id>{} 与 theme/themes/*.js 不一致，请运行 node scripts/build-skin-css.js");
 }
 
 // 12. 每个页面的根节点都要挂 {{skinClass}}：漏挂的页面在所有主题下都只剩默认结构，不报错，只是「没换肤」。

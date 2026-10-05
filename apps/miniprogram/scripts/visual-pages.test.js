@@ -47,7 +47,7 @@ test("艺术写真展示二十四套场景并提交所选场景", async () => {
   assert.equal(submitted.options.scene, "ballet-backstage");
 });
 
-test("写真底栏按九组展示三十六套场景并直达照片选择", async () => {
+test("写真馆按四组展示三十六套场景（13–36 暂不分类）并直达照片选择", async () => {
   const ids = ["window-morning", "garden-curious", "studio-confident", "cafe-afternoon", "seaside-breeze", "library-whisper", "autumn-leaves", "lakeside-sunset", "night-playful", "snow-cabin", "city-rain", "spring-picnic", "railway-traveler", "tennis-champion", "greenhouse-gardener", "sailboat-holiday", "berry-pastry-chef", "paper-flower-window", "mountain-cable-car", "laundry-day", "museum-curator", "poolside-vacation", "post-office", "ballet-backstage", "shorthair-armchair", "shorthair-books", "shorthair-night-rim", "shorthair-paper-bag", "corgi-denim", "corgi-crate", "corgi-sploot", "corgi-sweater", "calico-silk", "calico-bowl", "calico-rain-window", "calico-cane-stool"];
   const urls = [];
   const page = loadPage("art-photo", {
@@ -58,7 +58,9 @@ test("写真底栏按九组展示三十六套场景并直达照片选择", async
   }, { navigateTo: ({ url }) => urls.push(url) });
   page.onLoad();
   await new Promise((resolve) => setImmediate(resolve));
-  assert.deepEqual(Array.from(page.data.collections, (group) => group.scenes.length), [4, 4, 4, 4, 4, 4, 4, 4, 4]);
+  // 1–12 保留三组；13–36 在 v12 重做后暂不分类，平铺一组，等用户审完再定排序
+  assert.deepEqual(Array.from(page.data.collections, (group) => group.scenes.length), [4, 4, 4, 24]);
+  assert.equal(page.data.collections.some((group) => ["光影肖像", "静物棚拍", "胶片与布景", "屋里的光", "安静的静物"].includes(group.title)), false);
   // 2026-09：默认 10 套并预选好，点图是替换而不是跳转
   assert.equal(page.data.packageMode, "ten");
   assert.equal(page.data.selectedSceneIds.length, 10);
@@ -423,4 +425,63 @@ test("视频主视区只下载项目封面照片", async () => {
   await page.loadCover({ pet_id: "pet", cover_photo_id: "cover", photo_ids: ["other", "cover"] });
   assert.equal(transformed.id, "cover");
   assert.equal(page.data.coverUrl, "wxfile://cover");
+});
+
+const DUO_ENTRY = { id: "duo", title: "人宠写真", templates: [
+  { templateId: "duo-stripes-cheek", title: "贴脸大笑", subjectMode: "owner-pet", groupId: "duo-stripes", groupTitle: "同款条纹", groupDescription: "撞色影棚 · 贴脸大笑", sampleUrl: "a.jpg" },
+  { templateId: "duo-stripes-kiss", title: "被偷亲", subjectMode: "owner-pet", groupId: "duo-stripes", groupTitle: "同款条纹", groupDescription: "撞色影棚 · 贴脸大笑", sampleUrl: "b.jpg" },
+  { templateId: "duo-seaside-run", title: "踏浪奔跑", subjectMode: "owner-pet", groupId: "duo-seaside", groupTitle: "海边奔跑", groupDescription: "浪花里 · 一起疯跑", sampleUrl: "c.jpg" },
+  { templateId: "duo-seaside-lean", title: "靠着看海", subjectMode: "owner-pet", groupId: "duo-seaside", groupTitle: "海边奔跑", groupDescription: "浪花里 · 一起疯跑", sampleUrl: "d.jpg" }
+] };
+
+test("首页写真馆：宠物写真与人宠写真两张入口卡，横滑混排，人宠不进瀑布流", async () => {
+  const urls = [];
+  const page = loadPage("index", {
+    api: { request: async (url) => {
+      if (url === "/api/plugins") return [{ id: "pl-10", name: "写真", category: "ai-image", pricing: { unlockPrice: 16.9 }, samples: {
+        sceneOptions: require("../services/home-effect-ids").BOSS_SCENE_IDS.map((sceneId) => ({ id: sceneId, title: sceneId })), sceneUrls: {}
+      } }];
+      if (url === "/api/image-templates") return { entries: [DUO_ENTRY, { id: "fun", title: "好笑出片", templates: [{ templateId: "pet-wanted-poster", title: "萌宠通缉令" }] }] };
+      throw new Error(url);
+    } }
+  }, { navigateTo: ({ url }) => urls.push(url), switchTab: ({ url }) => urls.push(url) });
+  page.load();
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.deepEqual(Array.from(page.data.duoCovers, (item) => item.templateId), ["duo-stripes-cheek", "duo-seaside-run"]);
+  assert.equal(page.data.duoGroupCount, 2);
+  assert.deepEqual(Array.from(page.data.studioStrip.slice(0, 4), (item) => item.kind), ["scene", "duo", "scene", "duo"]);
+  assert.equal(page.data.duoCovers[0].title, "同款条纹");
+  assert.equal(page.data.feed.some((item) => item.entryId === "duo"), false);
+  assert.equal(page.data.chips.some((item) => item.id === "duo"), false);
+  // 点横滑里的人宠样片直达制作页，点宠物写真样片走单张写真
+  page.openStudioItem({ currentTarget: { dataset: { kind: "duo", id: "duo-seaside-run" } } });
+  assert.match(urls.pop(), /ai-create\?entryId=duo&templateId=duo-seaside-run/);
+  page.openStudioItem({ currentTarget: { dataset: { kind: "scene", id: "window-morning" } } });
+  assert.match(urls.pop(), /templateId=pet-art-photo&sceneId=window-morning/);
+  page.openArtStudio({ currentTarget: { dataset: { mode: "duo" } } });
+  assert.equal(urls.pop(), "/pages/art-photo/art-photo");
+});
+
+test("写真馆人宠写真：按组展示两个镜头，点镜头进主人 + 宠物制作页", async () => {
+  const urls = [];
+  const ids = require("../services/home-effect-ids").BOSS_SCENE_IDS;
+  const page = loadPage("art-photo", {
+    api: { request: async (url) => {
+      if (url === "/api/plugins") return [{ id: "pl-10", pricing: { unlockPrice: 16.9 }, samples: { sceneOptions: ids.map((id) => ({ id, title: id, description: id })), sceneUrls: {} } }];
+      if (url === "/api/image-templates") return { entries: [DUO_ENTRY] };
+      return null;
+    } }
+  }, { navigateTo: ({ url }) => urls.push(url) });
+  page.onLoad({ mode: "duo" });
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(page.data.artMode, "duo");
+  assert.equal(page.data.duoCount, 4);
+  assert.deepEqual(Array.from(page.data.duoGroups, (group) => [group.title, group.shots.length]), [["同款条纹", 2], ["海边奔跑", 2]]);
+  assert.match(page.data.duoPriceText, /¥16.9/);
+  // 人宠写真不在「其他玩法」里重复
+  assert.equal(page.data.categories.some((item) => item.id === "duo"), false);
+  page.openDuoTemplate({ currentTarget: { dataset: { id: "duo-stripes-kiss" } } });
+  assert.equal(urls[0], "/pages/ai-create/ai-create?entryId=duo&templateId=duo-stripes-kiss");
+  page.chooseArtMode({ currentTarget: { dataset: { id: "pet" } } });
+  assert.equal(page.data.artMode, "pet");
 });

@@ -38,7 +38,8 @@ themedPage({
   data: {
     pets: [], petId: "", petText: "", photos: [], selected: [],
     title: "我们的日常电影", caption: "", bgm: "none", bgmOptions: BGM,
-    sampleUrl: manifest.plugins["pl-19"],
+    // 全宽 16:10 封面，用高清版
+    sampleUrl: manifest.pluginsHd["pl-19"] || manifest.plugins["pl-19"],
     durationSeconds: 20, durationValue: "20", durationOptions: DURATION_OPTIONS, maxPhotos: maxPhotosFor(20),
     error: "", busy: false, loading: true, durationText: "20 秒成片", pricingText: "正在读取报价"
   },

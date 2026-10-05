@@ -55,7 +55,7 @@ async function displayMediaTree(value) {
     const result = {};
     Object.keys(item).forEach((key) => {
       const field = item[key];
-      if (["url", "outputUrl", "avatarUrl"].indexOf(key) >= 0 && typeof field === "string" && (field.indexOf("/api/media/") === 0 || /^\/api\/owner-photos\/[^/]+\/media$/.test(field))) {
+      if (["url", "outputUrl", "avatarUrl"].indexOf(key) >= 0 && typeof field === "string" && (field.indexOf("/api/media/") === 0 || /^\/api\/(owner-photos|record-attachments)\/[^/]+\/media$/.test(field))) {
         result[key] = "";
         jobs.push(async () => {
           try {

@@ -59,7 +59,9 @@ themedPage({
     introSampleUrl: manifest.plugins["pl-10"],
     pet: null, petDisplayUrl: "", pets: [], petLoading: true, recordError: "",
     /** 今日一格：{ eyebrow, title, action, kind }。没有命中时给默认的今日一拍提示。 */
-    moment: null
+    moment: null,
+    /** 照顾条：{ text }。已离开的宠物为 null */
+    care: null
   },
   onShow() {
     const tabbar = this.getTabBar && this.getTabBar();
@@ -197,6 +199,7 @@ themedPage({
         petDisplayUrl: pet.avatarUrl || "", petLoading: false,
         moment: milestone ? { kind: "milestone", eyebrow: "今天", title: milestone, action: "回看 ›" } : this.defaultMoment(pet)
       });
+      if (memorial) this.setData({ care: null }); else this.loadCare(pet, view);
       const result = await Promise.all([
         pet.avatarUrl ? Promise.resolve({ items: [] }) : api.request("/api/photos?petId=" + pet.id + "&pageSize=1&order=uploaded").then(displayMediaTree),
         api.request("/api/on-this-day?petId=" + pet.id).then(displayMediaTree).catch(() => ({ matches: [] }))
@@ -239,6 +242,28 @@ themedPage({
     }
   },
   record() { wx.navigateTo({ url: "/pages/photos/photos?mode=record&entry=index" + (this.data.pet ? "&petId=" + this.data.pet.id : "") }); },
+
+  /**
+   * 照顾条的那一句事实。优先级：已过期 / 快到期 → 用药疗程 → 今天记了几条 → 默认引导。
+   * **失败静默**：首屏情绪区块，拉不到就显示默认引导，不挡住下面的玩法。
+   */
+  async loadCare(pet, view) {
+    const fallback = { text: "今天吃得怎么样？给" + pet.name + "记一笔" };
+    this.setData({ care: fallback });
+    try {
+      const overview = await api.request("/api/pets/" + pet.id + "/records/overview");
+      if (view !== this._view || !overview) return;
+      const due = (overview.upcoming || []).find((item) => item.overdue || item.daysLeft <= 7);
+      const course = (overview.courses || [])[0];
+      const text = due ? (due.overdue ? due.title + " 已过期" : due.daysLeft === 0 ? due.title + " 今天到期" : due.title + " " + due.daysLeft + " 天后到期")
+        : course ? course.name + " · 用药第 " + course.dayIndex + " / " + course.courseDays + " 天"
+          : overview.todayCount ? "今天已记 " + overview.todayCount + " 条" + (overview.streakDays > 1 ? " · 连续 " + overview.streakDays + " 天" : "")
+            : overview.streakDays > 1 ? "已连续记录 " + overview.streakDays + " 天，今天也记一笔" : fallback.text;
+      this.setData({ care: { text } });
+    } catch (error) { /* 保留默认引导 */ }
+  },
+  openRecords() { if (this.data.pet) wx.navigateTo({ url: "/pages/records/records?petId=" + encodeURIComponent(this.data.pet.id) }); },
+  openHealth() { if (this.data.pet) wx.navigateTo({ url: "/pages/health/health?petId=" + encodeURIComponent(this.data.pet.id) }); },
   onHide() { this._view = (this._view || 0) + 1; },
 
   openTimeline(petId) {

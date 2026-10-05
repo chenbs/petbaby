@@ -93,3 +93,8 @@
 }
 
 .symptom-chips { margin-top: var(--space-2); }
+
+/* 日常记录联动（2026-10） */
+.section-head { justify-content: space-between; }
+.link { color: var(--primary); font-weight: var(--fw-bold); }
+.records-toggle { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-1); margin-top: var(--space-4); }

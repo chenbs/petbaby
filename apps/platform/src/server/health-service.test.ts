@@ -72,6 +72,9 @@ describe("健康分诊", () => {
     }
     await expect(createHealthSession(USER, { petId: PET, description: "第四次咨询，还是掉毛" }))
       .rejects.toMatchObject({ code: "HEALTH_QUOTA_USED" });
+    // 额度用完后，紧急表现仍然直通「立即就医」，不被额度挡住
+    const urgent = await createHealthSession(USER, { petId: PET, description: "一直蹲猫砂，尿不出来" });
+    expect(urgent.triageLevel).toBe("emergency");
   });
 
   /*

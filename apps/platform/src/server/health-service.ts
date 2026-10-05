@@ -6,8 +6,9 @@ import { computeWeightTrend, notableWeightNote } from "@/domain/weight-trend";
 import { getDatabase, inTransaction } from "@/server/db/client";
 import { claimEntitlement, claimHealthExport, entitlementBalance, hasHealthExport, purchasedCreditBalance } from "@/server/entitlements";
 import { AppError } from "@/server/errors";
+import { documentRecordLines, recentContextLines } from "@/server/daily-log-context";
 import { buildHealthDocumentSvg, renderHealthDocumentPdf } from "@/server/health/document";
-import { selectTriageProvider } from "@/server/health/provider";
+import { adviseWithMeta, selectTriageProvider } from "@/server/health/provider";
 import { emergencyAdvisory, matchEmergency, type TriageAdvisory } from "@/server/health/triage";
 import { objectStorage } from "@/server/storage";
 
@@ -29,7 +30,18 @@ const sessionSchema = z.object({
   petId: z.string().uuid(),
   description: z.string().trim().min(4, "请多描述一些症状").max(600),
   photoIds: z.array(z.string().uuid()).max(3).default([]),
+  /** 是否把近 7 天的日常记录带给分诊。默认带；用户可在页面上关掉 */
+  includeRecords: z.boolean().optional().default(true),
 });
+
+/** 生日 → 月龄。生日晚于今天（填错）时不给 */
+function ageInMonths(birthday?: string) {
+  if (!birthday) return undefined;
+  const [year, month, day] = birthday.split("-").map(Number);
+  const now = new Date();
+  const months = (now.getFullYear() - year) * 12 + (now.getMonth() + 1 - month) - (now.getDate() < day ? 1 : 0);
+  return months >= 0 ? months : undefined;
+}
 
 export interface HealthSession {
   id: string;
@@ -41,7 +53,14 @@ export interface HealthSession {
   advisory: TriageAdvisory;
   status: string;
   errorCode?: string;
+  /** 分诊时一并参考的日常记录行（快照，见 pet_snapshot.recentRecords） */
+  contextRecords: string[];
   createdAt: string;
+}
+
+function snapshotRecords(snapshot: unknown): string[] {
+  const records = (snapshot as { recentRecords?: unknown } | null)?.recentRecords;
+  return Array.isArray(records) ? records.map(String) : [];
 }
 
 function mapSession(row: Record<string, unknown>): HealthSession {
@@ -55,6 +74,7 @@ function mapSession(row: Record<string, unknown>): HealthSession {
     advisory: (row.advisory || {}) as TriageAdvisory,
     status: String(row.status),
     errorCode: row.error_code ? String(row.error_code) : undefined,
+    contextRecords: snapshotRecords(row.pet_snapshot),
     createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : String(row.created_at),
   };
 }
@@ -102,7 +122,13 @@ export async function createHealthSession(userId: string, input: unknown): Promi
     throw new AppError("HEALTH_UNAVAILABLE_MEMORIAL", "这只宠物的健康记录已经封存", 409);
   }
 
-  await consumeQuota(userId, data.photoIds.length ? "image" : "text");
+  /*
+   * 紧急关键词先判，命中时不扣额度（2026-10 修正）：原先额度在前，
+   * 用完 3 次的用户再输入「尿不出来」只会收到「次数已用完」，而不是「立即就医」。
+   * 紧急直通不调模型、没有成本，没有理由让额度挡在它前面。
+   */
+  const emergencyAreas = matchEmergency(data.description);
+  if (!emergencyAreas) await consumeQuota(userId, data.photoIds.length ? "image" : "text");
 
   // 体重取最近一次记录，作为模型输入。没有也不阻断。
   const weightRows = await database.query<{ weight_grams: number }>(
@@ -110,12 +136,20 @@ export async function createHealthSession(userId: string, input: unknown): Promi
     [data.petId],
   );
 
+  /*
+   * 近 7 天的日常记录作为分诊上下文（2026-10）。用户描述「今天吐了」时，
+   * 模型能看到「前天也吐过两次、昨天只吃了一点」——这是普通问答拿不到的信息。
+   * 一并快照进 pet_snapshot：事后追溯时要知道当时模型看到了什么。
+   */
+  const recentRecords = data.includeRecords ? await recentContextLines(userId, data.petId) : [];
+
   const petSnapshot = {
     name: String(pet.name),
     species: String(pet.species),
     lifeStage: String(pet.life_stage),
-    birthday: pet.birthday ? String(pet.birthday) : undefined,
+    birthday: pet.birthday ? asDateString(pet.birthday) : undefined,
     weightGrams: weightRows[0] ? Number(weightRows[0].weight_grams) : undefined,
+    recentRecords,
   };
 
   const id = crypto.randomUUID();
@@ -125,14 +159,13 @@ export async function createHealthSession(userId: string, input: unknown): Promi
    * 紧急关键词直通（A3）。**必须在调模型之前** ——
    * 模型有延迟也有失败率，等十几秒对尿闭的猫是实际风险。
    */
-  const emergencyAreas = matchEmergency(data.description);
   if (emergencyAreas) {
     const advisory = emergencyAdvisory(emergencyAreas);
     await database.query(
       "INSERT INTO health_sessions (id,user_id,pet_id,description,photo_ids,pet_snapshot,triage_level,triage_source,advisory,status,created_at) VALUES ($1,$2,$3,$4,$5::jsonb,$6::jsonb,$7,'keyword',$8::jsonb,'succeeded',$9)",
       [id, userId, data.petId, data.description, JSON.stringify(data.photoIds), JSON.stringify(petSnapshot), advisory.level, JSON.stringify(advisory), now],
     );
-    return { id, petId: data.petId, description: data.description, photoIds: data.photoIds, triageLevel: advisory.level, triageSource: "keyword", advisory, status: "succeeded", createdAt: now.toISOString() };
+    return { id, petId: data.petId, description: data.description, photoIds: data.photoIds, triageLevel: advisory.level, triageSource: "keyword", advisory, status: "succeeded", contextRecords: recentRecords, createdAt: now.toISOString() };
   }
 
   const images: Array<{ body: Uint8Array; contentType: string }> = [];
@@ -150,16 +183,17 @@ export async function createHealthSession(userId: string, input: unknown): Promi
 
   const provider = selectTriageProvider();
   try {
-    const advisory = await provider.advise({
+    const { advisory, provider: channel, model, errors } = await adviseWithMeta(provider, {
       description: data.description,
-      pet: { name: petSnapshot.name, species: petSnapshot.species, weightGrams: petSnapshot.weightGrams, lifeStage: petSnapshot.lifeStage },
+      pet: { name: petSnapshot.name, species: petSnapshot.species, ageMonths: ageInMonths(petSnapshot.birthday), weightGrams: petSnapshot.weightGrams, lifeStage: petSnapshot.lifeStage },
+      recentRecords,
       images,
     });
     await database.query(
       "INSERT INTO health_sessions (id,user_id,pet_id,description,photo_ids,pet_snapshot,triage_level,triage_source,advisory,model_snapshot,status,created_at) VALUES ($1,$2,$3,$4,$5::jsonb,$6::jsonb,$7,'model',$8::jsonb,$9::jsonb,'succeeded',$10)",
-      [id, userId, data.petId, data.description, JSON.stringify(data.photoIds), JSON.stringify(petSnapshot), advisory.level, JSON.stringify(advisory), JSON.stringify({ provider: provider.name, modelVersion: provider.modelVersion }), now],
+      [id, userId, data.petId, data.description, JSON.stringify(data.photoIds), JSON.stringify(petSnapshot), advisory.level, JSON.stringify(advisory), JSON.stringify({ provider: channel, modelVersion: model, failedChannels: errors }), now],
     );
-    return { id, petId: data.petId, description: data.description, photoIds: data.photoIds, triageLevel: advisory.level, triageSource: "model", advisory, status: "succeeded", createdAt: now.toISOString() };
+    return { id, petId: data.petId, description: data.description, photoIds: data.photoIds, triageLevel: advisory.level, triageSource: "model", advisory, status: "succeeded", contextRecords: recentRecords, createdAt: now.toISOString() };
   } catch (error) {
     /*
      * 失败也要落库。与 generation_tasks 的口径一致：不落库会让用户
@@ -320,7 +354,7 @@ export async function createHealthDocument(userId: string, petId: string, option
     throw new AppError("HEALTH_ANNUAL_REQUIRES_ENTITLEMENT", "年度健康记录需要会员权益", 402);
   }
 
-  const [weights, care, sessions] = await Promise.all([
+  const [weights, care, sessions, records] = await Promise.all([
     year
       ? database.query("SELECT weight_grams,measured_on FROM pet_weight_records WHERE pet_id=$1 AND user_id=$2 AND extract(year from measured_on)=$3 ORDER BY measured_on DESC LIMIT 200", [petId, userId, year])
       : database.query("SELECT weight_grams,measured_on FROM pet_weight_records WHERE pet_id=$1 AND user_id=$2 ORDER BY measured_on DESC LIMIT 200", [petId, userId]),
@@ -330,6 +364,7 @@ export async function createHealthDocument(userId: string, petId: string, option
     year
       ? database.query("SELECT created_at,triage_level,advisory FROM health_sessions WHERE pet_id=$1 AND user_id=$2 AND status='succeeded' AND extract(year from created_at)=$3 ORDER BY created_at DESC LIMIT 50", [petId, userId, year])
       : database.query("SELECT created_at,triage_level,advisory FROM health_sessions WHERE pet_id=$1 AND user_id=$2 AND status='succeeded' ORDER BY created_at DESC LIMIT 50", [petId, userId]),
+    documentRecordLines(userId, petId, year),
   ]);
 
   const svg = buildHealthDocumentSvg({
@@ -354,12 +389,13 @@ export async function createHealthDocument(userId: string, petId: string, option
         summary: String(advisory.summary || ""),
       };
     }),
+    records,
   });
 
   const id = crypto.randomUUID();
   const key = `private/${userId}/health/${kind}-${petId}-${id}.pdf`;
   await objectStorage.put(key, await renderHealthDocumentPdf(svg), "application/pdf");
-  const summary = { weights: weights.length, care: care.length, sessions: sessions.length, petName: String(pet.name) };
+  const summary = { weights: weights.length, care: care.length, sessions: sessions.length, records: records.length, petName: String(pet.name) };
   try {
     await inTransaction(async (transaction) => {
       const granted = kind === "archive" ? await claimHealthExport(userId, id) : await claimEntitlement(userId, "annualHealthReport", `${year} 年度健康记录`, id);
@@ -468,6 +504,13 @@ export async function listCare(userId: string, petId: string) {
     dueOn: row.due_on ? asDateString(row.due_on) : undefined,
     note: row.note ? String(row.note) : undefined,
   }));
+}
+
+/** 删一次称重。填错的体重会让趋势与体重变化提示一直错下去，必须能删。 */
+export async function deleteWeight(userId: string, petId: string, id: string) {
+  const rows = await (await getDatabase()).query("DELETE FROM pet_weight_records WHERE id=$1 AND pet_id=$2 AND user_id=$3 RETURNING id", [id, petId, userId]);
+  if (!rows[0]) throw new AppError("WEIGHT_RECORD_NOT_FOUND", "记录不存在", 404);
+  return { deleted: true };
 }
 
 export async function deleteCare(userId: string, petId: string, id: string) {

@@ -289,3 +289,32 @@ export const healthDailyQuotas = pgTable("health_daily_quotas", {
   used: integer("used").notNull().default(0),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull(),
 }, (table) => [uniqueIndex("health_quota_user_date_kind_idx").on(table.userId, table.quotaDate, table.kind)]);
+
+// 日常记录（迁移 0041）。details 按 kind 由 server/daily-log-kinds.ts 校验。
+export const petDailyLogs = pgTable("pet_daily_logs", {
+  id: uuid("id").primaryKey(),
+  userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  petId: uuid("pet_id").notNull().references(() => pets.id, { onDelete: "cascade" }),
+  kind: text("kind").notNull(),
+  occurredOn: date("occurred_on").notNull(),
+  occurredTime: text("occurred_time"),
+  details: jsonb("details").notNull().default(sql`'{}'::jsonb`),
+  note: text("note"),
+  healthSessionId: uuid("health_session_id"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull(),
+}, (table) => [
+  index("pet_daily_logs_pet_day_idx").on(table.petId, table.occurredOn, table.occurredTime),
+  index("pet_daily_logs_pet_kind_idx").on(table.petId, table.kind, table.occurredOn),
+]);
+
+// 日常记录附图。不进照片库：呕吐物照片不该出现在时间线与年度短片里。
+export const petRecordAttachments = pgTable("pet_record_attachments", {
+  id: uuid("id").primaryKey(),
+  userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  petId: uuid("pet_id").notNull().references(() => pets.id, { onDelete: "cascade" }),
+  logId: uuid("log_id").references(() => petDailyLogs.id, { onDelete: "set null" }),
+  storageKey: text("storage_key").notNull().unique(),
+  mimeType: text("mime_type").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull(),
+}, (table) => [index("pet_record_attachments_log_idx").on(table.logId)]);

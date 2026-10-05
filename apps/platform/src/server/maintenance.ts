@@ -1,6 +1,7 @@
 import "server-only";
 
 import { getDatabase } from "@/server/db/client";
+import { cleanupOrphanAttachments } from "@/server/daily-log-service";
 import { processObjectCleanupJobs } from "@/server/object-cleanup";
 
 export async function closeExpiredOrders() {
@@ -19,6 +20,8 @@ export async function cleanupExpiredContent() {
   await database.query("DELETE FROM rate_limits WHERE window_start < now()-interval '2 days'");
   // 照片库是用户的记录，不是生成任务的临时素材；没有作品引用也必须保留。
   // 软删行也不能硬删：上传请求键的墓碑依赖它阻止旧请求复活。
+  // 上传后没挂到任何记录上的日常记录附图（用户中途放弃），先登记进持久清理
+  await cleanupOrphanAttachments();
   const objectCleanup = await processObjectCleanupJobs();
   return { works: 0, photos: 0, objectCleanup };
 }

@@ -22,6 +22,7 @@ export async function processObjectCleanupJob(id: string) {
     const used = await db.query(
       `SELECT 1 FROM photos WHERE storage_key=$1 AND deleted_at IS NULL
        UNION ALL SELECT 1 FROM owner_photos WHERE storage_key=$1 AND deleted_at IS NULL
+       UNION ALL SELECT 1 FROM pet_record_attachments WHERE storage_key=$1
        UNION ALL SELECT 1 FROM pets WHERE avatar_key=$1 AND deleted_at IS NULL
        UNION ALL SELECT 1 FROM works WHERE (output_key=$1 OR preview_key=$1) AND deleted_at IS NULL
        UNION ALL SELECT 1 FROM photo_deliverable_assets a JOIN pets p ON p.id=a.pet_id WHERE a.storage_key=$1 AND p.deleted_at IS NULL

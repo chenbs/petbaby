@@ -48,6 +48,11 @@
         </view>
       </view>
 
+      <view wx:if="{{recentCount}}" class="records-toggle" aria-role="checkbox" aria-checked="{{includeRecords}}" bindtap="toggleRecords">
+        <view class="chip {{includeRecords ? 'chip-on' : ''}}">{{includeRecords ? '✓ ' : ''}}参考近 7 天的日常记录</view>
+        <text class="small">记得越全，判断越贴近{{pets[petIndex].name}}的实际情况</text>
+      </view>
+
       <t-button type="primary" block anim="{{animType}}" loading="{{busy}}" bindtap="submit">看看要不要去医院</t-button>
     </view>
 
@@ -77,81 +82,66 @@
         <text class="sub-title">去医院前准备</text>
         <text wx:for="{{result.advisory.visitPreparation}}" wx:key="*this" class="small">· {{item}}</text>
       </view>
+
+      <view wx:if="{{result.contextRecords.length}}" class="section-block">
+        <text class="sub-title">这次一起参考了</text>
+        <text wx:for="{{result.contextRecords}}" wx:key="*this" class="small">· {{item}}</text>
+      </view>
+
+      <view class="row block-gap">
+        <t-button type="secondary" size="mini" anim="{{animType}}" bindtap="saveToRecords">记到日常记录</t-button>
+        <t-button type="ghost" size="mini" anim="{{animType}}" data-action="summary" bindtap="openRecords">整理给兽医看</t-button>
+      </view>
     </view>
 
     <!--
-      体重记录与趋势（改造项 L6）。A4 只存不看等于相册 —— 价值全在趋势里。
+      日常记录（2026-10）。体重、疫苗驱虫与呕吐 / 便便 / 用药等全部在「日常记录」页录入，这里只读展示，
+      录入入口只有一处，避免两个页面各有一套表单、改一处漏一处。
 
-      **只陈述事实，不做评价**：文案给「较上次 +6.2%」这类可核对的数字，
-      不给「偏胖」「超重」「正常」。BMI 与肥胖评级是评价性结论、接近诊断，
-      且体况评分本身是执业兽医的触诊项目，靠体重数字算不出来。
-      趋势句与提示语全部由服务端下发，端上不拼。
+      **只陈述事实，不做评价**：体重给「较上次 +6.2%」，不给「偏胖」「正常」；
+      疫苗只标「下次 X 月 X 日」「已过期」，不写「该打了」（红线 2：项目名由用户自己填）。
     -->
     <view class="health-section">
-      <text class="sub-title">体重</text>
-      <text wx:if="{{weightTrend}}" class="small">{{weightTrend.statement}}</text>
-      <text wx:else class="small">记一次体重，之后就能看到变化。</text>
-      <!-- 幅度较大时给提示。措辞只说变化了多少并建议就医时提一下，不说「异常」 -->
-      <text wx:if="{{weightNote}}" class="hint">{{weightNote}}</text>
+      <view class="row section-head">
+        <text class="sub-title">日常记录</text>
+        <text class="small link" aria-role="button" data-action="" bindtap="openRecords">去记一笔 ›</text>
+      </view>
+      <text class="small">吃喝、便便、呕吐、用药、体重和疫苗驱虫都记在这里，分诊和健康档案会一起参考。</text>
+
+      <view wx:if="{{recentFacts.length}}" class="chips">
+        <text wx:for="{{recentFacts}}" wx:key="*this" class="chip">{{item}}</text>
+      </view>
 
       <view class="section-block">
-        <t-field
-          label="体重（公斤）"
-          type="digit"
-          value="{{weightInput}}"
-          placeholder="例如 4.2"
-          bindchange="inputWeight"
-        ></t-field>
-        <picker mode="date" value="{{weightDate}}" bindchange="chooseWeightDate">
-          <t-field label="称重日期" control="select" value="{{weightDate}}"></t-field>
-        </picker>
-        <t-button type="ghost" block anim="{{animType}}" loading="{{weightBusy}}" class="block-gap" bindtap="saveWeight">记下这次体重</t-button>
-      </view>
-
-      <!-- 只列最近几条，截断在 JS 侧做（wx:for 与 wx:if 同元素的求值顺序容易读错） -->
-      <view wx:if="{{recentWeights.length > 1}}" class="section-block">
-        <text class="small">最近几次</text>
-        <view wx:for="{{recentWeights}}" wx:key="id" class="row">
-          <text class="small">{{item.measuredOn}}</text>
-          <text class="small">{{item.weightText}}</text>
+        <text class="small strong">体重</text>
+        <text wx:if="{{weightTrend}}" class="small">{{weightTrend.statement}}</text>
+        <text wx:else class="small">还没有体重记录，记两次之后就能看到变化。</text>
+        <!-- 幅度较大时给提示。措辞只说变化了多少并建议就医时提一下，不说「异常」 -->
+        <text wx:if="{{weightNote}}" class="hint">{{weightNote}}</text>
+        <!-- 只列最近几条，截断在 JS 侧做（wx:for 与 wx:if 同元素的求值顺序容易读错） -->
+        <view wx:if="{{recentWeights.length > 1}}" class="stack-tight">
+          <view wx:for="{{recentWeights}}" wx:key="id" class="row">
+            <text class="small">{{item.measuredOn}}</text>
+            <text class="small">{{item.weightText}}</text>
+          </view>
         </view>
       </view>
-    </view>
 
-    <!--
-      免疫与驱虫（改造项 L5 的数据来源）。到期前一周 Worker 会推一条站内通知。
-
-      **只记事实不给建议**：项目名由用户自己填，产品不给候选清单 ——
-      给清单就等于在推荐具体疫苗或驱虫药（红线 2）。
-      列表上也只标「下次 X 月 X 日」「已过期」，不写「该打了」。
-    -->
-    <view class="health-section">
-      <text class="sub-title">免疫与驱虫</text>
-      <text class="small">记下日子，到期前会提醒你。打什么、打不打由兽医决定。</text>
-
-      <view wx:if="{{careRecords.length}}" class="section-block">
-        <view wx:for="{{careRecords}}" wx:key="id" class="row">
+      <view class="section-block">
+        <text class="small strong">免疫与驱虫</text>
+        <text wx:if="{{!careRecords.length}}" class="small">记下日子，到期前一周会提醒你。打什么、打不打由兽医决定。</text>
+        <view wx:for="{{careRecords}}" wx:key="id" wx:if="{{index < 4}}" class="row">
           <view class="care-main">
             <text class="small strong">{{item.kindText}} · {{item.label}}</text>
             <text class="small">{{item.performedOn}}</text>
           </view>
           <t-tag wx:if="{{item.dueText}}" tone="{{item.overdue ? 'warning' : 'neutral'}}" size="mini" text="{{item.dueText}}"></t-tag>
-          <t-button type="ghost" size="mini" anim="{{animType}}" data-id="{{item.id}}" bindtap="deleteCare">删</t-button>
         </view>
       </view>
 
-      <view class="section-block">
-        <picker range="{{careKindLabels}}" bindchange="chooseCareKind">
-          <t-field label="类型" control="select" value="{{careKindLabels[careKindIndex]}}"></t-field>
-        </picker>
-        <t-field label="项目" value="{{careLabel}}" placeholder="例如「猫三联」「体内驱虫」" maxlength="40" bindchange="inputCareLabel"></t-field>
-        <picker mode="date" value="{{careDate}}" bindchange="chooseCareDate">
-          <t-field label="这次日期" control="select" value="{{careDate}}"></t-field>
-        </picker>
-        <picker mode="date" value="{{careDueDate}}" bindchange="chooseCareDueDate">
-          <t-field label="下次到期" control="select" value="{{careDueDate || '不提醒'}}"></t-field>
-        </picker>
-        <t-button type="ghost" block anim="{{animType}}" loading="{{careBusy}}" class="block-gap" bindtap="saveCare">记下这一次</t-button>
+      <view class="row block-gap">
+        <t-button type="secondary" size="mini" anim="{{animType}}" data-action="summary" bindtap="openRecords">给兽医看</t-button>
+        <t-button type="ghost" size="mini" anim="{{animType}}" data-action="" bindtap="openRecords">全部记录</t-button>
       </view>
     </view>
 

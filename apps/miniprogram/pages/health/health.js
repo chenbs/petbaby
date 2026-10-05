@@ -3,6 +3,7 @@ const api = require("../../services/api");
 const payment = require("../../services/payment");
 const config = require("../../config");
 const { themedPage } = require("../../theme/page-mixin");
+const { openPetPage } = require("../../services/pet-nav");
 
 /**
  * 健康助手。
@@ -78,9 +79,6 @@ themedPage({
     recentWeights: [],
     weightTrend: null,
     weightNote: "",
-    weightInput: "",
-    weightDate: todayString(),
-    weightBusy: false,
     /*
      * 免疫与驱虫记录（改造项 L5 的数据来源）。
      *
@@ -89,12 +87,6 @@ themedPage({
      * 因为给清单就等于在推荐具体疫苗或驱虫药（红线 2）。
      */
     careRecords: [],
-    careKindIndex: 0,
-    careLabel: "",
-    careDate: todayString(),
-    careDueDate: "",
-    careBusy: false,
-    careKindLabels: CARE_KINDS.map((item) => item.label),
     /*
      * 健康档案（改造项 L1）。**是就医准备材料不是体检报告** ——
      * 内容全部来自用户自己录入的记录，不含任何结论性判断。
@@ -103,6 +95,18 @@ themedPage({
     documents: [],
     documentBusy: false,
     documentHint: "",
+    /*
+     * 日常记录联动（2026-10）：分诊默认带上近 7 天的日常记录，模型能看到「前天也吐过」这类背景；
+     * 用户可以关掉。结果下方给「记到日常记录」，把这次的描述存成一条不舒服的记录。
+     */
+    includeRecords: true,
+    recentCount: 0,
+    recentFacts: [],
+  },
+
+  onLoad(options) {
+    // 从日常记录、首页或宠物档案带进来时选中那一只，不带则用上次的选择
+    this._petId = (options && options.petId) || "";
   },
 
   onShow() {
@@ -115,7 +119,9 @@ themedPage({
       const pets = await api.request("/api/pets").then(displayMediaTree);
       // 已离开的宠物不进入健康功能（红线 10）。
       const active = (pets || []).filter((pet) => pet.lifeStage !== "memorial");
-      const index = Math.min(this.data.petIndex, Math.max(0, active.length - 1));
+      const wanted = this._petId ? active.findIndex((pet) => pet.id === this._petId) : -1;
+      this._petId = "";
+      const index = wanted >= 0 ? wanted : Math.min(this.data.petIndex, Math.max(0, active.length - 1));
       const petId = active[index] ? active[index].id : active[0] && active[0].id;
       const sessions = petId ? await api.request("/api/health-sessions?petId=" + petId) : [];
       this.setData({
@@ -124,7 +130,7 @@ themedPage({
         sessions: (sessions || []).map((item) => this.decorate(item)),
         loading: false,
       });
-      if (petId) { this.loadWeights(petId); this.loadCare(petId); this.loadDocuments(petId); }
+      if (petId) { this.loadWeights(petId); this.loadCare(petId); this.loadDocuments(petId); this.loadRecentRecords(petId); }
       else this.setData({ weights: [], recentWeights: [], weightTrend: null, weightNote: "", careRecords: [], documents: [] });
     } catch (error) {
       this.setData({ loading: false, error: error.message || "加载失败" });
@@ -173,33 +179,28 @@ themedPage({
       .catch(() => undefined);
   },
 
-  chooseCareKind(event) { this.setData({ careKindIndex: Number(event.detail.value) }); },
-  inputCareLabel(event) { this.setData({ careLabel: event.detail.value }); },
-  chooseCareDate(event) { this.setData({ careDate: event.detail.value }); },
-  chooseCareDueDate(event) { this.setData({ careDueDate: event.detail.value }); },
-
-  /** 记一次免疫 / 驱虫。到期日可留空 —— 一次性项目没有下次，留空即不提醒。 */
-  saveCare() {
-    const pet = this.data.pets[this.data.petIndex];
-    if (!pet) return;
-    const label = String(this.data.careLabel).trim();
-    if (!label) return this.setData({ error: "填一下项目名，比如「猫三联」" });
-    this.setData({ careBusy: true, error: "" });
-    const data = { kind: CARE_KINDS[this.data.careKindIndex].value, label, performedOn: this.data.careDate };
-    if (this.data.careDueDate) data.dueOn = this.data.careDueDate;
-    api.request("/api/pets/" + pet.id + "/care", { method: "POST", data }).then(displayMediaTree)
-      .then(() => { this.setData({ careBusy: false, careLabel: "", careDueDate: "" }); this.loadCare(pet.id); })
-      .catch((error) => this.setData({ careBusy: false, error: error.message || "保存失败" }));
+  /** 近 7 天的日常记录概况，告诉用户这次分诊会一起参考什么。失败静默 */
+  loadRecentRecords(petId) {
+    api.request("/api/pets/" + petId + "/records/overview")
+      .then((overview) => this.setData({ recentFacts: (overview && overview.recentFacts) || [], recentCount: overview && overview.totalDays ? overview.totalDays : 0 }))
+      .catch(() => undefined);
   },
 
-  /** 删一条。填错日期的记录会一直触发到期提示，必须能删。 */
-  deleteCare(event) {
+  toggleRecords() { this.setData({ includeRecords: !this.data.includeRecords }); },
+
+  /** 把这次的描述记成一条「不舒服」，并关联这次分诊 */
+  saveToRecords() {
     const pet = this.data.pets[this.data.petIndex];
-    const id = event.currentTarget.dataset.id;
-    if (!pet || !id) return;
-    api.request("/api/pets/" + pet.id + "/care/" + id, { method: "DELETE" }).then(displayMediaTree)
-      .then(() => this.loadCare(pet.id))
-      .catch((error) => this.setData({ error: error.message || "删除失败" }));
+    const result = this.data.result;
+    if (!pet || !result) return;
+    openPetPage("/pages/records/records", pet.id, { kind: "symptom", sessionId: result.id, note: String(result.description || "").slice(0, 280) });
+  },
+
+  openRecords(event) {
+    const pet = this.data.pets[this.data.petIndex];
+    if (!pet) return;
+    const action = event && event.currentTarget && event.currentTarget.dataset && event.currentTarget.dataset.action;
+    openPetPage("/pages/records/records", pet.id, action ? { action } : {});
   },
 
   /** 已导出的健康档案列表。失败静默，同体重与免疫。 */
@@ -251,27 +252,6 @@ themedPage({
     });
   },
 
-  inputWeight(event) { this.setData({ weightInput: event.detail.value }); },
-  chooseWeightDate(event) { this.setData({ weightDate: event.detail.value }); },
-
-  /**
-   * 记一次体重。公斤输入 → 克存储：`weight_grams` 是整数，
-   * 浮点公斤会出现 4.1+0.2 != 4.3 的显示问题（见迁移 0018 的说明）。
-   */
-  saveWeight() {
-    const pet = this.data.pets[this.data.petIndex];
-    if (!pet) return;
-    const kilograms = Number(this.data.weightInput);
-    if (!Number.isFinite(kilograms) || kilograms <= 0) return this.setData({ error: "请填写体重，单位公斤" });
-    this.setData({ weightBusy: true, error: "" });
-    api.request("/api/pets/" + pet.id + "/weights", {
-      method: "POST",
-      data: { weightGrams: Math.round(kilograms * 1000), measuredOn: this.data.weightDate },
-    }).then(displayMediaTree)
-      .then(() => { this.setData({ weightBusy: false, weightInput: "" }); this.loadWeights(pet.id); })
-      .catch((error) => this.setData({ weightBusy: false, error: error.message || "保存失败" }));
-  },
-
   decorate(session) {
     return Object.assign({}, session, {
       levelText: LEVEL_TEXT[session.triageLevel] || LEVEL_TEXT.observe,
@@ -282,7 +262,7 @@ themedPage({
 
   choosePet(event) {
     // 切宠物时清掉上一只的体重与趋势，否则会短暂显示错的宠物的数字
-    this.setData({ petIndex: Number(event.currentTarget.dataset.index), result: null, weights: [], recentWeights: [], weightTrend: null, weightNote: "", careRecords: [], documents: [], documentHint: "" });
+    this.setData({ petIndex: Number(event.currentTarget.dataset.index), result: null, weights: [], recentWeights: [], weightTrend: null, weightNote: "", careRecords: [], documents: [], documentHint: "", recentFacts: [], recentCount: 0 });
     this.load();
   },
 
@@ -304,7 +284,7 @@ themedPage({
     try {
       const session = await api.request("/api/health-sessions", {
         method: "POST",
-        data: { petId: pet.id, description: this.data.description },
+        data: { petId: pet.id, description: this.data.description, includeRecords: this.data.includeRecords },
       });
       this.setData({ result: this.decorate(session), description: "", busy: false });
       this.load();
@@ -313,8 +293,8 @@ themedPage({
     }
   },
 
+  /** 空状态的「去建档案」。原先只在已有宠物时才跳转，而空状态恰恰没有宠物，按钮点了没反应 */
   goWeights() {
-    const pet = this.data.pets[this.data.petIndex];
-    if (pet) wx.navigateTo({ url: "/pages/pets/pets" });
+    wx.navigateTo({ url: "/pages/pets/pets?mode=create" });
   },
 });

@@ -1,0 +1,242 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+
+<wxs module="pick">
+  function has(list, value) { return !!list && list.indexOf(value) >= 0; }
+  module.exports = { has: has };
+</wxs>
+
+<!--
+  日常记录（2026-10）：标题与连续天数 → 快记宫格 → 「替你记着」概览（到期 / 疗程 / 上次间隔 / 近 7 天）
+  → 分组筛选 → 按天分组的时间流。表单在底部抽屉里，字段由服务端清单下发。
+-->
+<view class="{{skinClass}} page page-flat art-pet layout-workbench records-page">
+  <t-notice wx:if="{{error}}" type="error" message="{{error}}"></t-notice>
+  <t-button wx:if="{{error}}" type="secondary" class="block-gap" bindtap="reload">重新加载</t-button>
+
+  <t-skeleton wx:if="{{loading}}" type="list" count="3"></t-skeleton>
+
+  <!-- 已离开的宠物：不给记录入口，安静地引到时间线 -->
+  <t-empty
+    wx:elif="{{sealed}}"
+    icon="paw"
+    title="{{pet.name}}的日常已经收好了"
+    description="照片和一起走过的日子都还在时间线里。"
+    anim="fade"
+  ></t-empty>
+
+  <t-empty
+    wx:elif="{{!pet}}"
+    icon="pet"
+    title="先建一个宠物档案"
+    description="每一条记录都会跟着档案走，换宠物也不会记混。"
+    action-text="去建档案"
+    anim="{{animType}}"
+    decor="{{decor}}"
+    bindaction="openPets"
+  ></t-empty>
+
+  <block wx:else>
+    <view class="records-head">
+      <view class="title flush">{{pet.name}}的日常</view>
+      <text class="small">{{headline}}</text>
+    </view>
+
+    <scroll-view wx:if="{{pets.length > 1}}" class="chip-scroll records-pets" scroll-x show-scrollbar="{{false}}"><view class="chip-track">
+      <view wx:for="{{pets}}" wx:key="id" class="chip {{petIndex === index ? 'chip-on' : ''}}" hover-class="chip-hover" data-index="{{index}}" aria-role="tab" aria-selected="{{petIndex === index}}" bindtap="choosePet">{{item.name}}</view>
+    </view></scroll-view>
+
+    <!-- 快记宫格：点一下直接进对应表单，大部分记录两三下就能存 -->
+    <view class="quick-grid">
+      <view wx:for="{{kinds}}" wx:key="kind" class="quick-item tappable anim-{{animType}}" hover-class="quick-hover" data-kind="{{item.kind}}" aria-role="button" aria-label="记{{item.label}}" bindtap="openForm">
+        <view class="quick-icon"><image class="quick-glyph" src="/assets/icons/{{themeId}}/rk-{{item.icon}}.png" mode="aspectFit" /></view>
+        <text class="quick-label">{{item.label}}</text>
+      </view>
+    </view>
+
+    <t-notice wx:if="{{urgent}}" type="error" class="block-gap" message="你记下的情况里提到了{{urgent.areas}}方面的紧急表现，请现在就联系动物医院。"></t-notice>
+    <view wx:if="{{urgent}}" class="row tip-actions">
+      <t-button type="primary" size="mini" anim="{{animType}}" bindtap="openHealth">去健康助手看看</t-button>
+      <t-button type="ghost" size="mini" anim="{{animType}}" bindtap="dismissTip">知道了</t-button>
+    </view>
+    <view wx:if="{{afterSave}}" class="tip-card" aria-role="button" hover-class="quick-hover" bindtap="openHealth">
+      <text class="small tip-text">{{afterSave.text}}</text>
+      <text class="tip-go">问问 ›</text>
+    </view>
+
+    <!-- 替你记着：全部是日期相减与次数相加，不给评价 -->
+    <view wx:if="{{overview}}" class="overview">
+      <view class="row overview-head">
+        <text class="sub-title">替你记着</text>
+        <text class="small">{{overview.todayCount ? '今天记了 ' + overview.todayCount + ' 条' : '今天还没记'}}</text>
+      </view>
+
+      <view wx:for="{{overview.upcoming}}" wx:key="key" class="fact-row">
+        <t-tag tone="{{item.overdue ? 'warning' : 'neutral'}}" size="mini" text="{{item.overdue ? '已过期' : item.daysLeft === 0 ? '今天' : item.daysLeft + ' 天后'}}"></t-tag>
+        <text class="small fact-text">{{item.title}} · {{item.date}}</text>
+      </view>
+
+      <view wx:for="{{overview.courses}}" wx:key="logId" class="fact-row">
+        <t-tag tone="accent" size="mini" text="用药第 {{item.dayIndex}} / {{item.courseDays}} 天"></t-tag>
+        <text class="small fact-text">{{item.name}}{{item.dosesToday ? ' · 今天已记 ' + item.dosesToday + ' 次' : ''}}</text>
+        <t-button type="ghost" size="mini" anim="{{animType}}" data-id="{{item.logId}}" bindtap="logCourseDose">记今天这次</t-button>
+      </view>
+
+      <view wx:if="{{overview.weight}}" class="fact-row">
+        <text class="small fact-text">体重 {{overview.weight.latest}}（{{overview.weight.measuredOn}}）· {{overview.weight.statement}}</text>
+      </view>
+      <text wx:if="{{overview.weight.note}}" class="hint">{{overview.weight.note}}</text>
+
+      <view wx:if="{{overview.recentFacts.length || overview.intervals.length}}" class="chips fact-chips">
+        <text wx:for="{{overview.recentFacts}}" wx:key="*this" class="fact-chip fact-chip-strong">{{item}}</text>
+        <text wx:for="{{overview.intervals}}" wx:key="key" class="fact-chip">{{item.text}}</text>
+      </view>
+      <text wx:if="{{!overview.totalDays}}" class="small">记下几次之后，这里会替你算好「上次呕吐是几天前」「疫苗哪天到期」。</text>
+
+      <view class="row overview-actions">
+        <t-button type="secondary" size="mini" anim="{{animType}}" loading="{{summaryBusy}}" bindtap="openSummary">给兽医看</t-button>
+        <t-button type="ghost" size="mini" anim="{{animType}}" bindtap="openHealth">问问健康助手</t-button>
+      </view>
+    </view>
+
+    <scroll-view class="chip-scroll records-groups" scroll-x show-scrollbar="{{false}}"><view class="chip-track">
+      <view wx:for="{{groups}}" wx:key="id" class="chip {{group === item.id ? 'chip-on' : ''}}" hover-class="chip-hover" data-id="{{item.id}}" aria-role="tab" aria-selected="{{group === item.id}}" bindtap="chooseGroup">{{item.label}}</view>
+    </view></scroll-view>
+
+    <t-empty
+      wx:if="{{empty}}"
+      icon="paw"
+      title="{{group ? '这一类还没有记录' : '还没有记录'}}"
+      description="今天吃了多少、便便怎么样、有没有吐，点上面的格子记一笔就好。"
+      anim="{{animType}}"
+      decor="{{decor}}"
+    ></t-empty>
+
+    <view wx:for="{{days}}" wx:for-item="day" wx:key="date" class="day">
+      <view class="row day-head">
+        <text class="day-label">{{day.label}}</text>
+        <text wx:if="{{day.dayText}}" class="small">{{day.dayText}}</text>
+      </view>
+      <view class="day-list">
+        <view wx:for="{{day.items}}" wx:key="key" class="entry">
+          <view class="entry-icon"><image class="entry-glyph" src="/assets/icons/{{themeId}}/rk-{{item.icon}}.png" mode="aspectFit" /></view>
+          <view class="entry-main">
+            <view class="row entry-title-row">
+              <text class="entry-title">{{item.title}}</text>
+              <text wx:if="{{item.occurredTime}}" class="small">{{item.occurredTime}}</text>
+            </view>
+            <text wx:if="{{item.summary}}" class="small entry-summary">{{item.summary}}</text>
+            <text wx:if="{{item.note}}" class="small entry-note">{{item.note}}</text>
+            <view wx:if="{{item.attachments.length}}" class="entry-photos">
+              <image wx:for="{{item.attachments}}" wx:for-item="photo" wx:key="id" wx:if="{{photo.url}}" class="entry-photo" src="{{photo.url}}" mode="aspectFill" data-url="{{photo.url}}" data-urls="{{item.attachments}}" bindtap="previewAttachment" />
+            </view>
+            <text wx:if="{{item.healthSessionId}}" class="small entry-link">来自健康助手</text>
+          </view>
+          <view class="entry-more hit-area" aria-role="button" aria-label="删除这条记录" data-id="{{item.id}}" data-source="{{item.source}}" data-title="{{item.title}}" bindtap="askRemove">×</view>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{days.length}}" class="list-foot">
+      <t-button wx:if="{{nextCursor}}" type="ghost" anim="{{animType}}" loading="{{loadingMore}}" bindtap="more">更早的记录</t-button>
+      <text wx:else class="small">没有更早的记录了</text>
+    </view>
+  </block>
+</view>
+
+<!-- 记一笔：字段来自服务端清单 -->
+<t-popup visible="{{!!form}}" title="{{form.title}}" tall anim="{{animType}}" bindclose="closeForm">
+  <view wx:if="{{form}}" class="stack form-body">
+    <view class="row form-when">
+      <picker mode="date" value="{{form.occurredOn}}" end="{{overview.today}}" bindchange="chooseDate" class="form-when-item">
+        <t-field label="日期" control="select" value="{{form.occurredOn}}"></t-field>
+      </picker>
+      <picker wx:if="{{form.withTime}}" mode="time" value="{{form.occurredTime}}" bindchange="chooseTime" class="form-when-item">
+        <t-field label="时间" control="select" value="{{form.occurredTime}}" placeholder="不记时间"></t-field>
+      </picker>
+    </view>
+
+    <view wx:for="{{form.spec.fields}}" wx:for-item="field" wx:key="key" class="form-field">
+      <block wx:if="{{field.type === 'choice'}}">
+        <text class="field-title">{{field.label}}{{field.multiple ? '（可多选）' : ''}}</text>
+        <view class="chips">
+          <view wx:for="{{field.options}}" wx:for-item="option" wx:key="value"
+            class="chip tappable anim-{{animType}} {{(field.multiple ? pick.has(form.values[field.key], option.value) : form.values[field.key] === option.value) ? 'chip-on' : ''}}"
+            hover-class="chip-hover" data-key="{{field.key}}" data-value="{{option.value}}" data-multiple="{{field.multiple}}" bindtap="pickChoice">{{option.label}}</view>
+        </view>
+      </block>
+
+      <view wx:elif="{{field.type === 'count'}}" class="row stepper-row">
+        <text class="field-title">{{field.label}}</text>
+        <view class="stepper">
+          <view class="stepper-btn hit-area" aria-role="button" aria-label="减少" data-key="{{field.key}}" data-step="-1" bindtap="stepCount">−</view>
+          <text class="stepper-value">{{form.values[field.key]}} {{field.unit}}</text>
+          <view class="stepper-btn hit-area" aria-role="button" aria-label="增加" data-key="{{field.key}}" data-step="1" bindtap="stepCount">＋</view>
+        </view>
+      </view>
+
+      <view wx:elif="{{field.type === 'toggle'}}" class="chips">
+        <view class="chip tappable anim-{{animType}} {{form.values[field.key] ? 'chip-on' : ''}}" hover-class="chip-hover" data-key="{{field.key}}" bindtap="toggleField">{{field.label}}</view>
+      </view>
+
+      <picker wx:elif="{{field.type === 'date'}}" mode="date" value="{{form.values[field.key]}}" data-key="{{field.key}}" bindchange="chooseFieldDate">
+        <t-field label="{{field.label}}" control="select" value="{{form.values[field.key]}}" placeholder="{{field.placeholder}}"></t-field>
+      </picker>
+
+      <t-field wx:elif="{{field.type === 'number'}}" label="{{field.label}}（{{field.unit}}）" input-type="digit" value="{{form.values[field.key]}}" placeholder="{{field.placeholder}}" data-key="{{field.key}}" bindchange="inputField"></t-field>
+
+      <t-field wx:else label="{{field.label}}" value="{{form.values[field.key]}}" placeholder="{{field.placeholder}}" maxlength="{{field.maxLength}}" data-key="{{field.key}}" bindchange="inputField"></t-field>
+    </view>
+
+    <t-field control="textarea" label="备注" value="{{form.note}}" placeholder="{{form.spec.notePlaceholder}}" maxlength="300" bindchange="inputNote"></t-field>
+
+    <view wx:if="{{form.spec.attachments}}" class="form-field">
+      <text class="field-title">照片（只有你能看到，不进照片库）</text>
+      <view class="entry-photos">
+        <view wx:for="{{form.attachments}}" wx:key="id" class="form-photo-wrap">
+          <image class="entry-photo" src="{{item.localPath}}" mode="aspectFill" />
+          <view class="form-photo-remove hit-area" aria-role="button" aria-label="移除这张" data-id="{{item.id}}" bindtap="removeAttachment">×</view>
+        </view>
+        <view wx:if="{{form.attachments.length < 3}}" class="form-photo-add" aria-role="button" aria-label="添加照片" hover-class="quick-hover" bindtap="addAttachment">＋</view>
+      </view>
+    </view>
+
+    <text wx:if="{{form.kind === 'medication'}}" class="hint">药名和用量请按兽医开的填写，这里只帮你记着，不提供用药建议。</text>
+    <t-notice wx:if="{{formError}}" type="error" message="{{formError}}"></t-notice>
+  </view>
+  <view slot="footer">
+    <t-button type="primary" block anim="{{animType}}" loading="{{formBusy}}" bindtap="saveForm">记下来</t-button>
+  </view>
+</t-popup>
+
+<!-- 给兽医看：近两周的身体状况、用药与疫苗驱虫，原样罗列 -->
+<t-popup visible="{{!!summary}}" title="给兽医看 · 近 {{summary.days}} 天" tall anim="{{animType}}" bindclose="closeSummary">
+  <view wx:if="{{summary}}" class="stack">
+    <view class="summary-block">
+      <text wx:for="{{summary.header}}" wx:key="*this" class="summary-line strong">{{item}}</text>
+      <text wx:if="{{summary.countsText}}" class="summary-line">这段时间：{{summary.countsText}}</text>
+    </view>
+    <view class="summary-block">
+      <text wx:for="{{summary.lines}}" wx:key="*this" class="summary-line">· {{item}}</text>
+      <text wx:if="{{!summary.lines.length}}" class="small">这段时间没有身体状况或用药记录。</text>
+    </view>
+    <view wx:if="{{summary.care.length}}" class="summary-block">
+      <text class="field-title">疫苗驱虫最近一次</text>
+      <text wx:for="{{summary.care}}" wx:key="*this" class="summary-line">· {{item}}</text>
+    </view>
+    <text class="small">以上是你自己记下的内容，可以直接把手机给医生看，或复制后发给医院。需要打印的完整版可在健康助手里导出健康档案。</text>
+  </view>
+  <view slot="footer">
+    <t-button type="primary" block anim="{{animType}}" bindtap="copySummary">复制成文字</t-button>
+  </view>
+</t-popup>
+
+<t-dialog
+  visible="{{!!removeTarget}}"
+  title="删除这条{{removeTarget.title}}记录？"
+  content="删除后无法恢复，附带的照片也会一起删除。"
+  confirm-text="删除"
+  danger
+  anim="{{animType}}"
+  bindconfirm="confirmRemove"
+  bindcancel="cancelRemove"
+></t-dialog>

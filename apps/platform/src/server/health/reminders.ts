@@ -115,7 +115,7 @@ async function remindCareDue(now: Date, limit: number): Promise<HealthReminder[]
      * subject_key 带上到期日：明年同一条记录续期后 due_on 变了，
      * key 也变，于是能再推一次。只用 record id 会让续期后永远不再提示。
      */
-    if (await emit({ ...reminder, userId: String(row.user_id), subjectKey: `${row.id}:${dueOn}`, targetPath: "/pages/health/health" })) sent.push(reminder);
+    if (await emit({ ...reminder, userId: String(row.user_id), subjectKey: `${row.id}:${dueOn}`, targetPath: `/pages/records/records?petId=${encodeURIComponent(reminder.petId)}` })) sent.push(reminder);
   }
   return sent;
 }
@@ -158,7 +158,7 @@ async function remindWeightChange(now: Date, limit: number): Promise<HealthRemin
       body: note,
     };
     // subject_key 用最近一条记录的 id：同一次称重只提醒一次，下次称重才会再判。
-    if (await emit({ ...reminder, userId: String(pet.user_id), subjectKey: String(rows[0].id), targetPath: "/pages/health/health" })) sent.push(reminder);
+    if (await emit({ ...reminder, userId: String(pet.user_id), subjectKey: String(rows[0].id), targetPath: `/pages/records/records?petId=${encodeURIComponent(reminder.petId)}` })) sent.push(reminder);
   }
   return sent;
 }
@@ -203,7 +203,7 @@ async function remindSeniorCheckup(now: Date, limit: number): Promise<HealthRemi
     };
     // 每季度一条：subject_key 带上年份与季度序号，同一季度内不重复。
     const quarter = `${now.getFullYear()}Q${Math.floor(now.getMonth() / 3) + 1}`;
-    if (await emit({ ...reminder, userId: String(pet.user_id), subjectKey: quarter, targetPath: "/pages/health/health" })) sent.push(reminder);
+    if (await emit({ ...reminder, userId: String(pet.user_id), subjectKey: quarter, targetPath: `/pages/health/health?petId=${encodeURIComponent(reminder.petId)}` })) sent.push(reminder);
   }
   return sent;
 }

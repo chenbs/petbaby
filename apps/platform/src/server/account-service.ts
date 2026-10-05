@@ -25,7 +25,7 @@ export async function updateAccountProfile(userId: string, input: unknown) {
 export async function exportAccountData(userId: string) {
   await getAccountProfile(userId);
   const database = await getDatabase();
-  const [user, pets, photos, ownerPhotos, works, orders, events] = await Promise.all([
+  const [user, pets, photos, ownerPhotos, works, orders, events, dailyLogs, weights, careRecords] = await Promise.all([
     database.query("SELECT id,display_name,created_at FROM users WHERE id=$1", [userId]),
     database.query("SELECT id,name,species,gender,birthday,is_default,created_at FROM pets WHERE user_id=$1 AND deleted_at IS NULL ORDER BY created_at", [userId]),
     database.query("SELECT id,pet_id,filename,mime_type,size,position,quality,created_at FROM photos WHERE user_id=$1 AND deleted_at IS NULL ORDER BY created_at", [userId]),
@@ -33,8 +33,11 @@ export async function exportAccountData(userId: string) {
     database.query("SELECT id,plugin_id,pet_id,title,subtitle,locked,public,version,created_at FROM works WHERE user_id=$1 AND deleted_at IS NULL ORDER BY created_at", [userId]),
     database.query("SELECT id,work_id,plugin_id,amount,status,created_at,paid_at,refunded_amount FROM orders WHERE user_id=$1 ORDER BY created_at", [userId]),
     database.query("SELECT id,plugin_id,name,created_at FROM events WHERE user_id=$1 ORDER BY created_at", [userId]),
+    database.query("SELECT l.id,l.pet_id,l.kind,l.occurred_on,l.occurred_time,l.details,l.note,l.created_at FROM pet_daily_logs l JOIN pets p ON p.id=l.pet_id WHERE l.user_id=$1 AND p.deleted_at IS NULL ORDER BY l.occurred_on,l.created_at", [userId]),
+    database.query("SELECT w.id,w.pet_id,w.weight_grams,w.measured_on,w.note FROM pet_weight_records w JOIN pets p ON p.id=w.pet_id WHERE w.user_id=$1 AND p.deleted_at IS NULL ORDER BY w.measured_on", [userId]),
+    database.query("SELECT c.id,c.pet_id,c.kind,c.label,c.performed_on,c.due_on,c.note FROM pet_care_records c JOIN pets p ON p.id=c.pet_id WHERE c.user_id=$1 AND p.deleted_at IS NULL ORDER BY c.performed_on", [userId]),
   ]);
-  return { exportedAt: new Date().toISOString(), user: user[0], pets, photos, ownerPhotos, works, orders, events };
+  return { exportedAt: new Date().toISOString(), user: user[0], pets, photos, ownerPhotos, works, orders, events, dailyLogs, weights, careRecords };
 }
 
 export async function deleteAccount(userId: string) {

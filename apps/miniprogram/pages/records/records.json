@@ -1,0 +1,13 @@
+{
+  "navigationBarTitleText": "日常记录",
+  "usingComponents": {
+    "t-button": "../../components/button/index",
+    "t-dialog": "../../components/dialog/index",
+    "t-empty": "../../components/empty/index",
+    "t-field": "../../components/field/index",
+    "t-notice": "../../components/notice/index",
+    "t-popup": "../../components/popup/index",
+    "t-skeleton": "../../components/skeleton/index",
+    "t-tag": "../../components/tag/index"
+  }
+}

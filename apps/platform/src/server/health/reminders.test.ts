@@ -245,10 +245,10 @@ describe("健康主动提示", () => {
     }
   });
 
-  /** 提示要能点进去。target_path 指健康页而不是首页 —— 用户要看的是记录本身 */
-  it("提示带上健康页的跳转路径", async () => {
+  /** 提示要能点进去，且带上是哪只宠物：到期提示指日常记录页（记录本身在那里），季度检查指健康页 */
+  it("提示带上具体宠物的跳转路径", async () => {
     await recordCare(USER, ACTIVE, { kind: "vaccine", label: "猫三联", performedOn: dateString(-360), dueOn: dateString(2) });
     await runHealthReminders(NOW);
-    expect(String((await notifications("health_care_due"))[0].target_path)).toContain("/pages/health/health");
+    expect(String((await notifications("health_care_due"))[0].target_path)).toBe(`/pages/records/records?petId=${ACTIVE}`);
   });
 });

@@ -42,6 +42,18 @@
       <view class="pet-moment-copy"><view class="pet-moment-title">{{moment.eyebrow}}</view><text class="pet-moment-sub">{{moment.title}}</text></view>
       <text class="pet-moment-action">{{moment.action}}</text>
     </view>
+    <!--
+      照顾条（2026-10）：日常记录与健康助手的首页入口。挂在名片里而不是另起一块，
+      首页仍是四块；只放一句事实（到期 / 疗程 / 今天记了几条）和两个动作。已离开的宠物不出现。
+    -->
+    <view wx:if="{{care}}" class="pet-care">
+      <view class="pet-care-copy" aria-role="button" aria-label="打开{{pet.name}}的日常记录" hover-class="pet-feature-hover" bindtap="openRecords">
+        <image class="pet-care-icon" src="/assets/icons/{{themeId}}/ic-note.png" mode="aspectFit" />
+        <text class="pet-care-text">{{care.text}}</text>
+      </view>
+      <view class="pet-care-action" aria-role="button" hover-class="pet-feature-hover" bindtap="openRecords">记一笔</view>
+      <view class="pet-care-action" aria-role="button" hover-class="pet-feature-hover" bindtap="openHealth">健康助手</view>
+    </view>
   </view>
   <view wx:else class="pet-card pet-card-empty">
     <image class="pet-card-sample" src="{{introSampleUrl}}" mode="aspectFill" />

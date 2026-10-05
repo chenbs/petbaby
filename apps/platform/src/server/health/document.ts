@@ -45,6 +45,47 @@ export interface HealthDocumentInput {
   weights: WeightPoint[];
   care: Array<{ kindText: string; label: string; performedOn: string; dueOn?: string }>;
   sessions: Array<{ date: string; levelText: string; summary: string }>;
+  /**
+   * 日常记录里的身体状况 / 用药 / 就医行（2026-10），已由 daily-log-context 转成文字。
+   * 只罗列主人记下的现象，与其余各段一样不做任何归纳。
+   */
+  records?: string[];
+}
+
+function sectionTitle(text: string, y: number) {
+  return `<text x="80" y="${y}" font-family="sans-serif" font-size="30" font-weight="700" fill="#1d2b24">${text}</text>`;
+}
+
+function emptyLine(y: number) {
+  return `<text x="80" y="${y}" font-family="sans-serif" font-size="26" fill="#6b7d73">还没有记录。</text>`;
+}
+
+/**
+ * 免疫驱虫 → 近期日常记录 → 分诊记录，三段自上而下排。
+ *
+ * 没有日常记录时保持原版式（免疫 12 条、分诊 6 条）；有日常记录时三段分摊同一块版面，
+ * 每段都按条数截断并注明「另有 N 条未列出」。
+ */
+function lowerSections(care: string[], records: string[], sessions: string[]) {
+  const limits = records.length ? { care: 6, records: 8, sessions: 4 } : { care: 12, records: 0, sessions: 6 };
+  const parts: string[] = [];
+  let y = 820;
+  const block = (title: string, lines: string[], limit: number) => {
+    parts.push(sectionTitle(title, y));
+    y += 46;
+    if (!lines.length) { parts.push(emptyLine(y)); y += 40; }
+    else {
+      parts.push(textLines(lines, 80, y, 40, limit));
+      y += 40 * (Math.min(lines.length, limit) + (lines.length > limit ? 1 : 0));
+    }
+    y += 48;
+  };
+  block("免疫与驱虫", care, limits.care);
+  if (records.length) block("近期日常记录", records, limits.records);
+  // 原版式里分诊段固定在 1380：免疫段少时不上移，保持老档案的版面不变
+  if (!records.length) y = Math.max(y, 1380);
+  block("分诊记录", sessions, limits.sessions);
+  return parts.join("\n  ");
 }
 
 const SPECIES_TEXT: Record<string, string> = { cat: "猫", dog: "犬", other: "宠物" };
@@ -115,6 +156,7 @@ export function buildHealthDocumentSvg(input: HealthDocumentInput): string {
    * 印进档案会让它读起来像一份持续有效的医疗意见。
    */
   const sessionLines = input.sessions.map((item) => `${item.date}　${item.levelText}　${item.summary}`);
+  const recordLines = input.records || [];
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${PAGE_WIDTH}" height="${PAGE_HEIGHT}" viewBox="0 0 ${PAGE_WIDTH} ${PAGE_HEIGHT}">
   <rect width="${PAGE_WIDTH}" height="${PAGE_HEIGHT}" fill="#fdfbf7"/>
@@ -136,15 +178,7 @@ export function buildHealthDocumentSvg(input: HealthDocumentInput): string {
   ${note ? `<text x="80" y="430" font-family="sans-serif" font-size="24" fill="#8a5a20">${escapeXml(note)}</text>` : ""}
   ${weightChart(input.weights, 80, 470, PAGE_WIDTH - 200, 260)}
 
-  <text x="80" y="820" font-family="sans-serif" font-size="30" font-weight="700" fill="#1d2b24">免疫与驱虫</text>
-  ${careLines.length
-    ? textLines(careLines, 80, 866, 40, 12)
-    : `<text x="80" y="866" font-family="sans-serif" font-size="26" fill="#6b7d73">还没有记录。</text>`}
-
-  <text x="80" y="1380" font-family="sans-serif" font-size="30" font-weight="700" fill="#1d2b24">分诊记录</text>
-  ${sessionLines.length
-    ? textLines(sessionLines, 80, 1426, 40, 6)
-    : `<text x="80" y="1426" font-family="sans-serif" font-size="26" fill="#6b7d73">还没有记录。</text>`}
+  ${lowerSections(careLines, recordLines, sessionLines)}
 
   <text x="80" y="${PAGE_HEIGHT - 60}" font-family="sans-serif" font-size="22" fill="#8b9992">由麻麻抱我导出　内容来自你自己录入的记录　不替代执业兽医面诊</text>
 </svg>`;

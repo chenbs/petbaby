@@ -1,0 +1,357 @@
+.block-gap {
+  display: block;
+  margin-top: var(--space-3);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.flush {
+  margin: 0;
+}
+
+.records-head {
+  display: grid;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+}
+
+.records-pets,
+.records-groups {
+  margin-top: var(--space-4);
+}
+
+/* ---------- 快记宫格：五列，图标块与「我的」入口行同一套底色 ---------- */
+.quick-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--space-3) var(--space-2);
+  margin-top: var(--space-4);
+  padding: var(--space-4) var(--space-3);
+  border: var(--card-border);
+  border-radius: var(--card-radius);
+  background: var(--card-background);
+  box-shadow: var(--shadow-card);
+  clip-path: var(--skin-clip, none);
+}
+
+.quick-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.quick-icon {
+  display: flex;
+  width: 84rpx;
+  height: 84rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
+.quick-glyph {
+  width: 44rpx;
+  height: 44rpx;
+}
+
+.quick-label {
+  overflow: hidden;
+  max-width: 100%;
+  color: var(--text-primary);
+  font-size: var(--eyebrow-size);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.quick-hover {
+  opacity: .85;
+}
+
+.skin-brand .quick-icon,
+.skin-brand .entry-icon {
+  border-radius: 0;
+}
+
+/* ---------- 保存后的提示 ---------- */
+.tip-actions {
+  margin-top: var(--space-2);
+}
+
+.tip-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--success-surface);
+}
+
+.tip-text {
+  flex: 1;
+  color: var(--text-primary);
+}
+
+.tip-go {
+  flex: none;
+  color: var(--primary);
+  font-size: var(--small-size);
+  font-weight: var(--fw-bold);
+}
+
+/* ---------- 替你记着 ---------- */
+.overview {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
+.overview-head {
+  justify-content: space-between;
+}
+
+.fact-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.fact-text {
+  flex: 1;
+  min-width: 0;
+  color: var(--text-primary);
+}
+
+.fact-chips {
+  margin-top: var(--space-1);
+}
+
+.fact-chip {
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  background: var(--card-background);
+  color: var(--text-secondary);
+  font-size: var(--eyebrow-size);
+}
+
+.fact-chip-strong {
+  color: var(--text-primary);
+  font-weight: var(--fw-bold);
+}
+
+.overview-actions {
+  margin-top: var(--space-2);
+}
+
+/* ---------- 时间流 ---------- */
+.day {
+  margin-top: var(--space-5);
+}
+
+.day-head {
+  justify-content: space-between;
+  padding-bottom: var(--space-2);
+  border-bottom: 2rpx solid var(--divider);
+}
+
+.day-label {
+  color: var(--text-primary);
+  font-size: var(--font-h3);
+  font-weight: var(--fw-bold);
+}
+
+.day-list {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.entry {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.entry-icon {
+  display: flex;
+  flex: none;
+  width: 64rpx;
+  height: 64rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
+.entry-glyph {
+  width: 36rpx;
+  height: 36rpx;
+}
+
+.entry-main {
+  display: grid;
+  flex: 1;
+  gap: var(--space-0);
+  min-width: 0;
+}
+
+.entry-title-row {
+  justify-content: space-between;
+}
+
+.entry-title {
+  color: var(--text-primary);
+  font-size: var(--body-size);
+  font-weight: var(--fw-bold);
+}
+
+.entry-summary {
+  color: var(--text-primary);
+}
+
+.entry-note {
+  word-break: break-all;
+}
+
+.entry-link {
+  color: var(--primary);
+}
+
+.entry-photos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+
+.entry-photo {
+  width: 136rpx;
+  height: 136rpx;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.entry-more {
+  flex: none;
+  padding: 0 var(--space-1);
+  color: var(--text-secondary);
+  font-size: var(--font-h3);
+  line-height: 1;
+}
+
+.list-foot {
+  display: grid;
+  justify-items: center;
+  margin-top: var(--space-5);
+}
+
+/* ---------- 表单 ---------- */
+.form-body {
+  padding-bottom: var(--space-4);
+}
+
+.form-when {
+  align-items: flex-start;
+}
+
+.form-when-item {
+  flex: 1;
+  min-width: 0;
+}
+
+.form-field {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.field-title {
+  color: var(--text-primary);
+  font-size: var(--small-size);
+  font-weight: var(--fw-bold);
+}
+
+.stepper-row {
+  justify-content: space-between;
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.stepper-btn {
+  display: flex;
+  width: 64rpx;
+  height: 64rpx;
+  align-items: center;
+  justify-content: center;
+  border: 2rpx solid var(--border);
+  border-radius: var(--radius-pill);
+  color: var(--text-primary);
+  font-size: var(--font-h3);
+}
+
+.stepper-value {
+  min-width: 96rpx;
+  color: var(--text-primary);
+  font-size: var(--body-size);
+  font-weight: var(--fw-bold);
+  text-align: center;
+}
+
+.form-photo-wrap {
+  position: relative;
+}
+
+.form-photo-remove {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  width: 40rpx;
+  height: 40rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  background: var(--mask);
+  color: var(--on-image-primary);
+  font-size: var(--small-size);
+}
+
+.form-photo-add {
+  display: flex;
+  width: 136rpx;
+  height: 136rpx;
+  align-items: center;
+  justify-content: center;
+  border: 2rpx dashed var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: var(--font-h2);
+}
+
+/* ---------- 给兽医看 ---------- */
+.summary-block {
+  display: grid;
+  gap: var(--space-1);
+  padding-bottom: var(--space-3);
+  border-bottom: 2rpx solid var(--divider);
+}
+
+.summary-line {
+  color: var(--text-primary);
+  font-size: var(--small-size);
+  line-height: 1.7;
+  word-break: break-all;
+}

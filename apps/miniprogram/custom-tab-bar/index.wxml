@@ -6,7 +6,7 @@
     data-index="{{index}}"
     aria-role="{{item.action ? 'button' : 'tab'}}"
     aria-selected="{{selected === item.tab}}"
-    aria-label="{{item.action ? '记录照片' : item.text}}"
+    aria-label="{{item.action ? '记录：照片、日常或健康' : item.text}}"
     hover-class="item-hover"
     bindtap="switchTab"
   >

@@ -189,6 +189,16 @@ await Promise.all([enforceRateLimit(...), assertGenerationCircuit()]);
 
 **免疫记录的项目名由用户自己填，不给候选清单** —— 给清单等于在推荐具体疫苗或驱虫药（红线 2）。
 
+### 日常记录（2026-10-05，迁移 0041）
+
+`pages/records` 是录入入口的唯一一处：吃喝 / 便便 / 呕吐 / 不舒服 / 用药 / 就医检查 / 洗护 / 小事写 `pet_daily_logs`，体重与疫苗驱虫**仍写 0018 / 0022 的老表**（同日覆盖与到期提醒口径不变），列表三表 UNION 合并。健康页只读展示，不再有录入表单——两处各有一套表单必然改一处漏一处。
+
+- **表单字段只在服务端维护**：`server/daily-log-kinds.ts` 的 `RECORD_KINDS` 经 `/api/record-kinds` 下发，端上按它渲染，`describeRecord` 生成列表、就医摘要、分诊上下文与 PDF 的文字。选项文案只描述可观察现象（「偏软 / 水样」而不是「腹泻」），`daily-log-service.test.ts` 有一条扫全部选项与概览文字的评价词守卫。
+- **附图不进照片库**：`pet_record_attachments` + `private/<userId>/records/`，否则呕吐物照片会进时间线与年度短片。删记录要**先删附图登记再删记录**（外键 `ON DELETE SET NULL`，反过来附图会变成找不回来的孤儿）；未挂记录的附图一天后由 `cleanupExpiredContent` 登记清理；删宠物、对象清理守卫都已纳入这张表。
+- **分诊默认带近 7 天记录**（`daily-log-context.ts` 的 `recentContextLines`，「吃完了 / 差不多」这类无信息量的吃喝不进），快照进 `pet_snapshot.recentRecords` 供追溯。`daily-log-context.ts` 单独成模块是为了避免 `health-service` ↔ `daily-log-service` 循环依赖。
+- `memorial` 宠物拒绝写入（`RECORDS_SEALED_MEMORIAL`），端上不进切换列表；首页照顾条、宠物「…」菜单同样不对它出现。
+- 健康分诊 HTTP provider 是 OpenAI 兼容主备双通道（`HEALTH_MODEL_*` / `HEALTH_MODEL_SECONDARY_*`），无图时 content 走纯字符串、有图切 `HEALTH_MODEL_VISION`；默认 `response_format: json_object` + `temperature 0.2`，审计写进 `model_snapshot`。
+
 ### AI 生成内容标识（合规硬要求，2026-09 口径）
 
 《人工智能生成合成内容标识办法》2025-09-01 已施行。实现在 `server/media/ai-label.ts` 与 `server/ai-disclosure-service.ts`，方案全文见 `docs/ui-refactor/2026-09-29-产品UIUX评审/去AI文案与取消水印实施方案.md`。

@@ -156,6 +156,11 @@ themedPage({
     const pet = (this.data.pets || []).find((item) => item.id === id);
     if (!pet) return;
     const actions = [];
+    // 日常记录与健康助手（2026-10）：这只宠物的上下文入口，已离开的宠物不出现（与两页的屏蔽口径一致）
+    if (pet.lifeStage !== "memorial") {
+      actions.push({ key: "records", label: "日常记录", description: "吃喝、便便、用药、疫苗驱虫" });
+      actions.push({ key: "health", label: "健康助手", description: "要不要去医院、去之前准备什么" });
+    }
     if (!pet.isDefault) actions.push({ key: "default", label: "设为默认" });
     if (pet.showMemorial) actions.push({ key: "memorial", label: "纪念空间", description: "把一起的日子安静地收好" });
     actions.push({ key: "remove", label: "删除档案", danger: true });
@@ -167,6 +172,8 @@ themedPage({
     const key = event.detail.key;
     const target = { currentTarget: { dataset: { id: this._moreId } } };
     this.setData({ moreVisible: false });
+    if (key === "records") wx.navigateTo({ url: "/pages/records/records?petId=" + encodeURIComponent(this._moreId) });
+    if (key === "health") wx.navigateTo({ url: "/pages/health/health?petId=" + encodeURIComponent(this._moreId) });
     if (key === "default") this.setDefault(target);
     if (key === "memorial") this.memorial(target);
     if (key === "remove") this.askRemove(target);

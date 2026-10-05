@@ -13,6 +13,7 @@ const manager = require("../../theme/manager");
 const ENTRY_URLS = {
   photos: "/pages/photos/photos",
   health: "/pages/health/health",
+  records: "/pages/records/records",
   memorials: "/pages/memorials/memorials",
   orders: "/pages/orders/orders",
   commerce: "/pages/commerce/commerce",
@@ -45,6 +46,7 @@ themedPage({
     const record = [
       { key: "photos", name: "照片库", icon: "ic-photo", tone: "warm", side: hero && hero.counts ? hero.counts.photos + " 张" : "" },
       { key: "timeline", name: "成长时间线", icon: "ic-book", tone: "sun", sub: "去年今日也在这里" },
+      { key: "records", name: "日常记录", icon: "ic-note", tone: "warm", sub: "吃喝、便便、用药、疫苗驱虫" },
       { key: "health", name: "健康助手", icon: "ic-cross", tone: "mint", sub: "要不要去医院、去之前准备什么" }
     ];
     if (this.data.hasMemorialPet) record.push({ key: "memorials", name: "纪念空间", icon: "ic-heart", tone: "plain", sub: "把一起的日子安静地收好" });
@@ -110,6 +112,9 @@ themedPage({
   openEntry(event) {
     const key = event.currentTarget.dataset.key;
     if (key === "timeline") return this.openTimeline();
+    // 日常记录与健康助手带上默认宠物（已离开的不带，由页面自己选一只在世的）
+    const hero = this.data.hero;
+    if ((key === "records" || key === "health") && hero && hero.lifeStage !== "memorial") return wx.navigateTo({ url: ENTRY_URLS[key] + "?petId=" + encodeURIComponent(hero.id) });
     if (ENTRY_URLS[key]) wx.navigateTo({ url: ENTRY_URLS[key] });
   },
   /** 铃铛：有通知时滚到通知区，没有就提示一句。 */

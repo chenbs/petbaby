@@ -66,6 +66,15 @@ export default defineConfig({
          */
         "src/server/health/reminders.ts",
         "src/server/health/document.ts",
+        /*
+         * 2026-10 日常记录：概览与就医摘要只给事实不给评价、memorial 拒绝写入、
+         * 附图随记录与档案清理——这些分支漏测的后果是给出评价性结论或残留私密照片。
+         * provider.ts 同期补了主备切换与药物过滤的用例。
+         */
+        "src/server/daily-log-service.ts",
+        "src/server/daily-log-kinds.ts",
+        "src/server/daily-log-context.ts",
+        "src/server/health/provider.ts",
       ],
       thresholds: { lines: 75, functions: 75, branches: 65, statements: 75 },
     },

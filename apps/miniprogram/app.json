@@ -14,6 +14,7 @@
     "pages/account/account",
     "pages/timeline/timeline",
     "pages/health/health",
+    "pages/records/records",
     "pages/ai-create/ai-create",
     "pages/ai-run/ai-run",
     "pages/video-create/video-create",

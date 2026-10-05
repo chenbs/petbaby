@@ -24,6 +24,7 @@ export async function softDeletePetResources(userId: string, petId: string) {
      UNION SELECT avatar_key FROM pets WHERE id=$2 AND avatar_key IS NOT NULL
      UNION SELECT storage_key FROM pet_human_identities WHERE user_id=$1 AND pet_id=$2
      UNION SELECT storage_key FROM photo_deliverable_assets WHERE user_id=$1 AND pet_id=$2
+     UNION SELECT storage_key FROM pet_record_attachments WHERE user_id=$1 AND pet_id=$2
      UNION SELECT output_key FROM works WHERE user_id=$1 AND pet_id=$2 AND output_key IS NOT NULL
      UNION SELECT preview_key FROM works WHERE user_id=$1 AND pet_id=$2 AND preview_key IS NOT NULL`, [userId, petId],
   );
@@ -32,6 +33,8 @@ export async function softDeletePetResources(userId: string, petId: string) {
   await db.query("UPDATE works SET deleted_at=coalesce(deleted_at,now()),public=false,share_token=NULL WHERE pet_id=$1", [petId]);
   await db.query("UPDATE memorial_spaces SET deleted_at=coalesce(deleted_at,now()),visibility='private',share_token=NULL WHERE pet_id=$1", [petId]);
   await db.query("DELETE FROM pet_human_identities WHERE user_id=$1 AND pet_id=$2", [userId, petId]);
+  // 日常记录附图（呕吐物、便便、处方单）是私密照片，删档案时与照片一起清理
+  await db.query("DELETE FROM pet_record_attachments WHERE user_id=$1 AND pet_id=$2", [userId, petId]);
   const ids: string[] = [];
   for (const row of keys) ids.push(await queueObjectCleanup(String(row.storage_key), "pet_deleted"));
   return ids;

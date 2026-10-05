@@ -35,13 +35,15 @@ export interface TriageProvider {
  * 提示词降低命中率，过滤保证正确性。
  */
 const SYSTEM_PROMPT = [
-  "你是宠物健康分诊助手。你的任务是判断紧急程度并给出就医准备建议。",
-  "严格禁止：给出疾病诊断结论；提到任何药物名称、类别、剂量或用法；给出准确率数字；说「不用去医院」。",
-  "允许：说明症状可能与哪些身体部位相关；给出观察指标；列出就医时该准备什么。",
+  "你是宠物健康助手，帮主人整理宠物的情况：判断紧急程度，并告诉主人现在可以做些什么。语气温和、简短，像一位懂宠物的朋友。",
+  "严格禁止：给出疾病诊断结论；说出任何病名（例如胃炎、肠梗阻、猫瘟、感染、结石、过敏），也不要用「疑似」「可能是某某病」这类说法；提到任何药物名称、类别、剂量或用法；给出准确率数字；说「不用去医院」。只描述看到的表现和相关的身体部位。",
+  "允许：说明症状可能与哪些身体部位相关；给出在家观察的要点；列出现在可以做的事（例如记录进食与排便、准备好疫苗驱虫记录）。",
   "紧急程度分四档：emergency（立即就医）、urgent_24h（24 小时内就医）、observe（暂可观察）、routine（通常无需担心）。",
   "每一档都必须给出「出现什么情况要立即就医」的升级条件。",
   "如果提供了「近 7 天日常记录」，把它当作主人记下的事实背景：同类表现反复出现、持续多天或叠加食欲下降时，紧急程度应相应提高，并在 summary 里用一句话点出你注意到的记录（只复述事实，不推测病因）。",
-  "visitPreparation 要具体到这只宠物：例如带上呕吐物照片、记下最近几次进食与排便的时间。",
+  "没有提供「近 7 天日常记录」时，不要提及或编造过去几天的情况，只依据主人这次的描述。",
+  "summary 用口语表达，例如「建议今天带它去看看」「可以先在家观察」，少用「就医」「病因」这类书面说法；只有 emergency 档才明确说「请立即联系医院」。",
+  "visitPreparation 是「现在可以做的」，要具体到这只宠物：例如拍下呕吐物、记下最近几次进食与排便的时间。不要写药物或处置方法。",
   "summary 不超过 80 字；relatedAreas、watchFor、visitPreparation 各不超过 5 条，每条不超过 30 字。全部使用简体中文。",
   '只返回 JSON：{"level":"...","summary":"...","relatedAreas":[],"watchFor":[],"visitPreparation":[]}',
 ].join("\n");
@@ -87,11 +89,11 @@ class LocalTriageProvider implements TriageProvider {
       level,
       summary: level === "urgent_24h"
         ? bodilyDays >= 2 && !urgentNow
-          ? `近 7 天有 ${bodilyDays} 天记了类似情况，建议 24 小时内就医，由执业兽医面诊确认。`
-          : "建议 24 小时内就医，由执业兽医面诊确认。"
+          ? `近 7 天有 ${bodilyDays} 天记了类似情况，建议今天带它去看看，请医生当面确认。`
+          : "建议今天带它去看看，请医生当面确认。"
         : level === "observe"
-          ? "暂可观察，出现下列情况请立即就医。"
-          : "这类表现通常无需担心，若持续或加重请就医。",
+          ? "可以先在家观察，出现下面这些情况要及时带它去看看。"
+          : "这类表现一般不用太担心，留意变化，持续或加重时及时带它去看看。",
       relatedAreas: areas,
       watchFor: [
         "症状持续超过 24 小时或明显加重",
@@ -99,9 +101,9 @@ class LocalTriageProvider implements TriageProvider {
         "出现呼吸急促、抽搐、无法排尿等情况",
       ],
       visitPreparation: [
-        "带上疫苗与驱虫记录",
-        records.length ? "打开日常记录里的「给兽医看」，把最近的记录给医生看" : "记下症状开始的时间与变化过程",
-        `说明${request.pet.name}的品种、年龄与体重`,
+        records.length ? "日常记录里的「整理近况」可以一键汇总最近的情况" : "记下症状开始的时间与变化过程",
+        `留意${request.pet.name}的精神、食欲和排便有没有变化`,
+        "整理好疫苗与驱虫记录",
       ],
       disclaimer: TRIAGE_DISCLAIMER,
     });
@@ -117,6 +119,8 @@ interface HttpTriageOptions {
   visionModel?: string;
   /** 是否带 `response_format: json_object`。百炼、DeepSeek 等 OpenAI 兼容接口都支持；个别网关不认时可关 */
   jsonMode: boolean;
+  /** 是否显式关闭思考模式（百炼 enable_thinking=false）。DeepSeek 等不认这个参数的网关填 false */
+  disableThinking: boolean;
   timeoutMs: number;
 }
 
@@ -152,6 +156,8 @@ class HttpTriageProvider {
         messages: [{ role: "system", content: SYSTEM_PROMPT }, { role: "user", content }],
         // 分诊要稳定，不要创意：同样的描述两次给出不同档位是最糟的体验
         temperature: 0.2,
+        // 百炼新版 Flash / Plus 默认开思考，开着会慢好几倍且 JSON 模式可能失效；分诊不需要推理链
+        ...(this.options.disableThinking ? { enable_thinking: false } : {}),
         max_tokens: 800,
         ...(this.options.jsonMode ? { response_format: { type: "json_object" } } : {}),
       }),
@@ -234,9 +240,10 @@ function channelFromEnv(prefix: string, name: string): HttpTriageProvider | unde
   return new HttpTriageProvider(name, {
     endpoint,
     apiKey,
-    model: process.env[prefix] || "qwen-plus",
+    model: process.env[prefix] || "qwen-flash",
     visionModel: process.env[`${prefix}_VISION`] || undefined,
     jsonMode: process.env.HEALTH_MODEL_JSON_MODE !== "false",
+    disableThinking: (process.env[`${prefix}_DISABLE_THINKING`] ?? (endpoint.includes("dashscope") || endpoint.includes("maas.aliyuncs") ? "true" : "false")) === "true",
     timeoutMs: Math.min(60_000, Math.max(5_000, Number(process.env.HEALTH_MODEL_TIMEOUT_MS) || 20_000)),
   });
 }
@@ -245,7 +252,8 @@ let cached: TriageProvider | undefined;
 
 /**
  * 环境变量：
- * - `HEALTH_MODEL_ENDPOINT` / `HEALTH_MODEL_API_KEY` / `HEALTH_MODEL`（缺省 qwen-plus）/ `HEALTH_MODEL_VISION`（有图时用）
+ * - `HEALTH_MODEL_ENDPOINT` / `HEALTH_MODEL_API_KEY` / `HEALTH_MODEL`（缺省 qwen-flash）/ `HEALTH_MODEL_VISION`（有图时用）
+ * - `HEALTH_MODEL_DISABLE_THINKING`：百炼地址默认 true（发 enable_thinking=false），其他地址默认 false
  * - 备用通道同名加 `_SECONDARY`：`HEALTH_MODEL_SECONDARY_ENDPOINT` / `..._API_KEY` / `HEALTH_MODEL_SECONDARY` / `HEALTH_MODEL_SECONDARY_VISION`
  * - `HEALTH_MODEL_TIMEOUT_MS`（缺省 20000）、`HEALTH_MODEL_JSON_MODE`（缺省开启，填 false 关闭）
  */
@@ -263,7 +271,7 @@ export function selectTriageProvider(): TriageProvider {
    * 拿规则输出当健康建议交付给真实用户是另一种性质的问题。
    */
   if (process.env.NODE_ENV === "production" && process.env.APP_ENV !== "staging") {
-    throw new AppError("HEALTH_PROVIDER_CONFIG_PENDING", "健康分诊服务尚未配置", 503);
+    throw new AppError("HEALTH_PROVIDER_CONFIG_PENDING", "健康助手服务尚未配置", 503);
   }
   cached = new LocalTriageProvider();
   return cached;

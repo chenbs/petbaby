@@ -168,7 +168,7 @@ export async function createRecord(userId: string, petId: string, input: unknown
     throw new AppError("RECORD_EMPTY", "写点什么再保存吧", 422);
   }
   if (data.kind === "visit" && details.followUpOn && String(details.followUpOn) < data.occurredOn) {
-    throw new AppError("RECORD_FIELD_INVALID", "复诊日期不能早于这次就医", 422);
+    throw new AppError("RECORD_FIELD_INVALID", "复诊日期不能早于这次看诊", 422);
   }
   if (data.healthSessionId) {
     const owned = await (await getDatabase()).query("SELECT id FROM health_sessions WHERE id=$1 AND user_id=$2 AND pet_id=$3", [data.healthSessionId, userId, petId]);
@@ -354,7 +354,7 @@ export async function getRecordOverview(userId: string, petId: string, now = new
   const intervals = [
     { key: "vomit", label: "上次呕吐", date: lastOf((row) => row.kind === "vomit") },
     { key: "symptom", label: "上次不舒服", date: lastOf((row) => row.kind === "symptom") },
-    { key: "visit", label: "上次就医", date: lastOf((row) => row.kind === "visit") },
+    { key: "visit", label: "上次看诊", date: lastOf((row) => row.kind === "visit") },
     { key: "deworm_internal", label: "上次体内驱虫", date: lastCare("deworm_internal") },
     { key: "deworm_external", label: "上次体外驱虫", date: lastCare("deworm_external") },
     { key: "bath", label: "上次洗澡", date: lastOf(groomed("bath")) },
@@ -470,7 +470,7 @@ export async function getVisitSummary(userId: string, petId: string, input: unkn
     ...(lines.length ? lines.map((line) => `· ${line}`) : ["· 这段时间没有身体状况或用药记录"]),
     ...(careLines.length ? ["", "疫苗驱虫最近一次", ...careLines.map((line) => `· ${line}`)] : []),
     "",
-    "以上由主人在「麻麻抱我」里记录，仅供就医时参考。",
+    "以上由主人在「麻麻抱我」里记录，仅供参考。",
   ].join("\n");
   return { petId: String(pet.id), days, header, counts, lines, care: careLines, text };
 }

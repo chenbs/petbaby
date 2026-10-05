@@ -159,7 +159,7 @@ themedPage({
     // 日常记录与健康助手（2026-10）：这只宠物的上下文入口，已离开的宠物不出现（与两页的屏蔽口径一致）
     if (pet.lifeStage !== "memorial") {
       actions.push({ key: "records", label: "日常记录", description: "吃喝、便便、用药、疫苗驱虫" });
-      actions.push({ key: "health", label: "健康助手", description: "要不要去医院、去之前准备什么" });
+      actions.push({ key: "health", label: "健康助手", description: "说说症状，看看宝贝怎么了" });
     }
     if (!pet.isDefault) actions.push({ key: "default", label: "设为默认" });
     if (pet.showMemorial) actions.push({ key: "memorial", label: "纪念空间", description: "把一起的日子安静地收好" });

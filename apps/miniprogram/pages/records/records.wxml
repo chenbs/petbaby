@@ -93,7 +93,7 @@
       <text wx:if="{{!overview.totalDays}}" class="small">记下几次之后，这里会替你算好「上次呕吐是几天前」「疫苗哪天到期」。</text>
 
       <view class="row overview-actions">
-        <t-button type="secondary" size="mini" anim="{{animType}}" loading="{{summaryBusy}}" bindtap="openSummary">给兽医看</t-button>
+        <t-button type="secondary" size="mini" anim="{{animType}}" loading="{{summaryBusy}}" bindtap="openSummary">整理近况</t-button>
         <t-button type="ghost" size="mini" anim="{{animType}}" bindtap="openHealth">问问健康助手</t-button>
       </view>
     </view>
@@ -200,7 +200,7 @@
       </view>
     </view>
 
-    <text wx:if="{{form.kind === 'medication'}}" class="hint">药名和用量请按兽医开的填写，这里只帮你记着，不提供用药建议。</text>
+    <text wx:if="{{form.kind === 'medication'}}" class="hint">药名和用量请按医嘱填写，这里只帮你记着，不提供用药建议。</text>
     <t-notice wx:if="{{formError}}" type="error" message="{{formError}}"></t-notice>
   </view>
   <view slot="footer">
@@ -208,8 +208,8 @@
   </view>
 </t-popup>
 
-<!-- 给兽医看：近两周的身体状况、用药与疫苗驱虫，原样罗列 -->
-<t-popup visible="{{!!summary}}" title="给兽医看 · 近 {{summary.days}} 天" tall anim="{{animType}}" bindclose="closeSummary">
+<!-- 近况整理：近两周的身体状况、用药与疫苗驱虫，原样罗列 -->
+<t-popup visible="{{!!summary}}" title="近况整理 · 近 {{summary.days}} 天" tall anim="{{animType}}" bindclose="closeSummary">
   <view wx:if="{{summary}}" class="stack">
     <view class="summary-block">
       <text wx:for="{{summary.header}}" wx:key="*this" class="summary-line strong">{{item}}</text>
@@ -223,7 +223,7 @@
       <text class="field-title">疫苗驱虫最近一次</text>
       <text wx:for="{{summary.care}}" wx:key="*this" class="summary-line">· {{item}}</text>
     </view>
-    <text class="small">以上是你自己记下的内容，可以直接把手机给医生看，或复制后发给医院。需要打印的完整版可在健康助手里导出健康档案。</text>
+    <text class="small">以上是你自己记下的内容，复制后可以随时发给需要的人。需要打印的完整版，可以在健康助手里导出健康档案。</text>
   </view>
   <view slot="footer">
     <t-button type="primary" block anim="{{animType}}" bindtap="copySummary">复制成文字</t-button>

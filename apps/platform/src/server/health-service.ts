@@ -205,7 +205,7 @@ export async function createHealthSession(userId: string, input: unknown): Promi
       "INSERT INTO health_sessions (id,user_id,pet_id,description,photo_ids,pet_snapshot,triage_level,triage_source,advisory,status,error_code,created_at) VALUES ($1,$2,$3,$4,$5::jsonb,$6::jsonb,'observe','model',$7::jsonb,'failed',$8,$9)",
       [id, userId, data.petId, data.description, JSON.stringify(data.photoIds), JSON.stringify(petSnapshot), JSON.stringify(advisory || {}), code, now],
     );
-    throw new AppError("HEALTH_ADVISORY_FAILED", "健康分诊暂时不可用，请稍后再试", 503);
+    throw new AppError("HEALTH_ADVISORY_FAILED", "健康助手暂时不可用，请稍后再试", 503);
   }
 }
 
@@ -286,8 +286,8 @@ export async function listWeights(userId: string, petId: string) {
 /** 分诊档位的中文。与端上 LEVEL_TEXT 一致 —— 档案里的措辞不能与页面上的不同 */
 const LEVEL_TEXT: Record<string, string> = {
   emergency: "建议立即就医",
-  urgent_24h: "建议 24 小时内就医",
-  observe: "暂可观察",
+  urgent_24h: "建议今天带它去看看",
+  observe: "先在家观察",
   routine: "通常无需担心",
 };
 

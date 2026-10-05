@@ -170,6 +170,7 @@ await Promise.all([enforceRateLimit(...), assertGenerationCircuit()]);
 **十条红线全文在 `docs/product/16-竞品分析与产品复盘.md` 3.8**，其中三条在代码里有强制点：
 
 - **不推荐任何药物。** `server/health/triage.ts` 的 `mentionsDrug` 是**代码级后置过滤**，命中即整段降级为通用建议。**不能只靠提示词** —— 模型会在「不要提药」的指令下仍然提到药名，而用药剂量与禁忌高度依赖体重品种（猫对乙酰氨基酚致死）。`triage-adversarial.test.ts` 钉了 13 条绕过尝试（药名/类别/剂量/动作/中英混写）。
+- **不说病名（2026-10，接入 qwen-flash 后补）。** 模型在提示词禁止下仍会写「提示可能存在胃炎、异物梗阻」。`mentionsDisease` / `stripDiseaseMentions` 后置过滤：summary 只删含病名的分句（连同「提示可能存在」这类引子），列表删含病名的条目，删空则换通用内容；**不像药物那样整段降级**，否则多数回答会变成模板。刻意不收「中毒」（误食中毒是要立刻行动的安全提示）和主人看得到的现象词。`triage-disease.test.ts` 钉了真实模型原句与误杀清单。
 - **不给「不用去医院」的确定结论。** 四档里最低档也必须带升级条件，`sanitizeAdvisory` 会把这类句子替换掉并补 `watchFor`。
 - **`memorial` 宠物屏蔽全部健康功能。** 服务端 `HEALTH_UNAVAILABLE_MEMORIAL` + 端上列表过滤，**两处都要** —— 只做端上隐藏接口仍可调，只做服务端拦截用户会看到入口点进去报错。
 

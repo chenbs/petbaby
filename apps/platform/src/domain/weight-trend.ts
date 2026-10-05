@@ -149,5 +149,5 @@ export function notableWeightNote(trend: WeightTrend | undefined): string | unde
   if (!trend || !trend.notable || trend.deltaPercent === undefined) return undefined;
   const magnitude = Math.abs(trend.deltaPercent);
   const spanText = trend.spanDays ? `${trend.spanDays} 天内` : "两次称重之间";
-  return `${spanText}体重变化了 ${magnitude}%，下次就医时可以和兽医提一下。`;
+  return `${spanText}体重变化了 ${magnitude}%，下次看医生时可以顺便提一下。`;
 }

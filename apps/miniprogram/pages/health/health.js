@@ -24,8 +24,8 @@ const { openPetPage } = require("../../services/pet-nav");
 
 const LEVEL_TEXT = {
   emergency: "建议立即就医",
-  urgent_24h: "建议 24 小时内就医",
-  observe: "暂可观察",
+  urgent_24h: "建议今天带它去看看",
+  observe: "先在家观察",
   routine: "通常无需担心",
 };
 
@@ -227,7 +227,7 @@ themedPage({
     if (!pet || this.data.documentBusy) return;
     this.setData({ documentBusy: true, documentHint: "", error: "" });
     api.request("/api/health-documents", { method: "POST", data: { petId: pet.id } })
-      .then(() => { this.setData({ documentBusy: false, documentHint: "已导出，可以下载带去医院。" }); this.loadDocuments(pet.id); })
+      .then(() => { this.setData({ documentBusy: false, documentHint: "已导出，可以下载保存。" }); this.loadDocuments(pet.id); })
       .catch((error) => this.setData({ documentBusy: false, canBuyDocument: error.code === "HEALTH_EXPORT_REQUIRES_ENTITLEMENT", documentHint: error.message || "导出失败" }));
   },
 

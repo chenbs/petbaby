@@ -47,7 +47,7 @@ themedPage({
       { key: "photos", name: "照片库", icon: "ic-photo", tone: "warm", side: hero && hero.counts ? hero.counts.photos + " 张" : "" },
       { key: "timeline", name: "成长时间线", icon: "ic-book", tone: "sun", sub: "去年今日也在这里" },
       { key: "records", name: "日常记录", icon: "ic-note", tone: "warm", sub: "吃喝、便便、用药、疫苗驱虫" },
-      { key: "health", name: "健康助手", icon: "ic-cross", tone: "mint", sub: "要不要去医院、去之前准备什么" }
+      { key: "health", name: "健康助手", icon: "ic-cross", tone: "mint", sub: "说说症状，看看宝贝怎么了" }
     ];
     if (this.data.hasMemorialPet) record.push({ key: "memorials", name: "纪念空间", icon: "ic-heart", tone: "plain", sub: "把一起的日子安静地收好" });
     this.setData({

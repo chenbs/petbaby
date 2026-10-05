@@ -140,7 +140,7 @@ describe("提示语不做评价（红线）", () => {
     ]);
     const note = notableWeightNote(trend)!;
     expect(note).toContain("10%");
-    expect(note).toContain("和兽医提一下");
+    expect(note).toContain("看医生时可以顺便提一下");
     expect(note).not.toContain("异常");
   });
 

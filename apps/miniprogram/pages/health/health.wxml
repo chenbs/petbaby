@@ -6,7 +6,7 @@
     定位说明必须在最前面。「分诊」不是「问诊」——
     这句话同时是产品定位和合规声明，不能省也不能挪到底部。
   -->
-  <text class="small">描述症状，帮你判断要不要去医院、去之前该准备什么。不替代兽医面诊。</text>
+  <text class="small">描述症状，越详细越好，帮你看看宝贝怎么样了、现在可以做些什么。不代替医生面诊。</text>
 
   <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
 
@@ -53,7 +53,7 @@
         <text class="small">记得越全，判断越贴近{{pets[petIndex].name}}的实际情况</text>
       </view>
 
-      <t-button type="primary" block anim="{{animType}}" loading="{{busy}}" bindtap="submit">看看要不要去医院</t-button>
+      <t-button type="primary" block anim="{{animType}}" loading="{{busy}}" bindtap="submit">看看宝贝怎么了</t-button>
     </view>
 
     <!-- 免责声明与结论同屏且在结论之前，不折叠。 -->
@@ -62,7 +62,7 @@
 
       <view class="row block-gap">
         <t-tag tone="{{result.levelTone}}" size="mini" text="{{result.levelText}}"></t-tag>
-        <text class="small">智能分诊建议，非诊断</text>
+        <text class="small">仅供参考，不是诊断</text>
       </view>
       <view class="sub-title">{{result.advisory.summary}}</view>
 
@@ -74,12 +74,12 @@
       </view>
 
       <view class="section-block">
-        <text class="sub-title">出现这些情况请立即就医</text>
+        <text class="sub-title">出现这些情况，要及时带它去看看</text>
         <text wx:for="{{result.advisory.watchFor}}" wx:key="*this" class="small">· {{item}}</text>
       </view>
 
       <view wx:if="{{result.advisory.visitPreparation.length}}" class="section-block">
-        <text class="sub-title">去医院前准备</text>
+        <text class="sub-title">现在可以做的</text>
         <text wx:for="{{result.advisory.visitPreparation}}" wx:key="*this" class="small">· {{item}}</text>
       </view>
 
@@ -90,7 +90,7 @@
 
       <view class="row block-gap">
         <t-button type="secondary" size="mini" anim="{{animType}}" bindtap="saveToRecords">记到日常记录</t-button>
-        <t-button type="ghost" size="mini" anim="{{animType}}" data-action="summary" bindtap="openRecords">整理给兽医看</t-button>
+        <t-button type="ghost" size="mini" anim="{{animType}}" data-action="summary" bindtap="openRecords">整理近况</t-button>
       </view>
     </view>
 
@@ -106,7 +106,7 @@
         <text class="sub-title">日常记录</text>
         <text class="small link" aria-role="button" data-action="" bindtap="openRecords">去记一笔 ›</text>
       </view>
-      <text class="small">吃喝、便便、呕吐、用药、体重和疫苗驱虫都记在这里，分诊和健康档案会一起参考。</text>
+      <text class="small">吃喝、便便、呕吐、用药、体重和疫苗驱虫都记在这里，健康助手和健康档案会一起参考。</text>
 
       <view wx:if="{{recentFacts.length}}" class="chips">
         <text wx:for="{{recentFacts}}" wx:key="*this" class="chip">{{item}}</text>
@@ -129,7 +129,7 @@
 
       <view class="section-block">
         <text class="small strong">免疫与驱虫</text>
-        <text wx:if="{{!careRecords.length}}" class="small">记下日子，到期前一周会提醒你。打什么、打不打由兽医决定。</text>
+        <text wx:if="{{!careRecords.length}}" class="small">记下日子，到期前一周会提醒你。具体怎么安排，以医生意见为准。</text>
         <view wx:for="{{careRecords}}" wx:key="id" wx:if="{{index < 4}}" class="row">
           <view class="care-main">
             <text class="small strong">{{item.kindText}} · {{item.label}}</text>
@@ -140,7 +140,7 @@
       </view>
 
       <view class="row block-gap">
-        <t-button type="secondary" size="mini" anim="{{animType}}" data-action="summary" bindtap="openRecords">给兽医看</t-button>
+        <t-button type="secondary" size="mini" anim="{{animType}}" data-action="summary" bindtap="openRecords">整理近况</t-button>
         <t-button type="ghost" size="mini" anim="{{animType}}" data-action="" bindtap="openRecords">全部记录</t-button>
       </view>
     </view>
@@ -153,8 +153,8 @@
       不可分享 —— 健康线的产出是私密记录，只能本人下载。
     -->
     <view class="health-section">
-      <text class="sub-title">带去医院的材料</text>
-      <text class="small">把体重、免疫与分诊记录导成一份 PDF，就医时给兽医看。不是体检报告，也不含诊断结论。</text>
+      <text class="sub-title">健康档案</text>
+      <text class="small">把体重、免疫和健康助手的记录整理成一份 PDF，方便保存和打印。不是体检报告，也不含诊断结论。</text>
 
       <view wx:if="{{documents.length}}" class="section-block">
         <view wx:for="{{documents}}" wx:key="id" class="row">

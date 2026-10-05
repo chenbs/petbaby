@@ -41,7 +41,7 @@ export interface TriageAdvisory {
  * 类目描述、页面、推送里出现这些词就等于自称在做诊疗活动。
  */
 export const TRIAGE_DISCLAIMER =
-  "以下是基于你描述的分诊建议，不是诊断。宠物的健康状况需要执业兽医面诊判断。";
+  "以上是根据你的描述整理的参考建议，不是诊断，具体情况以执业兽医面诊为准。";
 
 /*
  * 紧急症状关键词。命中即直通 emergency，**不调模型**。
@@ -123,6 +123,61 @@ export function mentionsDrug(text: string): boolean {
   return DRUG_PATTERNS.some((pattern) => pattern.test(text));
 }
 
+/*
+ * 病名词典（2026-10）。
+ *
+ * 接入真实模型后实测：即使提示词禁止，模型仍会写「提示可能存在胃炎、异物梗阻或肠胃感染」。
+ * 说出病名就是在下诊断结论（红线 1），而健康助手的定位是看情况、给建议，不替医生下判断。
+ *
+ * 与药物过滤的处理不同：药物命中要整段降级（处置建议一旦残留就可能致害），
+ * 病名只**删掉含病名的那一句 / 那一条**，其余观察与建议保留 —— 整段降级会让
+ * 大部分回答都变成通用模板，功能等于没做。紧急度不动。
+ *
+ * 刻意不收「中毒」：「可能误食中毒」是需要立刻行动的安全提示，删掉比留着危险。
+ * 也不收「便秘」「掉毛」「呕吐」这类主人自己看得到的现象。
+ */
+const DISEASE_PATTERNS: RegExp[] = [
+  // 各类「X 炎」与炎症
+  /(胃|肠|胰腺|肝|肾|膀胱|尿道|口腔?|牙龈|牙周|结膜|角膜|中耳|外耳|耳道|皮肤?|肺|支气管|鼻|乳腺|关节|子宫|心肌|脑|气管|咽|喉|胃肠|肠胃)炎|炎症/,
+  // 传染病与寄生虫病
+  /猫瘟|犬瘟|细小病毒|冠状病毒|传染性腹膜炎|传腹|FIP|杯状病毒|疱疹病毒|鼻支|狂犬病|钩端螺旋体|弓形虫|耳螨|疥螨|蠕形螨|猫癣|球虫|绦虫|蛔虫|钩虫|贾第虫|心丝虫|寄生虫(病|感染)/i,
+  /(细菌|病毒|真菌)?感染/,
+  // 慢性病与器官病
+  /糖尿病|甲亢|甲减|甲状腺|肾衰|肾病|肾功能不全|尿毒症|结石|下泌尿道|FLUTD|心肌病|心脏病|心衰|肿瘤|癌|淋巴瘤|贫血|黄疸|脂肪肝|肝病|胰腺|溃疡/i,
+  // 急症与外科问题的病名式说法
+  /梗阻|肠套叠|胃扭转|疝气|椎间盘|髋关节发育不良|骨折|脱臼|气管塌陷|子宫蓄脓|毛球症/,
+  // 眼、神经、皮肤与过敏
+  /白内障|青光眼|癫痫|哮喘|过敏|湿疹/,
+  // 下结论的说法
+  /疑似|确诊|诊断为|患有|患上/,
+];
+
+/** 文本是否提到病名或给出诊断式结论。用于输出后置过滤。 */
+export function mentionsDisease(text: string): boolean {
+  return DISEASE_PATTERNS.some((pattern) => pattern.test(text));
+}
+
+/** 只引出病名、本身没有信息的半句（「提示可能存在」「如」），后面那句被删时一起删 */
+const DANGLING_LEAD = /(可能是|可能存在|可能为|可能有|提示|考虑|怀疑|如|比如|例如|像是|或是|或者)\s*$/;
+
+/**
+ * 删掉 summary 里提到病名的分句。按句号、逗号、分号切开逐句检查，
+ * 被删分句前面只起引出作用的半句一起删。删完不剩可读内容时返回空串，由调用方换成通用句。
+ */
+export function stripDiseaseMentions(text: string): string {
+  const parts = text.split(/(?<=[，,。；;！!？?])/);
+  const kept: string[] = [];
+  for (const part of parts) {
+    if (!mentionsDisease(part)) { kept.push(part); continue; }
+    // 前一段若只是「提示可能存在，」这类引子，也一起去掉
+    const last = kept[kept.length - 1];
+    if (last && DANGLING_LEAD.test(last.replace(/[，,。；;！!？?]\s*$/, ""))) kept.pop();
+  }
+  const result = kept.join("").replace(/[，,；;]\s*$/, "。").replace(/^[，,。；;\s]+/, "").trim();
+  // 只剩几个字的残句（「虽然精神尚可，」）读起来像被掐断，宁可换通用句
+  return result.replace(/[，,。；;！!？?\s]/g, "").length >= 8 ? result : "";
+}
+
 /**
  * 降级后的通用建议。药物过滤命中时用它替换模型输出。
  *
@@ -133,11 +188,11 @@ export function fallbackAdvisory(level: TriageLevel): TriageAdvisory {
   return {
     level,
     summary: level === "routine"
-      ? "这类表现通常无需担心，若持续或加重请就医。"
-      : "建议由执业兽医面诊后再决定处置方式。",
+      ? "这类表现一般不用太担心，留意变化，持续或加重时及时带它去看看。"
+      : "建议请医生当面看看，再决定怎么处理。",
     relatedAreas: [],
     watchFor: ["症状持续超过 24 小时", "精神、食欲或饮水量明显下降", "出现新的症状"],
-    visitPreparation: ["带上疫苗与驱虫记录", "记下症状开始的时间与变化过程"],
+    visitPreparation: ["记下症状开始的时间与变化过程", "留意精神、食欲和排便有没有变化"],
     disclaimer: TRIAGE_DISCLAIMER,
   };
 }
@@ -166,7 +221,8 @@ export function normalizeLevel(value: unknown): TriageLevel {
  * 2. `watchFor` 非空 —— 每一档都要给出向上升级的条件，
  *    最低档也不能是终点，这是红线 4；
  * 3. `summary` 不给「不用去医院」的确定结论；
- * 4. 免责声明存在。
+ * 4. 不含病名或诊断式结论（命中只删那一句 / 那一条，紧急度不动）；
+ * 5. 免责声明存在。
  */
 export function sanitizeAdvisory(advisory: TriageAdvisory): TriageAdvisory {
   const joined = [advisory.summary, ...advisory.relatedAreas, ...advisory.watchFor, ...advisory.visitPreparation].join(" ");
@@ -181,14 +237,26 @@ export function sanitizeAdvisory(advisory: TriageAdvisory): TriageAdvisory {
    * 最低档的正确表述是「暂可观察，出现 X 请立即就医」，
    * 而不是「无需就医」的肯定句。
    */
-  const summary = /不(用|需要?)(去)?(医院|看医生|就医)/.test(advisory.summary)
-    ? fallbackAdvisory(advisory.level).summary
+  const fallback = fallbackAdvisory(advisory.level);
+  const noReassurance = /不(用|需要?)(去)?(医院|看医生|就医)/.test(advisory.summary)
+    ? fallback.summary
     : advisory.summary;
+
+  /*
+   * 病名过滤：summary 删掉含病名的分句，三个列表删掉含病名的条目。
+   * 删空了就换回通用内容 —— watchFor 不能为空（升级条件是红线 4）。
+   */
+  const summary = mentionsDisease(noReassurance) ? stripDiseaseMentions(noReassurance) || fallback.summary : noReassurance;
+  const withoutDisease = (items: string[]) => items.filter((item) => !mentionsDisease(item));
+  const filteredWatch = withoutDisease(watchFor);
+  const filteredPreparation = withoutDisease(advisory.visitPreparation);
 
   return {
     ...advisory,
     summary,
-    watchFor,
+    relatedAreas: withoutDisease(advisory.relatedAreas),
+    watchFor: filteredWatch.length ? filteredWatch : fallback.watchFor,
+    visitPreparation: filteredPreparation.length || !advisory.visitPreparation.length ? filteredPreparation : fallback.visitPreparation,
     disclaimer: TRIAGE_DISCLAIMER,
   };
 }

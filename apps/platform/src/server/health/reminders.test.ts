@@ -81,7 +81,7 @@ describe("健康主动提示", () => {
     await runHealthReminders(NOW);
     const rows = await notifications("health_care_due");
     expect(String(rows[0].title)).toContain("已过期");
-    expect(String(rows[0].body)).toContain("和兽医确认");
+    expect(String(rows[0].body)).toContain("问问医生");
   });
 
   /** 没有下次到期日的一次性项目不该产生提示 */
@@ -167,7 +167,7 @@ describe("健康主动提示", () => {
     const rows = await notifications("health_weight_change");
     expect(rows).toHaveLength(1);
     expect(String(rows[0].body)).toContain("10%");
-    expect(String(rows[0].body)).toContain("和兽医提一下");
+    expect(String(rows[0].body)).toContain("看医生时可以顺便提一下");
     expect(String(rows[0].body)).not.toContain("异常");
   });
 
@@ -205,7 +205,7 @@ describe("健康主动提示", () => {
     expect(rows).toHaveLength(1);
     expect(String(rows[0].title)).toContain("豆包");
     // 不列具体检查项目（那是兽医根据触诊决定的），也不带紧迫感或恐吓
-    expect(String(rows[0].body)).toContain("由兽医决定");
+    expect(String(rows[0].body)).toContain("听医生的");
     expect(String(rows[0].body)).not.toContain("尽快");
   });
 

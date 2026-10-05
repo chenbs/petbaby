@@ -109,7 +109,7 @@ async function remindCareDue(now: Date, limit: number): Promise<HealthReminder[]
       kind: "care_due",
       title: overdue ? `${petName}的${row.label}已过期` : `${petName}的${row.label}即将到期`,
       // 只给日期这个事实。不写「请尽快接种」——打什么、打不打由兽医决定。
-      body: overdue ? `到期日是 ${dueOn}，可以和兽医确认下一次安排。` : `到期日是 ${dueOn}。`,
+      body: overdue ? `到期日是 ${dueOn}，具体怎么安排可以问问医生。` : `到期日是 ${dueOn}。`,
     };
     /*
      * subject_key 带上到期日：明年同一条记录续期后 due_on 变了，
@@ -199,7 +199,7 @@ async function remindSeniorCheckup(now: Date, limit: number): Promise<HealthRemi
        * 也不列具体检查项目：那是兽医根据触诊决定的。
        */
       title: `${pet.name}的季度检查`,
-      body: "晚年阶段建议每季度做一次基础检查，具体项目由兽医决定。",
+      body: "晚年阶段建议每季度带它做一次基础检查，具体项目听医生的。",
     };
     // 每季度一条：subject_key 带上年份与季度序号，同一季度内不重复。
     const quarter = `${now.getFullYear()}Q${Math.floor(now.getMonth() / 3) + 1}`;

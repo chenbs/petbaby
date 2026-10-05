@@ -23,7 +23,7 @@ const GROUPS = [
   { id: "", label: "全部" },
   { id: "body", label: "身体状况" },
   { id: "food", label: "吃喝" },
-  { id: "medical", label: "用药就医" },
+  { id: "medical", label: "用药看诊" },
   { id: "care", label: "疫苗驱虫" },
   { id: "weight", label: "体重" },
   { id: "life", label: "生活" }
@@ -258,7 +258,7 @@ themedPage({
       this.setData({
         form: null, formBusy: false, urgent,
         // 身体状况类记完后，顺手提示可以让健康助手结合记录看看；从健康助手记回来的不再提示
-        afterSave: !urgent && form.spec.bodily && !form.healthSessionId ? { text: "记好了。想知道要不要去医院，健康助手会结合最近的记录一起看。" } : null
+        afterSave: !urgent && form.spec.bodily && !form.healthSessionId ? { text: "记好了。想知道宝贝怎么样了，健康助手会结合最近的记录一起看看。" } : null
       });
       if (wx.showToast) wx.showToast({ title: "记好了", icon: "success" });
       this._items = [];

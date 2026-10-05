@@ -139,7 +139,7 @@ describe("日常记录", () => {
     expect(summary.lines).toHaveLength(1);
     expect(summary.lines[0]).toContain("07:10 呕吐 · 2 次 · 没消化的粮（吃完粮就吐）");
     expect(summary.care[0]).toContain("疫苗 猫三联");
-    expect(summary.text).toContain("仅供就医时参考");
+    expect(summary.text).toContain("仅供参考");
   });
 
   it("附图：私有存储、只有本人可读、随记录删除清理、孤儿附图一天后清理", async () => {
@@ -211,7 +211,7 @@ describe("日常记录", () => {
   it("describeRecord 处理多选、开关与日期字段", () => {
     expect(describeRecord("symptom", { signs: ["cough", "sneeze"] }).summary).toBe("咳嗽、打喷嚏");
     expect(describeRecord("stool", { form: "soft", blood: true, count: 1 }).summary).toBe("偏软 · 看到血丝");
-    expect(describeRecord("visit", { type: "recheck", vetSaid: "再观察三天", followUpOn: "2026-10-12" }).summary).toBe("复查 · 兽医：再观察三天 · 复诊日期 2026-10-12");
+    expect(describeRecord("visit", { type: "recheck", vetSaid: "再观察三天", followUpOn: "2026-10-12" }).summary).toBe("复查 · 医生说：再观察三天 · 复诊日期 2026-10-12");
     expect(describeRecord("medication", { name: "药", courseDays: 7 }).summary).toBe("药 · 疗程 7 天");
     expect(describeRecord("unknown", {}).title).toBe("记录");
   });

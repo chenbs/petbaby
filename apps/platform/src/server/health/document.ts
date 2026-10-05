@@ -84,7 +84,7 @@ function lowerSections(care: string[], records: string[], sessions: string[]) {
   if (records.length) block("近期日常记录", records, limits.records);
   // 原版式里分诊段固定在 1380：免疫段少时不上移，保持老档案的版面不变
   if (!records.length) y = Math.max(y, 1380);
-  block("分诊记录", sessions, limits.sessions);
+  block("健康助手记录", sessions, limits.sessions);
   return parts.join("\n  ");
 }
 
@@ -180,7 +180,7 @@ export function buildHealthDocumentSvg(input: HealthDocumentInput): string {
 
   ${lowerSections(careLines, recordLines, sessionLines)}
 
-  <text x="80" y="${PAGE_HEIGHT - 60}" font-family="sans-serif" font-size="22" fill="#8b9992">由麻麻抱我导出　内容来自你自己录入的记录　不替代执业兽医面诊</text>
+  <text x="80" y="${PAGE_HEIGHT - 60}" font-family="sans-serif" font-size="22" fill="#8b9992">由麻麻抱我导出　内容来自你自己录入的记录　不代替医生面诊</text>
 </svg>`;
 }
 

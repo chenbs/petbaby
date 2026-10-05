@@ -100,21 +100,21 @@ export const RECORD_KINDS: KindSpec[] = [
   {
     kind: "medication", label: "用药", icon: "medication", group: "medical", bodily: false, attachments: true, notePlaceholder: "比如饭后喂、还剩几天",
     fields: [
-      { key: "name", label: "药名", type: "text", maxLength: 40, placeholder: "按兽医开的填写", required: true },
+      { key: "name", label: "药名", type: "text", maxLength: 40, placeholder: "按医嘱填写", required: true },
       { key: "dose", label: "用量", type: "text", maxLength: 30, placeholder: "按医嘱填写，如「半片」" },
       // 疗程天数 > 1 时，记录页顶部会出现「用药第 N 天 / 共 M 天」，之后每次喂药点一下即可
       { key: "courseDays", label: "疗程", type: "count", min: 1, max: 60, defaultValue: 1, unit: "天" },
     ],
   },
   {
-    kind: "visit", label: "就医检查", icon: "visit", group: "medical", bodily: false, attachments: true, notePlaceholder: "花费、检查项目，或者想记住的事",
+    kind: "visit", label: "看诊检查", icon: "visit", group: "medical", bodily: false, attachments: true, notePlaceholder: "花费、检查项目，或者想记住的事",
     fields: [
       { key: "type", label: "这次是", type: "choice", required: true, options: [
         { value: "visit", label: "看病" }, { value: "recheck", label: "复查" }, { value: "checkup", label: "体检" }, { value: "test", label: "做检查" },
       ] },
-      { key: "hospital", label: "医院", type: "text", maxLength: 40, placeholder: "可不填" },
+      { key: "hospital", label: "在哪里看的", type: "text", maxLength: 40, placeholder: "可不填" },
       { key: "reason", label: "为什么去", type: "text", maxLength: 60, placeholder: "比如连续两天呕吐" },
-      { key: "vetSaid", label: "兽医怎么说", type: "text", maxLength: 120, placeholder: "把医生的原话记下来，下次复诊用得上" },
+      { key: "vetSaid", label: "医生怎么说", type: "text", maxLength: 120, placeholder: "把医生的原话记下来，下次复诊用得上" },
       { key: "followUpOn", label: "复诊日期", type: "date", placeholder: "不复诊可不填" },
     ],
   },
@@ -193,7 +193,7 @@ export function describeRecord(kind: string, details: Record<string, unknown>): 
       if (Number(value) > 1) parts.push(field.key === "courseDays" ? `疗程 ${Number(value)} 天` : `${Number(value)} ${field.unit}`);
     } else if (field.type === "toggle") parts.push(field.label);
     else if (field.type === "date") parts.push(`${field.label} ${String(value)}`);
-    else if (field.key === "vetSaid") parts.push(`兽医：${String(value)}`);
+    else if (field.key === "vetSaid") parts.push(`医生说：${String(value)}`);
     else parts.push(String(value));
   }
   return { title: spec.label, summary: parts.join(" · ") };

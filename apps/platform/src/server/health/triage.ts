@@ -56,13 +56,23 @@ export const TRIAGE_DISCLAIMER =
 const EMERGENCY_PATTERNS: Array<{ pattern: RegExp; area: string }> = [
   { pattern: /呼吸(困难|急促|窘迫)|喘(得厉害|不上|气)|张口呼吸|舌头?(发)?紫/, area: "呼吸" },
   { pattern: /抽搐|痉挛|癫痫|抽风|口吐白沫/, area: "神经" },
-  { pattern: /误(食|吞|服)|吃了(药|老鼠药|巧克力|洋葱|百合|葡萄)|中毒/, area: "中毒" },
+  /*
+   * 中毒物前面常隔着量词或修饰（「偷吃了一块巧克力」「吞了半颗葡萄」），
+   * 2026-10 真实模型测试里前者没命中、被判成了「今天带它去看看」——对狗吃巧克力这太慢了。
+   * 所以动词与毒物之间允许隔几个字。
+   */
+  { pattern: /误(食|吞|服)|中毒|吃了药|(吃|偷吃|舔|啃|吞|咽)了?.{0,6}(人吃的药|药片|老鼠药|鼠药|蟑螂药|杀虫剂|农药|巧克力|洋葱|大蒜|百合|葡萄|葡萄干|木糖醇|消毒液|洗衣液|洗洁精|电池)/, area: "中毒" },
   { pattern: /尿(闭|不出|不下来)|排不出尿|一直蹲(厕所|猫砂)/, area: "泌尿" },
   { pattern: /大(出血|量出血)|血流不止|失血/, area: "出血" },
   { pattern: /难产|生不下来|羊水/, area: "产科" },
   { pattern: /中暑|热射|体温[过很太]高/, area: "体温" },
   { pattern: /体温[过很太]低|身体(冰|发)凉|失温/, area: "体温" },
   { pattern: /(一直|持续|不停)(呕吐|吐)|吐(得|到)(厉害|脱水)|喝不进水/, area: "消化" },
+  /*
+   * 两天以上不吃。猫长时间不进食本身就有风险，2026-10 真实模型测试里
+   * 「两天几乎不吃、一直趴着不动」被判成「今天带它去看看」，提示词里的标准没被遵守。
+   */
+  { pattern: /(两|二|三|四|五|几|好几|多)天.{0,4}(不吃|没吃|没怎么吃|不进食|不肯吃)/, area: "进食" },
   { pattern: /肚子(鼓|胀|膨)|腹部(膨大|鼓起)|胃扭转/, area: "腹部" },
   { pattern: /瘫|站不起来|后腿拖|不能动/, area: "运动" },
   { pattern: /昏(迷|倒)|叫不醒|失去意识/, area: "意识" },
@@ -256,7 +266,8 @@ export function sanitizeAdvisory(advisory: TriageAdvisory): TriageAdvisory {
     summary,
     relatedAreas: withoutDisease(advisory.relatedAreas),
     watchFor: filteredWatch.length ? filteredWatch : fallback.watchFor,
-    visitPreparation: filteredPreparation.length || !advisory.visitPreparation.length ? filteredPreparation : fallback.visitPreparation,
+    // 「现在可以做的」不能空着：真实模型在最低档常常省略这一项，页面会出现一个空标题
+    visitPreparation: filteredPreparation.length ? filteredPreparation : fallback.visitPreparation,
     disclaimer: TRIAGE_DISCLAIMER,
   };
 }

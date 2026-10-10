@@ -3,6 +3,7 @@ import "server-only";
 import { notFound } from "next/navigation";
 
 import { AppError } from "@/server/errors";
+import { isTestHarness } from "@/server/runtime-mode";
 
 function adminUserIds() {
   return new Set(
@@ -14,7 +15,8 @@ function adminUserIds() {
 }
 
 export function isAdmin(userId: string) {
-  if (process.env.NODE_ENV !== "production") return true;
+  // 本地开发与生产一样按 ADMIN_USER_IDS 白名单判断，只有自动化测试夹具默认放行。
+  if (isTestHarness()) return true;
   return adminUserIds().has(userId);
 }
 

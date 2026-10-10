@@ -14,6 +14,10 @@ import { collectAnnualData, type AnnualAggregate } from "@/server/annual/aggrega
 import { lockPhotoInputs } from "@/server/photo-deliverable-assets";
 import { buildNarrativeArgs } from "@/server/video/narrative";
 import { normalizeDuration } from "@/domain/video-duration";
+import { resolveDeliverableCost } from "@/domain/dongan-pricing";
+import { measureAccumulation } from "@/server/accumulation";
+import { spend } from "@/server/wallet/service";
+import { assertGenerationCircuit } from "@/server/risk/controls";
 
 /**
  * 叙事型年度视频（PL-19 的升级形态）。
@@ -76,6 +80,11 @@ async function createAnnualFilmInTransaction(userId: string, input: { year: numb
   const photoIds = aggregate.photos.map((item) => item.photo.id);
   await lockPhotoInputs(userId, aggregate.petId!, photoIds);
   const renderId = crypto.randomUUID();
+  // 先扣冻干再入队：按这只宠物当前的积累量分档（与记忆短片同价）。
+  await assertGenerationCircuit();
+  const pricing = resolveDeliverableCost({ pluginId: "pl-19", accumulation: await measureAccumulation(userId, aggregate.petId!) });
+  const walletBizKey = `spend:video:${renderId}`;
+  await spend(userId, { units: pricing.cost, bizKey: walletBizKey, title: `${aggregate.petName || ""}的 ${year} 年度短片`, refType: "video_render", refId: renderId });
   const config = {
     kind: "annual-film" as const,
     year,
@@ -85,12 +94,13 @@ async function createAnnualFilmInTransaction(userId: string, input: { year: numb
     photoIds,
     snapshotVersion: 1,
     snapshot: aggregate,
+    dongan: { cost: pricing.cost, tier: pricing.tier },
   };
   await database.query(
-    "INSERT INTO video_renders (id,user_id,plugin_id,status,progress,config,available_at,created_at) VALUES ($1,$2,'pl-19','queued',5,$3::jsonb,now(),$4)",
-    [renderId, userId, JSON.stringify(config), new Date()],
+    "INSERT INTO video_renders (id,user_id,plugin_id,status,progress,config,wallet_biz_key,available_at,created_at) VALUES ($1,$2,'pl-19','queued',5,$3::jsonb,$5,now(),$4)",
+    [renderId, userId, JSON.stringify(config), new Date(), walletBizKey],
   );
-  return { id: renderId, status: "queued", year, durationSeconds, petId: aggregate.petId, petName: aggregate.petName, photoIds, shots: aggregate.photos.length };
+  return { id: renderId, status: "queued", year, durationSeconds, petId: aggregate.petId, petName: aggregate.petName, photoIds, shots: aggregate.photos.length, cost: pricing.cost };
 }
 
 /**

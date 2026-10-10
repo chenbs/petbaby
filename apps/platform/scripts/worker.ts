@@ -1,8 +1,10 @@
+import "./load-env";
 import { runNextTask } from "../src/server/worker/generation-worker";
 import { closeExpiredOrders, cleanupExpiredContent, healthSnapshot, sendOperationalAlert } from "../src/server/maintenance";
 import { processDueMessages } from "../src/server/messaging/worker";
 import { processNextVideo } from "../src/server/video/ffmpeg";
-import { expirePastDueMemberships, processNextAiRun, resetMembershipQuotas, scheduleAllUpcomingReminders } from "../src/server/growth-service";
+import { processNextAiRun, scheduleAllUpcomingReminders } from "../src/server/growth-service";
+import { expireGiftLots } from "../src/server/wallet/service";
 import { runHealthReminders } from "../src/server/health/reminders";
 import { scheduleAllOnThisDay } from "../src/server/timeline-service";
 import { reconcilePayments } from "../src/server/payments/service";
@@ -42,7 +44,7 @@ async function loop() {
       const payments = await reconcilePayments();
       if (payments.failed) await sendOperationalAlert("支付对账需要检查", payments);
       await processPaidPhysicalOrders();
-      const [health] = await Promise.all([healthSnapshot(), closeExpiredOrders(), cleanupExpiredContent(), processDueMessages(), resetMembershipQuotas(), expirePastDueMemberships(), scheduleAllUpcomingReminders()]);
+      const [health] = await Promise.all([healthSnapshot(), closeExpiredOrders(), cleanupExpiredContent(), processDueMessages(), expireGiftLots(), scheduleAllUpcomingReminders()]);
       if (health.status !== "ok" || health.queued > 100) await sendOperationalAlert("Petbaby worker degraded", health);
     }
     if (Date.now() - onThisDayAt > ON_THIS_DAY_INTERVAL_MS) {

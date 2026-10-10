@@ -1,3 +1,4 @@
+const wallet = require("../../services/wallet");
 const { displayMediaTree } = require("../../services/photo-files");
 const api = require("../../services/api");
 const { preparePhoto, createUploadSession, requestId } = require("../../services/photo-upload-session");
@@ -37,15 +38,15 @@ function labelOf(map, value) {
 function nextTierText(pricing) {
   const next = pricing && pricing.nextTier;
   if (!next) return "";
-  const price = (pricing.tierPrices || {})[next.tier];
-  const target = (TIER_NAME[next.tier] || next.tier) + "版" + (price ? " ¥" + price : "");
+  const price = (pricing.tierCosts || {})[next.tier];
+  const target = (TIER_NAME[next.tier] || next.tier) + "版" + (price ? " · " + wallet.costText(price) : "");
   if (next.tier === "advanced" && next.photosNeeded) return "再攒 " + next.photosNeeded + " 张照片，就能做" + target + "。";
   if (next.daysNeeded) return "照片跨度再满 " + next.daysNeeded + " 天，就能做" + target + "。";
   return "";
 }
 
-themedPage({
-  data: {
+themedPage(Object.assign({}, wallet.walletSheetMethods, {
+  data: { walletSheet: { visible: false, required: 0, balance: 0, shortfall: 0 },
     steps: STEPS,
     stepIndex: 0,
     speciesLabels: SPECIES.labels,
@@ -287,14 +288,13 @@ themedPage({
       .then((pricing) => {
         if (version !== this._photoRequest || !this.data.pet || pet.id !== this.data.pet.id) return;
         if (pricing.free) return this.setData({ pricing: null, pricingText: "", pricingHint: "" });
-        const tierName = pricing.tiered && pricing.specTier ? (TIER_NAME[pricing.specTier] || "") + "版 · " : "";
+        const tierName = pricing.tiered && pricing.tier ? (TIER_NAME[pricing.tier] || "") + "版 · " : "";
         const hints = [];
         if (pricing.tiered && pricing.accumulation) hints.push("已积累 " + pricing.accumulation.photoCount + " 张照片，跨度 " + pricing.accumulation.spanDays + " 天。");
-        if (pricing.isMember && pricing.memberSaving > 0) hints.push("会员价，比单买省 ¥" + pricing.memberSaving + "。");
-        else hints.push(nextTierText(pricing));
+        hints.push(nextTierText(pricing));
         this.setData({
           pricing,
-          pricingText: tierName + pricing.label + " ¥" + pricing.amount,
+          pricingText: tierName + wallet.costText(pricing.cost) + " · 开始生成",
           pricingHint: hints.filter(Boolean).join("")
         });
       })
@@ -391,7 +391,8 @@ themedPage({
       const signature = JSON.stringify(input);
       if (!this._submission || this._submission.signature !== signature) this._submission = { signature, key: requestId() };
       this.saveDraft();
-      return api.request("/api/generations", { method: "POST", data: Object.assign({}, input, { idempotencyKey: this._submission.key }) }).then(displayMediaTree);
+      const key = this._submission.key;
+      return wallet.withDongan(this, () => api.request("/api/generations", { method: "POST", data: Object.assign({}, input, { idempotencyKey: key }) })).then(displayMediaTree);
     }).then((task) => {
       this.setData({ task, stage: "generating" });
       this.saveDraft();
@@ -399,7 +400,7 @@ themedPage({
       this.pollCount = 0;
       this._pollGeneration = (this._pollGeneration || 0) + 1;
       this.poll(task.id, this._pollGeneration);
-    }).catch((error) => this.setData({ error: error.message || error.errMsg, busy: false }));
+    }).catch((error) => this.setData({ error: error.code === "WALLET_TOPUP_CANCELLED" ? "" : error.message || error.errMsg, busy: false }));
   },
 
   poll(taskId, generation) {
@@ -420,7 +421,7 @@ themedPage({
       } else if (task.status === "failed") {
         // 失败任务不能继续复用同一幂等键，否则服务端会持续返回原 failed 任务。
         this._submission = null;
-        this.setData({ task: null, error: "生成失败，免费次数已返还", stage: "photos", busy: false });
+        this.setData({ task: null, error: this.data.pricing && this.data.pricing.cost > 0 ? "生成失败，已退还冻干" : "生成失败，免费玩法次数已返还", stage: "photos", busy: false });
         this.saveDraft();
         this.syncLabels();
       }
@@ -435,4 +436,4 @@ themedPage({
     if (this.data.work && this.data.work.outputUrl === event.currentTarget.dataset.src) this.setData({ resultImageFailed: true });
   },
   openWork() { if (this.data.work) wx.navigateTo({ url: "/pages/work/work?id=" + this.data.work.id }); }
-});
+}));

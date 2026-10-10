@@ -4,7 +4,9 @@ import { z } from "zod";
 
 import { computeWeightTrend, notableWeightNote } from "@/domain/weight-trend";
 import { getDatabase, inTransaction } from "@/server/db/client";
-import { claimEntitlement, claimHealthExport, entitlementBalance, hasHealthExport, purchasedCreditBalance } from "@/server/entitlements";
+import { consumePurchasedCredit, purchasedCreditBalance } from "@/server/entitlements";
+import { HEALTH_DOCUMENT_COST } from "@/domain/dongan-pricing";
+import { getWallet, insufficientError, spend } from "@/server/wallet/service";
 import { AppError } from "@/server/errors";
 import { documentRecordLines, recentContextLines } from "@/server/daily-log-context";
 import { buildHealthDocumentSvg, renderHealthDocumentPdf } from "@/server/health/document";
@@ -24,12 +26,12 @@ import { objectStorage } from "@/server/storage";
 
 /** 免费额度。会员不加次数 —— 加次数是鼓励多刷，产品要鼓励的是多积累。 */
 const FREE_TEXT_LIMIT = 3;
-const FREE_IMAGE_LIMIT = 1;
 
 const sessionSchema = z.object({
   petId: z.string().uuid(),
   description: z.string().trim().min(4, "请多描述一些症状").max(600),
-  photoIds: z.array(z.string().uuid()).max(3).default([]),
+  /** 2026-10-10 起只接收文字。带图的请求明确拒绝，而不是丢掉图片照常分诊 */
+  photoIds: z.array(z.unknown()).max(0, "健康助手只接收文字描述，不支持上传图片").optional(),
   /** 是否把近 7 天的日常记录带给分诊。默认带；用户可在页面上关掉 */
   includeRecords: z.boolean().optional().default(true),
 });
@@ -47,6 +49,7 @@ export interface HealthSession {
   id: string;
   petId: string;
   description: string;
+  /** 只有 2026-10-10 前的历史会话可能非空 */
   photoIds: string[];
   triageLevel: string;
   triageSource: string;
@@ -83,20 +86,15 @@ function mapSession(row: Record<string, unknown>): HealthSession {
  * 额度判定。健康额度**独立于创意生成的 daily_quotas** ——
  * 健康分诊用完不该影响做图额度，那是两种资源。
  */
-async function consumeQuota(userId: string, kind: "text" | "image") {
+async function consumeQuota(userId: string) {
   const database = await getDatabase();
   const quotaDate = new Date().toISOString().slice(0, 10);
-  const limit = kind === "image" ? FREE_IMAGE_LIMIT : FREE_TEXT_LIMIT;
   const rows = await database.query<{ used: number }>(
-    "INSERT INTO health_daily_quotas (id,user_id,quota_date,kind,used,created_at) VALUES ($1,$2,$3,$4,1,$5) ON CONFLICT (user_id,quota_date,kind) DO UPDATE SET used=health_daily_quotas.used+1 RETURNING used",
-    [crypto.randomUUID(), userId, quotaDate, kind, new Date()],
+    "INSERT INTO health_daily_quotas (id,user_id,quota_date,kind,used,created_at) VALUES ($1,$2,$3,'text',1,$4) ON CONFLICT (user_id,quota_date,kind) DO UPDATE SET used=health_daily_quotas.used+1 RETURNING used",
+    [crypto.randomUUID(), userId, quotaDate, new Date()],
   );
-  if (Number(rows[0]?.used || 0) > limit) {
-    throw new AppError(
-      "HEALTH_QUOTA_USED",
-      kind === "image" ? "今天的图片分析次数已用完，明天再来" : "今天的健康咨询次数已用完，明天再来",
-      429,
-    );
+  if (Number(rows[0]?.used || 0) > FREE_TEXT_LIMIT) {
+    throw new AppError("HEALTH_QUOTA_USED", "今天的健康咨询次数已用完，明天再来", 429);
   }
 }
 
@@ -128,7 +126,7 @@ export async function createHealthSession(userId: string, input: unknown): Promi
    * 紧急直通不调模型、没有成本，没有理由让额度挡在它前面。
    */
   const emergencyAreas = matchEmergency(data.description);
-  if (!emergencyAreas) await consumeQuota(userId, data.photoIds.length ? "image" : "text");
+  if (!emergencyAreas) await consumeQuota(userId);
 
   // 体重取最近一次记录，作为模型输入。没有也不阻断。
   const weightRows = await database.query<{ weight_grams: number }>(
@@ -163,22 +161,9 @@ export async function createHealthSession(userId: string, input: unknown): Promi
     const advisory = emergencyAdvisory(emergencyAreas);
     await database.query(
       "INSERT INTO health_sessions (id,user_id,pet_id,description,photo_ids,pet_snapshot,triage_level,triage_source,advisory,status,created_at) VALUES ($1,$2,$3,$4,$5::jsonb,$6::jsonb,$7,'keyword',$8::jsonb,'succeeded',$9)",
-      [id, userId, data.petId, data.description, JSON.stringify(data.photoIds), JSON.stringify(petSnapshot), advisory.level, JSON.stringify(advisory), now],
+      [id, userId, data.petId, data.description, "[]", JSON.stringify(petSnapshot), advisory.level, JSON.stringify(advisory), now],
     );
-    return { id, petId: data.petId, description: data.description, photoIds: data.photoIds, triageLevel: advisory.level, triageSource: "keyword", advisory, status: "succeeded", contextRecords: recentRecords, createdAt: now.toISOString() };
-  }
-
-  const images: Array<{ body: Uint8Array; contentType: string }> = [];
-  if (data.photoIds.length) {
-    const photoRows = await database.query(
-      "SELECT id,storage_key,mime_type FROM photos WHERE id=ANY($1::uuid[]) AND user_id=$2 AND pet_id=$3 AND deleted_at IS NULL",
-      [data.photoIds, userId, data.petId],
-    );
-    if (photoRows.length !== data.photoIds.length) throw new AppError("PHOTO_PET_MISMATCH", "照片不存在或不属于这只宠物", 422);
-    for (const row of photoRows) {
-      const object = await objectStorage.get(String(row.storage_key));
-      if (object) images.push({ body: object.body, contentType: object.contentType });
-    }
+    return { id, petId: data.petId, description: data.description, photoIds: [], triageLevel: advisory.level, triageSource: "keyword", advisory, status: "succeeded", contextRecords: recentRecords, createdAt: now.toISOString() };
   }
 
   const provider = selectTriageProvider();
@@ -187,13 +172,12 @@ export async function createHealthSession(userId: string, input: unknown): Promi
       description: data.description,
       pet: { name: petSnapshot.name, species: petSnapshot.species, ageMonths: ageInMonths(petSnapshot.birthday), weightGrams: petSnapshot.weightGrams, lifeStage: petSnapshot.lifeStage },
       recentRecords,
-      images,
     });
     await database.query(
       "INSERT INTO health_sessions (id,user_id,pet_id,description,photo_ids,pet_snapshot,triage_level,triage_source,advisory,model_snapshot,status,created_at) VALUES ($1,$2,$3,$4,$5::jsonb,$6::jsonb,$7,'model',$8::jsonb,$9::jsonb,'succeeded',$10)",
-      [id, userId, data.petId, data.description, JSON.stringify(data.photoIds), JSON.stringify(petSnapshot), advisory.level, JSON.stringify(advisory), JSON.stringify({ provider: channel, modelVersion: model, failedChannels: errors }), now],
+      [id, userId, data.petId, data.description, "[]", JSON.stringify(petSnapshot), advisory.level, JSON.stringify(advisory), JSON.stringify({ provider: channel, modelVersion: model, failedChannels: errors }), now],
     );
-    return { id, petId: data.petId, description: data.description, photoIds: data.photoIds, triageLevel: advisory.level, triageSource: "model", advisory, status: "succeeded", contextRecords: recentRecords, createdAt: now.toISOString() };
+    return { id, petId: data.petId, description: data.description, photoIds: [], triageLevel: advisory.level, triageSource: "model", advisory, status: "succeeded", contextRecords: recentRecords, createdAt: now.toISOString() };
   } catch (error) {
     /*
      * 失败也要落库。与 generation_tasks 的口径一致：不落库会让用户
@@ -203,7 +187,7 @@ export async function createHealthSession(userId: string, input: unknown): Promi
     const advisory = emergencyAreas ? emergencyAdvisory(emergencyAreas) : undefined;
     await database.query(
       "INSERT INTO health_sessions (id,user_id,pet_id,description,photo_ids,pet_snapshot,triage_level,triage_source,advisory,status,error_code,created_at) VALUES ($1,$2,$3,$4,$5::jsonb,$6::jsonb,'observe','model',$7::jsonb,'failed',$8,$9)",
-      [id, userId, data.petId, data.description, JSON.stringify(data.photoIds), JSON.stringify(petSnapshot), JSON.stringify(advisory || {}), code, now],
+      [id, userId, data.petId, data.description, "[]", JSON.stringify(petSnapshot), JSON.stringify(advisory || {}), code, now],
     );
     throw new AppError("HEALTH_ADVISORY_FAILED", "健康助手暂时不可用，请稍后再试", 503);
   }
@@ -298,9 +282,7 @@ const CARE_KIND_TEXT: Record<string, string> = {
   checkup: "体检",
 };
 
-/** 健康档案单次导出价（非会员）。会员的 healthExportUnlimited 权益免费无限导出 */
-export const HEALTH_ARCHIVE_PRICE = 29.9;
-/** 单买凭据在 entitlement_ledger 里的 kind */
+/** 冻干上线前单买的健康档案凭据在 entitlement_ledger 里的 kind（历史凭据仍可核销一次） */
 export const HEALTH_ARCHIVE_KIND = "health_archive";
 
 function todayString(now = new Date()) {
@@ -335,23 +317,18 @@ export async function createHealthDocument(userId: string, petId: string, option
   const kind = year ? "annual" : "archive";
 
   /*
-   * 权益判定。两类文件对应两项权益：
-   * - archive → `healthExportUnlimited`（无限导出）
-   * - annual  → `annualHealthReport`（按次，走 claimEntitlement 核销）
-   *
-   * 都不命中时抛 402 让端上引导购买 —— **不静默生成**：
-   * 先给文件再要钱，或者给一个残缺版本，都比明确告价更糟。
+   * 计费（2026-10-08 起）：健康档案与年度健康记录各 6 颗冻干，导出时扣。
+   * 冻干上线前单买的健康档案凭据仍可抵一次（只抵完整档案），抵不了再扣冻干。
+   * 扣费与写入文档记录在同一事务；文件生成失败时事务回滚，冻干不会白扣。
    */
-  if (kind === "archive") {
-    /*
-     * 会员无限导出；非会员回落到单买凭据（一张凭据换一次导出）。
-     * 顺序是「先看会员再消耗凭据」—— 反过来会让会员白白用掉一张已买的凭据。
-     */
-    if (!(await hasHealthExport(userId)) && (await purchasedCreditBalance(userId, HEALTH_ARCHIVE_KIND)) <= 0) {
-      throw new AppError("HEALTH_EXPORT_REQUIRES_ENTITLEMENT", `导出健康档案需要会员权益，或单次购买 ¥${HEALTH_ARCHIVE_PRICE}`, 402);
-    }
-  } else if ((await entitlementBalance(userId, "annualHealthReport")) <= 0) {
-    throw new AppError("HEALTH_ANNUAL_REQUIRES_ENTITLEMENT", "年度健康记录需要会员权益", 402);
+
+  // 余额不足要先弹充值面板，不能等 PDF 渲染、上传完才告知。
+  // 这里只预检；最终扣费仍在下面的事务里校验，防止并发消费导致透支。
+  const hasLegacyCredit = kind === "archive" && await purchasedCreditBalance(userId, HEALTH_ARCHIVE_KIND) > 0;
+  if (!hasLegacyCredit) {
+    const wallet = await getWallet(userId);
+    if (wallet.frozen) throw new AppError("WALLET_FROZEN", "账户里的冻干暂时不能使用，请联系客服", 409);
+    if (wallet.balance < HEALTH_DOCUMENT_COST) throw insufficientError(HEALTH_DOCUMENT_COST, wallet.balance);
   }
 
   const [weights, care, sessions, records] = await Promise.all([
@@ -398,8 +375,8 @@ export async function createHealthDocument(userId: string, petId: string, option
   const summary = { weights: weights.length, care: care.length, sessions: sessions.length, records: records.length, petName: String(pet.name) };
   try {
     await inTransaction(async (transaction) => {
-      const granted = kind === "archive" ? await claimHealthExport(userId, id) : await claimEntitlement(userId, "annualHealthReport", `${year} 年度健康记录`, id);
-      if (!granted) throw new AppError("HEALTH_EXPORT_REQUIRES_ENTITLEMENT", "导出权益已被使用，请重新购买", 402);
+      const legacyCredit = kind === "archive" && await consumePurchasedCredit(userId, HEALTH_ARCHIVE_KIND, "健康档案导出", id);
+      if (!legacyCredit) await spend(userId, { units: HEALTH_DOCUMENT_COST, bizKey: `spend:health:${id}`, title: year ? `${year} 年度健康记录` : "健康档案", refType: "health_document", refId: id });
   await transaction.query(
     "INSERT INTO health_documents (id,user_id,pet_id,kind,year,output_key,summary,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7::jsonb,$8)",
     [id, userId, petId, kind, year || null, key, JSON.stringify(summary), new Date()],

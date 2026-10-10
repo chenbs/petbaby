@@ -1,0 +1,13 @@
+{
+  "id": "mountain-cable-car",
+  "title": "大鼻子",
+  "samplePet": "blacklab",
+  "prompt": "Edit Image 1, a finished professional pet studio photograph. Keep it exactly as it is: the same pet with the same identity, pose, expression and fur, the same seamless backdrop colour, the same main prop, light direction, camera angle, framing and colour grading. Add only these new set decorations, placed naturally on the floor or at the sides and behind the pet so they never cover its face or body: a small glass jar of bone-shaped biscuits in a lower corner with two biscuits on the floor. The new pieces must belong to the same theme as the existing props, sit at a believable scale in the same light with soft contact shadows, and leave clear empty backdrop around the pet: tidy, airy and uncluttered, not crowded. Avoid: changing or moving the pet, a different backdrop colour, extra animals, people or hands, more decorations than listed, clutter, text, letters, numbers, logos or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/scenes/scene-mountain-cable-car-v13.jpg",
+  "referenceSha256": "1f70a0b246a5e66dd9e85e2ba7495d7f6aaa105c3fdf7d8560f100b86feb3eb7",
+  "output": "tools/imagegen/out/scenes/scene-mountain-cable-car-v14.jpg",
+  "sha256": "38f8f57ec1240a3508266280cd22d4c19736117d2de22571a309cb52d4e35c0b",
+  "review": "pending-visual-review"
+}

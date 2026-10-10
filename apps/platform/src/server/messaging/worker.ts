@@ -1,6 +1,7 @@
 import "server-only";
 
 import { getDatabase } from "@/server/db/client";
+import { isTestHarness } from "@/server/runtime-mode";
 
 /**
  * 投递到期的订阅消息。
@@ -16,7 +17,7 @@ export async function processDueMessages(limit = 20) {
   const results: Array<{ id: string; status: string }> = [];
   for (const row of rows) {
     const attempts = Number(row.attempts || 0) + 1;
-    const failed = process.env.NODE_ENV === "production" && !process.env.WECHAT_SUBSCRIBE_TEMPLATE_ID;
+    const failed = !isTestHarness() && !process.env.WECHAT_SUBSCRIBE_TEMPLATE_ID;
     const status = failed && attempts >= 3 ? "failed" : failed ? "scheduled" : "sent";
     const error = failed ? "TEMPLATE_CONFIG_PENDING" : null;
     await database.query(

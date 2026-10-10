@@ -1,3 +1,4 @@
+import "./load-env";
 import { createDatabase } from "../src/server/db/connection";
 import { migrateDatabase } from "../src/server/db/migrate";
 

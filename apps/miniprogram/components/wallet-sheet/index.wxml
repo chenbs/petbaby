@@ -1,0 +1,72 @@
+<view wx:if="{{visible}}" class="ws-mask" catchtouchmove="noop" bindtap="close">
+  <view class="ws-sheet" catchtap="noop">
+    <view class="ws-grab"></view>
+    <view class="ws-close" aria-role="button" aria-label="关闭" catchtap="close">×</view>
+    <view class="ws-head">
+      <image class="ws-head-icon" src="/assets/icons/{{themeId}}/fd-coin.png" mode="aspectFit" />
+      <view class="ws-head-copy">
+        <text class="ws-title">{{required ? '冻干不够啦' : '零食柜'}}</text>
+        <text wx:if="{{required}}" class="ws-sub">这次需要 <text class="ws-num">{{required}}</text> 颗，你还有 <text class="ws-num">{{balance}}</text> 颗<text wx:if="{{shortfall}}">，还差 <text class="ws-num">{{shortfall}}</text> 颗</text></text>
+        <text wx:else class="ws-sub">当前余额 <text class="ws-num">{{balance}}</text> 颗</text>
+      </view>
+    </view>
+
+    <view wx:if="{{loading}}" class="ws-loading">正在打开零食柜…</view>
+    <block wx:else>
+      <!-- 首充横幅：新用户只看到这一档首充，默认选中 -->
+      <view wx:if="{{first && !quiet}}" class="ws-first {{selectedId === first.id ? 'ws-on' : ''}}" data-id="{{first.id}}" aria-role="button" aria-label="新人首充 6 元到账 12 颗" bindtap="choose">
+        <text class="ws-deal ws-ribbon">{{first.badge}}</text>
+        <view class="ws-pile">
+          <image class="ws-pile-a" src="/assets/icons/{{themeId}}/fd-coin.png" mode="aspectFit" />
+          <image class="ws-pile-b" src="/assets/icons/{{themeId}}/fd-coin.png" mode="aspectFit" />
+          <text class="ws-x2">×2</text>
+        </view>
+        <view class="ws-first-mid">
+          <text class="ws-first-n">{{first.units}}<text class="ws-unit">颗</text></text>
+          <text class="ws-split ws-split-fc">{{first.amount}} 颗 + <text class="ws-gift ws-gift-fc">白送 {{first.gift}} 颗</text></text>
+          <view class="ws-bar"><view class="ws-bar-base" style="flex:{{first.amount}}"></view><view class="ws-bar-gift" style="flex:{{first.gift}}"></view></view>
+        </view>
+        <view class="ws-first-right">
+          <text class="ws-price ws-price-on">{{first.priceText}}</text>
+          <text class="ws-off ws-off-fc">相当于 5 折</text>
+        </view>
+      </view>
+
+      <view class="ws-grid">
+        <view wx:for="{{tiers}}" wx:key="id" class="ws-tier {{selectedId === item.id ? 'ws-on' : ''}} {{item.short ? 'ws-short' : ''}}" data-id="{{item.id}}" aria-role="button" aria-label="{{item.priceText}} 到账 {{item.units}} 颗，多送 {{item.giftPercent}}%" bindtap="choose">
+          <text wx:if="{{item.short}}" class="ws-badge">这次不够</text>
+          <text wx:elif="{{item.badge}}" class="ws-badge">{{item.badge}}</text>
+          <text class="ws-deal ws-deal-corner">多送 {{item.giftPercent}}%</text>
+          <view class="ws-tier-top">
+            <image class="ws-tier-icon" src="/assets/icons/{{themeId}}/fd-coin.png" mode="aspectFit" />
+            <text class="ws-tier-n">{{item.units}}<text class="ws-unit">颗</text></text>
+          </view>
+          <text class="ws-split">{{item.amount}} 颗 + <text class="ws-gift">送 {{item.gift}} 颗</text></text>
+          <view class="ws-bar"><view class="ws-bar-base" style="flex:{{item.amount}}"></view><view class="ws-bar-gift" style="flex:{{item.gift}}"></view></view>
+          <text class="ws-eq">够做 {{item.photos}} 张写真</text>
+          <view class="ws-tier-foot">
+            <text class="ws-price {{selectedId === item.id ? 'ws-price-on' : ''}}">{{item.priceText}}</text>
+            <text class="ws-off">{{item.discountText}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view wx:if="{{plainPack}}" class="ws-plain {{selectedId === plainPack.id ? 'ws-on' : ''}}" data-id="{{plainPack.id}}" aria-role="button" aria-label="不要加送，只买 6 颗" bindtap="choose">
+        <text>不要加送，只买 <text class="ws-strong">{{plainPack.units}} 颗</text></text>
+        <text class="ws-strong">{{plainPack.priceText}}</text>
+      </view>
+
+      <view class="ws-pay">
+        <text wx:if="{{selected && selected.gift > 0}}" class="ws-deal ws-bubble">这单多送 {{selected.gift}} 颗</text>
+        <view class="ws-btn {{paying || !selected ? 'ws-btn-off' : ''}}" aria-role="button" aria-label="支付" hover-class="ws-btn-hover" bindtap="pay">
+          <text wx:if="{{paying}}">正在付款…</text>
+          <text wx:elif="{{selected}}">支付 {{selected.priceText}}，到账 {{selected.units}} 颗</text>
+          <text wx:else>选一档冻干</text>
+        </view>
+      </view>
+      <text wx:if="{{error}}" class="ws-error">{{error}}</text>
+      <text class="ws-fine">{{required ? '到账后自动开始制作' : '充值后冻干到账钱包'}}</text>
+      <text class="ws-fine">冻干仅限本小程序使用，不可提现或转让 · <text class="ws-link" bindtap="openNotice">充值须知</text></text>
+    </block>
+  </view>
+</view>

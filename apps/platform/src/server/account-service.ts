@@ -49,7 +49,7 @@ export async function deleteAccount(userId: string) {
     for (const pet of pets) ids.push(...await softDeletePetResources(userId, String(pet.id)));
     const owners = await db.query("UPDATE owner_photos SET deleted_at=coalesce(deleted_at,now()) WHERE user_id=$1 RETURNING storage_key", [userId]);
     for (const photo of owners) ids.push(await queueObjectCleanup(String(photo.storage_key), "account_deleted"));
-    await db.query("UPDATE users SET deleted_at=now(),display_name=NULL,wechat_openid=NULL WHERE id=$1", [userId]);
+    await db.query("UPDATE users SET deleted_at=now(),display_name=NULL,wechat_openid=NULL,wechat_unionid=NULL WHERE id=$1", [userId]);
     return ids;
   });
   for (const job of jobs) await processObjectCleanupJob(job);

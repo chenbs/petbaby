@@ -1,0 +1,125 @@
+{
+  "steps": [
+    {
+      "name": "AI创建：打开并渲染模板货架",
+      "ok": true,
+      "detail": {
+        "petId": "196b801a-1215-47af-9c60-f4d47f69bbfd",
+        "pets": 2,
+        "photos": 0,
+        "入口数": 12,
+        "入口名": [
+          "好笑出片(10款)",
+          "表情漫画(7款)",
+          "和我合照(8款)",
+          "人宠写真(16款)",
+          "如果我是人(40款)",
+          "旅行打卡(7款)",
+          "职业反差(10款)",
+          "麻麻精选(2款)",
+          "动作剧情(8款)",
+          "角色设定(11款)",
+          "图鉴与档案(7款)",
+          "艺术肖像 / 纪念收藏(7款)"
+        ],
+        "stage": "samples",
+        "error": "",
+        "costText": "2 颗"
+      },
+      "newErrors": []
+    },
+    {
+      "name": "AI创建：真实点「如果我是人」入口",
+      "ok": true,
+      "detail": {
+        "点了": null,
+        "entryId": "art",
+        "模板数": 7,
+        "stage": "samples"
+      },
+      "newErrors": []
+    },
+    {
+      "name": "AI创建：真实点某个效果模板",
+      "ok": true,
+      "detail": {
+        "选中": "pet-art-photo",
+        "当前templateId": "pet-art-photo",
+        "stage": "photos",
+        "预览": "有",
+        "costText": "2 颗",
+        "activeTitle": "宠物艺术写真"
+      },
+      "newErrors": []
+    },
+    {
+      "name": "AI创建：选宠物照片并提交生成",
+      "ok": true,
+      "detail": "该宠物没有照片",
+      "newErrors": []
+    },
+    {
+      "name": "趣测：打开并真实点第一份测试",
+      "ok": true,
+      "detail": {
+        "点了": null,
+        "题目数": 0
+      },
+      "newErrors": []
+    },
+    {
+      "name": "趣测：答完所有题看结果",
+      "ok": true,
+      "detail": {
+        "有结果": false,
+        "结果标题": null,
+        "lastErr": "第0题无选项，字段:stage,tests,history,pets,test,petName,answers,questionIndex,progress,question,result,ownResult,loading,busy,error,themeStyle,themeId,navBg,navFront,animType,glow,decor,blurOk,skinClass,__webviewId__"
+      },
+      "newErrors": []
+    },
+    {
+      "name": "写真：打开写真馆并切换人宠",
+      "ok": true,
+      "detail": {
+        "单宠场景": 0,
+        "人宠组数": 8,
+        "error": "",
+        "字段": [
+          "segments",
+          "segment",
+          "artModes",
+          "artMode",
+          "sceneCount",
+          "duoGroups",
+          "duoCount",
+          "duoPriceText",
+          "collections",
+          "loading",
+          "error",
+          "packageMode",
+          "packages",
+          "selectedSceneIds",
+          "selectedCount",
+          "dockText",
+          "humanTags",
+          "humanTag",
+          "humanTemplates",
+          "humanVisible",
+          "categories",
+          "plays",
+          "playChip",
+          "playChips",
+          "visibleCategories",
+          "visiblePlays",
+          "themeStyle",
+          "themeId",
+          "navBg",
+          "navFront"
+        ]
+      },
+      "newErrors": []
+    }
+  ],
+  "failed": [],
+  "errors": []
+}

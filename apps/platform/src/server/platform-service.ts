@@ -14,13 +14,15 @@ import {
   type PublicWork,
   type Work,
 } from "@/domain/models";
-import { isTieredPlugin, nextTierGap, resolveOrderPricing, spanDaysBetween, tierPrice, type AccumulationInput } from "@/domain/pricing";
+import { nextTierGap } from "@/domain/pricing";
+import { AI_RUN_COST, DONGAN_UNIT, FREE_DAILY_GENERATIONS, isTieredPlugin, resolveDeliverableCost, tierCosts } from "@/domain/dongan-pricing";
 import { getRuntimePlugin, listRuntimePlugins, resolveManifestTone } from "@/plugins/runtime";
 import { getDatabase, inTransaction } from "@/server/db/client";
 import { mapOrder, mapPet, mapPhoto, mapTask, mapWork } from "@/server/db/rows";
-import { hasTierUnlock } from "@/server/entitlements";
+import { measureAccumulation } from "@/server/accumulation";
+import { grantNewcomerGift, spend } from "@/server/wallet/service";
 import { AppError } from "@/server/errors";
-import { confirmOrderPayment, prepareOrderPayment, refundOrderPayment } from "@/server/payments/service";
+import { applyWorkUnlock, confirmOrderPayment, prepareOrderPayment, refundOrderPayment } from "@/server/payments/service";
 import { objectStorage } from "@/server/storage";
 import { runWorkerUntilIdle } from "@/server/worker/generation-worker";
 import { ensurePhotoDeliverableAsset } from "@/server/photo-deliverable-assets";
@@ -98,7 +100,12 @@ export async function createPet(userId: string, input: unknown): Promise<Pet> {
     [pet.id, userId, pet.name, pet.species, pet.gender, pet.birthday || null, pet.dateType, pet.lifeStage, (await listPets(userId)).length === 0, new Date(pet.createdAt)],
   );
   await recordEvent(userId, "profile_created");
-  return { ...pet, isDefault: (await listPets(userId)).length === 1 };
+  /*
+   * 新人见面礼：添加第一只宠物后到账 3 颗冻干（7 天有效），每个微信身份只发一次。
+   * 发放失败不影响建档 —— 建档是积累，不能因为送礼出错而失败。
+   */
+  const gift = await grantNewcomerGift(userId).catch(() => undefined);
+  return { ...pet, isDefault: (await listPets(userId)).length === 1, ...(gift ? { newcomerGift: { units: gift.delta } } : {}) };
 }
 
 /* c8 ignore start */
@@ -155,7 +162,6 @@ async function createGenerationOperation(userId: string, input: unknown): Promis
   if (data.sourceWorkId) {
     const sourceRows = await database.query("SELECT * FROM works WHERE id=$1", [data.sourceWorkId]);
     const source = belongsToUser(sourceRows[0] ? mapWork(sourceRows[0]) : undefined, userId);
-    if (!canRegenerate(source)) throw new AppError("REGENERATION_EXPIRED", "作品已超过 24 小时，重新生成会使用新的免费额度", 409);
     if (source.pluginId !== data.pluginId || source.petId !== data.petId) throw new AppError("SOURCE_WORK_MISMATCH", "原作品与当前玩法不匹配");
   }
   if (data.photoIds.length < plugin.input.photos.min || data.photoIds.length > plugin.input.photos.max) {
@@ -169,23 +175,30 @@ async function createGenerationOperation(userId: string, input: unknown): Promis
     throw new AppError("PHOTO_PET_MISMATCH", "照片不存在或不属于当前宠物");
   }
 
-  const quotaDate = new Date().toISOString().slice(0, 10);
-  const quotaRows = data.sourceWorkId ? [] : await database.query("SELECT id FROM daily_quotas WHERE user_id = $1 AND quota_date = $2", [userId, quotaDate]);
-  let membershipId: string | undefined;
-  if (quotaRows.length) {
-    const memberships = await database.query("SELECT id FROM memberships WHERE user_id=$1 AND status='active' AND expires_at>now() AND used<quota ORDER BY expires_at LIMIT 1", [userId]);
-    if (!memberships[0]) throw new AppError("DAILY_QUOTA_USED", "今天的免费生成已用完，明天再来看看吧", 429);
-    membershipId = String(memberships[0].id);
-    await database.query("UPDATE memberships SET used=used+1 WHERE id=$1 AND used<quota", [membershipId]);
-  }
-
+  /*
+   * 先扣冻干，再执行任务（36 号文第 2 章）：付费玩法在入队的同一事务里扣费，产物直接是正式版；
+   * 改文案重新生成同样按现价再扣一次（扣一次生成一次）。免费玩法每天 10 次。
+   * 调用方 createGeneration 已锁住用户行，免费次数的计数不会被并发请求穿透。
+   */
+  const memorial = pet.lifeStage === "memorial";
+  const accumulation = isTieredPlugin(data.pluginId) && !memorial ? await measureAccumulation(userId, data.petId) : undefined;
+  const pricing = resolveDeliverableCost({ pluginId: data.pluginId, accumulation, memorial });
   const taskId = crypto.randomUUID();
   const timestamp = new Date();
-  const options = { ...data.options, recordSnapshot: plugin.id === "pl-23" ? { pet, photos: photoRows.map(mapPhoto) } : undefined };
-    if (!data.sourceWorkId && !membershipId) await database.query("INSERT INTO daily_quotas (id, user_id, quota_date, task_id, created_at) VALUES ($1,$2,$3,$4,$5)", [crypto.randomUUID(), userId, quotaDate, taskId, timestamp]);
+  const quotaDate = new Date().toISOString().slice(0, 10);
+  let walletBizKey: string | undefined;
+  if (pricing.cost > 0) {
+    walletBizKey = `spend:generation:${taskId}`;
+    await spend(userId, { units: pricing.cost, bizKey: walletBizKey, title: plugin.name, refType: "generation_task", refId: taskId });
+  } else if (["pet-id-card", "pl-23"].includes(data.pluginId)) {
+    const used = await database.query<{ count: number }>("SELECT count(*)::int count FROM daily_quotas q JOIN generation_tasks t ON t.id=q.task_id WHERE q.user_id = $1 AND q.quota_date = $2 AND t.plugin_id IN ('pet-id-card','pl-23')", [userId, quotaDate]);
+    if (Number(used[0]?.count || 0) >= FREE_DAILY_GENERATIONS) throw new AppError("DAILY_QUOTA_USED", `今天的免费生成已用完 ${FREE_DAILY_GENERATIONS} 次，明天再来看看吧`, 429);
+    await database.query("INSERT INTO daily_quotas (id, user_id, quota_date, task_id, created_at) VALUES ($1,$2,$3,$4,$5)", [crypto.randomUUID(), userId, quotaDate, taskId, timestamp]);
+  }
+  const options = { ...data.options, recordSnapshot: plugin.id === "pl-23" ? { pet, photos: photoRows.map(mapPhoto) } : undefined, dongan: { cost: pricing.cost, tier: pricing.tier, accumulation } };
     const rows = await database.query(
-      "INSERT INTO generation_tasks (id,user_id,plugin_id,pet_id,photo_ids,idempotency_key,status,progress,attempt,source_work_id,options,plugin_snapshot,available_at,created_at,updated_at) VALUES ($1,$2,$3,$4,$5::jsonb,$6,'queued',8,0,$7,$8::jsonb,$9::jsonb,$10,$10,$10) RETURNING *",
-      [taskId, userId, data.pluginId, data.petId, JSON.stringify(data.photoIds), data.idempotencyKey, data.sourceWorkId || null, JSON.stringify(options), JSON.stringify(plugin), timestamp],
+      "INSERT INTO generation_tasks (id,user_id,plugin_id,pet_id,photo_ids,idempotency_key,status,progress,attempt,source_work_id,options,plugin_snapshot,wallet_biz_key,available_at,created_at,updated_at) VALUES ($1,$2,$3,$4,$5::jsonb,$6,'queued',8,0,$7,$8::jsonb,$9::jsonb,$11,$10,$10,$10) RETURNING *",
+      [taskId, userId, data.pluginId, data.petId, JSON.stringify(data.photoIds), data.idempotencyKey, data.sourceWorkId || null, JSON.stringify(options), JSON.stringify(plugin), timestamp, walletBizKey || null],
     );
     await recordEvent(userId, "generation_created", data.pluginId);
     return mapTask(rows[0]);
@@ -237,7 +250,8 @@ async function hydrateWork(work: Work): Promise<PublicWork> {
   // 作品只需要封面；不要把后来补写的私人记录或上传标识嵌入作品响应。
   // 生成合成内容在界面上叠「该内容由AI生成」蒙层；文案由服务端下发，端上不写死。
   const aiGenerated = needsAiLabel(plugin);
-  return { ...work, pet, photo: { id: photo.id, url: `/api/media/${encodeURIComponent(coverKey)}` }, plugin, outputUrl: visibleKey ? `/api/media/${encodeURIComponent(visibleKey)}` : undefined, aiGenerated, ...(aiGenerated ? { aiNotice: AI_NOTICE_TEXT } : {}) };
+  const imageFormat = work.assetKind === "image" && visibleKey?.endsWith(".svg") ? "?format=png" : "";
+  return { ...work, pet, photo: { id: photo.id, url: `/api/media/${encodeURIComponent(coverKey)}` }, plugin, outputUrl: visibleKey ? `/api/media/${encodeURIComponent(visibleKey)}${imageFormat}` : undefined, aiGenerated, ...(aiGenerated ? { aiNotice: AI_NOTICE_TEXT } : {}) };
 }
 
 export async function listWorks(userId: string, filters: { petId?: string; pluginId?: string; locked?: boolean } = {}) {
@@ -309,36 +323,11 @@ export async function revokeShare(userId: string, id: string) {
 }
 
 /**
- * 量一只宠物当前的积累深度，供定价分档使用。
+ * 制作**之前**就能看到要扣多少颗冻干（改造项 L3 的冻干版）。
  *
- * 排序键用 `coalesce(shot_at, created_at)` —— 与 timeline-service 和 mapPhoto
- * 的回落口径一致。直接用 `shot_at` 会让无 EXIF 的照片算不进跨度，
- * 出现「时间线显示跨了两年、定价却算作基础档」。
- */
-async function measureAccumulation(userId: string, petId: string): Promise<AccumulationInput> {
-  const database = await getDatabase();
-  const rows = await database.query<{ photo_count: number; earliest: string | null; latest: string | null }>(
-    "SELECT count(*)::int photo_count, min(coalesce(shot_at, created_at)) earliest, max(coalesce(shot_at, created_at)) latest FROM photos WHERE user_id=$1 AND pet_id=$2 AND deleted_at IS NULL",
-    [userId, petId],
-  );
-  const row = rows[0];
-  const photoCount = Number(row?.photo_count || 0);
-  const spanDays = row?.earliest && row?.latest ? spanDaysBetween(new Date(row.earliest), new Date(row.latest)) : 0;
-  return { photoCount, spanDays };
-}
-
-/**
- * 下单**之前**就能拿到的定价说明（改造项 L3）。
- *
- * 17 号文 3.5 自己的判据是「档位必须在制作前可见，不能生成完才告价 —— 那是诱导」。
- * 这条服务给制作页与作品页共用的那份事实：当前档、要付多少、再攒多少进下一档、
- * 会员省了多少。
- *
- * **与 createOrder 走同一个 resolveOrderPricing**：展示价与实收价由同一个函数产出，
- * 不能各算一遍 —— 展示便宜、实收更贵正是这条改造要消除的风险。
- *
- * 分档按下单时的实际积累量算，而这条预览按调用时算，两者可能不同（用户看完又传了照片）。
- * 这个方向的偏差对用户有利（攒得更多只会更好或不变），不额外锁价。
+ * 与 createGeneration 走同一个 resolveDeliverableCost：展示颗数与实扣颗数由同一个函数产出。
+ * 分档按扣费那一刻的积累量算，而这条预览按调用时算 —— 两者可能不同（用户看完又传了照片），
+ * 这个方向的偏差对用户只会更好或不变，不额外锁价。
  */
 export async function getDeliveryPricing(userId: string, petId: string, pluginId: string) {
   const database = await getDatabase();
@@ -348,92 +337,62 @@ export async function getDeliveryPricing(userId: string, petId: string, pluginId
   const rawPlugin = await getRuntimePlugin(pluginId);
   if (!rawPlugin) throw new AppError("PLUGIN_NOT_FOUND", "玩法不存在", 404);
   const plugin = resolveManifestTone(rawPlugin, pet.lifeStage);
-  const base = plugin.pricing.unlockPrice;
-  const tiered = isTieredPlugin(pluginId) && pet.lifeStage !== "memorial";
+  const memorial = pet.lifeStage === "memorial";
+  const tiered = isTieredPlugin(pluginId) && !memorial;
   const accumulation = tiered ? await measureAccumulation(userId, petId) : undefined;
-  const isMember = tiered ? await hasTierUnlock(userId) : false;
-  const pricing = resolveOrderPricing({ pluginId, accumulation, isMember, basePrice: base });
+  const pricing = resolveDeliverableCost({ pluginId, accumulation, memorial });
   return {
     pluginId,
     petId,
-    /** 免费玩法为 true，端上据此完全不显示价格区块 */
-    free: pricing.amount <= 0,
+    /** 免费玩法为 true，端上据此完全不显示颗数区块 */
+    free: pricing.cost <= 0,
     tiered,
-    isMember,
     accumulation,
-    /** 内容规格档。会员恒为 annual */
-    specTier: pricing.specTier,
-    priceTier: pricing.priceTier,
-    amount: pricing.amount,
-    listPrice: pricing.listPrice,
-    memberSaving: pricing.memberSaving,
+    tier: pricing.tier,
+    /** 这次要扣的颗数 */
+    cost: pricing.cost,
+    unit: DONGAN_UNIT,
     label: plugin.pricing.label,
-    /*
-     * 会员已在最高规格，不需要「再攒多少」—— 那对他没有意义，
-     * 而留着会读成「你还差点什么」，与已付费的事实冲突。
-     */
-    nextTier: tiered && accumulation && !isMember ? nextTierGap(accumulation) : undefined,
-    /** 各档价目，供端上展示价格跨度（价格锚） */
-    tierPrices: tiered
-      ? { basic: tierPrice(pluginId, "basic"), advanced: tierPrice(pluginId, "advanced"), annual: tierPrice(pluginId, "annual") }
-      : undefined,
+    nextTier: tiered && accumulation ? nextTierGap(accumulation) : undefined,
+    /** 各档颗数，供端上展示跨度 */
+    tierCosts: tiered ? tierCosts(pluginId) : undefined,
   };
 }
 
-export async function createOrder(userId: string, workId: string, requestedSku?: string): Promise<Order> {
-  const work = await getWork(userId, workId);
+/** 一件作品现在要扣多少颗（用于冻干上线前遗留的锁定作品）。 */
+async function workUnlockCost(userId: string, work: PublicWork) {
   const database = await getDatabase();
-  const existing = await database.query("SELECT * FROM orders WHERE user_id = $1 AND work_id = $2", [userId, workId]);
-  if (existing[0]) {
-    const order = mapOrder(existing[0]);
-    if (requestedSku && order.sku !== requestedSku) throw new AppError("ORDER_SKU_LOCKED", "该作品已经按其他 SKU 创建订单", 409);
-    return order;
+  if (work.sourceKind === "ai") {
+    const runs = await database.query("SELECT role_inputs FROM ai_runs WHERE work_id=$1 AND user_id=$2", [work.id, userId]);
+    const mode = ((runs[0]?.role_inputs || {}) as { subjectMode?: keyof typeof AI_RUN_COST }).subjectMode || "pet";
+    return AI_RUN_COST[mode] ?? AI_RUN_COST.pet;
   }
-  const defaultSku = `${work.pluginId}-single`;
-  const sku = requestedSku || defaultSku;
-  /*
-   * `pet-id-card-bundle`（四证套餐 19.9）已随 PL-01 转免费而下线：
-   * 单张既然免费，四张打包收 19.9 讲不通。这里不再识别该 SKU，
-   * 传进来会按 SKU_INVALID 拒掉。
-   */
-  if (sku !== defaultSku) throw new AppError("SKU_INVALID", "所选 SKU 不适用于当前作品", 422);
-  const base = work.plugin.pricing.unlockPrice;
-  /*
-   * 免费玩法不建订单。原先 unlockPrice=0 也会插一条 amount=0 的 order，
-   * 而微信支付 `amount.total` 取 Math.round(0*100)=0，最低是 1 分 —— 生产环境
-   * 这条订单根本付不掉。现在免费作品直接以 locked=false 入库（见 generation-worker），
-   * 走到这里说明端上还在调解锁，属调用方错误而不是可支付状态。
-   */
-  if (base <= 0) throw new AppError("ORDER_NOT_REQUIRED", "这个玩法可以直接保存，不需要解锁", 409);
-  /*
-   * 按积累量分档（C5）。**在下单时算，不在生成时算**：用户可能生成后隔几天才付，
-   * 期间可能又上传了照片。按下单时的实际积累量计价对用户更有利，
-   * 也避免「生成时便宜、付款时变贵」的投诉。
-   *
-   * 纪念形态与套餐不分档：纪念场景比价是冒犯（见 domain/pricing.ts 的说明）。
-   */
-  const tiered = isTieredPlugin(work.pluginId) && work.pet.lifeStage !== "memorial";
-  const accumulation = tiered ? await measureAccumulation(userId, work.petId) : undefined;
-  /*
-   * 会员的档位解锁是「用最高规格、付最低价」，不是「按最高档计价」。
-   * 计价规则整个交给 domain/pricing.ts 的 resolveOrderPricing —— 原先这里
-   * 是一行三元表达式，把规格档直接当成计价档，导致会员反而多付钱。
-   * 端上的档位展示（L3）走同一个函数，避免两处各算一遍。
-   */
-  const pricing = resolveOrderPricing({ pluginId: work.pluginId, accumulation, isMember: tiered ? await hasTierUnlock(userId) : false, basePrice: base });
-  /*
-   * `price_tier` 记**计价档**：这一列的用途是对账时解释「为什么这单是这个数」，
-   * 记规格档会让 amount 与 price_tier 对不上。规格档进 works.accumulation_snapshot。
-   */
-  const entitlements = { formats: work.plugin.output.formats, fullResolution: true, ...(pricing.memberSaving > 0 ? { memberSaving: pricing.memberSaving, listPrice: pricing.listPrice } : {}) };
-  const rows = await database.query(
-    "INSERT INTO orders (id,user_id,work_id,plugin_id,amount,sku,unit_price,entitlements,plugin_snapshot,status,price_tier,created_at) VALUES ($1,$2,$3,$4,$5,$6,$5,$7::jsonb,$8::jsonb,'pending',$10,$9) RETURNING *",
-    [crypto.randomUUID(), userId, workId, work.pluginId, pricing.amount, sku, JSON.stringify(entitlements), JSON.stringify(work.plugin), new Date(), pricing.priceTier || null],
-  );
-  if (accumulation) {
-    await database.query("UPDATE works SET accumulation_snapshot=$2::jsonb WHERE id=$1", [workId, JSON.stringify({ ...accumulation, tier: pricing.specTier, priceTier: pricing.priceTier })]);
-  }
-  return mapOrder(rows[0]);
+  const memorial = work.pet.lifeStage === "memorial";
+  const accumulation = isTieredPlugin(work.pluginId) && !memorial ? await measureAccumulation(userId, work.petId) : undefined;
+  return resolveDeliverableCost({ pluginId: work.pluginId, accumulation, memorial }).cost;
+}
+
+/**
+ * 用冻干解锁一件作品。
+ *
+ * 冻干上线后新作品一律先扣后做、入库即正式版，走到这里的只有上线前遗留的锁定作品
+ * （生产从未收过真实款项，实际只存在于测试环境）。按该玩法现价扣一次，解锁副作用与历史支付回调共用。
+ */
+export async function unlockWork(userId: string, workId: string) {
+  return inTransaction(async (database) => {
+    await database.query("SELECT id FROM works WHERE id=$1 AND user_id=$2 FOR UPDATE", [workId, userId]);
+    const work = await getWork(userId, workId);
+    if (!work.locked) return { work, charged: 0 };
+    const cost = await workUnlockCost(userId, work);
+    if (cost > 0) await spend(userId, { units: cost, bizKey: `spend:work:${workId}:v${work.version}`, title: work.title, refType: "work", refId: workId });
+    await applyWorkUnlock(database, workId, userId, work.pluginId);
+    return { work: await getWork(userId, workId), charged: cost };
+  });
+}
+
+/** 历史现金订单（冻干上线前）。新作品不再下单，统一走冻干。 */
+export async function createOrder(): Promise<Order> {
+  throw new AppError("ORDER_RETIRED", "作品改用冻干制作，不再单独下单", 410);
 }
 
 export async function preparePayment(userId: string, orderId: string, client: "web" | "miniprogram" = "web") {
@@ -446,7 +405,7 @@ export async function payOrder(userId: string, id: string) {
   return { order, work: await getWork(userId, order.workId) };
 }
 
-export async function requestRefund(userId: string, orderId: string, reason: "generation_failed" | "dissatisfied") {
+export async function requestRefund(userId: string, orderId: string, reason: "generation_failed" | "requested") {
   return refundOrderPayment(userId, "work", orderId, reason);
 }
 
@@ -475,7 +434,8 @@ export async function getDownload(userId: string, id: string, format: "image" | 
   if (!key) throw new AppError("OUTPUT_NOT_FOUND", "作品文件不存在", 404);
   // 生成类原图上没有可见标识：首次交付前确认标识义务，并留交付日志（第九条）。
   if (work.aiGenerated) await assertAiOriginalDelivery(userId, { kind: "work", id: work.id, storageKey: key });
-  return { key, filename: `${work.pet.name}-${work.plugin.name}.${format === "pdf" ? "pdf" : key.split(".").pop()}` };
+  const extension = format === "pdf" ? "pdf" : format === "image" && key.endsWith(".svg") ? "png" : key.split(".").pop();
+  return { key, filename: `${work.pet.name}-${work.plugin.name}.${extension}` };
 }
 
 export async function getSharedWork(token: string, accessCode?: string) {

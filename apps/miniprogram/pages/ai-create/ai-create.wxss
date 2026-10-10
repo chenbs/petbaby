@@ -188,7 +188,7 @@
 .pet-chip-avatar-empty { display: flex; align-items: center; justify-content: center; overflow: hidden; color: var(--text-secondary); font-size: var(--eyebrow-size); }
 
 /* ---------- 选照片（2026-10 按 prototype.html after-effect）---------- */
-.ai-flow-photos { padding-top: var(--space-2); padding-bottom: calc(220rpx + env(safe-area-inset-bottom)); }
+.ai-flow-photos { padding-top: var(--space-2); padding-bottom: calc(var(--space-8) + var(--space-7) + var(--space-6) + env(safe-area-inset-bottom)); }
 
 /* 预览框比例跟素材走：card 3:4 铺满；portrait 在 3:4 框里完整显示 9:16 样片，两侧垫同图模糊底；wide 16:9 */
 .effect-preview { position: relative; width: 84%; margin: 0 auto; overflow: hidden; border-radius: var(--radius-image-hero); background: var(--surface); box-shadow: var(--shadow-image); }
@@ -227,7 +227,12 @@
 .photo-tip { display: flex; align-items: center; gap: var(--space-2); margin-top: var(--space-3); padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); background: var(--success-surface); color: var(--success); font-size: var(--small-size); }
 .photo-tip-mark { flex: none; font-weight: var(--fw-black); }
 
-/* 固定底栏：「为我拍一张 / 免费预览 · 满意再保存 ¥16.9 / 开始」 */
-.ai-dock { position: fixed; right: 0; bottom: 0; left: 0; z-index: 10; display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--page-padding) calc(var(--space-3) + env(safe-area-inset-bottom)); border-top: 2rpx solid var(--divider); background: var(--card-background); box-shadow: var(--shadow-float); }
-.ai-dock-meta { display: grid; flex: 1; gap: var(--space-0); min-width: 0; }
-.ai-dock-title { color: var(--text-primary); font-size: var(--font-h3); font-weight: var(--fw-black); }
+/* 固定底栏：标题与余额一行，费用说明与主操作一行，避免说明被挤碎。 */
+.ai-dock { position: fixed; right: 0; bottom: 0; left: 0; z-index: 10; display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-3) var(--page-padding) calc(var(--space-3) + env(safe-area-inset-bottom)); border-top: 2rpx solid var(--divider); background: var(--card-background); box-shadow: var(--shadow-float); }
+.ai-dock-head, .ai-dock-action { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.ai-dock-head t-dongan-balance, .ai-dock-action t-button { flex: none; }
+.ai-dock-meta { display: flex; flex-direction: column; flex: 1; gap: var(--space-1); min-width: 0; }
+.ai-dock-title { flex: 1; min-width: 0; overflow: hidden; color: var(--text-primary); font-size: var(--font-h3); font-weight: var(--fw-black); text-overflow: ellipsis; white-space: nowrap; }
+.ai-dock-cost { color: var(--text-primary); font-size: var(--small-size); line-height: 1.5; }
+.ai-dock-amount { color: var(--primary); font-weight: var(--fw-bold); white-space: nowrap; }
+.ai-dock-hint { color: var(--text-secondary); font-size: var(--eyebrow-size); line-height: 1.5; }

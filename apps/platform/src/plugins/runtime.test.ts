@@ -175,7 +175,7 @@ describe("玩法样例图回填", () => {
     if (!portrait?.samples?.sceneOptions || !portrait.samples.sceneUrls) throw new Error("PL-10 scenes missing");
     rows.set("pl-10", { manifest: { ...portrait, samples: { ...portrait.samples, sceneUrls: { ...portrait.samples.sceneUrls, "railway-traveler": "/api/plugin-samples/samples/scene-railway-traveler-v5-f24db13edc82.jpg" } } } });
     const upgraded = (await listRuntimePlugins()).find((plugin) => plugin.id === "pl-10");
-    expect(upgraded?.samples?.sceneUrls?.["railway-traveler"]).toMatch(/scene-railway-traveler-v13-/);
+    expect(upgraded?.samples?.sceneUrls?.["railway-traveler"]).toMatch(/scene-railway-traveler-v14-/);
     expect(upgraded?.samples?.sceneOptions?.find((scene) => scene.id === "railway-traveler")?.title).toBe("放大镜大眼");
   });
 
@@ -186,7 +186,7 @@ describe("玩法样例图回填", () => {
     rows.set("pl-10", { manifest: { ...portrait, samples: { ...portrait.samples, sceneOptions: portrait.samples.sceneOptions.slice(0, 24), sceneUrls: v6Urls } } });
     const upgraded = (await listRuntimePlugins()).find((plugin) => plugin.id === "pl-10");
     expect(upgraded?.samples?.sceneOptions).toHaveLength(36);
-    expect(upgraded?.samples?.sceneUrls?.["post-office"]).toMatch(/scene-post-office-v13-/);
+    expect(upgraded?.samples?.sceneUrls?.["post-office"]).toMatch(/scene-post-office-v14-/);
   });
 
   it("旧十二套默认写真自动扩到全部套数，人工编辑过的十二套仍保留", async () => {

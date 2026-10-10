@@ -1,11 +1,13 @@
 import "server-only";
 
 import { AppError } from "@/server/errors";
+import { isTestHarness } from "@/server/runtime-mode";
 
 export async function createMiniProgramScheme(pluginId: string, sourceWorkId?: string) {
   const query = new URLSearchParams({ pluginId });
   if (sourceWorkId) query.set("sourceWorkId", sourceWorkId);
-  if (process.env.NODE_ENV !== "production") return `/create/${pluginId}?ref=share${sourceWorkId ? `&sourceWorkId=${sourceWorkId}` : ""}`;
+  // 站内地址只给自动化测试夹具；本地开发与生产一样走微信接口，缺凭据明确失败。
+  if (isTestHarness()) return `/create/${pluginId}?ref=share${sourceWorkId ? `&sourceWorkId=${sourceWorkId}` : ""}`;
   const appid = process.env.WECHAT_APP_ID;
   const secret = process.env.WECHAT_APP_SECRET;
   if (!appid || !secret) throw new AppError("WECHAT_SCHEME_CONFIG_PENDING", "微信小程序 Scheme 配置尚未完成", 503);

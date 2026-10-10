@@ -92,3 +92,5 @@
   bindselect="chooseMore"
   bindclose="closeMore"
 ></t-action-sheet>
+
+<t-wallet-sheet id="wallet-sheet" visible="{{walletSheet.visible}}" required="{{walletSheet.required}}" balance="{{walletSheet.balance}}" shortfall="{{walletSheet.shortfall}}" quiet bind:close="onWalletSheetClose" bind:paid="onWalletPaid"></t-wallet-sheet>

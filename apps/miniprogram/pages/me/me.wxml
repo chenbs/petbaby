@@ -43,13 +43,12 @@
       <view class="me-stat"><view class="me-stat-value">{{hero.counts.works}}</view><text class="me-stat-label">作品</text></view>
     </view>
 
-    <view wx:if="{{status}}" class="me-quota" aria-role="button" bindtap="openCommerce">
+    <view wx:if="{{status}}" class="me-quota">
       <image class="me-quota-icon" src="/assets/icons/{{themeId}}/ic-magic.png" mode="aspectFit" />
       <view class="me-quota-copy">
-        <text class="me-quota-title">今日免费制作 · 剩 {{status.quota.remaining}} 次</text>
-        <text class="me-quota-sub">每天 {{status.quota.daily}} 次，0 点刷新</text>
+        <text class="me-quota-title">今日免费玩法 · 剩 {{status.quota.remaining}} 次</text>
+        <text class="me-quota-sub">每天 {{status.quota.daily}} 次免费玩法，0 点刷新</text>
       </view>
-      <text class="me-quota-more">会员更多 ›</text>
     </view>
 
     <view wx:if="{{status.notifications.length}}" id="me-notices" class="me-group">

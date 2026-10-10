@@ -30,7 +30,6 @@ foreach ($port in @(3000, 4321)) {
 New-Item -ItemType Directory -Path $stateDir -Force | Out-Null
 $env:NODE_ENV = 'development'
 $env:APP_ENV = 'local'
-$env:DATABASE_URL = 'file://.data/local-preview-petbaby'
 $env:OBJECT_STORAGE_PROVIDER = 'local'
 $env:LOCAL_STORAGE_DIR = '.data/objects'
 $env:PAYMENT_PROVIDER = 'development'
@@ -42,6 +41,10 @@ if ((Test-Path -LiteralPath $miniConfig) -and -not (Get-Content -LiteralPath $mi
   Write-Warning "Mini Program apiBaseUrl differs from $env:PUBLIC_APP_URL. Update $miniConfig before Mini Program debugging."
 }
 
+# 与生产同构：本地 PostgreSQL（DATABASE_URL 写在 .env.local）+ Web + 独立 Worker。
+& node (Join-Path $platformDir 'scripts/local-db.mjs') start
+if ($LASTEXITCODE -ne 0) { throw 'Local PostgreSQL did not start.' }
+$worker = Start-Process -FilePath 'cmd.exe' -ArgumentList @('/d', '/c', 'corepack.cmd pnpm worker') -WorkingDirectory $platformDir -WindowStyle Hidden -PassThru -RedirectStandardOutput (Join-Path $stateDir 'worker.out.log') -RedirectStandardError (Join-Path $stateDir 'worker.err.log')
 $platform = Start-Process -FilePath 'cmd.exe' -ArgumentList @('/d', '/c', "corepack.cmd pnpm dev --hostname $HostIp --port 3000") -WorkingDirectory $platformDir -WindowStyle Hidden -PassThru -RedirectStandardOutput (Join-Path $stateDir 'platform.out.log') -RedirectStandardError (Join-Path $stateDir 'platform.err.log')
 
 $env:SITE_URL = "http://${HostIp}:4321"
@@ -58,7 +61,7 @@ function Wait-Listener([int]$port) {
 
 $platformListener = Wait-Listener 3000
 $websiteListener = Wait-Listener 4321
-@{ platform = $platform.Id; website = $website.Id; platformListener = $platformListener; websiteListener = $websiteListener; hostIp = $HostIp } | ConvertTo-Json | Set-Content -LiteralPath $stateFile -Encoding UTF8
+@{ platform = $platform.Id; worker = $worker.Id; website = $website.Id; platformListener = $platformListener; websiteListener = $websiteListener; hostIp = $HostIp } | ConvertTo-Json | Set-Content -LiteralPath $stateFile -Encoding UTF8
 Write-Host "Platform and H5: http://${HostIp}:3000"
 Write-Host "Website:         http://${HostIp}:4321"
 Write-Host "Logs:            $stateDir"

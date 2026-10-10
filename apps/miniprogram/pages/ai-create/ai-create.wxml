@@ -62,18 +62,18 @@
           <text class="effect-thumb-name">{{item.title}}</text>
         </view>
       </scroll-view>
-      <!-- 写真套餐入口：单张之外，多拍几套更划算 -->
+      <!-- 写真套餐入口：单张之外，一次拍一组（回写真页从当前这套开始挑） -->
       <view wx:if="{{templateId === 'pet-art-photo' && artPackages.length}}" class="art-pack">
-        <view class="art-pack-head"><text class="art-pack-title">多拍几套更划算</text><text class="small">同一张照片，一次出多套写真</text></view>
+        <view class="art-pack-head"><text class="art-pack-title">想多换几身？一次拍一组</text><text class="small">同一张照片，这套之外再挑几套</text></view>
         <view class="art-pack-row">
           <view wx:for="{{artPackages}}" wx:key="id" class="art-pack-item" data-id="{{item.id}}" aria-role="button" aria-label="{{item.label}} {{item.price}}" hover-class="chip-hover" bindtap="chooseArtPackage">
-            <text class="art-pack-name">{{item.label}}</text><text class="art-pack-price">{{item.price}}</text>
+            <text class="art-pack-name">{{item.label}}</text><text class="art-pack-price">{{item.price}}</text><text wx:if="{{item.saving}}" class="small">{{item.saving}}</text>
           </view>
         </view>
       </view>
 
       <!-- 宠物用头像 chip 选择；没有宠物时去建档 -->
-      <view class="row photo-head"><view class="section-title flush">用谁的照片</view><text wx:if="{{pets.length}}" class="small">选 1 张</text><text wx:else class="small strong" aria-role="button" bindtap="openPets">先建一个档案 ›</text></view>
+      <view class="row photo-head"><view class="section-title flush">用谁的照片</view><text wx:if="{{pets.length}}" class="small">选 1 张</text><text wx:elif="{{!catalogLoading}}" class="small strong" aria-role="button" bindtap="openPets">先建一个档案 ›</text></view>
       <scroll-view wx:if="{{pets.length > 0}}" class="pet-chips chip-scroll" scroll-x show-scrollbar="{{false}}"><view class="chip-track">
         <view wx:for="{{pets}}" wx:key="id" class="pet-chip {{petId === item.id ? 'pet-chip-on' : ''}}" data-index="{{index}}" aria-role="radio" aria-checked="{{petId === item.id}}" bindtap="choosePetChip">
           <image wx:if="{{item.avatarUrl}}" class="pet-chip-avatar" src="{{item.avatarUrl}}" mode="aspectFill" />
@@ -84,6 +84,7 @@
       <view class="photo-row">
         <t-skeleton wx:if="{{loading}}" type="grid" count="4"></t-skeleton>
         <!-- 首格「拍照 / 相册」就地上传，传完自动选中，不离开当前流程 -->
+        <t-empty wx:elif="{{!catalogLoading && !pets.length}}" icon="pet" title="还没有宠物档案" description="建一份档案，就能用它的照片拍了。" action-text="添加我的宠物" anim="{{animType}}" decor="{{decor}}" bindaction="openPets"></t-empty>
         <t-photo-grid wx:elif="{{petId}}" photos="{{photos}}" selected-ids="{{photoIds}}" max="1" addable add-text="拍照 / 相册" add-icon="/assets/icons/{{themeId}}/camera.png" columns="4" previewable="{{false}}" anim="{{animType}}" bindadd="uploadPetPhoto" bindtoggle="togglePhoto"></t-photo-grid>
       </view>
       <view wx:if="{{petId && !loading}}" class="photo-tip"><text class="photo-tip-mark">✓</text><text>正脸、光线清楚、只有{{petText || '我'}}一只，效果最好</text></view>
@@ -101,12 +102,20 @@
       </block>
 
       <view class="ai-dock">
-        <view class="ai-dock-meta">
+        <view class="ai-dock-head">
           <text class="ai-dock-title">{{activeTemplate && activeTemplate.subjectMode === 'owner-pet' ? '为我和' + (petText || '它') + '拍一张' : '为' + (petText || '我') + '拍一张'}}</text>
-          <text class="small">{{activeTemplate && activeTemplate.subjectMode === 'pet-human' ? '不支持重拍 · ' : '免费预览 · '}}满意再保存{{unlockPrice ? ' ¥' + unlockPrice : ''}}</text>
+          <t-dongan-balance balance="{{walletBalance}}" loaded="{{walletLoaded}}"></t-dongan-balance>
         </view>
-        <t-button type="primary" anim="{{animType}}" loading="{{busy}}" disabled="{{!activeTemplate || !photoIds.length || (activeTemplate.subjectMode === 'owner-pet' && (!ownerPhotoIds.length || !authorizationConfirmed))}}" bindtap="create">开始</t-button>
+        <view class="ai-dock-action">
+          <view class="ai-dock-meta">
+            <text class="ai-dock-cost">每拍一张需要 <text class="ai-dock-amount">{{costText}}</text></text>
+            <text class="ai-dock-hint">没拍成，冻干原路退回</text>
+          </view>
+          <t-button type="primary" anim="{{animType}}" loading="{{busy}}" disabled="{{!activeTemplate}}" bindtap="create">开始拍摄</t-button>
+        </view>
       </view>
     </block>
   </block>
 </view>
+
+<t-wallet-sheet id="wallet-sheet" visible="{{walletSheet.visible}}" required="{{walletSheet.required}}" balance="{{walletSheet.balance}}" shortfall="{{walletSheet.shortfall}}" bind:close="onWalletSheetClose" bind:paid="onWalletPaid"></t-wallet-sheet>

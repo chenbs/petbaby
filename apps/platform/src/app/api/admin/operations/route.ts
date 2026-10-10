@@ -52,7 +52,7 @@ export async function POST(request: Request) {
     assertAdmin(actorId);
     const input = z.discriminatedUnion("action", [
       z.object({ action: z.literal("retry_task"), taskId: z.string().uuid(), reason: z.string().trim().min(2).max(200) }),
-      z.object({ action: z.literal("refund_order"), orderId: z.string().uuid(), refundReason: z.enum(["generation_failed", "dissatisfied"]).default("generation_failed"), reason: z.string().trim().min(2).max(200) }),
+      z.object({ action: z.literal("refund_order"), orderId: z.string().uuid(), refundReason: z.enum(["generation_failed", "requested"]).default("generation_failed"), reason: z.string().trim().min(2).max(200) }),
       z.object({ action: z.literal("close_share"), workId: z.string().uuid(), reason: z.string().trim().min(2).max(200) }),
       z.object({ action: z.literal("set_circuit"), open: z.boolean(), reason: z.string().trim().min(2).max(200) }),
       z.object({ action: z.literal("retry_ai"), runId: z.string().uuid(), reason: z.string().trim().min(2).max(200) }),

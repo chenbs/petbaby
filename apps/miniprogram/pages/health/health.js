@@ -1,6 +1,6 @@
+const wallet = require("../../services/wallet");
 const { displayMediaTree } = require("../../services/photo-files");
 const api = require("../../services/api");
-const payment = require("../../services/payment");
 const config = require("../../config");
 const { themedPage } = require("../../theme/page-mixin");
 const { openPetPage } = require("../../services/pet-nav");
@@ -56,8 +56,8 @@ function todayString() {
   return now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0") + "-" + String(now.getDate()).padStart(2, "0");
 }
 
-themedPage({
-  data: {
+themedPage(Object.assign({}, wallet.walletSheetMethods, {
+  data: { walletSheet: { visible: false, required: 0, balance: 0, shortfall: 0 },
     pets: [],
     petIndex: 0,
     description: "",
@@ -90,7 +90,7 @@ themedPage({
     /*
      * 健康档案（改造项 L1）。**是就医准备材料不是体检报告** ——
      * 内容全部来自用户自己录入的记录，不含任何结论性判断。
-     * 会员权益无限导出，非会员单买；不可分享（健康线的产出是私密记录）。
+     * 每次导出扣冻干（颗数由服务端决定）；不可分享（健康线的产出是私密记录）。
      */
     documents: [],
     documentBusy: false,
@@ -109,7 +109,7 @@ themedPage({
     this._petId = (options && options.petId) || "";
   },
 
-  onShow() {
+  onShow() { this.refreshWallet();
     this.load();
   },
 
@@ -218,36 +218,39 @@ themedPage({
   /**
    * 导出健康档案（L1）。
    *
-   * 无权益时服务端返回 402 并带上价格 —— **不静默给残缺版本**：
-   * 先给文件再要钱、或给一个删了内容的版本，都比明确告价更糟。
-   * 402 的错误文案直接透出（含单买价），不在端上写死金额。
+   * 余额不足时服务端返回 402 `WALLET_INSUFFICIENT` —— **不静默给残缺版本**：
+   * withDongan 弹充值面板，到账后用原请求重放；颗数来自服务端，端上不写死。
    */
   exportDocument() {
     const pet = this.data.pets[this.data.petIndex];
     if (!pet || this.data.documentBusy) return;
     this.setData({ documentBusy: true, documentHint: "", error: "" });
-    api.request("/api/health-documents", { method: "POST", data: { petId: pet.id } })
-      .then(() => { this.setData({ documentBusy: false, documentHint: "已导出，可以下载保存。" }); this.loadDocuments(pet.id); })
-      .catch((error) => this.setData({ documentBusy: false, canBuyDocument: error.code === "HEALTH_EXPORT_REQUIRES_ENTITLEMENT", documentHint: error.message || "导出失败" }));
-  },
-
-  buyDocument() {
-    if (this.data.documentBusy) return;
-    this.setData({ documentBusy: true });
-    api.request("/api/health-documents/orders", { method: "POST" })
-      .then((order) => payment.pay("growth", order.id))
-      .then(() => { this.setData({ documentBusy: false, canBuyDocument: false }); this.exportDocument(); })
-      .catch((error) => this.setData({ documentBusy: false, documentHint: error.message }));
+    return wallet.withDongan(this, () => api.request("/api/health-documents", { method: "POST", data: { petId: pet.id } }))
+      .then(() => { this.setData({ documentHint: "已导出，可以下载保存。" }); this.loadDocuments(pet.id); })
+      .catch((error) => this.setData({ documentHint: error.code === "WALLET_TOPUP_CANCELLED" ? "" : error.message || "导出失败" }))
+      .finally(() => this.setData({ documentBusy: false }));
   },
 
   /** 下载 PDF 并交给系统打开。健康档案不可分享，只能本人下载。 */
   downloadDocument(event) {
     const id = event.currentTarget.dataset.id;
     if (!id) return;
+    this.setData({ documentHint: "正在下载健康档案…" });
     wx.downloadFile({
       url: config.apiBaseUrl + "/api/health-documents/" + id + "/download",
       header: { authorization: "Bearer " + wx.getStorageSync("petbaby_session") },
-      success: (result) => wx.openDocument({ filePath: result.tempFilePath, fileType: "pdf", showMenu: true }),
+      timeout: 15000,
+      success: (result) => {
+        if (result.statusCode !== 200 || !result.tempFilePath) {
+          this.setData({ documentHint: "下载失败，请稍后再试" });
+          return;
+        }
+        wx.openDocument({
+          filePath: result.tempFilePath, fileType: "pdf", showMenu: true,
+          success: () => this.setData({ documentHint: "" }),
+          fail: () => this.setData({ documentHint: "文件打开失败，请重新下载或在手机上重试" }),
+        });
+      },
       fail: () => this.setData({ documentHint: "下载失败，请稍后再试" }),
     });
   },
@@ -297,4 +300,4 @@ themedPage({
   goWeights() {
     wx.navigateTo({ url: "/pages/pets/pets?mode=create" });
   },
-});
+}));

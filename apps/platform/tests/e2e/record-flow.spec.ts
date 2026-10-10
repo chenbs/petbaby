@@ -34,13 +34,19 @@ test("记录到回看：非默认宠物、上传回执、日期短句、实际�
   await expect(page.locator(".photo-thumb img")).toHaveJSProperty("naturalWidth", 240);
   await page.getByRole("button", { name: "确认年度素材与报价" }).click();
   await expect(page.getByText(new RegExp(`记录B · ${year} · 20 秒`))).toBeVisible();
-  await expect(page.getByText(/解锁 ¥/)).toBeVisible();
+  await expect(page.getByText(/制作 \d+ 颗/)).toBeVisible();
   await mkdir("output/playwright", { recursive: true });
   await page.screenshot({ path: "output/playwright/record-b-timeline.png", fullPage: true });
   // 改动时长必须重新确认，不能用前一次预览的素材/时长提交。
   await page.getByLabel("时长").selectOption("10");
   await expect(page.getByRole("button", { name: "用这些照片制作" })).toHaveCount(0);
   await page.getByRole("button", { name: "确认年度素材与报价" }).click();
+  // 年度影片须先扣费，给专用 E2E 用户完成模拟充值。
+  const topup = await request.post("/api/wallet/topups", { headers, data: { packageId: "p38" } });
+  expect(topup.status()).toBe(201);
+  const order = (await topup.json()).data;
+  const paid = await request.post("/api/growth-orders/" + order.id + "/pay", { headers, data: {} });
+  expect(paid.status()).toBe(200);
   const submission = page.waitForRequest((item) => item.url().endsWith("/api/annual-films") && item.method() === "POST");
   await page.getByRole("button", { name: "用这些照片制作" }).click();
   expect((await submission).postDataJSON()).toMatchObject({ petId: pet.id, year, durationSeconds: 10, photoIds: [photo.id] });

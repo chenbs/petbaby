@@ -24,13 +24,13 @@
   -->
   <view slot="overlay" wx:if="{{work && (work.aiGenerated || work.locked)}}" class="work-overlay">
     <text wx:if="{{work.aiGenerated && work.aiNotice}}" class="ai-mask-inline">{{work.aiNotice}}</text>
-    <t-tag wx:if="{{work.locked}}" tone="accent" size="mini" text="预览图 · 保存高清原图后可存到相册"></t-tag>
+    <t-tag wx:if="{{work.locked}}" tone="accent" size="mini" text="历史作品 · 解锁后可保存"></t-tag>
   </view>
 
   <view slot="header" wx:if="{{work}}">
     <view class="row">
       <text class="glass-eyebrow">第 {{work.version}} 版</text>
-      <t-tag tone="{{work.locked ? 'warning' : 'success'}}" size="mini" text="{{work.locked ? '待保存' : '已保存原图'}}"></t-tag>
+      <t-tag tone="{{work.locked ? 'warning' : 'success'}}" size="mini" text="{{work.locked ? '待保存' : '正式版'}}"></t-tag>
     </view>
     <view class="glass-title work-title">{{work.title}}</view>
     <text class="glass-muted">{{work.subtitle}}</text>
@@ -102,6 +102,7 @@
     <text wx:if="{{work.locked && priceHint}}" class="glass-small">{{priceHint}}</text>
     <t-button wx:if="{{work.locked}}" type="ai" block anim="{{animType}}" loading="{{busy}}" bindtap="unlock">{{priceText}}</t-button>
     <t-button wx:elif="{{work.assetKind === 'video'}}" type="primary" block anim="{{animType}}" loading="{{busy}}" bindtap="downloadVideo">保存高清视频到相册</t-button>
+    <t-button wx:elif="{{work.assetKind === 'pdf'}}" id="work-document-button" type="primary" block anim="{{animType}}" loading="{{busy}}" bindtap="downloadDocument">打开 PDF · 可保存或打印</t-button>
     <t-button wx:else type="primary" block anim="{{animType}}" loading="{{busy}}" bindtap="saveImage">保存高清原图到相册</t-button>
   </view>
 </t-glass-sheet>
@@ -122,3 +123,5 @@
   bindconfirm="revoke"
   bindcancel="cancelRevoke"
 ></t-dialog>
+
+<t-wallet-sheet id="wallet-sheet" visible="{{walletSheet.visible}}" required="{{walletSheet.required}}" balance="{{walletSheet.balance}}" shortfall="{{walletSheet.shortfall}}" bind:close="onWalletSheetClose" bind:paid="onWalletPaid"></t-wallet-sheet>

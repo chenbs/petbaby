@@ -11,6 +11,7 @@ function responseError(response, fallback) {
   const error = new Error((detail && detail.message) || fallback);
   error.code = (detail && detail.code) || "REQUEST_FAILED";
   error.statusCode = response.statusCode;
+  error.details = detail && detail.details;
   const header = response.header || {};
   error.retryAfterSeconds = Number((detail && detail.retryAfterSeconds) || header["Retry-After"] || header["retry-after"]) || 0;
   return error;

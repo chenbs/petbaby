@@ -20,6 +20,7 @@ export async function GET(request: Request) {
         u.admin_suspended_at, u.admin_suspended_by, u.admin_suspension_reason,
         (SELECT count(*)::int FROM pets p WHERE p.user_id=u.id AND p.deleted_at IS NULL) pets,
         (SELECT count(*)::int FROM works w WHERE w.user_id=u.id AND w.deleted_at IS NULL) works,
+        coalesce((SELECT balance FROM wallet_accounts a WHERE a.user_id=u.id),0)::int dongan_balance,
         ((SELECT count(*) FROM orders o WHERE o.user_id=u.id)
           +(SELECT count(*) FROM physical_orders p WHERE p.user_id=u.id)
           +(SELECT count(*) FROM growth_orders g WHERE g.user_id=u.id))::int orders,
@@ -27,7 +28,7 @@ export async function GET(request: Request) {
           +(SELECT coalesce(sum(p.amount),0) FROM physical_orders p WHERE p.user_id=u.id AND p.paid_at IS NOT NULL)
           +(SELECT coalesce(sum(g.amount),0) FROM growth_orders g WHERE g.user_id=u.id AND g.paid_at IS NOT NULL))::numeric revenue
        FROM users u
-       WHERE ($1::text IS NULL OR u.id::text ILIKE $1 OR coalesce(u.display_name,'') ILIKE $1 OR coalesce(u.wechat_openid,'') ILIKE $1)
+       WHERE ($1::text IS NULL OR u.id::text ILIKE $1 OR coalesce(u.display_name,'') ILIKE $1 OR coalesce(u.wechat_unionid,'') ILIKE $1 OR coalesce(u.wechat_openid,'') ILIKE $1)
          AND ($2='all'
            OR ($2='active' AND u.deleted_at IS NULL AND u.admin_suspended_at IS NULL)
            OR ($2='suspended' AND u.deleted_at IS NULL AND u.admin_suspended_at IS NOT NULL)

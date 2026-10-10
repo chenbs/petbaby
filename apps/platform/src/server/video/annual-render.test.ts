@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
+import { fundWallet } from "@/server/wallet/test-helpers";
 import sharp from "sharp";
 import { execFile } from "node:child_process";
 import { mkdir, writeFile } from "node:fs/promises";
@@ -37,6 +38,7 @@ describe("annual film render pipeline", () => {
     const database = await getDatabase();
     await database.query("DELETE FROM video_renders");
     await database.query("INSERT INTO users (id,created_at) VALUES ($1,now())", [USER]);
+    await fundWallet(USER, 200);
     await database.query("INSERT INTO pets (id,user_id,name,species,gender,birthday,date_type,life_stage,is_default,created_at) VALUES ($1,$2,'年糕','cat','unknown','2024-01-01','birthday','active',true,$3)", [PET, USER, new Date("2024-01-01T00:00:00Z")]);
   });
 
@@ -52,10 +54,15 @@ describe("annual film render pipeline", () => {
     await addPhoto("2025-11-01T10:00:00Z");
     const film = await createAnnualFilm(USER, { year: 2025, durationSeconds: 10 });
 
-    const result = await processNextVideo();
-    expect(result?.id).toBe(film.id);
-
     const database = await getDatabase();
+    let result = await processNextVideo();
+    expect(result?.id).toBe(film.id);
+    // 失败时系统自动重试 2 次（共 3 次尝试）才进入终态；测试里把推迟拨回现在。
+    for (let index = 0; index < 2 && result?.status === "retrying"; index += 1) {
+      await database.query("UPDATE video_renders SET available_at=now() WHERE id=$1", [film.id]);
+      result = await processNextVideo();
+    }
+
     const rows = await database.query<{ status: string; error_code: string | null; output_key: string | null; work_id: string | null }>(
       "SELECT status,error_code,output_key,work_id FROM video_renders WHERE id=$1", [film.id],
     );
@@ -69,13 +76,15 @@ describe("annual film render pipeline", () => {
       );
       expect(works[0].source_kind).toBe("report");
       expect(works[0].source_id).toBe(annualFilmSourceId(USER, PET, 2025));
-      // 高清解锁付费，预览免费 —— 与 PL-19 现有口径一致。
-      expect(works[0].locked).toBe(true);
+      // 入队时已扣冻干：成片直接是正式版。
+      expect(works[0].locked).toBe(false);
       expect(works[0].asset_kind).toBe("video");
     } else {
-      // 没有 ffmpeg：必须是明确失败，不能静默停在 processing。
+      // 没有 ffmpeg：必须是明确失败，不能静默停在 processing；终态失败全额退还冻干。
       expect(row.status).toBe("failed");
       expect(row.error_code).toBeTruthy();
+      const balance = await database.query<{ balance: number }>("SELECT balance FROM wallet_accounts WHERE user_id=$1", [USER]);
+      expect(Number(balance[0].balance)).toBe(200);
     }
   }, 120_000);
 
@@ -113,9 +122,9 @@ describe("annual film render pipeline", () => {
     const database = await getDatabase();
     await database.query("UPDATE video_projects SET photo_ids=$2::jsonb,cover_photo_id=$3,title='后来编辑的项目' WHERE id=$1", [String(project.id), JSON.stringify([second]), second]);
     const result = await processNextVideo();
-    expect(result?.status).toBe("preview_ready");
-    const [work] = await database.query("SELECT photo_id,title FROM works WHERE id=$1", [String(result?.workId)]);
-    expect(work).toMatchObject({ photo_id: first, title: "后来编辑的项目" });
+    expect(result?.status).toBe("ready");
+    const [work] = await database.query("SELECT photo_id,title,locked FROM works WHERE id=$1", [String(result?.workId)]);
+    expect(work).toMatchObject({ photo_id: first, title: "后来编辑的项目", locked: false });
     const [row] = await database.query<{ config: unknown }>("SELECT config FROM video_renders WHERE id=$1", [String(render.id)]);
     const config = typeof row.config === "string" ? JSON.parse(row.config) : row.config as { photoIds?: string[] };
     expect(config.photoIds).toEqual([first]);

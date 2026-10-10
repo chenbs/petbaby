@@ -13,15 +13,14 @@ import {
   createGeneration,
   createOrder,
   createPet,
-  getDashboard,
+  getDeliveryPricing,
+  unlockWork,
   getGeneration,
   getSharedWork,
   editWork,
   listPets,
   listPhotos,
   listWorks,
-  payOrder,
-  requestRefund,
   revokeShare,
   savePhoto,
   shareWork,
@@ -32,6 +31,9 @@ import { runWorkerUntilIdle } from "@/server/worker/generation-worker";
 import { assertGenerationCircuit, enforceRateLimit } from "@/server/risk/controls";
 import { cleanupExpiredContent, closeExpiredOrders, healthSnapshot } from "@/server/maintenance";
 import { listRuntimePlugins, listRuntimePluginVersions, rollbackRuntimePlugin, updateRuntimePlugin } from "@/plugins/runtime";
+import { getWallet, listWalletLedger } from "@/server/wallet/service";
+import { fundWallet } from "@/server/wallet/test-helpers";
+import { getUserStatus } from "@/server/user-status-service";
 
 const USER_A = "00000000-0000-4000-8000-00000000000a";
 const USER_B = "00000000-0000-4000-8000-00000000000b";
@@ -43,7 +45,7 @@ async function seedUser(userId: string) {
 }
 
 /**
- * 默认用 **付费** 玩法（电影海报 12.9）建任务。
+ * 默认用 **付费** 玩法（电影海报 5 颗冻干）建任务。新人礼 3 颗不够，先补 2 颗，扣完余额为 0。
  *
  * 2026-08-03 起 `pet-id-card` 转免费（改造方案 C6：证件照的免费替代太密，
  * 9.9 撑不住竞争），免费玩法的作品以 `locked=false` 入库、不建订单 ——
@@ -56,6 +58,7 @@ async function setupGeneration(userId = USER_A, key = "request-key-0001", plugin
   const storageKey = `private/${userId}/${crypto.randomUUID()}.png`;
   await objectStorage.put(storageKey, PNG, "image/png");
   const photo = await savePhoto(userId, { petId: pet.id, filename: "pet.png", mimeType: "image/png", size: PNG.byteLength, storageKey });
+  await fundWallet(userId, 2);
   const task = await createGeneration(userId, { pluginId, petId: pet.id, photoIds: [photo.id], idempotencyKey: key });
   return { pet, photo, task };
 }
@@ -130,11 +133,35 @@ describe("persistent platform service", () => {
     expect(listed.counts).toEqual({ works: 0, photos: 0, memorials: 0 });
   });
 
-  it("keeps idempotent tasks and enforces one daily quota", async () => {
+  it("keeps idempotent tasks and limits free plugins to ten a day", async () => {
     const first = await setupGeneration();
-    const repeated = await createGeneration(USER_A, { pluginId: "pet-id-card", petId: first.pet.id, photoIds: [first.photo.id], idempotencyKey: "request-key-0001" });
+    const repeated = await createGeneration(USER_A, { pluginId: "pet-movie-poster", petId: first.pet.id, photoIds: [first.photo.id], idempotencyKey: "request-key-0001" });
     expect(repeated.id).toBe(first.task.id);
-    await expect(createGeneration(USER_A, { pluginId: "pet-id-card", petId: first.pet.id, photoIds: [first.photo.id], idempotencyKey: "request-key-0002" })).rejects.toThrow("今天的免费生成已用完");
+    // 新人礼 3 颗 + 补 2 颗，扣了 5 颗；重复提交不重复扣。
+    expect((await getWallet(USER_A)).balance).toBe(0);
+    for (let index = 0; index < 10; index += 1) {
+      await createGeneration(USER_A, { pluginId: "pet-id-card", petId: first.pet.id, photoIds: [first.photo.id], idempotencyKey: `free-card-${index}-key` });
+    }
+    await expect(createGeneration(USER_A, { pluginId: "pet-id-card", petId: first.pet.id, photoIds: [first.photo.id], idempotencyKey: "free-card-over-key" })).rejects.toThrow("今天的免费生成已用完 10 次");
+  });
+
+  it("grants the newcomer gift once per account and records it in the ledger", async () => {
+    await seedUser(USER_A);
+    const pet = await createPet(USER_A, { name: "阿福", species: "dog", gender: "unknown", birthday: "" });
+    expect((pet as { newcomerGift?: { units: number } }).newcomerGift).toEqual({ units: 3 });
+    await createPet(USER_A, { name: "二福", species: "dog", gender: "unknown", birthday: "" });
+    const wallet = await getWallet(USER_A);
+    expect(wallet).toMatchObject({ balance: 3, giftBalance: 3, newcomerGiftGranted: true, firstTopupAvailable: true });
+    expect(wallet.nextGiftExpiry?.units).toBe(3);
+    expect((await listWalletLedger(USER_A)).items.map((item) => item.title)).toEqual(["新人见面礼"]);
+  });
+
+  it("rejects a paid plugin when the balance is short and leaves no task behind", async () => {
+    const { pet, photo } = await setupGeneration();
+    const error = await createGeneration(USER_A, { pluginId: "pet-movie-poster", petId: pet.id, photoIds: [photo.id], idempotencyKey: "no-money-0001" }).catch((caught) => caught);
+    expect(error).toMatchObject({ code: "WALLET_INSUFFICIENT", status: 402, details: { required: 5, balance: 0, shortfall: 5 } });
+    const rows = await (await getDatabase()).query("SELECT id FROM generation_tasks WHERE idempotency_key='no-money-0001'");
+    expect(rows).toHaveLength(0);
   });
 
   it("worker creates a durable work and the owner can share it", async () => {
@@ -143,7 +170,8 @@ describe("persistent platform service", () => {
     expect(await runWorkerUntilIdle()).toHaveLength(1);
     const completed = await getGeneration(USER_A, task.id);
     expect(completed.status).toBe("succeeded");
-    expect(completed.work?.locked).toBe(true);
+    // 先扣后做：付费玩法的作品入库即正式版。
+    expect(completed.work?.locked).toBe(false);
     const shared = await shareWork(USER_A, completed.work!.id);
     const sharedWork = await getSharedWork(shared.token);
     expect(sharedWork.public).toBe(true);
@@ -151,18 +179,19 @@ describe("persistent platform service", () => {
     await expect(listWorks(USER_B)).resolves.toHaveLength(0);
   });
 
-  it("unlocks an order once and aggregates the dashboard", async () => {
+  it("unlocks a legacy locked work once with dongan and retires cash orders", async () => {
     const { task } = await setupGeneration();
     await runWorkerUntilIdle();
     const work = (await getGeneration(USER_A, task.id)).work!;
-    const order = await createOrder(USER_A, work.id);
-    expect((await createOrder(USER_A, work.id)).id).toBe(order.id);
-    expect((await payOrder(USER_A, order.id)).work.locked).toBe(false);
-    expect((await payOrder(USER_A, order.id)).order.status).toBe("paid");
-    const dashboard = await getDashboard(USER_A);
-    // 电影海报 12.9（setupGeneration 默认玩法）。
-    expect(dashboard.revenue).toBe(12.9);
-    expect(dashboard.conversion).toBe(1);
+    await expect(createOrder()).rejects.toMatchObject({ code: "ORDER_RETIRED", status: 410 });
+    // 模拟冻干上线前遗留的锁定作品。
+    await (await getDatabase()).query("UPDATE works SET locked=true WHERE id=$1", [work.id]);
+    await fundWallet(USER_A, 10);
+    const first = await unlockWork(USER_A, work.id);
+    expect(first).toMatchObject({ charged: 5 });
+    expect(first.work.locked).toBe(false);
+    expect((await unlockWork(USER_A, work.id)).charged).toBe(0);
+    expect((await getWallet(USER_A)).balance).toBe(5);
   });
 
   it("blocks cross-user resource access", async () => {
@@ -171,8 +200,9 @@ describe("persistent platform service", () => {
     await expect(getGeneration(USER_B, task.id)).rejects.toThrow("没有找到这条记录");
   });
 
-  it("edits, regenerates without quota, and revokes public sharing", async () => {
+  it("edits and regenerates by charging again, and revokes public sharing", async () => {
     const { task, pet, photo } = await setupGeneration();
+    await fundWallet(USER_A, 10);
     await runWorkerUntilIdle();
     const work = (await getGeneration(USER_A, task.id)).work!;
     const edited = await editWork(USER_A, work.id, { title: "新标题", subtitle: "新文案" });
@@ -181,6 +211,8 @@ describe("persistent platform service", () => {
     const second = await createGeneration(USER_A, { pluginId: "pet-movie-poster", petId: pet.id, photoIds: [photo.id], sourceWorkId: work.id, options: {}, idempotencyKey: "regenerate-0001" });
     await runWorkerUntilIdle();
     expect((await getGeneration(USER_A, second.id)).work?.version).toBe(3);
+    // 扣一次生成一次：首次、改文案、重新生成各 5 颗。
+    expect((await getWallet(USER_A)).balance).toBe(15 - 15);
     const shared = await shareWork(USER_A, work.id);
     await revokeShare(USER_A, work.id);
     await expect(getSharedWork(shared.token)).rejects.toThrow("分享已关闭");
@@ -188,6 +220,7 @@ describe("persistent platform service", () => {
 
   it("generates movie poster and time album outputs", async () => {
     const { pet, photo } = await setupGeneration();
+    await fundWallet(USER_A, 100);
     const database = await getDatabase();
     await database.exec("DELETE FROM generation_tasks; DELETE FROM daily_quotas;");
     const movie = await createGeneration(USER_A, { pluginId: "pet-movie-poster", petId: pet.id, photoIds: [photo.id], options: { style: "hongkong" }, idempotencyKey: "movie-0001" });
@@ -212,17 +245,29 @@ describe("persistent platform service", () => {
     const albumWork = (await getGeneration(USER_A, album.id)).work!;
     expect(albumWork.outputUrl).toMatch(/\.png$/);
     expect(await listPhotos(USER_A, pet.id)).toHaveLength(6);
+    // 6 张照片、跨度不足一年：画册基础档 18 颗。
+    const pricing = await getDeliveryPricing(USER_A, pet.id, "pet-time-album");
+    expect(pricing).toMatchObject({ cost: 18, tier: "basic", tierCosts: { basic: 18, advanced: 28, annual: 38 } });
   });
 
-  it("refunds half only once and closes stale pending orders", async () => {
-    const { task } = await setupGeneration(); await runWorkerUntilIdle();
-    const work = (await getGeneration(USER_A, task.id)).work!;
-    const order = await createOrder(USER_A, work.id); await payOrder(USER_A, order.id);
-    // 12.9 的一半。不满意退款按半价，见 requestRefund。
-    expect((await requestRefund(USER_A, order.id, "dissatisfied")).amount).toBe(6.45);
-    await expect(requestRefund(USER_A, order.id, "dissatisfied")).rejects.toThrow("仅有一次");
+  it("refunds dongan in full when generation fails after the automatic retries", async () => {
+    const { task } = await setupGeneration();
     const database = await getDatabase();
-    await database.query("UPDATE orders SET status='pending',created_at=now()-interval '31 minutes' WHERE id=$1", [order.id]);
+    await database.query("UPDATE generation_tasks SET plugin_snapshot=jsonb_set(plugin_snapshot,'{generator,template}','\"missing-generator\"') WHERE id=$1", [task.id]);
+    expect((await getWallet(USER_A)).balance).toBe(0);
+    for (let index = 0; index < 3; index += 1) {
+      await database.query("UPDATE generation_tasks SET available_at=now() WHERE id=$1", [task.id]);
+      await runWorkerUntilIdle(1);
+    }
+    const failed = await getGeneration(USER_A, task.id);
+    expect(failed).toMatchObject({ status: "failed", attempt: 3 });
+    expect((await getWallet(USER_A)).balance).toBe(5);
+  });
+
+  it("closes stale pending orders, including top-up orders", async () => {
+    await seedUser(USER_A);
+    const database = await getDatabase();
+    await database.query("INSERT INTO growth_orders (id,user_id,kind,sku,amount,status,entitlement_snapshot,created_at,updated_at) VALUES ($1,$2,'wallet_topup','fd-topup-38',38,'pending','{}',now()-interval '31 minutes',now())", [crypto.randomUUID(), USER_A]);
     expect(await closeExpiredOrders()).toBe(1);
   });
 
@@ -295,12 +340,9 @@ describe("security boundaries", () => {
     const database = await getDatabase();
     const taskRow = await database.query("SELECT plugin_snapshot FROM generation_tasks WHERE id=$1", [task.id]);
     expect(taskRow[0].plugin_snapshot).toBeTruthy();
-    await runWorkerUntilIdle();
-    const work = (await getGeneration(USER_A, task.id)).work!;
-    const order = await createOrder(USER_A, work.id);
-    expect(order.sku).toBe("pet-movie-poster-single");
-    expect(order.unitPrice).toBe(12.9);
-    expect(order.pluginSnapshot).toBeTruthy();
+    const options = (await database.query("SELECT options,wallet_biz_key FROM generation_tasks WHERE id=$1", [task.id]))[0];
+    expect(options.wallet_biz_key).toBe(`spend:generation:${task.id}`);
+    expect((options.options as { dongan?: { cost: number } }).dongan?.cost).toBe(5);
   });
 
   it("versions and rolls back runtime plugin configuration", async () => {
@@ -377,15 +419,20 @@ describe("免费玩法", () => {
   it("免费作品可直接下载", async () => {
     const work = await generateFree();
     await expect(getDownload(USER_A, work.id, "image")).resolves.toMatchObject({ key: expect.any(String) });
+    expect(work.outputKey).toMatch(/\.png$/);
+    const image = await objectStorage.get(work.outputKey!);
+    expect(image?.contentType).toBe("image/png");
+    expect(await sharp(Buffer.from(image!.body)).metadata()).toMatchObject({ format: "png", width: 1080, height: 1440 });
   });
 
   /*
    * 微信支付 amount.total 最低 1 分，Math.round(0*100)=0 根本付不掉 ——
    * 建一条永远付不了的订单只会让用户卡在支付页。
    */
-  it("对免费作品建订单被拒", async () => {
+  it("免费作品无需解锁，也不扣冻干", async () => {
     const work = await generateFree();
-    await expect(createOrder(USER_A, work.id)).rejects.toMatchObject({ code: "ORDER_NOT_REQUIRED" });
+    expect(await unlockWork(USER_A, work.id)).toMatchObject({ charged: 0 });
+    expect((await getWallet(USER_A)).balance).toBe(3);
   });
 
   /*
@@ -405,9 +452,36 @@ describe("免费玩法", () => {
     expect(Math.max(meta.width || 0, meta.height || 0)).toBeLessThanOrEqual(1080);
   });
 
-  it("付费玩法仍然锁定且可建订单", async () => {
+  it("付费玩法先扣冻干，作品直接是正式版", async () => {
+    await seedUser(USER_A);
+    await fundWallet(USER_A, 4);
     const work = await generateFree("pet-movie-poster");
-    expect(work.locked).toBe(true);
-    await expect(createOrder(USER_A, work.id)).resolves.toMatchObject({ amount: 12.9 });
+    expect(work.locked).toBe(false);
+    // 新人礼 3 颗 + 补 4 颗，海报扣 5 颗
+    expect((await getWallet(USER_A)).balance).toBe(2);
+  });
+
+  it("免费玩法每天十次，重新生成也计次；付费与纪念册不占免费次数", async () => {
+    const work = await generateFree();
+    const photo = (await listPhotos(USER_A, work.petId))[0];
+    for (let index = 1; index < 10; index += 1) {
+      await createGeneration(USER_A, { pluginId: "pet-id-card", petId: work.petId, photoIds: [photo.id], sourceWorkId: work.id, idempotencyKey: `free-count-${index}` });
+    }
+    expect((await getUserStatus(USER_A)).quota).toMatchObject({ daily: 10, used: 10, remaining: 0 });
+    await expect(createGeneration(USER_A, { pluginId: "pet-id-card", petId: work.petId, photoIds: [photo.id], sourceWorkId: work.id, idempotencyKey: "free-eleventh" })).rejects.toMatchObject({ code: "DAILY_QUOTA_USED" });
+    await fundWallet(USER_A, 3);
+    await createGeneration(USER_A, { pluginId: "pet-movie-poster", petId: work.petId, photoIds: [photo.id], idempotencyKey: "paid-after-ten" });
+    await (await getDatabase()).query("UPDATE pets SET life_stage='memorial' WHERE id=$1", [work.petId]);
+    const albumPhotoIds = [photo.id];
+    for (let index = 1; index < 6; index += 1) {
+      const storageKey = `private/${USER_A}/${crypto.randomUUID()}.png`;
+      await objectStorage.put(storageKey, PNG, "image/png");
+      const albumPhoto = await savePhoto(USER_A, { petId: work.petId, filename: `album-${index}.png`, mimeType: "image/png", size: PNG.byteLength, storageKey });
+      albumPhotoIds.push(albumPhoto.id);
+    }
+    await createGeneration(USER_A, { pluginId: "pet-time-album", petId: work.petId, photoIds: albumPhotoIds, idempotencyKey: "memorial-free-album" });
+    expect((await getUserStatus(USER_A)).quota.used).toBe(10);
+    // 新人礼 3 颗 + 补 3 颗，海报扣 5 颗，纪念画册免费
+    expect((await getWallet(USER_A)).balance).toBe(1);
   });
 });

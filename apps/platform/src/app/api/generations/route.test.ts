@@ -31,23 +31,20 @@ describe("POST /api/generations worker dispatch", () => {
     mocks.runNextTask.mockReset();
   });
 
-  it("runs file-backed PGlite tasks in the development server process", async () => {
-    vi.stubEnv("NODE_ENV", "development");
-    vi.stubEnv("DATABASE_URL", "file://.data/local-preview-petbaby");
-    expect((await submitGeneration()).status).toBe(202);
-    expect(mocks.runNextTask).toHaveBeenCalledOnce();
-  });
-
-  it("leaves PostgreSQL tasks for the separate worker", async () => {
-    vi.stubEnv("NODE_ENV", "development");
-    vi.stubEnv("DATABASE_URL", "postgres://localhost/petbaby");
-    expect((await submitGeneration()).status).toBe(202);
-    expect(mocks.runNextTask).not.toHaveBeenCalled();
-  });
-
-  it("does not run a file-backed worker inline in production", async () => {
-    vi.stubEnv("NODE_ENV", "production");
-    vi.stubEnv("DATABASE_URL", "file://.data/petbaby");
+  /*
+   * 2026-10-09 起本地与生产走同一条路径：任务只入队，由 `pnpm worker` 处理。
+   * 以前文件库 / 内存库会在请求里内联执行，结果是本地能出图而 AI 写真（只入队）永远排队，
+   * 两类任务在本地表现不一致，也掩盖了「Worker 没起来」这类生产问题。
+   */
+  it.each([
+    ["development", ""],
+    ["development", "memory://"],
+    ["development", "file://.data/petbaby"],
+    ["development", "postgres://localhost/petbaby"],
+    ["production", "postgres://db/petbaby"],
+  ])("leaves tasks for the worker (%s, %s)", async (nodeEnv, databaseUrl) => {
+    vi.stubEnv("NODE_ENV", nodeEnv);
+    vi.stubEnv("DATABASE_URL", databaseUrl);
     expect((await submitGeneration()).status).toBe(202);
     expect(mocks.runNextTask).not.toHaveBeenCalled();
   });

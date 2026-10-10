@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import sharp from "sharp";
 
 import { getOptionalUserId } from "@/server/auth/session";
 import { getDatabase } from "@/server/db/client";
@@ -29,9 +30,11 @@ export async function GET(
     if (!rows.length) throw new AppError("MEDIA_NOT_FOUND", "文件不存在", 404);
     const object = await objectStorage.get(key);
     if (!object) throw new AppError("MEDIA_NOT_FOUND", "文件不存在", 404);
-    return new NextResponse(Buffer.from(object.body), {
+    const raster = new URL(request.url).searchParams.get("format") === "png" && object.contentType === "image/svg+xml";
+    const body = raster ? await sharp(Buffer.from(object.body)).png().toBuffer() : Buffer.from(object.body);
+    return new NextResponse(body, {
       headers: {
-        "Content-Type": object.contentType,
+        "Content-Type": raster ? "image/png" : object.contentType,
         "Cache-Control": "private, no-store",
         "Vary": "Cookie, Authorization",
         "X-Content-Type-Options": "nosniff",

@@ -2,11 +2,15 @@ import { NextResponse } from "next/server";
 import sharp from "sharp";
 import { z } from "zod";
 
-import { assertTrustedOrigin } from "@/server/auth/request-guard";
+import { assertTrustedMutation, assertTrustedOrigin } from "@/server/auth/request-guard";
 import { requireUserId } from "@/server/auth/session";
 import { AppError, routeError } from "@/server/errors";
+import { setPetAvatarFromPhoto } from "@/server/pet-avatar-service";
 import { updatePetAvatar } from "@/server/platform-service";
+import { enforceRateLimit } from "@/server/risk/controls";
 import { inspectImage, objectStorage } from "@/server/storage";
+
+const photoBodySchema = z.object({ photoId: z.string().uuid() }).strict();
 
 export async function POST(request: Request, context: { params: Promise<{ id: string }> }) {
   let key: string | undefined;
@@ -27,4 +31,19 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
     if (key) await objectStorage.delete(key).catch(() => undefined);
     return routeError(error);
   }
+}
+
+/**
+ * 用照片库里已收好的一张照片做头像（JSON：{ photoId }）。
+ * 新用户建档后的「上传一张照片做头像」走这里：照片先经 /api/uploads 进照片库，再设为头像，不另传一份文件。
+ */
+export async function PUT(request: Request, context: { params: Promise<{ id: string }> }) {
+  try {
+    assertTrustedMutation(request);
+    const userId = await requireUserId(request);
+    await enforceRateLimit("pet-avatar", userId, 20, 60);
+    const { id } = await context.params;
+    const { photoId } = photoBodySchema.parse(await request.json());
+    return NextResponse.json({ data: await setPetAvatarFromPhoto(userId, z.string().uuid().parse(id), photoId) });
+  } catch (error) { return routeError(error); }
 }

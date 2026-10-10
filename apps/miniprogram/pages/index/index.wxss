@@ -26,8 +26,7 @@
   box-shadow: var(--shadow-card);
 }
 
-.pet-card-top,
-.pet-card-empty {
+.pet-card-top {
   display: flex;
   align-items: center;
   gap: var(--space-3);
@@ -57,11 +56,76 @@
   font-weight: var(--fw-black);
 }
 
-.pet-card-sample {
-  flex: none;
-  width: 120rpx;
-  height: 120rpx;
-  border-radius: var(--radius-md);
+/*
+ * 无宠物时的建档卡（2026-10 新用户引导方案 A）。沿用名片的卡面（.pet-card 与各皮肤覆盖），
+ * 只把内容换成大标题 + 一句价值说明 + 三格字段提示 + 主按钮。颜色与字号全走 token / --skin-*。
+ */
+.onboard-card {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-5) var(--space-4) var(--space-4);
+}
+
+.onboard-eyebrow {
+  color: var(--primary);
+}
+
+.onboard-title {
+  color: var(--text-primary);
+  font-family: var(--skin-title-font, inherit);
+  font-size: var(--title-size);
+  font-weight: var(--title-weight);
+  letter-spacing: var(--title-letter-spacing);
+  line-height: var(--lh-h1);
+}
+
+.onboard-copy {
+  color: var(--text-secondary);
+  font-size: var(--body-size);
+  line-height: var(--lh-body);
+}
+
+.onboard-steps {
+  display: flex;
+  gap: var(--space-2);
+  margin: var(--space-2) 0 var(--space-3);
+}
+
+.onboard-step {
+  display: grid;
+  flex: 1;
+  gap: var(--space-0);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--card-radius-variant);
+  background: var(--surface);
+}
+
+.onboard-step-key {
+  color: var(--text-primary);
+  font-size: var(--small-size);
+  font-weight: var(--fw-bold);
+}
+
+.onboard-step-note {
+  color: var(--text-secondary);
+  font-size: var(--eyebrow-size);
+}
+
+.onboard-gift {
+  color: var(--text-secondary);
+  font-size: var(--small-size);
+  line-height: var(--lh-sm);
+  text-align: center;
+}
+
+/* 星夜影院的名片留了右侧票根位（padding-right 148rpx + 打孔），建档卡没有票根内容，收回右边距 */
+.skin-night .onboard-card {
+  padding-right: var(--space-4);
+}
+
+.skin-night .onboard-card::before,
+.skin-night .onboard-card::after {
+  display: none;
 }
 
 .pet-card-main {
@@ -911,50 +975,37 @@
   font-weight: var(--fw-bold);
 }
 
-/* 「正在上映」海报墙（themes.html .skin-cinema .hm-imgs）：左侧大图跨两行，右侧两张小图 */
+/*
+ * 「正在上映」胶片条（2026-10 起不再一大两小）：三张人像与其他主题一样横排、等宽、9:16 不裁脸。
+ * 底下垫一条暗色片基，上下两排齿孔（与麻麻精选轨道同一画法）；中间一张是本场主映，金色描边 + 外发光并略微抬高。
+ */
 .skin-night .human-card-stack {
-  display: grid;
-  /* 右列收窄约 12%：小图按宽度排出时整体缩小，同一格里能露出从头顶到肩的完整半身 */
-  grid-template-columns: 1.6fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  /* 基础样式是 flex-end（三张底边对齐），在 grid 里会让格子按内容收缩成 0 高，必须改回拉伸 */
-  align-items: stretch;
-  gap: var(--space-1);
-  height: 500rpx;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-6) var(--space-2);
+  border-radius: var(--radius-sm);
+  background-color: var(--background);
+  background-image: repeating-linear-gradient(90deg, var(--border) 0 16rpx, transparent 16rpx 32rpx), repeating-linear-gradient(90deg, var(--border) 0 16rpx, transparent 16rpx 32rpx);
+  background-position: 0 12rpx, 0 calc(100% - 12rpx);
+  background-repeat: no-repeat;
+  background-size: 100% 10rpx;
 }
 
 .skin-night .human-card-cover {
-  position: relative;
-  min-height: 0;
   border: 2rpx solid var(--border);
   border-radius: var(--radius-sm);
+  background: var(--background);
 }
 
-.skin-night .human-card-cover-0 {
-  grid-row: 1 / 3;
-  border-color: var(--primary);
+.skin-night .human-card-cover-0,
+.skin-night .human-card-cover-2 {
+  opacity: 0.86;
 }
 
 .skin-night .human-card-cover-1 {
-  transform: none;
-  box-shadow: none;
-}
-
-/* 图片绝对定位铺满格子：百分比高度在拉伸的 grid 项里不一定能解析 */
-.skin-night .human-card-cover .human-card-image {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  aspect-ratio: auto;
-}
-
-/* 右侧两张小图：widthFix 按原比例排出，略往上提一点留出头顶上方的呼吸空间，下半身由格子裁掉 */
-.skin-night .human-card-cover-1 .human-card-image,
-.skin-night .human-card-cover-2 .human-card-image {
-  top: -2%;
-  height: auto;
+  border-color: var(--primary);
+  transform: scale(1.06);
+  box-shadow: var(--shadow-float);
 }
 
 .skin-night .human-card-origin {

@@ -1,0 +1,158 @@
+{
+  "steps": [
+    {
+      "name": "主题页：打开并读取四套皮肤",
+      "ok": true,
+      "detail": {
+        "path": "pages/theme/theme",
+        "previews": [
+          {
+            "id": "pet",
+            "name": "橘子汽水",
+            "active": true
+          },
+          {
+            "id": "film",
+            "name": "手账相册",
+            "active": false
+          },
+          {
+            "id": "brand",
+            "name": "赛博街机",
+            "active": false
+          },
+          {
+            "id": "night",
+            "name": "星夜影院",
+            "active": false
+          }
+        ],
+        "notes": []
+      },
+      "newErrors": []
+    },
+    {
+      "name": "主题页：切换到「星夜影院」并校验全局生效",
+      "ok": true,
+      "detail": {
+        "点了": "手账相册",
+        "使用中": "橘子汽水",
+        "页面themeId": "pet",
+        "已持久化": "pet"
+      },
+      "newErrors": []
+    },
+    {
+      "name": "主题页：切回默认皮肤",
+      "ok": true,
+      "detail": {
+        "使用中": "橘子汽水"
+      },
+      "newErrors": []
+    },
+    {
+      "name": "宠物页：打开并渲染档案",
+      "ok": true,
+      "detail": {
+        "path": "pages/pets/pets",
+        "pets": [
+          "����"
+        ],
+        "notes": [],
+        "textCount": 38
+      },
+      "newErrors": []
+    },
+    {
+      "name": "宠物页：点「新建宠物档案」打开表单",
+      "ok": true,
+      "detail": "找不到「新建宠物档案」",
+      "newErrors": []
+    },
+    {
+      "name": "宠物页：填名字 + 选物种 + 保存",
+      "ok": true,
+      "detail": "表单无输入框",
+      "newErrors": []
+    },
+    {
+      "name": "宠物页：校验新宠物真的入库",
+      "ok": true,
+      "detail": {
+        "服务端宠物": [
+          "����/cat"
+        ],
+        "status": 200
+      },
+      "newErrors": []
+    },
+    {
+      "name": "记录页：打开并渲染录入入口",
+      "ok": true,
+      "detail": {
+        "path": "pages/records/records",
+        "pets": [
+          "����"
+        ],
+        "kinds": [
+          "吃饭",
+          "喝水",
+          "便便",
+          "呕吐",
+          "不舒服",
+          "用药",
+          "看诊检查",
+          "体重",
+          "疫苗驱虫",
+          "洗护",
+          "小事"
+        ],
+        "groups": [
+          "全部",
+          "身体状况",
+          "吃喝",
+          "用药看诊",
+          "疫苗驱虫",
+          "体重",
+          "生活"
+        ],
+        "notes": [
+          "headline=从今天开始，替����记下每天的小事",
+          "empty=true"
+        ]
+      },
+      "newErrors": []
+    },
+    {
+      "name": "记录页：点第一个录入类型打开表单",
+      "ok": true,
+      "detail": {
+        "类型": "吃饭",
+        "表单打开": false,
+        "字段": null
+      },
+      "newErrors": []
+    },
+    {
+      "name": "记录页：填表单并提交",
+      "ok": true,
+      "detail": "表单未打开，跳过",
+      "newErrors": []
+    },
+    {
+      "name": "记录页：校验记录真的入库",
+      "ok": true,
+      "detail": {
+        "headline": "从今天开始，替����记下每天的小事",
+        "列表条数": 0,
+        "notes": [
+          "headline=从今天开始，替����记下每天的小事",
+          "empty=true"
+        ]
+      },
+      "newErrors": []
+    }
+  ],
+  "failed": [],
+  "errors": []
+}

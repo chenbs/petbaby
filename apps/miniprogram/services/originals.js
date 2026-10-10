@@ -17,8 +17,9 @@ function download(path) {
   return new Promise((resolve, reject) => wx.downloadFile({
     url: config.apiBaseUrl + path,
     header: authHeader(),
+    timeout: 15000,
     success: (result) => {
-      if (result.statusCode >= 200 && result.statusCode < 300) return resolve(result.tempFilePath);
+      if (result.statusCode >= 200 && result.statusCode < 300 && result.tempFilePath) return resolve(result.tempFilePath);
       const error = new Error(result.statusCode === 428 ? "需要先确认标识说明" : "文件暂时无法下载，请稍后重试");
       error.statusCode = result.statusCode;
       error.code = result.statusCode === 428 ? "AI_DISCLOSURE_REQUIRED" : "DOWNLOAD_FAILED";

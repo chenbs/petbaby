@@ -1,0 +1,19 @@
+<view wx:if="{{visible}}" class="gd-mask" catchtouchmove="noop" bindtap="close">
+  <view class="gd-card" catchtap="noop">
+    <view class="gd-close" aria-role="button" aria-label="关闭" catchtap="close">×</view>
+    <view class="gd-stack">
+      <image class="gd-side gd-left" src="/assets/icons/{{themeId}}/fd-coin.png" mode="aspectFit" />
+      <image class="gd-main" src="/assets/icons/{{themeId}}/fd-coin.png" mode="aspectFit" />
+      <image class="gd-side gd-right" src="/assets/icons/{{themeId}}/fd-coin.png" mode="aspectFit" />
+    </view>
+    <text class="gd-title">送你一份见面礼</text>
+    <text class="gd-n">{{units}} 颗</text>
+    <text class="gd-sub">冻干 · 7 天内有效</text>
+    <text class="gd-what">冻干是这里的零食币，做写真、做画册都用它</text>
+    <view class="gd-uses">
+      <view class="gd-use"><text class="gd-use-t">宠物写真</text><text class="gd-use-s">2 颗 · 1 张</text></view>
+      <view class="gd-use"><text class="gd-use-t">电影海报</text><text class="gd-use-s">5 颗 · 1 张</text></view>
+    </view>
+    <view class="gd-btn" aria-role="button" hover-class="gd-btn-hover" bindtap="go">{{actionText}}</view>
+  </view>
+</view>

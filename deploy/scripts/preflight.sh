@@ -67,6 +67,7 @@ if [ "$MODE" = "staging" ]; then
   [ -n "$(env_value PASSWORD_AUTH_INVITE_CODE)" ] || warn "PASSWORD_AUTH_INVITE_CODE 为空，公网上任何人都能注册账号"
 else
   [ "$APP_ENV_VALUE" != "staging" ] || fail "正式生产禁止 APP_ENV=staging（会放行本地磁盘存储和模拟支付）"
+  [ "$(env_value PASSWORD_AUTH_ENABLED)" != "true" ] || warn "PASSWORD_AUTH_ENABLED=true 在正式生产无效：生产只有微信账号（unionid），账号密码注册/登录一律关闭"
   [ "$(env_value OBJECT_STORAGE_PROVIDER)" = "cos" ] || fail "正式生产使用腾讯云 COS，OBJECT_STORAGE_PROVIDER 必须为 cos"
   [ "$(env_value OSS_BUCKET)" = "babykitty-user-one-1252454114" ] || fail "COS Bucket 与已确认的私有桶不一致"
   [ "$(env_value PAYMENT_PROVIDER)" = "wechat" ] || fail "正式生产 PAYMENT_PROVIDER 必须是 wechat"

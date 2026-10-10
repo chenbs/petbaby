@@ -6,6 +6,7 @@ import {
   imageTemplateSupportsReroll,
   listPublicImageTemplateEntries,
 } from "@/server/image-template-registry";
+import { AI_RUN_COST } from "@/domain/dongan-pricing";
 
 const duoGroupById = new Map<string, (typeof duoPhotoGroups)[number]>(duoPhotoGroups.map((group) => [group.id, group]));
 
@@ -28,6 +29,8 @@ export async function GET() {
       status: template.status,
       candidateCount: getImageTemplateCandidateCount(template),
       rerollSupported: imageTemplateSupportsReroll(template),
+      // 每拍一张扣的冻干颗数（2026-10-08）。端上只读这里，不写死。
+      donganCost: AI_RUN_COST[template.subjectMode] ?? AI_RUN_COST.pet,
       sampleUrl: `/api/image-templates/${encodeURIComponent(template.templateId)}/sample`,
     })),
   }));

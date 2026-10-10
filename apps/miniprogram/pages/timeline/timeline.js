@@ -1,3 +1,4 @@
+const wallet = require("../../services/wallet");
 const api = require("../../services/api");
 const { recordSession } = require("../../services/record-events");
 const { themedPage } = require("../../theme/page-mixin");
@@ -7,8 +8,8 @@ const SOURCES = { manual: "你设置的日期", exif: "照片里的拍摄时间"
 const TAGS = { today: "今天的样子", first: "第一次", walk: "散步", birthday: "生日", learned: "学会了", keep: "只是想留着" };
 const ANCHOR_LABEL = { birthday: "出生", got_home: "到家", created: "建档" };
 
-themedPage({
-  data: {
+themedPage(Object.assign({}, wallet.walletSheetMethods, {
+  data: { walletSheet: { visible: false, required: 0, balance: 0, shortfall: 0 },
     pets: [], petId: "", petText: "", companion: "", anchorLabel: "", totalDays: 0,
     groups: [], milestones: [], totalCount: 0, nextCursor: "", loading: true, loadingMore: false, error: "", empty: false,
     filmYears: [new Date().getFullYear(), new Date().getFullYear() - 1], filmYear: new Date().getFullYear(),
@@ -110,11 +111,11 @@ themedPage({
     if (this.data.filmBusy || !preview || preview.petId !== this.data.petId) return;
     this.setData({ filmBusy: true, filmHint: "" });
     try {
-      const film = await api.request("/api/annual-films", { method: "POST", data: { petId: preview.petId, year: preview.year, durationSeconds: preview.durationSeconds, photoIds: preview.photos.map((photo) => photo.id) } });
+      const film = await wallet.withDongan(this, () => api.request("/api/annual-films", { method: "POST", data: { petId: preview.petId, year: preview.year, durationSeconds: preview.durationSeconds, photoIds: preview.photos.map((photo) => photo.id) } }));
       if (view === this._view) this.setData({ filmPreview: null, filmHint: "已为 " + film.petName + " 开始渲染，使用确认的 " + film.shots + " 张照片。完成后到作品库查看。" });
-    } catch (error) { if (view === this._view) this.setData({ filmHint: error.message }); }
+    } catch (error) { if (view === this._view) this.setData({ filmHint: error.code === "WALLET_TOPUP_CANCELLED" ? "" : error.message }); }
     finally { if (view === this._view) this.setData({ filmBusy: false }); }
   },
   openDetail(event) { wx.navigateTo({ url: "/pages/photos/photos?petId=" + this.data.petId + "&photoId=" + event.currentTarget.dataset.id }); },
   openPhotos() { wx.navigateTo({ url: "/pages/photos/photos?mode=record&entry=timeline" + (this.data.petId ? "&petId=" + this.data.petId : "") }); }
-});
+}));

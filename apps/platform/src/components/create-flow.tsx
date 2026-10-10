@@ -1,5 +1,4 @@
 "use client";
-import { payWebOrder, webPaymentEnabled, webPaymentNotice } from "@/lib/payment";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -7,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "react";
 
 import { WorkPreview } from "@/components/work-preview";
-import type { GenerationTask, Order, Pet, Photo, PluginManifest, PublicWork } from "@/domain/models";
+import type { GenerationTask, Pet, Photo, PluginManifest, PublicWork } from "@/domain/models";
 import { apiFetch, apiUploadWithProgress } from "@/lib/api";
 import { clearCreateDraft, compressImage, loadCreateDraft, saveCreateDraft } from "@/lib/create-draft";
 
@@ -18,15 +17,12 @@ type TaskResponse = GenerationTask & { work?: PublicWork };
 type DeliveryPricing = {
   free: boolean;
   tiered: boolean;
-  isMember: boolean;
   accumulation?: { photoCount: number; spanDays: number };
-  specTier?: "basic" | "advanced" | "annual";
-  amount: number;
-  listPrice: number;
-  memberSaving: number;
+  tier?: "basic" | "advanced" | "annual";
+  cost: number;
   label: string;
   nextTier?: { tier: "advanced" | "annual"; photosNeeded?: number; daysNeeded?: number };
-  tierPrices?: { basic?: number; advanced?: number; annual?: number };
+  tierCosts?: { basic?: number; advanced?: number; annual?: number };
 };
 
 const TIER_NAME: Record<string, string> = { basic: "基础", advanced: "进阶", annual: "年度" };
@@ -40,8 +36,8 @@ const TIER_NAME: Record<string, string> = { basic: "基础", advanced: "进阶",
 function nextTierCopy(pricing: DeliveryPricing): string | undefined {
   const next = pricing.nextTier;
   if (!next) return undefined;
-  const price = pricing.tierPrices?.[next.tier];
-  const target = `${TIER_NAME[next.tier]}版${price ? ` ¥${price}` : ""}`;
+  const price = pricing.tierCosts?.[next.tier];
+  const target = `${TIER_NAME[next.tier]}版${price ? ` · ${price} 颗` : ""}`;
   if (next.tier === "advanced" && next.photosNeeded) return `再攒 ${next.photosNeeded} 张照片，就能做${target}。`;
   if (next.daysNeeded) return `照片跨度再满 ${next.daysNeeded} 天，就能做${target}。`;
   return undefined;
@@ -158,7 +154,7 @@ export function CreateFlow({ plugin }: { plugin: PluginManifest }) {
           return;
         }
         if (next.status === "failed") {
-          setError("生成没有完成，免费次数已返还，请重新尝试。");
+          setError(pricing?.free ? "生成没有完成，免费次数已返还。" : "生成没有完成，冻干已退回，可以重新制作。");
           setStage("photos");
           return;
         }
@@ -170,7 +166,7 @@ export function CreateFlow({ plugin }: { plugin: PluginManifest }) {
     };
     pollTimer.current = setTimeout(poll, 600);
     return () => { if (pollTimer.current) clearTimeout(pollTimer.current); };
-  }, [stage, task?.id]);
+  }, [stage, task?.id, pricing?.free]);
 
   useEffect(() => {
     if (stage !== "preview" || !work || previewTracked.current) return;
@@ -294,13 +290,7 @@ export function CreateFlow({ plugin }: { plugin: PluginManifest }) {
     setBusy(true);
     setError("");
     try {
-      /*
-       * SKU 恒为 `${pluginId}-single`。`pet-id-card-bundle`（四证套餐 19.9）
-       * 已随 PL-01 转免费下线，`createOrder` 会按 SKU_INVALID 拒掉 ——
-       * 端上还在按 documentType 拼那个 SKU，走到这条分支必然 422。
-       */
-      const order = await apiFetch<Order>("/api/orders", { method: "POST", body: JSON.stringify({ workId: work.id, sku: `${plugin.id}-single` }) });
-      const result = await payWebOrder<{ order: Order; work: PublicWork }>("work", order.id);
+      const result = await apiFetch<{ work: PublicWork }>(`/api/works/${work.id}/unlock`, { method: "POST" });
       setWork(result.work);
     } catch (paymentError) {
       setError(paymentError instanceof Error ? paymentError.message : "解锁失败");
@@ -363,17 +353,16 @@ export function CreateFlow({ plugin }: { plugin: PluginManifest }) {
           档位与价格在制作前展示（L3）。免费玩法整块不出现 ——
           给一个 ¥0 的价格区块只是噪声。
         */}
-        {pricing && !pricing.free ? <section className="settings-list" aria-label="解锁价格">
+        {pricing && !pricing.free ? <section className="settings-list" aria-label="制作颗数">
           <div>
-            <span><b>{pricing.tiered && pricing.specTier ? `${TIER_NAME[pricing.specTier]}版 · ${pricing.label}` : pricing.label}</b>
+            <span><b>{pricing.tiered && pricing.tier ? `${TIER_NAME[pricing.tier]}版 · ${pricing.label}` : pricing.label}</b>
               {pricing.tiered && pricing.accumulation ? <small style={{ display: "block" }}>已积累 {pricing.accumulation.photoCount} 张照片，跨度 {pricing.accumulation.spanDays} 天</small> : null}
-              {pricing.isMember && pricing.memberSaving > 0 ? <small style={{ display: "block" }}>会员价，比单买省 ¥{pricing.memberSaving}</small> : null}
-              {!pricing.isMember && nextTierCopy(pricing) ? <small style={{ display: "block" }}>{nextTierCopy(pricing)}</small> : null}
+              {nextTierCopy(pricing) ? <small style={{ display: "block" }}>{nextTierCopy(pricing)}</small> : null}
             </span>
-            <span><b>¥{pricing.amount}</b>{pricing.memberSaving > 0 ? <small style={{ display: "block", textDecoration: "line-through" }}>¥{pricing.listPrice}</small> : null}</span>
+            <span><b>{pricing.cost} 颗</b></span>
           </div>
         </section> : null}
-        <button className="primary-button" disabled={busy || selectedCount < plugin.input.photos.min || selectedCount > plugin.input.photos.max} onClick={startGeneration} type="button">{busy ? "照片上传中…" : "免费生成预览"}</button>
+        <button className="primary-button" disabled={busy || selectedCount < plugin.input.photos.min || selectedCount > plugin.input.photos.max} onClick={startGeneration} type="button">{busy ? "照片上传中…" : pricing && !pricing.free ? `${pricing.cost} 颗 · 开始生成` : "免费生成"}</button>
         {busy ? <><p className="privacy-note">上传进度 {uploadProgress}%（单文件失败自动重试）</p><button className="secondary-button" onClick={() => uploadAbort.current?.abort()} type="button">取消上传</button></> : null}
         <p className="privacy-note">草稿会保存在当前浏览器；刷新页面后仍可继续。</p>
       </section> : null}
@@ -386,7 +375,7 @@ export function CreateFlow({ plugin }: { plugin: PluginManifest }) {
         写在这里会让一个 80 张照片的用户看到 ¥19.9 却被收 ¥49。
         pricing 未取到时回落 manifest 价，好过不显示价格。
       */}
-      {stage === "preview" && work ? <section><WorkPreview work={work} /><div className="preview-actions"><div className="price-line"><span>{work.locked ? (pricing && pricing.tiered && pricing.specTier ? `${TIER_NAME[pricing.specTier]}版 · ${pricing.label}` : plugin.pricing.label) : "已解锁高清原图"}</span><strong>{work.locked ? `¥${pricing && !pricing.free ? pricing.amount : plugin.pricing.unlockPrice}` : "✓"}</strong></div>{work.locked && pricing?.memberSaving ? <p className="privacy-note">会员价，比单买省 ¥{pricing.memberSaving}</p> : null}{work.locked ? <button className="primary-button" disabled={!webPaymentEnabled || busy} onClick={unlock} type="button" title={!webPaymentEnabled ? webPaymentNotice : undefined}>{busy ? "正在解锁…" : "支付并保存原图"}</button> : <div className="button-row"><Link className="secondary-button" href="/works">去作品库</Link><button className="primary-button" disabled={busy} onClick={share} type="button">生成分享页</button></div>}{sharePath ? <Link className="primary-button" href={sharePath}>打开分享页</Link> : null}</div></section> : null}
+      {stage === "preview" && work ? <section><WorkPreview work={work} /><div className="preview-actions"><div className="price-line"><span>{work.locked ? "历史锁定作品" : "正式版 · 可直接保存"}</span><strong>{work.locked ? (pricing?.cost || "") + " 颗" : "✓"}</strong></div>{work.locked ? <button className="primary-button" disabled={busy} onClick={unlock} type="button">解锁历史作品</button> : <div className="button-row"><Link className="secondary-button" href={"/works/" + work.id}>查看与保存作品</Link><button className="primary-button" disabled={busy} onClick={share} type="button">生成分享页</button></div>}{sharePath ? <Link className="primary-button" href={sharePath}>打开分享页</Link> : null}</div></section> : null}
     </main>
   );
 }

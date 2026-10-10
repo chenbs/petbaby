@@ -6,29 +6,41 @@ import { getDatabase, inTransaction } from "@/server/db/client";
 import { AppError } from "@/server/errors";
 import { AI_NOTICE_TEXT } from "@/server/media/ai-label";
 import { buildPetArtPhotoPrompt, petArtPhotoScenes, PET_ART_PHOTO_SCENE_IDS, PET_ART_PHOTO_TEMPLATE_ID, PET_ART_PHOTO_VERSION, type PetArtPhotoSceneId } from "@/domain/pet-art-photo";
+import { ART_PHOTO_BUNDLE_COST, ART_PHOTO_BUNDLE_ITEM_REFUND, describeCost } from "@/domain/dongan-pricing";
+import { refundSpend, spend } from "@/server/wallet/service";
 
+/*
+ * 写真套餐（2026-10-08 起扣冻干）：10 张 12 颗、20 张 20 颗；单张写真走 AI 单张（2 颗）。
+ * 创建批次的同一事务里扣冻干并直接入队，不再建现金订单。
+ * 历史 24 / 36 张批次（现金订单）只读，靠 order_id 关联 growth_orders。
+ */
 export const ART_PHOTO_BUNDLE_PACKAGES = {
-  ten: { count: 10, amount: 9.9, sku: "pet-art-photo-bundle-10" },
-  // 2026-10 起「全部」= 36 套；历史 24 套订单的 SKU pet-art-photo-bundle-24 仍在支付白名单里
-  all: { count: 36, amount: 26.9, sku: "pet-art-photo-bundle-36" },
+  ten: { count: 10, cost: ART_PHOTO_BUNDLE_COST.ten, label: "10 张一组" },
+  twenty: { count: 20, cost: ART_PHOTO_BUNDLE_COST.twenty, label: "20 张一组" },
 } as const;
+type BundlePackage = keyof typeof ART_PHOTO_BUNDLE_PACKAGES;
 
 const sceneIdSchema = z.enum(PET_ART_PHOTO_SCENE_IDS);
 const createInputSchema = z.object({
-  package: z.enum(["ten", "all"]),
+  package: z.enum(["ten", "twenty"]),
   petId: z.string().uuid(),
   photoId: z.string().uuid(),
   sceneIds: z.array(sceneIdSchema).min(1).max(36),
   idempotencyKey: z.string().min(8).max(120),
 });
 
-function mapBatch(row: SqlRow, items: SqlRow[], order: SqlRow) {
+function mapBatch(row: SqlRow, items: SqlRow[], order?: SqlRow) {
+  const paidWithDongan = Boolean(row.wallet_biz_key);
   return {
     id: String(row.id), userId: String(row.user_id), petId: String(row.pet_id), photoId: String(row.photo_id),
-    package: String(row.package) as "ten" | "all", totalCount: Number(row.total_count), status: String(row.status),
+    package: String(row.package) as BundlePackage | "all", totalCount: Number(row.total_count), status: String(row.status),
+    /** 冻干批次的扣费颗数；历史现金批次为空 */
+    cost: paidWithDongan ? Number((row.package === "twenty" ? ART_PHOTO_BUNDLE_COST.twenty : ART_PHOTO_BUNDLE_COST.ten)) : undefined,
     completedCount: Number(row.completed_count || 0), failedCount: Number(row.failed_count || 0),
+    returnedUnits: paidWithDongan ? Number(row.failed_count || 0) * ART_PHOTO_BUNDLE_ITEM_REFUND : 0,
     createdAt: new Date(String(row.created_at)).toISOString(), updatedAt: new Date(String(row.updated_at)).toISOString(),
-    order: { id: String(order.id), status: String(order.status), amount: Number(order.amount), sku: String(order.sku) },
+    /** 只读：冻干上线前的现金批次。冻干批次没有订单，视为已付 */
+    order: order ? { id: String(order.id), status: String(order.status), amount: Number(order.amount), sku: String(order.sku) } : { id: "", status: "paid", amount: 0, sku: "" },
     // 写真成片都是生成合成内容，界面蒙层文案由服务端下发。
     aiNotice: AI_NOTICE_TEXT,
     items: items.map((item) => ({
@@ -42,8 +54,8 @@ async function readBatch(database: Database, userId: string, batchId: string, lo
   const rows = await database.query(`SELECT * FROM art_photo_batches WHERE id=$1 AND user_id=$2${lock ? " FOR UPDATE" : ""}`, [batchId, userId]);
   if (!rows[0]) throw new AppError("ART_PHOTO_BATCH_NOT_FOUND", "写真套餐不存在", 404);
   const items = await database.query("SELECT * FROM art_photo_batch_items WHERE batch_id=$1 ORDER BY position", [batchId]);
-  const order = await database.query("SELECT id,status,amount,sku FROM growth_orders WHERE id=$1 AND user_id=$2", [rows[0].order_id, userId]);
-  if (!order[0]) throw new AppError("ART_PHOTO_ORDER_NOT_FOUND", "写真套餐订单不存在", 409);
+  const order = rows[0].order_id ? await database.query("SELECT id,status,amount,sku FROM growth_orders WHERE id=$1 AND user_id=$2", [rows[0].order_id, userId]) : [];
+  if (!rows[0].wallet_biz_key && !order[0]) throw new AppError("ART_PHOTO_ORDER_NOT_FOUND", "写真套餐订单不存在", 409);
   return mapBatch(rows[0], items, order[0]);
 }
 
@@ -52,7 +64,7 @@ export async function getArtPhotoBundle(userId: string, batchId: string) {
 }
 
 export async function listArtPhotoBundles(userId: string) {
-  const rows = await (await getDatabase()).query("SELECT b.id,b.package,b.total_count,b.status,b.completed_count,b.failed_count,b.created_at,o.status order_status FROM art_photo_batches b JOIN growth_orders o ON o.id=b.order_id WHERE b.user_id=$1 ORDER BY b.created_at DESC LIMIT 20", [userId]);
+  const rows = await (await getDatabase()).query("SELECT b.id,b.package,b.total_count,b.status,b.completed_count,b.failed_count,b.created_at,CASE WHEN b.wallet_biz_key IS NOT NULL THEN 'paid' ELSE o.status END order_status FROM art_photo_batches b LEFT JOIN growth_orders o ON o.id=b.order_id WHERE b.user_id=$1 AND (b.wallet_biz_key IS NOT NULL OR o.id IS NOT NULL) ORDER BY b.created_at DESC LIMIT 20", [userId]);
   return rows.map((row) => ({ id: String(row.id), package: String(row.package), totalCount: Number(row.total_count), status: String(row.status), completedCount: Number(row.completed_count), failedCount: Number(row.failed_count), orderStatus: String(row.order_status), createdAt: new Date(String(row.created_at)).toISOString() }));
 }
 
@@ -68,13 +80,14 @@ export async function createArtPhotoBundle(userId: string, input: unknown) {
       if (batch.petId !== data.petId || batch.photoId !== data.photoId || batch.package !== data.package || batch.items.map((item) => item.sceneId).join(",") !== sceneIds.join(",")) throw new AppError("ART_PHOTO_REQUEST_CONFLICT", "这次提交编号已用于另一份写真套餐", 409);
       return { batch, order: batch.order };
     }
+    await database.query("SELECT id FROM users WHERE id=$1 FOR UPDATE", [userId]);
     const pets = await database.query("SELECT id FROM pets WHERE id=$1 AND user_id=$2 AND deleted_at IS NULL", [data.petId, userId]);
     const photos = await database.query("SELECT id FROM photos WHERE id=$1 AND pet_id=$2 AND user_id=$3 AND deleted_at IS NULL", [data.photoId, data.petId, userId]);
     if (!pets[0] || !photos[0]) throw new AppError("ART_PHOTO_ASSET_MISMATCH", "宠物或身份照片不可用，请重新选择", 422);
     const batchId = crypto.randomUUID();
-    const orderId = crypto.randomUUID();
     const now = new Date();
-    const inserted = await database.query("INSERT INTO art_photo_batches (id,user_id,pet_id,photo_id,package,total_count,status,order_id,request_key,created_at,updated_at) VALUES ($1,$2,$3,$4,$5,$6,'pending',$7,$8,$9,$9) ON CONFLICT (user_id,request_key) WHERE request_key IS NOT NULL DO NOTHING RETURNING id", [batchId, userId, data.petId, data.photoId, data.package, spec.count, orderId, data.idempotencyKey, now]);
+    const walletBizKey = `spend:bundle:${batchId}`;
+    const inserted = await database.query("INSERT INTO art_photo_batches (id,user_id,pet_id,photo_id,package,total_count,status,order_id,wallet_biz_key,request_key,created_at,updated_at) VALUES ($1,$2,$3,$4,$5,$6,'pending',NULL,$7,$8,$9,$9) ON CONFLICT (user_id,request_key) WHERE request_key IS NOT NULL DO NOTHING RETURNING id", [batchId, userId, data.petId, data.photoId, data.package, spec.count, walletBizKey, data.idempotencyKey, now]);
     if (!inserted[0]) {
       const concurrent = await database.query("SELECT id FROM art_photo_batches WHERE user_id=$1 AND request_key=$2", [userId, data.idempotencyKey]);
       if (!concurrent[0]) throw new AppError("ART_PHOTO_REQUEST_PENDING", "写真套餐创建结果待确认，请稍后重试", 503);
@@ -85,14 +98,23 @@ export async function createArtPhotoBundle(userId: string, input: unknown) {
     for (const [position, sceneId] of sceneIds.entries()) {
       await database.query("INSERT INTO art_photo_batch_items (id,batch_id,scene_id,position,created_at,updated_at) VALUES ($1,$2,$3,$4,$5,$5)", [crypto.randomUUID(), batchId, sceneId, position, now]);
     }
-    await database.query("INSERT INTO growth_orders (id,user_id,kind,resource_id,sku,amount,status,entitlement_snapshot,created_at,updated_at) VALUES ($1,$2,'art_photo_bundle',$3,$4,$5,'pending',$6::jsonb,$7,$7)", [orderId, userId, batchId, spec.sku, spec.amount, JSON.stringify({ package: data.package, sceneIds }), now]);
+    // 先扣冻干再入队：余额不足在这里抛 402，整个事务回滚，批次与任务都不会留下。
+    await spend(userId, { units: spec.cost, bizKey: walletBizKey, title: `写真套餐 · ${spec.label}`, refType: "art_photo_batch", refId: batchId });
+    await enqueueArtPhotoBatch(database, userId, batchId);
     const batch = await readBatch(database, userId, batchId);
     return { batch, order: batch.order };
   });
 }
 
+/** 历史现金批次的支付确认（冻干上线前的订单回调仍可能到达）。 */
 export async function activateArtPhotoBundle(database: Database, userId: string, batchId: string, orderId: string) {
-  const rows = await database.query("SELECT * FROM art_photo_batches WHERE id=$1 AND user_id=$2 AND order_id=$3 FOR UPDATE", [batchId, userId, orderId]);
+  const rows = await database.query("SELECT id FROM art_photo_batches WHERE id=$1 AND user_id=$2 AND order_id=$3", [batchId, userId, orderId]);
+  if (!rows[0]) throw new AppError("ART_PHOTO_BATCH_NOT_FOUND", "写真套餐不存在", 404);
+  await enqueueArtPhotoBatch(database, userId, batchId);
+}
+
+async function enqueueArtPhotoBatch(database: Database, userId: string, batchId: string) {
+  const rows = await database.query("SELECT * FROM art_photo_batches WHERE id=$1 AND user_id=$2 FOR UPDATE", [batchId, userId]);
   if (!rows[0]) throw new AppError("ART_PHOTO_BATCH_NOT_FOUND", "写真套餐不存在", 404);
   if (["queued", "processing", "completed", "partial"].includes(String(rows[0].status))) return;
   if (String(rows[0].status) !== "pending") throw new AppError("ART_PHOTO_BATCH_NOT_PAYABLE", "写真套餐状态不允许入队", 409);
@@ -119,6 +141,9 @@ export async function completeArtPhotoBatchItem(input: { runId: string; status: 
     const batch = await database.query("SELECT status FROM art_photo_batches WHERE id=$1 FOR UPDATE", [item.batch_id]);
     if (!batch[0] || batch[0].status === "cancelled") return;
     await database.query("UPDATE art_photo_batch_items SET status=$2,output_key=$3,preview_key=$4,error_code=$5,locked_at=NULL,updated_at=now() WHERE id=$1", [item.id, input.status, input.outputKey || null, input.previewKey || null, input.errorCode || null]);
+    // 系统自动重试用尽仍失败的这一张，按张退还 1 颗（只回到冻干余额）。
+    const batchRow = (await database.query("SELECT wallet_biz_key FROM art_photo_batches WHERE id=$1", [item.batch_id]))[0];
+    if (input.status === "failed" && batchRow?.wallet_biz_key) await refundSpend(String(batchRow.wallet_biz_key), { units: ART_PHOTO_BUNDLE_ITEM_REFUND, part: `item:${String(item.id)}`, title: "写真套餐 · 一张没有拍成，已退还" });
     const counts = await database.query("SELECT count(*) FILTER (WHERE status='succeeded')::int completed,count(*) FILTER (WHERE status='failed')::int failed,count(*) FILTER (WHERE status IN ('queued','processing'))::int pending FROM art_photo_batch_items WHERE batch_id=$1", [item.batch_id]);
     const count = counts[0];
     const status = Number(count.pending) > 0 ? "processing" : Number(count.failed) > 0 ? (Number(count.completed) > 0 ? "partial" : "failed") : "completed";
@@ -129,7 +154,7 @@ export async function completeArtPhotoBatchItem(input: { runId: string; status: 
       await database.query("INSERT INTO user_notifications (id,user_id,type,title,body,target_path,created_at) VALUES ($1,$2,'art_photo_ready',$3,$4,$5,now())", [
         crypto.randomUUID(), item.user_id,
         failed && !done ? "写真没有拍成" : "写真拍好了",
-        failed ? `${done} 张已完成，${failed} 张没有拍成，可以在结果页重试` : `${done} 张写真都好了，快去看看`,
+        failed ? `${done} 张已完成，${failed} 张没有拍成，已退还 ${describeCost(failed * ART_PHOTO_BUNDLE_ITEM_REFUND)}冻干` : `${done} 张写真都好了，快去看看`,
         `/pages/art-photo-result/art-photo-result?id=${item.batch_id}`,
       ]);
     }

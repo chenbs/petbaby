@@ -1,6 +1,5 @@
 const api = require("../../services/api");
 const config = require("../../config");
-const payment = require("../../services/payment");
 const originals = require("../../services/originals");
 const { manifest } = require("../../services/sample-assets");
 const { themedPage } = require("../../theme/page-mixin");
@@ -44,7 +43,7 @@ themedPage({
   stopPolling() { if (this._pollTimer) clearTimeout(this._pollTimer); this._pollTimer = null; },
   schedulePoll(batch) {
     this.stopPolling();
-    if (!this._visible || !batch || !batch.order || batch.order.status !== "paid" || FINAL_STATUS.indexOf(batch.status) >= 0) return;
+    if (!this._visible || !batch || FINAL_STATUS.indexOf(batch.status) >= 0) return;
     this._pollTimer = setTimeout(() => this.load(), 4000);
   },
   async load() {
@@ -53,7 +52,7 @@ themedPage({
     try {
       const batch = await api.request("/api/art-photo-bundles/" + encodeURIComponent(this.batchId));
       if (!this._visible || version !== this._loadVersion) return;
-      const paid = Boolean(batch.order && batch.order.status === "paid" && batch.status !== "cancelled");
+      const paid = batch.status !== "cancelled";
       const done = Number(batch.completedCount || 0) + Number(batch.failedCount || 0);
       const items = batch.items.map((item) => Object.assign({}, item, {
         number: item.position + 1,
@@ -89,14 +88,6 @@ themedPage({
     };
     try { await Promise.all([worker(), worker(), worker()]); }
     finally { this._downloadingPreviews = false; }
-  },
-  retryPayment() {
-    const batch = this.data.batch;
-    if (!batch || !batch.order || batch.order.status !== "pending" || this.data.busy) return;
-    this.setData({ busy: true, error: "", message: "" });
-    payment.pay("growth", batch.order.id).then(() => this.load())
-      .catch((error) => this.setData({ error: error.message || "付款未完成，可稍后继续" }))
-      .finally(() => this.setData({ busy: false }));
   },
   preview(event) {
     const item = this.data.items.find((entry) => entry.id === event.currentTarget.dataset.id);

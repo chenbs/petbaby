@@ -104,10 +104,12 @@
         <view>{{filmPreview.petName}} · {{filmPreview.year}} · {{filmPreview.durationSeconds}} 秒</view>
         <text class="small">本次采用以下 {{filmPreview.photos.length}} 张，按显示顺序制作。</text>
         <view wx:for="{{filmPreview.photos}}" wx:key="id" class="node"><image wx:if="{{item.url}}" class="node-photo" src="{{item.url}}" mode="aspectFill" data-kind="film" data-id="{{item.id}}" data-src="{{item.url}}" binderror="onPhotoError" /><view wx:else class="node-photo node-photo-blank">照片暂不可用</view><text>{{item.date}}</text></view>
-        <text>解锁价格 ¥{{filmPricing.amount}} · {{filmPricing.label}}</text>
+        <text>{{filmPricing.cost}} 颗冻干 · 开始生成</text>
         <t-button loading="{{filmBusy}}" bindtap="confirmFilm">用这些照片制作</t-button>
       </view>
       <text wx:if="{{filmHint}}" class="hint">{{filmHint}}</text>
     </t-card>
   </view>
 </view>
+
+<t-wallet-sheet id="wallet-sheet" visible="{{walletSheet.visible}}" required="{{walletSheet.required}}" balance="{{walletSheet.balance}}" shortfall="{{walletSheet.shortfall}}" bind:close="onWalletSheetClose" bind:paid="onWalletPaid"></t-wallet-sheet>

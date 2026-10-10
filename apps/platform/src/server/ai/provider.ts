@@ -2,7 +2,7 @@ import "server-only";
 
 import { ConcurrencyQueue, normalizeConcurrency } from "@/server/ai/concurrency-queue";
 import { AppError } from "@/server/errors";
-import { isRealProduction } from "@/server/runtime-mode";
+import { isStaging, isTestHarness } from "@/server/runtime-mode";
 
 export type ImageOutput = { body: Uint8Array; contentType: string };
 
@@ -273,10 +273,11 @@ const localProvider = new LocalImageProvider();
  * lingsuan 优先是因为它是当前实际接入的服务；通用 HTTP 分支保留给尚未迁移的备用供应商，
  * 不能直接删 —— 线上可能正靠它兜底。
  *
- * 两者都没配时按环境分岔：开发/测试机回落 LocalImageProvider（无凭据也能跑通链路），
- * **正式生产回落到 UnconfiguredImageProvider 直接失败** —— 色块不是可交付的产物。
+ * 两者都没配时：本地开发与正式生产一样回落到 UnconfiguredImageProvider 直接失败 ——
+ * 色块不是可交付的产物，本地静默出色块会让「本地能跑」不再代表生产能跑。
+ * 只有 staging 测试机与自动化测试夹具回落 LocalImageProvider（Playwright 在 webServer 环境里清空凭据）。
  */
-const fallbackProvider: ImageProvider = isRealProduction() ? new UnconfiguredImageProvider() : localProvider;
+const fallbackProvider: ImageProvider = isStaging() || isTestHarness() ? localProvider : new UnconfiguredImageProvider();
 const lingsuanPrimary = process.env.LINGSUAN_IMAGE_BASE_URL && process.env.LINGSUAN_IMAGE_API_KEY
   ? new LingsuanImageProvider(process.env.LINGSUAN_IMAGE_BASE_URL, process.env.LINGSUAN_IMAGE_API_KEY, "lingsuan", process.env.LINGSUAN_IMAGE_MODEL || "gpt-image-2")
   : null;
@@ -293,10 +294,14 @@ const secondaryProvider = process.env.AI_IMAGE_SECONDARY_ENDPOINT && process.env
   ? new HttpImageProvider(process.env.AI_IMAGE_SECONDARY_ENDPOINT, process.env.AI_IMAGE_SECONDARY_API_KEY, "secondary", process.env.AI_IMAGE_SECONDARY_MODEL || "provider-v1")
   : (lingsuanPrimary && process.env.AI_IMAGE_ENDPOINT && process.env.AI_IMAGE_API_KEY
     ? new HttpImageProvider(process.env.AI_IMAGE_ENDPOINT, process.env.AI_IMAGE_API_KEY, "secondary", process.env.AI_IMAGE_MODEL || "provider-v1")
-    : fallbackProvider);
+    : null);
 
 export const imageProvider = primaryProvider;
-export const imageProviders = [primaryProvider, secondaryProvider].filter((item, index, list) => list.findIndex((candidate) => candidate.name === item.name) === index);
+/*
+ * 没配备用通道就只有主通道（2026-10-09）。以前这里会补上占位/未配置实现：
+ * 开发态主通道一失败就静默交付色块，生产态则用「制作服务暂不可用」盖掉主通道的真实错误。
+ */
+export const imageProviders = [primaryProvider, secondaryProvider].filter((item): item is ImageProvider => Boolean(item)).filter((item, index, list) => list.findIndex((candidate) => candidate.name === item.name) === index);
 
 export async function generateWithFailover(prompt: string, count: number, isOpen: (provider: string) => Promise<boolean>, onFailure: (provider: string, error: unknown) => Promise<void>, references?: ImageReferenceInput, options?: ImageGenerationOptions) {
   let lastError: unknown;

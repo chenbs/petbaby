@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>新用户无宠物档案 · 方案 A / B 示意</title>
+<style>
+  /* 橘子汽水（theme/themes/pet.js）：L2 token 取值；阴影基色暖褐 60,35,20 */
+  :root {
+    --bg: #FFFAF3; --surface: #FFF1E0; --card: #FFFFFF;
+    --ink: #1F2540; --ink-2: #5B6178; --ink-3: #8A8FA3;
+    --accent: #B7401A; --btn: #FF9A52; --btn-2: #FFF1E0;
+    --border: #F3E3D2; --divider: #F6ECE0; --disabled: #D9CFC4;
+    --hero: linear-gradient(150deg, #FFB273 0%, #FFD0A1 50%, #FFE8D2 100%);
+    --sh-card: 0 2px 8px -2px rgba(60,35,20,.10), 0 16px 32px -18px rgba(60,35,20,.28);
+    --sh-phone: 0 4px 12px rgba(60,35,20,.08), 0 40px 80px -40px rgba(60,35,20,.35);
+    --sh-btn: 0 8px 16px -8px rgba(255,154,82,.75);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #F4ECE2; color: var(--ink); padding: 48px 40px 80px; }
+  h1 { font-size: 30px; font-weight: 800; letter-spacing: -.02em; }
+  .lead { color: var(--ink-2); margin-top: 8px; font-size: 15px; line-height: 1.7; max-width: 920px; }
+  .now { margin-top: 20px; background: var(--card); border-radius: 16px; padding: 18px 22px; box-shadow: var(--sh-card); max-width: 920px; font-size: 14px; line-height: 1.8; color: var(--ink-2); }
+  .now b { color: var(--ink); }
+  .now code { font-size: 12px; background: var(--surface); padding: 1px 6px; border-radius: 6px; color: var(--accent); }
+
+  .plan { margin-top: 56px; }
+  .plan-head { display: flex; align-items: baseline; gap: 14px; }
+  .plan-tag { font-size: 13px; font-weight: 800; color: var(--accent); letter-spacing: .12em; }
+  .plan-title { font-size: 24px; font-weight: 800; letter-spacing: -.01em; }
+  .plan-desc { color: var(--ink-2); font-size: 14px; margin-top: 6px; }
+  .stage { display: flex; gap: 32px; margin-top: 24px; flex-wrap: wrap; align-items: flex-start; }
+  .cap { font-size: 12px; color: var(--ink-2); text-align: center; margin-top: 12px; letter-spacing: .04em; }
+
+  /* 手机框 */
+  .phone { width: 375px; height: 760px; background: var(--bg); border-radius: 44px; border: 10px solid #2B2A30; box-shadow: var(--sh-phone); overflow: hidden; position: relative; display: flex; flex-direction: column; }
+  .phone.sm { width: 300px; height: 608px; border-width: 8px; border-radius: 38px; }
+  .status { height: 34px; flex: none; display: flex; justify-content: space-between; align-items: center; padding: 0 22px; font-size: 11px; font-weight: 700; }
+  .nav { height: 40px; flex: none; display: flex; align-items: center; padding: 0 16px; gap: 8px; font-weight: 800; font-size: 16px; letter-spacing: -.01em; }
+  .nav .paw { width: 18px; height: 18px; border-radius: 50%; background: var(--btn); }
+  .nav .pill { margin-left: auto; width: 76px; height: 26px; border-radius: 13px; border: 1px solid var(--border); background: var(--card); }
+  .body { flex: 1; overflow: hidden; padding: 4px 16px 0; }
+  .tabbar { height: 64px; flex: none; background: var(--card); border-top: 1px solid var(--divider); display: flex; justify-content: space-around; align-items: center; font-size: 10px; color: var(--ink-3); }
+  .tabbar .t { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .tabbar .t i { width: 20px; height: 20px; border-radius: 6px; background: var(--disabled); display: block; }
+  .tabbar .t.on { color: var(--ink); font-weight: 700; }
+  .tabbar .t.on i { background: var(--btn); }
+  .tabbar .plus { width: 44px; height: 44px; border-radius: 50%; background: var(--ink); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-top: -18px; box-shadow: var(--sh-card); }
+
+  /* 通用 */
+  .btn { display: flex; align-items: center; justify-content: center; height: 46px; border-radius: 999px; background: var(--btn); color: var(--ink); font-weight: 800; font-size: 15px; box-shadow: var(--sh-btn); }
+  .btn.ghost { background: transparent; box-shadow: none; color: var(--ink-2); font-weight: 600; font-size: 13px; height: 32px; }
+  .eyebrow { font-size: 10px; font-weight: 700; letter-spacing: .16em; color: var(--accent); }
+  .sec-title { font-size: 16px; font-weight: 800; letter-spacing: -.01em; display: flex; justify-content: space-between; align-items: baseline; margin: 20px 0 10px; }
+  .sec-title small { font-size: 11px; font-weight: 500; color: var(--ink-3); }
+  .ph { border-radius: 16px; position: relative; overflow: hidden; }
+  .ph::after { content: ""; position: absolute; width: 46%; aspect-ratio: 1; border-radius: 50%; background: rgba(255,255,255,.55); left: 27%; top: 30%; }
+  .ph.c1 { background: linear-gradient(160deg, #F7C9A0, #E9A77B); }
+  .ph.c2 { background: linear-gradient(160deg, #CFE0F2, #9DB8D8); }
+  .ph.c3 { background: linear-gradient(160deg, #E8DCC8, #C9B597); }
+  .ph.c4 { background: linear-gradient(160deg, #F2D7DA, #D9A9B0); }
+  .lock { position: absolute; left: 8px; bottom: 8px; z-index: 2; font-size: 10px; font-weight: 700; color: var(--ink); background: rgba(255,250,243,.92); padding: 3px 8px; border-radius: 999px; }
+  .note { position: absolute; z-index: 5; background: var(--ink); color: #fff; font-size: 11px; line-height: 1.5; padding: 6px 10px; border-radius: 10px; max-width: 150px; box-shadow: var(--sh-card); }
+
+  /* 方案 A */
+  .a-hero { background: var(--hero); border-radius: 28px; padding: 22px 20px 20px; box-shadow: var(--sh-card); position: relative; overflow: hidden; }
+  .a-hero::before { content: ""; position: absolute; right: -40px; top: -40px; width: 160px; height: 160px; border-radius: 50%; background: rgba(255,255,255,.35); }
+  .a-hero h2 { font-size: 26px; font-weight: 900; letter-spacing: -.03em; line-height: 1.2; margin-top: 8px; position: relative; }
+  .a-hero p { font-size: 13px; color: #3B3F57; margin-top: 8px; line-height: 1.6; position: relative; }
+  .a-steps { display: flex; gap: 6px; margin: 16px 0; position: relative; }
+  .a-steps span { flex: 1; background: rgba(255,250,243,.7); border-radius: 12px; padding: 8px 6px; font-size: 11px; text-align: center; color: var(--ink-2); }
+  .a-steps b { display: block; font-size: 15px; color: var(--ink); font-weight: 800; }
+  .a-gift { font-size: 11px; color: #3B3F57; text-align: center; margin-top: 10px; position: relative; }
+  .a-gift b { color: var(--accent); }
+  .a-human { background: var(--card); border-radius: 24px; padding: 14px; box-shadow: var(--sh-card); display: flex; gap: 12px; align-items: center; }
+  .a-human .ph { width: 64px; height: 84px; flex: none; }
+  .a-human h3 { font-size: 15px; font-weight: 800; }
+  .a-human p { font-size: 11px; color: var(--ink-2); margin-top: 4px; line-height: 1.5; }
+  .a-row { display: flex; gap: 10px; }
+  .a-row .ph { flex: 1; height: 118px; }
+
+  /* 方案 B */
+  .b-progress { display: flex; gap: 6px; padding: 8px 20px 0; }
+  .b-progress i { flex: 1; height: 4px; border-radius: 2px; background: var(--border); display: block; }
+  .b-progress i.on { background: var(--btn); }
+  .b-body { flex: 1; padding: 28px 20px 20px; display: flex; flex-direction: column; }
+  .b-body h2 { font-size: 24px; font-weight: 900; letter-spacing: -.03em; line-height: 1.25; }
+  .b-body .sub { font-size: 12px; color: var(--ink-2); margin-top: 8px; line-height: 1.6; }
+  .b-choice { margin-top: 24px; display: flex; flex-direction: column; gap: 10px; }
+  .b-choice div { background: var(--card); border: 2px solid transparent; border-radius: 20px; padding: 16px; display: flex; align-items: center; gap: 12px; box-shadow: var(--sh-card); font-weight: 800; font-size: 16px; }
+  .b-choice div span { width: 40px; height: 40px; border-radius: 14px; background: var(--surface); flex: none; }
+  .b-choice div.on { border-color: var(--btn); background: #FFF6EC; }
+  .b-choice div.on span { background: var(--btn); }
+  .b-choice div small { margin-left: auto; font-size: 11px; color: var(--ink-3); font-weight: 500; }
+  .b-field { margin-top: 18px; }
+  .b-field label { font-size: 11px; color: var(--ink-2); font-weight: 600; }
+  .b-field .in { margin-top: 6px; height: 44px; border-radius: 14px; background: var(--card); border: 1px solid var(--border); display: flex; align-items: center; padding: 0 14px; font-size: 15px; font-weight: 700; }
+  .b-field .in.ph-text { color: var(--ink-3); font-weight: 500; font-size: 13px; }
+  .b-upload { margin-top: 18px; height: 120px; border-radius: 20px; border: 2px dashed var(--border); background: var(--surface); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; font-size: 12px; color: var(--ink-2); }
+  .b-upload b { width: 34px; height: 34px; border-radius: 50%; background: var(--card); box-shadow: var(--sh-card); display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--accent); }
+  .spacer { flex: 1; }
+  .b-skip { text-align: center; font-size: 12px; color: var(--ink-3); margin-top: 10px; }
+  .b-card { background: var(--card); border-radius: 24px; padding: 16px; box-shadow: var(--sh-card); margin-top: 22px; }
+  .b-card .top { display: flex; gap: 12px; align-items: center; }
+  .b-card .av { width: 54px; height: 54px; border-radius: 50%; background: linear-gradient(160deg, #F7C9A0, #E9A77B); border: 3px solid #FFD0A1; flex: none; }
+  .b-card .nm { font-size: 18px; font-weight: 900; letter-spacing: -.02em; }
+  .b-card .dy { font-size: 12px; color: var(--ink-2); margin-top: 2px; }
+  .b-card .dy b { font-size: 20px; color: var(--accent); font-weight: 900; }
+  .b-card .care { margin-top: 12px; background: var(--surface); border-radius: 14px; padding: 10px 12px; font-size: 11px; color: var(--ink-2); display: flex; justify-content: space-between; }
+  .b-card .care b { color: var(--ink); }
+  .b-gift { margin-top: 14px; border-radius: 20px; background: var(--hero); padding: 14px 16px; display: flex; align-items: center; gap: 12px; }
+  .b-gift .cube { width: 34px; height: 34px; border-radius: 10px; background: #FFF6EC; box-shadow: var(--sh-card); flex: none; }
+  .b-gift p { font-size: 12px; color: #3B3F57; line-height: 1.5; }
+  .b-gift p b { color: var(--ink); font-size: 14px; }
+  .b-unlock { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+  .b-unlock div { display: flex; justify-content: space-between; font-size: 12px; padding: 10px 2px; border-bottom: 1px solid var(--divider); }
+  .b-unlock div b { color: var(--accent); font-weight: 700; }
+  .b-mini-home { display: flex; flex-direction: column; }
+  .b-empty-card { background: var(--card); border-radius: 22px; padding: 12px; box-shadow: var(--sh-card); display: flex; gap: 10px; align-items: center; }
+  .b-empty-card .ph { width: 52px; height: 52px; border-radius: 14px; flex: none; }
+  .b-empty-card .tx { flex: 1; }
+  .b-empty-card .tx b { font-size: 13px; display: block; }
+  .b-empty-card .tx span { font-size: 10px; color: var(--ink-2); }
+  .b-empty-card .mini { font-size: 11px; font-weight: 800; padding: 6px 12px; border-radius: 999px; background: var(--btn); }
+
+  /* 优缺点 */
+  .pc { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 28px; max-width: 1100px; }
+  .pc > div { background: var(--card); border-radius: 18px; padding: 18px 22px; box-shadow: var(--sh-card); }
+  .pc h4 { font-size: 13px; letter-spacing: .1em; margin-bottom: 10px; }
+  .pc .pro h4 { color: #23794A; }
+  .pc .con h4 { color: #C0352B; }
+  .pc li { font-size: 13px; line-height: 1.7; color: var(--ink-2); margin-left: 18px; margin-bottom: 4px; }
+  .pc li b { color: var(--ink); }
+</style>
+</head>
+<body>
+
+<h1>新用户还没有宠物档案：两套方案</h1>
+<p class="lead">配色取默认主题「橘子汽水」（theme/themes/pet.js），浅橘 #FF9A52 只做按钮与大色块，文字强调用焦橘 #B7401A，阴影暖褐。图片位全部用色块占位。建档最少字段以服务端 <code>petInputSchema</code> 为准：名字（必填）+ 物种（猫咪 / 狗狗 / 其他），性别、生日 / 到家日、生命阶段都有默认值或选填。第一只宠物建档后到账 3 颗冻干见面礼（7 天有效）。</p>
+
+<div class="now">
+  <b>现状（代码实测）</b><br>
+  首页无宠物时不是空页：名片位换成一张小卡「从第一张照片开始 / 收好一张我的照片，这里会出现我的名片和陪伴天数」+ 按钮「收好照片」，下方「如果我是人」「麻麻精选」「写真馆」「挑一个玩法」全部照常展示。
+  照顾条、今日一格、陪伴天数只在有宠物时出现。按钮「收好照片」先进照片页，照片页提示「先为我建一份档案」，再跳建档弹层，<b>建档要绕两跳</b>；
+  点玩法样片能直接进制作页，到了「用谁的照片」才看到「先建一个档案 ›」，提交时报「请选择模板、宠物和 1 张宠物身份照」，<b>转化在最后一步才断</b>。
+</div>
+
+<!-- ===================== 方案 A ===================== -->
+<section class="plan">
+  <div class="plan-head"><span class="plan-tag">方案 A</span><span class="plan-title">首页本身换成「空态首页」</span></div>
+  <p class="plan-desc">不加新流程。无宠物时把首页第一块换成建档主卡，玩法照常可看，但标注「建档后可用」，点进去先拉起建档弹层再回到原玩法。</p>
+  <div class="stage">
+    <div>
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>100%</span></div>
+        <div class="nav"><span class="paw"></span>麻麻抱我<span class="pill"></span></div>
+        <div class="body">
+          <div class="a-hero">
+            <div class="eyebrow">第一步</div>
+            <h2>先给它建一份<br>小档案</h2>
+            <p>只要名字和猫狗，半分钟就好。之后的写真、成长记录和陪伴天数都会挂在它名下。</p>
+            <div class="a-steps">
+              <span><b>名字</b>必填</span>
+              <span><b>猫 / 狗</b>必选</span>
+              <span><b>生日</b>选填</span>
+            </div>
+            <div class="btn">添加我的宠物</div>
+            <div class="a-gift">建好就送 <b>3 颗冻干</b>，7 天内可用</div>
+          </div>
+
+          <div class="sec-title">先看看能做什么<small>建档后可用</small></div>
+          <div class="a-human">
+            <div class="ph c1"></div>
+            <div><h3>如果我是人</h3><p>40 款造型，用一张正脸照看看它变成人的样子</p></div>
+          </div>
+          <div class="sec-title">写真馆<small>单宠 · 人宠同框 ›</small></div>
+          <div class="a-row">
+            <div class="ph c2"><span class="lock">建档后可用</span></div>
+            <div class="ph c4"><span class="lock">建档后可用</span></div>
+            <div class="ph c3"><span class="lock">建档后可用</span></div>
+          </div>
+        </div>
+        <div class="tabbar">
+          <div class="t on"><i></i>首页</div><div class="t"><i></i>创作</div>
+          <div class="plus">+</div>
+          <div class="t"><i></i>作品</div><div class="t"><i></i>我的</div>
+        </div>
+        <div class="note" style="right:-4px; top:128px;">主卡替换原名片位，主按钮直接拉起建档弹层，不再绕照片页</div>
+        <div class="note" style="left:8px; bottom:150px;">样片可浏览；点击先建档，建完自动回到这款玩法</div>
+      </div>
+      <div class="cap">A · 无宠物时的首页（唯一新画面）</div>
+    </div>
+  </div>
+  <div class="pc">
+    <div class="pro"><h4>优点</h4><ul>
+      <li><b>改动最小</b>：只换首页第一块与玩法点击守卫，复用现有 pets 建档弹层和见面礼弹窗。</li>
+      <li><b>不打断浏览</b>：先逛后建档的用户不受阻拦，分享卡进来的人能马上看到样片。</li>
+      <li><b>建档从两跳变一跳</b>，并把见面礼前置成建档理由。</li>
+      <li>无宠物与有宠物共用一份首页 DOM，四套主题只需补一个空态卡样式。</li>
+    </ul></div>
+    <div class="con"><h4>缺点</h4><ul>
+      <li><b>建档仍是可选项</b>，用户可能一直往下刷，到点样片时才被弹层拦住。</li>
+      <li>「建档后可用」角标多了显得像锁门，和精致基调有冲突，需要控制出现次数。</li>
+      <li>建档只填名字和物种，不带照片，名片点亮后仍是首字母头像，第一印象偏空。</li>
+    </ul></div>
+  </div>
+</section>
+
+<!-- ===================== 方案 B ===================== -->
+<section class="plan">
+  <div class="plan-head"><span class="plan-tag">方案 B</span><span class="plan-title">首次进入的三步轻引导</span></div>
+  <p class="plan-desc">首次打开且无宠物时铺满一个三步引导：选物种 → 名字 + 一张照片 → 完成并领见面礼，回到首页时名片、陪伴天数、照顾条一次点亮。首页本身只保留现有的小卡作为跳过后的兜底。</p>
+  <div class="stage">
+    <div>
+      <div class="phone sm">
+        <div class="status"><span>9:41</span><span>100%</span></div>
+        <div class="b-progress"><i class="on"></i><i></i><i></i></div>
+        <div class="b-body">
+          <div class="eyebrow">1 / 3</div>
+          <h2>你家的是？</h2>
+          <p class="sub">选好后，后面的玩法会按它来推荐。</p>
+          <div class="b-choice">
+            <div class="on"><span></span>猫咪</div>
+            <div><span></span>狗狗</div>
+            <div><span></span>其他<small>兔子、仓鼠…</small></div>
+          </div>
+          <div class="spacer"></div>
+          <div class="btn">下一步</div>
+          <div class="b-skip">先逛逛，稍后再建</div>
+        </div>
+      </div>
+      <div class="cap">B1 · 选物种（一次点选）</div>
+    </div>
+
+    <div>
+      <div class="phone sm">
+        <div class="status"><span>9:41</span><span>100%</span></div>
+        <div class="b-progress"><i class="on"></i><i class="on"></i><i></i></div>
+        <div class="b-body">
+          <div class="eyebrow">2 / 3</div>
+          <h2>它叫什么名字？</h2>
+          <div class="b-field"><label>名字</label><div class="in">橘子</div></div>
+          <div class="b-field"><label>生日或到家日（选填）</label><div class="in ph-text">不记得也没关系</div></div>
+          <div class="b-upload"><b>+</b>放一张它的照片<span style="font-size:10px;color:#8A8FA3">做头像，也是第一张收藏</span></div>
+          <div class="spacer"></div>
+          <div class="btn">建好档案</div>
+          <div class="b-skip">照片稍后再传</div>
+        </div>
+      </div>
+      <div class="cap">B2 · 名字 + 照片（照片可跳过）</div>
+    </div>
+
+    <div>
+      <div class="phone sm">
+        <div class="status"><span>9:41</span><span>100%</span></div>
+        <div class="b-progress"><i class="on"></i><i class="on"></i><i class="on"></i></div>
+        <div class="b-body">
+          <div class="eyebrow">3 / 3</div>
+          <h2>橘子的档案<br>收好了</h2>
+          <div class="b-card">
+            <div class="top"><div class="av"></div><div><div class="nm">橘子</div><div class="dy">陪伴第 <b>1</b> 天 · 1 张照片</div></div></div>
+            <div class="care"><span>今天吃得怎么样？</span><b>记一笔</b></div>
+          </div>
+          <div class="b-gift"><div class="cube"></div><p><b>3 颗冻干已到账</b><br>7 天内可用，够试一款写真</p></div>
+          <div class="spacer"></div>
+          <div class="btn">用橘子的照片试一款</div>
+          <div class="b-skip">回首页看看</div>
+        </div>
+      </div>
+      <div class="cap">B3 · 完成：名片预览 + 见面礼</div>
+    </div>
+
+    <div>
+      <div class="phone sm">
+        <div class="status"><span>9:41</span><span>100%</span></div>
+        <div class="nav"><span class="paw"></span>麻麻抱我<span class="pill"></span></div>
+        <div class="body b-mini-home">
+          <div class="b-empty-card">
+            <div class="ph c1"></div>
+            <div class="tx"><b>从第一张照片开始</b><span>建好档案，这里会出现名片和陪伴天数</span></div>
+            <div class="mini">建档</div>
+          </div>
+          <div class="sec-title">如果我是人<small>40 款 ›</small></div>
+          <div class="a-row"><div class="ph c1" style="height:130px"></div><div class="ph c4" style="height:130px"></div><div class="ph c2" style="height:130px"></div></div>
+          <div class="sec-title">麻麻精选<small>每周更新</small></div>
+          <div class="ph c3" style="height:120px"></div>
+        </div>
+        <div class="tabbar">
+          <div class="t on"><i></i>首页</div><div class="t"><i></i>创作</div>
+          <div class="plus">+</div>
+          <div class="t"><i></i>作品</div><div class="t"><i></i>我的</div>
+        </div>
+        <div class="note" style="right:6px; top:116px;">跳过引导时的兜底：沿用现有小卡，按钮改为直达建档</div>
+      </div>
+      <div class="cap">B0 · 跳过后的首页（基本不变）</div>
+    </div>
+  </div>
+  <div class="pc">
+    <div class="pro"><h4>优点</h4><ul>
+      <li><b>建档率高</b>：一进来就在做一件事，三步走完名片、陪伴天数、照顾条一次点亮。</li>
+      <li><b>顺手拿到第一张照片</b>，头像和后续玩法的身份照都有了，首屏不再是首字母头像。</li>
+      <li>完成页直接把见面礼接到一款玩法，建档到首次消费的路径最短。</li>
+      <li>首页几乎不改，有宠物用户零影响。</li>
+    </ul></div>
+    <div class="con"><h4>缺点</h4><ul>
+      <li><b>挡在内容前面</b>：从分享卡或样片进来、只想看一眼的人会被拦，跳出率可能上升。</li>
+      <li>新增一个引导页面 / 分包，要处理「只出现一次」、跳过、登录态失效、上传失败等状态。</li>
+      <li>引导里传照片需要复用照片页的上传会话与幂等回执，不能另写一套，开发量明显大于 A。</li>
+      <li>微信审核对首次强制流程较敏感，「先逛逛」必须常驻且不能弱化。</li>
+    </ul></div>
+  </div>
+</section>
+
+</body>
+</html>

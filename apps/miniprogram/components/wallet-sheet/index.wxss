@@ -1,0 +1,422 @@
+@import "../shared.wxss";
+
+/*
+ * 零食柜面板。颜色全部来自主题 token 与皮肤层（--skin-deal* / --skin-fc* / --skin-tier-on*，
+ * 由 scripts/build-skin-css.js 写进 app.wxss 的 .skin-<id>{}），不写死任何色值。
+ * 切角、等宽数字、衬线标题沿用既有皮肤变量，四套主题各自成立。
+ */
+.ws-mask {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 60;
+  display: flex;
+  align-items: flex-end;
+  background: var(--mask);
+  animation: ws-fade var(--dur-base) var(--ease-out);
+}
+
+@keyframes ws-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.ws-sheet {
+  position: relative;
+  width: 100%;
+  max-height: 88vh;
+  box-sizing: border-box;
+  overflow-y: auto;
+  padding: var(--space-2) var(--space-4) calc(var(--space-5) + env(safe-area-inset-bottom));
+  border-radius: var(--card-radius) var(--card-radius) 0 0;
+  background: var(--background);
+  box-shadow: var(--shadow-float);
+  color: var(--text-primary);
+  animation: ws-up var(--dur-slow) var(--ease-out);
+}
+
+@keyframes ws-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.ws-grab {
+  width: 72rpx;
+  height: 8rpx;
+  margin: 0 auto var(--space-3);
+  border-radius: var(--radius-pill);
+  background: var(--text-secondary);
+  opacity: .35;
+}
+
+.ws-close {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  display: flex;
+  width: 56rpx;
+  height: 56rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-size: var(--body-size);
+}
+
+.ws-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-right: var(--space-7);
+}
+
+.ws-head-icon {
+  width: 80rpx;
+  height: 80rpx;
+  flex: none;
+}
+
+.ws-head-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--space-0);
+}
+
+.ws-title {
+  font-family: var(--skin-title-font);
+  font-size: var(--font-h3);
+  font-weight: var(--fw-black);
+}
+
+.ws-sub {
+  color: var(--text-secondary);
+  font-size: var(--small-size);
+}
+
+.ws-num {
+  color: var(--primary);
+  font-family: var(--skin-num-font);
+  font-weight: var(--fw-black);
+}
+
+.ws-loading {
+  padding: var(--space-6) 0;
+  color: var(--text-secondary);
+  font-size: var(--small-size);
+  text-align: center;
+}
+
+/* 「多送」角标：每档都标，是这块面板的主角 */
+.ws-deal {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-pill);
+  background: var(--skin-deal);
+  color: var(--skin-deal-text);
+  font-size: var(--eyebrow-size);
+  font-weight: var(--fw-black);
+  line-height: 38rpx;
+  white-space: nowrap;
+}
+
+.ws-badge {
+  position: absolute;
+  top: -18rpx;
+  left: var(--space-2);
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-pill);
+  background: var(--skin-sticker-bg);
+  color: var(--skin-sticker-text);
+  font-size: var(--eyebrow-size);
+  font-weight: var(--fw-black);
+  line-height: 34rpx;
+  white-space: nowrap;
+}
+
+/* 首充横幅 */
+.ws-first {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-3) var(--space-3) var(--space-2);
+  border: 4rpx solid var(--skin-tier-on-border);
+  border-radius: var(--card-radius-variant);
+  background: var(--skin-fc-bg);
+  color: var(--skin-fc-text);
+  clip-path: var(--skin-clip);
+}
+
+.ws-ribbon {
+  position: absolute;
+  top: -20rpx;
+  left: var(--space-3);
+}
+
+.ws-pile {
+  position: relative;
+  width: 124rpx;
+  height: 104rpx;
+  flex: none;
+}
+
+.ws-pile-a,
+.ws-pile-b {
+  position: absolute;
+  width: 68rpx;
+  height: 68rpx;
+}
+
+.ws-pile-a { top: 20rpx; left: 0; }
+.ws-pile-b { top: 4rpx; left: 44rpx; transform: rotate(18deg); }
+
+.ws-x2 {
+  position: absolute;
+  right: -12rpx;
+  bottom: -8rpx;
+  display: flex;
+  width: 60rpx;
+  height: 60rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  background: var(--skin-deal);
+  color: var(--skin-deal-text);
+  font-family: var(--skin-num-font);
+  font-size: var(--small-size);
+  font-weight: var(--fw-black);
+}
+
+.ws-first-mid {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+}
+
+.ws-first-n {
+  font-family: var(--skin-num-font);
+  font-size: var(--font-display);
+  font-weight: var(--fw-black);
+  line-height: 1.05;
+}
+
+.ws-unit {
+  margin-left: var(--space-0);
+  font-size: var(--small-size);
+  font-weight: var(--fw-bold);
+}
+
+.ws-first-right {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-0);
+}
+
+/* 本金 + 送：拆开写，送的部分用强调色 */
+.ws-split {
+  color: var(--text-secondary);
+  font-family: var(--skin-num-font);
+  font-size: var(--eyebrow-size);
+  line-height: 1.35;
+}
+
+.ws-split-fc { color: var(--skin-fc-sub); }
+
+.ws-gift {
+  color: var(--skin-deal-ink);
+  font-weight: var(--fw-black);
+}
+
+.ws-gift-fc { color: var(--skin-fc-ink); }
+
+/* 加送进度条：本金一段、送的一段条纹，越往后条纹越长 */
+.ws-bar {
+  display: flex;
+  height: 12rpx;
+  margin-top: var(--space-1);
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--divider);
+}
+
+.ws-bar-base { height: 100%; background: var(--skin-deal-base); }
+.ws-bar-gift { height: 100%; background: repeating-linear-gradient(135deg, var(--skin-deal) 0 6rpx, var(--skin-deal-2) 6rpx 12rpx); }
+
+/* 档位宫格 */
+.ws-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  row-gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+.ws-tier {
+  position: relative;
+  width: calc(50% - 10rpx);
+  box-sizing: border-box;
+  padding: var(--space-3) var(--space-2) var(--space-2);
+  border: 4rpx solid var(--border);
+  border-radius: var(--card-radius-variant);
+  background: var(--card-background);
+  clip-path: var(--skin-clip);
+}
+
+.ws-on {
+  border-color: var(--skin-tier-on-border);
+  background: var(--skin-tier-on-bg);
+}
+
+.ws-first.ws-on { background: var(--skin-fc-bg); }
+
+.ws-short { opacity: .62; }
+
+.ws-deal-corner {
+  position: absolute;
+  top: -20rpx;
+  right: var(--space-2);
+}
+
+.ws-tier-top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.ws-tier-icon {
+  width: 52rpx;
+  height: 52rpx;
+  flex: none;
+}
+
+.ws-tier-n {
+  font-family: var(--skin-num-font);
+  font-size: var(--font-h2);
+  font-weight: var(--fw-black);
+  line-height: 1.1;
+}
+
+.ws-eq {
+  display: block;
+  margin-top: var(--space-1);
+  color: var(--text-secondary);
+  font-size: var(--eyebrow-size);
+}
+
+.ws-tier-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--space-2);
+}
+
+.ws-price {
+  min-width: 108rpx;
+  padding: var(--space-0) var(--space-2);
+  border-radius: var(--button-radius);
+  background: var(--surface);
+  color: var(--text-primary);
+  font-family: var(--skin-num-font);
+  font-size: var(--small-size);
+  font-weight: var(--fw-black);
+  text-align: center;
+}
+
+.ws-price-on {
+  background: var(--button-primary);
+  color: var(--button-primary-text);
+  box-shadow: var(--skin-btn-shadow);
+  clip-path: var(--skin-btn-clip);
+}
+
+.ws-first .ws-price {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--body-size);
+}
+
+.ws-off {
+  color: var(--skin-deal-ink);
+  font-size: var(--eyebrow-size);
+  font-weight: var(--fw-black);
+}
+
+.ws-off-fc { color: var(--skin-fc-ink); }
+
+.ws-plain {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border: 2rpx solid var(--border);
+  border-radius: var(--card-radius-variant);
+  color: var(--text-secondary);
+  font-size: var(--small-size);
+}
+
+.ws-plain.ws-on { border-color: var(--skin-tier-on-border); }
+
+.ws-strong {
+  color: var(--text-primary);
+  font-family: var(--skin-num-font);
+  font-weight: var(--fw-black);
+}
+
+.ws-pay {
+  position: relative;
+  margin-top: var(--space-5);
+}
+
+.ws-bubble {
+  position: absolute;
+  top: -24rpx;
+  right: var(--space-4);
+  z-index: 2;
+}
+
+.ws-btn {
+  display: flex;
+  min-height: 100rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--button-radius);
+  background: var(--button-primary);
+  color: var(--button-primary-text);
+  box-shadow: var(--skin-btn-shadow);
+  clip-path: var(--skin-btn-clip);
+  font-size: var(--body-size);
+  font-weight: var(--fw-black);
+}
+
+.ws-btn-hover { transform: var(--skin-press); }
+.ws-btn-off { opacity: .6; }
+
+.ws-error {
+  display: block;
+  margin-top: var(--space-2);
+  color: var(--error);
+  font-size: var(--small-size);
+  text-align: center;
+}
+
+.ws-fine {
+  display: block;
+  margin-top: var(--space-1);
+  color: var(--text-secondary);
+  font-size: var(--eyebrow-size);
+  text-align: center;
+}
+
+.ws-link {
+  color: var(--text-primary);
+  text-decoration: underline;
+}

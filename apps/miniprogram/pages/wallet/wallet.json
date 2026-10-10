@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "我的冻干",
+  "usingComponents": {
+    "t-button": "../../components/button/index",
+    "t-notice": "../../components/notice/index",
+    "t-skeleton": "../../components/skeleton/index",
+    "t-wallet-sheet": "../../components/wallet-sheet/index"
+  }
+}

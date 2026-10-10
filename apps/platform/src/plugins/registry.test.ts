@@ -35,13 +35,13 @@ describe("玩法样例图与枚举对齐", () => {
       const bytes = readFileSync(file);
       const hash = createHash("sha256").update(bytes).digest("hex");
       const version = stem.match(/-v\d+$/)?.[0];
-      const batch = version === "-v13" ? "v13" : version === "-v12" ? "v12" : version === "-v11" ? "v11" : version === "-v10" ? "v10" : version === "-v9" ? "v9" : version === "-v8" ? "v8" : version === "-v7" ? "v7" : version === "-v6" ? "v6" : version === "-v5" ? "v5" : version === "-v4" && !["snow-cabin", "lakeside-sunset", "spring-picnic"].includes(id) ? "v4" : "v3";
-      const metadataName = batch === "v5" || batch === "v6" || batch === "v7" || batch === "v8" || batch === "v9" || batch === "v10" || batch === "v11" || batch === "v12" || batch === "v13" ? `scene-${id}${version}.json` : `scenes-${id}${version}.json`;
+      const batch = version === "-v14" ? "v14" : version === "-v13" ? "v13" : version === "-v12" ? "v12" : version === "-v11" ? "v11" : version === "-v10" ? "v10" : version === "-v9" ? "v9" : version === "-v8" ? "v8" : version === "-v7" ? "v7" : version === "-v6" ? "v6" : version === "-v5" ? "v5" : version === "-v4" && !["snow-cabin", "lakeside-sunset", "spring-picnic"].includes(id) ? "v4" : "v3";
+      const metadataName = batch === "v5" || batch === "v6" || batch === "v7" || batch === "v8" || batch === "v9" || batch === "v10" || batch === "v11" || batch === "v12" || batch === "v13" || batch === "v14" ? `scene-${id}${version}.json` : `scenes-${id}${version}.json`;
       const metadata = JSON.parse(readFileSync(path.resolve(process.cwd(), `../../tools/imagegen/out/miniprogram-${batch}`, metadataName), "utf8"));
       expect(hash.slice(0, 12)).toBe(match![2]);
       expect(metadata.sha256).toBe(hash);
       if (metadata.samplePet) {
-        expect(["golden", "poodle", "british", "shorthair", "corgi", "calico", "sphynx", "afghan", "greyhound", "persian", "siamese", "tuxedo", "cream", "blacklab", "husky", "shiba", "blackcat"]).toContain(metadata.samplePet);
+        expect(["golden", "poodle", "british", "shorthair", "corgi", "calico", "sphynx", "afghan", "greyhound", "persian", "siamese", "tuxedo", "cream", "blacklab", "husky", "shiba", "blackcat", "schnauzer", "whiteschnauzer", "samoyed", "teddy", "merle"]).toContain(metadata.samplePet);
         expect(metadata.reference).not.toContain("ragdoll");
       } else {
         expect(metadata.reference).toBe(id === "snow-cabin"

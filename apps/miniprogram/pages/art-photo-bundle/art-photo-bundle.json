@@ -4,6 +4,8 @@
     "t-button": "../../components/button/index",
     "t-notice": "../../components/notice/index",
     "t-skeleton": "../../components/skeleton/index",
-    "t-photo-grid": "../../components/photo-grid/index"
+    "t-photo-grid": "../../components/photo-grid/index",
+    "t-empty": "../../components/empty/index",
+    "t-wallet-sheet": "../../components/wallet-sheet/index"
   }
 }

@@ -1,0 +1,13 @@
+{
+  "id": "tennis-champion",
+  "title": "风扇吹毛",
+  "samplePet": "cream",
+  "prompt": "Edit Image 1, a finished professional pet studio photograph. Keep it exactly as it is: the same pet with the same identity, pose, expression and fur, the same seamless backdrop colour, the same main prop, light direction, camera angle, framing and colour grading. Add only these new set decorations, placed naturally on the floor or at the sides and behind the pet so they never cover its face or body: two pale ribbon streamers tied to the fan grille fluttering in the wind, and a tall glass of iced lemonade with a lemon slice and a striped paper straw on the floor. The new pieces must belong to the same theme as the existing props, sit at a believable scale in the same light with soft contact shadows, and leave clear empty backdrop around the pet: tidy, airy and uncluttered, not crowded. Avoid: changing or moving the pet, a different backdrop colour, extra animals, people or hands, more decorations than listed, clutter, text, letters, numbers, logos or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/scenes/scene-tennis-champion-v13.jpg",
+  "referenceSha256": "654b9be172075c643031dec7eedbf67b7b113baefae8cfd1ed7f6cdf51185f3e",
+  "output": "tools/imagegen/out/scenes/scene-tennis-champion-v14.jpg",
+  "sha256": "169502ad95dde7203864aeea6f96454b679a134b6a81b74bf8b0704b67ac5786",
+  "review": "pending-visual-review"
+}

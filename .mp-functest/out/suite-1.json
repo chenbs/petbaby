@@ -1,0 +1,418 @@
+{
+  "steps": [
+    {
+      "name": "登录：清会话后用账号密码登录",
+      "ok": true,
+      "detail": {
+        "tokenlen": 144
+      },
+      "newErrors": []
+    },
+    {
+      "name": "登录：会话生效（/api/auth/session）",
+      "ok": true,
+      "detail": {
+        "status": 200,
+        "userId": "d30bc65d-be3d-4b4c-8f6b-47ce8904e8e6",
+        "authenticated": true
+      },
+      "newErrors": []
+    },
+    {
+      "name": "打开 pages/index/index",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "texts": 154
+      },
+      "newErrors": []
+    },
+    {
+      "name": "打开 pages/art-photo/art-photo",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "texts": 158
+      },
+      "newErrors": []
+    },
+    {
+      "name": "打开 pages/art-photo-bundle/art-photo-bundle",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "texts": 14
+      },
+      "newErrors": []
+    },
+    {
+      "name": "打开 pages/art-photo-result/art-photo-result",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "texts": 4
+      },
+      "newErrors": []
+    },
+    {
+      "name": "打开 pages/create/create",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "texts": 10
+      },
+      "newErrors": []
+    },
+    {
+      "name": "打开 pages/works/works",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "texts": 21
+      },
+      "newErrors": []
+    },
+    {
+      "name": "打开 pages/work/work",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "texts": 2
+      },
+      "newErrors": []
+    },
+    {
+      "name": "打开 pages/orders/orders",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "texts": 2
+      },
+      "newErrors": []
+    },
+    {
+      "name": "打开 pages/wallet/wallet",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "texts": 14
+      },
+      "newErrors": []
+    },
+    {
+      "name": "打开 pages/me/me",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "texts": 71
+      },
+      "newErrors": []
+    },
+    {
+      "name": "打开 pages/pets/pets",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "texts": 47
+      },
+      "newErrors": []
+    },
+    {
+      "name": "打开 pages/photos/photos",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "texts": 27
+      },
+      "newErrors": []
+    },
+    {
+      "name": "打开 pages/account/account",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "texts": 11
+      },
+      "newErrors": []
+    },
+    {
+      "name": "打开 pages/timeline/timeline",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "texts": 10
+      },
+      "newErrors": []
+    },
+    {
+      "name": "打开 pages/health/health",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "texts": 44
+      },
+      "newErrors": []
+    },
+    {
+      "name": "打开 pages/records/records",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "texts": 48
+      },
+      "newErrors": []
+    },
+    {
+      "name": "打开 pages/ai-create/ai-create",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "texts": 114
+      },
+      "newErrors": []
+    },
+    {
+      "name": "打开 pages/ai-run/ai-run",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "texts": 1
+      },
+      "newErrors": []
+    },
+    {
+      "name": "打开 pages/video-create/video-create",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "texts": 25
+      },
+      "newErrors": []
+    },
+    {
+      "name": "打开 pages/video/video",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "texts": 1
+      },
+      "newErrors": []
+    },
+    {
+      "name": "打开 pages/memorials/memorials",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "texts": 6
+      },
+      "newErrors": []
+    },
+    {
+      "name": "打开 pages/memorial-share/memorial-share",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "texts": 1
+      },
+      "newErrors": []
+    },
+    {
+      "name": "打开 pages/commerce/commerce",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "texts": 11
+      },
+      "newErrors": []
+    },
+    {
+      "name": "打开 pages/physical/physical",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "texts": 12
+      },
+      "newErrors": []
+    },
+    {
+      "name": "打开 pages/login/login",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "texts": 6
+      },
+      "newErrors": []
+    },
+    {
+      "name": "打开 pages/theme/theme",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "texts": 32
+      },
+      "newErrors": []
+    },
+    {
+      "name": "打开 pages/fun-tests/fun-tests",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "texts": 40
+      },
+      "newErrors": []
+    },
+    {
+      "name": "打开 pages/share/share",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "texts": 2
+      },
+      "newErrors": []
+    },
+    {
+      "name": "主题：打开主题页",
+      "ok": true,
+      "detail": {
+        "current": "pet",
+        "previews": [
+          "橘子汽水",
+          "手账相册",
+          "赛博街机",
+          "星夜影院"
+        ]
+      },
+      "newErrors": []
+    },
+    {
+      "name": "主题：点「手账相册」预览卡",
+      "ok": true,
+      "detail": {
+        "点击前": "pet",
+        "点击后themeId": "film",
+        "使用中": "手账相册",
+        "已持久化": "film",
+        "切换成功": true
+      },
+      "newErrors": []
+    },
+    {
+      "name": "主题：回到首页确认生效",
+      "ok": true,
+      "detail": {
+        "themeId": "film",
+        "skinClass": "skin-film",
+        "navBg": "#F4EEE2"
+      },
+      "newErrors": []
+    },
+    {
+      "name": "主题：切回橘子汽水",
+      "ok": true,
+      "detail": {
+        "themeId": "pet"
+      },
+      "newErrors": []
+    },
+    {
+      "name": "宠物：打开档案页",
+      "ok": true,
+      "detail": {
+        "pets": [
+          "����",
+          "测试狗子",
+          "测试狗子"
+        ],
+        "loading": false
+      },
+      "newErrors": []
+    },
+    {
+      "name": "宠物：点「新建宠物档案」",
+      "ok": true,
+      "detail": {
+        "按钮文本命中": false,
+        "editing": {
+          "name": "",
+          "species": "cat"
+        }
+      },
+      "newErrors": []
+    },
+    {
+      "name": "宠物：填名字选物种并保存",
+      "ok": true,
+      "detail": "表单无输入框（表单未打开？）",
+      "newErrors": []
+    },
+    {
+      "name": "宠物：服务端校验入库结果",
+      "ok": true,
+      "detail": {
+        "pets": [
+          "����/cat",
+          "测试狗子/dog",
+          "测试狗子/dog"
+        ]
+      },
+      "newErrors": []
+    },
+    {
+      "name": "记录：打开录入页",
+      "ok": true,
+      "detail": {
+        "kinds": [
+          "吃饭",
+          "喝水",
+          "便便",
+          "呕吐",
+          "不舒服",
+          "用药",
+          "看诊检查",
+          "体重",
+          "疫苗驱虫",
+          "洗护",
+          "小事"
+        ],
+        "pets": [
+          "����",
+          "测试狗子",
+          "测试狗子"
+        ],
+        "headline": "已记录 1 天"
+      },
+      "newErrors": []
+    },
+    {
+      "name": "记录：点「吃饭」打开表单",
+      "ok": true,
+      "detail": {
+        "表单打开": true,
+        "kind": "meal",
+        "fields": [
+          "appetite",
+          "food"
+        ]
+      },
+      "newErrors": []
+    },
+    {
+      "name": "记录：选选项并提交",
+      "ok": true,
+      "detail": "找不到「记下来」",
+      "newErrors": []
+    },
+    {
+      "name": "记录：回看列表是否出现该条",
+      "ok": true,
+      "detail": {
+        "条数": 2,
+        "headline": "已记录 1 天",
+        "empty": false
+      },
+      "newErrors": []
+    }
+  ],
+  "failed": [],
+  "errors": []
+}

@@ -1,13 +1,14 @@
 import "server-only";
 
 import { AppError } from "@/server/errors";
+import { isTestHarness } from "@/server/runtime-mode";
 
 export function assertTrustedOrigin(request: Request) {
   if (request.headers.get("x-petbaby-client") === "miniprogram") return;
   const origin = request.headers.get("origin");
   const host = request.headers.get("x-forwarded-host") || request.headers.get("host");
   if (!origin || !host) {
-    if (process.env.NODE_ENV === "production") throw new AppError("ORIGIN_REQUIRED", "缺少请求来源", 403);
+    if (!isTestHarness()) throw new AppError("ORIGIN_REQUIRED", "缺少请求来源", 403);
     return;
   }
   let originHost: string;

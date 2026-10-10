@@ -1,3 +1,5 @@
+const wallet = require("../../services/wallet");
+const { openPetCreator, remind } = require("../../services/pet-onboarding");
 const { displayMediaTree } = require("../../services/photo-files");
 const api = require("../../services/api");
 const { themedPage } = require("../../theme/page-mixin");
@@ -59,7 +61,7 @@ themedPage({
       .then((photos) => { if (request !== this._photoRequest || id !== this.data.petId) return; const selected = this._initialPhotoIds || this.data.selected; this._initialPhotoIds = null; if (selected.some((value) => !photos.some((photo) => photo.id === value))) { this.setData({ photos, selected: [], loading: false }); throw new Error("部分照片已不可用，请重新确认素材"); } this.setData({ photos, selected, loading: false }); this.syncDuration(); })
       .catch((error) => { if (request === this._photoRequest) this.setData({ error: error.message, loading: false }); });
     api.request("/api/pets/" + id + "/pricing?pluginId=pl-19").then((price) => {
-      if (request === this._photoRequest) this.setData({ pricingText: "预览免费，高清解锁 ¥" + price.amount + " · " + price.label });
+      if (request === this._photoRequest) this.setData({ pricingText: wallet.costText(price.cost) + " · 生成" });
     }).catch(() => { if (request === this._photoRequest) this.setData({ pricingText: "暂时无法读取报价，请稍后重试" }); });
   },
   onShow() { if (this.data.petId && !this.data.busy) this.loadPhotos(this.data.petId); },
@@ -111,10 +113,25 @@ themedPage({
   inputTitle(event) { this.setData({ title: event.detail.value }); },
   inputCaption(event) { this.setData({ caption: event.detail.value }); },
   chooseBgm(event) { this.setData({ bgm: event.currentTarget.dataset.id }); },
-  openPhotos() { wx.navigateTo({ url: "/pages/photos/photos?petId=" + this.data.petId }); },
+  /** 没有档案时直接打开新建抽屉；建成后回到这里并选中新宠物。 */
+  openPets() { if (!this.data.busy) openPetCreator((petId) => this.useNewPet(petId)); },
+  useNewPet(petId) {
+    return api.request("/api/pets").then(displayMediaTree).then((pets) => {
+      const pet = pets.find((item) => item.id === petId);
+      if (!pet) return;
+      this._initialPhotoIds = null;
+      this.setData({ pets, petId: pet.id, petText: pet.name, selected: [], photos: [], error: "", pricingText: "正在读取报价" });
+      this.loadPhotos(pet.id);
+    }).catch((error) => this.setData({ error: error.message }));
+  },
+  openPhotos() { if (!this.data.petId) return this.openPets(); wx.navigateTo({ url: "/pages/photos/photos?petId=" + this.data.petId }); },
   create() {
     if (this.data.busy || this.data.loading) return;
-    if (!this.data.petId || !this.data.selected.length) return this.setData({ error: "请先选择照片" });
+    // 缺什么就带用户去补，按钮不再置灰没反应
+    if (!this.data.pets.length) { remind("先给它建一份档案"); return this.openPets(); }
+    if (!this.data.petId) return remind("先选一只宠物");
+    if (!this.data.photos.length) { remind("先上传几张照片"); return this.openPhotos(); }
+    if (!this.data.selected.length) return remind("先选几张照片");
     const limit = maxPhotosFor(this.data.durationSeconds);
     if (this.data.selected.length > limit) return this.setData({ error: this.data.durationSeconds + " 秒的片子最多放 " + limit + " 张照片，取消几张再创建。" });
     this.setData({ busy: true, error: "" });

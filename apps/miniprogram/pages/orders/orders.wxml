@@ -12,7 +12,7 @@
     wx:elif="{{!orders.length}}"
     icon="order"
     title="还没有订单"
-    description="解锁作品高清版后，订单会出现在这里。"
+    description="充值、实体商品及历史现金订单会出现在这里。"
     action-text="去看看玩法"
     anim="{{animType}}"
     decor="{{decor}}"
@@ -24,7 +24,7 @@
       <view class="row">
         <view class="order-main">
           <view class="order-amount">{{item.amountText}}</view>
-          <text class="small">{{item.sku}}</text>
+          <text class="small">{{item.skuText}}</text>
           <text wx:if="{{item.refundedText}}" class="small">{{item.refundedText}}</text>
         </view>
         <t-tag tone="{{item.statusTone}}" text="{{item.statusText}}"></t-tag>

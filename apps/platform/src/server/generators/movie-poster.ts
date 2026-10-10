@@ -5,6 +5,7 @@ import type { GeneratorInput, GeneratorOutput } from "@/server/generators/types"
 import { imageProvider } from "@/server/ai/provider";
 import { AppError } from "@/server/errors";
 import { applyAiMetadata } from "@/server/media/ai-label";
+import { isTestHarness } from "@/server/runtime-mode";
 
 const assetBase = "https://babykitty-static-one-1252454114.cos.ap-shanghai.myqcloud.com/samples/miniprogram-effects/v3/movie-master";
 
@@ -61,10 +62,7 @@ export async function generateMoviePoster(input: GeneratorInput): Promise<Genera
   const composition = typeof input.task.options.composition === "string" ? input.task.options.composition : "portrait";
   const review = typeof input.task.options.review === "string" ? input.task.options.review.trim() : "";
 
-  const testProvider = imageProvider.name === "local" && (
-    process.env.NODE_ENV === "test" ||
-    (process.env.NODE_ENV === "development" && process.env.E2E_MOCK_IMAGE_PROVIDER === "1")
-  );
+  const testProvider = imageProvider.name === "local" && isTestHarness();
   if (!testProvider && (imageProvider.name === "local" || imageProvider.name === "unconfigured")) {
     throw new AppError("AI_PROVIDER_CONFIG_PENDING", "电影海报生成服务尚未配置", 503);
   }

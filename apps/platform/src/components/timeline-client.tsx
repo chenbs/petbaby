@@ -82,7 +82,7 @@ export function TimelineClient({ initialPetId }: { initialPetId?: string }) {
   const requestVersion = useRef(0);
   const filmVersion = useRef(0);
   const session = useRef("");
-  const [filmPreview, setFilmPreview] = useState<{ petId: string; petName: string; year: number; durationSeconds: number; photos: Array<{ id: string; url: string; date: string }>; amount: number; label: string }>();
+  const [filmPreview, setFilmPreview] = useState<{ petId: string; petName: string; year: number; durationSeconds: number; photos: Array<{ id: string; url: string; date: string }>; cost: number; label: string }>();
 
   useEffect(() => {
     apiFetch<Pet[]>("/api/pets").then((items) => {
@@ -139,7 +139,7 @@ export function TimelineClient({ initialPetId }: { initialPetId?: string }) {
     try {
       const [selection, pricing] = await Promise.all([
         apiFetch<NonNullable<typeof filmPreview>>(`/api/annual-films?petId=${petId}&year=${filmYear}&durationSeconds=${filmDuration}`),
-        apiFetch<{ amount: number; label: string }>(`/api/pets/${petId}/pricing?pluginId=pl-19`),
+        apiFetch<{ cost: number; label: string }>(`/api/pets/${petId}/pricing?pluginId=pl-19`),
       ]);
       if (activePet.current !== petId || version !== filmVersion.current) return;
       if (!selection.photos.length) throw new Error("这一年还没有可用照片，请先收好照片或校正日期");
@@ -210,7 +210,7 @@ export function TimelineClient({ initialPetId }: { initialPetId?: string }) {
           <div className="field"><label htmlFor="film-duration">时长</label><select id="film-duration" disabled={busy} value={filmDuration} onChange={(event) => { filmVersion.current++; setFilmPreview(undefined); setFilmDuration(Number(event.target.value)); }}>{[10, 20, 30].map((seconds) => <option key={seconds} value={seconds}>{seconds} 秒</option>)}</select></div>
         </div>
         <button className="primary-button" disabled={busy} onClick={createFilm} type="button">确认年度素材与报价</button>
-        {filmPreview ? <div><p>{filmPreview.petName} · {filmPreview.year} · {filmPreview.durationSeconds} 秒；采用以下 {filmPreview.photos.length} 张照片。</p><div className="photo-thumbs">{filmPreview.photos.map((photo) => <div key={photo.id}><Image src={photo.url} alt={photo.date} width={96} height={120} unoptimized /><small>{photo.date}</small></div>)}</div><p>解锁 ¥{filmPreview.amount} · {filmPreview.label}</p><button className="primary-button" disabled={busy} onClick={confirmFilm} type="button">用这些照片制作</button></div> : null}
+        {filmPreview ? <div><p>{filmPreview.petName} · {filmPreview.year} · {filmPreview.durationSeconds} 秒；采用以下 {filmPreview.photos.length} 张照片。</p><div className="photo-thumbs">{filmPreview.photos.map((photo) => <div key={photo.id}><Image src={photo.url} alt={photo.date} width={96} height={120} unoptimized /><small>{photo.date}</small></div>)}</div><p>制作 {filmPreview.cost} 颗 · {filmPreview.label}</p><button className="primary-button" disabled={busy} onClick={confirmFilm} type="button">用这些照片制作</button></div> : null}
       </section> : null}
     </> : null}
 

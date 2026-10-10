@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const developmentEval = process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : "";
 
 const nextConfig: NextConfig = {
+  distDir: process.env.NEXT_DIST_DIR || ".next",
   poweredByHeader: false,
   serverExternalPackages: ["@electric-sql/pglite"],
   async headers() {

@@ -123,3 +123,21 @@
 ></t-dialog>
 
 <t-action-sheet visible="{{moreVisible}}" title="{{morePetName}}" actions="{{moreActions}}" bindselect="chooseMore" bindclose="closeMore"></t-action-sheet>
+
+<t-gift-dialog visible="{{giftVisible}}" units="{{giftUnits}}" action-text="{{giftActionText}}" action-url="{{giftActionUrl}}" bind:close="closeGift"></t-gift-dialog>
+
+<!--
+  建档后的头像一步（2026-10 新用户引导）：可跳过。照片收进这只宠物的照片库，再设为头像。
+  首页名片和档案列表都读这张头像。
+-->
+<t-popup visible="{{!!avatarStep}}" title="给{{avatarStep.name}}挑一张头像" anim="{{animType}}" bindclose="skipAvatar">
+  <view class="stack avatar-step">
+    <view class="avatar avatar-blank" aria-hidden="true">🐾</view>
+    <text class="small avatar-step-copy">选一张看得清脸的照片，它会成为首页名片上的头像，也会收进{{avatarStep.name}}的照片库。</text>
+    <t-notice wx:if="{{avatarError}}" type="error" message="{{avatarError}}"></t-notice>
+  </view>
+  <view slot="footer" class="foot">
+    <t-button type="ghost" block anim="{{animType}}" disabled="{{avatarBusy}}" bindtap="skipAvatar">先跳过</t-button>
+    <t-button type="primary" block anim="{{animType}}" disabled="{{avatarBusy}}" bindtap="uploadAvatar">{{avatarBusy ? '正在上传' : '上传一张照片'}}</t-button>
+  </view>
+</t-popup>

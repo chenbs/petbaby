@@ -24,7 +24,8 @@
 /* ---------- 创作 Tab（2026-09）---------- */
 .create-segments-bar { position: sticky; top: 0; z-index: 15; margin: calc(0rpx - var(--page-padding)) calc(0rpx - var(--page-padding)) 0; padding: var(--page-padding) var(--page-padding) var(--space-2); background: var(--background); }
 .create-segments { display: flex; padding: var(--space-1); border-radius: var(--radius-pill); background: var(--surface); }
-.create-segment { flex: 1; padding: var(--space-2) 0; border-radius: var(--radius-pill); color: var(--text-secondary); font-size: var(--body-size); text-align: center; }
+/* 四段（2026-10-09）：「如果我是人」五个字要在 1/4 宽里放得下，不换行 */
+.create-segment { flex: 1; min-width: 0; padding: var(--space-2) 0; border-radius: var(--radius-pill); color: var(--text-secondary); font-size: var(--body-size); text-align: center; white-space: nowrap; }
 .create-segment-on { background: var(--card-background); color: var(--text-primary); font-weight: var(--fw-bold); box-shadow: var(--shadow-press); }
 .art-package { position: relative; }
 .art-package-badge { position: absolute; top: calc(0rpx - var(--space-3)); left: 50%; padding: var(--space-0) var(--space-2); border-radius: var(--radius-pill); background: var(--button-primary); color: var(--button-primary-text); font-size: var(--eyebrow-size); white-space: nowrap; transform: translateX(-50%); }
@@ -51,9 +52,17 @@
 .skin-brand .play-card-fun .art-name { color: var(--text-primary); }
 .skin-brand .play-card-fun .small { color: var(--primary); }
 
-/* 写真馆二级切换：宠物写真 / 人宠写真（2026-10） */
-.art-modes { margin-top: var(--space-3); }
-.art-mode-count { margin-left: var(--space-1); font-family: var(--skin-num-font, inherit); font-size: var(--eyebrow-size); opacity: .7; }
+/* 线下影棚对比的三条优势：三列等宽，标题加粗、说明用 small */
+.art-perks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-2); margin-top: var(--space-4); }
+.art-perk { display: grid; align-content: start; gap: var(--space-1); padding: var(--space-2); border-radius: var(--radius-sm); background: var(--surface); }
+.art-perk-title { color: var(--text-primary); font-size: var(--small-size); font-weight: var(--fw-bold); }
+/* 标题下的价格行：颗数单独一行，不混进介绍文案 */
+.art-heading-price { display: block; margin-top: var(--space-2); color: var(--primary); }
+/* 套餐挑选条：提示 + 清空 / 帮我挑满（2026-10-09，取代默认预选） */
+.art-pick-bar { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-3); }
+.art-pick-tip { flex: 1; min-width: 0; }
+.art-pick-action { padding: var(--space-1) 0; }
+.art-selection-on { font-family: var(--skin-num-font, inherit); font-weight: var(--fw-bold); }
 /* 人宠写真母版是 9:16 竖图，两人一宠同框，按原比例完整展示，不裁掉任何一张脸 */
 .duo-image { display: block; width: 100%; height: auto; aspect-ratio: var(--ratio-portrait); border-radius: var(--radius-image-thumb); background: var(--surface); }
 .duo-badge { position: absolute; left: var(--space-2); bottom: var(--space-2); padding: var(--space-0) var(--space-2); border-radius: var(--radius-pill); background: var(--mask); color: var(--on-image-primary); font-size: var(--eyebrow-size); }

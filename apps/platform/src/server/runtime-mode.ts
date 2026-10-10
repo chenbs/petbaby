@@ -21,3 +21,15 @@ export function isStaging() {
 export function isRealProduction() {
   return runtimeMode() === "production";
 }
+
+/**
+ * 自动化测试夹具：Vitest（`NODE_ENV=test`）与 Playwright（`PETBABY_TEST_HARNESS=1`）。
+ *
+ * 2026-10-09 起本地开发与生产功能一致：没有 demo 用户兜底、后台按白名单、
+ * 缺凭据的外部依赖明确失败。只有测试夹具还能用占位实现顶替外部依赖、
+ * 跳过来源校验、默认开放后台 —— 否则测试无法自足运行。生产构建里该开关无效。
+ */
+export function isTestHarness() {
+  if (process.env.NODE_ENV === "production") return false;
+  return process.env.NODE_ENV === "test" || process.env.PETBABY_TEST_HARNESS === "1";
+}

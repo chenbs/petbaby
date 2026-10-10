@@ -5,6 +5,7 @@ import { promisify } from "node:util";
 
 import { getDatabase } from "@/server/db/client";
 import { AppError } from "@/server/errors";
+import { isRealProduction, isTestHarness } from "@/server/runtime-mode";
 
 const scrypt = promisify(scryptCallback) as (password: string, salt: Buffer, keylen: number, options: { N: number; r: number; p: number }) => Promise<Buffer>;
 
@@ -12,11 +13,15 @@ const KEY_LENGTH = 64;
 const COST = { N: 16384, r: 8, p: 1 };
 const ACCOUNT_PATTERN = /^[a-zA-Z][a-zA-Z0-9._-]{2,31}$/;
 
-/** 账号密码登录默认只在非生产开启；测试机需显式设置 `PASSWORD_AUTH_ENABLED=true`。 */
+/**
+ * 账号密码登录默认关闭（自动化测试夹具除外）；本地与测试机需显式设置 `PASSWORD_AUTH_ENABLED=true`。
+ * 正式生产一律关闭、开关无效：生产只有微信一种账号（2026-10-09）。
+ */
 export function passwordAuthEnabled() {
+  if (isRealProduction()) return false;
   const flag = process.env.PASSWORD_AUTH_ENABLED?.trim().toLowerCase();
   if (flag) return flag === "1" || flag === "true" || flag === "on";
-  return process.env.NODE_ENV !== "production";
+  return isTestHarness();
 }
 
 export function assertPasswordAuthEnabled() {

@@ -12,7 +12,7 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
     const { id, itemId } = await context.params;
     z.string().uuid().parse(id);
     z.string().uuid().parse(itemId);
-    const rows = await (await getDatabase()).query("SELECT i.output_key,i.preview_key,i.status,b.status batch_status,o.status order_status FROM art_photo_batch_items i JOIN art_photo_batches b ON b.id=i.batch_id JOIN growth_orders o ON o.id=b.order_id WHERE i.id=$1 AND i.batch_id=$2 AND b.user_id=$3", [itemId, id, userId]);
+    const rows = await (await getDatabase()).query("SELECT i.output_key,i.preview_key,i.status,b.status batch_status,CASE WHEN b.wallet_biz_key IS NOT NULL THEN 'paid' ELSE o.status END order_status FROM art_photo_batch_items i JOIN art_photo_batches b ON b.id=i.batch_id LEFT JOIN growth_orders o ON o.id=b.order_id WHERE i.id=$1 AND i.batch_id=$2 AND b.user_id=$3", [itemId, id, userId]);
     if (!rows[0]) throw new AppError("ART_PHOTO_ITEM_NOT_FOUND", "写真成片不存在", 404);
     if (rows[0].order_status !== "paid" || rows[0].batch_status === "cancelled") throw new AppError("ART_PHOTO_NOT_PAID", "写真套餐尚未付款或已退款", 403);
     const preview = new URL(request.url).searchParams.get("preview") === "1";

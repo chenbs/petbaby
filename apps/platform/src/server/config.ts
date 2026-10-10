@@ -19,7 +19,8 @@ export function inspectConfiguration(): { environment: string; mode: RuntimeMode
     { key: "ADDRESS_ENCRYPTION_KEY", required: hosted, configured: Boolean(process.env.ADDRESS_ENCRYPTION_KEY), hint: "实体订单地址加密密钥" },
     { key: "ADMIN_USER_IDS", required: production, configured: Boolean(process.env.ADMIN_USER_IDS), hint: "管理员 UUID 白名单，未配置时后台返回 404" },
     { key: "WECHAT_APP_ID", required: production, configured: Boolean(process.env.WECHAT_APP_ID), hint: "微信小程序 AppID" },
-    { key: "WECHAT_APP_SECRET", required: production, configured: Boolean(process.env.WECHAT_APP_SECRET), hint: "仅写入密钥管理" },
+    { key: "WECHAT_APP_SECRET", required: production, configured: Boolean(process.env.WECHAT_APP_SECRET), hint: "仅写入密钥管理；小程序还必须绑定微信开放平台，否则拿不到 unionid、无法登录" },
+    { key: "WECHAT_SESSION_ENCRYPTION_KEY", required: production, configured: Buffer.from(process.env.WECHAT_SESSION_ENCRYPTION_KEY?.trim() || "", "base64").length === 32, hint: "32 字节 Base64；缺失时微信登录整体失败" },
     { key: "PAYMENT_PROVIDER", required: production, configured: Boolean(process.env.PAYMENT_PROVIDER === "wechat"), hint: "生产固定为 wechat" },
     /*
      * AI 图片凭据。正式生产必需 —— provider 在缺凭据时会以

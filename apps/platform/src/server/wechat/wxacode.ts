@@ -7,8 +7,8 @@ import { getWechatAccessToken } from "@/server/wechat/access-token";
 /*
  * 分享海报上的小程序码。
  *
- * 生产环境走 wxa/getwxacodeunlimit：scene 最长 32 个可见字符，页面必须是已发布版本里的页面。
- * 本地或未配置 AppSecret 时退回一张普通二维码（指向站内分享地址），保证海报能画出来。
+ * 配齐 WECHAT_APP_ID / WECHAT_APP_SECRET 时（本地与生产同口径）走 wxa/getwxacodeunlimit：scene 最长 32 个可见字符，页面必须是已发布版本里的页面。
+ * 未配置 AppSecret 时退回一张普通二维码（指向站内分享地址），保证海报能画出来。
  * 这个回退码在微信里扫不进小程序，只用于开发联调。
  */
 const cache = new Map<string, { body: Buffer; contentType: string; expiresAt: number }>();
@@ -18,7 +18,7 @@ export async function createShareCode(page: "pages/fun-tests/fun-tests" | "pages
   const hit = cache.get(key);
   if (hit && hit.expiresAt > Date.now()) return hit;
   let result: { body: Buffer; contentType: string } | undefined;
-  if (process.env.NODE_ENV === "production" && process.env.WECHAT_APP_ID && process.env.WECHAT_APP_SECRET) {
+  if (process.env.WECHAT_APP_ID && process.env.WECHAT_APP_SECRET) {
     try {
       const token = await getWechatAccessToken();
       const response = await fetch(`https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=${encodeURIComponent(token)}`, {

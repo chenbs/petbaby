@@ -28,36 +28,36 @@ scenes/scene-night-playful-v3.jpg
 scenes/scene-seaside-breeze-v3.jpg
 scenes/scene-library-whisper-v3.jpg
 scenes/scene-autumn-leaves-v3.jpg
-scenes/scene-snow-cabin-v4.jpg
+scenes/scene-snow-cabin-v14.jpg
 scenes/scene-cafe-afternoon-v3.jpg
-scenes/scene-lakeside-sunset-v4.jpg
-scenes/scene-city-rain-v3.jpg
-scenes/scene-spring-picnic-v4.jpg
+scenes/scene-lakeside-sunset-v14.jpg
+scenes/scene-city-rain-v14.jpg
+scenes/scene-spring-picnic-v14.jpg
 # Reviewed on 2026-10-03 (v6, studio / window-light fine-art rework): 4 golden retriever, 4 toy poodle, 4 British Shorthair scenes.
-scenes/scene-railway-traveler-v13.jpg
-scenes/scene-tennis-champion-v13.jpg
-scenes/scene-greenhouse-gardener-v13.jpg
-scenes/scene-sailboat-holiday-v13.jpg
-scenes/scene-berry-pastry-chef-v12.jpg
-scenes/scene-paper-flower-window-v13.jpg
-scenes/scene-mountain-cable-car-v13.jpg
-scenes/scene-laundry-day-v13.jpg
-scenes/scene-museum-curator-v13.jpg
-scenes/scene-poolside-vacation-v13.jpg
-scenes/scene-post-office-v13.jpg
+scenes/scene-railway-traveler-v14.jpg
+scenes/scene-tennis-champion-v14.jpg
+scenes/scene-greenhouse-gardener-v14.jpg
+scenes/scene-sailboat-holiday-v14.jpg
+scenes/scene-berry-pastry-chef-v14.jpg
+scenes/scene-paper-flower-window-v14.jpg
+scenes/scene-mountain-cable-car-v14.jpg
+scenes/scene-laundry-day-v14.jpg
+scenes/scene-museum-curator-v14.jpg
+scenes/scene-poolside-vacation-v14.jpg
+scenes/scene-post-office-v14.jpg
 scenes/scene-ballet-backstage-v12.jpg
 # Reviewed on 2026-10-03 (v7): 6 accent re-shoots above, plus 4 American Shorthair, 4 Corgi, 4 calico scenes.
-scenes/scene-shorthair-armchair-v13.jpg
+scenes/scene-shorthair-armchair-v14.jpg
 scenes/scene-shorthair-books-v13.jpg
 scenes/scene-shorthair-night-rim-v11.jpg
-scenes/scene-shorthair-paper-bag-v13.jpg
+scenes/scene-shorthair-paper-bag-v14.jpg
 scenes/scene-corgi-denim-v11.jpg
 scenes/scene-corgi-crate-v9.jpg
-scenes/scene-corgi-sploot-v13.jpg
-scenes/scene-corgi-sweater-v13.jpg
+scenes/scene-corgi-sploot-v14.jpg
+scenes/scene-corgi-sweater-v14.jpg
 scenes/scene-calico-silk-v12.jpg
 scenes/scene-calico-bowl-v12.jpg
-scenes/scene-calico-rain-window-v13.jpg
+scenes/scene-calico-rain-window-v14.jpg
 scenes/scene-calico-cane-stool-v11.jpg
 # 2026-10-04 (v8): 14 scenes above re-shot brighter and livelier after user review; 10 v6/v7 scenes kept.
 # 2026-10-04 (v9): 5 scenes above re-shot as indoor fashion-magazine editorials (Sphynx, Afghan Hound, Italian Greyhound, Chinchilla Persian, Siamese).
@@ -65,3 +65,4 @@ scenes/scene-calico-cane-stool-v11.jpg
 # 2026-10-05 (v11): 4 fashion scenes re-shot as half-body magazine covers (tuxedo, biker jacket, gold chain, sunglasses + trench).
 # 2026-10-05 (v12): 20 scenes above redesigned as candid pet moments (paw pads, sneeze, birthday cake, box, mid-air catch...); 4 fashion covers kept.
 # 2026-10-05 (v13): 16 v12 scenes above re-shot as true studio portraits (seamless backdrop, one key light, one prop); 4 v12 kept (mid-air catch, balloons, plush nap, ice cream).
+# 2026-10-06 (v14): 13 studio scenes above gained one or two same-theme set pieces (books, gift boxes, rubber duck...); snow-cabin, city-rain, greenhouse-gardener, paper-flower-window replaced by fashion covers in real pet-cut garments (knit turtleneck, camel dog coat, velvet pet cape, houndstooth dog vest); first anthropomorphic draft rejected.

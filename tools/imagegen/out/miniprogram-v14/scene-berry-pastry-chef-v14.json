@@ -1,0 +1,13 @@
+{
+  "id": "berry-pastry-chef",
+  "title": "半空接球",
+  "samplePet": "golden",
+  "prompt": "Edit Image 1, a finished professional pet studio photograph. Keep it exactly as it is: the same pet with the same identity, pose, expression and fur, the same seamless backdrop colour, the same main prop, light direction, camera angle, framing and colour grading. Add only these new set decorations, placed naturally on the floor or at the sides and behind the pet so they never cover its face or body: two more soft fabric balls in mustard and sky blue resting on the floor, and a low red-and-white striped training hurdle standing behind. The new pieces must belong to the same theme as the existing props, sit at a believable scale in the same light with soft contact shadows, and leave clear empty backdrop around the pet: tidy, airy and uncluttered, not crowded. Avoid: changing or moving the pet, a different backdrop colour, extra animals, people or hands, more decorations than listed, clutter, text, letters, numbers, logos or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/scenes/scene-berry-pastry-chef-v12.jpg",
+  "referenceSha256": "f063d9ca752d150828e12abd3e711812631a04c079e59c6d95759907cd502bfd",
+  "output": "tools/imagegen/out/scenes/scene-berry-pastry-chef-v14.jpg",
+  "sha256": "362bd1b32ff3b54181c9316f340b7304ca08ed31a95890cf5ba8e6d35802b00b",
+  "review": "pending-visual-review"
+}

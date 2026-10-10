@@ -12,6 +12,7 @@ async function main() {
   const output = path.resolve(process.env.MEDIA_SMOKE_OUTPUT || "test-results/media");
   await mkdir(output, { recursive: true });
   process.env.DATABASE_URL = "memory://";
+  process.env.PETBABY_TEST_HARNESS = "1";
   process.env.OBJECT_STORAGE_PROVIDER = "local";
   process.env.APP_ENV = "staging";
   process.env.LOCAL_STORAGE_DIR = path.join(output, "objects");

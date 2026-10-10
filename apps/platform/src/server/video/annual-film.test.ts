@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
+import { fundWallet } from "@/server/wallet/test-helpers";
 
 import { getDatabase, resetDatabaseForTest } from "@/server/db/client";
 import { createAnnualFilm } from "@/server/video/annual-film";
@@ -24,6 +25,7 @@ describe("createAnnualFilm", () => {
     const database = await getDatabase();
     await database.query("DELETE FROM video_renders");
     await database.query("INSERT INTO users (id,created_at) VALUES ($1,now())", [USER]);
+    await fundWallet(USER, 200);
     await database.query("INSERT INTO pets (id,user_id,name,species,gender,birthday,date_type,life_stage,is_default,created_at) VALUES ($1,$2,'年糕','cat','unknown','2024-01-01','birthday','active',true,$3)", [PET, USER, new Date("2024-01-01T00:00:00Z")]);
   });
 

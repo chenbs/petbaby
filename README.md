@@ -7,10 +7,10 @@
 ```powershell
 cd apps/platform
 pnpm install
-pnpm dev
+pnpm dev:local
 ```
 
-浏览器打开 `http://localhost:3000`，可完成“选择玩法 → 建立宠物档案 → 上传照片 → 生成免费预览 → 模拟支付解锁 → 创建 H5 分享页”的完整本地流程。
+`dev:local` 起本地 PostgreSQL、Web（`http://localhost:3000`）与 Worker，运行方式与生产一致；先在 `.env.local` 配好图片与健康模型凭据，注册账号后即可走完整流程。
 
 ## 当前交付
 
@@ -28,7 +28,7 @@ pnpm dev
 - 独立官网 `apps/website`（Astro 7 静态站，11 个页面，独立域名）。
 - 数据库前向迁移、独立 Worker、健康检查、限频、成本熔断、告警和清理任务。
 
-本地模式使用匿名账户、PGlite 持久数据库和私有文件目录；生产必须使用 PostgreSQL、对象存储和微信正式配置。仍待外部提供的 Value 集中在 `docs/operations/04-external-prerequisites.md`。
+本地与生产功能一致（PostgreSQL + 独立 Worker、必须登录、后台白名单），只有支付走模拟通道、对象存储写本地磁盘；生产必须使用对象存储和微信正式配置。仍待外部提供的 Value 集中在 `docs/operations/04-external-prerequisites.md`。
 
 ## 验证
 

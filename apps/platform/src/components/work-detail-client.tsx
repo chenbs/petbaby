@@ -1,5 +1,4 @@
 "use client";
-import { payWebOrder, webPaymentEnabled, webPaymentNotice } from "@/lib/payment";
 
 import Link from "next/link";
 import { useState } from "react";
@@ -14,15 +13,12 @@ import { apiFetch } from "@/lib/api";
 type DeliveryPricing = {
   free: boolean;
   tiered: boolean;
-  isMember: boolean;
   accumulation?: { photoCount: number; spanDays: number };
-  specTier?: "basic" | "advanced" | "annual";
-  amount: number;
-  listPrice: number;
-  memberSaving: number;
+  tier?: "basic" | "advanced" | "annual";
+  cost: number;
   label: string;
   nextTier?: { tier: "advanced" | "annual"; photosNeeded?: number; daysNeeded?: number };
-  tierPrices?: { basic?: number; advanced?: number; annual?: number };
+  tierCosts?: { basic?: number; advanced?: number; annual?: number };
 };
 
 const TIER_NAME: Record<string, string> = { basic: "基础", advanced: "进阶", annual: "年度" };
@@ -31,8 +27,8 @@ const TIER_NAME: Record<string, string> = { basic: "基础", advanced: "进阶",
 function nextTierCopy(pricing: DeliveryPricing): string | undefined {
   const next = pricing.nextTier;
   if (!next) return undefined;
-  const price = pricing.tierPrices?.[next.tier];
-  const target = `${TIER_NAME[next.tier]}版${price ? ` ¥${price}` : ""}`;
+  const price = pricing.tierCosts?.[next.tier];
+  const target = `${TIER_NAME[next.tier]}版${price ? ` · ${price} 颗` : ""}`;
   if (next.tier === "advanced" && next.photosNeeded) return `再攒 ${next.photosNeeded} 张照片，下次可做${target}。`;
   if (next.daysNeeded) return `照片跨度再满 ${next.daysNeeded} 天，下次可做${target}。`;
   return undefined;
@@ -111,8 +107,7 @@ export function WorkDetailClient({ initialWork }: { initialWork: PublicWork }) {
   async function unlock() {
     setBusy(true); setMessage("");
     try {
-      const order = await apiFetch<{ id: string }>("/api/orders", { method: "POST", body: JSON.stringify({ workId: work.id, sku: `${work.pluginId}-single` }) });
-      const result = await payWebOrder<{ work: PublicWork }>("work", order.id);
+      const result = await apiFetch<{ work: PublicWork }>(`/api/works/${work.id}/unlock`, { method: "POST" });
       setWork(result.work);
       setMessage("已解锁高清原图");
     } catch (error) { setMessage(error instanceof Error ? error.message : "解锁失败"); }
@@ -141,13 +136,12 @@ export function WorkDetailClient({ initialWork }: { initialWork: PublicWork }) {
       */}
       {work.locked && pricing && !pricing.free ? <section className="panel" style={{ marginTop: 20 }}>
         <div className="price-line">
-          <span>{pricing.tiered && pricing.specTier ? `${TIER_NAME[pricing.specTier]}版 · ${pricing.label}` : pricing.label}</span>
-          <strong>¥{pricing.amount}{pricing.memberSaving > 0 ? <small style={{ marginLeft: 8, textDecoration: "line-through", fontWeight: 400 }}>¥{pricing.listPrice}</small> : null}</strong>
+          <span>{pricing.tiered && pricing.tier ? `${TIER_NAME[pricing.tier]}版 · ${pricing.label}` : pricing.label}</span>
+          <strong>{pricing.cost} 颗</strong>
         </div>
         {pricing.tiered && pricing.accumulation ? <p className="privacy-note">已积累 {pricing.accumulation.photoCount} 张照片，跨度 {pricing.accumulation.spanDays} 天。</p> : null}
-        {pricing.isMember && pricing.memberSaving > 0 ? <p className="privacy-note">会员价，比单买省 ¥{pricing.memberSaving}。</p> : null}
-        {!pricing.isMember && nextTierCopy(pricing) ? <p className="privacy-note">{nextTierCopy(pricing)}</p> : null}
-        <button className="primary-button" disabled={!webPaymentEnabled || busy} onClick={unlock} type="button" title={!webPaymentEnabled ? webPaymentNotice : undefined}>{busy ? "正在解锁…" : `支付 ¥${pricing.amount} 保存高清原图`}</button>
+        {nextTierCopy(pricing) ? <p className="privacy-note">{nextTierCopy(pricing)}</p> : null}
+        <button className="primary-button" disabled={busy} onClick={unlock} type="button">{busy ? "正在解锁…" : `扣 ${pricing.cost} 颗解锁历史作品`}</button>
       </section> : null}
       {versions.length > 1 ? <section className="panel" style={{ marginTop: 20 }}><b>历史版本</b><div className="button-row" style={{ marginTop: 12 }}>{versions.map((version) => <button className={version.version === work.version ? "primary-button" : "secondary-button"} disabled={busy || version.version === work.version} key={version.id} onClick={() => restore(version.id)} type="button">v{version.version} · {version.title}</button>)}</div></section> : null}
       <section className="panel" style={{ marginTop: 26 }}>

@@ -4,7 +4,10 @@
   "private": true,
   "packageManager": "pnpm@10.13.1",
   "scripts": {
+    "db:start": "node scripts/local-db.mjs start",
+    "db:stop": "node scripts/local-db.mjs stop",
     "dev": "next dev",
+    "dev:local": "node scripts/local-db.mjs start && concurrently -n web,worker --kill-others \"next dev\" \"pnpm worker\"",
     "dev:web": "next dev",
     "build": "next build",
     "start": "next start",
@@ -16,7 +19,8 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
-    "check": "pnpm lint && pnpm typecheck && pnpm test:coverage && pnpm build"
+    "check": "pnpm lint && pnpm typecheck && pnpm test:coverage && pnpm build",
+    "test:e2e:local": "node scripts/local-db.mjs run --fresh petbaby_e2e -- playwright test"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.8",
@@ -41,6 +45,7 @@
     "concurrently": "^10.0.5",
     "cross-env": "^10.1.0",
     "drizzle-kit": "^0.31.10",
+    "embedded-postgres": "17.10.0-beta.17",
     "eslint": "^9.39.5",
     "eslint-config-next": "16.3.5",
     "tsx": "^4.23.15",

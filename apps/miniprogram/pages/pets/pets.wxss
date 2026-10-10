@@ -93,3 +93,13 @@
   font-weight: var(--fw-bold);
   letter-spacing: var(--ls-tight);
 }
+
+/* 建档后的头像一步 */
+.avatar-step {
+  justify-items: center;
+  padding: var(--space-3) 0;
+}
+
+.avatar-step-copy {
+  text-align: center;
+}

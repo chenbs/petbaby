@@ -1,6 +1,7 @@
 import { apiFetch } from "./api";
 
-export const webPaymentEnabled = process.env.NODE_ENV !== "production";
+// Web/H5 与生产一致不收款（付款只在小程序内完成）；只有单元测试保留这条路径（2026-10-09）。
+export const webPaymentEnabled = process.env.NODE_ENV === "test";
 export const webPaymentNotice = "此页面仅支持查看订单和使用已有权益，暂不支持付款。";
 
 export async function payWebOrder<Result = unknown>(kind: "work" | "growth" | "physical", id: string): Promise<Result> {

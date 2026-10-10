@@ -6,6 +6,7 @@ import { AppError } from "@/server/errors";
 import { requiredPaymentConfig as required } from "./config";
 import { reconcilePayment } from "./service";
 import type { Payment } from "./types";
+import { topupConsumption } from "@/server/wallet/topup";
 
 function signature(parts: string[]) {
   return createHash("sha1").update(parts.sort().join("")).digest("hex");
@@ -67,10 +68,15 @@ const eventSchema = z.object({ Event: z.string() }).passthrough();
 export async function iosRefundInquiry(payload: Record<string, unknown>) {
   const input = z.object({ pay_order_id: z.string().min(8).max(64) }).passthrough().parse(payload);
   const database = await getDatabase();
-  const rows = await database.query("SELECT p.id,p.status,p.delivered_at,(SELECT count(*)::int FROM entitlement_ledger e WHERE (e.order_id=p.order_id OR e.membership_id=(SELECT resource_id FROM growth_orders WHERE id=p.order_id)) AND e.status='consumed') consumed FROM payment_transactions p WHERE p.out_trade_no=$1 AND p.provider='virtual'", [input.pay_order_id]);
+  /*
+   * 冻干充值单看「这笔到账的冻干是否已经花掉」；历史权益订单仍看权益账本的核销记录。
+   * 只看权益账本会把「充完就花光再申请退款」判成同意。
+   */
+  const rows = await database.query("SELECT p.id,p.status,p.delivered_at,p.order_id,p.order_kind,(SELECT kind FROM growth_orders WHERE id=p.order_id) growth_kind,(SELECT count(*)::int FROM entitlement_ledger e WHERE (e.order_id=p.order_id OR e.membership_id=(SELECT resource_id FROM growth_orders WHERE id=p.order_id)) AND e.status='consumed') consumed FROM payment_transactions p WHERE p.out_trade_no=$1 AND p.provider='virtual'", [input.pay_order_id]);
   const order = rows[0];
   const deliveredAt = order?.delivered_at || null;
-  const consumedEntitlements = Number(order?.consumed || 0);
+  const topup = order && order.order_kind === "growth" && order.growth_kind === "wallet_topup" ? await topupConsumption(database, String(order.order_id)) : undefined;
+  const consumedEntitlements = topup ? topup.consumed : Number(order?.consumed || 0);
   const denyRefund = Boolean(deliveredAt && consumedEntitlements > 0);
   const evidence = { policy: denyRefund ? "deny_refund_consumed" : "allow_refund", orderFound: Boolean(order), deliveredAt, consumedEntitlements };
   const requestHash = createHash("sha256").update(JSON.stringify(input)).digest("hex");

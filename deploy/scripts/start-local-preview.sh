@@ -24,7 +24,7 @@ if [ -z "$host_ip" ]; then
 fi
 
 state_dir="$repo_dir/apps/platform/.data/local-preview"
-for name in platform website; do
+for name in platform worker website; do
   pid_file="$state_dir/$name.pid"
   if [ -f "$pid_file" ] && kill -0 "$(cat "$pid_file")" 2>/dev/null; then
     echo "$name preview is already running (PID $(cat "$pid_file"))" >&2
@@ -33,9 +33,16 @@ for name in platform website; do
 done
 mkdir -p "$state_dir"
 
+# 与生产同构：本地 PostgreSQL（DATABASE_URL 写在 .env.local）+ Web + 独立 Worker。
+(cd "$repo_dir/apps/platform" && node scripts/local-db.mjs start)
 (
   cd "$repo_dir/apps/platform"
-  setsid env NODE_ENV=development APP_ENV=local DATABASE_URL=file://.data/local-preview-petbaby \
+  setsid corepack pnpm worker >"$state_dir/worker.out.log" 2>"$state_dir/worker.err.log" </dev/null &
+  echo $! >"$state_dir/worker.pid"
+)
+(
+  cd "$repo_dir/apps/platform"
+  setsid env NODE_ENV=development APP_ENV=local \
     OBJECT_STORAGE_PROVIDER=local LOCAL_STORAGE_DIR=.data/objects \
     PAYMENT_PROVIDER=development PHYSICAL_PAYMENT_PROVIDER=development \
     PASSWORD_AUTH_ENABLED=true PUBLIC_APP_URL="http://$host_ip:3000" \

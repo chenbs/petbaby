@@ -6,10 +6,10 @@
 
 ```powershell
 pnpm install
-pnpm dev
+pnpm dev:local
 ```
 
-打开 `http://localhost:3000`。本地模式使用匿名账户、磁盘持久化 PGlite 数据库、私有文件存储和模拟支付；数据写入未跟踪的 `.data/` 目录，服务重启后仍保留。
+`dev:local` 先用 `scripts/local-db.mjs` 起本地 PostgreSQL 17（首次会初始化并把 `DATABASE_URL`、`SESSION_SECRET`、`ADDRESS_ENCRYPTION_KEY` 写进 `.env.local`），再同时起 Web（`http://localhost:3000`）和 Worker。本地与生产功能一致：需要登录（`PASSWORD_AUTH_ENABLED=true` 时可用账号密码），后台按 `ADMIN_USER_IDS` 白名单，图片与健康助手必须配真实凭据；只有支付走模拟通道、对象存储写本地磁盘。数据在未跟踪的 `.data/` 目录。
 
 ## 检查命令
 
@@ -18,7 +18,7 @@ pnpm lint
 pnpm typecheck
 pnpm test
 pnpm exec playwright install chromium
-pnpm test:e2e
+pnpm test:e2e:local
 pnpm build
 pnpm worker
 pnpm db:migrate

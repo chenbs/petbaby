@@ -1,7 +1,8 @@
+const wallet = require("../../services/wallet");
 const { displayMediaTree } = require("../../services/photo-files");
-const payment = require("../../services/payment");
 const api = require("../../services/api");
 const originals = require("../../services/originals");
+const params = require("../../services/params");
 const { themedPage } = require("../../theme/page-mixin");
 
 /** 面板内展示用的短日期。作品详情只关心到分钟，避免整串 ISO 文本撑破一行。 */
@@ -23,17 +24,17 @@ const TIER_NAME = { basic: "基础", advanced: "进阶", annual: "年度" };
 function nextTierText(pricing) {
   const next = pricing && pricing.nextTier;
   if (!next) return "";
-  const price = (pricing.tierPrices || {})[next.tier];
-  const target = (TIER_NAME[next.tier] || next.tier) + "版" + (price ? " ¥" + price : "");
+  const price = (pricing.tierCosts || {})[next.tier];
+  const target = (TIER_NAME[next.tier] || next.tier) + "版" + (price ? " · " + wallet.costText(price) : "");
   if (next.tier === "advanced" && next.photosNeeded) return "再攒 " + next.photosNeeded + " 张照片，下次可做" + target + "。";
   if (next.daysNeeded) return "照片跨度再满 " + next.daysNeeded + " 天，下次可做" + target + "。";
   return "";
 }
 
 // 沉浸式版式：navigationStyle 为 custom，导航栏同步无效，交给 immersive 跳过
-themedPage({ immersive: true }, {
-  data: { work: null, versions: [], error: "", busy: false, loading: true, confirmRevoke: false, priceText: "", priceHint: "", createdText: "", shareExpiresText: "", sheetState: "half", sheetBackgroundVideo: "", sheetBackgroundImage: "", sheetPoster: "", sheetTitle: "" },
-  onLoad(query) { this.workId = query.id; if (wx.showShareMenu) wx.showShareMenu({ menus: ["shareAppMessage", "shareTimeline"] }); this.reload(); },
+themedPage({ immersive: true }, Object.assign({}, wallet.walletSheetMethods, {
+  data: { walletSheet: { visible: false, required: 0, balance: 0, shortfall: 0 }, work: null, versions: [], error: "", busy: false, loading: true, confirmRevoke: false, priceText: "", priceHint: "", createdText: "", shareExpiresText: "", sheetState: "half", sheetBackgroundVideo: "", sheetBackgroundImage: "", sheetPoster: "", sheetTitle: "" },
+  onLoad(query) { this.workId = query.id; if (!params.isUuid(this.workId)) return this.setData({ loading: false, error: "作品链接无效，请从作品柜重新打开" }); if (wx.showShareMenu) wx.showShareMenu({ menus: ["shareAppMessage", "shareTimeline"] }); this.reload(); },
   onBackgroundError() { if (this.data.work) this.setData({ error: "作品预览暂时无法显示，请稍后重试" }); },
   reload() {
     this.setData({ loading: !this.data.work, error: "" });
@@ -75,13 +76,12 @@ themedPage({ immersive: true }, {
     api.request("/api/pets/" + work.petId + "/pricing?pluginId=" + encodeURIComponent(work.pluginId)).then(displayMediaTree)
       .then((pricing) => {
         if (pricing.free) return this.setData({ priceText: "保存高清原图", priceHint: "" });
-        const tier = pricing.tiered && pricing.specTier ? (TIER_NAME[pricing.specTier] || "") + "版 · " : "";
+        const tier = pricing.tiered && pricing.tier ? (TIER_NAME[pricing.tier] || "") + "版 · " : "";
         const hints = [];
         if (pricing.tiered && pricing.accumulation) hints.push("已积累 " + pricing.accumulation.photoCount + " 张照片，跨度 " + pricing.accumulation.spanDays + " 天。");
-        if (pricing.isMember && pricing.memberSaving > 0) hints.push("会员价，比单买省 ¥" + pricing.memberSaving + "。");
-        else hints.push(nextTierText(pricing));
+        hints.push(nextTierText(pricing));
         this.setData({
-          priceText: "¥" + pricing.amount + " 保存" + tier + "高清原图",
+          priceText: wallet.costText(pricing.cost) + " · 解锁" + tier + "高清原图",
           priceHint: hints.filter(Boolean).join("")
         });
       })
@@ -92,16 +92,33 @@ themedPage({ immersive: true }, {
   handleStateChange(event) { this.setData({ sheetState: event.detail.to }); },
   unlock() {
     const work = this.data.work;
-    if (!work) return;
+    if (!work || !work.locked || this.data.busy) return;
     this.setData({ busy: true, error: "" });
-    api.request("/api/orders", { method: "POST", data: { workId: work.id, sku: work.pluginId + "-single" } }).then((order) => payment.pay("work", order.id)).then(() => { this.setData({ busy: false }); this.reload(); }).catch((error) => this.setData({ error: error.message || error.errMsg, busy: false }));
+    wallet.withDongan(this, () => api.request("/api/works/" + work.id + "/unlock", { method: "POST" })).then(() => { this.setData({ busy: false }); this.reload(); }).catch((error) => this.setData({ error: error.code === "WALLET_TOPUP_CANCELLED" ? "" : error.message || error.errMsg, busy: false }));
   },
   saveImage() { this.saveOriginal("image"); },
   downloadVideo() { this.saveOriginal("video"); },
+  downloadDocument() {
+    const work = this.data.work;
+    if (!work || work.assetKind !== "pdf" || work.locked || this.data.busy) return;
+    this.setData({ busy: true, error: "" });
+    return originals.downloadOriginal("/api/works/" + work.id + "/download?format=pdf")
+      .then((filePath) => {
+        if (!filePath) return;
+        return new Promise((resolve, reject) => wx.openDocument({
+          filePath, fileType: "pdf", showMenu: true,
+          success: resolve,
+          fail: () => reject(new Error("PDF 暂时无法打开，请稍后重试"))
+        }));
+      })
+      .catch((error) => this.setData({ error: error.message || "PDF 下载失败，请重试" }))
+      .finally(() => this.setData({ busy: false }));
+  },
   /** 保存原图到相册。生成类作品首次保存会先确认标识说明（见 services/originals.js）。 */
   saveOriginal(kind) {
     const work = this.data.work;
     if (!work || this.data.busy) return;
+    if (work.assetKind === "pdf") return this.downloadDocument();
     if (work.locked) return wx.showToast({ title: "请先保存高清原图", icon: "none" });
     this.setData({ busy: true, error: "" });
     originals.saveOriginal("/api/works/" + work.id + "/download?format=" + kind, kind)
@@ -138,4 +155,4 @@ themedPage({ immersive: true }, {
     if (!work || !work.shareToken) return { title: "麻麻抱我" };
     return { title: work.title, query: "token=" + encodeURIComponent(work.shareToken) };
   }
-});
+}));

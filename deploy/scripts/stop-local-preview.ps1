@@ -4,7 +4,7 @@ $stateFile = Join-Path $repoRoot 'apps/platform/.data/local-preview/processes.js
 if (-not (Test-Path -LiteralPath $stateFile)) { throw 'No local preview process record found.' }
 
 $state = Get-Content -LiteralPath $stateFile -Raw -Encoding UTF8 | ConvertFrom-Json
-foreach ($processId in @($state.platformListener, $state.websiteListener, $state.platform, $state.website) | Select-Object -Unique) {
+foreach ($processId in @($state.platformListener, $state.websiteListener, $state.platform, $state.worker, $state.website) | Select-Object -Unique) {
   if ($processId -and (Get-Process -Id $processId -ErrorAction SilentlyContinue)) {
     & taskkill.exe /PID $processId /T /F | Out-Null
   }

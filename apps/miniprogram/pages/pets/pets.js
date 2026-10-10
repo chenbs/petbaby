@@ -3,6 +3,7 @@ const api = require("../../services/api");
 const config = require("../../config");
 const companion = require("../../services/companion");
 const { themedPage } = require("../../theme/page-mixin");
+const { uploadOnePhoto } = require("../../services/quick-upload");
 
 const SPECIES = { values: ["cat", "dog", "other"], labels: ["猫咪", "狗狗", "其他"] };
 const GENDER = { values: ["unknown", "female", "male"], labels: ["未填写", "女孩子", "男孩子"] };
@@ -23,11 +24,18 @@ function labelOf(map, value) {
 
 themedPage({
   data: {
-    pets: [], editing: null, loading: true, saving: false, error: "", message: "", removeTarget: null,
+    giftVisible: false, giftUnits: 0, pets: [], editing: null, loading: true, saving: false, error: "", message: "", removeTarget: null,
     speciesLabels: SPECIES.labels, genderLabels: GENDER.labels, dateTypeLabels: DATE_TYPE.labels, stageLabels: STAGE.labels,
-    editSpeciesText: "", editGenderText: "", editDateTypeText: "", editStageText: ""
+    editSpeciesText: "", editGenderText: "", editDateTypeText: "", editStageText: "",
+    /** 建档后的「上传一张照片做头像」一步（可跳过）：{ id, name } */
+    avatarStep: null, avatarBusy: false, avatarError: "", giftActionText: "去拍一张写真", giftActionUrl: "/pages/ai-create/ai-create?entryId=art&templateId=pet-art-photo"
   },
-  onLoad(query) { this._returnToRecord = query.returnToRecord === "1"; if (query.mode === "create") this.newPet(); },
+  onLoad(query) {
+    this._returnToRecord = query.returnToRecord === "1";
+    // 首页新用户引导进来：建完 → 头像一步 → 返回首页，由首页继续原本要去的玩法
+    this._onboard = query.onboard === "1";
+    if (query.mode === "create") this.newPet();
+  },
   onShow() { this.reload(); },
   newPet() {
     this.setData({ editing: { name: "", species: "cat", gender: "unknown", birthday: "", dateType: "birthday", lifeStage: "active" }, error: "", message: "" });
@@ -91,7 +99,48 @@ themedPage({
   memorial(event) {
     wx.navigateTo({ url: "/pages/memorials/memorials?petId=" + encodeURIComponent(event.currentTarget.dataset.id) });
   },
-  cancel() { if (!this.data.saving) this.setData({ editing: null }); },
+  closeGift() {
+    this.setData({ giftVisible: false });
+    if (this._giftReturnPetId) { this.getOpenerEventChannel().emit("petCreated", { petId: this._giftReturnPetId }); this._giftReturnPetId = ""; wx.navigateBack(); return; }
+    if (this._pendingAvatar) { this.setData({ avatarStep: this._pendingAvatar, avatarError: "" }); this._pendingAvatar = null; }
+  },
+  /*
+   * 建档后的头像一步（2026-10 新用户引导）。照片走照片库同一条上传链路（quick-upload：幂等回执、断点核对、429 退避），
+   * 收进这只宠物的照片库后再 PUT /api/pets/[id]/avatar 设为头像，服务端复制成独立的头像对象。
+   * 跳过不影响建档；首页名片没有头像时本来就会回落到第一张照片或首字。
+   */
+  offerAvatar(pet) {
+    const step = { id: pet.id, name: pet.name };
+    if (this.data.giftVisible) this._pendingAvatar = step;
+    else this.setData({ avatarStep: step, avatarError: "" });
+  },
+  async uploadAvatar() {
+    const step = this.data.avatarStep;
+    if (!step || this.data.avatarBusy) return;
+    this.setData({ avatarBusy: true, avatarError: "" });
+    try {
+      const photoId = await uploadOnePhoto(step, "pets");
+      if (!photoId) return this.setData({ avatarBusy: false });
+      await api.request("/api/pets/" + encodeURIComponent(step.id) + "/avatar", { method: "PUT", data: { photoId } });
+      this.setData({ avatarBusy: false });
+      wx.showToast({ title: "头像已设好", icon: "none" });
+      this.finishAvatar();
+    } catch (error) {
+      this.setData({ avatarBusy: false, avatarError: error.message || "头像没有设好，请重试" });
+    }
+  },
+  skipAvatar() { if (!this.data.avatarBusy) this.finishAvatar(); },
+  finishAvatar() {
+    this.setData({ avatarStep: null, avatarError: "" });
+    if (this._onboard) wx.navigateBack();
+    else this.reload();
+  },
+  cancel() {
+    if (this.data.saving) return;
+    // 从制作页 / 首页直开的新建抽屉：关掉就回到原页面，不把用户留在档案列表里
+    if (this._onboard && this.data.editing && !this.data.editing.id) { this.setData({ editing: null }); return wx.navigateBack(); }
+    this.setData({ editing: null });
+  },
   /** 编辑抽屉里的枚举值同步成中文 */
   syncEditLabels() {
     const editing = this.data.editing || {};
@@ -120,7 +169,18 @@ themedPage({
     return api.request(pet.id ? "/api/pets/" + pet.id : "/api/pets", { method: pet.id ? "PATCH" : "POST", data: { name: pet.name, species: pet.species, gender: pet.gender, birthday: pet.birthday || "", dateType: pet.dateType || "birthday", lifeStage: pet.lifeStage || "active" } }).then(displayMediaTree)
       .then((saved) => {
         this.setData({ editing: null, saving: false, message: "档案已保存" });
-        if (!pet.id && this._returnToRecord) {
+        const gift = !pet.id && saved.newcomerGift && saved.newcomerGift.units;
+        // 记录页进来的建档直接回去传照片，不再插头像一步；其余新建都给「上传一张照片做头像」（可跳过）
+        const avatarNext = !pet.id && !this._returnToRecord && saved.id;
+        // 建成即通知首页：用户在头像一步直接返回，也能回到原本要去的玩法
+        if (avatarNext && this._onboard) this.getOpenerEventChannel().emit("petCreated", { petId: saved.id });
+        if (gift) {
+          this.setData(avatarNext ? { giftVisible: true, giftUnits: saved.newcomerGift.units, giftActionText: "继续", giftActionUrl: "" } : { giftVisible: true, giftUnits: saved.newcomerGift.units });
+          if (this._returnToRecord) this._giftReturnPetId = saved.id;
+        }
+        if (avatarNext) { this.offerAvatar({ id: saved.id, name: saved.name || pet.name }); this.reload(); }
+        else if (gift) this.reload();
+        else if (!pet.id && this._returnToRecord) {
           this.getOpenerEventChannel().emit("petCreated", { petId: saved.id });
           wx.navigateBack();
         } else this.reload();

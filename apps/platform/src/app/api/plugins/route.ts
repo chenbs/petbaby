@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import type { PluginManifest } from "@/domain/models";
 import { listRuntimePlugins, resolveManifestTone } from "@/plugins/runtime";
+import { AI_RUN_COST, DONGAN_UNIT, resolveDeliverableCost, tierCosts } from "@/domain/dongan-pricing";
 
 /**
  * 样例图补全绝对域名。
@@ -34,6 +35,20 @@ function absolutize(manifest: PluginManifest, origin: string): PluginManifest {
   };
 }
 
+/**
+ * 冻干颗数（2026-10-08）：端上的价签一律读这里，不再读 manifest 的 unlockPrice（那是作废的现金价）。
+ *
+ * `from` 是这个玩法的起步颗数（分档玩法取基础档），实际扣费按制作时的积累量算，
+ * 制作页要精确颗数时调 `/api/pets/[id]/pricing`。`free` 为 true 的玩法完全不显示价签。
+ */
+function donganPricing(pluginId: string, lifeStage?: string) {
+  const memorial = lifeStage === "memorial";
+  if (pluginId === "pl-10") return { from: AI_RUN_COST.pet, unit: DONGAN_UNIT, free: false };
+  const tiers = memorial ? undefined : tierCosts(pluginId);
+  const base = resolveDeliverableCost({ pluginId, memorial }).cost;
+  return { from: base, unit: DONGAN_UNIT, free: base <= 0, tierCosts: tiers };
+}
+
 export async function GET(request: Request) {
   const configured = process.env.PUBLIC_APP_URL?.trim().replace(/\/+$/, "");
   const origin = configured || new URL(request.url).origin;
@@ -48,6 +63,6 @@ export async function GET(request: Request) {
   return NextResponse.json({
     data: plugins
       .filter((plugin) => plugin.status === "live")
-      .map((plugin) => absolutize(resolveManifestTone(plugin, lifeStage), origin)),
+      .map((plugin) => ({ ...absolutize(resolveManifestTone(plugin, lifeStage), origin), dongan: donganPricing(plugin.id, lifeStage) })),
   });
 }

@@ -6,7 +6,6 @@ const REQUEST: TriageRequest = {
   description: "今天吐了两次，精神还行",
   pet: { name: "年糕", species: "cat", ageMonths: 30, weightGrams: 4200, lifeStage: "active" },
   recentRecords: ["10-03 呕吐 · 1 次", "10-04 吃饭 · 吃了一点"],
-  images: [],
 };
 
 const ENV_KEYS = [
@@ -40,11 +39,11 @@ describe("健康分诊 HTTP provider", () => {
     expect(text.endsWith("主人这次的描述：今天吐了两次，精神还行")).toBe(true);
   });
 
-  it("无图走纯文本 content、开 JSON 模式、低温度；有图切多模态模型", async () => {
-    process.env.HEALTH_MODEL_ENDPOINT = "https://primary.example/v1/chat/completions";
+  it("只发纯文本 content、开 JSON 模式、低温度；配了 VISION 也不切多模态", async () => {
     process.env.HEALTH_MODEL_API_KEY = "key";
     process.env.HEALTH_MODEL_ENDPOINT = "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions";
     process.env.HEALTH_MODEL = "qwen-flash";
+    // 老环境里残留的变量不再生效
     process.env.HEALTH_MODEL_VISION = "qwen3-vl-flash";
     const bodies: Array<Record<string, unknown>> = [];
     vi.stubGlobal("fetch", vi.fn(async (_url: string, init: RequestInit) => {
@@ -58,11 +57,7 @@ describe("健康分诊 HTTP provider", () => {
     expect(typeof (bodies[0].messages as Array<{ content: unknown }>)[1].content).toBe("string");
     // 百炼地址默认显式关闭思考：新版 Flash 默认开思考，开着慢且 JSON 模式可能失效
     expect(bodies[0]).toMatchObject({ model: "qwen-flash", temperature: 0.2, enable_thinking: false, response_format: { type: "json_object" } });
-
-    const image = await adviseWithMeta(provider, { ...REQUEST, images: [{ body: new Uint8Array([1, 2]), contentType: "image/png" }] });
-    expect(image.model).toBe("qwen3-vl-flash");
-    const content = (bodies[1].messages as Array<{ content: unknown }>)[1].content as Array<{ type: string }>;
-    expect(content.map((part) => part.type)).toEqual(["text", "image_url"]);
+    expect(provider.modelVersion).toBe("qwen-flash");
   });
 
   it("主通道失败时切备用，审计里留下失败通道", async () => {

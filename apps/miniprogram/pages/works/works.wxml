@@ -28,7 +28,7 @@
   <block wx:else>
     <!-- 进行中：普通生成、独立制作、写真套餐、短片草稿都在这里，点击回到对应页面 -->
     <view wx:if="{{progress.length}}" class="works-section">
-      <view class="row works-head"><text class="works-head-title">进行中</text><text class="small">好了会通知你</text></view>
+      <view class="row works-head"><text class="works-head-title">制作记录</text><text class="small">点开查看进度与结果</text></view>
       <scroll-view class="progress-track" scroll-x enable-flex show-scrollbar="{{false}}">
         <view wx:for="{{progress}}" wx:key="id" class="progress-card" data-id="{{item.id}}" aria-role="button" hover-class="chip-hover" bindtap="openProgress">
           <image wx:if="{{item.thumb}}" class="progress-thumb" src="{{item.thumb}}" mode="aspectFill" lazy-load />

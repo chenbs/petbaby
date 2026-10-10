@@ -12,6 +12,7 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
     if (!key) throw new AppError("REPORT_NOT_FOUND", "年度报告不存在", 404);
     const object = await objectStorage.get(String(key));
     if (!object) throw new AppError("REPORT_FILE_NOT_FOUND", "报告文件不存在", 404);
-    return new NextResponse(Buffer.from(object.body), { headers: { "Content-Type": object.contentType, "Content-Disposition": `attachment; filename=petbaby-wrapped-${String(row.year)}.svg` } });
+    const extension = object.contentType === "image/png" ? "png" : object.contentType === "image/svg+xml" ? "svg" : "bin";
+    return new NextResponse(Buffer.from(object.body), { headers: { "Content-Type": object.contentType, "Content-Disposition": `attachment; filename=petbaby-wrapped-${String(row.year)}.${extension}` } });
   } catch (error) { return routeError(error); }
 }

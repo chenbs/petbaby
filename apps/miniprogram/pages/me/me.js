@@ -1,3 +1,4 @@
+const wallet = require("../../services/wallet");
 const { displayMediaTree } = require("../../services/photo-files");
 const api = require("../../services/api");
 const companion = require("../../services/companion");
@@ -15,6 +16,7 @@ const ENTRY_URLS = {
   health: "/pages/health/health",
   records: "/pages/records/records",
   memorials: "/pages/memorials/memorials",
+  wallet: "/pages/wallet/wallet",
   orders: "/pages/orders/orders",
   commerce: "/pages/commerce/commerce",
   theme: "/pages/theme/theme",
@@ -23,7 +25,7 @@ const ENTRY_URLS = {
 };
 
 themedPage({
-  data: { profile: null, status: null, hero: null, pets: [], hasMemorialPet: false, loading: true, error: "", themeName: "", displayName: "微信用户", groups: [] },
+  data: { profile: null, status: null, hero: null, pets: [], hasMemorialPet: false, loading: true, error: "", themeName: "", displayName: "微信用户", groups: [], walletBalance: null },
   onShow() {
     const tabbar = this.getTabBar && this.getTabBar();
     if (tabbar) tabbar.setData({ selected: 3 });
@@ -32,6 +34,7 @@ themedPage({
     this.setData({ themeName: current ? current.name : "" });
     this.buildGroups();
     this.loadAccount();
+    wallet.getWallet().then((balance) => { this.setData({ walletBalance: balance.balance }); this.buildGroups(); }).catch(() => undefined);
     this.loadHero();
   },
   loadAccount() {
@@ -53,9 +56,10 @@ themedPage({
     this.setData({
       groups: [
         { title: "记录与照顾", items: record },
-        { title: "订单与会员", items: [
+        { title: "钱包与订单", items: [
+          { key: "wallet", name: "冻干钱包", icon: "fd-coin", tone: "plain", side: this.data.walletBalance === null ? "" : this.data.walletBalance + " 颗" },
           { key: "orders", name: "订单与退款", icon: "ic-bag", tone: "plain" },
-          { key: "commerce", name: "会员与年度报告", icon: "ic-crown", tone: "plain" }
+          { key: "commerce", name: "年度报告", icon: "ic-book", tone: "plain" }
         ] },
         { title: "设置", items: [
           { key: "theme", name: "外观", icon: "ic-gear", tone: "plain", side: this.data.themeName },

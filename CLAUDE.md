@@ -11,14 +11,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 全部在 `apps/platform/` 下执行：
 
 ```bash
-pnpm dev                     # 本地模式，localhost:3000
-pnpm worker                  # 生产任务 Worker（本地一般不需要，见下）
+pnpm dev:local               # 起本地 PostgreSQL + Web（localhost:3000）+ Worker，与生产同构
+pnpm db:start / db:stop      # 只起停本地 PostgreSQL（scripts/local-db.mjs，embedded-postgres 17，端口 54329）
+pnpm dev / pnpm worker       # 分开起 Web 与 Worker（两者都读 .env.local）
 pnpm check                   # lint + typecheck + test:coverage + build（提交前必跑）
 pnpm test                    # Vitest 单测
 pnpm test -- src/server/platform-service.test.ts        # 单个测试文件
 pnpm test -- -t "创建生成任务"                            # 按用例名筛选
-pnpm test:e2e                # Playwright，默认内存库；设置 E2E_DATABASE_URL 则拉起对应库的 Web + Worker（端口 3100）
-pnpm test:e2e -- --headed -g "completes generation"     # 单个 E2E 用例
+pnpm test:e2e:local          # Playwright：清空本地 petbaby_e2e 库后拉起 Web + Worker（端口 3100）；CI 用 pnpm test:e2e + E2E_DATABASE_URL
+pnpm test:e2e -- --headed -g "completes paid generation"     # 单个 E2E 用例
 pnpm db:generate             # 由 src/server/db/schema.ts 生成 drizzle/*.sql
 pnpm db:migrate              # 对 DATABASE_URL 指向的 PostgreSQL 执行迁移
 ```
@@ -33,25 +34,25 @@ pnpm db:migrate              # 对 DATABASE_URL 指向的 PostgreSQL 执行迁�
 
 `src/server/db/client.ts` 导出 `Database` 接口（`query` / `exec` / `close`）并按 `DATABASE_URL` 选实现：
 
-- `postgres://` → `postgres` 驱动（生产）
-- `memory://` → 内存 PGlite（E2E）
-- 空值或 `file://...` → 落盘 PGlite（默认 `file://.data/petbaby`，本地开发）
+- `postgres://` → `postgres` 驱动（生产与本地开发；本地库由 `scripts/local-db.mjs` 提供，`start` 时把 `DATABASE_URL` 等写进 `.env.local`）
+- `memory://` → 内存 PGlite（只给 Vitest）
+- 空值 → 直接报错。2026-10-09 起不再回落到落盘 PGlite：文件库只能被一个进程打开，Worker 连不上，本地会出现「任务入队但永远没人处理」
 
 **运行时全部是原始参数化 SQL**，`src/server/db/schema.ts`（drizzle-orm）仅供 `drizzle-kit generate` 产出 `drizzle/*.sql`，业务代码不 import 它。行→领域对象的转换集中在 `src/server/db/rows.ts`（`mapPet` / `mapWork` / `mapTask` …，snake_case → camelCase）。
 
 `getDatabase()` 首次调用 `db/migrate.ts` 的 `migrateDatabase()`：按文件名排序扫描 `drizzle/` 下四位编号 SQL，在事务锁内查询 `schema_migrations`，只执行尚未登记的迁移。新增 forward-only SQL 无需追加运行时硬编码列表，禁止改写历史迁移。`resetDatabaseForTest()` 则仍有固定 TRUNCATE 表清单与种子迁移重放，新增表或种子须单独检查测试重置覆盖。
 
-**测试隔离**：Vitest 在未显式设置时使用 `DATABASE_URL=memory://` 和 `.data/test-objects`；显式传入的配置仍会生效。执行 reset 类回归前必须确认是专用测试库，不得连接日常开发库 `.data/petbaby`。数据库事务上下文使用 `globalThis` 上的 AsyncLocalStorage 单例，避免 Next 热重载产生两份上下文而自锁。
+**测试隔离**：Vitest 在未显式设置时使用 `DATABASE_URL=memory://` 和 `.data/test-objects`；显式传入的配置仍会生效。执行 reset 类回归前必须确认是专用测试库，不得连接日常开发库（本地 PostgreSQL 的 `petbaby` 库）。数据库事务上下文使用 `globalThis` 上的 AsyncLocalStorage 单例，避免 Next 热重载产生两份上下文而自锁。
 
-### 生成任务：队列 + 本地内联执行
+### 生成任务：队列 + Worker（本地与生产同一条路径）
 
-`generation_tasks` 是状态机（`queued` / `processing` / `succeeded` / `failed`，带 `attempt`、`available_at`、`locked_at`）。`src/server/worker/generation-worker.ts` 的 `claimNextTask()` 用 `FOR UPDATE SKIP LOCKED` 抢任务并回收超过 5 分钟的僵死锁，`processTask()` 失败时最多重试 `MAX_ATTEMPTS=2`，终态失败会退还 `daily_quotas` 并写站内通知。
+`generation_tasks` 是状态机（`queued` / `processing` / `succeeded` / `failed`，带 `attempt`、`available_at`、`locked_at`）。`src/server/worker/generation-worker.ts` 的 `claimNextTask()` 用 `FOR UPDATE SKIP LOCKED` 抢任务并回收超过 5 分钟的僵死锁，`processTask()` 失败时自动重试两次（`MAX_TASK_ATTEMPTS=3`，共三次尝试），终态失败按原批次退还冻干；免费玩法返还当日次数，并写站内通知。
 
-任务驱动有三条路径，改动生成链路时都要考虑：
+任务驱动有两条路径，改动生成链路时都要考虑：
 
-1. `pnpm worker`（`scripts/worker.ts`）—— 生产循环，同时轮询图文生成、视频渲染（`processNextVideo`）、AI 任务（`processNextAiRun`），每 60 秒跑一轮运维动作（关单、清理过期内容、订阅消息投递、会员配额重置、健康快照与告警）。
+1. `pnpm worker`（`scripts/worker.ts`）—— 生产循环，同时轮询图文生成、视频渲染（`processNextVideo`）、AI 任务（`processNextAiRun`），每 60 秒跑一轮运维动作（关单、清理过期内容、订阅消息投递、赠送冻干过期、健康快照与告警）。
 2. `POST /api/internal/worker` 等 `internal/*` 路由 —— 需 `Authorization: Bearer $WORKER_SECRET`，否则统一返回 404。
-3. **本地/E2E 内联执行** —— `POST /api/generations` 在 `DATABASE_URL` 为空或 `memory://` 时直接 `await runNextTask()`，所以本地不起 Worker 也能走完全流程；这也是 Playwright 用例能同步看到结果的原因。
+**没有内联执行**（2026-10-09 删除）。以前 `POST /api/generations` 在本地库下会在请求里直接跑任务，而 `/api/ai-runs` 只入队，结果本地图文能出、写真永远排队，还掩盖了「Worker 没起来」。现在本地必须起 `pnpm worker`（`dev:local` 会一起起），Playwright 也是 Web + Worker 双进程。`scripts/load-env.ts` 让 Worker 与迁移脚本按 Next 的规则读 `.env.local`。
 
 ### 玩法（plugin）是数据驱动的
 
@@ -64,7 +65,7 @@ pnpm db:migrate              # 对 DATABASE_URL 指向的 PostgreSQL 执行迁�
 REST route handler 在 `src/app/api/**/route.ts`，它们只做「守卫 → 限频 → 调 service → 包 envelope」，几乎不含业务规则。准确路由数只在 `docs/README.md` 维护。规则集中在少数大 service：
 
 - `server/platform-service.ts` —— 阶段一主链路：宠物、照片、生成、作品/版本/分享、订单、支付、退款。
-- `server/growth-service.ts` —— 最大的一个：图片模板单张出图（`ai_runs`）、视频项目、订阅消息、会员、年度报告、实体商品。
+- `server/growth-service.ts` —— 最大的一个：图片模板单张出图（`ai_runs`）、视频项目、订阅消息、年度报告、实体商品。
 - `server/memorial-service.ts`、`server/account-service.ts`、`server/user-status-service.ts`、`server/maintenance.ts`。
 - `server/timeline-service.ts` —— 成长时间线按有效记录日期分页；「去年今日」仍按 EXIF 命中，手工日期与 EXIF 不一致时排除。
 
@@ -90,9 +91,11 @@ await Promise.all([enforceRateLimit(...), assertGenerationCircuit()]);
 
 `assertTrustedOrigin` 对 `x-petbaby-client: miniprogram` 放行（小程序无 Origin）。限频（`enforceRateLimit`）和日成本熔断（`assertGenerationCircuit`，读写 `system_usage`）都落库，不依赖内存状态。
 
-### 认证与后台权限（本地是刻意放宽的）
+### 认证与后台权限（本地与生产同口径）
 
-`server/auth/session.ts` 用 HMAC-SHA256 签名的 cookie（`petbaby_session`，7 天），也接受 `Authorization: Bearer <同一 token>`（小程序用）。**非生产环境 `getOptionalUserId()` 会回落到固定 demo 用户**，`server/auth/admin.ts` 的 `isAdmin()` **非生产环境直接返回 true**；生产必须靠 `ADMIN_USER_IDS` 白名单，未授权时按 404 处理（不暴露后台存在）。所以「本地能进后台」不代表权限正确，涉及权限的改动要按生产语义判断。
+`server/auth/session.ts` 用 HMAC-SHA256 签名的 cookie（`petbaby_session`，7 天），也接受 `Authorization: Bearer <同一 token>`（小程序用）。
+
+**正式生产只有微信一种账号**（2026-10-09）：`passwordAuthEnabled()` 在 `isRealProduction()` 下恒为 false，`PASSWORD_AUTH_ENABLED` 只对本地与测试机生效。**账号唯一标识是 unionid，openid 只记录**：`server/auth/wechat-account.ts` 的 `signInWechatUser` 按 `wechat_unionid` 找人并刷新 `wechat_openid`（支付必须用当前小程序的 openid），接管只有 openid 的老账号，用户行与加密 session_key 同一事务落库。code2Session 不返回 unionid（小程序未绑定开放平台）时登录明确失败，不能回落到 openid——否则同一个人会在绑定前后变成两个账号。见面礼、后台搜索、注销清理都按 unionid。2026-10-09 起本地开发与生产一致：未登录返回 401、后台按 `ADMIN_USER_IDS` 白名单（未授权 404，不暴露后台存在）、写接口要求来源、缺凭据的外部依赖（图片、健康模型、微信 Scheme、订阅模板、地址密钥）明确失败而不是给占位结果。**只有自动化测试夹具**（`runtime-mode.ts` 的 `isTestHarness()`：`NODE_ENV=test` 或 `PETBABY_TEST_HARNESS=1`，生产构建里无效）保留 demo 用户、开放后台和占位实现。本地仍保留的差异只有模拟支付、本地磁盘存储与 Cookie 不带 `secure`；Web/H5 本地同样不收款。本地进后台要先注册账号，再把用户 ID 填进 `.env.local` 的 `ADMIN_USER_IDS` 并重启 dev 与 worker。
 
 后台页面（`src/app/admin/**/page.tsx`）都是 `export const dynamic = "force-dynamic"` + `assertAdminPage(await requireUserId())` 的服务端壳，UI 在对应的 `*-admin-client.tsx`。人工操作通过 `server/admin/audit.ts` 的 `recordAdminAudit` 留痕。
 
@@ -133,7 +136,7 @@ await Promise.all([enforceRateLimit(...), assertGenerationCircuit()]);
 
 **生图接口 2026-08-06 从 packy 换到 lingsuan（`https://lingsuan.top`，OpenAI images 兼容）**，四处实测差异都在代码里有对应处理，换回去或再换站时逐条复核：① 默认返回 **url 而非 b64_json**，且**下载主机与 API 主机不同**（`img.junliai.org`）—— 出网白名单要放两个域名，只放 API 域名的症状是「生成成功、取字节全失败」；② `response_format` 接口**接受**（packy 不接受），但仍不传，默认 url 形态省内存；③ `size` **只对方形生效**（`1600x1000` 实测返回 `2048x1376`），所以 `crop.mjs` 的本地裁切不能省；④ `background=transparent` 返 200 但可能不生效，使用透明素材时须回读 alpha 通道。单张实测 46–62 秒（`quality=low`），比 packy 慢，超时默认已提到 180s。
 
-**图片玩法现在是模板货架，不再是旧的玩法/风格/气质预设组合。** `server/image-template-registry.ts` 是已登记入口、模板状态、尺寸、主体模式和运行时提示词的单一事实源；只有 `status="live"` 且有 `masterStorageKey` 的模板才由 `/api/image-templates` 下发。当前登记 12 个入口（含 `human` 如果我是人、`boss` 麻麻精选与 2026-10 新增的 `duo` 人宠写真：8 组 × 2 镜头的 owner-pet 模板，`groupId` 分组，展示在写真馆二级切换而非「其他玩法」），公开 API 只下发有 live 模板的入口；准确计数看 `docs/README.md`。单宠运行时输入固定为「冻结母版 → 宠物身份图」，人宠模板固定为「冻结母版 → 主人身份图 → 宠物身份图」；缺任一角色或母版必须明确失败，不能静默回落文生图。主人照片走迁移 `0025` 与 `owner-photo-service.ts` 独立存储，上传必须确认本人授权，读取/删除/账户清理都校验归属。
+**图片玩法现在是模板货架，不再是旧的玩法/风格/气质预设组合。** `server/image-template-registry.ts` 是已登记入口、模板状态、尺寸、主体模式和运行时提示词的单一事实源；只有 `status="live"` 且有 `masterStorageKey` 的模板才由 `/api/image-templates` 下发。当前登记 12 个入口（含 `human` 如果我是人、`boss` 麻麻精选与 2026-10 新增的 `duo` 人宠写真：8 组 × 2 镜头的 owner-pet 模板，`groupId` 分组，展示在创作页顶部独立的「人宠写真」分段（2026-10-09 起创作页四段：宠物写真 / 人宠写真 / 如果我是人 / 其他玩法）而非「其他玩法」），公开 API 只下发有 live 模板的入口；准确计数看 `docs/README.md`。单宠运行时输入固定为「冻结母版 → 宠物身份图」，人宠模板固定为「冻结母版 → 主人身份图 → 宠物身份图」；缺任一角色或母版必须明确失败，不能静默回落文生图。主人照片走迁移 `0025` 与 `owner-photo-service.ts` 独立存储，上传必须确认本人授权，读取/删除/账户清理都校验归属。
 
 **宠物人化已经切到直接效果图方案。** 新任务只调用一次 lingsuan，参考顺序固定为「图一：用户宠物原图 → 图二：自有效果图」，一次生成 1 张，只输出完整自然真人，不生成或缓存人物身份卡，也不支持重抽。效果图在上线后由同一个对象同时承担公开展示图与运行时图二；模板专属提示词归一到 `server/pet-human-effect-prompts.json`，固定第一、三部分在 `server/image-template-registry.ts`。迁移 `0026` 与 `pet-human-identity-service.ts` 仅保留历史数据兼容和删除清理，不得重新接回生成链路。2026-08-21 V2 新图已在 `tools/imagegen/out/pet-human-v2/effects/` 完成本地规范化，数字 ID `N` 固定映射为 `human-effect-NN`，提示词和计划对象键均已登记；不得重复生图。**2026-09-30 已确认上线**：40 款 `human-effect-NN` 均为 `live`，首页「如果我是人」入口打开全部造型。新增或替换人化效果图仍需单独审批，不得直接改 `live`。完整交接见 `docs/product/31-宠物人化两阶段执行与审批记录.md`。
 
@@ -186,7 +189,7 @@ await Promise.all([enforceRateLimit(...), assertGenerationCircuit()]);
 
 **「变化」不是「异常」。** `domain/weight-trend.ts` 只做减法：给「较上次 +10%（400 克）」，不给「偏胖」「正常范围」「BMI」——体况评分是执业兽医的触诊项目，靠体重数字算不出来。提示语说「和兽医提一下」把判断权交回有资格的人。`weight-trend.test.ts` 与 `health/document.test.ts` 各有一条扫全文的评价词守卫。
 
-**健康档案 PDF 是就医准备材料不是体检报告**（`health/document.ts`）。免责声明印在第一页顶部、带底衬、位置在正文之前 —— 这份文件会被打印带去医院，没有视觉分隔的免责声明会被当成正文读过去。文件里不出现「确诊」「治愈」「问诊」，也不出现「状况良好」这类评价性结论。**不打 AI 标识**（它是模板套用户自己录入的数据，不是生成合成内容）。会员 `healthExportUnlimited` 无限导出，非会员单买走 `entitlement_ledger` 的 `membership_id IS NULL` 凭据（`grantPurchasedCredit` / `consumePurchasedCredit`）。
+**健康档案 PDF 是就医准备材料不是体检报告**（`health/document.ts`）。免责声明印在第一页顶部、带底衬、位置在正文之前 —— 这份文件会被打印带去医院，没有视觉分隔的免责声明会被当成正文读过去。文件里不出现「确诊」「治愈」「问诊」，也不出现「状况良好」这类评价性结论。**不打 AI 标识**（它是模板套用户自己录入的数据，不是生成合成内容）。健康档案与年度健康记录均在导出时扣冻干，颗数来自 `domain/dongan-pricing.ts`；历史单买凭据仍可抵扣一次档案导出。会员已下线。
 
 **免疫记录的项目名由用户自己填，不给候选清单** —— 给清单等于在推荐具体疫苗或驱虫药（红线 2）。
 
@@ -198,7 +201,7 @@ await Promise.all([enforceRateLimit(...), assertGenerationCircuit()]);
 - **附图不进照片库**：`pet_record_attachments` + `private/<userId>/records/`，否则呕吐物照片会进时间线与年度短片。删记录要**先删附图登记再删记录**（外键 `ON DELETE SET NULL`，反过来附图会变成找不回来的孤儿）；未挂记录的附图一天后由 `cleanupExpiredContent` 登记清理；删宠物、对象清理守卫都已纳入这张表。
 - **分诊默认带近 7 天记录**（`daily-log-context.ts` 的 `recentContextLines`，「吃完了 / 差不多」这类无信息量的吃喝不进），快照进 `pet_snapshot.recentRecords` 供追溯。`daily-log-context.ts` 单独成模块是为了避免 `health-service` ↔ `daily-log-service` 循环依赖。
 - `memorial` 宠物拒绝写入（`RECORDS_SEALED_MEMORIAL`），端上不进切换列表；首页照顾条、宠物「…」菜单同样不对它出现。
-- 健康分诊 HTTP provider 是 OpenAI 兼容主备双通道（`HEALTH_MODEL_*` / `HEALTH_MODEL_SECONDARY_*`），无图时 content 走纯字符串、有图切 `HEALTH_MODEL_VISION`；默认 `response_format: json_object` + `temperature 0.2`，审计写进 `model_snapshot`。
+- 健康分诊 HTTP provider 是 OpenAI 兼容主备双通道（`HEALTH_MODEL_*` / `HEALTH_MODEL_SECONDARY_*`），2026-10-10 起只收文字（请求带 `photoIds` 非空直接 422、不扣额度），content 一律纯字符串，`HEALTH_MODEL_VISION` 已废弃；默认 `response_format: json_object` + `temperature 0.2`，审计写进 `model_snapshot`。
 
 ### AI 生成内容标识（合规硬要求，2026-09 口径）
 
@@ -210,7 +213,7 @@ await Promise.all([enforceRateLimit(...), assertGenerationCircuit()]);
 - **保存原图前确认标识义务**（第九条）：生成类原图交付前走 `assertAiOriginalDelivery`，未确认返回 428 `AI_DISCLOSURE_REQUIRED`；确认记录与交付日志在 `ai_disclosure_acknowledgements` / `ai_original_deliveries`，不参与任何自动清理。改确认文案必须升级 `AI_DISCLOSURE_POLICY_VERSION`。
 - 页面标题、按钮、错误信息、作品标题、官网宣传不出现「AI」字样；后台保留 Provider 等排障用语。
 
-**`needsAiLabel` 只对 `generator.type === "image-api"` 为真。** 排版类是 SVG 模板套用户原照片、视频是 ffmpeg 模板合成，都不是生成合成内容——给它们打标是错误标注，既误导用户又损害观感。
+**`needsAiLabel` 只对 `generator.type === "image-api"` 为真。** 证件照与画册等确定性排版是 SVG 模板套原照片、视频是 ffmpeg 模板合成；电影海报使用 image-api，按生成器类型标识——给它们打标是错误标注，既误导用户又损害观感。
 
 界面蒙层**必须有深色底衬**（暖黑 .66 渐变），不能只用半透明白字：白字压在白猫/雪地/过曝天空上等于没有提示。隐式标识走 sharp 的 `withMetadata`，实测能写进 PNG 的 EXIF（`ai-label-metadata.test.ts` 从产物回读验证，`growth-service.test.ts` 验证候选原图与预览都带）。
 
@@ -220,15 +223,15 @@ await Promise.all([enforceRateLimit(...), assertGenerationCircuit()]);
 
 **老 manifest（PL-20/21/22）保留为 `status: "archived"`，不能删。** `works` 表**没有** `plugin_snapshot` 列（只有 `generation_tasks` 和 `orders` 有），`hydrateWork` 一律 `getRuntimePlugin(work.pluginId)` 现查——删条目会让历史纪念作品抛 `WORK_INCOMPLETE`，打不开也删不掉。archived 同时满足「新用户看不到」（`/api/plugins` 只输出 live）与「老作品读得出」。
 
-**`hydrateWork` 里也要解析调性**：`createOrder` 的基础价取自 `work.plugin.pricing.unlockPrice`，漏了就会把纪念册按画册的基础价收费。
+**`hydrateWork` 里也要解析调性**：历史作品与纪念画册按解析后的玩法读取；纪念画册免费，收费规则统一由 `domain/dongan-pricing.ts` 决定。
 
-**免费玩法（`unlockPrice: 0`）直接给干净的正式产物**（2026-09 起取消水印）。拉新改由分享卡、公开落地页（小程序 `pages/share`、`/api/share/[token]`）和带小程序码的分享海报承担，作品本身不带任何标记。付费点只有「保存高清原图」。
+**免费玩法（`unlockPrice: 0`）直接给干净的正式产物**（2026-09 起取消水印）。拉新改由分享卡、公开落地页（小程序 `pages/share`、`/api/share/[token]`）和带小程序码的分享海报承担，作品本身不带任何标记。付费玩法先扣冻干再生成，产物入库即正式版；历史锁定作品使用 `/api/works/[id]/unlock` 扣冻干。免费证件照与成长对比每天合计十次，重新生成也计次。
 
 **作品长期保存。** 未付费作品不再 90 天后硬删除：`cleanupExpiredContent` 不清理作品，新作品 `expires_at` 写 NULL（迁移 `0036` 清空存量）。作品只在用户删除、删宠物或注销时清理；不要在云控制台配对象存储生命周期规则，那会绕过数据库直接删掉作品文件。
 
 **PL-15 互动星尘页已下线（2026-09）**：页面、接口、后台与导出分支已删除，但 manifest 必须保留为 `archived`——纪念空间「星尘纪念页」与历史互动导出都以 `plugin_id='pl-15'` 入库。表 `interactive_sessions` / `interactive_events` 暂留，下一个发布周期再删（方案见 `docs/ui-refactor/2026-09-29-产品UIUX评审/互动星尘页下线实施方案.md`）。
 
-**定价按积累量分档**在 `domain/pricing.ts`（放 `domain/` 因为 Web 端选择器要用），**下单时算不是生成时算**（用户可能隔几天才付，期间又上传了照片）。跨度用 `coalesce(shot_at, created_at)` 的 max−min，与 `timeline-service.ts` 同口径。纪念形态不分档——纪念场景比价是冒犯。
+**定价按积累量分档**在 `domain/pricing.ts`（放 `domain/` 因为 Web 端选择器要用），**入队扣费时计算并冻结**，端上提前读取 `/api/pets/[id]/pricing` 的 `cost/tier/tierCosts`。颗数真源为 `domain/dongan-pricing.ts`，端上不得写死。跨度用 `coalesce(shot_at, created_at)` 的 max−min，与 `timeline-service.ts` 同口径。纪念形态不分档——纪念场景比价是冒犯。
 
 ### 官网（`apps/website` + `docs/website/`）
 
@@ -248,13 +251,13 @@ await Promise.all([enforceRateLimit(...), assertGenerationCircuit()]);
 
 ## 测试口径
 
-Vitest 只收 `src/**/*.test.ts`（`fileParallelism: false`，因为共享 PGlite 单例），并把 `server-only` alias 到 `tests/server-only.ts`。覆盖率阈值（lines/functions/statements 75%、branches 65%）只作用于 `vitest.config.ts` 的 `include` 白名单（domain、plugins、errors、platform-service、request-guard、storage/index、generation-worker、entitlements、media/ai-label、health-service 与 `health/{triage,reminders,document}.ts`）——给这些文件加分支时要同步补测试，否则 `pnpm check` 会挂。健康线那几个进白名单是因为它们承载红线（药物过滤、memorial 排除、档案不给结论），漏测的后果是给出致害建议或对已离开的宠物推提醒。
+Vitest 只收 `src/**/*.test.ts`（`fileParallelism: false`，因为共享 PGlite 单例），并把 `server-only` alias 到 `tests/server-only.ts`。覆盖率阈值（lines/functions/statements 75%、branches 65%）只作用于 `vitest.config.ts` 的 `include` 白名单（准确清单见 `vitest.config.ts`，包括钱包、充值、支付、写真套餐及健康/记录服务）——给这些文件加分支时要同步补测试，否则 `pnpm check` 会挂。健康线那几个进白名单是因为它们承载红线（药物过滤、memorial 排除、档案不给结论），漏测的后果是给出致害建议或对已离开的宠物推提醒。
 
-Playwright 只有 `tests/e2e/main-flow.spec.ts` 两个用例：完整生成→解锁→分享主链路，以及遍历后台工作台并断言没有 `/api/admin/*` 4xx/5xx。加后台页面时记得补进那个列表。
+Playwright 覆盖冻干见面礼→扣费生成→正式版→分享、后台遍历、趣测与记录回看。用例数只看 `docs/README.md`。加后台页面时补进 `tests/e2e/main-flow.spec.ts`；钱包页也在遍历中。测试使用独立 `.next-e2e` 构建目录（`NEXT_DIST_DIR`），不与日常开发服务争用目录锁。
 
 ## 环境与部署
 
-`@electric-sql/pglite` 必须留在 `next.config.ts` 的 `serverExternalPackages` 里，否则 Windows 下 `memory://` E2E 会失败。`next.config.ts` 还统一下发 CSP 等安全头（开发态才放开 `unsafe-eval`）。
+`@electric-sql/pglite` 必须留在 `next.config.ts` 的 `serverExternalPackages` 里，否则 Windows 下 Vitest 的 `memory://` 会失败。`next.config.ts` 还统一下发 CSP 等安全头（开发态才放开 `unsafe-eval`）。
 
 `server/runtime-mode.ts` 把运行模式分成 `development` / `staging` / `production` 三态：`NODE_ENV=production` 且 `APP_ENV=staging` 时（测试机）允许 `OBJECT_STORAGE_PROVIDER=local` 和 `PAYMENT_PROVIDER=development`，正式生产两者都强制失败关闭。判定集中在 `storage/index.ts` 的 `selectObjectStorage()`、`payments/provider.ts` 的 `selectPaymentProvider()` 和 `platform-service.ts` 的 `payOrder()`。
 

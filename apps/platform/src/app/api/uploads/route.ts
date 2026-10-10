@@ -16,7 +16,7 @@ const metadataSchema = z.object({
   petId: z.string().uuid(),
   filename: z.string().min(1).max(120),
   uploadRequestId: z.string().uuid().optional(),
-  entry: z.enum(["create", "photos", "index", "me", "pets", "timeline"]).optional(),
+  entry: z.enum(["create", "photos", "index", "me", "pets", "timeline", "ai-create", "art-photo-bundle"]).optional(),
 });
 
 export async function GET(request: Request) {

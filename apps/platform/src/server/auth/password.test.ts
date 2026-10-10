@@ -6,11 +6,19 @@ import { resetDatabaseForTest } from "@/server/db/client";
 describe("account/password credentials", () => {
   afterEach(() => vi.unstubAllEnvs());
 
-  it("keeps password login closed in production unless explicitly enabled", () => {
+  it("never allows password login in real production, even when the flag is set", () => {
     vi.stubEnv("NODE_ENV", "production");
-    vi.stubEnv("PASSWORD_AUTH_ENABLED", "");
+    vi.stubEnv("APP_ENV", "production");
+    vi.stubEnv("PASSWORD_AUTH_ENABLED", "true");
     expect(passwordAuthEnabled()).toBe(false);
     expect(() => assertPasswordAuthEnabled()).toThrowError(expect.objectContaining({ code: "PASSWORD_AUTH_DISABLED", status: 403 }));
+  });
+
+  it("keeps password login closed on staging unless explicitly enabled", () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("APP_ENV", "staging");
+    vi.stubEnv("PASSWORD_AUTH_ENABLED", "");
+    expect(passwordAuthEnabled()).toBe(false);
     vi.stubEnv("PASSWORD_AUTH_ENABLED", "true");
     expect(passwordAuthEnabled()).toBe(true);
     expect(() => assertPasswordAuthEnabled()).not.toThrow();

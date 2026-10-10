@@ -2,7 +2,7 @@
 
 <!--
   制作与挑选（2026-10 按 prototype.html 第 4 节重做）：
-  - 等待：模糊的场景样片 + 我的头像、三段进度、「好了提醒我」、等的时候再挑几套写真；
+  - 等待：模糊的场景样片 + 我的头像、三段进度、等的时候再挑几套写真；
   - 结果：每次只出 1 张，大图展示、点一下放大；历史多候选任务仍并排挑选；重拍降级成一行文字链接；
   - 底部抽屉：场景名 + 带价格的保存按钮 +「发给朋友看」。
 -->
@@ -30,10 +30,6 @@
       </view>
       <view class="wait-bar"><view class="wait-bar-fill" style="width:{{waitProgress}}%"></view></view>
       <text class="muted wait-time">{{run.status === 'queued' && run.queuePosition > 1 ? '前面还有 ' + (run.queuePosition - 1) + ' 位，' : ''}}大约还要 {{run.estimatedSeconds || 55}} 秒</text>
-      <view class="wait-remind {{remindSet ? 'wait-remind-on' : ''}}" aria-role="button" hover-class="pet-feature-hover" bindtap="remindWhenReady">
-        <image class="wait-remind-icon" src="/assets/icons/{{themeId}}/ic-bell.png" mode="aspectFit" />
-        <text>{{remindSet ? '好了会在「我的」里提醒你' : '好了提醒我'}}</text>
-      </view>
       <text class="small wait-cap">离开也会继续做，在「作品 › 进行中」能找到</text>
 
       <view wx:if="{{suggestScenes.length}}" class="wait-more">
@@ -51,14 +47,14 @@
     <!-- 失败 -->
     <t-card wx:elif="{{run.status === 'failed'}}" blur="{{blurOk}}" anim="{{animType}}">
       <view class="state-title">这次没有拍成</view>
-      <text class="muted">额度已经返还。可以直接重试，用同样的照片再拍一次。</text>
-      <t-button type="primary" block anim="{{animType}}" loading="{{busy}}" class="block-gap" bindtap="retry">重试一次</t-button>
+      <text class="muted">系统已经自动重试过，{{costText}}已全额退回。</text>
+      <t-button wx:if="{{canReroll}}" type="primary" block anim="{{animType}}" loading="{{busy}}" class="block-gap" bindtap="chooseReroll">{{costText}} · 再拍一张</t-button>
     </t-card>
 
     <!-- 已取消 -->
     <t-card wx:elif="{{run.status === 'cancelled'}}" blur="{{blurOk}}" anim="{{animType}}">
       <view class="state-title">任务已取消</view>
-      <text class="muted">没有产生订单，也没有扣减额度。</text>
+      <text class="muted">{{costText}}已退回。</text>
     </t-card>
 
     <!-- 结果：新任务只有 1 张（服务端已自动选中）；历史 2 / 4 候选任务仍可挑选 -->
@@ -85,9 +81,9 @@
         </view>
       </view>
       <view wx:if="{{canReroll}}" class="run-reroll">
-        <text class="muted">不太满意？</text><text class="run-reroll-link" aria-role="button" bindtap="chooseReroll">换个方向重拍一张（剩 {{run.rerollRemaining}} 次）</text>
+        <text class="muted">想换个方向？</text><text class="run-reroll-link" aria-role="button" bindtap="chooseReroll">再拍一张（{{costText}}，这张会保留）</text>
       </view>
-      <text wx:elif="{{humanMode}}" class="small run-reroll">「如果我是人」不支持重拍</text>
+      <text wx:elif="{{humanMode}}" class="small run-reroll">想看看另一种样子？回上一页换一款造型再拍</text>
     </block>
   </block>
 
@@ -98,11 +94,11 @@
 <view wx:if="{{showSheet}}" class="{{skinClass}} run-sheet">
   <view class="run-sheet-head">
     <text class="run-sheet-title">{{selectedLabel}}</text>
-    <text class="small">{{run.selectedUnlocked ? '高清原图已就绪' : '预览图'}}</text>
+    <text class="small">{{run.selectedUnlocked ? '高清原图已就绪' : '冻干上线前的作品，需要先解锁'}}</text>
   </view>
   <t-button wx:if="{{run.selectedUnlocked}}" type="primary" block anim="{{animType}}" loading="{{busy}}" bindtap="save">保存高清原图到相册</t-button>
   <t-button wx:else type="primary" block anim="{{animType}}" disabled="{{!run.selectedId}}" loading="{{busy}}" bindtap="unlock">
-    <image class="run-lock" src="/assets/icons/{{themeId}}/lock.png" mode="aspectFit" />{{run.order && run.order.status === 'pending' ? '继续支付' : priceText || '保存高清原图'}}
+    <image class="run-lock" src="/assets/icons/{{themeId}}/fd-coin-mono.png" mode="aspectFit" />{{unlockText}}
   </t-button>
   <view class="run-sheet-row">
     <button class="run-share" open-type="share" disabled="{{!run.workId}}" hover-class="pet-feature-hover">
@@ -110,16 +106,18 @@
     </button>
     <view wx:if="{{run.workId}}" class="run-work" aria-role="button" bindtap="openWork">作品档案 ›</view>
   </view>
-  <text class="small run-sheet-cap">预览可以看、可以分享，会一直留在作品柜；保存到相册 = 高清原图</text>
+  <text class="small run-sheet-cap">作品会一直留在作品柜，可以分享，也可以保存高清原图到相册</text>
 </view>
 
 <t-dialog
   visible="{{confirmCancel}}"
   title="取消这次制作？"
-  content="已经排进队列的任务会立刻停止，免费额度原样返还。"
+  content="已经排进队列的任务会立刻停止，这次扣的冻干全额退回。"
   confirm-text="取消任务"
   danger
   anim="{{animType}}"
   bindconfirm="cancel"
   bindcancel="dismissCancel"
 ></t-dialog>
+
+<t-wallet-sheet id="wallet-sheet" visible="{{walletSheet.visible}}" required="{{walletSheet.required}}" balance="{{walletSheet.balance}}" shortfall="{{walletSheet.shortfall}}" bind:close="onWalletSheetClose" bind:paid="onWalletPaid"></t-wallet-sheet>

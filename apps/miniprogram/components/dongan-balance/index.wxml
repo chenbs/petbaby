@@ -1,0 +1,4 @@
+<view class="db" aria-role="button" aria-label="冻干余额 {{balance}} 颗，查看钱包" hover-class="db-hover" bindtap="open">
+  <image class="db-icon" src="/assets/icons/{{themeId}}/fd-coin.png" mode="aspectFit" />
+  <text class="db-n">{{loaded ? balance : '-'}}</text><text class="db-unit">颗</text>
+</view>

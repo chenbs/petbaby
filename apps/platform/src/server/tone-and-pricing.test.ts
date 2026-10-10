@@ -5,7 +5,6 @@ import { getPlugin } from "@/plugins/registry";
 import { getDatabase, resetDatabaseForTest } from "@/server/db/client";
 import {
   createGeneration,
-  createOrder,
   createPet,
   getGeneration,
   getWork,
@@ -13,6 +12,8 @@ import {
 } from "@/server/platform-service";
 import { objectStorage } from "@/server/storage";
 import { runWorkerUntilIdle } from "@/server/worker/generation-worker";
+import { getWallet } from "@/server/wallet/service";
+import { fundWallet } from "@/server/wallet/test-helpers";
 
 const USER = "00000000-0000-4000-8000-0000000000e1";
 const PNG = Uint8Array.from(
@@ -96,12 +97,14 @@ describe("生命阶段调性切换", () => {
   });
 });
 
-describe("定价分档端到端", () => {
+describe("冻干分档端到端", () => {
   beforeEach(async () => {
     await resetDatabaseForTest();
     await seed();
+    await fundWallet(USER, 100);
   });
 
+  /** 生成一本画册，返回作品与这一次扣掉的颗数（新人礼 3 颗 + 测试充值 100 颗）。 */
   async function makeAlbum(lifeStage: "active" | "memorial", photoCount: number, spanDays: number) {
     const pet = await createPet(USER, { name: "年糕", species: "cat", gender: "unknown", birthday: "", lifeStage });
     const photos = [];
@@ -110,54 +113,48 @@ describe("定价分档端到端", () => {
       const offset = photoCount > 1 ? Math.round((spanDays * index) / (photoCount - 1)) : 0;
       photos.push(await addPhoto(pet.id, new Date(Date.UTC(2025, 0, 1 + offset, 8)).toISOString()));
     }
+    const before = (await getWallet(USER)).balance;
     const task = await createGeneration(USER, {
       pluginId: "pet-time-album",
       petId: pet.id,
       photoIds: photos.slice(0, 6).map((photo) => photo.id),
       idempotencyKey: `album-${lifeStage}-${photoCount}-${spanDays}`,
     });
+    const charged = before - (await getWallet(USER)).balance;
     await runWorkerUntilIdle();
-    return (await getGeneration(USER, task.id)).work!;
+    return { work: (await getGeneration(USER, task.id)).work!, charged, taskId: task.id };
   }
 
-  it("20 张 / 短跨度是基础档 19.9", async () => {
-    const work = await makeAlbum("active", 20, 30);
-    const order = await createOrder(USER, work.id);
-    expect(order.amount).toBe(19.9);
+  it("20 张 / 短跨度是基础档 18 颗", async () => {
+    const { charged, work } = await makeAlbum("active", 20, 30);
+    expect(charged).toBe(18);
+    expect(work.locked).toBe(false);
   }, 60_000);
 
-  it("21 张是进阶档 39.9（边界值）", async () => {
-    const work = await makeAlbum("active", 21, 30);
-    const order = await createOrder(USER, work.id);
-    expect(order.amount).toBe(39.9);
+  it("21 张是进阶档 28 颗（边界值）", async () => {
+    expect((await makeAlbum("active", 21, 30)).charged).toBe(28);
   }, 60_000);
 
-  it("跨度满年是年度档 49，且照片不必多", async () => {
-    const work = await makeAlbum("active", 8, 400);
-    const order = await createOrder(USER, work.id);
-    expect(order.amount).toBe(49);
+  it("跨度满年是年度档 38 颗，且照片不必多", async () => {
+    expect((await makeAlbum("active", 8, 400)).charged).toBe(38);
   }, 60_000);
 
   /*
-   * 纪念形态**不分档**：纪念场景比价是冒犯，且「照片少所以便宜」
-   * 在纪念语境下不成立 —— 照片少往往是因为陪伴时间短。
+   * 纪念形态**不分档**：纪念场景比价是冒犯。纪念空间与纪念阶段的画册维持免费（36 号文 D2）。
    */
-  it("纪念册统一 49，不因照片少而降价", async () => {
-    const work = await makeAlbum("memorial", 6, 10);
-    const order = await createOrder(USER, work.id);
-    expect(order.amount).toBe(49);
+  it("纪念阶段的画册免费，且直接是正式版", async () => {
+    const { charged, work } = await makeAlbum("memorial", 6, 10);
+    expect(charged).toBe(0);
+    expect(work.locked).toBe(false);
   }, 60_000);
 
-  it("落库记录档位与积累量快照", async () => {
-    const work = await makeAlbum("active", 21, 30);
-    await createOrder(USER, work.id);
+  it("任务快照记录颗数、档位与积累量", async () => {
+    const { taskId } = await makeAlbum("active", 21, 30);
     const database = await getDatabase();
-    const orderRows = await database.query("SELECT price_tier,amount FROM orders WHERE work_id=$1", [work.id]);
-    expect(String(orderRows[0].price_tier)).toBe("advanced");
-    expect(Number(orderRows[0].amount)).toBe(39.9);
-    const workRows = await database.query("SELECT accumulation_snapshot FROM works WHERE id=$1", [work.id]);
-    const snapshot = workRows[0].accumulation_snapshot as Record<string, unknown>;
-    expect(Number(snapshot.photoCount)).toBe(21);
+    const rows = await database.query("SELECT options FROM generation_tasks WHERE id=$1", [taskId]);
+    const dongan = (rows[0].options as { dongan: { cost: number; tier: string; accumulation: { photoCount: number } } }).dongan;
+    expect(dongan).toMatchObject({ cost: 28, tier: "advanced" });
+    expect(dongan.accumulation.photoCount).toBe(21);
   }, 60_000);
 });
 

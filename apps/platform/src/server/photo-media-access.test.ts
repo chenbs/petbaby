@@ -1,11 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import sharp from "sharp";
 import { GET as media } from "@/app/api/media/[...key]/route";
+import { GET as downloadWork } from "@/app/api/works/[id]/download/route";
 import { GET as shareMedia } from "@/app/api/share/[token]/media/[asset]/route";
 import { GET as memorialMedia } from "@/app/api/memorial-share/[token]/media/[photoId]/route";
 import { signSession } from "@/server/auth/session";
 import { getDatabase, inTransaction, resetDatabaseForTest } from "@/server/db/client";
-import { createGeneration, createPet, createOrder, deletePet, getGeneration, getSharedWork, getWork, revokeShare, shareWork } from "@/server/platform-service";
+import { createGeneration, createPet, deletePet, getGeneration, getSharedWork, getWork, revokeShare, shareWork, unlockWork } from "@/server/platform-service";
+import { fundWallet } from "@/server/wallet/test-helpers";
 import { runWorkerUntilIdle } from "@/server/worker/generation-worker";
 import { deletePhoto, savePhoto, updatePhotoMetadata } from "@/server/photo-library-service";
 import { createVideoRender } from "@/server/growth-service";
@@ -47,7 +49,27 @@ beforeEach(async () => {
 afterEach(() => { vi.restoreAllMocks(); vi.unstubAllEnvs(); });
 
 describe("私人照片与交付物隔离（A10/A11/A16）", () => {
-  it.each(["pl-23", "pet-time-album"])("A13：记录照片进入 %s，免费交付或未付款后照片仍能回看下载", async (pluginId) => {
+  it("历史 SVG 作品预览和相册下载提供 PNG，其他账户仍无权读取", async () => {
+    const id = await work();
+    const key = `private/${USER}/works/${id}.svg`;
+    await objectStorage.put(key, new TextEncoder().encode('<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1440"><rect width="1080" height="1440" fill="orange"/></svg>'), "image/svg+xml");
+    await (await getDatabase()).query("UPDATE works SET output_key=$2 WHERE id=$1", [id, key]);
+    const detail = await getWork(USER, id);
+    expect(detail.outputUrl).toMatch(/\.svg\?format=png$/);
+    const response = await media(request(USER, `http://localhost${detail.outputUrl}`), { params: Promise.resolve({ key: key.split("/") }) });
+    expect(response.status).toBe(200);
+    expect(response.headers.get("Content-Type")).toBe("image/png");
+    expect(await sharp(Buffer.from(await response.arrayBuffer())).metadata()).toMatchObject({ format: "png", width: 1080, height: 1440 });
+    const download = await downloadWork(request(USER, `http://localhost/api/works/${id}/download?format=image`), { params: Promise.resolve({ id }) });
+    expect(download.status).toBe(200);
+    expect(download.headers.get("Content-Type")).toBe("image/png");
+    expect(download.headers.get("Content-Disposition")).toMatch(/\.png$/);
+    expect(await sharp(Buffer.from(await download.arrayBuffer())).metadata()).toMatchObject({ format: "png", width: 1080, height: 1440 });
+    expect((await media(request(OTHER, `http://localhost${detail.outputUrl}`), { params: Promise.resolve({ key: key.split("/") }) })).status).toBe(404);
+    expect((await downloadWork(request(OTHER), { params: Promise.resolve({ id }) })).status).toBe(404);
+  });
+  it.each(["pl-23", "pet-time-album"])("A13：记录照片进入 %s，交付后照片仍能回看下载", async (pluginId) => {
+    await fundWallet(USER, 50);
     const photoIds = [photo.id];
     for (let index = 1; index < (pluginId === "pl-23" ? 2 : 6); index++) {
       const key = `private/${USER}/${crypto.randomUUID()}.png`;
@@ -61,16 +83,14 @@ describe("私人照片与交付物隔离（A10/A11/A16）", () => {
     expect(completed.work?.petId).toBe(petId);
     if (pluginId === "pl-23") {
       expect(completed.work?.locked).toBe(false);
-      await expect(createOrder(USER, completed.work!.id)).rejects.toMatchObject({ code: "ORDER_NOT_REQUIRED" });
+      expect(await unlockWork(USER, completed.work!.id)).toMatchObject({ charged: 0 });
       const output = await objectStorage.get(completed.work!.outputKey!);
       const preview = await objectStorage.get(completed.work!.previewKey!);
       // 2026-09 起免费作品直接给干净原图，预览是独立的缩图，不再用预览覆盖原图。
       expect(output).toBeTruthy(); expect(preview).toBeTruthy(); expect(Buffer.from(output!.body).equals(Buffer.from(preview!.body))).toBe(false);
     } else {
-      const order = await createOrder(USER, completed.work!.id);
-      expect(order.status).toBe("pending"); expect(order.amount).toBeGreaterThan(0);
-      // 用户在付款前离开：未调用支付确认，不赋予收费权益，也不影响基础记录。
-      expect((await getWork(USER, completed.work!.id)).locked).toBe(true);
+      // 先扣冻干再生成：画册入库即正式版，交付不影响基础记录。
+      expect(completed.work?.locked).toBe(false);
     }
     expect(Buffer.from(await (await original(USER)).arrayBuffer())).toEqual(image);
     expect((await (await getDatabase()).query("SELECT id FROM photos WHERE user_id=$1 AND deleted_at IS NULL", [USER])).length).toBe(photoIds.length);

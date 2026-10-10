@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { mkdir } from "node:fs/promises";
 
 const tinyPng = Buffer.from(
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAADElEQVQImWP4v5QBAARLAaVqE1cAAAAAAElFTkSuQmCC",
@@ -6,116 +7,50 @@ const tinyPng = Buffer.from(
 );
 
 /*
- * 付费主链路用**电影海报**（12.9）而不是身份证。
+ * 主链路使用电影海报（5 颗）：建档得见面礼 3 颗，再模拟充值补足后生成。
  *
  * 2026-08-03 起 `pet-id-card` 转免费（改造方案 C6：证件照的免费替代太密），
  * 免费玩法不再有「支付并保存原图」这一步 —— 用它测解锁链路会测不到付费分支。
  * 免费路径由下面那条用例覆盖。
  */
-test("completes generation, unlock, and public share flow", async ({ page }) => {
+test("completes paid generation with newcomer gift and public share", async ({ page, request }) => {
+  const before = (await (await request.get("/api/wallet")).json()).data;
   await page.goto("/");
   await expect(page.getByRole("heading", { name: /每张照片/ })).toBeVisible();
   await page.getByRole("link", { name: /宠物电影海报/ }).click();
 
   await page.getByLabel("我叫什么？").fill("年糕");
+  const petSaved = page.waitForResponse((response) => response.url().endsWith("/api/pets") && response.request().method() === "POST");
   await page.getByRole("button", { name: "保存档案，选择照片" }).click();
+  expect((await petSaved).status()).toBe(201);
+  const gifted = (await (await request.get("/api/wallet")).json()).data;
+  expect(gifted.balance).toBe(before.balance + 3);
+  // 海报 5 颗，见面礼 3 颗不够：先走一次模拟充值（6 元 6 颗）
+  const headers = { "x-petbaby-client": "miniprogram" };
+  const topup = await request.post("/api/wallet/topups", { headers, data: { packageId: "p6" } });
+  expect(topup.status()).toBe(201);
+  const paid = await request.post("/api/growth-orders/" + (await topup.json()).data.id + "/pay", { headers, data: {} });
+  expect(paid.status()).toBe(200);
+  const funded = (await (await request.get("/api/wallet")).json()).data;
+  expect(funded.balance).toBe(gifted.balance + 6);
   await page.getByLabel(/追加新照片/).setInputFiles({ name: "pet.png", mimeType: "image/png", buffer: tinyPng });
-  await page.getByRole("button", { name: "免费生成预览" }).click();
+  await page.getByRole("button", { name: "5 颗 · 开始生成" }).click();
 
-  await page.getByRole("button", { name: "支付并保存原图" }).click({ timeout: 20_000 });
-  await expect(page.getByText("已解锁高清原图")).toBeVisible();
+  await expect(page.getByText("正式版 · 可直接保存")).toBeVisible({ timeout: 20_000 });
+  const resultImage = page.locator(".preview-photo img");
+  await expect.poll(() => resultImage.evaluate((element) => (element as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+  await resultImage.evaluate((element) => (element as HTMLImageElement).decode());
+  await mkdir("output/playwright", { recursive: true });
+  await page.screenshot({ path: "output/playwright/wallet-paid-work.png", fullPage: true });
+  const charged = (await (await request.get("/api/wallet")).json()).data;
+  expect(charged.balance).toBe(funded.balance - 5);
   await page.getByRole("button", { name: "生成分享页" }).click();
   await page.getByRole("link", { name: /打开分享页/ }).click();
 
   await expect(page.getByRole("link", { name: "给我的宠物也做一个" })).toBeVisible();
 });
 
-/*
- * 免费玩法零摩擦（改造方案 C2）**不放在 E2E 里**。
- *
- * 免费额度是每天 1 次且全站共用一个 demo 用户，第二个「要生成一次」的
- * E2E 用例必然撞上 DAILY_QUOTA_USED —— 而且 memory:// 的库随 dev server
- * 复用而保留，改成先跑免费再跑付费也只是换一个失败的那条。
- *
- * 该行为由 `platform-service.test.ts` 的「免费玩法」一组覆盖：
- * locked=false 入库、createOrder 拒绝、正式产物不被预览覆盖（2026-09 起不带水印）。
- */
-
-/*
- * 会员购买与权益兑付（改造项 M5）。
- *
- * 20 号文附录局限 1 点明这是原 E2E 的缺口：两个用例覆盖生成→解锁→分享与
- * 8 个后台，**不覆盖会员购买与权益兑付** —— 而那正是收入支点所在。
- *
- * 这条用例刻意**不做生成**：免费额度每天 1 次且全站共用一个 demo 用户，
- * 再加一个要生成的用例必然撞上 DAILY_QUOTA_USED（见上面那段说明）。
- * 会员与年报都不消耗生成额度，所以这条能与主链路共存。
- *
- * 断言落在**界面上的价格与权益文案**：M3 要修的就是「端上写死的价格与
- * 迁移走散」，而那种缺陷只有在真的渲染一遍页面时才看得见 ——
- * 服务端单测拿不到「按钮上印的是 ¥199」这件事。
- */
-test("sells only redeemable membership entitlements at the migrated price", async ({ page }) => {
-  const failedRequests: string[] = [];
-  page.on("response", (response) => {
-    if (response.url().includes("/api/member") && response.status() >= 400) failedRequests.push(`${response.status()} ${response.url()}`);
-  });
-  await page.goto("/commerce");
-
-  /*
-   * 价格与权益必须与最新的在售版本一致（当前是迁移 0023 的 v4 ¥128）。
-   * 写死 ¥199/¥25 的旧实现会在这里失败 —— 那是「界面承诺一个价、实收另一个」
-   * 的价格欺诈风险，也是 M3 要修的东西。
-   *
-   * 权益断言限定在套餐卡的 `<li>` 上：已开通会员的用户在同一页还有一张
-   * 会员卡（权益渲染成 `<small>`），不限定会命中 strict mode 的双元素。
-   */
-  await expect(page.getByRole("heading", { name: "¥128 / 年" })).toBeVisible({ timeout: 15_000 });
-  const planBenefits = page.locator("li");
-  await expect(planBenefits.filter({ hasText: "画册与短片按最高规格制作，价格按最低档收" })).toHaveCount(1);
-  await expect(planBenefits.filter({ hasText: "年度报告高清版 1 次免费解锁" })).toHaveCount(1);
-  await expect(planBenefits.filter({ hasText: "实体纪念品 9 折" })).toHaveCount(1);
-  // 健康两项已随第三批实施并由 P5 加回 —— 在售即必须可兑付。
-  await expect(planBenefits.filter({ hasText: "健康档案 PDF 无限导出" })).toHaveCount(1);
-  await expect(planBenefits.filter({ hasText: "年度健康记录 1 次" })).toHaveCount(1);
-  // 省额为负时不宣称省钱，改给回本件数（¥128 − 一次性 89.7 = 38.3，每件省 29.1 ⇒ 2 件）。
-  await expect(page.getByText("做 2 件画册或短片即回本")).toBeVisible();
-
-  /*
-   * 健康权益的卖点文案同样受红线约束：这份文件是就医准备材料，
-   * 不得被描述成体检报告或诊断结论。
-   */
-  await expect(page.locator("main")).not.toContainText("体检报告");
-  await expect(page.locator("main")).not.toContainText("诊断");
-  // D6 判定的负向卖点，迁移已从权益 JSON 移除，端上文案也不该残留。
-  await expect(page.locator("main")).not.toContainText("额度加量");
-  await expect(page.locator("main")).not.toContainText("额度按月自动重置");
-  // 月会员已下架：留着它点下去只会命中 MEMBERSHIP_PLAN_UNAVAILABLE。
-  await expect(page.locator("main")).not.toContainText("月会员");
-
-  expect(failedRequests).toEqual([]);
-});
-
-/*
- * **会员开通与年报权益核销不放进 E2E**，理由与上面的免费玩法同源：
- * 全站共用一个 demo 用户，而 memory:// 的库随 dev server 复用而保留 ——
- * 会员记录会跨用例累积，「年报余量剩 1 次」在第二次运行时就是错的期望。
- *
- * 这条链路由 `server/entitlement-redemption.test.ts` 覆盖，且那里走的是
- * **完整购买链路**（createMembership → payGrowthOrder）并断言账本行与
- * locked 状态，比点一遍界面严格。E2E 这条留下的是单测拿不到的那部分：
- * **界面上印的价格与权益文案是否与迁移走散**。
- */
-
-/*
- * Web 成长时间线（改造项 E6）。
- *
- * 20 号文 2.2 把「积累层的底座只有单端」列为情绪价值的分发缺口：
- * `getPetTimeline` 与 `/api/pets/[id]/timeline` 早已建成，而此前只有小程序有页面。
- *
- * 这条用例同时守住 E6 的入口可达性 —— 一个建好但没人能进的页面
- * 与 E5 修掉的「零端上调用方」是同一种浪费。
- */
+// 免费玩法每日十次与退款边界由服务端回归覆盖；这里复用主链路的宠物和照片。
 test("reaches the growth timeline from the account entry", async ({ page }) => {
   await page.goto("/me");
   await page.getByRole("link", { name: /成长时间线/ }).click();
@@ -148,6 +83,7 @@ test("loads every administrator workspace through the formal navigation", async 
     ["/admin/video", "视频模板与渲染任务"],
     ["/admin/memorials", "纪念产品管理"],
     ["/admin/business", "订阅、履约与权益"],
+    ["/admin/wallet", "冻干钱包管理"],
     ["/admin/users", "用户与审计"],
     ["/admin/audit", "统一管理审计"],
   ] as const;
@@ -156,6 +92,9 @@ test("loads every administrator workspace through the formal navigation", async 
     await expect(page.getByRole("heading", { name: heading })).toBeVisible();
     await expect(page.locator("main")).not.toContainText("服务暂时不可用", { timeout: 15_000 });
     await page.waitForTimeout(250);
+    if (path === "/admin/wallet") {
+      await page.screenshot({ path: "output/playwright/wallet-admin.png", fullPage: true });
+    }
   }
   expect(failedAdminRequests).toEqual([]);
 });

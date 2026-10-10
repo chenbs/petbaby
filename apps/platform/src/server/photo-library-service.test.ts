@@ -58,6 +58,19 @@ afterEach(async () => {
 });
 
 describe("上传回执与兼容（A01/A02/A03/A07/A10/A15）", () => {
+  it.each(["ai-create", "art-photo-bundle"])("支持 %s 页面就地上传并保留来源", async (entry) => {
+    const original = uploadRequest(crypto.randomUUID());
+    const form = await original.formData();
+    form.set("entry", entry);
+    const response = await upload(new Request(original.url, { method: "POST", headers: headers(), body: form }));
+    expect(response.status).toBe(201);
+    const photo = (await response.json()).data;
+    expect(photo.petId).toBe(petId);
+    const events = await (await getDatabase()).query("SELECT metadata FROM events WHERE name='upload_completed'");
+    expect(events).toHaveLength(1);
+    expect(events[0].metadata).toMatchObject({ entry });
+  });
+
   it("并发重放只存一张并只记一次事实，同键换文件/宠物拒绝，旧端仍为 Photo", async () => {
     const requestId = crypto.randomUUID();
     const responses = await Promise.all([upload(uploadRequest(requestId)), upload(uploadRequest(requestId))]);

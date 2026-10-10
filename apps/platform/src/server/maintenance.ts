@@ -7,7 +7,12 @@ import { processObjectCleanupJobs } from "@/server/object-cleanup";
 export async function closeExpiredOrders() {
   const database = await getDatabase();
   const rows = await database.query<{ id: string }>("UPDATE orders SET status='closed',closed_at=now() WHERE status='pending' AND created_at < now()-interval '30 minutes' RETURNING id");
-  return rows.length;
+  /*
+   * 权益订单（含冻干充值单）同样 30 分钟关单。原先只关作品订单，未付的充值单会一直挂在 pending，
+   * 占着单日充值上限的额度。已发起渠道支付的单仍可被回查确认（applyPaymentConfirmation 接受 closed）。
+   */
+  const growth = await database.query<{ id: string }>("UPDATE growth_orders SET status='closed',updated_at=now() WHERE status='pending' AND created_at < now()-interval '30 minutes' RETURNING id");
+  return rows.length + growth.length;
 }
 
 /**

@@ -9,7 +9,7 @@
   <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
 
   <view class="video-pet">
-    <picker range="{{pets}}" range-key="name" bindchange="choosePet">
+    <picker wx:if="{{pets.length}}" range="{{pets}}" range-key="name" bindchange="choosePet">
       <t-field label="宠物" control="select" value="{{petText}}" placeholder="请选择宠物"></t-field>
     </picker>
   </view>
@@ -21,6 +21,17 @@
     </view>
 
     <t-skeleton wx:if="{{loading}}" type="grid" count="9"></t-skeleton>
+
+    <t-empty
+      wx:elif="{{!pets.length}}"
+      icon="pet"
+      title="还没有宠物档案"
+      description="建一份档案、传几张照片，就能剪它的短片了。"
+      action-text="添加我的宠物"
+      anim="{{animType}}"
+      decor="{{decor}}"
+      bindaction="openPets"
+    ></t-empty>
 
     <t-empty
       wx:elif="{{!photos.length}}"
@@ -74,5 +85,5 @@
   </view>
 
   <text class="small video-price">{{pricingText}}</text>
-  <t-button type="primary" block anim="{{animType}}" loading="{{busy}}" disabled="{{!selected.length || selected.length > maxPhotos}}" class="block-gap" bindtap="create">创建并编辑（{{selected.length}} 张 · {{durationSeconds}} 秒）</t-button>
+  <t-button type="primary" block anim="{{animType}}" loading="{{busy}}" disabled="{{selected.length > maxPhotos}}" class="block-gap" bindtap="create">创建并编辑（{{selected.length}} 张 · {{durationSeconds}} 秒）</t-button>
 </view>

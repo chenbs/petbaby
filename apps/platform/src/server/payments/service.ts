@@ -2,11 +2,12 @@ import "server-only";
 import { z } from "zod";
 import { getDatabase, inTransaction, type Database, type SqlRow } from "@/server/db/client";
 import { AppError } from "@/server/errors";
-import { isRealProduction } from "@/server/runtime-mode";
+import { isRealProduction, isTestHarness } from "@/server/runtime-mode";
 import { selectPaymentChannel, virtualEnvironment, virtualProduct } from "./config";
 import { paymentProviderFor } from "./provider";
 import type { OrderKind, Payment, PaymentConfirmation, PaymentRefund } from "./types";
 import { activateArtPhotoBundle, cancelArtPhotoBundle } from "@/server/art-photo-bundle-service";
+import { grantTopup, revokeTopup } from "@/server/wallet/topup";
 
 const orderTables = { work: "orders", growth: "growth_orders", physical: "physical_orders" } as const;
 
@@ -41,7 +42,8 @@ export async function ensurePayment(userId: string, kind: OrderKind, orderId: st
 }
 
 export async function prepareOrderPayment(userId: string, kind: OrderKind, orderId: string, client: "miniprogram" | "web") {
-  if (client === "web" && (isRealProduction() || process.env.PAYMENT_PROVIDER !== "development" && process.env.PAYMENT_PROVIDER)) {
+  // Web/H5 与生产一致不收款，本地也一样；只有自动化测试夹具保留模拟付款路径。
+  if (client === "web" && !isTestHarness()) {
     throw new AppError("MINIPROGRAM_PAYMENT_REQUIRED", "本页面暂不支持付款", 409);
   }
   const payment = await ensurePayment(userId, kind, orderId);
@@ -50,17 +52,29 @@ export async function prepareOrderPayment(userId: string, kind: OrderKind, order
   return { ...await paymentProviderFor(payment.provider).create(payment), paymentId: payment.id };
 }
 
+/**
+ * 作品解锁的全部副作用。支付回调（历史现金订单）与冻干解锁共用这一处，
+ * 两条路各写一份会让 ai_runs / video_projects 的状态对不上。
+ */
+export async function applyWorkUnlock(database: Database, workId: string, userId: string, pluginId: string) {
+  await database.query("UPDATE works SET locked=false WHERE id=$1", [workId]);
+  await database.query("UPDATE ai_runs SET selected_unlocked=true WHERE work_id=$1", [workId]);
+  await database.query("UPDATE video_projects SET status='ready',updated_at=now() WHERE work_id=$1", [workId]);
+  await database.query("UPDATE video_renders SET status='ready' WHERE work_id=$1 AND status='preview_ready'", [workId]);
+  await database.query("INSERT INTO events (id,user_id,plugin_id,name,created_at) VALUES ($1,$2,$3,'paid',now())", [crypto.randomUUID(), userId, pluginId]);
+}
+
 async function grantPayment(database: Database, payment: Payment, order: SqlRow) {
   if (payment.order_kind === "work") {
-    await database.query("UPDATE works SET locked=false WHERE id=$1", [order.work_id]);
-    await database.query("UPDATE ai_runs SET selected_unlocked=true WHERE work_id=$1", [order.work_id]);
-    await database.query("UPDATE video_projects SET status='ready',updated_at=now() WHERE work_id=$1", [order.work_id]);
-    await database.query("UPDATE video_renders SET status='ready' WHERE work_id=$1 AND status='preview_ready'", [order.work_id]);
-    await database.query("INSERT INTO events (id,user_id,plugin_id,name,created_at) VALUES ($1,$2,$3,'paid',now())", [crypto.randomUUID(), payment.user_id, order.plugin_id]);
+    await applyWorkUnlock(database, String(order.work_id), payment.user_id, String(order.plugin_id));
     return;
   }
   if (payment.order_kind === "physical") {
     await database.query("UPDATE physical_orders SET provider_order_id=$2 WHERE id=$1", [payment.order_id, payment.provider_transaction_id]);
+    return;
+  }
+  if (payment.order_kind === "growth" && order.kind === "wallet_topup") {
+    await grantTopup(database, order, payment.amount_fen);
     return;
   }
   if (payment.order_kind === "growth" && order.kind === "art_photo_bundle") {
@@ -68,11 +82,11 @@ async function grantPayment(database: Database, payment: Payment, order: SqlRow)
     await activateArtPhotoBundle(database, payment.user_id, String(order.resource_id), payment.order_id);
     return;
   }
-  if (order.kind === "membership") {
-    const memberships = await database.query("UPDATE memberships SET status='active',quota=COALESCE((entitlements->>'monthlyQuota')::int,0),used=0,status_updated_at=now(),expires_at=now()+CASE WHEN plan='yearly' THEN interval '365 days' ELSE interval '30 days' END,quota_reset_at=now()+interval '30 days' WHERE id=$1 AND user_id=$2 RETURNING id", [order.resource_id, payment.user_id]);
-    if (!memberships[0]) throw new AppError("MEMBERSHIP_NOT_FOUND", "会员记录不存在", 409);
-    await database.query("INSERT INTO entitlement_ledger (id,user_id,membership_id,order_id,kind,units,status,reason,created_at) VALUES ($1,$2,$3,$4,'membership',1,'granted','会员支付到账',now())", [crypto.randomUUID(), payment.user_id, order.resource_id, payment.order_id]);
-  } else if (order.kind === "annual_report") {
+  /*
+   * 会员已下线（2026-10-08）：不再开通新会员，历史会员订单的支付确认一律拒绝发放；
+   * 退款回收（revokePayment 的会员分支）保留，供历史订单对账。
+   */
+  if (order.kind === "annual_report") {
     const reports = await database.query("UPDATE annual_reports SET locked=false WHERE id=$1 AND user_id=$2 RETURNING id", [order.resource_id, payment.user_id]);
     if (!reports[0]) throw new AppError("REPORT_NOT_FOUND", "年度报告不存在", 409);
   } else if (order.kind === "health_archive") {
@@ -111,9 +125,12 @@ async function revokePayment(database: Database, payment: Payment) {
     await database.query("UPDATE video_renders SET status='preview_ready' WHERE work_id=$1 AND status='ready'", [order.work_id]);
   } else if (payment.order_kind === "growth") {
     await database.query("UPDATE growth_orders SET refunded_at=now(),updated_at=now() WHERE id=$1", [payment.order_id]);
-    if (order.kind === "art_photo_bundle") {
+    if (order.kind === "wallet_topup") {
+      await revokeTopup(database, order);
+    } else if (order.kind === "art_photo_bundle") {
       if (order.resource_id) await cancelArtPhotoBundle(database, String(order.resource_id));
     } else if (order.kind === "membership") {
+      // 历史会员订单（会员已于 2026-10-08 下线）：退款时仍按原规则回收已用权益。
       await database.query("UPDATE memberships SET status='expired',quota=0,used=0,status_updated_at=now() WHERE id=$1", [order.resource_id]);
       const redeemed = await database.query("SELECT kind,resource_id FROM entitlement_ledger WHERE membership_id=$1 AND status='consumed'", [order.resource_id]);
       for (const item of redeemed) {
@@ -129,8 +146,11 @@ async function revokePayment(database: Database, payment: Payment) {
     }
     await database.query("UPDATE health_documents SET revoked_at=now() WHERE id IN (SELECT resource_id FROM entitlement_ledger WHERE order_id=$1)", [payment.order_id]);
     await database.query("UPDATE entitlement_ledger SET status='revoked' WHERE order_id=$1", [payment.order_id]);
-  } else {
+  } else if (payment.order_kind === "physical") {
     await database.query("UPDATE physical_orders SET refunded_at=now() WHERE id=$1", [payment.order_id]);
+  } else {
+    // 未知类型直接拒绝：原先 else 一律按实体处理，新类型会静默跳过权益回收。
+    throw new AppError("PAYMENT_KIND_UNSUPPORTED", "未知订单类型，已拒绝退款回收", 409);
   }
 }
 
@@ -215,7 +235,7 @@ async function submitRefund(payment: Payment, refund: PaymentRefund) {
   if (payment.provider === "development") await completeRefund(refund.id);
 }
 
-export async function refundOrderPayment(userId: string, kind: OrderKind, orderId: string, reason: "generation_failed" | "dissatisfied" | "requested" = "requested") {
+export async function refundOrderPayment(userId: string, kind: OrderKind, orderId: string, reason: "generation_failed" | "dissatisfied" | "requested" | "admin" = "requested") {
   const payment = await ensurePayment(userId, kind, orderId);
   if (kind === "physical") {
     const order = await sourceOrder(await getDatabase(), kind, orderId, userId);
@@ -248,13 +268,14 @@ export async function listPaymentOrders(userId: string) {
     SELECT source.*,p.status payment_status,COALESCE(p.refunded_fen,0) refunded_fen,
       (SELECT status FROM payment_refunds WHERE payment_id=p.id ORDER BY created_at DESC LIMIT 1) refund_status
     FROM (
-      SELECT id,user_id,sku,amount,status,created_at,'work' payment_kind FROM orders
-      UNION ALL SELECT id,user_id,sku,amount,status,created_at,'growth' payment_kind FROM growth_orders
-      UNION ALL SELECT id,user_id,sku,amount,status,created_at,'physical' payment_kind FROM physical_orders
+      SELECT id,user_id,sku,amount,status,created_at,'work' payment_kind,0::int units FROM orders
+      UNION ALL SELECT id,user_id,sku,amount,status,created_at,'growth' payment_kind,coalesce((entitlement_snapshot->>'units')::int,0) units FROM growth_orders
+      UNION ALL SELECT id,user_id,sku,amount,status,created_at,'physical' payment_kind,0::int units FROM physical_orders
     ) source LEFT JOIN payment_transactions p ON p.order_id=source.id AND p.order_kind=source.payment_kind
     WHERE source.user_id=$1 ORDER BY source.created_at DESC LIMIT 100`, [userId]);
   return rows.map((row) => ({
     id: String(row.id), paymentKind: String(row.payment_kind), sku: String(row.sku),
+    units: Number(row.units || 0),
     amount: Number(row.amount), status: ["pending", "processing"].includes(String(row.refund_status)) ? "refunding" : String(row.status),
     refundedAmount: Number(row.refunded_fen) / 100, refundStatus: row.refund_status || null,
   }));

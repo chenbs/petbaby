@@ -1,5 +1,5 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
-<view class="{{skinClass}} page page-tabbar art-brand layout-matrix art-photo-page {{segment === 'art' && artMode === 'pet' && packageMode !== 'single' ? 'art-photo-page-bundle' : ''}}">
+<view class="{{skinClass}} page page-tabbar art-brand layout-matrix art-photo-page {{segment === 'pet' ? 'art-photo-page-bundle' : ''}}">
   <!-- 分段吸顶：往下滑时仍可切换；外层垫页面底色，内容滑过时不透出来 -->
   <view class="create-segments-bar">
     <view class="create-segments" aria-role="tablist">
@@ -10,15 +10,12 @@
   <t-skeleton wx:if="{{loading}}" type="grid" count="4"></t-skeleton>
   <t-notice wx:elif="{{error}}" type="error" message="{{error}}"></t-notice>
 
-  <!-- 写真馆：宠物写真 / 人宠写真（2026-10）。两种写真共用一个写真馆，用二级切换分开 -->
-  <block wx:elif="{{segment === 'art'}}">
-    <view wx:if="{{duoCount}}" class="art-modes chips" aria-role="tablist">
-      <view wx:for="{{artModes}}" wx:key="id" class="chip {{artMode === item.id ? 'chip-on' : ''}}" data-id="{{item.id}}" aria-role="tab" aria-selected="{{artMode === item.id}}" hover-class="chip-hover" bindtap="chooseArtMode">{{item.label}}<text class="art-mode-count">{{item.id === 'duo' ? duoCount : sceneCount}}</text></view>
-    </view>
-    <block wx:if="{{artMode === 'duo'}}">
+  <!-- 人宠写真：主人 + 宠物同框，按组展示，点镜头直达制作页 -->
+  <block wx:elif="{{segment === 'duo'}}">
     <view class="art-heading">
-      <view class="title">我和我家的，同框一组</view>
-      <text class="muted">上传一张我的照片和一张宠物照，换成我们俩。{{duoPriceText}}</text>
+      <view class="title">和我同框，拍一组合影</view>
+      <text class="muted">一张你的照片，一张我的照片，就能并排出现在同一个画面里。{{duoGroups.length}} 场拍摄，每场两个镜头。</text>
+      <text wx:if="{{duoPriceText}}" class="small art-heading-price">{{duoPriceText}}</text>
     </view>
     <view wx:for="{{duoGroups}}" wx:for-item="group" wx:key="id" class="art-collection duo-group">
       <view class="art-section-head">
@@ -36,41 +33,54 @@
         </view>
       </view>
     </view>
-    </block>
-    <block wx:else>
+  </block>
+
+  <!-- 宠物写真：单张点图直达；10 / 20 张一组从空白开始挑，按点选顺序编号 -->
+  <block wx:elif="{{segment === 'pet'}}">
     <view class="art-heading">
-      <view class="title">一张照片，拍出 {{sceneCount}} 种样子</view>
-      <text class="muted">布景、造型和那一下的小表情都准备好了，不用预约。每套 1 张，可以单独保存。</text>
+      <view class="title">{{sceneCount}} 套布景，换我来当主角</view>
+      <text class="muted">从窗边晨光到雪夜木屋，衣服、道具和灯光都按场景搭好，只要一张我的清楚照片。</text>
+      <!-- 和线下影棚比：不用等、不折腾、花得少（2026-10-10） -->
+      <view class="art-perks">
+        <view class="art-perk"><text class="art-perk-title">不用约档期</text><text class="small">不排队、不赶路，现在挑好，一分钟左右就出片</text></view>
+        <view class="art-perk"><text class="art-perk-title">不用哄我配合</text><text class="small">不怕我乱跑、不肯穿衣服，平时随手拍的那张就够用</text></view>
+        <view class="art-perk"><text class="art-perk-title">换装不加钱</text><text class="small">省下影棚、服装和道具的钱，一套 {{packages.single.price}}，一组更省</text></view>
+      </view>
     </view>
     <view class="art-package-options">
-      <view wx:for="{{['single', 'ten', 'all']}}" wx:key="*this" class="art-package {{packageMode === item ? 'art-package-on' : ''}}" data-mode="{{item}}" aria-role="radio" aria-checked="{{packageMode === item}}" bindtap="choosePackage">
+      <view wx:for="{{['single', 'ten', 'twenty']}}" wx:key="*this" class="art-package {{packageMode === item ? 'art-package-on' : ''}}" data-mode="{{item}}" aria-role="radio" aria-checked="{{packageMode === item}}" bindtap="choosePackage">
         <text wx:if="{{packages[item].recommended}}" class="art-package-badge">最多人选</text>
         <text>{{packages[item].label}}</text>
         <text class="art-package-price">{{packages[item].price || '—'}}</text>
         <text class="small">{{packages[item].unit}}</text>
       </view>
     </view>
+    <view wx:if="{{packageMode !== 'single'}}" class="art-pick-bar">
+      <text class="small art-pick-tip">{{selectedCount ? '再点一下可以取下' : '点图挑出想拍的 ' + packageTotal + ' 套'}}</text>
+      <text wx:if="{{selectedCount}}" class="small art-pick-action" aria-role="button" bindtap="clearSelection">清空</text>
+      <text wx:if="{{selectedCount < packageTotal}}" class="small strong art-pick-action" aria-role="button" bindtap="fillSelection">{{selectedCount ? '剩下的帮我挑' : '帮我挑满'}}</text>
+    </view>
     <view wx:for="{{collections}}" wx:for-item="group" wx:key="id" class="art-collection">
       <view class="art-section-head">
         <view class="section-title">{{group.title}}</view>
-        <text class="small">{{packageMode === 'ten' ? '已为我挑好，点图可替换' : group.subtitle}}</text>
+        <text class="small">{{group.subtitle}}</text>
       </view>
       <view class="art-grid">
-        <view wx:for="{{group.scenes}}" wx:for-item="scene" wx:key="id" class="art-item {{scene.selected ? 'art-item-selected' : ''}}" data-id="{{scene.id}}" aria-role="{{packageMode === 'single' ? 'button' : 'checkbox'}}" aria-checked="{{scene.selected}}" aria-label="{{scene.title}}写真" bindtap="chooseScene">
-          <view class="art-image-wrap"><image wx:if="{{scene.url}}" class="art-image" src="{{scene.url}}" mode="aspectFit" data-id="{{scene.id}}" binderror="onSceneImageError" lazy-load /><view wx:else class="art-image art-image-empty">样片暂不可用</view><text wx:if="{{packageMode !== 'single'}}" class="art-selection {{scene.selected ? 'art-selection-on' : ''}}">{{scene.selected ? '✓' : '＋'}}</text></view>
+        <view wx:for="{{group.scenes}}" wx:for-item="scene" wx:key="id" class="art-item {{scene.selected ? 'art-item-selected' : ''}}" data-id="{{scene.id}}" aria-role="{{packageMode === 'single' ? 'button' : 'checkbox'}}" aria-checked="{{scene.selected}}" aria-label="{{scene.title}}写真{{scene.selected ? '，第 ' + scene.order + ' 张' : ''}}" bindtap="chooseScene">
+          <view class="art-image-wrap"><image wx:if="{{scene.url}}" class="art-image" src="{{scene.url}}" mode="aspectFit" data-id="{{scene.id}}" binderror="onSceneImageError" lazy-load /><view wx:else class="art-image art-image-empty">样片暂不可用</view><text wx:if="{{packageMode !== 'single'}}" class="art-selection {{scene.selected ? 'art-selection-on' : ''}}">{{scene.selected ? scene.order : '＋'}}</text></view>
           <view class="art-name">{{scene.title}}</view>
           <text class="small art-description">{{scene.description}}</text>
         </view>
       </view>
     </view>
-    </block>
   </block>
 
   <!-- 如果我是人：40 款造型，按标签筛选，点哪张直达哪张 -->
   <block wx:elif="{{segment === 'human'}}">
     <view class="art-heading">
       <view class="title">如果我是人</view>
-      <text class="muted">上传一张我的正脸照，看看我变成人的样子。每次出 1 张，不支持重拍。</text>
+      <text class="muted">我的毛色、眼神和那股劲儿，换成人会是什么样？{{humanTemplates.length}} 款造型，挑一个就能看看。</text>
+      <text wx:if="{{humanPriceText}}" class="small art-heading-price">{{humanPriceText}} · 用一张我的正脸照</text>
     </view>
     <scroll-view class="human-tags chip-scroll" scroll-x show-scrollbar="{{false}}"><view class="chip-track">
       <view class="chip {{!humanTag ? 'chip-on' : ''}}" data-tag="" bindtap="chooseHumanTag">全部 {{humanTemplates.length}}</view>
@@ -87,7 +97,7 @@
 
   <!-- 其他玩法：分类 + 图文 / 短片 / 趣测 -->
   <block wx:else>
-    <view class="art-heading"><view class="title">其他玩法</view><text class="muted">挑一个，几分钟就能做好。</text></view>
+    <view class="art-heading"><view class="title">其他玩法</view><text class="muted">证件照、电影海报、成长画册和回忆短片，把我攒下的照片做成能留着的东西。</text></view>
     <scroll-view class="human-tags chip-scroll" scroll-x show-scrollbar="{{false}}"><view class="chip-track">
       <view wx:for="{{playChips}}" wx:key="id" class="chip {{playChip === item.id ? 'chip-on' : ''}}" data-id="{{item.id}}" aria-role="tab" aria-selected="{{playChip === item.id}}" hover-class="chip-hover" bindtap="choosePlayChip">{{item.label}}</view>
     </view></scroll-view>
@@ -110,7 +120,7 @@
     </view>
   </block>
 </view>
-<view wx:if="{{segment === 'art' && artMode === 'pet' && !loading && !error}}" class="{{skinClass}} art-bundle-dock">
-  <view class="dock-meta"><text class="dock-count">{{dockText}}</text><text class="small">{{packageMode === 'single' ? '先看预览，满意再保存' : '下一步选我的照片'}}</text></view>
+<view wx:if="{{segment === 'pet' && !loading && !error}}" class="{{skinClass}} art-bundle-dock">
+  <view class="dock-meta"><text class="dock-count">{{dockText}}</text><text wx:if="{{dockSub}}" class="small">{{dockSub}}</text></view>
   <t-button wx:if="{{packageMode !== 'single'}}" type="primary" anim="{{animType}}" bindtap="startBundle">下一步</t-button>
 </view>

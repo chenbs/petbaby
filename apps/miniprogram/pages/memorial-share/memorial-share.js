@@ -1,5 +1,6 @@
 const api = require("../../services/api");
 const config = require("../../config");
+const params = require("../../services/params");
 const { themedPage } = require("../../theme/page-mixin");
 
 function downloadPublicPhoto(photo) {
@@ -20,7 +21,7 @@ themedPage({ mood: "memorial" }, {
 
   onLoad(options) {
     const token = options.token;
-    if (!token) return this.setData({ loading: false, error: "分享链接缺少必要信息，请让分享者重新发送。" });
+    if (!params.isShareToken(token)) return this.setData({ loading: false, error: "分享链接缺少必要信息，请让分享者重新发送。" });
     return api.request("/api/memorial-share/" + token)
       .then((item) => {
         const sections = item.storySections || item.story_sections || [];

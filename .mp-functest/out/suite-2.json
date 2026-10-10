@@ -1,0 +1,119 @@
+{
+  "steps": [
+    {
+      "name": "宠物：新建档案（打开→填名→选种类→保存）",
+      "ok": true,
+      "detail": {
+        "点了狗狗": true,
+        "提交前名字": "测试狗子",
+        "提交前种类": "dog",
+        "保存后message": "档案已保存",
+        "保存后error": "",
+        "编辑器已关": true,
+        "列表": [
+          "����/cat",
+          "测试狗子/dog",
+          "测试狗子/dog",
+          "测试狗子/dog"
+        ]
+      },
+      "newErrors": []
+    },
+    {
+      "name": "宠物：服务端确认新档案",
+      "ok": true,
+      "detail": {
+        "pets": [
+          "����/cat/active",
+          "测试狗子/dog/active",
+          "测试狗子/dog/active",
+          "测试狗子/dog/active"
+        ]
+      },
+      "newErrors": []
+    },
+    {
+      "name": "记录：真实点击「吃饭」打开表单",
+      "ok": true,
+      "detail": {
+        "表单打开": true,
+        "kind": "meal",
+        "specFields": [
+          "appetite",
+          "food"
+        ]
+      },
+      "newErrors": []
+    },
+    {
+      "name": "记录：真实点击「吃完了」选项",
+      "ok": true,
+      "detail": {
+        "点了": "吃完了",
+        "values": {
+          "appetite": "all",
+          "food": ""
+        }
+      },
+      "newErrors": []
+    },
+    {
+      "name": "记录：提交「记下来」",
+      "ok": true,
+      "detail": {
+        "表单已关": true,
+        "formError": "",
+        "afterSave": null,
+        "urgent": null,
+        "headline": "已记录 1 天"
+      },
+      "newErrors": []
+    },
+    {
+      "name": "记录：回看列表确认已入库",
+      "ok": true,
+      "detail": {
+        "条数": 3,
+        "headline": "已记录 1 天",
+        "empty": false,
+        "今日条目": [
+          "吃饭",
+          "吃饭",
+          "吃饭"
+        ]
+      },
+      "newErrors": []
+    },
+    {
+      "name": "作品详情：无 id 打开（应给友好文案）",
+      "ok": true,
+      "detail": {
+        "页面error字段": "作品链接无效，请从作品柜重新打开",
+        "是否泄漏原始异常": false
+      },
+      "newErrors": []
+    },
+    {
+      "name": "作品详情：造一件作品后用真实 id 打开",
+      "ok": true,
+      "detail": {
+        "玩法": "pet-id-card",
+        "宠物": "����",
+        "建任务": 422,
+        "body": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"Invalid input: expected array, received undefined\"}}"
+      },
+      "newErrors": []
+    },
+    {
+      "name": "作品柜：真实点击查看作品",
+      "ok": true,
+      "detail": {
+        "卡片数": 0,
+        "path": "pages/works/works"
+      },
+      "newErrors": []
+    }
+  ],
+  "failed": [],
+  "errors": []
+}

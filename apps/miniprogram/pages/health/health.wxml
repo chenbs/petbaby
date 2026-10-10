@@ -166,8 +166,7 @@
         </view>
       </view>
 
-      <t-button type="ghost" block anim="{{animType}}" loading="{{documentBusy}}" class="block-gap" bindtap="exportDocument">导出健康档案</t-button>
-      <t-button wx:if="{{canBuyDocument}}" type="ai" block anim="{{animType}}" loading="{{documentBusy}}" class="block-gap" bindtap="buyDocument">购买一次导出</t-button>
+      <t-button type="ghost" block anim="{{animType}}" loading="{{documentBusy}}" class="block-gap" bindtap="exportDocument">{{walletCosts.healthDocument}} 颗冻干 · 导出健康档案</t-button>
       <text wx:if="{{documentHint}}" class="hint">{{documentHint}}</text>
     </view>
 
@@ -183,3 +182,5 @@
     </view>
   </block>
 </view>
+
+<t-wallet-sheet id="wallet-sheet" visible="{{walletSheet.visible}}" required="{{walletSheet.required}}" balance="{{walletSheet.balance}}" shortfall="{{walletSheet.shortfall}}" bind:close="onWalletSheetClose" bind:paid="onWalletPaid"></t-wallet-sheet>

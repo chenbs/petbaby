@@ -68,7 +68,7 @@ export async function inTransaction<T>(operation: (database: Database) => Promis
 
 export async function resetDatabaseForTest() {
   const database = await getDatabase();
-  await database.exec("TRUNCATE home_curation, ai_original_deliveries, ai_disclosure_acknowledgements, object_cleanup_jobs, payment_refund_inquiries, payment_refunds, payment_transactions, wechat_sessions, user_notifications, pet_human_identities, owner_photos, plugin_config_versions, plugin_configs, refunds, rate_limits, system_usage, ai_cost_ledger, interactive_events, experiment_metrics, events, daily_quotas, health_daily_quotas, health_sessions, health_reminders, health_documents, pet_record_attachments, pet_daily_logs, pet_care_records, pet_weight_records, audit_logs, operation_audit_logs, orders, growth_orders, physical_orders, generation_tasks, works, photos, pets, users CASCADE;");
+  await database.exec("TRUNCATE wallet_ledger, wallet_lots, wallet_accounts, home_curation, ai_original_deliveries, ai_disclosure_acknowledgements, object_cleanup_jobs, payment_refund_inquiries, payment_refunds, payment_transactions, wechat_sessions, user_notifications, pet_human_identities, owner_photos, plugin_config_versions, plugin_configs, refunds, rate_limits, system_usage, ai_cost_ledger, interactive_events, experiment_metrics, events, daily_quotas, health_daily_quotas, health_sessions, health_reminders, health_documents, pet_record_attachments, pet_daily_logs, pet_care_records, pet_weight_records, audit_logs, operation_audit_logs, orders, growth_orders, physical_orders, generation_tasks, works, photos, pets, users CASCADE;");
   await database.exec("INSERT INTO ai_provider_slots (slot_id) SELECT generate_series(1,8) ON CONFLICT DO NOTHING;");
   await database.exec(await readFile(path.join(process.cwd(), "drizzle", "0013_admin_completion.sql"), "utf8"));
   await database.exec(await readFile(path.join(process.cwd(), "drizzle", "0014_password_auth.sql"), "utf8"));
@@ -86,4 +86,6 @@ export async function resetDatabaseForTest() {
   await database.exec(await readFile(path.join(process.cwd(), "drizzle", "0027_remove_retired_feature.sql"), "utf8"));
   await database.exec(await readFile(path.join(process.cwd(), "drizzle", "0028_payment_transactions.sql"), "utf8"));
   await database.exec(await readFile(path.join(process.cwd(), "drizzle", "0029_entitlement_delivery_reference.sql"), "utf8"));
+  // 0013/0020/0021/0023 会重新灌入会员套餐种子；最后重放 0042 把它们归档，否则测试库里年卡会「复活」。
+  await database.exec(await readFile(path.join(process.cwd(), "drizzle", "0042_dongan_wallet.sql"), "utf8"));
 }

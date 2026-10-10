@@ -75,6 +75,13 @@ export default defineConfig({
         "src/server/daily-log-kinds.ts",
         "src/server/daily-log-context.ts",
         "src/server/health/provider.ts",
+        /*
+         * 2026-10-08 冻干钱包：扣减顺序、余额不为负、幂等、原路退还与充值退款回收。
+         * 这些分支漏测的后果是多扣用户的钱、退款后冻干没收回，或余额被透支。
+         */
+        "src/server/wallet/service.ts",
+        "src/server/wallet/topup.ts",
+        "src/server/art-photo-bundle-service.ts",
       ],
       thresholds: { lines: 75, functions: 75, branches: 65, statements: 75 },
     },

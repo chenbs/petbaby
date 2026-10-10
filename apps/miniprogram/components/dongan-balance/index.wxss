@@ -1,0 +1,33 @@
+@import "../shared.wxss";
+
+.db {
+  display: inline-flex;
+  min-height: 88rpx;
+  box-sizing: border-box;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0 var(--space-3) 0 var(--space-2);
+  border-radius: var(--button-radius);
+  background: var(--surface);
+  color: var(--text-primary);
+  clip-path: var(--skin-btn-clip);
+}
+
+.db-hover { transform: var(--skin-press); }
+
+.db-icon {
+  width: 40rpx;
+  height: 40rpx;
+}
+
+.db-n {
+  font-family: var(--skin-num-font);
+  font-size: var(--body-size);
+  font-weight: var(--fw-black);
+}
+
+.db-unit {
+  color: var(--text-secondary);
+  font-size: var(--eyebrow-size);
+  font-weight: var(--fw-bold);
+}

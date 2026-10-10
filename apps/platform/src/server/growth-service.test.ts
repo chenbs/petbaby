@@ -1,10 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import sharp from "sharp";
 import { getDatabase, resetDatabaseForTest } from "@/server/db/client";
-import { createAiRun, getAiRun, rerollAiRun, listAiRuns, processNextAiRun, selectAiCandidate, unlockAiCandidate, scheduleUpcomingReminders, createPhysicalOrder, createAnnualReport, payPhysicalOrder, createExperiment, updateExperiment, rollbackExperiment, updatePhysicalOrderStatus, expirePastDueMemberships } from "@/server/growth-service";
+import { cancelAiRun, createAiRun, getAiRun, rerollAiRun, retryAiRun, listAiRuns, processNextAiRun, selectAiCandidate, scheduleUpcomingReminders, createPhysicalOrder, createAnnualReport, payPhysicalOrder, createExperiment, updateExperiment, rollbackExperiment, updatePhysicalOrderStatus } from "@/server/growth-service";
 import { decryptAddress } from "@/server/commerce/address";
 import { objectStorage } from "@/server/storage";
-import { payOrder, deletePhoto, getDownload, getWork } from "@/server/platform-service";
+import { deletePhoto, getDownload, getWork } from "@/server/platform-service";
+import { getWallet } from "@/server/wallet/service";
+import { fundWallet } from "@/server/wallet/test-helpers";
 import { acknowledgeAiDisclosure } from "@/server/ai-disclosure-service";
 import { listRuntimePlugins } from "@/plugins/runtime";
 
@@ -23,36 +25,31 @@ describe("stage two growth services", () => {
     await database.query("INSERT INTO photos (id,user_id,pet_id,filename,mime_type,size,storage_key,position,quality,created_at) VALUES ($1,$2,$3,'milo.png','image/png',1,$4,0,'clear',now())", [PHOTO, USER, PET, `private/${USER}/photos/milo.png`]);
     await objectStorage.put(`private/${USER}/photos/milo.png`, Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAADUlEQVQImWP4////fwAJ+wP9CNHoHgAAAABJRU5ErkJggg==", "base64"), "image/png");
     await objectStorage.put(MASTER_KEY, new TextEncoder().encode("owned-master"), "image/webp");
+    await fundWallet(USER, 100);
   });
 
-  it("expires memberships only after three full days past due", async () => {
-    const database = await getDatabase();
-    const now = new Date("2026-09-27T12:00:00Z");
-    const cases = [
-      { id: crypto.randomUUID(), status: "past_due", updatedAt: "2026-09-24T11:59:59Z" },
-      { id: crypto.randomUUID(), status: "past_due", updatedAt: "2026-09-24T12:00:00Z" },
-      { id: crypto.randomUUID(), status: "active", updatedAt: "2026-09-23T12:00:00Z" },
-    ];
-    for (const item of cases) {
-      await database.query(
-        "INSERT INTO memberships (id,user_id,plan,status,quota,used,expires_at,created_at,status_updated_at) VALUES ($1,$2,'yearly',$3,5,1,$4,$4,$5)",
-        [item.id, USER, item.status, now, new Date(item.updatedAt)],
-      );
+  async function balance() { return (await getWallet(USER)).balance; }
+
+  /** 跑满系统自动重试（共 3 次尝试），返回最后一次的结果。 */
+  async function runUntilTerminal(runId: string) {
+    // 自动重试会把下一次尝试推迟 2 秒，测试里直接拨到现在。
+    await (await getDatabase()).query("UPDATE ai_runs SET available_at=now() WHERE id=$1", [runId]);
+    let result = await processNextAiRun();
+    for (let index = 0; index < 4 && result?.status === "retrying"; index += 1) {
+      await (await getDatabase()).query("UPDATE ai_runs SET available_at=now() WHERE id=$1", [runId]);
+      result = await processNextAiRun();
     }
+    return result;
+  }
 
-    expect(await expirePastDueMemberships(now)).toBe(1);
-    const rows = await database.query<{ id: string; status: string; quota: number; used: number }>(
-      "SELECT id,status,quota,used FROM memberships WHERE user_id=$1", [USER],
-    );
-    const byId = new Map(rows.map((row) => [row.id, row]));
-    expect(byId.get(cases[0].id)).toMatchObject({ status: "expired", quota: 0, used: 0 });
-    expect(byId.get(cases[1].id)).toMatchObject({ status: "past_due", quota: 5, used: 1 });
-    expect(byId.get(cases[2].id)).toMatchObject({ status: "active", quota: 5, used: 1 });
-  });
-
-  it("queues AI runs, generates one image and archives it as a work automatically", async () => {
+  it("charges dongan before queueing, generates one image and archives it as a final work", async () => {
     const run = await createAiRun(USER, { pluginId: "pl-10", petId: PET, photoIds: [PHOTO], prompt: "a cat", idempotencyKey: "ai-test-run-1" });
     expect(run.status).toBe("queued");
+    expect(run).toMatchObject({ paidWithDongan: true, donganCost: 2, rerollRemaining: 0 });
+    expect(await balance()).toBe(98);
+    // 同一个幂等键重复提交不重复扣。
+    await createAiRun(USER, { pluginId: "pl-10", petId: PET, photoIds: [PHOTO], prompt: "a cat", idempotencyKey: "ai-test-run-1" });
+    expect(await balance()).toBe(98);
     expect(run.roleInputs).toMatchObject({ subjectMode: "pet", templateId: "pet-expression-grid", petPhotoIds: [PHOTO] });
     expect((await processNextAiRun())?.status).toBe("succeeded");
     const ready = await getAiRun(USER, run.id);
@@ -64,10 +61,9 @@ describe("stage two growth services", () => {
     expect(selected[0].workId).toBe(ready.workId);
     expect(selected[1].workId).toBe(ready.workId);
     expect(await (await getDatabase()).query("SELECT id FROM works WHERE source_id=$1", [run.id])).toHaveLength(1);
-    const pending = await unlockAiCandidate(USER, run.id);
-    expect(pending.order?.status).toBe("pending");
-    await payOrder(USER, String(pending.order?.id));
+    // 先扣后做：作品入库即正式版，没有预览和二次解锁。
     expect((await getAiRun(USER, run.id)).selectedUnlocked).toBe(true);
+    expect((await getWork(USER, String(ready.workId))).locked).toBe(false);
 
     /*
      * 2026-09 口径：图上不画可见标识，只写元数据；界面蒙层文案由服务端下发；
@@ -99,11 +95,25 @@ describe("stage two growth services", () => {
     expect(listed.find((item) => item.id === run.id)?.title).not.toMatch(/AI/);
   });
 
-  it("必需母版缺失时明确失败，不回退文生图", async () => {
+  it("必需母版缺失时明确失败，不回退文生图；系统重试 2 次后全额退还冻干", async () => {
     await objectStorage.delete(MASTER_KEY);
     const run = await createAiRun(USER, { pluginId: "pl-10", petId: PET, photoIds: [PHOTO], idempotencyKey: "ai-test-missing-master" });
-    expect((await processNextAiRun())?.status).toBe("failed");
-    expect((await getAiRun(USER, run.id)).errorCode).toBe("必需参考图不存在，请重新选择或联系运营补齐母版");
+    expect(await balance()).toBe(98);
+    expect((await processNextAiRun())?.status).toBe("retrying");
+    expect(await runUntilTerminal(run.id)).toMatchObject({ status: "failed" });
+    const failed = await getAiRun(USER, run.id);
+    expect(failed.errorCode).toBe("必需参考图不存在，请重新选择或联系运营补齐母版");
+    expect(failed.attempt).toBe(3);
+    expect(await balance()).toBe(100);
+    // 没有用户手动重试：想再拍就新建任务。
+    await expect(retryAiRun(USER, run.id)).rejects.toMatchObject({ code: "AI_RETRY_RETIRED" });
+  });
+
+  it("排队中取消全额退还冻干", async () => {
+    const run = await createAiRun(USER, { pluginId: "pl-10", petId: PET, photoIds: [PHOTO], idempotencyKey: "ai-test-cancel-refund" });
+    expect(await balance()).toBe(98);
+    await cancelAiRun(USER, run.id);
+    expect(await balance()).toBe(100);
   });
 
   it("艺术写真只用宠物身份照，并保留旧风格入参映射的场景", async () => {
@@ -133,14 +143,29 @@ describe("stage two growth services", () => {
     expect(await database.query("SELECT id FROM works WHERE source_id=$1", [run.id])).toHaveLength(0);
   });
 
-  it("单张出图后未下单仍可重拍，重拍时撤下自动归档的未付费作品", async () => {
+  it("「再拍一张」是新任务、重新扣费，原作品保留", async () => {
     const run = await createAiRun(USER, { pluginId: "pl-10", petId: PET, photoIds: [PHOTO], idempotencyKey: "ai-reroll-after-archive" });
     await processNextAiRun();
     const ready = await getAiRun(USER, run.id);
     expect(ready.workId).toBeTruthy();
-    const rerolled = await rerollAiRun(USER, run.id, "composition");
-    expect(rerolled).toMatchObject({ status: "queued", workId: undefined, selectedId: undefined });
-    expect((await (await getDatabase()).query("SELECT deleted_at FROM works WHERE id=$1", [ready.workId]))[0]?.deleted_at).toBeTruthy();
+    expect(await balance()).toBe(98);
+    const rerolled = await rerollAiRun(USER, run.id, "composition", "reroll-key-0001");
+    expect(rerolled.id).not.toBe(run.id);
+    expect(rerolled).toMatchObject({ status: "queued", paidWithDongan: true });
+    expect(rerolled.roleInputs.rerollReason).toBe("composition");
+    expect(await balance()).toBe(96);
+    // 同一个幂等键连点不重复扣。
+    await rerollAiRun(USER, run.id, "composition", "reroll-key-0001");
+    expect(await balance()).toBe(96);
+    expect((await (await getDatabase()).query("SELECT deleted_at FROM works WHERE id=$1", [ready.workId]))[0]?.deleted_at).toBeNull();
+  });
+
+  it("余额不足时不入队，并带上差额", async () => {
+    await (await getDatabase()).query("UPDATE wallet_lots SET remaining=1 WHERE user_id=$1", [USER]);
+    await (await getDatabase()).query("UPDATE wallet_accounts SET balance=1 WHERE user_id=$1", [USER]);
+    const error = await createAiRun(USER, { pluginId: "pl-10", petId: PET, photoIds: [PHOTO], idempotencyKey: "ai-no-balance" }).catch((caught) => caught);
+    expect(error).toMatchObject({ code: "WALLET_INSUFFICIENT", status: 402, details: { required: 2, balance: 1, shortfall: 1 } });
+    expect(await (await getDatabase()).query("SELECT id FROM ai_runs WHERE idempotency_key='ai-no-balance'")).toHaveLength(0);
   });
 
   it("schedules a birthday reminder seven days ahead", async () => {

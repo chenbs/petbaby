@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>麻麻抱我 · 冻干付费 UI 预览 v3（2026-10-07，待审）</title>
+<style>
+/* ===== 文档外壳 ===== */
+*{box-sizing:border-box}
+body{margin:0;background:#E9E5DF;color:#1F2540;font:14px/1.6 "PingFang SC","Microsoft YaHei","Noto Sans CJK SC",sans-serif}
+img{display:block}
+.doc{max-width:1600px;margin:0 auto;padding:32px 32px 80px}
+.doc-head h1{margin:0;font-size:28px;line-height:1.3}
+.doc-head p{margin:6px 0 0;color:#5B6178;max-width:1200px}
+.doc-head ol{margin:8px 0 0;padding-left:20px;color:#3B3F57;max-width:1200px}
+.toolbar{display:flex;gap:8px;margin:14px 0 0;flex-wrap:wrap;align-items:center}
+.toolbar span{font-size:13px;color:#5B6178;margin:0 2px 0 10px}
+.toolbar span:first-child{margin-left:0}
+.toolbar button{padding:6px 14px;border:0;border-radius:999px;background:#fff;color:#1F2540;font:inherit;font-size:13px;cursor:pointer}
+.toolbar button.on{background:#1F2540;color:#fff}
+.sec{margin-top:28px;padding:24px;border-radius:24px;background:#F6F3EE}
+.sec>h2{margin:0;font-size:21px}
+.sec>.lead{margin:4px 0 18px;color:#5B6178;max-width:1250px}
+.four{display:grid;grid-template-columns:repeat(4,360px);gap:20px;justify-content:space-between}
+.label{margin:0 0 8px}
+.label b{font-size:15px}
+.label span{display:block;font-size:12px;color:#5B6178}
+body.gray .phone,body.gray .board{filter:grayscale(1)}
+
+/* ===== 手机外框 ===== */
+.phone{position:relative;width:360px;height:780px;border:9px solid #16141A;border-radius:48px;overflow:hidden;box-shadow:0 26px 50px -26px rgba(40,20,10,.5);background:var(--bg);color:var(--text)}
+.status{height:40px;display:flex;align-items:center;justify-content:space-between;padding:0 24px 0 28px;font-size:13px;font-weight:700}
+.status i{display:inline-block;width:16px;height:9px;margin-left:4px;border-radius:3px;background:currentColor}
+.nav{height:40px;display:flex;align-items:center;padding-left:14px;position:relative;font-size:16px;font-weight:var(--tw);font-family:var(--tf)}
+.capsule{position:absolute;right:8px;top:5px;width:80px;height:30px;border-radius:15px;border:1px solid var(--capsule-line);background:var(--capsule-bg)}
+
+/* ===== 冻干图标：八款造型共用一套着色类，配色走主题变量 ===== */
+svg.meat{flex:none;overflow:visible;vertical-align:middle}
+.m-body{fill:var(--m-fill);stroke:var(--m-line);stroke-width:1.3;stroke-linejoin:round}
+.m-top{fill:var(--m-top);stroke:var(--m-line);stroke-width:1.3;stroke-linejoin:round}
+.m-side{fill:var(--m-shade);stroke:var(--m-line);stroke-width:1.3;stroke-linejoin:round}
+.m-crumb{fill:var(--m-fill);stroke:var(--m-line);stroke-width:1.1;stroke-linejoin:round}
+.m-pore{fill:var(--m-mark)}
+.m-fib{fill:none;stroke:var(--m-mark);stroke-width:1;stroke-linecap:round;stroke-dasharray:2.2 1.6}
+.m-hi{fill:none;stroke:var(--m-hi);stroke-width:1.1;stroke-linecap:round}
+.m-yolk{fill:var(--m-accent);stroke:var(--m-line);stroke-width:1.1}
+.m-glass{fill:var(--m-glass);stroke:var(--m-line);stroke-width:1.3;stroke-linejoin:round}
+.m-lid{fill:var(--m-lid);stroke:var(--m-line);stroke-width:1.3;stroke-linejoin:round}
+.m-line{fill:none;stroke:var(--m-line);stroke-width:1.2;stroke-linecap:round}
+/* 立体款：渐变填充写在元素 style 上（CSS 的 fill 会盖过 fill 属性），描边走类 */
+.m-g{stroke:var(--m-line);stroke-width:1.3;stroke-linejoin:round}
+.m-paw{fill:var(--m-mark)}
+.m-paw-hi{fill:var(--m-hi)}
+.m-shadow{fill:var(--m-line);opacity:.14}
+.m-dust{fill:var(--m-deep)}
+.m-thin .m-g{stroke-width:1.05}
+.skin-cyber .m-dust{fill:var(--m-line)}
+.on-btn .m-shadow,.on-btn .m-paw-hi{display:none}
+/* 画在主按钮色块上的图标一律单色线稿，用按钮文字色 */
+.on-btn{--m-deep:transparent;--m-fill:transparent;--m-top:transparent;--m-shade:transparent;--m-line:var(--btn-text);--m-mark:var(--btn-text);--m-hi:transparent;--m-accent:transparent;--m-glass:transparent;--m-lid:transparent;filter:none!important}
+
+/* ===== 底层页面：模板详情页 ===== */
+.screen{position:absolute;top:80px;left:0;right:0;bottom:0;padding:4px 14px 0;overflow:hidden}
+.hero{position:relative;border-radius:var(--ri);overflow:hidden;border:var(--bd-img)}
+.hero img{width:100%;height:330px;object-fit:cover;object-position:50% 30%}
+.pg-t{margin:12px 0 0;font-size:20px;font-weight:var(--tw);font-family:var(--tf)}
+.pg-s{font-size:12px;color:var(--text2)}
+.bar{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:10px;padding:12px 14px 30px;background:var(--bar-bg);border-top:var(--bar-line)}
+.bal{display:flex;align-items:center;gap:5px;height:44px;padding:0 14px 0 10px;border-radius:var(--rb);background:var(--surface);border:var(--chip-bd);font-weight:800;font-family:var(--nf);font-size:16px;color:var(--text)}
+.bal small{font-size:11px;font-weight:600;color:var(--text2);font-family:inherit}
+.cta{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;height:44px;border-radius:var(--rb);background:var(--btn);color:var(--btn-text);box-shadow:var(--btn-sh);font-size:15px;font-weight:800}
+.cta b{font-family:var(--nf)}
+
+/* ===== 遮罩与面板 ===== */
+.scrim{position:absolute;inset:0;background:var(--scrim);z-index:10}
+.sheet{position:absolute;left:0;right:0;bottom:0;z-index:11;padding:8px 14px 24px;background:var(--sheet);border-radius:var(--sheet-r);box-shadow:var(--sheet-sh);color:var(--text)}
+.grab{width:36px;height:4px;margin:0 auto 8px;border-radius:2px;background:var(--text2);opacity:.35}
+.x{position:absolute;right:14px;top:14px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--surface);color:var(--text2);font-style:normal;font-size:16px;line-height:1}
+.sh-head{display:flex;align-items:center;gap:10px;padding-right:36px}
+.sh-t{display:block;font-size:19px;font-weight:var(--tw);font-family:var(--tf);line-height:1.3}
+.sh-s{font-size:12px;color:var(--text2)}
+.sh-s b{color:var(--num);font-family:var(--nf)}
+.fine{margin:6px 0 0;font-size:10.5px;line-height:1.5;color:var(--text2);text-align:center}
+.fine u{color:var(--text);text-decoration-color:var(--text2)}
+.badge{display:inline-block;padding:0 6px;border-radius:var(--rtag);background:var(--stk);color:var(--stk-ink);font-size:10px;font-weight:800;line-height:17px;font-style:normal;white-space:nowrap}
+
+/* 「多送」的视觉语言：角标、拆分行、加送进度条 */
+.deal{display:inline-flex;align-items:center;padding:0 7px;border-radius:var(--rtag);background:var(--deal);color:var(--deal-text);font-size:11px;font-weight:900;line-height:19px;font-style:normal;white-space:nowrap}
+.split{font-size:11px;color:var(--text2);line-height:1.35;font-family:var(--nf)}
+.split em{font-style:normal;font-weight:900;color:var(--deal-ink)}
+.gbar{display:flex;height:6px;margin-top:5px;border-radius:3px;overflow:hidden;background:var(--line)}
+.gbar i{display:block;height:100%}
+.gbar .b{background:var(--base-bar)}
+.gbar .g{background:repeating-linear-gradient(135deg,var(--deal) 0 3px,var(--deal-2) 3px 6px)}
+
+/* 首充横幅 */
+.fc{position:relative;display:flex;align-items:center;gap:10px;margin-top:12px;padding:12px 12px 12px 10px;border-radius:var(--rc);background:var(--banner-bg);border:var(--sel-bd);color:var(--banner-text)}
+.fc .ribbon{position:absolute;left:12px;top:-10px}
+.fc .pile{position:relative;width:62px;height:52px;flex:none}
+.fc .pile svg{position:absolute}
+.fc .pile svg:nth-child(1){left:0;top:10px}
+.fc .pile svg:nth-child(2){left:22px;top:2px;transform:rotate(18deg)}
+.fc .pile .x2{position:absolute;right:-6px;bottom:-4px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--deal);color:var(--deal-text);font-size:13px;font-weight:900;font-style:normal;font-family:var(--nf);box-shadow:0 0 0 2px var(--banner-ring)}
+.fc .mid{flex:1;min-width:0}
+.fc .mid b{font-size:28px;font-weight:900;line-height:1.05;font-family:var(--nf)}
+.fc .mid b small{font-size:13px;margin-left:2px}
+.fc .split{color:var(--banner-text2)}
+.fc .rt{text-align:right}
+.fc .pr{display:inline-block;min-width:56px;padding:3px 10px;border-radius:var(--rb);background:var(--btn);color:var(--btn-text);font-size:17px;font-weight:900;text-align:center;font-family:var(--nf);box-shadow:var(--btn-sh)}
+.fc .off{display:block;margin-top:3px;font-size:11px;font-weight:800;color:var(--deal-ink-banner)}
+
+/* 档位宫格 */
+.tiers{display:grid;grid-template-columns:1fr 1fr;gap:12px 10px;margin-top:16px}
+.tier{position:relative;padding:14px 10px 10px;border-radius:var(--rc);background:var(--card);border:var(--tier-bd)}
+.tier.sel{border:var(--sel-bd);background:var(--sel-bg);box-shadow:var(--sel-sh)}
+.tier .deal{position:absolute;right:8px;top:-10px}
+.tier .hot{position:absolute;left:8px;top:-9px}
+.tier .top{display:flex;align-items:center;gap:6px}
+.tier .n{font-size:24px;font-weight:900;line-height:1.1;font-family:var(--nf)}
+.tier .n small{font-size:11px;font-weight:700;margin-left:1px}
+.tier .eq{display:block;margin-top:4px;font-size:10.5px;color:var(--text2)}
+.tier .foot{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+.tier .pr{min-width:54px;padding:2px 10px;border-radius:var(--rb);background:var(--surface);font-weight:900;font-size:14px;text-align:center;font-family:var(--nf)}
+.tier.sel .pr{background:var(--btn);color:var(--btn-text);box-shadow:var(--btn-sh)}
+.tier .off{font-size:10.5px;font-weight:800;color:var(--deal-ink)}
+.tier.short{opacity:.62}
+.tier .lack{position:absolute;left:8px;top:-9px}
+.plain{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding:8px 12px;border-radius:var(--rc);border:var(--tier-bd);font-size:12px;color:var(--text2)}
+.plain b{color:var(--text);font-family:var(--nf)}
+
+.pay{position:relative;margin-top:16px}
+.btn{display:flex;align-items:center;justify-content:center;gap:6px;height:50px;border-radius:var(--rb);background:var(--btn);color:var(--btn-text);box-shadow:var(--btn-sh);font-size:16px;font-weight:800}
+.btn b{font-family:var(--nf)}
+.pay .bubble{position:absolute;right:14px;top:-13px;z-index:2}
+
+/* 新人见面礼 */
+.dlg{position:absolute;left:28px;right:28px;top:150px;z-index:11;padding:22px 18px 16px;border-radius:var(--dlg-r);background:var(--sheet);box-shadow:var(--sheet-sh);text-align:center;color:var(--text)}
+.dlg-t{display:block;margin-top:8px;font-size:21px;font-weight:var(--tw);font-family:var(--tf)}
+.dlg p{margin:2px 0 0;font-size:13px;color:var(--text2)}
+.gift-stack{display:flex;justify-content:center;align-items:flex-end;height:96px;margin-top:-66px}
+.gift-stack svg:nth-child(1){transform:rotate(-14deg) translate(10px,6px)}
+.gift-stack svg:nth-child(3){transform:rotate(14deg) translate(-10px,6px)}
+.gift-stack svg:nth-child(2){position:relative;z-index:2}
+.big-n{font-size:40px;font-weight:900;line-height:1.1;color:var(--num);font-family:var(--nf)}
+.what{margin:8px 0 0;padding:6px 10px;border-radius:var(--rc);background:var(--surface);font-size:12px;color:var(--text2)}
+.uses{display:flex;gap:8px;margin:12px 0}
+.uses div{flex:1;padding:8px 4px;border-radius:var(--rc);background:var(--surface);font-size:12px;line-height:1.4}
+.uses b{display:block;font-size:13px}
+.uses span{color:var(--text2)}
+.toast{position:absolute;left:50%;top:96px;z-index:12;transform:translateX(-50%);display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--rb);background:var(--toast-bg);color:var(--toast-text);font-size:13px;font-weight:700;white-space:nowrap;box-shadow:0 10px 24px -12px rgba(0,0,0,.5)}
+
+/* ===== 组件板 ===== */
+.board{padding:16px;border-radius:22px;background:var(--bg);color:var(--text);border:1px solid rgba(0,0,0,.06);min-height:100%}
+.board h4{margin:14px 0 8px;font-size:12px;color:var(--text2);font-weight:700}
+.board h4:first-child{margin-top:0}
+.rowc{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+/* 图标候选格：48 大图，下排 24 / 16 / 按钮上的单色版 */
+.gal{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.gal .cell{padding:14px 4px 8px!important}
+.gal .cell{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 2px 6px;border-radius:var(--rc);background:var(--card);border:var(--bd);cursor:pointer}
+.gal .cell.cur{outline:2px solid var(--primary);outline-offset:1px}
+.gal .sm{display:flex;align-items:center;gap:4px}
+.gal .chipbtn{display:flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:var(--rb);background:var(--btn)}
+.gal .nm{font-size:11px;color:var(--text2);line-height:1.2;text-align:center}
+.mini-card{position:relative;width:96px;border-radius:var(--ri);overflow:hidden;border:var(--bd-img)}
+.mini-card img{width:96px;height:124px;object-fit:cover;object-position:50% 30%}
+.mini-card .cost{position:absolute;right:6px;top:6px;display:flex;align-items:center;gap:2px;padding:1px 7px 1px 4px;border-radius:var(--rb);background:var(--cost-bg);color:var(--cost-text);font-size:11px;font-weight:800;font-family:var(--nf)}
+.mini-card .free{position:absolute;right:6px;top:6px;padding:1px 7px;border-radius:var(--rb);background:var(--stk);color:var(--stk-ink);font-size:11px;font-weight:800}
+.wallet{display:flex;align-items:center;gap:10px;padding:12px;border-radius:var(--rc);background:var(--card);border:var(--bd);box-shadow:var(--sh)}
+.wallet div{flex:1}
+.wallet b{font-size:22px;font-weight:900;font-family:var(--nf)}
+.wallet b small{font-size:12px;margin-left:2px}
+.wallet span{display:block;font-size:11px;color:var(--text2)}
+.wallet .go{padding:6px 14px;border-radius:var(--rb);background:var(--btn);color:var(--btn-text);font-size:13px;font-weight:800;box-shadow:var(--btn-sh)}
+.ledger{border-radius:var(--rc);background:var(--card);border:var(--bd);padding:2px 12px}
+.ledger div{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);font-size:12px}
+.ledger div:last-child{border-bottom:0}
+.ledger span{color:var(--text2)}
+.ledger em{font-style:normal;font-weight:800;font-family:var(--nf)}
+.ledger .plus{color:var(--plus)}
+
+/* ================= 主题一：橘子汽水（pet） ================= */
+.skin-soda{--bg:#FFFAF3;--surface:#FFF1E0;--card:#FFFFFF;--text:#1F2540;--text2:#5B6178;--primary:#B7401A;--num:#B7401A;--line:#F3E6D8;--plus:#23794A;
+  --btn:#FF9A52;--btn-text:#1F2540;--btn-sh:0 8px 16px -8px rgba(255,154,82,.75);
+  --rc:18px;--ri:16px;--rb:999px;--rtag:999px;--dlg-r:28px;--bd:0 solid transparent;--bd-img:0 solid transparent;
+  --sh:0 2px 8px -2px rgba(60,35,20,.10),0 16px 32px -18px rgba(60,35,20,.28);--tw:800;--tf:inherit;--nf:inherit;
+  --stk:#FFD45C;--stk-ink:#1F2540;--chip-bd:0 solid transparent;
+  --deal:#D23A1E;--deal-2:#E8573A;--deal-text:#FFFFFF;--deal-ink:#B7401A;--deal-ink-banner:#9A3212;--base-bar:#E6D3C0;
+  --banner-bg:linear-gradient(150deg,#FFB273 0%,#FFD0A1 55%,#FFE8D2 100%);--banner-text:#1F2540;--banner-text2:#3B3F57;--banner-ring:#FFE8D2;
+  --scrim:rgba(31,37,64,.32);--sheet:#FFFAF3;--sheet-r:28px 28px 0 0;--sheet-sh:0 -8px 28px rgba(60,35,20,.18);
+  --sel-bd:2px solid #FF9A52;--sel-bg:#FFF6EC;--sel-sh:0 10px 22px -14px rgba(255,120,40,.6);--tier-bd:2px solid #F3E3D2;
+  --bar-bg:rgba(255,250,243,.96);--bar-line:1px solid #F6ECE0;--cost-bg:rgba(255,255,255,.94);--cost-text:#1F2540;--toast-bg:#1F2540;--toast-text:#fff;
+  --m-fill:#F7E0B8;--m-top:#FFF0D6;--m-shade:#E6BF86;--m-deep:#CF9A5A;--m-line:#7A3E12;--m-mark:#C48A4A;--m-hi:#FFFFFF;--m-accent:#FFB23E;--m-glass:rgba(255,255,255,.7);--m-lid:#FF9A52;
+  --capsule-bg:rgba(255,255,255,.8);--capsule-line:rgba(0,0,0,.08)}
+.skin-soda .tier .deal,.skin-soda .fc .ribbon{transform:rotate(3deg)}
+.skin-soda .tier .hot{transform:rotate(-4deg)}
+
+/* ================= 主题二：手账相册（film） ================= */
+.skin-journal{--bg:#F4EEE2;--surface:#EAE2D2;--card:#FFFDF8;--text:#211E1B;--text2:#6B6258;--primary:#C2381F;--num:#C2381F;--line:#E6DCCB;--plus:#3E6B4F;
+  --btn:#211E1B;--btn-text:#FFFDF8;--btn-sh:0 3px 0 rgba(33,30,27,.25);
+  --rc:4px;--ri:2px;--rb:6px;--rtag:999px;--dlg-r:6px;--bd:1px solid #DDD3C2;--bd-img:0 solid transparent;
+  --sh:0 3px 0 rgba(33,30,27,.10);--tw:700;--tf:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC",serif;--nf:var(--tf);
+  --stk:#FFFDF8;--stk-ink:#B42318;--chip-bd:1px dashed #BFB3A0;
+  --deal:#C2381F;--deal-2:#D9573C;--deal-text:#FFFDF8;--deal-ink:#B42318;--deal-ink-banner:#B42318;--base-bar:#D6CAB6;
+  --banner-bg:#FFFDF8;--banner-text:#211E1B;--banner-text2:#6B6258;--banner-ring:#FFFDF8;
+  --scrim:rgba(33,30,27,.30);--sheet:#F4EEE2;--sheet-r:8px 8px 0 0;--sheet-sh:0 -3px 0 rgba(33,30,27,.08);
+  --sel-bd:1.5px solid #C2381F;--sel-bg:#FFFDF8;--sel-sh:3px 3px 0 rgba(194,56,31,.18);--tier-bd:1px dashed #BFB3A0;
+  --bar-bg:#FFFDF8;--bar-line:1px dashed #CFC3AF;--cost-bg:#FFFDF8;--cost-text:#B42318;--toast-bg:#211E1B;--toast-text:#FFFDF8;
+  --m-fill:#EFDCBB;--m-top:#FAEED8;--m-shade:#D6B98C;--m-deep:#BE9C68;--m-line:#211E1B;--m-mark:#9A6534;--m-hi:#FFFDF8;--m-accent:#E9A13B;--m-glass:rgba(255,253,248,.75);--m-lid:#C2381F;
+  --capsule-bg:rgba(255,253,248,.8);--capsule-line:rgba(0,0,0,.1);
+  background-image:radial-gradient(rgba(33,30,27,.05) 1px,transparent 1.2px),radial-gradient(rgba(33,30,27,.035) 1px,transparent 1.2px);background-size:7px 7px,11px 11px;background-position:0 0,3px 5px}
+.skin-journal .badge{border:1.5px solid #B42318}
+/* 手账里的「多送」是红色印章：描边、倾斜 */
+.skin-journal .deal{background:#FFFDF8;color:#B42318;border:1.5px solid #B42318;transform:rotate(-6deg);font-family:var(--tf)}
+.skin-journal .fc .x2{background:#FFFDF8;color:#B42318;border:1.5px dashed #B42318;transform:rotate(-10deg);box-shadow:none}
+.skin-journal .hero{padding:6px 6px 22px;background:#fff;box-shadow:0 3px 8px rgba(33,30,27,.22);transform:rotate(-.8deg)}
+.skin-journal .hero img{height:308px}
+.skin-journal .sheet::before,.skin-journal .dlg::before{content:"";position:absolute;left:50%;top:-8px;width:70px;height:16px;margin-left:-35px;background:rgba(207,227,200,.9);transform:rotate(-3deg)}
+.skin-journal .sheet .grab{display:none}
+.skin-journal .sheet{padding-top:20px}
+.skin-journal .fc{box-shadow:3px 3px 0 rgba(194,56,31,.18)}
+.skin-journal .fc::after{content:"";position:absolute;right:-6px;top:10px;width:40px;height:13px;background:rgba(243,211,198,.9);transform:rotate(38deg)}
+.skin-journal .tier .pr{background:transparent;border:1px solid #DDD3C2}
+.skin-journal .tier.sel .pr{background:#211E1B;border-color:#211E1B;color:#FFFDF8}
+.skin-journal .sh-ic svg{transform:rotate(-8deg);filter:drop-shadow(1px 2px 0 rgba(33,30,27,.18))}
+.skin-journal .x{background:transparent;border:1px solid #DDD3C2}
+.skin-journal .gbar{border-radius:0;height:5px}
+.skin-journal .mini-card{padding:4px 4px 14px;background:#fff;box-shadow:0 2px 6px rgba(33,30,27,.18)}
+.skin-journal .mini-card img{width:88px;height:112px}
+.skin-journal .mini-card .cost{border:1.5px solid #B42318}
+
+/* ================= 主题三：赛博街机（brand） ================= */
+.skin-cyber{--bg:#0E1016;--surface:#151922;--card:#1B2029;--text:#EAF2F5;--text2:#93A1AD;--primary:#D4FF3A;--num:#D4FF3A;--line:#2A3140;--plus:#4FE3A1;
+  --btn:#D4FF3A;--btn-text:#0E1016;--btn-sh:none;
+  --rc:0;--ri:0;--rb:0;--rtag:0;--dlg-r:0;--bd:1px solid #2A3140;--bd-img:1px solid #2A3140;
+  --sh:none;--tw:800;--tf:inherit;--nf:"SF Mono","Menlo","Consolas","Roboto Mono",monospace;
+  --stk:#3DE8FF;--stk-ink:#0E1016;--chip-bd:1px solid #2A3140;
+  --deal:#FF4F9A;--deal-2:#FF7AB4;--deal-text:#0E1016;--deal-ink:#FF6FAE;--deal-ink-banner:#FF6FAE;--base-bar:#3A4354;
+  --banner-bg:linear-gradient(90deg,rgba(212,255,58,.12),rgba(212,255,58,.02));--banner-text:#EAF2F5;--banner-text2:#93A1AD;--banner-ring:#0E1016;
+  --scrim:rgba(14,16,22,.62);--sheet:#151922;--sheet-r:0;--sheet-sh:0 -1px 0 #D4FF3A;
+  --sel-bd:1px solid #D4FF3A;--sel-bg:rgba(212,255,58,.07);--sel-sh:none;--tier-bd:1px solid #2A3140;
+  --bar-bg:#0E1016;--bar-line:1px solid #2A3140;--cost-bg:#0E1016;--cost-text:#D4FF3A;--toast-bg:#D4FF3A;--toast-text:#0E1016;
+  --m-fill:rgba(212,255,58,.12);--m-top:rgba(212,255,58,.28);--m-shade:rgba(212,255,58,.06);--m-deep:rgba(212,255,58,0);--m-line:#D4FF3A;--m-mark:#3DE8FF;--m-hi:transparent;--m-accent:#FF4F9A;--m-glass:rgba(61,232,255,.10);--m-lid:rgba(212,255,58,.18);
+  --capsule-bg:rgba(255,255,255,.06);--capsule-line:rgba(255,255,255,.18);
+  --cut:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));
+  --cut-s:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));
+  background-image:linear-gradient(rgba(61,232,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(61,232,255,.045) 1px,transparent 1px);background-size:22px 22px}
+.skin-cyber .cta,.skin-cyber .btn,.skin-cyber .tier .pr,.skin-cyber .fc .pr,.skin-cyber .wallet .go,.skin-cyber .bal,.skin-cyber .gal .chipbtn{clip-path:var(--cut-s)}
+.skin-cyber .wallet{clip-path:var(--cut)}
+.skin-cyber .sheet{background-image:linear-gradient(rgba(61,232,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(61,232,255,.04) 1px,transparent 1px);background-size:22px 22px}
+.skin-cyber .sh-head{border-left:3px solid #D4FF3A;padding-left:10px}
+.skin-cyber .fc{border-left:3px solid #D4FF3A}
+.skin-cyber .fc .x2{border-radius:0;clip-path:var(--cut-s);box-shadow:none}
+.skin-cyber .tier.sel::after{content:"";position:absolute;right:0;bottom:0;border-left:12px solid transparent;border-bottom:12px solid #D4FF3A}
+.skin-cyber .tier{border-left:3px solid #2A3140}
+.skin-cyber .tier.sel{border-left:3px solid #D4FF3A}
+.skin-cyber .gbar{border-radius:0}
+.skin-cyber .gbar .g{background:repeating-linear-gradient(90deg,#FF4F9A 0 3px,transparent 3px 5px)}
+.skin-cyber .x{border-radius:0;background:transparent;border:1px solid #2A3140}
+.skin-cyber .grab{border-radius:0;background:#D4FF3A;opacity:1;width:28px;height:2px}
+.skin-cyber .toast{clip-path:var(--cut-s)}
+.skin-cyber .bal{border:1px solid #D4FF3A;color:#D4FF3A;background:transparent}
+
+/* ================= 主题四：星夜影院（night） ================= */
+.skin-cinema{--bg:#141218;--surface:#1E1B24;--card:#262230;--text:#F6F1E7;--text2:#B8AFA0;--primary:#FFC94A;--num:#FFC94A;--line:#3A3446;--plus:#7FE3C4;
+  --btn:#FFC94A;--btn-text:#1A1508;--btn-sh:0 0 18px rgba(255,201,74,.45);
+  --rc:14px;--ri:10px;--rb:999px;--rtag:999px;--dlg-r:24px;--bd:1px solid rgba(255,255,255,.08);--bd-img:0 solid transparent;
+  --sh:none;--tw:700;--tf:inherit;--nf:inherit;
+  --stk:#7FE3C4;--stk-ink:#141218;--chip-bd:1px solid rgba(255,255,255,.12);
+  --deal:#FF8A7A;--deal-2:#FFA799;--deal-text:#141218;--deal-ink:#FF9C8E;--deal-ink-banner:#FF9C8E;--base-bar:#4A4357;
+  --banner-bg:linear-gradient(135deg,rgba(255,201,74,.22),rgba(255,201,74,.04) 70%);--banner-text:#F6F1E7;--banner-text2:#D8CFC0;--banner-ring:#262230;
+  --scrim:rgba(20,18,24,.5);--sheet:rgba(30,27,36,.9);--sheet-r:24px 24px 0 0;--sheet-sh:0 -1px 0 rgba(255,201,74,.3);
+  --sel-bd:1px solid #FFC94A;--sel-bg:rgba(255,201,74,.08);--sel-sh:0 0 16px rgba(255,201,74,.25);--tier-bd:1px solid rgba(255,255,255,.1);
+  --bar-bg:rgba(20,18,24,.82);--bar-line:1px solid rgba(255,255,255,.08);--cost-bg:rgba(20,18,24,.82);--cost-text:#FFC94A;--toast-bg:rgba(38,34,48,.95);--toast-text:#FFC94A;
+  --m-fill:#F3DCAE;--m-top:#FFF1D2;--m-shade:#CFA66A;--m-deep:#B07F40;--m-line:#1A1508;--m-mark:#A8742F;--m-hi:rgba(255,255,255,.8);--m-accent:#FFC94A;--m-glass:rgba(255,255,255,.14);--m-lid:#FFC94A;
+  --capsule-bg:rgba(255,255,255,.08);--capsule-line:rgba(255,255,255,.18);
+  background-image:radial-gradient(1px 1px at 20% 12%,rgba(255,255,255,.5),transparent),radial-gradient(1px 1px at 70% 30%,rgba(255,255,255,.35),transparent),radial-gradient(1.5px 1.5px at 40% 60%,rgba(255,201,74,.35),transparent),radial-gradient(1px 1px at 85% 78%,rgba(255,255,255,.3),transparent);background-size:220px 260px}
+.skin-cinema svg.meat{filter:drop-shadow(0 0 4px rgba(255,201,74,.45))}
+.skin-cinema .sheet,.skin-cinema .dlg{backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.skin-cinema .dlg{border:1px solid rgba(255,201,74,.3)}
+.skin-cinema .fc{box-shadow:0 0 22px rgba(255,201,74,.25)}
+.skin-cinema .fc .mid b,.skin-cinema .tier.sel .n,.skin-cinema .big-n{color:#FFC94A;text-shadow:0 0 12px rgba(255,201,74,.4)}
+.skin-cinema .bar{backdrop-filter:blur(12px)}
+.skin-cinema .x{background:rgba(255,255,255,.08)}
+.skin-cinema .toast{border:1px solid rgba(255,201,74,.4)}
+</style>
+</head>
+<body>
+<div class="doc">
+  <div class="doc-head">
+    <h1>冻干付费 UI 预览 v4（图标已定稿：J 厚切方块，2026-10-08）</h1>
+    <p>已定：货币「冻干 · 颗」、图标走「爪印冻干」方向、面板「零食柜」宫格、加送比例保留 v2。这一轮在爪印冻干基础上做了 4 款立体版：用受光面、侧面和暗面三档明暗交代体积，爪印改成压进去的凹印（暗色印痕加下沿一道亮边），表面保留冻干的气孔。</p>
+    <ol>
+      <li>在第一节里挑一款（点格子或上方按钮都能切换），留意 16 号小尺寸和按钮上的单色版。</li>
+      <li>看第二到第五节同一款在真实界面里的效果。</li>
+    </ol>
+    <div class="toolbar" id="iconbar"><span>图标</span></div>
+    <div class="toolbar"><span>检查</span><button id="gray">灰度</button></div>
+  </div>
+
+  <section class="sec">
+    <h2>一、爪印冻干 · 立体版候选（4 款 × 4 套主题）</h2>
+    <p class="lead">每格上面是 72 号大图，下面依次是 32、24、16 号，以及画在主按钮色块上的单色线稿版。赛博街机统一改成主色线框，星夜影院带一圈暖光。落地时沿用 <code>build-tab-icons.js</code>，按主题栅格化成 PNG，渐变与明暗在 PNG 里保留。</p>
+    <div class="four" id="gallery"></div>
+  </section>
+
+  <section class="sec">
+    <h2>二、组件</h2>
+    <p class="lead">上一轮已通过，这次只换图标和量词。</p>
+    <div class="four" id="boards"></div>
+  </section>
+
+  <section class="sec">
+    <h2>三、余额不足面板 · 新用户</h2>
+    <p class="lead" id="lead-new"></p>
+    <div class="four" data-ver="fresh"></div>
+  </section>
+
+  <section class="sec">
+    <h2>四、余额不足面板 · 老用户</h2>
+    <p class="lead" id="lead-old"></p>
+    <div class="four" data-ver="back"></div>
+  </section>
+
+  <section class="sec">
+    <h2>五、新人见面礼与到账提示</h2>
+    <p class="lead" id="lead-gift"></p>
+    <div class="four" data-ver="gift"></div>
+  </section>
+</div>
+
+<script>
+const R = "../../../";
+const T = (n) => `${R}apps/miniprogram/assets/samples/templates/${n}.jpg`;
+const SKINS = [
+  ["skin-soda", "橘子汽水", "pet · 默认主题"],
+  ["skin-journal", "手账相册", "film"],
+  ["skin-cyber", "赛博街机", "brand"],
+  ["skin-cinema", "星夜影院", "night"]
+];
+const N = "冻干", U = "颗";
+
+// 充值档位（v2，待定）：1 元 = 1 颗；折扣按「6 元 6 颗」的在售基础档折算
+const TIERS = [
+  { p: 18, n: 22, hot: "" },
+  { p: 38, n: 50, hot: "最多人选" },
+  { p: 68, n: 95, hot: "" },
+  { p: 128, n: 188, hot: "最划算" }
+];
+const pct = (t) => Math.round(((t.n - t.p) / t.p) * 100);
+const zhe = (t) => (Math.floor((t.p / t.n) * 100) / 10).toFixed(1);
+const photos = (n) => Math.floor(n / 2);
+
+/* ===== 图标几何（24×24）：爪印冻干立体版 =====
+ * 渐变色标引用主题变量，每个 <svg> 实例各自带一份 defs（id 唯一）——
+ * 共用 id 时浏览器只认第一份 defs，色标会按第一份所在主题解析，其余三套主题就串色了。 */
+const pore = (x, y, r) => `<circle class="m-pore" cx="${x}" cy="${y}" r="${r}"/>`;
+const stops = (list) => list.map(([o, v]) => `<stop offset="${o}" style="stop-color:var(${v})"/>`).join("");
+const lin = (id, x2, y2, list) => `<linearGradient id="${id}" x1="0" y1="0" x2="${x2}" y2="${y2}">${stops(list)}</linearGradient>`;
+const rad = (id, list, cx = 0.36, cy = 0.3, r = 0.8) => `<radialGradient id="${id}" cx="${cx}" cy="${cy}" r="${r}">${stops(list)}</radialGradient>`;
+const PUFF = [[0, "--m-top"], [0.58, "--m-fill"], [1, "--m-shade"]];
+// 爪印：掌垫 + 四个趾豆，中心约在 (12, 12.1)
+const PAW = (cls) => `<path class="${cls}" d="M12 11.8C14 11.8 15.6 13.3 15.6 15C15.6 16.4 14.4 17.2 13.4 17.2C12.8 17.2 12.5 16.9 12 16.9S11.2 17.2 10.6 17.2C9.6 17.2 8.4 16.4 8.4 15C8.4 13.3 10 11.8 12 11.8Z"/>
+  <ellipse class="${cls}" cx="8.5" cy="10.6" rx="1.1" ry="1.4" transform="rotate(-20 8.5 10.6)"/><ellipse class="${cls}" cx="10.8" cy="8.4" rx="1.1" ry="1.45" transform="rotate(-6 10.8 8.4)"/>
+  <ellipse class="${cls}" cx="13.2" cy="8.4" rx="1.1" ry="1.45" transform="rotate(6 13.2 8.4)"/><ellipse class="${cls}" cx="15.5" cy="10.6" rx="1.1" ry="1.4" transform="rotate(20 15.5 10.6)"/>`;
+// 压进去的爪印：先画下移的亮边，再盖暗色印痕，下沿露出一道亮边，读起来是「凹」的
+const deboss = (t, lip = 0.7) => `<g transform="${t}"><g transform="translate(0 ${lip})">${PAW("m-paw-hi")}</g>${PAW("m-paw")}</g>`;
+
+const ICONS = {
+  // 立体方粒：等轴视角的冻干方块，顶面受光、左面中间调、右面背光，爪印压在顶面上
+  I: { name: "立体方粒", svg: (id) => `<defs>${lin(id + "a", 1, 1, [[0, "--m-top"], [1, "--m-fill"]])}${lin(id + "b", 0, 1, [[0, "--m-fill"], [1, "--m-shade"]])}${lin(id + "c", 0, 1, [[0, "--m-shade"], [1, "--m-deep"]])}</defs>
+    <ellipse class="m-shadow" cx="12" cy="21.5" rx="8.6" ry="1.5"/>
+    <path class="m-g" style="fill:url(#${id}b)" d="M3.4 7.9L12 12.3L12 20.7L3.6 16.4Z"/>
+    <path class="m-g" style="fill:url(#${id}c)" d="M12 12.3L20.6 7.9L20.4 16.4L12 20.7Z"/>
+    <path class="m-g" style="fill:url(#${id}a)" d="M12 3.4L20.6 7.9L12 12.3L3.4 7.9Z"/>
+    <path class="m-hi" style="opacity:.8" d="M5.4 8.1L12 11.4L18.6 8.1"/>
+    ${deboss("translate(12 7.85) scale(.78 .4) translate(-12 -12.1)", 1.2)}
+    ${pore(6, 12.2, 0.5)}${pore(8.6, 16.2, 0.55)}${pore(10, 13.4, 0.4)}${pore(14.6, 15.6, 0.5)}${pore(17.8, 12.2, 0.45)}${pore(16.6, 17.4, 0.4)}
+    <circle class="m-dust" cx="21.2" cy="19.8" r=".8"/><circle class="m-dust" cx="2.8" cy="20" r=".6"/>` },
+  // 厚切方块：在原版圆角方块上加出厚度（下沿露出侧面），顶面用径向渐变做出微微鼓起
+  J: { name: "厚切方块", svg: (id) => `<defs>${rad(id + "a", PUFF, 0.34, 0.26, 0.85)}${lin(id + "b", 0, 1, [[0, "--m-shade"], [1, "--m-deep"]])}</defs>
+    <ellipse class="m-shadow" cx="12.4" cy="21.7" rx="8.2" ry="1.4"/>
+    <g transform="rotate(-8 12 12)">
+    <rect class="m-g" style="fill:url(#${id}b)" x="3.8" y="4.4" width="16.4" height="15.6" rx="3.2"/>
+    ${pore(6.6, 18.4, 0.42)}${pore(10.2, 18.8, 0.42)}${pore(13.8, 18.8, 0.42)}${pore(17.4, 18.4, 0.42)}
+    <rect class="m-g" style="fill:url(#${id}a)" x="3.8" y="3.4" width="16.4" height="13.4" rx="3.2"/>
+    <path class="m-hi" d="M5.3 11V7.1C5.3 5.8 6.1 4.9 7.4 4.9H11.2"/>
+    ${deboss("translate(12 10.2) scale(.74) translate(-12 -12.1)", 0.8)}
+    ${pore(6.4, 14.6, 0.5)}${pore(17.6, 14.4, 0.55)}${pore(17.4, 6, 0.45)}</g>` },
+  // 蓬松枕块：边缘起伏、整体鼓起的冻干块，中心最亮、四周渐暗，最像真实冻干的酥松感
+  K: { name: "蓬松枕块", svg: (id) => `<defs>${rad(id + "a", [[0, "--m-top"], [0.5, "--m-fill"], [0.86, "--m-shade"], [1, "--m-deep"]], 0.38, 0.32, 0.78)}</defs>
+    <ellipse class="m-shadow" cx="12.2" cy="20.9" rx="7.8" ry="1.5"/>
+    <path class="m-g" style="fill:url(#${id}a)" d="M4.6 9.2C4.4 6.4 6.6 4.4 9.4 4.6C10.4 4 11.6 4 12.6 4.4C13.8 3.9 15.4 4.2 16.2 5C18.8 5 20.2 7.2 19.8 9.6C20.6 10.8 20.6 12.6 19.8 13.8C20 16.6 18 18.4 15.4 18.2C14.2 19 12.4 19 11.2 18.4C9.8 19 8 18.6 7.2 17.6C4.8 17.4 3.6 15.4 4.2 13.2C3.4 12 3.6 10.2 4.6 9.2Z"/>
+    <path class="m-hi" d="M6.4 8.8C6.8 7.2 8 6.1 9.6 6"/>
+    ${deboss("translate(12.1 11.6) scale(.72) translate(-12 -12.1)", 0.8)}
+    ${pore(6.6, 13.8, 0.55)}${pore(17.4, 8.4, 0.5)}${pore(16.8, 15.4, 0.6)}${pore(9, 16.4, 0.45)}${pore(14.6, 6.2, 0.4)}
+    <circle class="m-dust" cx="20.9" cy="18.6" r=".75"/><circle class="m-dust" cx="3.2" cy="18.8" r=".6"/><circle class="m-dust" cx="21.6" cy="16.7" r=".45"/>` },
+  // 爪形冻干：冻干本身就压成爪子形状，掌垫与四个趾豆各自鼓起、带厚度
+  L: { name: "爪形冻干", svg: (id) => {
+    const pad = "M12 10.4C15.6 10.4 18.6 13 18.6 16C18.6 18.6 16.6 20 14.8 20C13.6 20 13 19.4 12 19.4S10.4 20 9.2 20C7.4 20 5.4 18.6 5.4 16C5.4 13 8.4 10.4 12 10.4Z";
+    const toes = [[4.9, 10.5, 1.9, 2.4, -24], [8.9, 6.1, 2, 2.6, -8], [15.1, 6.1, 2, 2.6, 8], [19.1, 10.5, 1.9, 2.4, 24]];
+    const toe = (dy, style) => toes.map(([x, y, rx, ry, a]) => `<ellipse class="m-g" style="${style}" cx="${x}" cy="${y + dy}" rx="${rx}" ry="${ry}" transform="rotate(${a} ${x} ${y + dy})"/>`).join("");
+    return `<defs>${rad(id + "a", PUFF, 0.36, 0.3, 0.78)}</defs>
+    <ellipse class="m-shadow" cx="12" cy="21.8" rx="8" ry="1.3"/>
+    <g class="m-thin"><path class="m-g" style="fill:var(--m-deep)" transform="translate(0 1.3)" d="${pad}"/>${toe(1.1, "fill:var(--m-deep)")}</g>
+    <g class="m-thin"><path class="m-g" style="fill:url(#${id}a)" d="${pad}"/>${toe(0, `fill:url(#${id}a)`)}</g>
+    <path class="m-hi" d="M8 13.6C8.8 12.5 9.9 11.8 11.1 11.6"/><path class="m-hi" d="M7.7 5C8 4.3 8.5 3.9 9.1 3.8"/><path class="m-hi" d="M13.9 5C14.2 4.3 14.7 3.9 15.3 3.8"/>
+    ${pore(10, 15.2, 0.6)}${pore(13.8, 14.2, 0.5)}${pore(12.4, 17.4, 0.55)}${pore(8.8, 17.8, 0.4)}${pore(15.8, 17.2, 0.45)}${pore(9.6, 7.2, 0.4)}${pore(15.8, 7.4, 0.4)}${pore(5.2, 11.4, 0.35)}${pore(19, 11.6, 0.35)}`;
+  } }
+};
+let icon = "J";
+let gid = 0;
+const meat = (s, cls = "", v = icon) => `<svg class="meat ${cls}" viewBox="0 0 24 24" width="${s}" height="${s}">${ICONS[v].svg(`fd${++gid}`)}</svg>`;
+
+const frame = (title, inner) => `<div class="status"><span>9:41</span><span><i></i><i></i></span></div><div class="nav">${title}<div class="capsule"></div></div>${inner}`;
+const page = (o) => `<div class="screen">
+  <div class="hero"><img src="${o.img}" alt="${o.title}样张"></div>
+  <div class="pg-t">${o.title}</div>
+  <div class="pg-s">${o.sub}</div>
+</div>
+<div class="bar"><div class="bal">${meat(18)}${o.have}<small>${U}</small></div><div class="cta">${meat(18, "on-btn")}<b>${o.need}</b> ${U} · 开始生成</div></div>`;
+const fine = () => `<p class="fine">${N}仅限本小程序使用，不可提现或转让 · <u>充值须知</u></p>`;
+const gbar = (base, gift) => `<div class="gbar"><i class="b" style="flex:${base}"></i><i class="g" style="flex:${gift}"></i></div>`;
+
+const tierCell = (t, selIdx, i, lackOf) => {
+  const gift = t.n - t.p, short = lackOf && t.n < lackOf;
+  return `<div class="tier ${i === selIdx ? "sel" : ""} ${short ? "short" : ""}">
+    ${short ? `<em class="badge lack">这次不够</em>` : t.hot ? `<em class="badge hot">${t.hot}</em>` : ""}
+    <em class="deal">多送 ${pct(t)}%</em>
+    <div class="top">${meat(26)}<b class="n">${t.n}<small>${U}</small></b></div>
+    <div class="split">${t.p} ${U} + <em>送 ${gift} ${U}</em></div>
+    ${gbar(t.p, gift)}
+    <span class="eq">够做 ${photos(t.n)} 张写真</span>
+    <div class="foot"><span class="pr">¥${t.p}</span><span class="off">约 ${zhe(t)} 折</span></div>
+  </div>`;
+};
+
+// 新用户：森林画报需要 2，余额 1（见面礼用掉 2），首充可用
+const fresh = () => `<div class="scrim"></div><div class="sheet"><div class="grab"></div><i class="x">×</i>
+  <div class="sh-head"><span class="sh-ic">${meat(40)}</span><div><b class="sh-t">${N}不够啦</b><span class="sh-s">这次需要 <b>2</b> ${U}，你还有 <b>1</b> ${U}</span></div></div>
+  <div class="fc"><em class="deal ribbon">新人首充 · 仅此一次</em>
+    <div class="pile">${meat(34)}${meat(34)}<em class="x2">×2</em></div>
+    <div class="mid"><b>12<small>${U}</small></b><div class="split">6 ${U} + <em>白送 6 ${U}</em></div>${gbar(6, 6)}</div>
+    <div class="rt"><span class="pr">¥6</span><span class="off">相当于 5 折</span></div>
+  </div>
+  <div class="tiers">${TIERS.map((t, i) => tierCell(t, -1, i)).join("")}</div>
+  <div class="pay"><em class="deal bubble">这单多送 6 ${U}</em><div class="btn">支付 ¥<b>6</b>，到账 <b>12</b> ${U}</div></div>
+  <p class="fine">到账后自动开始生成</p>${fine()}</div>`;
+
+// 老用户：36 张写真套餐需要 36，余额 8，还差 28 → 默认选中能补足的最小档（38 元）
+const back = () => `<div class="scrim"></div><div class="sheet"><div class="grab"></div><i class="x">×</i>
+  <div class="sh-head"><span class="sh-ic">${meat(40)}</span><div><b class="sh-t">${N}不够啦</b><span class="sh-s">这次需要 <b>36</b> ${U}，你还有 <b>8</b> ${U}，还差 <b>28</b> ${U}</span></div></div>
+  <div class="tiers">${TIERS.map((t, i) => tierCell(t, 1, i, 28)).join("")}</div>
+  <div class="plain"><span>不要加送，只买 <b>6 ${U}</b></span><b>¥6</b></div>
+  <div class="pay"><em class="deal bubble">这单多送 12 ${U}</em><div class="btn">支付 ¥<b>38</b>，到账 <b>50</b> ${U}</div></div>
+  <p class="fine">到账后自动开始生成 · 余额 58 ${U}，用完还剩 22 ${U}</p>${fine()}</div>`;
+
+// 「冻干」也是真实商品名，见面礼里用一句话说明它是这里的零食币，避免新用户以为能买实物
+const gift = () => `<div class="scrim"></div><div class="toast">${meat(18)}已到账 12 ${U}，开始生成</div>
+  <div class="dlg"><i class="x">×</i>
+  <div class="gift-stack">${meat(56)}${meat(80)}${meat(56)}</div>
+  <b class="dlg-t">送你一份见面礼</b>
+  <div class="big-n">3 ${U}</div>
+  <p>${N} · 7 天内有效</p>
+  <div class="what">${N}是这里的零食币，做写真、做画册都用它</div>
+  <div class="uses"><div><b>如果我是人</b><span>3 ${U} · 1 次</span></div><div><b>艺术写真</b><span>2 ${U} · 1 张</span></div></div>
+  <div class="btn">去变成人试试</div></div>`;
+
+const PAGES = {
+  fresh: { title: "森林画报", img: T("pet-forest-editorial"), sub: "艺术写真 · 用你家毛孩子的照片拍一张杂志封面", have: 1, need: 2, body: fresh },
+  back: { title: "写真套餐", img: T("pet-runway"), sub: `36 张一次拍齐 · 每张只要 1 ${U}`, have: 8, need: 36, body: back },
+  gift: { title: "森林画报", img: T("pet-forest-editorial"), sub: "艺术写真 · 用你家毛孩子的照片拍一张杂志封面", have: 1, need: 2, body: gift }
+};
+
+const gallery = () => `<div class="board"><div class="gal">${Object.keys(ICONS).map((v) => `<div class="cell ${v === icon ? "cur" : ""}" data-pick="${v}">
+  ${meat(72, "", v)}<span class="sm">${meat(32, "", v)}${meat(24, "", v)}${meat(16, "", v)}<span class="chipbtn">${meat(16, "on-btn", v)}</span></span>
+  <span class="nm">${v} ${ICONS[v].name}</span></div>`).join("")}</div></div>`;
+
+const board = () => `<div class="board">
+  <h4>余额胶囊 · 带消耗的主按钮</h4>
+  <div class="rowc"><div class="bal">${meat(18)}12<small>${U}</small></div><div class="cta" style="flex:1">${meat(18, "on-btn")}<b>3</b> ${U} · 开始生成</div></div>
+  <h4>模板卡角标（免费 / 消耗）</h4>
+  <div class="rowc">
+    <div class="mini-card"><img src="${T("pet-runway")}" alt=""><span class="cost">${meat(14)}2</span></div>
+    <div class="mini-card"><img src="${T("duo-tulips-lap")}" alt=""><span class="cost">${meat(14)}4</span></div>
+    <div class="mini-card"><img src="${R}apps/miniprogram/assets/samples/plugins/pet-id-card.jpg" alt=""><span class="free">免费</span></div>
+  </div>
+  <h4>「我的」页钱包行</h4>
+  <div class="wallet">${meat(36)}<div><b>12<small>${U}</small></b><span>${N} · 其中赠送 1 ${U}，10-13 到期</span></div><span class="go">充值</span></div>
+  <h4>收支明细</h4>
+  <div class="ledger">
+    <div><span>充值 6 元 · 10-06 14:02</span><em class="plus">+12</em></div>
+    <div><span>森林画报 · 10-06 14:02</span><em>−2</em></div>
+    <div><span>生成失败退回 · 10-06 13:40</span><em class="plus">+3</em></div>
+    <div><span>新人见面礼 · 10-06 13:31</span><em class="plus">+3</em></div>
+  </div>
+</div>`;
+
+function pick(v) {
+  icon = v;
+  document.querySelectorAll("[data-icon]").forEach((x) => x.classList.toggle("on", x.dataset.icon === v));
+  render();
+}
+function render() {
+  document.getElementById("lead-new").innerHTML = `新用户只看到一档首充：<b>6 元到账 12 ${U}，白送 6 ${U}</b>，用横幅单独突出并默认选中。下面四档每档都标「多送 N%」、拆成「本金 + 送」两段并配加送进度条；折扣按 6 元 6 ${U}的在售基础价折算。按钮上方的气泡随选中档位变化。`;
+  document.getElementById("lead-old").innerHTML = `首充用过后不再出现横幅。场景是做 36 张写真套餐，还差 28 ${U}：<b>默认选中能补足差额的最小档</b>（38 元 50 ${U}），补不足的档位变淡并标「这次不够」。不要加送的 6 元档收在最下面一行。`;
+  document.getElementById("lead-gift").innerHTML = `添加第一只宠物后弹出。3 ${U}正好够做一次「如果我是人」，7 天内有效。「冻干」也是真实的零食名，所以见面礼里加一句说明它是这里的零食币，避免新用户以为能买实物。顶部是充值到账后的轻提示。`;
+  document.getElementById("gallery").innerHTML = SKINS.map(([cls, name, sub]) =>
+    `<div><p class="label"><b>${name}</b><span>${sub}</span></p><div class="${cls}" style="border-radius:22px">${gallery()}</div></div>`).join("");
+  document.getElementById("boards").innerHTML = SKINS.map(([cls, name, sub]) =>
+    `<div><p class="label"><b>${name}</b><span>${sub}</span></p><div class="${cls}" style="border-radius:22px">${board()}</div></div>`).join("");
+  document.querySelectorAll("[data-ver]").forEach((el) => {
+    const o = PAGES[el.dataset.ver];
+    el.innerHTML = SKINS.map(([cls, name, sub]) =>
+      `<div><p class="label"><b>${name}</b><span>${sub}</span></p><div class="phone ${cls}">${frame(o.title, page(o) + o.body())}</div></div>`).join("");
+  });
+  document.querySelectorAll("[data-pick]").forEach((c) => c.addEventListener("click", () => pick(c.dataset.pick)));
+}
+const bar = document.getElementById("iconbar");
+Object.keys(ICONS).forEach((v) => {
+  const b = document.createElement("button");
+  b.dataset.icon = v;
+  b.textContent = `${v} ${ICONS[v].name}`;
+  b.className = v === icon ? "on" : "";
+  b.addEventListener("click", () => pick(v));
+  bar.appendChild(b);
+});
+document.getElementById("gray").addEventListener("click", (e) => {
+  document.body.classList.toggle("gray");
+  e.target.classList.toggle("on");
+});
+render();
+</script>
+</body>
+</html>

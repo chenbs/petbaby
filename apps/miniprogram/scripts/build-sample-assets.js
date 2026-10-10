@@ -43,14 +43,14 @@ const pluginSources = {
 const scenes = {
   "window-morning": "v3", "garden-curious": "v3", "studio-confident": "v3",
   "night-playful": "v3", "seaside-breeze": "v3", "library-whisper": "v3",
-  "autumn-leaves": "v3", "snow-cabin": "v4", "cafe-afternoon": "v3",
-  "lakeside-sunset": "v4", "city-rain": "v3", "spring-picnic": "v4",
-  "railway-traveler": "v13", "tennis-champion": "v13", "greenhouse-gardener": "v13", "sailboat-holiday": "v13",
-  "berry-pastry-chef": "v12", "paper-flower-window": "v13", "mountain-cable-car": "v13", "laundry-day": "v13",
-  "museum-curator": "v13", "poolside-vacation": "v13", "post-office": "v13", "ballet-backstage": "v12",
-  "shorthair-armchair": "v13", "shorthair-books": "v13", "shorthair-night-rim": "v11", "shorthair-paper-bag": "v13",
-  "corgi-denim": "v11", "corgi-crate": "v9", "corgi-sploot": "v13", "corgi-sweater": "v13",
-  "calico-silk": "v12", "calico-bowl": "v12", "calico-rain-window": "v13", "calico-cane-stool": "v11"
+  "autumn-leaves": "v3", "snow-cabin": "v14", "cafe-afternoon": "v3",
+  "lakeside-sunset": "v14", "city-rain": "v14", "spring-picnic": "v14",
+  "railway-traveler": "v14", "tennis-champion": "v14", "greenhouse-gardener": "v14", "sailboat-holiday": "v14",
+  "berry-pastry-chef": "v14", "paper-flower-window": "v14", "mountain-cable-car": "v14", "laundry-day": "v14",
+  "museum-curator": "v14", "poolside-vacation": "v14", "post-office": "v14", "ballet-backstage": "v12",
+  "shorthair-armchair": "v14", "shorthair-books": "v13", "shorthair-night-rim": "v11", "shorthair-paper-bag": "v14",
+  "corgi-denim": "v11", "corgi-crate": "v9", "corgi-sploot": "v14", "corgi-sweater": "v14",
+  "calico-silk": "v12", "calico-bowl": "v12", "calico-rain-window": "v14", "calico-cane-stool": "v11"
 };
 const movieScenes = {
   highseas: path.join(root, "tools/imagegen/out/movie-album-v3/movie-highseas.jpg"),

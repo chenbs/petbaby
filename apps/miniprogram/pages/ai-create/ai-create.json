@@ -6,6 +6,8 @@
     "t-empty": "../../components/empty/index",
     "t-skeleton": "../../components/skeleton/index",
     "t-photo-grid": "../../components/photo-grid/index",
-    "t-steps": "../../components/steps/index"
+    "t-steps": "../../components/steps/index",
+    "t-wallet-sheet": "../../components/wallet-sheet/index",
+    "t-dongan-balance": "../../components/dongan-balance/index"
   }
 }

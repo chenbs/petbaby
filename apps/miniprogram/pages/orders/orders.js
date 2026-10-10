@@ -14,6 +14,7 @@ themedPage({
       .then((orders) => this.setData({
         loading: false,
         orders: orders.map((order) => Object.assign({}, order, {
+          skuText: /^fd-topup-/.test(order.sku) ? "充值 " + Number(order.units || order.entitlement_snapshot && order.entitlement_snapshot.units || 0) + " 颗" : order.sku,
           statusText: STATUS_TEXT[order.status] || order.status,
           statusTone: STATUS_TONE[order.status] || "neutral",
           // orders.amount 是 numeric(10,2) 元，不是分，直接保留两位
@@ -25,7 +26,7 @@ themedPage({
   },
   askRefund(event) {
     const order = this.data.orders.find((item) => item.id === event.currentTarget.dataset.id);
-    if (order) this.setData({ refundTarget: order, refundDescription: order.paymentKind === "work" ? "每位用户可申请一次效果不满意退款，退回订单金额的 50%。Apple 订单请在 Apple 购买记录中申请。" : "申请退回此订单尚未退还的金额。到账后相关权益将收回；Apple 订单请在 Apple 购买记录中申请。" });
+    if (order) this.setData({ refundTarget: order, refundDescription: "申请退回此现金订单尚未退还的金额。充值退款后将收回对应冻干；Apple 订单请在 Apple 购买记录中申请。" });
   },
   pay(event) {
     const order = this.data.orders.find((item) => item.id === event.currentTarget.dataset.id);
@@ -47,7 +48,7 @@ themedPage({
     if (!target) return;
     this.setData({ refundTarget: null, busy: true, error: "" });
     const paths = { work: "/api/orders/", growth: "/api/growth-orders/", physical: "/api/physical-orders/" };
-    api.request(paths[target.paymentKind] + target.id + "/refund", { method: "POST", data: { reason: target.paymentKind === "work" ? "dissatisfied" : "requested" } })
+    api.request(paths[target.paymentKind] + target.id + "/refund", { method: "POST", data: { reason: "requested" } })
       .then(() => { this.setData({ busy: false }); wx.showToast({ title: "退款已提交", icon: "none" }); this.load(); })
       .catch((error) => this.setData({ error: error.message, busy: false }));
   },

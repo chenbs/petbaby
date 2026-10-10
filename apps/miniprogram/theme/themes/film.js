@@ -40,6 +40,18 @@ module.exports = {
     "--skin-glow": "transparent",
     "--skin-avatar-ring": "transparent",
     "--skin-sticker-alt": "#FFFDF8",
+    // 冻干充值面板（2026-10-08）：「多送」角标、加送进度条、首充横幅、选中档位
+    "--skin-deal": "#C2381F",
+    "--skin-deal-2": "#D9573C",
+    "--skin-deal-text": "#FFFDF8",
+    "--skin-deal-ink": "#B42318",
+    "--skin-deal-base": "#D6CAB6",
+    "--skin-fc-bg": "#FFFDF8",
+    "--skin-fc-text": "#211E1B",
+    "--skin-fc-sub": "#6B6258",
+    "--skin-fc-ink": "#B42318",
+    "--skin-tier-on-bg": "#FFFDF8",
+    "--skin-tier-on-border": "#C2381F",
     // 以下覆盖同名常量（圆角 / 阴影），只在本皮肤的页面子树内生效
     "--skin-press-shadow": "none",
     "--skin-btn-clip": "none",

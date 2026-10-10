@@ -470,6 +470,68 @@ const previousV12SceneOptions = [
   { id: "calico-cane-stool", title: "墨镜风衣", description: "立领风衣 · 墨镜压低" },
 ];
 
+// 2026-10-06 v14：13 套 v12/v13 棚拍加 1–2 件同主题装饰，黑白经典肖像、街头雨衣、小拳击手、叼一束花同 id 换成时尚杂志大片，草地花环午后、软玩具野餐改为棚拍，滑板少年换示范宠物；这 20 个 v13 默认键与 v13 的 36 套名称表视为上一版默认值。
+const previousV13ArtSceneUrls: Record<string, string> = {
+  "lakeside-sunset": "/api/plugin-samples/samples/scene-lakeside-sunset-v4-5cc0cb785432.jpg",
+  "spring-picnic": "/api/plugin-samples/samples/scene-spring-picnic-v4-274593d9cd4a.jpg",
+  "shorthair-armchair": "/api/plugin-samples/samples/scene-shorthair-armchair-v13-aa756fb2baa9.jpg",
+  "snow-cabin": "/api/plugin-samples/samples/scene-snow-cabin-v4-76d611cfe07a.jpg",
+  "city-rain": "/api/plugin-samples/samples/scene-city-rain-v3-0ccde8661153.jpg",
+  "railway-traveler": "/api/plugin-samples/samples/scene-railway-traveler-v13-ceb6b51f13ac.jpg",
+  "tennis-champion": "/api/plugin-samples/samples/scene-tennis-champion-v13-654b9be17207.jpg",
+  "greenhouse-gardener": "/api/plugin-samples/samples/scene-greenhouse-gardener-v13-b66874dd3375.jpg",
+  "sailboat-holiday": "/api/plugin-samples/samples/scene-sailboat-holiday-v13-348202af2174.jpg",
+  "berry-pastry-chef": "/api/plugin-samples/samples/scene-berry-pastry-chef-v12-f063d9ca752d.jpg",
+  "paper-flower-window": "/api/plugin-samples/samples/scene-paper-flower-window-v13-f9056cc77d00.jpg",
+  "mountain-cable-car": "/api/plugin-samples/samples/scene-mountain-cable-car-v13-1f70a0b246a5.jpg",
+  "laundry-day": "/api/plugin-samples/samples/scene-laundry-day-v13-0a318b72b47f.jpg",
+  "museum-curator": "/api/plugin-samples/samples/scene-museum-curator-v13-d872cde76870.jpg",
+  "poolside-vacation": "/api/plugin-samples/samples/scene-poolside-vacation-v13-1a97d5934980.jpg",
+  "post-office": "/api/plugin-samples/samples/scene-post-office-v13-9aaedbad7313.jpg",
+  "shorthair-paper-bag": "/api/plugin-samples/samples/scene-shorthair-paper-bag-v13-7dee6fca465a.jpg",
+  "corgi-sploot": "/api/plugin-samples/samples/scene-corgi-sploot-v13-e6b833ccac67.jpg",
+  "corgi-sweater": "/api/plugin-samples/samples/scene-corgi-sweater-v13-5a2dbfdd359d.jpg",
+  "calico-rain-window": "/api/plugin-samples/samples/scene-calico-rain-window-v13-e856e390ced3.jpg",
+};
+const previousV13SceneOptions = [
+  { id: "window-morning", title: "蓝格睡衣卧室", description: "床上打哈欠 · 慵懒放松" },
+  { id: "garden-curious", title: "绿幕恐龙朋友", description: "抱住玩偶 · 天真好奇" },
+  { id: "studio-confident", title: "薄荷领带影棚", description: "端坐回望 · 自信从容" },
+  { id: "night-playful", title: "星夜小王子", description: "披风坐定 · 安静幻想" },
+  { id: "seaside-breeze", title: "柠檬黄日记", description: "柠檬入镜 · 俏皮大笑" },
+  { id: "library-whisper", title: "复古摄影师", description: "相机在旁 · 慢慢观察" },
+  { id: "autumn-leaves", title: "蓝调杂志封面", description: "耳机与领带 · 俏皮凝视" },
+  { id: "snow-cabin", title: "黑白经典肖像", description: "黑白影棚 · 温柔凝视" },
+  { id: "cafe-afternoon", title: "玫红眼镜写真", description: "衬衫领带 · 轻松回眸" },
+  { id: "lakeside-sunset", title: "草地花环午后", description: "花束相伴 · 温柔凝视" },
+  { id: "city-rain", title: "街头雨衣", description: "雨后水洼 · 小心探步" },
+  { id: "spring-picnic", title: "软玩具野餐", description: "野餐垫上 · 伸爪拨带" },
+  { id: "railway-traveler", title: "放大镜大眼", description: "镜片后面 · 一只眼超大" },
+  { id: "tennis-champion", title: "风扇吹毛", description: "小风扇对着吹 · 毛乱飞" },
+  { id: "greenhouse-gardener", title: "小拳击手", description: "戴上拳套 · 一脸认真" },
+  { id: "sailboat-holiday", title: "礼物盒惊喜", description: "顶开盒盖 · 探出圆脸" },
+  { id: "berry-pastry-chef", title: "半空接球", description: "腾空一跃 · 张嘴接住" },
+  { id: "paper-flower-window", title: "叼一束花", description: "叼着郁金香 · 来送花" },
+  { id: "mountain-cable-car", title: "大鼻子", description: "凑到镜头前 · 鼻子好大" },
+  { id: "laundry-day", title: "钻进大毛衣", description: "从领口钻出来 · 只露脑袋" },
+  { id: "museum-curator", title: "第一天上学", description: "小黄帽小书包 · 乖乖坐好" },
+  { id: "poolside-vacation", title: "泳圈小将", description: "坐进泳圈 · 不太情愿" },
+  { id: "post-office", title: "追纸飞机", description: "纸飞机飞过 · 抬爪去够" },
+  { id: "ballet-backstage", title: "气球派对", description: "抬头望气球 · 眼睛亮晶晶" },
+  { id: "shorthair-armchair", title: "滑板少年", description: "踩着滑板 · 一路滑过" },
+  { id: "shorthair-books", title: "吹风机造型", description: "长毛被吹起 · 一脸淡定" },
+  { id: "shorthair-night-rim", title: "黑金礼服", description: "昂首睥睨 · 礼服绅士" },
+  { id: "shorthair-paper-bag", title: "毛线帽", description: "大绒球毛线帽 · 歪头看你" },
+  { id: "corgi-denim", title: "机车先生", description: "皮衣回眸 · 酷感气场" },
+  { id: "corgi-crate", title: "丝绒王座", description: "端坐高背椅 · 贵族气质" },
+  { id: "corgi-sploot", title: "毛线团缠住", description: "打滚玩毛线 · 越缠越乱" },
+  { id: "corgi-sweater", title: "西瓜啃啃", description: "咬一口西瓜 · 眯眼满足" },
+  { id: "calico-silk", title: "抱着玩偶睡", description: "搂紧玩偶 · 睡到吐舌" },
+  { id: "calico-bowl", title: "冰淇淋舔舔", description: "伸舌头够 · 专注对眼" },
+  { id: "calico-rain-window", title: "害羞捂眼", description: "爪子捂眼睛 · 偷偷看你" },
+  { id: "calico-cane-stool", title: "墨镜风衣", description: "立领风衣 · 墨镜压低" },
+];
+
 const manifestSchema: z.ZodType<PluginManifest> = z.object({
   id: z.string().min(1).max(80),
   code: z.string().min(1).max(80),
@@ -628,7 +690,7 @@ async function ensurePluginConfigs() {
               const v2Styles = key === "sceneUrls" ? previousV2SampleDefaults[plugin.id]?.sceneUrls || {} : {};
               for (const [style, url] of Object.entries(value as Record<string, string>)) {
                 if (nextStyles[style] === undefined || nextStyles[style] === oldStyles[style] || nextStyles[style] === v2Styles[style] ||
-                    (plugin.id === "pl-10" && key === "sceneUrls" && (nextStyles[style] === previousV4ArtSceneUrls[style] || nextStyles[style] === previousV5ArtSceneUrls[style] || nextStyles[style] === previousV6ArtSceneUrls[style] || nextStyles[style] === previousV7ArtSceneUrls[style] || nextStyles[style] === previousV8ArtSceneUrls[style] || nextStyles[style] === previousV9ArtSceneUrls[style] || nextStyles[style] === previousV10ArtSceneUrls[style] || nextStyles[style] === previousV11ArtSceneUrls[style] || nextStyles[style] === previousV12ArtSceneUrls[style]))) {
+                    (plugin.id === "pl-10" && key === "sceneUrls" && (nextStyles[style] === previousV4ArtSceneUrls[style] || nextStyles[style] === previousV5ArtSceneUrls[style] || nextStyles[style] === previousV6ArtSceneUrls[style] || nextStyles[style] === previousV7ArtSceneUrls[style] || nextStyles[style] === previousV8ArtSceneUrls[style] || nextStyles[style] === previousV9ArtSceneUrls[style] || nextStyles[style] === previousV10ArtSceneUrls[style] || nextStyles[style] === previousV11ArtSceneUrls[style] || nextStyles[style] === previousV12ArtSceneUrls[style] || nextStyles[style] === previousV13ArtSceneUrls[style]))) {
                   if (nextStyles[style] !== url) { nextStyles[style] = url; changed = true; }
                 }
               }
@@ -637,7 +699,7 @@ async function ensurePluginConfigs() {
               const previousTwelve = (value as typeof previousV2ArtSceneOptions).slice(0, 12);
               const previousV4 = [...previousTwelve, ...previousV4ExtendedSceneOptions];
               const previousV5 = [...previousTwelve, ...previousV5ExtendedSceneOptions];
-              if (merged[key] === undefined || matchesPreviousArtScenes(merged[key]) || matchesArtSceneOptions(merged[key], previousTwelve) || matchesArtSceneOptions(merged[key], previousV4) || matchesArtSceneOptions(merged[key], previousV5) || matchesArtSceneOptions(merged[key], (value as typeof previousV2ArtSceneOptions).slice(0, 24)) || matchesArtSceneOptions(merged[key], previousV7SceneOptions) || matchesArtSceneOptions(merged[key], previousV7SceneOptions.slice(0, 24)) || matchesArtSceneOptions(merged[key], previousV8SceneOptions) || matchesArtSceneOptions(merged[key], previousV9SceneOptions) || matchesArtSceneOptions(merged[key], previousV10SceneOptions) || matchesArtSceneOptions(merged[key], previousV11SceneOptions) || matchesArtSceneOptions(merged[key], previousV12SceneOptions)) { merged[key] = value; changed = true; }
+              if (merged[key] === undefined || matchesPreviousArtScenes(merged[key]) || matchesArtSceneOptions(merged[key], previousTwelve) || matchesArtSceneOptions(merged[key], previousV4) || matchesArtSceneOptions(merged[key], previousV5) || matchesArtSceneOptions(merged[key], (value as typeof previousV2ArtSceneOptions).slice(0, 24)) || matchesArtSceneOptions(merged[key], previousV7SceneOptions) || matchesArtSceneOptions(merged[key], previousV7SceneOptions.slice(0, 24)) || matchesArtSceneOptions(merged[key], previousV8SceneOptions) || matchesArtSceneOptions(merged[key], previousV9SceneOptions) || matchesArtSceneOptions(merged[key], previousV10SceneOptions) || matchesArtSceneOptions(merged[key], previousV11SceneOptions) || matchesArtSceneOptions(merged[key], previousV12SceneOptions) || matchesArtSceneOptions(merged[key], previousV13SceneOptions)) { merged[key] = value; changed = true; }
             } else if (value !== undefined && (merged[key] === undefined || merged[key] === previousSampleDefaults[plugin.id]?.[key as "heroUrl"] || merged[key] === previousV2SampleDefaults[plugin.id]?.[key as "heroUrl"])) {
               if (merged[key] !== value) { merged[key] = value; changed = true; }
             }

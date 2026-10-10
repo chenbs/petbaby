@@ -1,24 +1,27 @@
+const wallet = require("../../services/wallet");
 const api = require("../../services/api");
+const params = require("../../services/params");
 const { displayMediaTree } = require("../../services/photo-files");
 const { themedPage } = require("../../theme/page-mixin");
 
-const RENDER_TEXT = { queued: "排队中", processing: "渲染中", succeeded: "已完成", failed: "渲染失败", cancelled: "已取消" };
+const RENDER_TEXT = { queued: "排队中", processing: "渲染中", succeeded: "已完成", ready: "已完成", preview_ready: "已完成", failed: "渲染失败", cancelled: "已取消" };
 
-themedPage({
-  data: { id: "", project: null, render: null, coverUrl: "", caption: "", message: "", messageType: "info", busy: false, loading: true, renderText: "", confirmCancel: false },
-  onLoad(options) { if (!options.id) return this.setData({ loading: false, message: "短片链接无效，请从作品柜重新打开。", messageType: "error" }); this.setData({ id: options.id }); this.load(); },
+themedPage(Object.assign({}, wallet.walletSheetMethods, {
+  data: { walletSheet: { visible: false, required: 0, balance: 0, shortfall: 0 }, id: "", project: null, render: null, coverUrl: "", caption: "", message: "", messageType: "info", busy: false, loading: true, renderText: "", confirmCancel: false, pricingText: "正在读取报价" },
+  onLoad(options) { if (!params.isUuid(options.id)) return this.setData({ loading: false, message: "短片链接无效，请从作品柜重新打开。", messageType: "error" }); this.setData({ id: options.id }); this.load(); },
   onShow() { if (this.data.id && this.data.project) this.load(); },
   onUnload() { if (this.timer) clearTimeout(this.timer); },
   load() {
     api.request("/api/video-projects/" + this.data.id).then((project) => {
       this.setData({ project, caption: project.captions && project.captions[0] || "", loading: false });
       this.loadCover(project);
+      api.request("/api/pets/" + project.pet_id + "/pricing?pluginId=pl-19").then((price) => this.setData({ pricingText: wallet.costText(price.cost) + " · 开始生成" })).catch(() => this.setData({ pricingText: "报价暂不可用" }));
       if (!project.current_render_id) return;
       return api.request("/api/video-renders/" + project.current_render_id).then((render) => {
         this.setData({ render, renderText: RENDER_TEXT[render.status] || render.status });
         if (["queued", "processing"].indexOf(render.status) >= 0) this.timer = setTimeout(() => this.load(), 2500);
       });
-    }).catch((error) => this.setData({ message: error.message, messageType: "error", loading: false }));
+    }).catch((error) => this.setData({ message: error.code === "WALLET_TOPUP_CANCELLED" ? "" : error.message, messageType: "error", loading: false }));
   },
   loadCover(project) {
     const ids = Array.isArray(project.photo_ids) ? project.photo_ids : [];
@@ -44,8 +47,9 @@ themedPage({
       .catch((error) => this.setData({ message: error.message, messageType: "error" }));
   },
   render() {
+    if (this.data.busy || this.data.render && ["queued", "processing", "failed"].indexOf(this.data.render.status) >= 0) return;
     this.setData({ busy: true, message: "" });
-    api.request("/api/video-projects/" + this.data.id + "/render", { method: "POST" })
+    wallet.withDongan(this, () => api.request("/api/video-projects/" + this.data.id + "/render", { method: "POST" }))
       .then((render) => { this.setData({ render, busy: false, renderText: RENDER_TEXT[render.status] || render.status }); this.timer = setTimeout(() => this.load(), 2500); })
       .catch((error) => this.setData({ busy: false, message: error.message, messageType: "error" }));
   },
@@ -58,11 +62,5 @@ themedPage({
       .then((render) => this.setData({ render, renderText: RENDER_TEXT[render.status] || render.status, message: "渲染已取消。", messageType: "info" }))
       .catch((error) => this.setData({ message: error.message, messageType: "error" }));
   },
-  retry() {
-    if (!this.data.render) return;
-    api.request("/api/video-renders/" + this.data.render.id + "/retry", { method: "POST" })
-      .then((render) => { this.setData({ render, renderText: RENDER_TEXT[render.status] || render.status }); this.timer = setTimeout(() => this.load(), 2500); })
-      .catch((error) => this.setData({ message: error.message, messageType: "error" }));
-  },
   openWork() { if (this.data.render && this.data.render.work_id) wx.navigateTo({ url: "/pages/work/work?id=" + this.data.render.work_id }); }
-});
+}));

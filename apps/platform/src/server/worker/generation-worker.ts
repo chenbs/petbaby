@@ -9,8 +9,11 @@ import { generatorRegistry } from "@/server/generators/svg";
 import { svgToPdf } from "@/server/generators/pdf";
 import { objectStorage } from "@/server/storage";
 import { applyAiMetadata, needsAiLabel } from "@/server/media/ai-label";
+import { MAX_TASK_ATTEMPTS, describeCost } from "@/domain/dongan-pricing";
+import { refundSpend } from "@/server/wallet/service";
 
-const MAX_ATTEMPTS = 2;
+/** 首次 + 系统自动重试 2 次；仍失败则全额退还冻干（36 号文 D5）。 */
+const MAX_ATTEMPTS = MAX_TASK_ATTEMPTS;
 /** 免费预览长边。正式产物保留完整分辨率，这是去水印后付费墙唯一的依据之一。 */
 const PREVIEW_LONG_EDGE = 1080;
 /** 长图（画册）预览只限宽：640 宽在手机上仍清楚，但明显低于 1080 宽的原图。 */
@@ -53,6 +56,11 @@ export async function processTask(task: ReturnType<typeof mapTask>) {
     const generator = generatorRegistry[plugin.generator.template as keyof typeof generatorRegistry];
     if (!generator) throw new Error("GENERATOR_NOT_FOUND");
     const output = await generator({ task, pet: snapshot?.pet || mapPet(petRows[0]), photos, plugin });
+    // SVG 保留供矢量/PDF 使用，相册交付必须另有完整分辨率的 PNG。
+    if (!output.files.some((file) => file.suffix === "png")) {
+      const svg = output.files.find((file) => file.suffix === "svg");
+      if (svg) output.files.push({ suffix: "png", body: new Uint8Array(await sharp(Buffer.from(svg.body)).png().toBuffer()), contentType: "image/png" });
+    }
     const storedFiles: Record<string, string> = {};
     for (const file of output.files) {
       const key = `private/${task.userId}/works/${task.id}.${file.suffix}`;
@@ -94,6 +102,12 @@ export async function processTask(task: ReturnType<typeof mapTask>) {
      * 2026-09 起拉新改由分享卡 / 公开页 / 分享海报承担，作品本身不带任何标记。
      */
     const freePlugin = plugin.pricing.unlockPrice <= 0;
+    /*
+     * 已扣冻干的任务直接产出正式版（先扣后做，没有预览这一步）。
+     * 没有扣费键又不是免费玩法的，只可能是冻干上线前入队的历史任务，沿用当时的锁定口径。
+     */
+    // options.dongan 只有冻干上线后入队的任务才有：颗数为 0（如纪念形态的画册）同样直接是正式版。
+    const paid = Boolean(task.walletBizKey) || Boolean((task.options as { dongan?: unknown }).dongan);
 
     const sourceRows = task.sourceWorkId ? await database.query("SELECT * FROM works WHERE id=$1 AND user_id=$2 AND deleted_at IS NULL", [task.sourceWorkId, task.userId]) : [];
     const workId = sourceRows[0] ? String(sourceRows[0].id) : crypto.randomUUID();
@@ -103,13 +117,13 @@ export async function processTask(task: ReturnType<typeof mapTask>) {
      * 作品只在用户自己删除、删除宠物或注销账户时清理。
      */
     if (sourceRows[0]) {
-      await database.query("UPDATE works SET photo_id=$2,title=$3,subtitle=$4,serial_number=$5,authority=$6,output_key=$7,preview_key=$8,version=$9,expires_at=NULL WHERE id=$1", [workId, task.photoIds[0], output.title, output.subtitle, output.serialNumber, output.authority, storedFiles.png || storedFiles.svg, previewKey, version]);
+      await database.query("UPDATE works SET photo_id=$2,title=$3,subtitle=$4,serial_number=$5,authority=$6,output_key=$7,preview_key=$8,version=$9,expires_at=NULL,locked=CASE WHEN $10 THEN false ELSE locked END WHERE id=$1", [workId, task.photoIds[0], output.title, output.subtitle, output.serialNumber, output.authority, storedFiles.png || storedFiles.svg, previewKey, version, paid]);
     } else {
       /*
        * `locked` 不再无条件为 true。免费玩法原先也以 locked=true 入库，用户必须走一遍
        * 0 元订单才能下载 —— 这直接违反 14 号文的「积累不能有任何摩擦」。
        */
-      const locked = !freePlugin;
+      const locked = !freePlugin && !paid;
       await database.query(
         "INSERT INTO works (id,user_id,plugin_id,pet_id,photo_id,title,subtitle,serial_number,authority,output_key,preview_key,locked,public,version,expires_at,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$14,false,$12,NULL,$13)",
         [workId, task.userId, task.pluginId, task.petId, task.photoIds[0], output.title, output.subtitle, output.serialNumber, output.authority, storedFiles.png || storedFiles.svg, previewKey, version, new Date(), locked],
@@ -130,7 +144,9 @@ export async function processTask(task: ReturnType<typeof mapTask>) {
     }
     await database.query("UPDATE generation_tasks SET status='failed',progress=0,error_code=$2,locked_at=null,updated_at=now() WHERE id=$1", [task.id, message]);
     await database.query("DELETE FROM daily_quotas WHERE task_id=$1", [task.id]);
-    await database.query("INSERT INTO user_notifications (id,user_id,type,title,body,target_path,created_at) VALUES ($1,$2,'generation_failed',$3,$4,$5,$6)", [crypto.randomUUID(), task.userId, "生成失败", "免费次数已返还，可以重新尝试", `/create/${task.pluginId}`, new Date()]);
+    // 系统已自动重试过；终态失败按扣费流水原路全额退还冻干（只回到余额，现金不退）。
+    const returned = task.walletBizKey ? await refundSpend(task.walletBizKey, { title: "制作失败 · 已退还" }) : 0;
+    await database.query("INSERT INTO user_notifications (id,user_id,type,title,body,target_path,created_at) VALUES ($1,$2,'generation_failed',$3,$4,$5,$6)", [crypto.randomUUID(), task.userId, "这次没有做成", returned ? `已退还 ${describeCost(returned)}冻干，可以重新试一次` : "免费次数已返还，可以重新尝试", `/create/${task.pluginId}`, new Date()]);
     return { status: "failed" as const, taskId: task.id };
   }
 }

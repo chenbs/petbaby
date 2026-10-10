@@ -63,7 +63,7 @@
         disabled="{{!canSubmit}}"
         class="block-gap"
         bindtap="askConfirm"
-      >支付 ¥39.90 下单</t-button>
+      >支付 {{priceText}} 下单</t-button>
       <text wx:if="{{!canSubmit}}" class="small">请先选择作品并填写完整的收货信息。</text>
     </view>
 
@@ -99,7 +99,7 @@
   visible="{{confirming}}"
   title="确认下单信息"
   content="{{confirmText}}"
-  confirm-text="确认支付 ¥39.90"
+  confirm-text="确认支付 {{priceText}}"
   cancel-text="再改改"
   anim="{{animType}}"
   bindconfirm="create"

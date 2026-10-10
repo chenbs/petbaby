@@ -11,7 +11,7 @@ import { queueObjectCleanup, processObjectCleanupJob } from "@/server/object-cle
 export type SavePhotoInput = {
   petId: string; filename: string; mimeType: string; size: number; storageKey: string;
   quality?: "clear" | "blurry"; shotAt?: Date; uploadRequestId?: string; contentSha256?: string;
-  entry?: "create" | "photos" | "index" | "pets" | "timeline" | "me";
+  entry?: "create" | "photos" | "index" | "pets" | "timeline" | "me" | "ai-create" | "art-photo-bundle";
 };
 export type UploadReceipt = { status: "saved"; photo: Photo } | { status: "deleted"; photoId: string };
 

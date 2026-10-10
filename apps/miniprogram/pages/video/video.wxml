@@ -25,8 +25,7 @@
 
     <t-card wx:elif="{{render && render.status === 'failed'}}" blur="{{blurOk}}" anim="{{animType}}">
       <view class="sub-title">渲染没有完成</view>
-      <text class="muted">素材还在，直接重试即可。</text>
-      <t-button type="primary" block anim="{{animType}}" class="block-gap" bindtap="retry">重试渲染</t-button>
+      <text class="muted">系统已自动重试，仍未完成，已退还冻干。</text>
     </t-card>
 
     <view class="section">
@@ -47,14 +46,15 @@
     <view class="actions">
       <t-button type="secondary" block anim="{{animType}}" bindtap="save">保存草稿</t-button>
       <t-button
+        wx:if="{{!render || render.status === 'cancelled'}}"
         type="ai"
         block
         anim="{{animType}}"
         loading="{{busy}}"
         disabled="{{render && (render.status === 'queued' || render.status === 'processing')}}"
         bindtap="render"
-      >提交渲染</t-button>
-      <t-button wx:if="{{render && render.work_id}}" type="primary" block anim="{{animType}}" bindtap="openWork">查看作品与解锁</t-button>
+      >{{pricingText}}</t-button>
+      <t-button wx:if="{{render && render.work_id}}" type="primary" block anim="{{animType}}" bindtap="openWork">查看与保存作品</t-button>
     </view>
   </block>
 
@@ -71,3 +71,5 @@
   bindconfirm="cancel"
   bindcancel="dismissCancel"
 ></t-dialog>
+
+<t-wallet-sheet id="wallet-sheet" visible="{{walletSheet.visible}}" required="{{walletSheet.required}}" balance="{{walletSheet.balance}}" shortfall="{{walletSheet.shortfall}}" bind:close="onWalletSheetClose" bind:paid="onWalletPaid"></t-wallet-sheet>

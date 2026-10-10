@@ -7,6 +7,7 @@
     "t-button": "../../components/button/index",
     "t-notice": "../../components/notice/index",
     "t-dialog": "../../components/dialog/index",
-    "t-skeleton": "../../components/skeleton/index"
+    "t-skeleton": "../../components/skeleton/index",
+    "t-wallet-sheet": "../../components/wallet-sheet/index"
   }
 }

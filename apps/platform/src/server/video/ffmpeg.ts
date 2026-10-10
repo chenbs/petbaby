@@ -9,6 +9,8 @@ import sharp from "sharp";
 import { getDatabase } from "@/server/db/client";
 import { objectStorage } from "@/server/storage";
 import { FADE_SECONDS, MAX_PHOTOS, normalizeDuration, perPhotoSeconds } from "@/domain/video-duration";
+import { MAX_TASK_ATTEMPTS, describeCost } from "@/domain/dongan-pricing";
+import { refundSpend } from "@/server/wallet/service";
 import { renderAnnualFilm } from "@/server/video/annual-film";
 
 /** source_id is a UUID; stable per owner, pet and year without a schema change. */
@@ -86,13 +88,14 @@ export function buildFfmpegArgs(options: {
 /**
  * 叙事年度视频的收尾：渲染 → 归档为作品 → 更新队列行。
  *
- * 与项目短片一样**锁定**（`locked=true`）：预览版免费看，高清解锁付费，
- * 沿用 PL-19 现有的 19.9。作品记录按 `source_kind='report'` 归类，
+ * 2026-10-08 起入队时已扣冻干，成片直接是正式版（没有预览）；没有扣费键的历史任务仍按当时口径锁定。
+ * 作品记录按 `source_kind='report'` 归类，
  * 同一年重复生成时更新同一条作品并自增版本，不堆出多条。
  */
 async function processAnnualFilm(row: Record<string, unknown>, database: Awaited<ReturnType<typeof getDatabase>>) {
   const renderId = String(row.id);
   const userId = String(row.user_id);
+  const paid = Boolean(row.wallet_biz_key);
   const config = (row.config || {}) as { year?: number; petId?: string; photoId?: string; durationSeconds?: unknown };
   const { key, aggregate } = await renderAnnualFilm({ id: renderId, user_id: userId, config: row.config });
   const previewKey = key.replace(/\.mp4$/, "-preview.mp4");
@@ -111,9 +114,9 @@ async function processAnnualFilm(row: Record<string, unknown>, database: Awaited
   const createdAt = new Date();
   const photoId = config.photoId || aggregate.photos[0]?.photo.id;
   if (existing[0]) {
-    await database.query("UPDATE works SET title=$2,subtitle=$3,output_key=$4,preview_key=$5,locked=true,public=false,share_token=NULL,version=$6,photo_id=$7,deleted_at=NULL WHERE id=$1", [workId, title, subtitle, key, previewKey, version, photoId]);
+    await database.query("UPDATE works SET title=$2,subtitle=$3,output_key=$4,preview_key=$5,locked=$8,public=false,share_token=NULL,version=$6,photo_id=$7,deleted_at=NULL WHERE id=$1", [workId, title, subtitle, key, previewKey, version, photoId, !paid]);
   } else {
-    await database.query("INSERT INTO works (id,user_id,plugin_id,pet_id,photo_id,title,subtitle,serial_number,authority,output_key,preview_key,asset_kind,source_kind,source_id,locked,public,version,created_at) VALUES ($1,$2,'pl-19',$3,$4,$5,$6,$7,'麻麻抱我 · 年度工作室',$8,$9,'video','report',$10,true,false,1,$11)", [workId, userId, config.petId || aggregate.petId, photoId, title, subtitle, `ANN-${renderId.slice(0, 8).toUpperCase()}`, key, previewKey, sourceId, createdAt]);
+    await database.query("INSERT INTO works (id,user_id,plugin_id,pet_id,photo_id,title,subtitle,serial_number,authority,output_key,preview_key,asset_kind,source_kind,source_id,locked,public,version,created_at) VALUES ($1,$2,'pl-19',$3,$4,$5,$6,$7,'麻麻抱我 · 年度工作室',$8,$9,'video','report',$10,$12,false,1,$11)", [workId, userId, config.petId || aggregate.petId, photoId, title, subtitle, `ANN-${renderId.slice(0, 8).toUpperCase()}`, key, previewKey, sourceId, createdAt, !paid]);
   }
   await database.query("INSERT INTO work_versions (id,work_id,version,title,subtitle,output_key,preview_key,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)", [crypto.randomUUID(), workId, version, title, subtitle, key, previewKey, createdAt]);
   await database.query("UPDATE video_renders SET status='ready',progress=100,output_key=$2,preview_key=$3,work_id=$4,error_code=NULL,locked_at=NULL WHERE id=$1", [renderId, key, previewKey, workId]);
@@ -125,6 +128,7 @@ export async function processNextVideo() {
   const rows = await database.query("UPDATE video_renders SET status='processing',progress=15,attempt=attempt+1,locked_at=now() WHERE id=(SELECT id FROM video_renders WHERE status='queued' AND available_at<=now() ORDER BY created_at FOR UPDATE SKIP LOCKED LIMIT 1) RETURNING *");
   if (!rows[0]) return null;
   const row = rows[0]; const directory = await mkdtemp(path.join(os.tmpdir(), "petbaby-video-")); const file = path.join(directory, `${String(row.id)}.mp4`);
+  const paid = Boolean(row.wallet_biz_key);
   try {
     const config = (row.config || {}) as { kind?: string; projectId?: string; photoIds?: unknown; photos?: unknown; captions?: unknown; bgm?: string; cover?: unknown; petId?: string; photoId?: string; durationSeconds?: unknown };
     /*
@@ -189,19 +193,27 @@ export async function processNextVideo() {
       const title = String(project.title || "宠物记忆短片").slice(0, 80); const createdAt = new Date();
       // 副标题写实际时长。时长可选之后「15 秒可编辑宠物短片」对 10/30 秒的片子是错的。
       const subtitle = `${totalSeconds} 秒可编辑宠物短片`;
-      if (existing[0]) await database.query("UPDATE works SET title=$2,subtitle=$3,output_key=$4,preview_key=$5,locked=true,public=false,share_token=NULL,version=$6,photo_id=$7,deleted_at=NULL WHERE id=$1", [workId, title, subtitle, key, previewKey, version, photoIds[0]]);
-      else await database.query("INSERT INTO works (id,user_id,plugin_id,pet_id,photo_id,title,subtitle,serial_number,authority,output_key,preview_key,asset_kind,source_kind,source_id,locked,public,version,created_at) VALUES ($1,$2,'pl-19',$3,$4,$5,$6,$7,'麻麻抱我 · 视频工作室',$8,$9,'video','video',$10,true,false,1,$11)", [workId, row.user_id, petId, photoIds[0], title, subtitle, `VID-${String(row.id).slice(0, 8).toUpperCase()}`, key, previewKey, config.projectId, createdAt]);
+      // 已扣冻干的渲染直接是正式版；没有扣费键的历史任务仍按当时口径锁定。
+      if (existing[0]) await database.query("UPDATE works SET title=$2,subtitle=$3,output_key=$4,preview_key=$5,locked=$8,public=false,share_token=NULL,version=$6,photo_id=$7,deleted_at=NULL WHERE id=$1", [workId, title, subtitle, key, previewKey, version, photoIds[0], !paid]);
+      else await database.query("INSERT INTO works (id,user_id,plugin_id,pet_id,photo_id,title,subtitle,serial_number,authority,output_key,preview_key,asset_kind,source_kind,source_id,locked,public,version,created_at) VALUES ($1,$2,'pl-19',$3,$4,$5,$6,$7,'麻麻抱我 · 视频工作室',$8,$9,'video','video',$10,$12,false,1,$11)", [workId, row.user_id, petId, photoIds[0], title, subtitle, `VID-${String(row.id).slice(0, 8).toUpperCase()}`, key, previewKey, config.projectId, createdAt, !paid]);
       await database.query("INSERT INTO work_versions (id,work_id,version,title,subtitle,output_key,preview_key,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)", [crypto.randomUUID(), workId, version, title, subtitle, key, previewKey, createdAt]);
-      await database.query("UPDATE video_projects SET status='preview_ready',work_id=$2,updated_at=now() WHERE id=$1", [config.projectId, workId]);
+      await database.query("UPDATE video_projects SET status=$3,work_id=$2,updated_at=now() WHERE id=$1", [config.projectId, workId, paid ? "ready" : "preview_ready"]);
     }
-    const status = config.projectId ? "preview_ready" : "ready";
+    const status = config.projectId && !paid ? "preview_ready" : "ready";
     await database.query("UPDATE video_renders SET status=$2,progress=100,output_key=$3,preview_key=$4,work_id=$5,error_code=NULL,locked_at=NULL WHERE id=$1", [row.id, status, key, previewKey, workId || null]);
     return { id: String(row.id), status, progress: 100, outputKey: key, workId };
   } catch (error) {
     const message = error instanceof Error ? error.message.slice(0, 500) : "FFMPEG_FAILED";
+    // 系统自动重试 2 次（共 3 次），仍失败才进入终态并全额退还冻干（36 号文 D5）。
+    if (Number(row.attempt || 1) < MAX_TASK_ATTEMPTS) {
+      await database.query("UPDATE video_renders SET status='queued',progress=5,error_code=$2,locked_at=NULL,available_at=now()+interval '5 seconds' WHERE id=$1 AND status='processing'", [row.id, message]);
+      return { id: String(row.id), status: "retrying", progress: 5, errorCode: message };
+    }
     await database.query("UPDATE video_renders SET status='failed',progress=0,error_code=$2,locked_at=NULL WHERE id=$1", [row.id, message]);
     const config = (row.config || {}) as { projectId?: string };
     if (config.projectId) await database.query("UPDATE video_projects SET status='failed',updated_at=now() WHERE id=$1", [config.projectId]);
+    const returned = paid ? await refundSpend(String(row.wallet_biz_key), { title: "短片没有做成 · 已退还" }) : 0;
+    if (returned) await database.query("INSERT INTO user_notifications (id,user_id,type,title,body,target_path,created_at) VALUES ($1,$2,'video_failed','短片没有做成',$3,'/pages/works/works',now())", [crypto.randomUUID(), row.user_id, `已退还 ${describeCost(returned)}冻干，可以再试一次`]);
     return { id: String(row.id), status: "failed", progress: 0, errorCode: message };
   } finally { await rm(directory, { recursive: true, force: true }).catch(() => undefined); }
 }

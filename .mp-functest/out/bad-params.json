@@ -1,0 +1,237 @@
+{
+  "steps": [
+    {
+      "name": "作品详情-缺id",
+      "ok": true,
+      "detail": {
+        "路径": "pages/work/work",
+        "error字段": "作品链接无效，请从作品柜重新打开",
+        "界面上技术串": [],
+        "泄漏": false
+      },
+      "newErrors": []
+    },
+    {
+      "name": "作品详情-非uuid",
+      "ok": true,
+      "detail": {
+        "路径": "pages/work/work",
+        "error字段": "作品链接无效，请从作品柜重新打开",
+        "界面上技术串": [],
+        "泄漏": false
+      },
+      "newErrors": []
+    },
+    {
+      "name": "作品详情-合法但不存在",
+      "ok": true,
+      "detail": {
+        "路径": "pages/work/work",
+        "error字段": "没有找到这条记录",
+        "界面上技术串": [],
+        "泄漏": false
+      },
+      "newErrors": []
+    },
+    {
+      "name": "生成结果-缺id",
+      "ok": true,
+      "detail": {
+        "路径": "pages/ai-run/ai-run",
+        "error字段": "生成任务链接无效，请从作品柜重新打开。",
+        "界面上技术串": [],
+        "泄漏": false
+      },
+      "newErrors": []
+    },
+    {
+      "name": "生成结果-非uuid",
+      "ok": true,
+      "detail": {
+        "路径": "pages/ai-run/ai-run",
+        "error字段": "生成任务链接无效，请从作品柜重新打开。",
+        "界面上技术串": [],
+        "泄漏": false
+      },
+      "newErrors": []
+    },
+    {
+      "name": "短片-缺id",
+      "ok": true,
+      "detail": {
+        "路径": "pages/video/video",
+        "error字段": "短片链接无效，请从作品柜重新打开。",
+        "界面上技术串": [],
+        "泄漏": false
+      },
+      "newErrors": []
+    },
+    {
+      "name": "短片-非uuid",
+      "ok": true,
+      "detail": {
+        "路径": "pages/video/video",
+        "error字段": "短片链接无效，请从作品柜重新打开。",
+        "界面上技术串": [],
+        "泄漏": false
+      },
+      "newErrors": []
+    },
+    {
+      "name": "写真结果-缺id",
+      "ok": true,
+      "detail": {
+        "路径": "pages/art-photo-result/art-photo-result",
+        "error字段": "写真套餐链接无效，请从写真页重新进入",
+        "界面上技术串": [],
+        "泄漏": false
+      },
+      "newErrors": []
+    },
+    {
+      "name": "写真结果-非uuid",
+      "ok": true,
+      "detail": {
+        "路径": "pages/art-photo-result/art-photo-result",
+        "error字段": "服务暂时不可用，请稍后再试",
+        "界面上技术串": [],
+        "泄漏": false
+      },
+      "newErrors": []
+    },
+    {
+      "name": "写真套餐-缺id",
+      "ok": true,
+      "detail": {
+        "路径": "pages/art-photo-bundle/art-photo-bundle",
+        "error字段": "写真场景数量不对，请返回写真页重新选择",
+        "界面上技术串": [],
+        "泄漏": false
+      },
+      "newErrors": []
+    },
+    {
+      "name": "分享-缺token",
+      "ok": true,
+      "detail": {
+        "路径": "pages/share/share",
+        "error字段": "分享链接不完整，请让好友重新分享一次",
+        "界面上技术串": [],
+        "泄漏": false
+      },
+      "newErrors": []
+    },
+    {
+      "name": "分享-非法token",
+      "ok": true,
+      "detail": {
+        "路径": "pages/share/share",
+        "error字段": "分享已关闭或不存在",
+        "界面上技术串": [],
+        "泄漏": false
+      },
+      "newErrors": []
+    },
+    {
+      "name": "纪念分享-缺token",
+      "ok": true,
+      "detail": {
+        "路径": "pages/memorial-share/memorial-share",
+        "error字段": "分享链接缺少必要信息，请让分享者重新发送。",
+        "界面上技术串": [],
+        "泄漏": false
+      },
+      "newErrors": []
+    },
+    {
+      "name": "纪念分享-非法token",
+      "ok": true,
+      "detail": {
+        "路径": "pages/memorial-share/memorial-share",
+        "error字段": "分享链接缺少必要信息，请让分享者重新发送。",
+        "界面上技术串": [],
+        "泄漏": false
+      },
+      "newErrors": []
+    },
+    {
+      "name": "时间线-非uuid",
+      "ok": true,
+      "detail": {
+        "路径": "pages/timeline/timeline",
+        "error字段": "这只宠物的档案不可用，请重新选择",
+        "界面上技术串": [],
+        "泄漏": false
+      },
+      "newErrors": []
+    },
+    {
+      "name": "照片库-非uuid",
+      "ok": true,
+      "detail": {
+        "路径": "pages/photos/photos",
+        "error字段": "这只宠物的档案不可用，请重新选择宠物",
+        "界面上技术串": [],
+        "泄漏": false
+      },
+      "newErrors": []
+    },
+    {
+      "name": "记录-非uuid",
+      "ok": true,
+      "detail": {
+        "路径": "pages/records/records",
+        "error字段": "这只宠物的档案不可用，请重新选择",
+        "界面上技术串": [],
+        "泄漏": false
+      },
+      "newErrors": []
+    },
+    {
+      "name": "健康-非uuid",
+      "ok": true,
+      "detail": {
+        "路径": "pages/health/health",
+        "error字段": "",
+        "界面上技术串": [],
+        "泄漏": false
+      },
+      "newErrors": []
+    },
+    {
+      "name": "视频创建-非uuid",
+      "ok": true,
+      "detail": {
+        "路径": "pages/video-create/video-create",
+        "error字段": "这只宠物的档案不可用，请重新选择",
+        "界面上技术串": [],
+        "泄漏": false
+      },
+      "newErrors": []
+    },
+    {
+      "name": "AI创建-非法photoIds",
+      "ok": true,
+      "detail": {
+        "路径": "pages/ai-create/ai-create",
+        "error字段": "请选择当前宠物的一张可用照片",
+        "界面上技术串": [],
+        "泄漏": false
+      },
+      "newErrors": []
+    },
+    {
+      "name": "趣测-非uuid结果",
+      "ok": true,
+      "detail": {
+        "路径": "pages/fun-tests/fun-tests",
+        "error字段": "",
+        "界面上技术串": [],
+        "泄漏": false
+      },
+      "newErrors": []
+    }
+  ],
+  "failed": [],
+  "errors": []
+}

@@ -261,33 +261,6 @@
   margin: var(--space-2) 0 var(--space-4);
 }
 
-/* 「好了提醒我」：杏色软按钮 */
-.wait-remind {
-  display: inline-flex;
-  min-height: 88rpx;
-  box-sizing: border-box;
-  align-items: center;
-  gap: var(--space-2);
-  padding: 0 var(--space-5);
-  border: var(--card-border);
-  border-radius: var(--button-radius);
-  background: var(--button-secondary);
-  color: var(--button-secondary-text);
-  font-size: var(--body-size);
-  font-weight: var(--fw-bold);
-  clip-path: var(--skin-btn-clip, none);
-}
-
-.wait-remind-on {
-  opacity: .72;
-}
-
-.wait-remind-icon {
-  width: 36rpx;
-  height: 36rpx;
-  border-radius: 0;
-}
-
 .wait-cap {
   margin-top: var(--space-2);
 }

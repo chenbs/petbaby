@@ -55,13 +55,21 @@
       <view class="pet-care-action" aria-role="button" hover-class="pet-feature-hover" bindtap="openHealth">健康助手</view>
     </view>
   </view>
-  <view wx:else class="pet-card pet-card-empty">
-    <image class="pet-card-sample" src="{{introSampleUrl}}" mode="aspectFill" />
-    <view class="pet-card-main">
-      <view class="pet-name">从第一张照片开始</view>
-      <text class="pet-days">收好一张我的照片，这里会出现我的名片和陪伴天数。</text>
+  <!--
+    无宠物时的建档卡（2026-10 新用户引导方案 A）：替换原名片位，主按钮一跳直达建档抽屉。
+    下面的玩法照常可看，点进去会先建档、建完回到那款玩法。见面礼一行只在服务端下发可领时出现。
+  -->
+  <view wx:else class="pet-card onboard-card">
+    <text class="eyebrow onboard-eyebrow">第一步</text>
+    <view class="onboard-title">先给它建一份小档案</view>
+    <text class="onboard-copy">只要名字和种类，半分钟就好。之后的写真、成长记录和陪伴天数都会挂在它名下。</text>
+    <view class="onboard-steps" aria-hidden="true">
+      <view class="onboard-step"><text class="onboard-step-key">名字</text><text class="onboard-step-note">必填</text></view>
+      <view class="onboard-step"><text class="onboard-step-key">种类</text><text class="onboard-step-note">必选</text></view>
+      <view class="onboard-step"><text class="onboard-step-key">头像</text><text class="onboard-step-note">可跳过</text></view>
     </view>
-    <t-button type="primary" size="mini" anim="{{animType}}" bindtap="record">收好照片</t-button>
+    <t-button type="primary" block anim="{{animType}}" bindtap="startOnboarding">添加我的宠物</t-button>
+    <text wx:if="{{onboardGift}}" class="onboard-gift">{{onboardGift}}</text>
   </view>
 
   <!-- 2. 如果我是人：第一主推。点标题区进 40 款造型页，点某一张直达那一款 -->
@@ -74,7 +82,7 @@
     <view class="human-card-stack">
       <view class="human-card-scan" aria-hidden="true"></view>
       <view wx:for="{{humanCovers}}" wx:key="templateId" wx:if="{{index < 3}}" class="human-card-cover human-card-cover-{{index}}" data-id="{{item.templateId}}" aria-role="button" aria-label="{{item.title}}" bindtap="openHuman">
-        <image wx:if="{{item.sampleUrl}}" class="human-card-image" src="{{item.sampleUrl}}" mode="{{themeId === 'night' && index > 0 ? 'widthFix' : 'aspectFill'}}" webp data-kind="human" data-id="{{item.templateId}}" data-src="{{item.sampleUrl}}" binderror="onImageError" />
+        <image wx:if="{{item.sampleUrl}}" class="human-card-image" src="{{item.sampleUrl}}" mode="aspectFill" webp data-kind="human" data-id="{{item.templateId}}" data-src="{{item.sampleUrl}}" binderror="onImageError" />
       </view>
       <view class="human-card-origin" aria-hidden="true">
         <image wx:if="{{petDisplayUrl}}" class="human-card-origin-image" src="{{petDisplayUrl}}" mode="aspectFill" />

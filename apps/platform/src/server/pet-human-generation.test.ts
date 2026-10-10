@@ -30,6 +30,7 @@ import { getDatabase, resetDatabaseForTest } from "@/server/db/client";
 import { createAiRun, getAiRun, processNextAiRun, rerollAiRun } from "@/server/growth-service";
 import type { ImageReference } from "@/server/ai/provider";
 import { objectStorage } from "@/server/storage";
+import { fundWallet } from "@/server/wallet/test-helpers";
 
 const USER = "20000000-0000-4000-8000-000000000001";
 const PET = "20000000-0000-4000-8000-000000000002";
@@ -54,6 +55,7 @@ describe("pet-human effect-reference generation", () => {
     await resetDatabaseForTest();
     const database = await getDatabase();
     await database.query("INSERT INTO users (id,created_at) VALUES ($1,now())", [USER]);
+    await fundWallet(USER, 50);
     await database.query(
       "INSERT INTO pets (id,user_id,name,species,gender,date_type,life_stage,is_default,created_at) VALUES ($1,$2,'Milo','cat','unknown','birthday','active',true,now())",
       [PET, USER],

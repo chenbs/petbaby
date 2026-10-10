@@ -1,24 +1,8 @@
-const payment = require("../../services/payment");
+const wallet = require("../../services/wallet");
 const api = require("../../services/api");
 const config = require("../../config");
 const { themedPage } = require("../../theme/page-mixin");
 
-/*
- * 套餐名、价格、权益一律从 /api/membership-plans 读（改造项 M3）。
- *
- * 原先这里有一个写死的 PLANS 数组：月会员 ¥25 / 年会员 ¥199，权益写着
- * 「每月生成额度加量」「额度按月自动重置」。而迁移 0020 已经把月会员置 inactive
- * （点了直接 409）、年费改成 ¥128、并从权益 JSON 里删掉了 monthlyQuota ——
- * 「额度加量」是 D6 判定的负向卖点（每月 10 次比免费用户每天 1 次还少）。
- *
- * 端上写死价格必然与迁移走散，而走散的表现是「界面承诺一个价、实际扣另一个」。
- * 所以这个文件不再有任何套餐常量。
- */
-
-const PERIOD_TEXT = { month: "月", year: "年" };
-
-const MEMBER_STATUS_TEXT = { pending: "待支付", active: "生效中", expired: "已过期", cancelled: "已取消" };
-const MEMBER_STATUS_TONE = { pending: "warning", active: "success", expired: "neutral", cancelled: "neutral" };
 const EVENT_TEXT = { birthday: "生日提醒", got_home: "到家纪念日提醒", holiday: "节日提醒", on_this_day: "去年今日提醒" };
 /*
  * `authorization_required` 是用户在微信弹层里点了拒绝，`consumed` 是那条
@@ -35,14 +19,12 @@ function dateText(value) {
   return date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2, "0") + "-" + String(date.getDate()).padStart(2, "0");
 }
 
-themedPage({
-  data: {
-    plans: [],
-    memberships: [],
+themedPage(Object.assign({}, wallet.walletSheetMethods, {
+  data: { walletSheet: { visible: false, required: 0, balance: 0, shortfall: 0 },
     subscriptions: [],
     reports: [],
     loading: true,
-    buyingPlan: "",
+    reportBusy: false, walletCosts: {},
     unlockingId: "",
     cancelTarget: null,
     message: "",
@@ -53,37 +35,9 @@ themedPage({
 
   load() {
     this.setData({ loading: this.data.loading, error: "" });
-    Promise.all([api.request("/api/membership-plans"), api.request("/api/memberships"), api.request("/api/subscriptions"), api.request("/api/annual-reports")])
-      .then(([plans, memberships, subscriptions, reports]) => this.setData({
-        loading: false,
-        plans: plans.map((item) => Object.assign({}, item, {
-          priceText: "¥" + item.amount + " / " + (PERIOD_TEXT[item.period] || item.period),
-          // 「省多少」由服务端按权益单买价算，端上不再自己拼「比月付省 ¥101」
-          // 那类算式 —— 那个数字在套餐改版后就成了假的。
-          //
-          // 省额为 0 时（按「只做一件交付物」算下来定价高于权益价值）改给回本件数：
-          // 那是用户能自己算的账，而「省 ¥N」在他只做一件时是假的。
-          hint: item.saving > 0
-            ? "单买这些权益约 ¥" + item.singleBuyValue + "，省 ¥" + item.saving
-            : item.breakEven ? "做 " + item.breakEven + " 件画册或短片即回本" : "",
-          // 只有一个套餐在售时不给「更划算」标签：没有比较对象的比较级是空话。
-          badge: plans.length > 1 && item.period === "year" ? "更划算" : "",
-          benefitTexts: (item.benefits || []).map((benefit) => benefit.text)
-        })),
-        memberships: memberships.map((item) => Object.assign({}, item, {
-          // 套餐名由服务端按 membership_plan_versions.label 下发，
-          // 端上不再留 { monthly: "月会员" } 这种翻译表 —— 那是第二份副本。
-          planText: item.planLabel || item.plan,
-          statusText: MEMBER_STATUS_TEXT[item.status] || item.status,
-          statusTone: MEMBER_STATUS_TONE[item.status] || "neutral",
-          benefitTexts: (item.benefits || []).map((benefit) => benefit.text),
-          // 年报免费解锁余量。新权益不卖生成次数，原先的 used/quota 进度条
-          // 在 ¥69 套餐下永远是 0/0，看起来像坏了，已去掉。
-          remainingText: item.status === "active" && typeof item.annualReportRemaining === "number"
-            ? "年度报告免费解锁剩余 " + item.annualReportRemaining + " 次"
-            : "",
-          expiresText: dateText(item.expiresAt || item.expires_at) ? "有效期至 " + dateText(item.expiresAt || item.expires_at) : ""
-        })),
+    Promise.all([api.request("/api/subscriptions"), api.request("/api/annual-reports"), wallet.getWallet()])
+      .then(([subscriptions, reports, balance]) => this.setData({
+        loading: false, walletCosts: balance.costs || {},
         subscriptions: subscriptions.map((item) => {
           const status = item.status;
           const scheduled = dateText(item.scheduledAt || item.scheduled_at);
@@ -98,19 +52,6 @@ themedPage({
         reports
       }))
       .catch((error) => this.setData({ loading: false, error: error.message }));
-  },
-
-  member(event) {
-    const plan = event.currentTarget.dataset.plan;
-    if (this.data.buyingPlan) return;
-    this.setData({ buyingPlan: plan, message: "", error: "" });
-    api.request("/api/memberships", { method: "POST", data: { plan } })
-      .then((item) => {
-        const id = item.orderId || item.order_id;
-        return id ? payment.pay("growth", id) : item;
-      })
-      .then(() => { this.setData({ buyingPlan: "", message: "会员已开通" }); this.load(); })
-      .catch((error) => this.setData({ buyingPlan: "", error: error.message }));
   },
 
   remind() { this.subscribe("birthday", "已订阅生日提醒"); },
@@ -164,29 +105,24 @@ themedPage({
   },
 
   report() {
-    this.setData({ message: "", error: "" });
-    api.request("/api/annual-reports", { method: "POST", data: { year: new Date().getFullYear() } })
+    if (this.data.reportBusy) return;
+    const key = "mp-annual-report-" + Date.now();
+    const year = new Date().getFullYear();
+    this.setData({ reportBusy: true, message: "", error: "" });
+    return wallet.withDongan(this, () => api.request("/api/annual-reports", { method: "POST", data: { year, idempotencyKey: key } }))
       .then(() => { this.setData({ message: "年度报告已生成" }); this.load(); })
-      .catch((error) => this.setData({ error: error.message }));
+      .catch((error) => this.setData({ error: error.code === "WALLET_TOPUP_CANCELLED" ? "" : error.message }))
+      .finally(() => this.setData({ reportBusy: false }));
   },
-
-  /*
-   * 年报解锁可能**不产生订单**：会员的 annualReport 权益命中时服务端直接解锁并
-   * 返回 `{ unlocked: true, viaEntitlement: true }`（改造项 M4）。
-   * 无条件拿 order.id 去支付会对 undefined 发请求，表现是解锁成功却报错。
-   */
   unlock(event) {
     const id = event.currentTarget.dataset.id;
     if (this.data.unlockingId) return;
     this.setData({ unlockingId: id, message: "", error: "" });
-    api.request("/api/annual-reports/" + id, { method: "PATCH", data: { action: "unlock" } })
-      .then((result) => {
-        if (result && result.id) return payment.pay("growth", result.id).then(() => "高清版已解锁");
-        return result && result.viaEntitlement ? "已用会员权益解锁高清版" : "高清版已解锁";
-      })
-      .then((message) => { this.setData({ unlockingId: "", message }); this.load(); })
-      .catch((error) => this.setData({ unlockingId: "", error: error.message }));
+    return wallet.withDongan(this, () => api.request("/api/annual-reports/" + id, { method: "PATCH", data: { action: "unlock" } }))
+      .then(() => { this.setData({ message: "高清版已解锁" }); this.load(); })
+      .catch((error) => this.setData({ error: error.code === "WALLET_TOPUP_CANCELLED" ? "" : error.message }))
+      .finally(() => this.setData({ unlockingId: "" }));
   },
 
   goPhysical() { wx.navigateTo({ url: "/pages/physical/physical" }); }
-});
+}));

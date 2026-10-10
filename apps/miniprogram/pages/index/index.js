@@ -1,3 +1,4 @@
+const wallet = require("../../services/wallet");
 const api = require("../../services/api");
 const companion = require("../../services/companion");
 const { themedPage } = require("../../theme/page-mixin");
@@ -37,18 +38,17 @@ function arrangePlays(plugins) {
     key: "plugin-" + plugin.id, kind: "plugin", id: plugin.id, category: plugin.category, chip: "all", shape: "wide",
     title: plugin.name, cover: plugin.samples && plugin.samples.heroUrl || "",
     tag: plugin.id === "pet-movie-poster" ? "新" : "", tagTone: 2,
-    note: plugin.pricing && plugin.pricing.unlockPrice ? "免费预览 · ¥" + plugin.pricing.unlockPrice + " 保存" : "免费制作"
+    note: plugin.dongan && !plugin.dongan.free ? wallet.costText(plugin.dongan.from) + "起" : "免费制作"
   }));
 }
 
-function money(value) { return typeof value === "number" ? "¥" + value : ""; }
+function cost(value) { return typeof value === "number" ? wallet.costText(value) : ""; }
 
-/** 「写真也值得收藏」右侧的起价：取套餐里最低的总价，不在端上写死。 */
+/** 写真馆入口的起价：单张价格从套餐接口取，不在端上写死；拿不到就只说有几套布景。 */
 function artPriceText(packages) {
-  const list = packages ? Object.keys(packages).map((key) => packages[key]).filter((item) => item && typeof item.amount === "number") : [];
-  if (!list.length) return "36 套 · 去写真馆";
-  const total = Math.max.apply(null, list.map((item) => item.count || 0)) || 24;
-  return total + " 套 · " + money(Math.min.apply(null, list.map((item) => item.amount))) + " 起";
+  const single = packages && packages.single;
+  if (!single || typeof single.cost !== "number") return "36 套布景";
+  return "36 套布景 · 单张 " + cost(single.cost) + "起";
 }
 
 themedPage({
@@ -57,7 +57,8 @@ themedPage({
     humanTemplateCount: 0, humanCovers: [],
     bossCoverUrl: "", bossTemplates: [], bossScenes: [], duoCovers: [], duoGroupCount: 0, studioStrip: [], bossLead: null, bossNote: "", artPriceText: "36 套 · 去写真馆", copy: HOME_COPY,
     chips: [{ id: "all", label: "全部" }], chip: "all", feed: [], feedLeft: [], feedRight: [],
-    introSampleUrl: manifest.plugins["pl-10"],
+    /** 无宠物时建档卡下方的见面礼说明。颗数 / 有效期取 /api/wallet 的 newcomerGift，拿不到或已领过就不显示 */
+    onboardGift: "",
     pet: null, petDisplayUrl: "", pets: [], petLoading: true, recordError: "",
     /** 今日一格：{ eyebrow, title, action, kind }。没有命中时给默认的今日一拍提示。 */
     moment: null,
@@ -67,6 +68,7 @@ themedPage({
   onShow() {
     const tabbar = this.getTabBar && this.getTabBar();
     if (tabbar) tabbar.setData({ selected: 0 });
+    this.resumeOnboarding();
     api.request("/api/events", { method: "POST", data: { name: "visited", channel: "miniprogram", metadata: {} } }).catch(() => undefined);
     // 情绪区块在 onShow 里刷：用户建档 / 传照片回来后首屏应跟着变。玩法列表在 onLoad。
     this.loadPet();
@@ -130,7 +132,7 @@ themedPage({
           cover: artInk ? inkCover || artInk.sampleUrl : cover.sampleUrl,
           shape: inkCover || cover.sampleShape === "wide" ? "wide" : "tall",
           tag: index === 0 ? "热门" : entry.id === "together" ? "主人 + 宠物" : "", tagTone: index === 0 ? 1 : 2,
-          note: entry.templates.length + " 款 · 免费预览 · 满意再保存"
+          note: entry.templates.length + " 款 · " + cost(cover.donganCost)
         };
       });
       const funCard = { key: "fun-tests", kind: "fun", chip: "all", shape: "square", tag: "免费", tagTone: 1, title: "我的隐藏性格", cover: "/assets/fun-tests/personality.jpg", note: "免费趣测 · 10 题" };
@@ -145,7 +147,7 @@ themedPage({
         .map((template) => ({
           key: "tpl-" + template.templateId, kind: "template", chip: entry.id, entryId: entry.id, templateId: template.templateId,
           title: template.title, cover: template.sampleUrl, shape: template.sampleShape === "wide" ? "wide" : "tall",
-          tag: entry.id === "together" ? "主人 + 宠物" : "", tagTone: 2, note: "免费预览 · 满意再保存"
+          tag: entry.id === "together" ? "主人 + 宠物" : "", tagTone: 2, note: cost(template.donganCost)
         }))]));
 
       this.setData({
@@ -195,10 +197,14 @@ themedPage({
     try {
       const pets = await api.request("/api/pets").then(displayMediaTree);
       if (view !== this._view) return;
+      this._petsLoaded = true;
       const pet = this._petId ? pets.find((item) => item.id === this._petId) : pets.find((item) => item.isDefault) || pets[0];
       this.setData({ pets });
       if (this._petId && !pet) throw new Error("所选档案不可用，请重新选择宠物");
-      if (!pet) return this.setData({ pet: null, petDisplayUrl: "", petLoading: false });
+      if (!pet) {
+        this.setData({ pet: null, petDisplayUrl: "", petLoading: false, care: null });
+        return this.loadOnboardGift(view);
+      }
       this._petId = pet.id;
       const days = companion.daysSince(companion.anchorOf(pet), pet.memorialSince);
       const memorial = pet.lifeStage === "memorial";
@@ -290,6 +296,47 @@ themedPage({
   openPets() { wx.navigateTo({ url: "/pages/pets/pets" }); },
   petQuery(prefix) { return this.data.pet ? prefix + "petId=" + encodeURIComponent(this.data.pet.id) : ""; },
 
+  /*
+   * 新用户引导（2026-10，方案 A，示意见 docs/ui-refactor/2026-10-09-新用户引导示意.html）。
+   *
+   * 无宠物时名片位换成建档卡，主按钮一跳直达建档抽屉（复用 pets?mode=create&onboard=1，不另造表单）。
+   * 样片照常可看；点需要宠物的玩法时先去建档，建完（含可跳过的头像一步）回到首页 onShow，
+   * 再带上原参数和新宠物的 petId 进入原本要去的玩法。
+   * 只有确认「档案列表已拉到且为空」才拦：列表还在加载或拉取失败时照常放行，由制作页自己兜底。
+   */
+  needsPet() { return Boolean(this._petsLoaded && !this.data.pet && !(this.data.pets || []).length); },
+  go(path) {
+    if (this.needsPet()) return this.startOnboarding(path);
+    wx.navigateTo({ url: path + this.petQuery(path.indexOf("?") >= 0 ? "&" : "?") });
+  },
+  /** 主按钮（bindtap 传进来的是事件对象）不带去向，建完回首页；玩法入口带上原本要去的页面。 */
+  startOnboarding(path) {
+    const target = typeof path === "string" ? path : "";
+    const onboarding = this._onboarding = { path: target, petId: "" };
+    wx.navigateTo({
+      url: "/pages/pets/pets?mode=create&onboard=1",
+      events: { petCreated: (result) => { if (result && result.petId) onboarding.petId = result.petId; } },
+      fail: () => { if (this._onboarding === onboarding) this._onboarding = null; }
+    });
+  },
+  /** 建档页返回后：建成了就选中新宠物并继续原玩法；用户中途退出则清掉待办，之后不会误跳。 */
+  resumeOnboarding() {
+    const onboarding = this._onboarding;
+    if (!onboarding) return;
+    this._onboarding = null;
+    if (!onboarding.petId) return;
+    this._petId = onboarding.petId;
+    if (onboarding.path) wx.navigateTo({ url: onboarding.path + (onboarding.path.indexOf("?") >= 0 ? "&" : "?") + "petId=" + encodeURIComponent(onboarding.petId) });
+  },
+  /** 见面礼说明：只用服务端下发的颗数与有效期；拉取失败或已领过就不显示，端上不写死数字。 */
+  loadOnboardGift(view) {
+    return api.request("/api/wallet").then((data) => {
+      if (view !== this._view) return;
+      const gift = data && data.newcomerGift;
+      this.setData({ onboardGift: gift && gift.available && gift.units ? "建好就送 " + wallet.costText(gift.units) + (gift.days ? "，" + gift.days + " 天内可用" : "") : "" });
+    }).catch(() => { if (view === this._view) this.setData({ onboardGift: "" }); });
+  },
+
   openFeed(event) {
     const key = event.currentTarget.dataset.id;
     const item = this.data.feed.concat(this.data.feedLeft, this.data.feedRight).find((entry) => entry.key === key);
@@ -303,31 +350,31 @@ themedPage({
     const category = event.currentTarget.dataset.category;
     api.request("/api/events", { method: "POST", data: { name: "plugin_selected", pluginId, channel: "miniprogram", metadata: {} } }).catch(() => undefined);
     if (pluginId === "pl-10") return wx.switchTab({ url: "/pages/art-photo/art-photo" });
-    if (category === "ai-image") return wx.navigateTo({ url: "/pages/ai-create/ai-create" + this.petQuery("?") });
-    if (category === "video") return wx.navigateTo({ url: "/pages/video-create/video-create" + this.petQuery("?") });
+    if (category === "ai-image") return this.go("/pages/ai-create/ai-create");
+    if (category === "video") return this.go("/pages/video-create/video-create");
     if (category === "memorial") return wx.navigateTo({ url: "/pages/memorials/memorials" });
     if (category === "report") return wx.navigateTo({ url: "/pages/commerce/commerce" });
-    wx.navigateTo({ url: "/pages/create/create?pluginId=" + encodeURIComponent(pluginId) + this.petQuery("&") });
+    this.go("/pages/create/create?pluginId=" + encodeURIComponent(pluginId));
   },
   startTemplate(event) {
     const entryId = event.currentTarget.dataset.entry;
     const templateId = event.currentTarget.dataset.template;
-    wx.navigateTo({ url: "/pages/ai-create/ai-create?entryId=" + encodeURIComponent(entryId) + "&templateId=" + encodeURIComponent(templateId) + this.petQuery("&") });
+    this.go("/pages/ai-create/ai-create?entryId=" + encodeURIComponent(entryId) + "&templateId=" + encodeURIComponent(templateId));
   },
   /** 点人化封面直达那一款；点标题区进 40 款造型页。 */
   openHuman(event) {
     const templateId = event && event.currentTarget && event.currentTarget.dataset && event.currentTarget.dataset.id;
-    wx.navigateTo({ url: "/pages/ai-create/ai-create?entryId=human" + (templateId ? "&templateId=" + encodeURIComponent(templateId) : "") + this.petQuery("&") });
+    this.go("/pages/ai-create/ai-create?entryId=human" + (templateId ? "&templateId=" + encodeURIComponent(templateId) : ""));
   },
   startBossScene(event) {
     const sceneId = event.currentTarget.dataset.id;
-    wx.navigateTo({ url: "/pages/ai-create/ai-create?entryId=art&templateId=pet-art-photo&sceneId=" + encodeURIComponent(sceneId) + this.petQuery("&") });
+    this.go("/pages/ai-create/ai-create?entryId=art&templateId=pet-art-photo&sceneId=" + encodeURIComponent(sceneId));
   },
-  /** 写真馆入口卡：switchTab 不能带参数，用 globalData 告诉创作页打开「宠物写真」还是「人宠写真」。 */
+  /** 写真馆入口卡：switchTab 不能带参数，用 globalData 告诉创作页打开「宠物写真」还是「人宠写真」分段。 */
   openArtStudio(event) {
     const mode = event && event.currentTarget && event.currentTarget.dataset && event.currentTarget.dataset.mode;
     const app = typeof getApp === "function" ? getApp() : null;
-    if (app && app.globalData) app.globalData.artMode = mode === "duo" ? "duo" : "pet";
+    if (app && app.globalData) app.globalData.createSegment = mode === "duo" ? "duo" : "pet";
     wx.switchTab({ url: "/pages/art-photo/art-photo" });
   },
   openStudioItem(event) {

@@ -8,17 +8,17 @@
 
 | 变量 | 本地 | 测试机 | 生产 | 说明 |
 | --- | --- | --- | --- | --- |
-| `NODE_ENV` | 可选 | 必填 `production` | 必填 `production` | 启用生产安全边界：无 demo 用户兜底、Cookie `Secure`、后台白名单 |
+| `NODE_ENV` | 可选 | 必填 `production` | 必填 `production` | 生产构建与 Cookie `Secure`；登录、后台白名单、来源校验本地同样生效（2026-10-09） |
 | `APP_ENV` | 可选 | 必填 `staging` | **禁止 `staging`** | 唯一放行本地磁盘存储与模拟支付的开关 |
-| `DATABASE_URL` | 可选 | 必填 | 必填 | PostgreSQL 连接串；留空或 `file://` 用落盘 PGlite，`memory://` 用内存 PGlite（仅本地/E2E） |
+| `DATABASE_URL` | 必填 | 必填 | 必填 | PostgreSQL 连接串；本地由 `node scripts/local-db.mjs start` 生成，留空直接报错；`memory://` 仅供 Vitest |
 | `POSTGRES_DB`、`POSTGRES_USER`、`POSTGRES_PASSWORD` | — | 必填 | 必填 | Compose 创建 PostgreSQL 容器时使用；由 `gen-env.sh` 随机生成密码 |
-| `SESSION_SECRET` | 可选 | 必填 ≥32 位 | 必填 ≥32 位 | 会话 Cookie 的 HMAC 密钥 |
+| `SESSION_SECRET` | 必填 ≥32 位 | 必填 ≥32 位 | 必填 ≥32 位 | 会话 Cookie 的 HMAC 密钥 |
 | `WORKER_SECRET` | 可选 | 必填 ≥32 位 | 必填 ≥32 位 | `internal/*` 接口鉴权；缺失时这些路由返回 404 |
-| `ADDRESS_ENCRYPTION_KEY` | 可选 | 必填 | 必填 | 实体订单地址字段加密，必须独立随机 |
+| `ADDRESS_ENCRYPTION_KEY` | 必填 | 必填 | 必填 | 实体订单地址字段加密，必须独立随机 |
 | `PUBLIC_APP_URL` | 可选 | 必填 HTTPS | 必填 HTTPS | H5、分享和回调的公开地址 |
 | `PETBABY_DOMAIN` | — | 必填 | 必填 | 反向代理使用的裸域名（不带协议） |
 | `ACME_EMAIL` | — | 可选 | — | 保留用于环境文件兼容；宿主机 Nginx/Certbot 或云证书系统实际使用 |
-| `ADMIN_USER_IDS` | 可选 | 部署后写入 | 必填 | 逗号分隔的管理员 UUID；未配置时后台页面/API 全部返回 404 |
+| `ADMIN_USER_IDS` | 进后台时填 | 部署后写入 | 必填 | 逗号分隔的管理员 UUID；未配置时后台页面/API 全部返回 404 |
 | `APP_PORT` | — | — | 可选，默认 3000 | 仅 `compose.production.yaml` 用，绑定在 `127.0.0.1` |
 | `PETBABY_IMAGE` | — | 推荐 | 推荐 | 不可变镜像标签，回滚依赖它 |
 | `NODE_BASE_IMAGE` | — | 推荐 | 推荐 | Dockerfile 的 Node 22 基础镜像；Docker Hub 不通时改为国内/企业仓库完整地址 |
@@ -26,15 +26,18 @@
 | `PNPM_VERSION` | — | 推荐 `10.13.1` | 推荐 `10.13.1` | 固定容器内 pnpm 版本，必须与 `apps/platform/package.json` 的 `packageManager` 一致 |
 | `NPM_REGISTRY` | — | 推荐 | 推荐 | 容器构建时的 npm/pnpm registry；网络受限时改为云厂商或企业镜像 |
 
-非生产环境 `getOptionalUserId()` 会回落到固定 demo 用户，`isAdmin()` 直接返回 true。所以「本地能进后台」不代表权限正确。
+2026-10-09 起本地与生产同口径：没有 demo 用户兜底，后台按 `ADMIN_USER_IDS` 判断，缺凭据的外部依赖明确失败。只有自动化测试夹具（`NODE_ENV=test` 或 `PETBABY_TEST_HARNESS=1`，生产构建中无效）保留 demo 用户、开放后台与占位实现。
 
 ## 登录
 
 | 变量 | 默认 | 说明 |
 | --- | --- | --- |
-| `PASSWORD_AUTH_ENABLED` | 非生产为 `true`，生产为 `false` | 账号密码注册/登录开关。测试机必须显式设为 `true` |
+| `PASSWORD_AUTH_ENABLED` | `false` | 账号密码注册/登录开关，只在本地与测试机生效（需显式设 `true`）。**正式生产一律关闭、此开关无效**：生产只有微信账号 |
 | `PASSWORD_AUTH_INVITE_CODE` | 空 | 设置后注册必须携带邀请码；公网测试机建议保留 |
-| `WECHAT_APP_ID`、`WECHAT_APP_SECRET` | 空 | 小程序 `wx.login` 换取 openid；缺失时微信登录不可用 |
+| `WECHAT_APP_ID`、`WECHAT_APP_SECRET` | 空 | 小程序 `wx.login` 经 code2Session 换取 unionid 与 openid；缺失时微信登录不可用 |
+| `WECHAT_SESSION_ENCRYPTION_KEY` | 空 | 32 字节 Base64，加密保存 session_key；缺失时微信登录整体失败（用户行随事务回滚） |
+
+**微信账号以 unionid 为唯一标识（2026-10-09，迁移 0043）。** openid 只记录在 `users.wechat_openid`（支付必须用当前小程序的 openid），不再唯一。小程序必须绑定微信开放平台，code2Session 才会返回 unionid；拿不到时登录返回 503 `WECHAT_UNIONID_REQUIRED`，不回落到 openid。改口径前只有 openid 的老用户首次登录时被接管（补写 unionid），不会变成新用户。新人见面礼按 unionid 去重。
 
 账号规则：字母开头、3-32 位、仅含字母数字点下划线连字符，大小写不敏感唯一。密码规则：10-72 位且同时含字母和数字，用 scrypt（N=16384, r=8, p=1）加盐存储。
 
@@ -52,7 +55,7 @@
 | `WECHAT_PAY_NOTIFY_URL`、`WECHAT_REFUND_NOTIFY_URL` | 公网 HTTPS 回调 |
 | `WECHAT_PLATFORM_SERIAL` | 微信支付平台证书序列号；通知验签必须与此值一致 |
 | `WECHAT_VIRTUAL_OFFER_ID`、`WECHAT_VIRTUAL_APP_KEY`、`WECHAT_VIRTUAL_SANDBOX_APP_KEY` | 虚拟支付商品配置中的 Offer 与现网/沙箱 AppKey；按环境选用 |
-| `WECHAT_VIRTUAL_PRODUCTS` | JSON 商品映射，键为 `sku:分`，值为微信后台已上架 `productId` |
+| `WECHAT_VIRTUAL_PRODUCTS` | JSON 商品映射，键为 `sku:分`，值为微信后台已上架 `productId`。冻干上线后只含 6 个充值档：`fd-topup-6-first:600`、`fd-topup-6:600`、`fd-topup-18:1800`、`fd-topup-38:3800`、`fd-topup-68:6800`、`fd-topup-128:12800`；会员 SKU 一律删除 |
 | `WECHAT_SESSION_ENCRYPTION_KEY` | 32 字节 Base64，用于服务端加密保存微信 `session_key` |
 | `WECHAT_MESSAGE_TOKEN`、`WECHAT_MESSAGE_AES_KEY` | 虚拟支付消息推送安全模式 Token 与 EncodingAESKey |
 | `WECHAT_SUBSCRIBE_TEMPLATE_ID` | 订阅消息模板 ID |

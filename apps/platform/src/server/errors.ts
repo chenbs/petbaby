@@ -7,6 +7,8 @@ export class AppError extends Error {
     message: string,
     public readonly status = 400,
     public readonly retryAfterSeconds?: number,
+    /** 端上需要的结构化信息，原样随错误下发（例如余额不足时的需要 / 现有 / 差额颗数） */
+    public readonly details?: Record<string, unknown>,
   ) {
     super(message);
   }
@@ -27,7 +29,7 @@ export function routeError(error: unknown) {
 
   if (error instanceof AppError) {
     return NextResponse.json(
-      { error: { code: error.code, message: error.message, ...(error.retryAfterSeconds ? { retryAfterSeconds: error.retryAfterSeconds } : {}) } },
+      { error: { code: error.code, message: error.message, ...(error.retryAfterSeconds ? { retryAfterSeconds: error.retryAfterSeconds } : {}), ...(error.details ? { details: error.details } : {}) } },
       { status: error.status, ...(error.retryAfterSeconds ? { headers: { "Retry-After": String(error.retryAfterSeconds) } } : {}) },
     );
   }

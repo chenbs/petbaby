@@ -65,6 +65,16 @@ describe("健康分诊", () => {
     await expect(createHealthSession(USER, { petId: PET, description: "咳" })).rejects.toThrow();
   });
 
+  /** 2026-10-10 起只收文字：带图的请求整体拒绝且不扣额度，空数组（老客户端）照常通过 */
+  it("带图片的请求被拒，不扣额度", async () => {
+    await expect(createHealthSession(USER, { petId: PET, description: "有点掉毛，看看照片", photoIds: [crypto.randomUUID()] }))
+      .rejects.toThrow("只接收文字描述");
+    const quota = await (await getDatabase()).query("SELECT * FROM health_daily_quotas");
+    expect(quota).toHaveLength(0);
+    const session = await createHealthSession(USER, { petId: PET, description: "有点掉毛，还会挠", photoIds: [] });
+    expect(session.photoIds).toEqual([]);
+  });
+
   /** 免费文字额度 3 次/日，第 4 次被拒。 */
   it("超出每日文字额度被拒", async () => {
     for (let index = 0; index < 3; index += 1) {

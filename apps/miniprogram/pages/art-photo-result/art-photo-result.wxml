@@ -1,8 +1,8 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
 <view class="{{skinClass}} page page-flat art-brand layout-matrix bundle-result-page">
   <text class="eyebrow">我的写真套餐</text>
-  <view class="title">{{!batch ? '正在读取写真' : !paid ? '写真等我来开启' : finished ? '这一组写真收好啦' : '我的写真正在诞生'}}</view>
-  <text class="muted">{{!batch ? '稍等一下' : !paid ? '付款确认后才会开始制作，每套各有一张成片。' : finished ? '每一张都可以单独打开和保存。' : '一张张慢慢做好，随时回来查看进度。'}}</text>
+  <view class="title">{{!batch ? '正在读取写真' : finished ? '这一组写真收好啦' : '我的写真正在诞生'}}</view>
+  <text class="muted">{{!batch ? '稍等一下' : finished ? '每一张都可以单独打开和保存。' : '一张张慢慢做好，随时回来查看进度。'}}</text>
 
   <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="bundle-notice"></t-notice>
   <t-notice wx:if="{{message}}" type="success" message="{{message}}" class="bundle-notice"></t-notice>
@@ -11,11 +11,10 @@
 
   <block wx:if="{{batch}}">
     <view class="bundle-progress">
-      <view class="bundle-progress-head"><view><view class="sub-title">{{batch.package === 'all' ? batch.totalCount + ' 套珍藏写真' : '10 套精选写真'}}</view><text class="small">{{paid ? progressText : batch.order && batch.order.status === 'refunded' ? '订单已退款' : '等待付款'}}</text></view><text class="bundle-progress-count">{{batch.completedCount}} / {{batch.totalCount}}</text></view>
+      <view class="bundle-progress-head"><view><view class="sub-title">{{batch.totalCount + ' 张写真'}}</view><text class="small">{{progressText}}</text></view><text class="bundle-progress-count">{{batch.completedCount}} / {{batch.totalCount}}</text></view>
       <view class="bundle-progress-track"><view class="bundle-progress-fill" style="width:{{progressWidth}}"></view></view>
-      <text wx:if="{{batch.failedCount}}" class="small">{{batch.failedCount}} 张制作未完成，其余成片仍可查看和保存。</text>
+      <text wx:if="{{batch.failedCount}}" class="small">{{batch.failedCount}} 张制作未完成，其余成片仍可查看和保存。{{batch.returnedUnits ? '已退还 ' + batch.returnedUnits + ' 颗冻干。' : ''}}</text>
     </view>
-    <t-button wx:if="{{batch.order && batch.order.status === 'pending'}}" type="primary" block loading="{{busy}}" bindtap="retryPayment" class="bundle-notice">继续支付 {{batch.order.amount}} 元，开始制作</t-button>
     <view wx:if="{{paid}}" class="bundle-gallery">
       <view class="bundle-gallery-title"><view class="section-title">逐张看成片</view><text class="small">点图片放大 · 点按钮保存</text></view>
       <view class="bundle-grid">

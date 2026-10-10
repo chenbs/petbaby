@@ -8,6 +8,7 @@
     "t-empty": "../../components/empty/index",
     "t-loading": "../../components/loading/index",
     "t-progress": "../../components/progress/index",
-    "t-photo-grid": "../../components/photo-grid/index"
+    "t-photo-grid": "../../components/photo-grid/index",
+    "t-wallet-sheet": "../../components/wallet-sheet/index"
   }
 }

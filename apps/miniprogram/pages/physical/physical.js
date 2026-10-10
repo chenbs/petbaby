@@ -27,7 +27,7 @@ const STATUS_TONE = {
 
 themedPage({
   data: {
-    works: [],
+    works: [], priceText: "",
     orders: [],
     workId: "",
     workTitle: "",
@@ -45,12 +45,14 @@ themedPage({
 
   load() {
     this.setData({ loading: !this.data.works.length && !this.data.orders.length, error: "" });
-    Promise.all([api.request("/api/works?locked=false").then(displayMediaTree), api.request("/api/physical-orders")])
-      .then(([works, orders]) => {
+    Promise.all([api.request("/api/works?locked=false").then(displayMediaTree), api.request("/api/physical-orders"), api.request("/api/physical-skus")])
+      .then(([works, orders, skus]) => {
+        const sku = skus.find((item) => item.code === "art-print-a4");
+        if (!sku) throw new Error("这个实体商品暂不可用");
         const list = works.map((work) => Object.assign({}, work, { coverUrl: work.outputUrl || (work.photo && work.photo.url) || "" }));
         const current = list.filter((work) => work.id === this.data.workId)[0] || list[0];
         this.setData({
-          loading: false,
+          loading: false, priceText: "¥" + Number(sku.amount).toFixed(2),
           works: list,
           workId: current ? current.id : "",
           workTitle: current ? current.title : "",

@@ -1,7 +1,8 @@
-const payment = require("../../services/payment");
+const wallet = require("../../services/wallet");
 const api = require("../../services/api");
 const config = require("../../config");
 const originals = require("../../services/originals");
+const params = require("../../services/params");
 const { displayMediaTree } = require("../../services/photo-files");
 const { pluginSample, imageEntries } = require("../../services/sample-assets");
 const { themedPage } = require("../../theme/page-mixin");
@@ -9,12 +10,12 @@ const { themedPage } = require("../../theme/page-mixin");
 /*
  * 制作与挑选（2026-10 按 prototype.html 第 4 节重做，替代原来的玻璃面板沉浸页）。
  *
- * 等待：模糊的样片 + 我的头像、三段进度、「好了提醒我」、等的时候再挑几套写真。
+ * 等待：模糊的样片 + 我的头像、三段进度、等的时候再挑几套写真。
  * 结果（2026-10 起每次只出 1 张）：出图即由服务端选中并归档进作品柜，这里大图展示，点一下放大；
  * 历史任务仍可能有 2 / 4 张候选，保留并排挑选的分支。底部抽屉写场景名与带价格的保存按钮。
  *
- * 重拍只在还没下单之前可用；重拍时服务端撤下自动归档的那件未付费作品。
- * 「好了提醒我」不另起订阅：任务完成时服务端本来就会写站内通知（notifyRun），这里只是告诉用户去哪看。
+ * 2026-10-08 起先扣冻干再出图：结果直接是正式版，没有预览和二次付费；没有免费重拍，
+ * 「再拍一张」是新任务、重新扣费，原结果保留。失败由系统自动重试 2 次，仍失败全额退还冻干。
  */
 const REROLL_REASONS = [
   { id: "pet-not-like", label: "宠物不像" },
@@ -23,15 +24,16 @@ const REROLL_REASONS = [
 ];
 const RUNNING = ["queued", "processing"];
 
-themedPage({
+themedPage(Object.assign({}, wallet.walletSheetMethods, {
   data: {
     run: null, candidates: [], pet: null, petAvatarUrl: "", loading: true, busy: false, message: "", messageType: "info",
-    humanMode: false, canReroll: false, priceText: "", confirmCancel: false, showSheet: false, selectedLabel: "",
-    waitCoverUrl: "", waitStages: [], waitProgress: 0, suggestScenes: [], remindSet: false
+    humanMode: false, canReroll: false, costText: "", unlockText: "", confirmCancel: false, showSheet: false, selectedLabel: "",
+    walletSheet: { visible: false, required: 0, balance: 0, shortfall: 0 },
+    waitCoverUrl: "", waitStages: [], waitProgress: 0, suggestScenes: []
   },
   onLoad(query) {
     this.runId = query.id;
-    if (!this.runId) return this.setData({ loading: false, message: "生成任务链接无效，请从作品柜重新打开。", messageType: "error" });
+    if (!params.isUuid(this.runId)) return this.setData({ loading: false, message: "生成任务链接无效，请从作品柜重新打开。", messageType: "error" });
     this.loadContext().then(() => this.poll());
   },
   onUnload() { if (this.timer) clearTimeout(this.timer); },
@@ -87,15 +89,17 @@ themedPage({
     const name = pet ? pet.name : "我";
     const selected = candidates.find((item) => item.id === run.selectedId);
     const processing = run.status === "processing";
-    const plugin = (this._plugins || []).find((item) => item.id === run.pluginId);
-    const price = plugin && plugin.pricing && plugin.pricing.unlockPrice;
+    const cost = Number(run.donganCost);
     return {
       run, humanMode, pet, petAvatarUrl: pet && pet.avatarUrl || "",
-      canReroll: !humanMode && Number(run.rerollRemaining) > 0 && !run.order && run.status === "succeeded",
+      // 「再拍一张」按原模板重新扣费；人化模板不支持换理由重拍
+      canReroll: !humanMode && ["succeeded", "failed"].indexOf(run.status) >= 0,
+      costText: wallet.costText(cost),
+      // 冻干上线前的历史任务才会有未解锁的结果
+      unlockText: wallet.costText(cost) + " · 保存高清原图",
       single: candidates.length <= 1,
       showSheet: run.status === "succeeded",
       selectedLabel: candidates.length <= 1 ? effect.title : selected ? "第 " + selected.number + " 张 · " + effect.title : "先挑一张喜欢的",
-      priceText: price ? "保存高清原图 ¥" + price : "",
       waitCoverUrl: effect.cover,
       // 三段进度：排队时停在第一段，制作中走到第二段；出图后页面直接切到挑选
       waitStages: [
@@ -139,44 +143,34 @@ themedPage({
       success: (result) => { const reason = reasons[result.tapIndex]; if (reason) this.reroll(reason.id); }
     });
   },
+  /** 「再拍一张」：新任务、重新扣冻干；余额不足弹零食柜，到账后用同一个幂等键自动重放。 */
   reroll(reason) {
     this.setData({ busy: true, message: "" });
-    api.request("/api/ai-runs/" + this.runId + "/reroll", { method: "POST", data: { reason } })
-      .then((run) => { this.setData(Object.assign({ busy: false, candidates: [], remindSet: false }, this.deriveRun(run, []))); this.poll(); })
-      .catch((error) => this.setData({ busy: false, message: error.message, messageType: "error" }));
-  },
-  retry() {
-    this.setData({ busy: true });
-    api.request("/api/ai-runs/" + this.runId, { method: "PATCH", data: { action: "retry" } })
-      .then((run) => { this.setData(Object.assign({ busy: false }, this.deriveRun(run))); this.poll(); })
-      .catch((error) => this.setData({ busy: false, message: error.message, messageType: "error" }));
+    const idempotencyKey = "mp-reroll-" + this.runId + "-" + Date.now();
+    wallet.withDongan(this, () => api.request("/api/ai-runs/" + this.runId + "/reroll", { method: "POST", data: { reason, idempotencyKey } }))
+      .then((run) => wx.redirectTo({ url: "/pages/ai-run/ai-run?id=" + run.id }))
+      .catch((error) => this.setData({ busy: false, message: error.code === "WALLET_TOPUP_CANCELLED" ? "" : error.message, messageType: "error" }));
   },
   askCancel() { this.setData({ confirmCancel: true }); },
   dismissCancel() { this.setData({ confirmCancel: false }); },
   cancel() {
     this.setData({ confirmCancel: false });
     api.request("/api/ai-runs/" + this.runId, { method: "PATCH", data: { action: "cancel" } })
-      .then((run) => this.setData(Object.assign({ message: "已取消，额度已返还。", messageType: "info" }, this.deriveRun(run))))
+      .then((run) => this.setData(Object.assign({ message: "已取消，" + wallet.costText(Number(run.donganCost)) + "已退回。", messageType: "info" }, this.deriveRun(run))))
       .catch((error) => this.setData({ message: error.message, messageType: "error" }));
-  },
-  /** 完成时服务端会写站内通知，这里只记下用户的意图并说明去哪看。 */
-  remindWhenReady() {
-    if (this.data.remindSet) return;
-    this.setData({ remindSet: true });
-    wx.showToast({ title: "好了会提醒你", icon: "none" });
   },
   openSuggestScene(event) {
     wx.navigateTo({ url: "/pages/ai-create/ai-create?entryId=art&templateId=pet-art-photo&sceneId=" + encodeURIComponent(event.currentTarget.dataset.id) });
   },
   openArtStudio() { wx.switchTab({ url: "/pages/art-photo/art-photo" }); },
 
+  /** 冻干上线前的历史任务：用冻干解锁（新任务出图即正式版，不会走到这里）。 */
   unlock() {
     this.setData({ busy: true, message: "" });
-    api.request("/api/ai-runs/" + this.runId + "/unlock", { method: "POST" })
-      .then((run) => { this.setData(this.deriveRun(run)); return payment.pay("work", run.order.id); })
+    wallet.withDongan(this, () => api.request("/api/ai-runs/" + this.runId + "/unlock", { method: "POST" }))
       .then(() => this.load())
-      .then(() => this.setData({ busy: false, message: "支付成功，可以保存高清原图了。", messageType: "success" }))
-      .catch((error) => this.setData({ busy: false, message: error.message || error.errMsg, messageType: "error" }));
+      .then(() => this.setData({ busy: false, message: "可以保存高清原图了。", messageType: "success" }))
+      .catch((error) => this.setData({ busy: false, message: error.code === "WALLET_TOPUP_CANCELLED" ? "" : error.message || error.errMsg, messageType: "error" }));
   },
   save() {
     const run = this.data.run;
@@ -207,4 +201,4 @@ themedPage({
         .catch(() => fallback)
     });
   }
-});
+}));

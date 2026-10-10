@@ -5,24 +5,21 @@ import "server-only";
 import { z } from "zod";
 import sharp from "sharp";
 import { PDFDocument } from "pdf-lib";
-import type { AiRun, Membership, VideoRender } from "@/domain/models";
+import type { AiRun, VideoRender } from "@/domain/models";
 import { getDatabase, inTransaction } from "@/server/db/client";
-import { confirmOrderPayment, refundOrderPayment } from "@/server/payments/service";
+import { confirmOrderPayment } from "@/server/payments/service";
 import { jsonIdArray, jsonObject, mapAiRoleInputs, mapOrder } from "@/server/db/rows";
 import { AppError } from "@/server/errors";
 import { generateWithFailover, type ImageReference } from "@/server/ai/provider";
 import { AI_NOTICE_TEXT, applyAiMetadata } from "@/server/media/ai-label";
 import { objectStorage } from "@/server/storage";
 import { decryptAddress, encryptAddress } from "@/server/commerce/address";
-import { claimEntitlement, entitlementBalance, hasHealthExport, physicalDiscountRate } from "@/server/entitlements";
-import { HEALTH_ARCHIVE_PRICE } from "@/server/health-service";
 import { getRuntimePlugin } from "@/plugins/runtime";
 import { collectAnnualData } from "@/server/annual/aggregate";
 import { REPORT_PHOTOS, buildReportSvg, rasterizeReport, rasterizeReportPreview } from "@/server/annual/report";
-import { createOrder, recordEvent } from "@/server/platform-service";
+import { recordEvent, unlockWork } from "@/server/platform-service";
 import { recordAdminAudit } from "@/server/admin/audit";
 import { shortestDurationFor } from "@/domain/video-duration";
-import { breakEvenDeliverables, describeEntitlements, singleBuyValue, type MembershipEntitlementMap } from "@/domain/membership";
 import {
   buildImageTemplatePrompt,
   getImageTemplate,
@@ -39,6 +36,9 @@ import {
   type PetArtPhotoSceneId,
 } from "@/domain/pet-art-photo";
 import { completeArtPhotoBatchItem } from "@/server/art-photo-bundle-service";
+import { AI_RUN_COST, ANNUAL_REPORT_COST, MAX_TASK_ATTEMPTS, describeCost } from "@/domain/dongan-pricing";
+import { refundSpend, spend } from "@/server/wallet/service";
+import { assertGenerationCircuit } from "@/server/risk/controls";
 
 /** 宠物艺术写真场景的单一事实来源；旧 AI_STYLE_IDS 仅为历史请求兼容。 */
 export const AI_SCENE_IDS = PET_ART_PHOTO_SCENE_IDS;
@@ -67,6 +67,9 @@ const aiInput = z.object({
   modelVersion: z.string().min(1).max(80).default("provider-v1"),
   idempotencyKey: z.string().min(8).max(120),
   options: aiOptions,
+  /** 「再拍一张」：带上原任务与理由，按新任务重新扣费 */
+  rerollOf: z.string().uuid().optional(),
+  rerollReason: z.enum(["owner-not-like", "pet-not-like", "too-animal", "composition"]).optional(),
 });
 const addressSchema = z.object({ name: z.string().min(1), phone: z.string().min(6), province: z.string().min(1), city: z.string().min(1), detail: z.string().min(1) });
 
@@ -110,9 +113,18 @@ async function createAiRunOperation(userId: string, input: unknown): Promise<AiR
     authorizationConfirmed: template.subjectMode === "owner-pet" ? data.authorizationConfirmed : false,
   };
   const prompt = template.templateId === PET_ART_PHOTO_TEMPLATE_ID
-    ? buildPetArtPhotoPrompt(data.options.scene)
-    : buildImageTemplatePrompt(template);
-  await database.query("INSERT INTO ai_runs (id,user_id,plugin_id,pet_id,photo_ids,role_inputs,status,prompt,prompt_version,model_version,provider,options,idempotency_key,candidates,cost,available_at,created_at) VALUES ($1,$2,$3,$4,$5::jsonb,$6::jsonb,'queued',$7,$8,$9,'pending',$10::jsonb,$11,'[]'::jsonb,0,now(),$12)", [id, userId, data.pluginId, data.petId, JSON.stringify(data.photoIds), JSON.stringify(roleInputs), prompt, `template-${roleInputs.templateVersion}`, data.modelVersion, JSON.stringify({ ...data.options, templateId: roleInputs.templateId }), data.idempotencyKey, new Date()]);
+    ? buildPetArtPhotoPrompt(data.options.scene, data.rerollReason)
+    : buildImageTemplatePrompt(template, data.rerollReason);
+  if (data.rerollReason) roleInputs.rerollReason = data.rerollReason;
+  /*
+   * 先扣冻干，再入队（36 号文第 2 章）：扣费与写入任务在同一事务，余额不足整体回滚。
+   * 没有免费重拍：「再拍一张」就是新建一个任务、重新扣费（rerollOf 记来源，原结果保留）。
+   */
+  await assertGenerationCircuit();
+  const cost = AI_RUN_COST[template.subjectMode] ?? AI_RUN_COST.pet;
+  const walletBizKey = `spend:ai_run:${id}`;
+  await spend(userId, { units: cost, bizKey: walletBizKey, title: template.title || "创意照片", refType: "ai_run", refId: id });
+  await database.query("INSERT INTO ai_runs (id,user_id,plugin_id,pet_id,photo_ids,role_inputs,status,prompt,prompt_version,model_version,provider,options,idempotency_key,candidates,cost,wallet_biz_key,available_at,created_at) VALUES ($1,$2,$3,$4,$5::jsonb,$6::jsonb,'queued',$7,$8,$9,'pending',$10::jsonb,$11,'[]'::jsonb,0,$13,now(),$12)", [id, userId, data.pluginId, data.petId, JSON.stringify(data.photoIds), JSON.stringify(roleInputs), prompt, `template-${roleInputs.templateVersion}`, data.modelVersion, JSON.stringify({ ...data.options, templateId: roleInputs.templateId, dongan: { cost }, ...(data.rerollOf ? { rerollOf: data.rerollOf } : {}) }), data.idempotencyKey, new Date(), walletBizKey]);
   await recordEvent(userId, "ai_created", data.pluginId, "product", { petId: data.petId, templateId: roleInputs.templateId, subjectMode: roleInputs.subjectMode, scene: template.templateId === PET_ART_PHOTO_TEMPLATE_ID ? data.options.scene : undefined });
   return getAiRun(userId, id);
 }
@@ -169,7 +181,7 @@ async function loadTemplateReferences(row: Record<string, unknown>) {
   const petId = String(row.pet_id);
   const roleInputs = mapAiRoleInputs(row.role_inputs);
   if (roleInputs.templateId === PET_ART_PHOTO_TEMPLATE_ID) {
-    if (!["v01", "v03", "v04", "v05", "v06", "v07", "v08", "v09", "v10", "v11", "v12", PET_ART_PHOTO_VERSION].includes(roleInputs.templateVersion || "") || roleInputs.subjectMode !== "pet" || roleInputs.petPhotoIds.length !== 1 || roleInputs.ownerPhotoIds.length) {
+    if (!["v01", "v03", "v04", "v05", "v06", "v07", "v08", "v09", "v10", "v11", "v12", "v13", PET_ART_PHOTO_VERSION].includes(roleInputs.templateVersion || "") || roleInputs.subjectMode !== "pet" || roleInputs.petPhotoIds.length !== 1 || roleInputs.ownerPhotoIds.length) {
       throw new AppError("AI_TEMPLATE_SNAPSHOT_INVALID", "写真任务输入已失效，请重新创建", 409);
     }
     const reference = await loadPetReference(userId, petId, roleInputs.petPhotoIds[0]);
@@ -297,10 +309,11 @@ export async function processNextAiRun() {
   } catch (error) {
     const message = error instanceof Error ? error.message.slice(0, 200) : "AI_PROVIDER_UNAVAILABLE";
     const runOptions = jsonObject<Record<string, unknown>>(row.options, {});
-    if (runOptions.artPhotoBatchItemId && attempt < 2) {
+    // 系统自动重试 2 次（共 3 次尝试），仍失败才进入终态并全额退还冻干（36 号文 D5）。
+    if (attempt < MAX_TASK_ATTEMPTS) {
       const retried = await inTransaction(async (transaction) => {
         const rows = await transaction.query("UPDATE ai_runs SET status='queued',error_code=$2,retry_count=retry_count+1,available_at=now()+interval '2 seconds',locked_at=NULL WHERE id=$1 AND status='processing' AND attempt=$3 RETURNING id", [runId, message, attempt]);
-        if (rows[0]) await transaction.query("UPDATE art_photo_batch_items SET status='queued',error_code=$2,locked_at=NULL,updated_at=now() WHERE id=$1 AND status='processing' AND run_id=$3", [String(runOptions.artPhotoBatchItemId), message, runId]);
+        if (rows[0] && runOptions.artPhotoBatchItemId) await transaction.query("UPDATE art_photo_batch_items SET status='queued',error_code=$2,locked_at=NULL,updated_at=now() WHERE id=$1 AND status='processing' AND run_id=$3", [String(runOptions.artPhotoBatchItemId), message, runId]);
         return rows;
       });
       return { id: runId, status: retried[0] ? "retrying" as const : "cancelled" as const };
@@ -312,7 +325,8 @@ export async function processNextAiRun() {
     });
     if (!failed[0]) return { id: runId, status: "cancelled" as const };
     await database.query("INSERT INTO ai_cost_ledger (id,run_id,provider,model_version,units,amount,status,created_at) VALUES ($1,$2,'unknown','unknown',0,0,'failed',now())", [crypto.randomUUID(), runId]);
-    if (!runOptions.artPhotoBatchItemId) await notifyRun(userId, runId, "ai_run_failed", "这次没有拍成", "免费次数已返还，可以重新试一次");
+    const returned = row.wallet_biz_key ? await refundSpend(String(row.wallet_biz_key), { title: "没有拍成 · 已退还" }) : 0;
+    if (!runOptions.artPhotoBatchItemId) await notifyRun(userId, runId, "ai_run_failed", "这次没有拍成", returned ? `已退还 ${describeCost(returned)}冻干，可以再试一次` : "可以再试一次");
     return { id: runId, status: "failed" as const, errorCode: message };
   } finally {
     clearInterval(heartbeat);
@@ -337,9 +351,13 @@ export async function getAiRun(userId: string, id: string) {
     selectedUnlocked: workRows[0] ? !Boolean(workRows[0].locked) : false, provider: row.provider && row.provider !== "pending" ? String(row.provider) : undefined,
     modelVersion: row.model_version ? String(row.model_version) : undefined, prompt: String(row.prompt || ""), promptVersion: String(row.prompt_version || "v1"), options: jsonObject<Record<string, unknown>>(row.options, {}),
     roleInputs,
-    errorCode: row.error_code ? String(row.error_code) : undefined, cost: Number(row.cost), attempt: Number(row.attempt || 0), retryCount: Number(row.retry_count || 0),
+    errorCode: row.error_code ? String(row.error_code) : undefined, attempt: Number(row.attempt || 0), retryCount: Number(row.retry_count || 0),
     rerollCount: Number(row.reroll_count || 0),
-    rerollRemaining: roleInputs.subjectMode === "pet-human" ? 0 : Math.max(0, 2 - Number(row.reroll_count || 0)),
+    // 没有免费重拍（D8）。「再拍一张」是新任务，按 cost 重新扣费；人化模板不支持换理由重拍。
+    rerollRemaining: 0,
+    cost: Number(row.cost),
+    donganCost: AI_RUN_COST[roleInputs.subjectMode] ?? AI_RUN_COST.pet,
+    paidWithDongan: Boolean(row.wallet_biz_key),
     // lingsuan 单张实测 46–62 秒；按每位 55 秒估算，比原来写死的 20 秒更接近真实等待。
     queuePosition, estimatedSeconds: queuePosition ? queuePosition * AI_SECONDS_PER_RUN : row.status === "processing" ? AI_SECONDS_PER_RUN : undefined,
     workId: row.work_id ? String(row.work_id) : undefined, order: orderRows[0] ? mapOrder(orderRows[0]) : undefined, createdAt: new Date(String(row.created_at)).toISOString(),
@@ -401,7 +419,10 @@ export async function selectAiCandidate(userId: string, id: string, candidateId:
     const templateTitle = run.roleInputs.templateId === PET_ART_PHOTO_TEMPLATE_ID ? "宠物艺术写真" : getImageTemplate(String(run.roleInputs.templateId || ""), { includePending: true })?.title || "创意照片";
     const workId = crypto.randomUUID(); const now = new Date(); const title = `${String(pets[0]?.name || "我")}的${templateTitle}`;
     const subtitle = run.candidates.length > 1 ? `从 ${run.candidates.length} 张里挑中的这一张` : "为我拍的这一张";
-    await db.query("INSERT INTO works (id,user_id,plugin_id,pet_id,photo_id,title,subtitle,serial_number,authority,output_key,preview_key,asset_kind,source_kind,source_id,locked,public,version,expires_at,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,'麻麻抱我照相馆',$9,$10,'image','ai',$11,true,false,1,NULL,$12)", [workId, userId, run.pluginId, run.petId, run.photoIds[0], title, subtitle, `MB-${id.slice(0, 8).toUpperCase()}`, candidate.outputKey, candidate.previewKey, id, now]);
+    // 已扣冻干的任务直接归档为正式作品；没有扣费键的是冻干上线前的历史任务，仍按当时口径锁定。
+    const paid = run.paidWithDongan;
+    await db.query("INSERT INTO works (id,user_id,plugin_id,pet_id,photo_id,title,subtitle,serial_number,authority,output_key,preview_key,asset_kind,source_kind,source_id,locked,public,version,expires_at,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,'麻麻抱我照相馆',$9,$10,'image','ai',$11,$13,false,1,NULL,$12)", [workId, userId, run.pluginId, run.petId, run.photoIds[0], title, subtitle, `MB-${id.slice(0, 8).toUpperCase()}`, candidate.outputKey, candidate.previewKey, id, now, !paid]);
+    if (paid) await db.query("UPDATE ai_runs SET selected_unlocked=true WHERE id=$1", [id]);
     await db.query("INSERT INTO work_versions (id,work_id,version,title,subtitle,output_key,preview_key,created_at) VALUES ($1,$2,1,$3,$4,$5,$6,$7)", [crypto.randomUUID(), workId, title, subtitle, candidate.outputKey, candidate.previewKey, now]);
     await db.query("UPDATE ai_runs SET selected_id=$3,work_id=$4 WHERE id=$1 AND user_id=$2", [id, userId, candidateId, workId]);
     await recordEvent(userId, "ai_candidate_selected", run.pluginId, "product", { runId: id, candidateId });
@@ -412,45 +433,52 @@ export async function selectAiCandidate(userId: string, id: string, candidateId:
 export async function unlockAiCandidate(userId: string, id: string) {
   const run = await getAiRun(userId, id);
   if (!run.selectedId || !run.workId) throw new AppError("AI_CANDIDATE_NOT_SELECTED", "这张照片还没归档好，请稍后再试", 409);
-  const order = await createOrder(userId, run.workId, `${run.pluginId}-single`);
-  await (await getDatabase()).query("UPDATE ai_runs SET order_id=$3 WHERE id=$1 AND user_id=$2", [id, userId, order.id]);
+  // 冻干上线前的历史任务：按该模板现价用冻干解锁（新任务入库即正式版，不会走到这里）。
+  await unlockWork(userId, run.workId);
   return getAiRun(userId, id);
 }
 
-async function rerollAiRunOperation(userId: string, id: string, reason: ImageTemplateRerollReason = "composition") {
+/**
+ * 「再拍一张」（2026-10-08 起）：按原任务的模板、照片与场景**新建一个任务并重新扣费**，原结果保留。
+ * 没有免费重拍；理由（构图 / 不像 / 太像动物）仍写进提示词，让第二张往对的方向改。
+ */
+async function rerollAiRunOperation(userId: string, id: string, reason: ImageTemplateRerollReason = "composition", idempotencyKey?: string) {
   const run = await getAiRun(userId, id);
+  if (!["succeeded", "failed"].includes(run.status)) throw new AppError("AI_REROLL_NOT_READY", "这一张还在制作中，稍后再拍", 409);
 
   const template = run.roleInputs.templateId ? getImageTemplate(run.roleInputs.templateId) : undefined;
   if (!template) throw new AppError("IMAGE_TEMPLATE_UNAVAILABLE", "这个图片模板已下架，不能继续重抽", 409);
   if (!imageTemplateSupportsReroll(template)) throw new AppError("AI_REROLL_NOT_SUPPORTED", "「如果我是人」不支持重抽", 409);
   if (reason === "owner-not-like" && template.subjectMode !== "owner-pet") throw new AppError("REROLL_REASON_INVALID", "单宠模板不能选择主人不像", 422);
   if (reason === "too-animal" && template.subjectMode !== "pet-human") throw new AppError("REROLL_REASON_INVALID", "只有宠物人化模板可以选择太像动物", 422);
-  const roleInputs = { ...run.roleInputs, rerollReason: reason };
   const scene = resolvePetArtPhotoScene({
     scene: typeof run.options.scene === "string" && (AI_SCENE_IDS as readonly string[]).includes(run.options.scene) ? run.options.scene as PetArtPhotoSceneId : undefined,
     style: typeof run.options.style === "string" ? run.options.style : undefined,
   });
-  const prompt = template.templateId === PET_ART_PHOTO_TEMPLATE_ID
-    ? buildPetArtPhotoPrompt(scene, reason)
-    : buildImageTemplatePrompt(template, reason);
-  const rows = await (await getDatabase()).query("UPDATE ai_runs SET status='queued',candidates='[]'::jsonb,selected_id=NULL,work_id=NULL,reroll_count=reroll_count+1,error_code=NULL,available_at=now(),locked_at=NULL,role_inputs=$3::jsonb,prompt=$4 WHERE id=$1 AND user_id=$2 AND status IN ('succeeded','failed') AND reroll_count<2 AND order_id IS NULL RETURNING id", [id, userId, JSON.stringify(roleInputs), prompt]);
-  if (!rows[0]) throw new AppError("AI_REROLL_LIMIT", "重抽次数已用完，或任务仍在制作中", 409);
-  // 出图时自动归档的那件作品还没付费，重抽后它引用的文件会被删掉，一并撤下
-  if (run.workId) await (await getDatabase()).query("UPDATE works SET deleted_at=now(),public=false,share_token=NULL WHERE id=$1 AND user_id=$2 AND locked=true AND deleted_at IS NULL", [run.workId, userId]);
-  await Promise.all(run.candidates.flatMap((candidate) => [candidate.outputKey, candidate.previewKey].filter((key): key is string => Boolean(key)).map((key) => objectStorage.delete(key).catch(() => undefined))));
-  return getAiRun(userId, id);
+  const options = { ...run.options, scene } as Record<string, unknown>;
+  delete options.dongan;
+  delete options.rerollOf;
+  return createAiRunOperation(userId, {
+    pluginId: run.pluginId, petId: run.petId, photoIds: run.roleInputs.petPhotoIds.length ? run.roleInputs.petPhotoIds : run.photoIds,
+    ownerPhotoIds: run.roleInputs.ownerPhotoIds, authorizationConfirmed: run.roleInputs.authorizationConfirmed,
+    templateId: template.templateId, promptVersion: run.promptVersion, modelVersion: "provider-v1",
+    idempotencyKey: idempotencyKey || `reroll-${id}-${crypto.randomUUID()}`, options, rerollOf: id, rerollReason: reason,
+  });
 }
 
-async function retryAiRunOperation(userId: string, id: string) {
-  const rows = await (await getDatabase()).query("UPDATE ai_runs SET status='queued',error_code=NULL,retry_count=retry_count+1,available_at=now(),locked_at=NULL WHERE id=$1 AND user_id=$2 AND status='failed' AND retry_count<2 RETURNING id", [id, userId]);
-  if (!rows[0]) throw new AppError("AI_RETRY_LIMIT", "任务不可重试或重试次数已用完", 409);
-  return getAiRun(userId, id);
+/** 没有用户手动重试（D8）：失败已由系统自动重试 2 次并全额退还冻干，想再拍就新建任务。 */
+async function retryAiRunOperation() {
+  throw new AppError("AI_RETRY_RETIRED", "这一张已经退还冻干，想再拍请点「再拍一张」", 410);
 }
 
 export async function cancelAiRun(userId: string, id: string) {
-  const rows = await (await getDatabase()).query("UPDATE ai_runs SET status='cancelled',cancelled_at=now(),locked_at=NULL WHERE id=$1 AND user_id=$2 AND status='queued' RETURNING id", [id, userId]);
-  if (!rows[0]) throw new AppError("AI_NOT_CANCELLABLE", "任务已开始处理，请在处理结束后再删除照片", 409);
-  return getAiRun(userId, id);
+  return inTransaction(async (database) => {
+    const rows = await database.query("UPDATE ai_runs SET status='cancelled',cancelled_at=now(),locked_at=NULL WHERE id=$1 AND user_id=$2 AND status='queued' RETURNING id,wallet_biz_key", [id, userId]);
+    if (!rows[0]) throw new AppError("AI_NOT_CANCELLABLE", "任务已开始处理，请在处理结束后再删除照片", 409);
+    // 排队中取消：还没调用供应商，全额退还。
+    if (rows[0].wallet_biz_key) await refundSpend(String(rows[0].wallet_biz_key), { title: "取消制作 · 已退还" });
+    return getAiRun(userId, id);
+  });
 }
 
 export async function createVideoRender(userId:string,input:unknown):Promise<VideoRender> {
@@ -520,81 +548,14 @@ export async function updateAddress(userId:string,id:string,input:unknown){const
 export async function deleteAddress(userId:string,id:string){const rows=await (await getDatabase()).query("DELETE FROM user_addresses WHERE id=$1 AND user_id=$2 RETURNING id",[id,userId]);if(!rows[0])throw new AppError("ADDRESS_NOT_FOUND","收货地址不存在",404);return{deleted:true};}
 export async function createPhysicalOrder(userId:string,input:unknown) {
   const data=z.object({workId:z.string().uuid(),sku:z.string().min(1),address:addressSchema.optional(),addressId:z.string().uuid().optional()}).refine(value=>value.address||value.addressId,{message:"请选择或填写收货地址"}).parse(input); const id=crypto.randomUUID(); const database=await getDatabase(); await ensurePhysicalSkus(); const works=await database.query("SELECT id,asset_kind FROM works WHERE id=$1 AND user_id=$2 AND locked=false AND deleted_at IS NULL",[data.workId,userId]);if(!works[0])throw new AppError("WORK_NOT_UNLOCKED","实体商品只能使用已解锁作品",409);const skus=await database.query("SELECT * FROM physical_skus WHERE code=$1 AND status='active' ORDER BY version DESC LIMIT 1",[data.sku]);const sku=skus[0];if(!sku)throw new AppError("PHYSICAL_SKU_UNAVAILABLE","商品规格已下架",409);if(sku.required_asset_kind&&sku.required_asset_kind!==works[0].asset_kind)throw new AppError("PHYSICAL_WORK_INCOMPATIBLE","该作品类型不适用于所选商品",422);let address=data.address;if(data.addressId){const rows=await database.query("SELECT ciphertext FROM user_addresses WHERE id=$1 AND user_id=$2",[data.addressId,userId]);if(!rows[0])throw new AppError("ADDRESS_NOT_FOUND","收货地址不存在",404);address=addressSchema.parse(decryptAddress(String(rows[0].ciphertext)));}if(!address)throw new AppError("ADDRESS_REQUIRED","请填写收货地址",422);
-  /*
-   * 会员实体折扣（改造项 M6）。原实现直接 `Number(sku.amount)`，从不查会员 ——
-   * 套餐里写着「实体 9 折」却一分不减，属承诺未兑付。
-   *
-   * 折在**下单时**算并落进 amount，不在支付时算：`payPhysicalOrder` 读的是
-   * 这一列，两处各算一遍会在会员正好在这期间到期时给出不一致的金额。
-   * 折后价与原价都要保留 —— 只留折后价的话，后台看到一笔 35.91 的订单
-   * 对不上任何 SKU 价目，履约与对账都会卡住。
-   */
+  // 实体商品仍收现金、走普通微信支付；会员九折随会员下线取消（2026-10-08）。
   const listPrice=Number(sku.amount);
-  const discount=await physicalDiscountRate(userId);
-  // 分为最小单位取整：0.9 折的 39.9 是 35.91，浮点直乘会得到 35.910000000000004。
-  const amount=Math.round(listPrice*discount*100)/100;
-  const ciphertext=encryptAddress(address); await database.query("INSERT INTO physical_orders (id,user_id,work_id,sku,address,address_ciphertext,amount,status,created_at) VALUES ($1,$2,$3,$4,$5::jsonb,$6,$7,'pending',$8)",[id,userId,data.workId,data.sku,JSON.stringify(address),ciphertext,amount,new Date()]); return {id,userId,sku:data.sku,amount,listPrice,memberDiscount:discount<1?discount:undefined,status:"pending",address};
+  const amount=Math.round(listPrice*100)/100;
+  const ciphertext=encryptAddress(address); await database.query("INSERT INTO physical_orders (id,user_id,work_id,sku,address,address_ciphertext,amount,status,created_at) VALUES ($1,$2,$3,$4,$5::jsonb,$6,$7,'pending',$8)",[id,userId,data.workId,data.sku,JSON.stringify(address),ciphertext,amount,new Date()]); return {id,userId,sku:data.sku,amount,listPrice,status:"pending",address};
 }
 
-/**
- * 在售套餐清单（改造项 M3）。**两端的套餐名、价格、权益一律从这里读。**
- *
- * 原先三处各写一份（迁移 SQL、Web 按钮文案、小程序 PLANS 数组），
- * 迁移 0020 改了价而两端没改，于是界面承诺 ¥199 实收 ¥128、
- * 并且在卖已置 inactive 的月会员（点了直接 409）。
- *
- * 只输出 `status='active'` 且**同 code 取最高 version** ——
- * 与 `createMembership` 的选版逻辑必须一致，否则会出现
- * 「列表展示 v2 的价、下单扣 v3 的钱」。
- */
-export async function listMembershipPlans() {
-  const database = await getDatabase();
-  const rows = await database.query(
-    "SELECT DISTINCT ON (code) code,label,amount,period,entitlements,version FROM membership_plan_versions WHERE status='active' ORDER BY code,version DESC",
-  );
-  return rows.map((row) => {
-    const entitlements = (typeof row.entitlements === "object" && row.entitlements ? row.entitlements : {}) as MembershipEntitlementMap;
-    const amount = Number(row.amount);
-    const value = singleBuyValue(entitlements);
-    return {
-      plan: String(row.code),
-      label: String(row.label),
-      amount,
-      period: String(row.period),
-      version: Number(row.version),
-      entitlements,
-      benefits: describeEntitlements(entitlements),
-      /** 单买这些权益的合计价，按「只做一件交付物」的保守口径。折扣类不计入 */
-      singleBuyValue: value,
-      /*
-       * 比单买省多少。**只在真的为正时才有值** —— 负数说明按「只做一件」
-       * 算下来定价高于权益价值，那时宣称「省 ¥N」是假的。
-       * 这种情况给 breakEven（做几件回本）而不是编一个省额。
-       */
-      saving: value > amount ? Math.round((value - amount) * 100) / 100 : 0,
-      /** 做几件分档交付物回本。用户能自己算这道题，也就能自己判断值不值 */
-      breakEven: breakEvenDeliverables(entitlements, amount),
-    };
-  });
-}
-
-export async function createMembership(userId: string, input: unknown): Promise<Membership> {
-  const data = z.object({ plan: z.enum(["monthly", "yearly"]) }).parse(input);
-  const database = await getDatabase();
-  const plans = await database.query("SELECT * FROM membership_plan_versions WHERE code=$1 AND status='active' ORDER BY version DESC LIMIT 1", [data.plan]);
-  const plan = plans[0];
-  if (!plan) throw new AppError("MEMBERSHIP_PLAN_UNAVAILABLE", "会员套餐暂不可售", 409);
-  const id = crypto.randomUUID();
-  const orderId = crypto.randomUUID();
-  const entitlements = (plan.entitlements || {}) as Record<string, unknown>;
-  const expiresAt = new Date(Date.now() + (plan.period === "year" ? 365 : 30) * 86400000);
-  const resetAt = new Date(Date.now() + 30 * 86400000);
-  await database.query("INSERT INTO memberships (id,user_id,plan,status,quota,expires_at,quota_reset_at,entitlements,order_id,created_at) VALUES ($1,$2,$3,'pending',0,$4,$5,$6::jsonb,$7,$8)", [id, userId, data.plan, expiresAt, resetAt, JSON.stringify(entitlements), orderId, new Date()]);
-  await database.query("INSERT INTO growth_orders (id,user_id,kind,resource_id,sku,amount,status,entitlement_snapshot,created_at,updated_at) VALUES ($1,$2,'membership',$3,$4,$5,'pending',$6::jsonb,$7,$7)", [orderId, userId, id, `membership-${data.plan}-v${plan.version}`, plan.amount, JSON.stringify({ ...entitlements, planVersion: plan.version }), new Date()]);
-  return { id, userId, plan: data.plan, status: "pending", quota: 0, used: 0, expiresAt: expiresAt.toISOString(), orderId };
-}
-
-export async function createAnnualReport(userId:string,year:number) {
+/** 排版并落库年度报告。付费入口见 createPaidAnnualReport；后台重试沿用原报告的解锁状态。 */
+export async function createAnnualReport(userId:string,year:number,options:{unlocked?:boolean}={}) {
   const database=await getDatabase();const id=crypto.randomUUID();
   const templateRows=await database.query("SELECT code,version,config FROM annual_report_templates WHERE status='active' ORDER BY is_default DESC,created_at DESC LIMIT 1");
   const template=templateRows[0];
@@ -629,7 +590,7 @@ export async function createAnnualReport(userId:string,year:number) {
   const previewKey=`private/${userId}/reports/${year}-${id}-preview.png`;
   await objectStorage.put(previewKey, await rasterizeReportPreview(svg), "image/png");
 
-  const rows=await database.query("INSERT INTO annual_reports (id,user_id,year,status,output_key,preview_key,data,template_version,locked,created_at) VALUES ($1,$2,$3,'ready',$4,$5,$6::jsonb,$7,true,$8) ON CONFLICT (user_id,year) DO UPDATE SET status='ready',output_key=$4,preview_key=$5,data=$6::jsonb,template_version=$7 RETURNING *",[id,userId,year,key,previewKey,JSON.stringify({...data,companionDays:aggregate.companionDays,petName:aggregate.petName,photoCount:photos.length,templateConfig:template.config}),templateVersion,new Date()]);const row=rows[0];return{id:String(row.id),userId:String(row.user_id),year:Number(row.year),status:String(row.status),outputKey:String(row.output_key),createdAt:new Date(String(row.created_at)).toISOString()};
+  const rows=await database.query("INSERT INTO annual_reports (id,user_id,year,status,output_key,preview_key,data,template_version,locked,created_at) VALUES ($1,$2,$3,'ready',$4,$5,$6::jsonb,$7,$9,$8) ON CONFLICT (user_id,year) DO UPDATE SET status='ready',output_key=$4,preview_key=$5,data=$6::jsonb,template_version=$7,locked=CASE WHEN $9 THEN false ELSE annual_reports.locked END RETURNING *",[id,userId,year,key,previewKey,JSON.stringify({...data,companionDays:aggregate.companionDays,petName:aggregate.petName,photoCount:photos.length,templateConfig:template.config}),templateVersion,new Date(),!options.unlocked]);const row=rows[0];return{id:String(row.id),userId:String(row.user_id),year:Number(row.year),status:String(row.status),outputKey:String(row.output_key),createdAt:new Date(String(row.created_at)).toISOString()};
 }
 
 export async function listSubscriptions(userId:string){return (await getDatabase()).query("SELECT * FROM message_subscriptions WHERE user_id=$1 ORDER BY created_at DESC",[userId]);}
@@ -696,114 +657,45 @@ export async function updatePhysicalOrderStatus(
   if (actorId) await recordAdminAudit({ actorId, action: "physical_order_transition", targetType: "physical_order", targetId: id, reason: note || "后台履约", before: current, after: rows[0] });
   return rows[0];
 }
-/**
- * 我的会员。**权益文案与按次余量随行下发**（M3）：
- * 端上不再自己拼「本期额度 used/quota」这类话术 —— 新权益不卖次数，
- * 那个进度条在 ¥69 套餐下永远是 0/0，看起来像坏了。
- *
- * 按次余量对每条 active 记录逐条算。会员记录数量级是「每人 1–2 条」，
- * 不值得为此做批量查询。
- */
-export async function listMemberships(userId:string){
-  const database = await getDatabase();
-  const rows = await database.query("SELECT * FROM memberships WHERE user_id=$1 ORDER BY created_at DESC",[userId]);
-  /*
-   * 套餐显示名也从库里取，端上不再留 `{monthly:"月会员"}` 这种翻译表 ——
-   * 那张表与 membership_plan_versions.label 是两份副本，改了 label 就走散。
-   * memberships 只存 code 不存 version，所以按 code 取最新一版的 label。
-   */
-  const labelRows = await database.query("SELECT DISTINCT ON (code) code,label FROM membership_plan_versions ORDER BY code,version DESC");
-  const labelByCode = new Map(labelRows.map((row) => [String(row.code), String(row.label)]));
-  return Promise.all(rows.map(async (row) => {
-    const entitlements = (typeof row.entitlements === "object" && row.entitlements ? row.entitlements : {}) as MembershipEntitlementMap;
-    const active = String(row.status) === "active" && new Date(String(row.expires_at)).getTime() > Date.now();
-    return {
-      ...row,
-      planLabel: labelByCode.get(String(row.plan)) || String(row.plan),
-      benefits: describeEntitlements(entitlements),
-      /*
-       * 年报余量只对生效中的会员算 —— 过期会员的余量是 0，
-       * 但对它调 entitlementBalance 会白跑一次查询（内部按 active 过滤后必然返回 0）。
-       */
-      annualReportRemaining: active ? await entitlementBalance(userId, "annualReport") : 0,
-    };
-  }));
-}
-export async function resetMembershipQuotas(now = new Date()) { const rows = await (await getDatabase()).query("UPDATE memberships SET used=0,quota_reset_at=$1 + interval '30 days' WHERE status='active' AND expires_at>$1 AND (quota_reset_at IS NULL OR quota_reset_at<= $1) RETURNING id,user_id", [now]); return rows.length; }
-export async function recordMembershipRenewal() {
-  throw new AppError("MEMBERSHIP_RENEWAL_REQUIRES_ORDER", "续费需要重新下单并完成支付", 409);
-}
-export async function expirePastDueMemberships(now=new Date()){const rows=await (await getDatabase()).query("UPDATE memberships SET status='expired',quota=0,used=0,status_updated_at=$1 WHERE status='past_due' AND status_updated_at<$1::timestamptz-interval '3 days' RETURNING id",[now]);return rows.length;}
-export async function refundMembership(userId: string, id: string) {
-  const rows = await (await getDatabase()).query("SELECT order_id FROM memberships WHERE id=$1 AND user_id=$2", [id,userId]);
-  if (!rows[0]?.order_id) throw new AppError("MEMBERSHIP_NOT_REFUNDABLE", "会员记录不可退款", 409);
-  return refundOrderPayment(userId, "growth", String(rows[0].order_id));
-}
 export async function listAnnualReports(userId:string){return (await getDatabase()).query("SELECT * FROM annual_reports WHERE user_id=$1 ORDER BY year DESC",[userId]);}
-export async function unlockAnnualReport(userId:string,id:string){return createAnnualReportUnlockOrder(userId,id);}
+/** 冻干上线前生成的锁定报告：按现价用冻干解锁。 */
+export async function unlockAnnualReport(userId:string,id:string){
+  return inTransaction(async (database) => {
+    const rows = await database.query("SELECT * FROM annual_reports WHERE id=$1 AND user_id=$2 FOR UPDATE", [id, userId]);
+    if (!rows[0]) throw new AppError("REPORT_NOT_FOUND", "年度报告不存在", 404);
+    if (!rows[0].locked) return { unlocked: true };
+    await spend(userId, { units: ANNUAL_REPORT_COST, bizKey: `spend:annual_report_unlock:${id}`, title: `${String(rows[0].year)} 年度报告`, refType: "annual_report", refId: id });
+    await database.query("UPDATE annual_reports SET locked=false WHERE id=$1 AND user_id=$2", [id, userId]);
+    return { unlocked: true, cost: ANNUAL_REPORT_COST };
+  });
+}
 export async function shareAnnualReport(userId:string,id:string){const current=await(await getDatabase()).query("SELECT locked FROM annual_reports WHERE id=$1 AND user_id=$2",[id,userId]);if(!current[0])throw new AppError("REPORT_NOT_FOUND","年度报告不存在",404);if(current[0].locked)throw new AppError("REPORT_LOCKED","请先解锁年度报告",409);const token=crypto.randomUUID().replaceAll("-","");await (await getDatabase()).query("UPDATE annual_reports SET share_token=$3,revoked_at=NULL WHERE id=$1 AND user_id=$2",[id,userId,token]);return{token};}
 export async function revokeAnnualReport(userId:string,id:string){const rows=await (await getDatabase()).query("UPDATE annual_reports SET share_token=NULL,revoked_at=now() WHERE id=$1 AND user_id=$2 RETURNING *",[id,userId]);if(!rows[0])throw new AppError("REPORT_NOT_FOUND","年度报告不存在",404);return rows[0];}
 export async function payGrowthOrder(userId: string, id: string) {
   return confirmOrderPayment(userId, "growth", id, true);
 }
 export async function listGrowthOrders(userId: string) { return (await getDatabase()).query("SELECT * FROM growth_orders WHERE user_id=$1 ORDER BY created_at DESC", [userId]); }
-/** 年度报告高清版单买价。会员权益命中时不走这个价（见下）。 */
-export const ANNUAL_REPORT_UNLOCK_PRICE = 19.9;
-
 /**
- * 单买一次健康档案导出（改造项 L1 的非会员路径）。
- *
- * 会员的 `healthExportUnlimited` 无限导出，非会员按次买 ¥29.9。
- * 付款后发一张凭据（`entitlement_ledger` 的 granted 行），
- * 导出时核销 —— 不直接生成文件：**先付钱再拿东西**这条链路上，
- * 付款与产出之间必须有一个可追溯的凭据，否则付了款而生成失败就无处申诉。
- *
- * 已是会员时直接拒掉，不让他买一个已经拥有的东西。
+ * 年度报告（2026-10-08 起）：生成时先扣 18 颗冻干，产物直接是高清版（没有预览、没有解锁）。
+ * 同一年重复生成按「扣一次生成一次」再扣一次，更新同一份报告。
  */
-export async function createHealthArchiveOrder(userId: string) {
-  if (await hasHealthExport(userId)) throw new AppError("HEALTH_EXPORT_ALREADY_INCLUDED", "你的会员权益已包含健康档案导出", 409);
-  const database = await getDatabase();
-  const existing = await database.query("SELECT * FROM growth_orders WHERE user_id=$1 AND kind='health_archive' AND status='pending' ORDER BY created_at DESC LIMIT 1", [userId]);
-  if (existing[0]) return existing[0];
-  const orderId = crypto.randomUUID();
-  await database.query(
-    "INSERT INTO growth_orders (id,user_id,kind,resource_id,sku,amount,status,entitlement_snapshot,created_at,updated_at) VALUES ($1,$2,'health_archive',NULL,'health-archive-pdf',$3,'pending','{}',$4,$4)",
-    [orderId, userId, HEALTH_ARCHIVE_PRICE, new Date()],
-  );
-  return { id: orderId, status: "pending", amount: HEALTH_ARCHIVE_PRICE };
+export async function createPaidAnnualReport(userId: string, year: number, idempotencyKey?: string) {
+  return inTransaction(async (database) => {
+    await database.query("SELECT id FROM users WHERE id=$1 FOR UPDATE", [userId]);
+    await assertGenerationCircuit();
+    const bizKey = `spend:annual_report:${userId}:${year}:${idempotencyKey || crypto.randomUUID()}`;
+    const charged = await spend(userId, { units: ANNUAL_REPORT_COST, bizKey, title: `${year} 年度报告`, refType: "annual_report", refId: String(year) });
+    // 同一个幂等键重放：不重复生成，直接返回这一年的报告。
+    if (charged.replayed) {
+      const existing = await database.query("SELECT * FROM annual_reports WHERE user_id=$1 AND year=$2", [userId, year]);
+      if (existing[0]) return { id: String(existing[0].id), userId, year, status: String(existing[0].status), outputKey: String(existing[0].output_key), createdAt: new Date(String(existing[0].created_at)).toISOString(), cost: ANNUAL_REPORT_COST };
+    }
+    // 排版在同一事务里完成：失败时扣费随事务一起回滚，冻干不会白扣。
+    const report = await createAnnualReport(userId, year, { unlocked: true });
+    return { ...report, cost: ANNUAL_REPORT_COST };
+  });
 }
 
-/**
- * 年度报告解锁（改造项 M4）。
- *
- * **先查会员的 `annualReport` 权益余量**：套餐里写着「年度报告 ×1」，
- * 命中就直接解锁并记账，不建订单 —— 让已付 ¥128/¥69 的会员再付 ¥19.9
- * 是重复收费，也是这条改造存在的原因。
- *
- * 顺序上「查权益」必须在「查待付订单」之前吗？不必，但**核销必须在建单之前**：
- * 反过来会先给用户建一张订单再告诉他不用付，界面上会留一条永远 pending 的单。
- */
-export async function createAnnualReportUnlockOrder(userId: string, id: string) {
-  const database = await getDatabase();
-  const rows = await database.query("SELECT * FROM annual_reports WHERE id=$1 AND user_id=$2", [id, userId]);
-  const report = rows[0];
-  if (!report) throw new AppError("REPORT_NOT_FOUND", "年度报告不存在", 404);
-  if (!report.locked) return { unlocked: true };
-  const existing = await database.query("SELECT * FROM growth_orders WHERE resource_id=$1 AND kind='annual_report' AND status='pending'", [id]);
-  if (existing[0]) return existing[0];
-  /*
-   * 会员权益兑付。核销成功才解锁 —— claimEntitlement 内部已判余量，
-   * 返回 false 时一律回落到付费路径，不能「先解锁再记账」。
-   */
-  if (await claimEntitlement(userId, "annualReport", `年度报告 ${report.year} 高清版解锁`, id)) {
-    await database.query("UPDATE annual_reports SET locked=false WHERE id=$1 AND user_id=$2", [id, userId]);
-    return { unlocked: true, viaEntitlement: true };
-  }
-  const orderId = crypto.randomUUID();
-  await database.query("INSERT INTO growth_orders (id,user_id,kind,resource_id,sku,amount,status,entitlement_snapshot,created_at,updated_at) VALUES ($1,$2,'annual_report',$3,'annual-report-hd',$5,'pending','{}',$4,$4)", [orderId, userId, id, new Date(), ANNUAL_REPORT_UNLOCK_PRICE]);
-  await database.query("UPDATE annual_reports SET order_id=$2 WHERE id=$1 AND user_id=$3", [id, orderId, userId]);
-  return { id: orderId, status: "pending", amount: ANNUAL_REPORT_UNLOCK_PRICE };
-}
 type ExperimentFilters = { pluginId?: string; status?: string; channel?: string; from?: string; to?: string };
 
 function experimentMetrics(row: Record<string, unknown>): Record<string, unknown> & {
@@ -976,17 +868,14 @@ export async function createAiRun(userId: string, input: unknown) {
 }
 
 export async function retryAiRun(userId: string, id: string) {
-  return inTransaction(async () => {
-    const run = await getAiRun(userId, id);
-    await lockPhotoInputs(userId, run.petId, run.photoIds);
-    return retryAiRunOperation(userId, id);
-  });
+  await getAiRun(userId, id);
+  return retryAiRunOperation();
 }
 
-export async function rerollAiRun(userId: string, id: string, reason: ImageTemplateRerollReason = "composition") {
+export async function rerollAiRun(userId: string, id: string, reason: ImageTemplateRerollReason = "composition", idempotencyKey?: string) {
   return inTransaction(async () => {
     const run = await getAiRun(userId, id);
     await lockPhotoInputs(userId, run.petId, run.photoIds);
-    return rerollAiRunOperation(userId, id, reason);
+    return rerollAiRunOperation(userId, id, reason, idempotencyKey);
   });
 }

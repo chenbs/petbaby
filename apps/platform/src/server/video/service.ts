@@ -8,6 +8,10 @@ import { AppError } from "@/server/errors";
 import { getRuntimePlugin } from "@/plugins/runtime";
 import { recordAdminAudit } from "@/server/admin/audit";
 import { DEFAULT_VIDEO_DURATION, MAX_PHOTOS, maxPhotosFor, normalizeDuration } from "@/domain/video-duration";
+import { resolveDeliverableCost } from "@/domain/dongan-pricing";
+import { measureAccumulation } from "@/server/accumulation";
+import { refundSpend, spend } from "@/server/wallet/service";
+import { assertGenerationCircuit } from "@/server/risk/controls";
 
 const projectSchema = z.object({
   petId: z.string().uuid(),
@@ -117,8 +121,19 @@ async function renderVideoProjectOperation(userId: string, id: string) {
   // 渲染前再校验一次：项目可能是在时长选项上线前建的，或照片被别处删到不足。
   const durationSeconds = normalizeDuration(project.duration_seconds);
   assertDurationFits(durationSeconds, photoKeys.length);
-  const renderId = crypto.randomUUID(); const config = { projectId: id, petId: String(project.pet_id), photoIds: jsonIdArray(project.photo_ids), photos: photoKeys, cover: keyMap.get(String(project.cover_photo_id)) || photoKeys[0], captions: project.captions, bgm: project.bgm, durationSeconds, templateCode: project.template_code, canvas: project.canvas, snapshotVersion: 1 };
-  await database.query("INSERT INTO video_renders (id,user_id,plugin_id,project_id,status,progress,config,available_at,created_at) VALUES ($1,$2,'pl-19',$3,'queued',5,$4::jsonb,now(),$5)", [renderId, userId, id, JSON.stringify(config), new Date()]);
+  /*
+   * 先扣冻干，再渲染（36 号文第 2 章）：按积累量分档，纪念短片固定 26 颗。
+   * 成片即正式版，没有预览；再渲染一次就是再扣一次。
+   */
+  await assertGenerationCircuit();
+  const petRows = await database.query("SELECT life_stage FROM pets WHERE id=$1 AND user_id=$2", [project.pet_id, userId]);
+  const memorial = String(petRows[0]?.life_stage || "") === "memorial" || Boolean((project.draft_snapshot as { memorialId?: string } | null)?.memorialId);
+  const accumulation = memorial ? undefined : await measureAccumulation(userId, String(project.pet_id));
+  const pricing = resolveDeliverableCost({ pluginId: "pl-19", accumulation, memorial });
+  const renderId = crypto.randomUUID(); const config = { projectId: id, petId: String(project.pet_id), photoIds: jsonIdArray(project.photo_ids), photos: photoKeys, cover: keyMap.get(String(project.cover_photo_id)) || photoKeys[0], captions: project.captions, bgm: project.bgm, durationSeconds, templateCode: project.template_code, canvas: project.canvas, snapshotVersion: 1, dongan: { cost: pricing.cost, tier: pricing.tier } };
+  const walletBizKey = pricing.cost > 0 ? `spend:video:${renderId}` : null;
+  if (walletBizKey) await spend(userId, { units: pricing.cost, bizKey: walletBizKey, title: memorial ? "纪念短片" : `记忆短片 · ${String(project.title || "")}`.slice(0, 60), refType: "video_render", refId: renderId });
+  await database.query("INSERT INTO video_renders (id,user_id,plugin_id,project_id,status,progress,config,wallet_biz_key,available_at,created_at) VALUES ($1,$2,'pl-19',$3,'queued',5,$4::jsonb,$6,now(),$5)", [renderId, userId, id, JSON.stringify(config), new Date(), walletBizKey]);
   await database.query("UPDATE video_projects SET status='queued',current_render_id=$3,updated_at=now() WHERE id=$1 AND user_id=$2", [id, userId, renderId]);
   return getVideoRender(userId, renderId);
 }
@@ -129,10 +144,14 @@ export async function getVideoRender(userId: string, id: string) {
 }
 
 export async function cancelVideoRender(userId: string, id: string) {
-  const rows = await (await getDatabase()).query("UPDATE video_renders SET status='cancelled',cancelled_at=now(),locked_at=NULL WHERE id=$1 AND user_id=$2 AND status IN ('queued','preview_ready') RETURNING *", [id, userId]);
-  if (!rows[0]) throw new AppError("VIDEO_RENDER_NOT_CANCELLABLE", "视频已开始处理，请在处理结束后再删除照片", 409);
-  if (rows[0].project_id) await (await getDatabase()).query("UPDATE video_projects SET status='draft',updated_at=now() WHERE id=$1 AND user_id=$2", [rows[0].project_id, userId]);
-  return rows[0];
+  return inTransaction(async (database) => {
+    const rows = await database.query("UPDATE video_renders SET status='cancelled',cancelled_at=now(),locked_at=NULL WHERE id=$1 AND user_id=$2 AND status='queued' RETURNING *", [id, userId]);
+    if (!rows[0]) throw new AppError("VIDEO_RENDER_NOT_CANCELLABLE", "视频已开始处理，请在处理结束后再删除照片", 409);
+    if (rows[0].project_id) await database.query("UPDATE video_projects SET status='draft',updated_at=now() WHERE id=$1 AND user_id=$2", [rows[0].project_id, userId]);
+    // 排队中取消：还没渲染，全额退还冻干。
+    if (rows[0].wallet_biz_key) await refundSpend(String(rows[0].wallet_biz_key), { title: "取消制作 · 已退还" });
+    return rows[0];
+  });
 }
 
 export async function retryVideoRender(userId: string, id: string) {

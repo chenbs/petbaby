@@ -9,6 +9,7 @@
     "t-popup": "../../components/popup/index",
     "t-action-sheet": "../../components/action-sheet/index",
     "t-skeleton": "../../components/skeleton/index",
-    "t-photo-grid": "../../components/photo-grid/index"
+    "t-photo-grid": "../../components/photo-grid/index",
+    "t-wallet-sheet": "../../components/wallet-sheet/index"
   }
 }

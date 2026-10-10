@@ -1,0 +1,103 @@
+{
+  "steps": [
+    {
+      "name": "上传：在小程序里真实上传包内样片",
+      "ok": true,
+      "detail": {
+        "status": 201,
+        "body": "{\"data\":{\"id\":\"2090822d-b169-4826-befb-e3288d1659a2\",\"userId\":\"d30bc65d-be3d-4b4c-8f6b-47ce8904e8e6\",\"petId\":\"25688e2c-9b74-4327-b0c9-1054056ef13a\",\"filename\":\"upload-test.jpg\",\"mimeType\":\"image/jpeg\",\"size\":8220,\"storageKey\":\"private/d30bc65d-be3d-4b4c-8f6b-47ce8904e8e6/2e810420-a1ea-41b9-97e7-46a55d81b897.jpg\",\"url\":\"/api/media/private%2Fd30bc65d-be3d-4b4c-8f6b-47ce8904e8e6%2F2e810420-a1ea-41b9-"
+      },
+      "newErrors": []
+    },
+    {
+      "name": "上传：确认照片入库并可列出",
+      "ok": true,
+      "detail": {
+        "status": 200,
+        "张数": 2,
+        "首张id": "23da93a2-296a-4c5c-bbbb-c247d98e2aba"
+      },
+      "newErrors": []
+    },
+    {
+      "name": "照片页：渲染刚上传的照片",
+      "ok": true,
+      "detail": {
+        "photos": 2,
+        "total": 2,
+        "error": "",
+        "petId": "25688e2c-9b74-4327-b0c9-1054056ef13a"
+      },
+      "newErrors": []
+    },
+    {
+      "name": "生成：用免费玩法建任务（含 photoIds）",
+      "ok": true,
+      "detail": {
+        "status": 202,
+        "task": "{\"data\":{\"id\":\"c0779d34-9904-4c9c-86d5-030c81fbf528\",\"userId\":\"d30bc65d-be3d-4b4c-8f6b-47ce8904e8e6\",\"pluginId\":\"pet-id-card\",\"petId\":\"25688e2c-9b74-4327-b0c9-1054056ef13a\",\"photoIds\":[\"23da93a2-296a-4c5c-bbbb-c247d98e2aba\"],\"idempotencyKey\":\"mp-functest-1791519320254\",\"status\":\"queued\",\"progress\":8"
+      },
+      "newErrors": []
+    },
+    {
+      "name": "生成：等任务出结果",
+      "ok": true,
+      "detail": {
+        "status": "succeeded",
+        "attempt": 1,
+        "error": null
+      },
+      "newErrors": []
+    },
+    {
+      "name": "作品柜：看生成结果是否归档",
+      "ok": true,
+      "detail": {
+        "作品数": 1,
+        "首件": {
+          "id": "ce62072a-2bb6-4fb2-b0f6-af3c83cd6f37",
+          "title": "测试狗子居民身份证",
+          "pluginId": "pet-id-card"
+        }
+      },
+      "newErrors": []
+    },
+    {
+      "name": "作品柜：真实点击打开作品卡片",
+      "ok": true,
+      "detail": {
+        "没找到作品卡": true,
+        "作品数": 0,
+        "文案": [
+          {
+            "id": "all",
+            "label": "全部"
+          },
+          {
+            "id": "progress",
+            "label": "制作记录"
+          },
+          {
+            "id": "locked",
+            "label": "待保存"
+          },
+          {
+            "id": "art",
+            "label": "写真"
+          },
+          {
+            "id": "video",
+            "label": "短片"
+          },
+          {
+            "id": "fun",
+            "label": "趣测"
+          }
+        ]
+      },
+      "newErrors": []
+    }
+  ],
+  "failed": [],
+  "errors": []
+}

@@ -1,0 +1,35 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+
+<view class="{{skinClass}} page page-flat layout-workbench">
+  <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
+  <t-skeleton wx:if="{{loading && !wallet}}" type="list" count="3" class="block-gap"></t-skeleton>
+
+  <block wx:if="{{wallet}}">
+    <view class="wl-card">
+      <image class="wl-icon" src="/assets/icons/{{themeId}}/fd-coin.png" mode="aspectFit" />
+      <view class="wl-main">
+        <text class="eyebrow">我的冻干</text>
+        <text class="wl-n">{{wallet.balance}}<text class="wl-unit">颗</text></text>
+        <text wx:if="{{expiryText}}" class="small">{{expiryText}}</text>
+        <text wx:if="{{wallet.frozen}}" class="small wl-warn">冻干暂时不能使用，客服会联系你核对</text>
+      </view>
+      <t-button type="primary" size="mini" anim="{{animType}}" bindtap="openTopup">充值</t-button>
+    </view>
+    <text class="small wl-tip">冻干是这里的零食币，做写真、画册、短片都用它。制作失败会自动全额退回。</text>
+
+    <view class="section-title wl-section">收支明细</view>
+    <view wx:if="{{!items.length}}" class="small wl-empty">还没有记录</view>
+    <view wx:else class="wl-ledger">
+      <view wx:for="{{items}}" wx:key="id" class="wl-row">
+        <view class="wl-row-main">
+          <text class="wl-row-title">{{item.title}}</text>
+          <text class="small">{{item.timeText}}</text>
+        </view>
+        <text class="wl-delta {{item.plus ? 'wl-plus' : ''}}">{{item.deltaText}}</text>
+      </view>
+      <text wx:if="{{loadingMore}}" class="small wl-empty">加载中…</text>
+    </view>
+  </block>
+</view>
+
+<t-wallet-sheet id="wallet-sheet" visible="{{walletSheet.visible}}" required="{{walletSheet.required}}" balance="{{walletSheet.balance}}" shortfall="{{walletSheet.shortfall}}" bind:close="onWalletSheetClose" bind:paid="onWalletPaid"></t-wallet-sheet>

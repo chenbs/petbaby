@@ -11,6 +11,7 @@ function page(name, request) {
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, "../pages", name, name + ".js"), "utf8"), {
     require(module) {
       if (module.endsWith("page-mixin")) return { themedPage: (a, b) => { definition = b || a; } };
+      if (module.endsWith("/wallet")) return require("./wallet-test-harness").loadWallet({ request });
       if (module.endsWith("/api")) return { request };
       if (module.endsWith("photo-files")) return { displayMediaTree: async (data) => data };
       if (module.endsWith("record-events")) return { recordSession: () => ({ viewed: (...args) => events.push(args), opened() {}, deliverable() {} }) };
@@ -44,13 +45,13 @@ test("A06/A14：年度入口先确认素材与实际价，用户再确认才以B
   const calls = [];
   const { instance } = page("timeline", async (url, options) => {
     calls.push([url, options]);
-    if (url.includes("/pricing")) return { amount: 19.9, label: "短片" };
+    if (url.includes("/pricing")) return { cost: 15, label: "短片" };
     if (!options) return { petId: "B", petName: "乙", year: 2025, durationSeconds: 20, photos: [{ id: "b1", date: "2025-01-01" }] };
     return { petName: "乙", shots: 1 };
   });
   instance.onLoad({ petId: "B" }); instance._view = 1; instance.setData({ filmYear: 2025 });
   await instance.createFilm(); assert.equal(calls.filter((call) => call[1]).length, 0);
-  assert.equal(instance.data.filmPricing.amount, 19.9);
+  assert.equal(instance.data.filmPricing.cost, 15);
   await instance.confirmFilm();
   const body = calls.find((call) => call[1])[1].data;
   assert.equal(body.petId, "B"); assert.deepEqual(Array.from(body.photoIds), ["b1"]);

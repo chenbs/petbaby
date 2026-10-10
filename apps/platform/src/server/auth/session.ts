@@ -6,6 +6,7 @@ import { cookies } from "next/headers";
 
 import { AppError } from "@/server/errors";
 import { getDatabase } from "@/server/db/client";
+import { isTestHarness } from "@/server/runtime-mode";
 
 const COOKIE_NAME = "petbaby_session";
 const DEMO_USER_ID = "00000000-0000-4000-8000-000000000001";
@@ -13,7 +14,8 @@ const DEMO_USER_ID = "00000000-0000-4000-8000-000000000001";
 function sessionSecret() {
   const configured = process.env.SESSION_SECRET;
   if (configured && configured.length >= 32) return configured;
-  if (process.env.NODE_ENV === "production") throw new Error("SESSION_SECRET must be at least 32 characters");
+  // 本地开发与生产同口径：缺密钥直接失败，只有自动化测试夹具用固定密钥。
+  if (!isTestHarness()) throw new Error("SESSION_SECRET must be at least 32 characters");
   return "local-development-secret-change-before-production";
 }
 
@@ -63,7 +65,8 @@ export async function getOptionalUserId(request?: Request) {
     const rows = await database.query("SELECT id FROM users WHERE id=$1 AND deleted_at IS NULL AND admin_suspended_at IS NULL", [session.userId]);
     if (rows[0]) return session.userId;
   }
-  if (process.env.NODE_ENV !== "production") return ensureDemoUser();
+  // demo 用户只留给自动化测试夹具；本地开发与生产一样必须登录（2026-10-09）。
+  if (isTestHarness()) return ensureDemoUser();
   return null;
 }
 

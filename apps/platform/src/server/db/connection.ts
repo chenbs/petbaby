@@ -59,7 +59,13 @@ function pgliteDatabase(client: PGlite | Transaction): Database {
 }
 
 export async function createDatabase(): Promise<Database> {
-  const url = process.env.DATABASE_URL || "file://.data/petbaby";
+  /*
+   * 不再默认回落到 PGlite 文件库（2026-10-09）：文件库只能被一个进程打开，Worker 连不上，
+   * 本地就会出现「任务入队但永远没人处理」。本地用 `node scripts/local-db.mjs start` 起 PostgreSQL；
+   * 自动化测试显式传 `memory://`。
+   */
+  const url = process.env.DATABASE_URL;
+  if (!url) throw new Error("DATABASE_URL is required; run `node scripts/local-db.mjs start` for a local PostgreSQL");
   if (url.startsWith("postgres://") || url.startsWith("postgresql://")) {
     return postgresDatabase(postgres(url, {
       max: 10, idle_timeout: 20, connect_timeout: 10,

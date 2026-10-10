@@ -1,0 +1,13 @@
+{
+  "id": "corgi-sploot",
+  "title": "毛线团缠住",
+  "samplePet": "blackcat",
+  "prompt": "Edit Image 1, a finished professional pet studio photograph. Keep it exactly as it is: the same pet with the same identity, pose, expression and fur, the same seamless backdrop colour, the same main prop, light direction, camera angle, framing and colour grading. Add only these new set decorations, placed naturally on the floor or at the sides and behind the pet so they never cover its face or body: a tipped-over wicker knitting basket spilling two more yarn balls in cream and mustard onto the floor. The new pieces must belong to the same theme as the existing props, sit at a believable scale in the same light with soft contact shadows, and leave clear empty backdrop around the pet: tidy, airy and uncluttered, not crowded. Avoid: changing or moving the pet, a different backdrop colour, extra animals, people or hands, more decorations than listed, clutter, text, letters, numbers, logos or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/scenes/scene-corgi-sploot-v13.jpg",
+  "referenceSha256": "e6b833ccac6718027a30ce7f7dbbc7d57acde4cc484815aa1bf1f4a9113d02b6",
+  "output": "tools/imagegen/out/scenes/scene-corgi-sploot-v14.jpg",
+  "sha256": "1a1fb0355773eefa88e6128cdbea80bd6b3510df9738b25275f29413d06b1657",
+  "review": "pending-visual-review"
+}

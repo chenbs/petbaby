@@ -15,7 +15,7 @@ const { manifest, imageEntries } = require("../../services/sample-assets");
  */
 const TABS = [
   { id: "all", label: "全部" },
-  { id: "progress", label: "进行中" },
+  { id: "progress", label: "制作记录" },
   { id: "locked", label: "待保存" },
   { id: "art", label: "写真" },
   { id: "video", label: "短片" },
@@ -86,25 +86,25 @@ themedPage({
         (result[1] || []).filter((task) => RUNNING.concat("failed").indexOf(task.status) >= 0).map((task) => ({
           id: "gen-" + task.id, kind: "generation", targetId: task.id, pluginId: task.pluginId, petId: task.petId, status: task.status,
           title: this.pluginNames[task.pluginId] || "作品", thumb: pluginCover(task.pluginId),
-          hint: task.status === "failed" ? "免费次数已返还，点这里重试" : "大约还要 " + (task.estimatedSeconds || 15) + " 秒",
+          hint: task.status === "failed" ? "任务未完成，已退还冻干或免费玩法次数" : "大约还要 " + (task.estimatedSeconds || 15) + " 秒",
           percent: task.progress || 10
         })),
         (result[4] || []).map((run) => ({
           id: "run-" + run.id, kind: "run", targetId: run.id, pluginId: run.pluginId, petId: run.petId, status: run.status,
           title: run.title, thumb: templateByTitle[run.title] || pluginCover("pl-10"),
-          hint: run.status === "succeeded" ? (run.candidateCount > 1 ? run.candidateCount + " 张已出，去挑一张" : "已经拍好，去看看") : run.status === "failed" ? "没有完成，点这里重试" : "离开也会继续做",
+          hint: run.status === "succeeded" ? (run.candidateCount > 1 ? run.candidateCount + " 张已出，去挑一张" : "已经拍好，去看看") : run.status === "failed" ? "任务未完成，已退还冻干" : "离开也会继续做",
           percent: run.status === "succeeded" ? 100 : run.status === "processing" ? 62 : 15
         })),
         (result[5] || []).filter((batch) => batch.status !== "cancelled" && batch.completedCount < batch.totalCount).map((batch) => ({
-          id: "art-" + batch.id, kind: "art", targetId: batch.id, status: batch.orderStatus === "paid" ? "processing" : "queued",
+          id: "art-" + batch.id, kind: "art", targetId: batch.id, status: "processing",
           title: "写真 " + batch.totalCount + " 套", thumb: pluginCover("pl-10"),
-          hint: batch.orderStatus === "paid" ? "已完成 " + batch.completedCount + " / " + batch.totalCount : "待付款后开始制作",
+          hint: "已完成 " + batch.completedCount + " / " + batch.totalCount,
           percent: Math.round(batch.completedCount * 100 / Math.max(1, batch.totalCount))
         })),
         (result[6] || []).filter((project) => ["draft", "queued", "processing", "failed"].indexOf(project.status) >= 0).map((project) => ({
           id: "video-" + project.id, kind: "video", targetId: project.id, petId: project.pet_id, status: project.status,
           title: project.title || "宠物短片", thumb: pluginCover("pl-19"),
-          hint: project.status === "draft" ? "草稿 · 继续编辑" : project.status === "failed" ? "没有完成，点这里重试" : "正在渲染",
+          hint: project.status === "draft" ? "草稿 · 继续编辑" : project.status === "failed" ? "任务未完成，已退还冻干" : "正在渲染",
           percent: project.status === "draft" ? 0 : 50
         }))
       );

@@ -1,0 +1,13 @@
+{
+  "id": "railway-traveler",
+  "title": "放大镜大眼",
+  "samplePet": "tuxedo",
+  "prompt": "Edit Image 1, a finished professional pet studio photograph. Keep it exactly as it is: the same pet with the same identity, pose, expression and fur, the same seamless backdrop colour, the same main prop, light direction, camera angle, framing and colour grading. Add only these new set decorations, placed naturally on the floor or at the sides and behind the pet so they never cover its face or body: a small stack of two old cloth-bound books under the magnifying-glass stand and an open antique brass pocket watch on the floor beside it. The new pieces must belong to the same theme as the existing props, sit at a believable scale in the same light with soft contact shadows, and leave clear empty backdrop around the pet: tidy, airy and uncluttered, not crowded. Avoid: changing or moving the pet, a different backdrop colour, extra animals, people or hands, more decorations than listed, clutter, text, letters, numbers, logos or watermark. Return one photograph only.",
+  "provider": "lingsuan",
+  "model": "gpt-image-2",
+  "reference": "tools/imagegen/out/scenes/scene-railway-traveler-v13.jpg",
+  "referenceSha256": "ceb6b51f13acdcba042e166d27cdb7a718f6d28241aef41e50a7034baab310c9",
+  "output": "tools/imagegen/out/scenes/scene-railway-traveler-v14.jpg",
+  "sha256": "a2a5447957496015c0607142efd4223ce49735b15c84f46c2c8c0bde0912a3a1",
+  "review": "pending-visual-review"
+}

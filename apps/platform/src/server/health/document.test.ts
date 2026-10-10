@@ -1,8 +1,12 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { getDatabase, resetDatabaseForTest } from "@/server/db/client";
 import { grantPurchasedCredit } from "@/server/entitlements";
+import { getWallet } from "@/server/wallet/service";
+import { fundWallet } from "@/server/wallet/test-helpers";
 import { buildHealthDocumentSvg } from "@/server/health/document";
+import * as documentRenderer from "@/server/health/document";
+import { objectStorage } from "@/server/storage";
 import {
   HEALTH_ARCHIVE_KIND,
   createHealthDocument,
@@ -27,13 +31,6 @@ const USER = "00000000-0000-4000-8000-0000000000e5";
 const MEMBER = "00000000-0000-4000-8000-0000000000e6";
 const PET = "00000000-0000-4000-8000-0000000000e7";
 const MEMORIAL_PET = "00000000-0000-4000-8000-0000000000e8";
-
-async function grantMembership(userId: string, entitlements: Record<string, unknown>) {
-  await (await getDatabase()).query(
-    "INSERT INTO memberships (id,user_id,plan,status,quota,expires_at,quota_reset_at,entitlements,order_id,created_at) VALUES ($1,$2,'yearly','active',0,$3,$3,$4::jsonb,$5,now())",
-    [crypto.randomUUID(), userId, new Date(Date.now() + 86_400_000), JSON.stringify(entitlements), crypto.randomUUID()],
-  );
-}
 
 /**
  * 造一张已支付的单买凭据。
@@ -158,56 +155,81 @@ describe("健康档案生成与权益", () => {
   });
 
   /*
-   * 无权益不生成。**不静默给一个残缺版本** ——
-   * 先给文件再要钱、或给一个删了内容的版本，都比明确告价更糟。
+   * 余额不足不生成。**不静默给一个残缺版本** —— 先给文件再要钱、或给删了内容的版本，都比明确告价更糟。
    */
-  it("无权益时拒绝导出并给出价格", async () => {
-    await expect(createHealthDocument(USER, PET)).rejects.toMatchObject({ code: "HEALTH_EXPORT_REQUIRES_ENTITLEMENT" });
-    expect(await listHealthDocuments(USER, PET)).toHaveLength(0);
+  it("零余额在 PDF 渲染与上传前拒绝导出并带上差额", async () => {
+    const render = vi.spyOn(documentRenderer, "renderHealthDocumentPdf").mockRejectedValue(new Error("不应开始渲染"));
+    const put = vi.spyOn(objectStorage, "put");
+    try {
+      await expect(createHealthDocument(USER, PET)).rejects.toMatchObject({ code: "WALLET_INSUFFICIENT", status: 402, details: { required: 6, balance: 0, shortfall: 6 } });
+      expect(render).not.toHaveBeenCalled();
+      expect(put).not.toHaveBeenCalled();
+      expect(await listHealthDocuments(USER, PET)).toHaveLength(0);
+      expect((await getWallet(USER)).balance).toBe(0);
+    } finally {
+      render.mockRestore();
+      put.mockRestore();
+    }
   });
 
-  it("会员的 healthExportUnlimited 可无限导出", async () => {
-    await grantMembership(MEMBER, { healthExportUnlimited: true });
+  it("健康档案每份扣 6 颗冻干，可以反复导出", async () => {
+    await fundWallet(MEMBER, 20);
     const database = await getDatabase();
     const petId = crypto.randomUUID();
     await database.query("INSERT INTO pets (id,user_id,name,species,gender,date_type,life_stage,is_default,created_at) VALUES ($1,$2,'豆包','dog','unknown','birthday','active',true,now())", [petId, MEMBER]);
     await recordWeight(MEMBER, petId, { weightGrams: 8000, measuredOn: "2026-08-01" });
     expect((await createHealthDocument(MEMBER, petId)).kind).toBe("archive");
-    // 「无限」是字面意思：第二次、第三次都该成功
     expect((await createHealthDocument(MEMBER, petId)).kind).toBe("archive");
     expect(await listHealthDocuments(MEMBER, petId)).toHaveLength(2);
+    expect((await getWallet(MEMBER)).balance).toBe(8);
   });
 
-  /** 非会员单买：一张凭据换一次导出，用完要再买 */
-  it("单买凭据核销一次后用完", async () => {
+  /** 冻干上线前单买的凭据仍可抵一次，用完再扣冻干 */
+  it("历史单买凭据抵一次后改扣冻干", async () => {
     await grantArchiveCredit(USER);
     expect((await createHealthDocument(USER, PET)).kind).toBe("archive");
-    await expect(createHealthDocument(USER, PET)).rejects.toMatchObject({ code: "HEALTH_EXPORT_REQUIRES_ENTITLEMENT" });
+    await expect(createHealthDocument(USER, PET)).rejects.toMatchObject({ code: "WALLET_INSUFFICIENT" });
+    await fundWallet(USER, 6);
+    expect((await createHealthDocument(USER, PET)).kind).toBe("archive");
+    expect((await getWallet(USER)).balance).toBe(0);
   });
 
-  /** 年度记录走按次权益，余量用完回落到拒绝 */
-  it("年度记录消耗 annualHealthReport 权益", async () => {
-    await grantMembership(MEMBER, { annualHealthReport: 1 });
-    const database = await getDatabase();
-    const petId = crypto.randomUUID();
-    await database.query("INSERT INTO pets (id,user_id,name,species,gender,date_type,life_stage,is_default,created_at) VALUES ($1,$2,'豆包','dog','unknown','birthday','active',true,now())", [petId, MEMBER]);
-    await recordWeight(MEMBER, petId, { weightGrams: 8000, measuredOn: "2026-08-01" });
-    const doc = await createHealthDocument(MEMBER, petId, { year: 2026 });
-    expect(doc.kind).toBe("annual");
-    expect(doc.year).toBe(2026);
-    await expect(createHealthDocument(MEMBER, petId, { year: 2026 })).rejects.toMatchObject({ code: "HEALTH_ANNUAL_REQUIRES_ENTITLEMENT" });
+  it("历史档案凭据不能抵年度记录，零余额也不开始渲染", async () => {
+    await grantArchiveCredit(USER);
+    const render = vi.spyOn(documentRenderer, "renderHealthDocumentPdf").mockRejectedValue(new Error("不应开始渲染"));
+    try {
+      await expect(createHealthDocument(USER, PET, { year: 2026 })).rejects.toMatchObject({ code: "WALLET_INSUFFICIENT" });
+      expect(render).not.toHaveBeenCalled();
+    } finally {
+      render.mockRestore();
+    }
   });
 
-  /** 年度记录只收当年数据 —— 跨年混进来会让「这一年」失去意义 */
-  it("年度记录只统计当年记录", async () => {
-    await grantMembership(MEMBER, { annualHealthReport: 2 });
+  it("冻干冻结时在渲染前拒绝导出", async () => {
+    await fundWallet(USER, 6);
+    await (await getDatabase()).query("UPDATE wallet_accounts SET frozen_reason='核对中' WHERE user_id=$1", [USER]);
+    const render = vi.spyOn(documentRenderer, "renderHealthDocumentPdf").mockRejectedValue(new Error("不应开始渲染"));
+    try {
+      await expect(createHealthDocument(USER, PET)).rejects.toMatchObject({ code: "WALLET_FROZEN" });
+      expect(render).not.toHaveBeenCalled();
+      expect((await getWallet(USER)).balance).toBe(6);
+    } finally {
+      render.mockRestore();
+    }
+  });
+
+  /** 年度健康记录 6 颗一份（会员下线后的获取路径，36 号文 D1） */
+  it("年度健康记录每份扣 6 颗，只统计当年记录", async () => {
+    await fundWallet(MEMBER, 12);
     const database = await getDatabase();
     const petId = crypto.randomUUID();
     await database.query("INSERT INTO pets (id,user_id,name,species,gender,date_type,life_stage,is_default,created_at) VALUES ($1,$2,'豆包','dog','unknown','birthday','active',true,now())", [petId, MEMBER]);
     await recordWeight(MEMBER, petId, { weightGrams: 7800, measuredOn: "2025-06-01" });
     await recordWeight(MEMBER, petId, { weightGrams: 8000, measuredOn: "2026-08-01" });
-    expect((await createHealthDocument(MEMBER, petId, { year: 2026 })).weights).toBe(1);
+    const doc = await createHealthDocument(MEMBER, petId, { year: 2026 });
+    expect(doc).toMatchObject({ kind: "annual", year: 2026, weights: 1 });
     expect((await createHealthDocument(MEMBER, petId, { year: 2025 })).weights).toBe(1);
+    await expect(createHealthDocument(MEMBER, petId, { year: 2024 })).rejects.toMatchObject({ code: "WALLET_INSUFFICIENT" });
   });
 
   /*

@@ -1,6 +1,7 @@
 import "server-only";
 
 import { AppError } from "@/server/errors";
+import { isStaging, isTestHarness } from "@/server/runtime-mode";
 import {
   TRIAGE_DISCLAIMER,
   fallbackAdvisory,
@@ -19,8 +20,6 @@ export interface TriageRequest {
   pet: { name: string; species: string; ageMonths?: number; weightGrams?: number; lifeStage: string };
   /** 近 7 天的日常记录（已转成文字行，见 daily-log-context）。只作背景，不替代主人这次的描述 */
   recentRecords?: string[];
-  /** 图片字节。有图时走多模态，无图时纯文本。 */
-  images: Array<{ body: Uint8Array; contentType: string }>;
 }
 
 export interface TriageProvider {
@@ -89,7 +88,6 @@ class LocalTriageProvider implements TriageProvider {
     if (/眼泪|眼屎|眼睛/.test(text)) areas.push("眼部");
     if (/耳朵|甩头/.test(text)) areas.push("耳部");
     if (/跛|瘸|腿|关节/.test(text)) areas.push("运动");
-    if (request.images.length) areas.push("影像仅作记录，未做判读");
 
     return sanitizeAdvisory({
       level,
@@ -121,8 +119,6 @@ interface HttpTriageOptions {
   endpoint: string;
   apiKey: string;
   model: string;
-  /** 有图时改用的多模态模型。不配则用 `model`（要求它本身支持图片） */
-  visionModel?: string;
   /** 是否带 `response_format: json_object`。百炼、DeepSeek 等 OpenAI 兼容接口都支持；个别网关不认时可关 */
   jsonMode: boolean;
   /** 是否显式关闭思考模式（百炼 enable_thinking=false）。DeepSeek 等不认这个参数的网关填 false */
@@ -133,32 +129,23 @@ interface HttpTriageOptions {
 /**
  * OpenAI Chat Completions 兼容的 HTTP 实现。
  *
- * 无图时 `content` 走纯字符串：部分纯文本模型不接受数组形式的 content，
- * 只在有图时才拼 `image_url` 数组并切到多模态模型。
+ * 只发文字（2026-10-10 起健康分诊不接收图片）：`content` 走纯字符串，
+ * 部分纯文本模型不接受数组形式的 content。
  */
 class HttpTriageProvider {
   constructor(readonly name: string, private readonly options: HttpTriageOptions) {}
 
-  modelFor(request: TriageRequest) {
-    return request.images.length && this.options.visionModel ? this.options.visionModel : this.options.model;
+  get model() {
+    return this.options.model;
   }
 
   async advise(request: TriageRequest): Promise<TriageAdvisory> {
-    const text = buildTriageUserText(request);
-    const content = request.images.length
-      ? [
-        { type: "text", text },
-        ...request.images.map((image) => ({
-          type: "image_url",
-          image_url: { url: `data:${image.contentType};base64,${Buffer.from(image.body).toString("base64")}` },
-        })),
-      ]
-      : text;
+    const content = buildTriageUserText(request);
     const response = await fetch(this.options.endpoint, {
       method: "POST",
       headers: { "content-type": "application/json", authorization: `Bearer ${this.options.apiKey}` },
       body: JSON.stringify({
-        model: this.modelFor(request),
+        model: this.options.model,
         messages: [{ role: "system", content: SYSTEM_PROMPT }, { role: "user", content }],
         // 分诊要稳定，不要创意：同样的描述两次给出不同档位是最糟的体验
         temperature: 0.2,
@@ -219,14 +206,14 @@ class FailoverTriageProvider implements TriageProvider {
 
   constructor(private readonly channels: HttpTriageProvider[]) {
     this.name = channels.map((channel) => channel.name).join("+");
-    this.modelVersion = channels.map((channel) => channel.modelFor({ description: "", pet: { name: "", species: "", lifeStage: "" }, images: [] })).join("|");
+    this.modelVersion = channels.map((channel) => channel.model).join("|");
   }
 
   async adviseWithMeta(request: TriageRequest) {
     const errors: string[] = [];
     for (const channel of this.channels) {
       try {
-        return { advisory: await channel.advise(request), provider: channel.name, model: channel.modelFor(request), errors };
+        return { advisory: await channel.advise(request), provider: channel.name, model: channel.model, errors };
       } catch (error) {
         errors.push(`${channel.name}:${error instanceof Error ? error.message.slice(0, 60) : "UNKNOWN"}`);
       }
@@ -247,7 +234,6 @@ function channelFromEnv(prefix: string, name: string): HttpTriageProvider | unde
     endpoint,
     apiKey,
     model: process.env[prefix] || "qwen-flash",
-    visionModel: process.env[`${prefix}_VISION`] || undefined,
     jsonMode: process.env.HEALTH_MODEL_JSON_MODE !== "false",
     disableThinking: (process.env[`${prefix}_DISABLE_THINKING`] ?? (endpoint.includes("dashscope") || endpoint.includes("maas.aliyuncs") ? "true" : "false")) === "true",
     timeoutMs: Math.min(60_000, Math.max(5_000, Number(process.env.HEALTH_MODEL_TIMEOUT_MS) || 20_000)),
@@ -258,9 +244,9 @@ let cached: TriageProvider | undefined;
 
 /**
  * 环境变量：
- * - `HEALTH_MODEL_ENDPOINT` / `HEALTH_MODEL_API_KEY` / `HEALTH_MODEL`（缺省 qwen-flash）/ `HEALTH_MODEL_VISION`（有图时用）
+ * - `HEALTH_MODEL_ENDPOINT` / `HEALTH_MODEL_API_KEY` / `HEALTH_MODEL`（缺省 qwen-flash）
  * - `HEALTH_MODEL_DISABLE_THINKING`：百炼地址默认 true（发 enable_thinking=false），其他地址默认 false
- * - 备用通道同名加 `_SECONDARY`：`HEALTH_MODEL_SECONDARY_ENDPOINT` / `..._API_KEY` / `HEALTH_MODEL_SECONDARY` / `HEALTH_MODEL_SECONDARY_VISION`
+ * - 备用通道同名加 `_SECONDARY`：`HEALTH_MODEL_SECONDARY_ENDPOINT` / `..._API_KEY` / `HEALTH_MODEL_SECONDARY`
  * - `HEALTH_MODEL_TIMEOUT_MS`（缺省 20000）、`HEALTH_MODEL_JSON_MODE`（缺省开启，填 false 关闭）
  */
 export function selectTriageProvider(): TriageProvider {
@@ -276,7 +262,8 @@ export function selectTriageProvider(): TriageProvider {
    * 与 ai/provider.ts 同一个判断：本地实现是给开发用的，
    * 拿规则输出当健康建议交付给真实用户是另一种性质的问题。
    */
-  if (process.env.NODE_ENV === "production" && process.env.APP_ENV !== "staging") {
+  // 本地开发与正式生产同口径（2026-10-09）：只有 staging 测试机与自动化测试夹具可用规则实现。
+  if (!isStaging() && !isTestHarness()) {
     throw new AppError("HEALTH_PROVIDER_CONFIG_PENDING", "健康助手服务尚未配置", 503);
   }
   cached = new LocalTriageProvider();

@@ -12,7 +12,7 @@ esac
 
 state_dir="$repo_dir/apps/platform/.data/local-preview"
 found=0
-for name in platform website; do
+for name in platform worker website; do
   pid_file="$state_dir/$name.pid"
   if [ ! -f "$pid_file" ]; then continue; fi
   found=1

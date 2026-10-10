@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
+import { fundWallet } from "@/server/wallet/test-helpers";
 
 import { getDatabase, resetDatabaseForTest } from "@/server/db/client";
 import { describeRecord, RECORD_KINDS } from "@/server/daily-log-kinds";
@@ -198,11 +199,8 @@ describe("日常记录", () => {
     });
     expect(svg).toContain("近期日常记录");
     expect(svg).toContain("呕吐 · 2 次");
-    const database = await getDatabase();
-    await database.query(
-      "INSERT INTO memberships (id,user_id,plan,status,quota,expires_at,quota_reset_at,entitlements,order_id,created_at) VALUES ($1,$2,'yearly','active',0,$3,$3,$4::jsonb,$5,now())",
-      [crypto.randomUUID(), USER, new Date(Date.now() + 86_400_000), JSON.stringify({ healthExportUnlimited: true }), crypto.randomUUID()],
-    );
+    // 健康档案每份 6 颗冻干（2026-10-08 起，会员下线）。
+    await fundWallet(USER, 6);
     await createRecord(USER, PET, { kind: "stool", occurredOn: day(0), details: { form: "soft" } });
     const document = await createHealthDocument(USER, PET);
     expect(document.records).toBe(1);

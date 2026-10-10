@@ -4,8 +4,10 @@ const { themedPage } = require("../../theme/page-mixin");
 const { pluginSample, imageEntries } = require("../../services/sample-assets");
 const { selectBossTemplates } = require("../../services/home-effect-ids");
 const { uploadOnePhoto } = require("../../services/quick-upload");
+const wallet = require("../../services/wallet");
+const { openPetCreator, remind } = require("../../services/pet-onboarding");
 
-themedPage({
+themedPage(Object.assign({}, wallet.walletSheetMethods, {
   data: {
     flowSteps: ["选效果", "选照片"],
     pets: [], petId: "", petText: "", photos: [], photoIds: [],
@@ -13,7 +15,8 @@ themedPage({
     artPlugin: null, sceneOptions: [], sceneId: "window-morning", selectedScene: null,
     stage: "samples",
     ownerPhotos: [], ownerPhotoIds: [], authorizationConfirmed: false,
-    unlockPrice: null, previewUrl: "", previewShape: "card", candidateCount: 1, artPackages: [],
+    costText: "", previewUrl: "", previewShape: "card", candidateCount: 1, artPackages: [],
+    walletBalance: 0, walletLoaded: false, walletSheet: { visible: false, required: 0, balance: 0, shortfall: 0 },
     busy: false, error: "", loading: true, catalogLoading: true
   },
   onLoad(query) {
@@ -35,14 +38,16 @@ themedPage({
       api.request("/api/art-photo-bundles/packages").catch(() => null)
     ]).then((results) => {
       const packs = results[5] || {};
-      this.setData({ artPackages: ["ten", "all"].filter((id) => packs[id] && typeof packs[id].amount === "number").map((id) => ({ id, label: packs[id].label || (id === "ten" ? "精选 10 套" : "全部套餐"), price: "¥" + packs[id].amount, count: packs[id].count })) });
+      // 套餐按冻干计价（2026-10-08）：颗数从服务端取；第三行写比单张省多少
+      const singleCost = packs.single && packs.single.cost;
+      const saving = (pack) => { const percent = singleCost ? Math.round((1 - pack.cost / (pack.count * singleCost)) * 100) : 0; return percent > 0 ? "比单张省 " + percent + "%" : ""; };
+      this.setData({ artPackages: ["ten", "twenty"].filter((id) => packs[id] && typeof packs[id].cost === "number").map((id) => ({ id, label: packs[id].label, price: wallet.costText(packs[id].cost), count: packs[id].count, saving: saving(packs[id]) })) });
       const curation = results[4] && results[4].lead ? results[4] : null;
       this._bossIds = curation ? [curation.lead.templateId].concat(curation.templateIds) : null;
       const pets = results[0] || [];
       const entries = imageEntries(results[1] && results[1].entries);
       const artSource = (results[3] || []).find((item) => item.id === "pl-10");
       const artPlugin = artSource ? pluginSample(artSource) : null;
-      const unlockPrice = artSource && artSource.pricing && artSource.pricing.unlockPrice || null;
       const sceneOptions = artPlugin && artPlugin.samples && artPlugin.samples.sceneOptions
         ? artPlugin.samples.sceneOptions.map((item) => Object.assign({}, item, {
           url: artPlugin.samples.sceneUrls && artPlugin.samples.sceneUrls[item.id] || "",
@@ -75,7 +80,7 @@ themedPage({
         sceneOptions,
         sceneId,
         selectedScene: sceneOptions.find((item) => item.id === sceneId) || null,
-        unlockPrice,
+        costText: template ? typeof template.donganCost === "number" ? wallet.costText(template.donganCost) : "" : "",
         candidateCount: template && template.candidateCount || 1,
         stage: (query && query.entryId === "human" && !query.templateId) || (template && template.templateId === "pet-art-photo" && !query.sceneId) ? "samples" : "photos",
         loading: false,
@@ -123,7 +128,10 @@ themedPage({
       .then((photos) => { if (request !== this._photoRequest || petId !== this.data.petId) return; const photoIds = this._initialPhotoIds || this.data.photoIds; this._initialPhotoIds = null; if (photoIds.length > 1 || photoIds.some((value) => !photos.some((photo) => photo.id === value))) { this.setData({ photos, photoIds: [], loading: false }); throw new Error("请选择当前宠物的一张可用照片"); } this.setData({ photos, photoIds: photoIds.length ? photoIds : photos[0] ? [photos[0].id] : [], loading: false }); })
       .catch((error) => { if (request === this._photoRequest) this.setData({ error: error.message, loading: false }); });
   },
-  onShow() { if (this.data.petId && !this.data.busy) this.loadPhotos(this.data.petId); },
+  onShow() {
+    if (this.data.petId && !this.data.busy) this.loadPhotos(this.data.petId);
+    this.refreshWallet().then(() => this.setData({ walletLoaded: true }));
+  },
   onHide() { this._photoRequest = (this._photoRequest || 0) + 1; },
   choosePetChip(event) { this.choosePet({ detail: { value: event.currentTarget.dataset.index } }); },
   /** 首格「＋」：拍照或从相册选一张，传完刷新列表并自动选中。 */
@@ -136,7 +144,17 @@ themedPage({
       .catch((error) => this.setData({ error: error.message }))
       .finally(() => this.setData({ busy: false }));
   },
-  openPets() { wx.navigateTo({ url: "/pages/pets/pets" }); },
+  /** 没有档案时直接打开新建抽屉；建成后回到这里并选中新宠物，接着选照片。 */
+  openPets() { if (!this.data.busy) openPetCreator((petId) => this.useNewPet(petId)); },
+  useNewPet(petId) {
+    return api.request("/api/pets").then(withPrivatePreviews).then((pets) => {
+      const pet = pets.find((item) => item.id === petId);
+      if (!pet) return;
+      this._initialPhotoIds = null;
+      this.setData({ pets, petId: pet.id, petText: pet.name, photos: [], photoIds: [], error: "" });
+      this.loadPhotos(pet.id);
+    }).catch((error) => this.setData({ error: error.message }));
+  },
   choosePet(event) {
     if (this.data.busy) return;
     const pet = this.data.pets[Number(event.detail.value)];
@@ -167,7 +185,7 @@ themedPage({
     const template = this.data.templates.find((item) => item.templateId === id);
     if (!template) return;
     if (template.templateId === this.data.templateId && this.data.stage === "photos") return;
-    this.setData({ templateId: id, activeTemplate: template, candidateCount: template.candidateCount || 1, ownerPhotoIds: [], authorizationConfirmed: false, stage: "photos", error: "" });
+    this.setData({ templateId: id, activeTemplate: template, costText: wallet.costText(template.donganCost || 2), candidateCount: template.candidateCount || 1, ownerPhotoIds: [], authorizationConfirmed: false, stage: "photos", error: "" });
     this.syncPreview();
     if (wx.setNavigationBarTitle && template) wx.setNavigationBarTitle({ title: template.title });
   },
@@ -192,16 +210,16 @@ themedPage({
     if (entering) this.scrollTop();
   },
   /**
-   * 单张写真页里的套餐入口（2026-10）：首页「写真也值得收藏」点进来是单张，这里给出「多拍几套更划算」。
-   * 精选套餐以当前场景打头、再按写真馆顺序补满；全部套餐直接带上全部场景。
+   * 单张写真页里的套餐入口（2026-10）：首页样片点进来是单张，这里给出「一次拍一组」。
+   * 2026-10-09 起不再按写真馆顺序替用户补满（用户没挑过的被算进套餐，莫名其妙）：
+   * 切回创作页「宠物写真」，选好档位、只勾上当前这套，剩下的由用户自己挑或点「帮我挑满」。
    */
   chooseArtPackage(event) {
     const pack = (this.data.artPackages || []).find((item) => item.id === event.currentTarget.dataset.id);
     if (!pack) return;
-    const all = (this.data.sceneOptions || []).map((item) => item.id);
-    const picked = pack.id === "all" ? all : [this.data.sceneId].concat(all.filter((id) => id !== this.data.sceneId)).slice(0, pack.count);
-    if (picked.length !== pack.count) return wx.showToast({ title: "写真场景还没加载完，稍后再试", icon: "none" });
-    wx.navigateTo({ url: "/pages/art-photo-bundle/art-photo-bundle?package=" + pack.id + "&sceneIds=" + encodeURIComponent(picked.join(",")) });
+    const app = typeof getApp === "function" ? getApp() : null;
+    if (app && app.globalData) app.globalData.artPackage = { mode: pack.id, sceneIds: this.data.sceneId ? [this.data.sceneId] : [] };
+    wx.switchTab({ url: "/pages/art-photo/art-photo" });
   },
   scrollTop() { if (wx.pageScrollTo) wx.pageScrollTo({ scrollTop: 0, duration: 180 }); },
   continueToPhotos() { if (this.data.activeTemplate) { this.setData({ stage: "photos", error: "" }); this.syncPreview(); this.scrollTop(); } },
@@ -260,11 +278,25 @@ themedPage({
   create() {
     if (this.data.busy || this.data.loading) return;
     const template = this.data.activeTemplate;
-    if (!template || !this.data.petId || this.data.photoIds.length !== 1) return this.setData({ error: "请选择模板、宠物和 1 张宠物身份照" });
+    if (!template) return remind("先选一个效果");
+    /*
+     * 按钮不再因缺宠物 / 缺照片置灰（点了没反应）：缺什么就直接带用户去补。
+     * 没有档案 → 打开新建抽屉；有档案没照片 → 拉起拍照 / 相册；有照片没选 → 提示选一张。
+     */
+    if (!this.data.pets.length) { remind("先给它建一份档案"); return this.openPets(); }
+    if (!this.data.petId) return remind("先选一只宠物");
+    if (!this.data.photos.length) return this.uploadPetPhoto();
+    if (this.data.photoIds.length !== 1) return remind("先选 1 张照片");
     if (template.templateId === "pet-art-photo" && !this.data.sceneOptions.some((item) => item.id === this.data.sceneId)) return this.setData({ error: "写真场景暂不可用，请重新加载" });
-    if (template.subjectMode === "owner-pet" && (!this.data.authorizationConfirmed || this.data.ownerPhotoIds.length !== 1)) return this.setData({ error: "人宠模板需要 1 张已授权的主人照片" });
+    if (template.subjectMode === "owner-pet" && !this.data.authorizationConfirmed) return remind("先勾选主人照片授权");
+    if (template.subjectMode === "owner-pet" && this.data.ownerPhotoIds.length !== 1) return remind(this.data.ownerPhotos.length ? "先选 1 张主人照片" : "先上传 1 张主人照片");
     this.setData({ busy: true, error: "" });
-    api.request("/api/ai-runs", { method: "POST", data: {
+    /*
+     * 先扣冻干再出图：余额不足时弹零食柜，付款到账后用同一个幂等键重放，等于「到账后自动开始」。
+     * 幂等键在按下「开始」时就定下来，重放不会重复扣。
+     */
+    const idempotencyKey = "mp-" + Date.now() + "-" + template.templateId + "-" + this.data.photoIds[0];
+    wallet.withDongan(this, () => api.request("/api/ai-runs", { method: "POST", data: {
       pluginId: "pl-10",
       templateId: template.templateId,
       petId: this.data.petId,
@@ -274,10 +306,10 @@ themedPage({
       options: { scene: this.data.sceneId },
       promptVersion: "template-" + template.version,
       modelVersion: "provider-v1",
-      idempotencyKey: "mp-" + Date.now() + "-" + template.templateId + "-" + this.data.photoIds[0]
-    } })
+      idempotencyKey
+    } }))
       .then((run) => wx.redirectTo({ url: "/pages/ai-run/ai-run?id=" + run.id }))
-      .catch((error) => this.setData({ busy: false, error: error.message }));
+      .catch((error) => this.setData({ busy: false, error: error.code === "WALLET_TOPUP_CANCELLED" ? "" : error.message }));
   },
-  openPhotos() { wx.navigateTo({ url: this.data.petId ? "/pages/photos/photos?petId=" + this.data.petId : "/pages/pets/pets" }); }
-});
+  openPhotos() { if (!this.data.petId) return this.openPets(); wx.navigateTo({ url: "/pages/photos/photos?petId=" + this.data.petId }); }
+}));

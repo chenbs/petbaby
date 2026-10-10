@@ -129,6 +129,7 @@ export function mapTask(row: Record<string, unknown>): GenerationTask {
     sourceWorkId: row.source_work_id ? String(row.source_work_id) : undefined,
     options: jsonObject<Record<string, unknown>>(row.options, {}),
     pluginSnapshot: jsonObject<GenerationTask["pluginSnapshot"]>(row.plugin_snapshot, undefined),
+    walletBizKey: row.wallet_biz_key ? String(row.wallet_biz_key) : undefined,
   };
 }
 

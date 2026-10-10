@@ -1,3 +1,4 @@
+const wallet = require("../../services/wallet");
 const { displayMediaTree } = require("../../services/photo-files");
 const api = require("../../services/api");
 const companion = require("../../services/companion");
@@ -26,8 +27,8 @@ function formatDate(value) {
   return `${date.getFullYear()}·${pad(date.getMonth() + 1)}·${pad(date.getDate())}`;
 }
 
-themedPage({ mood: "memorial" }, {
-  data: {
+themedPage({ mood: "memorial" }, Object.assign({}, wallet.walletSheetMethods, {
+  data: { walletSheet: { visible: false, required: 0, balance: 0, shortfall: 0 },
     items: [],
     pets: [],
     petLabels: [],
@@ -59,7 +60,7 @@ themedPage({ mood: "memorial" }, {
     if (petId) this.setData({ petId });
   },
 
-  onShow() { this.load(); },
+  onShow() { this.load(); this.refreshWallet().then(() => this.setData({ productActions: PRODUCT_ACTIONS.map((item) => Object.assign({}, item, { description: item.description + (item.key === "video" && this.data.walletCosts ? " · " + wallet.costText(this.data.walletCosts.memorialFilm) : " · 免费") })) })); },
 
   load() {
     this.setData({ loading: !this.data.items.length, error: "" });
@@ -161,9 +162,9 @@ themedPage({ mood: "memorial" }, {
     const id = this.data.productsFor;
     this.setData({ productsFor: "", message: "", error: "" });
     if (!id) return;
-    api.request("/api/memorials/" + id + "/products", { method: "POST", data: { product: event.detail.key } })
+    wallet.withDongan(this, () => api.request("/api/memorials/" + id + "/products", { method: "POST", data: { product: event.detail.key } }))
       .then(() => this.setData({ message: "已提交生成，稍后可在作品柜查看" }))
-      .catch((error) => this.setData({ error: error.message }));
+      .catch((error) => this.setData({ error: error.code === "WALLET_TOPUP_CANCELLED" ? "" : error.message }));
   },
 
   openMore(event) {
@@ -191,4 +192,4 @@ themedPage({ mood: "memorial" }, {
       .then(() => this.load())
       .catch((error) => this.setData({ error: error.message }));
   }
-});
+}));

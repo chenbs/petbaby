@@ -221,6 +221,8 @@ export type GenerationTask = {
   sourceWorkId?: string;
   options: Record<string, unknown>;
   pluginSnapshot?: PluginManifest;
+  /** 扣费流水键。为空即免费玩法或冻干上线前的历史任务 */
+  walletBizKey?: string;
   queuePosition?: number;
   estimatedSeconds?: number;
 };
@@ -336,6 +338,10 @@ export type AiRun = {
   retryCount: number;
   rerollCount: number;
   rerollRemaining: number;
+  /** 这个模板每拍一张要扣的冻干颗数（「再拍一张」按它重新扣费） */
+  donganCost: number;
+  /** 是否已用冻干付费。为 false 的只有冻干上线前的历史任务 */
+  paidWithDongan: boolean;
   queuePosition?: number;
   estimatedSeconds?: number;
   workId?: string;

@@ -21,11 +21,7 @@ export async function POST(request: Request) {
       assertGenerationCircuit(),
     ]);
     const task = await createGeneration(userId, await request.json());
-    const databaseUrl = process.env.DATABASE_URL;
-    if (!databaseUrl || databaseUrl === "memory://" || (process.env.NODE_ENV !== "production" && databaseUrl.startsWith("file://"))) {
-      const { runNextTask } = await import("@/server/worker/generation-worker");
-      await runNextTask();
-    }
+    // 任务一律交给 Worker（pnpm worker），本地与生产同一条路径（2026-10-09 起不再在请求里内联执行）。
     return NextResponse.json({ data: task }, { status: 202 });
   } catch (error) {
     return routeError(error);

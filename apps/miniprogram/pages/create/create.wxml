@@ -106,7 +106,7 @@
       免费玩法整块不出现（pricingText 为空），给一个 ¥0 的价格区块只是噪声。
     -->
     <view wx:if="{{pricingText}}" class="section-block">
-      <view class="sub-title">做好之后</view>
+      <view class="sub-title">本次制作</view>
       <view class="creation-price">
         <view class="sub-title">{{pricingText}}</view>
         <text wx:if="{{pricingHint}}" class="small">{{pricingHint}}</text>
@@ -130,7 +130,7 @@
       anim="{{animType}}"
       loading="{{busy}}"
       bindtap="goToPhotosOrGenerate"
-    >{{(pluginId === 'pet-movie-poster' || pluginId === 'pet-time-album') && selectedTileIds.length < plugin.input.photos.min ? '选好效果，挑照片' : '免费生成预览'}}</t-button>
+    >{{(pluginId === 'pet-movie-poster' || pluginId === 'pet-time-album') && selectedTileIds.length < plugin.input.photos.min ? '选好效果，挑照片' : pricing ? pricing.cost + ' 颗冻干 · 开始生成' : '免费生成'}}</t-button>
   </view>
 </view>
 
@@ -174,3 +174,5 @@
     <t-button type="ghost" block anim="{{animType}}" class="block-gap" bindtap="backToPhotos">再做一个</t-button>
   </view>
 </view>
+
+<t-wallet-sheet id="wallet-sheet" visible="{{walletSheet.visible}}" required="{{walletSheet.required}}" balance="{{walletSheet.balance}}" shortfall="{{walletSheet.shortfall}}" bind:close="onWalletSheetClose" bind:paid="onWalletPaid"></t-wallet-sheet>

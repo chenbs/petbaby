@@ -11,6 +11,7 @@ function loadPage(name, dependencies, wx) {
     require: (name) => {
       if (name.endsWith("page-mixin")) return { themedPage: (page) => { definition = page; } };
       const key = name.split("/").pop();
+      if (key === "wallet") return require("./wallet-test-harness").loadWallet(dependencies.api || {});
       if (dependencies[key]) return dependencies[key];
       if (key === "companion") return require("../services/companion");
       if (key === "sample-assets") return require("../services/sample-assets");

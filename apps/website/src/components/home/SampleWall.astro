@@ -1,0 +1,111 @@
+---
+/*
+ * 作品样片墙：按小程序创作页的四段分组（宠物写真 / 人宠写真 / 如果我是人 / 其他玩法）。
+ *
+ * 图片全部是已上线的公开样片，由 tools/imagegen/export-website-gallery.mjs 导出，
+ * 不在这里手放新图。标题取自小程序里的模板名，换模板时两处一起改。
+ *
+ * 合规：样片是生成合成内容，区块内用文字注明；官网文案不出现「AI」字样。
+ */
+import ResponsiveImage from "../ResponsiveImage.astro";
+
+interface Sample {
+  src: string;
+  title: string;
+  alt: string;
+}
+
+const GROUPS: Array<{ key: string; name: string; note: string; ratio: "card" | "tall"; samples: Sample[] }> = [
+  {
+    key: "portrait",
+    name: "宠物写真",
+    note: "像在影棚里拍的一组大片，可以单张拍，也可以一次拍一套。",
+    ratio: "card",
+    samples: [
+      { src: "/assets/website-gallery-scene-watermelon.jpg", title: "西瓜啃啃", alt: "柴犬戴着条纹领巾，在薄荷绿影棚里咬一口西瓜" },
+      { src: "/assets/website-gallery-scene-fan.jpg", title: "风扇吹毛", alt: "奶油色猫咪对着小风扇，长毛被吹得飘起来" },
+      { src: "/assets/website-gallery-scene-gift.jpg", title: "礼物盒惊喜", alt: "英短猫从红色背景前的礼物盒里探出圆脸" },
+      { src: "/assets/website-gallery-scene-beanie.jpg", title: "毛线帽", alt: "萨摩耶戴着大绒球毛线帽，咧嘴笑" },
+      { src: "/assets/website-gallery-scene-basket.jpg", title: "花篮小熊", alt: "泰迪坐在花篮里，歪头看向镜头" },
+    ],
+  },
+  {
+    key: "duo",
+    name: "人宠写真",
+    note: "上传你和我的照片，我们一起入镜。主人照片需要本人授权。",
+    ratio: "tall",
+    samples: [
+      { src: "/assets/website-gallery-duo-tulips.jpg", title: "花里抱猫", alt: "主人坐在郁金香旁，把猫咪抱在怀里" },
+      { src: "/assets/website-gallery-duo-fly.jpg", title: "举高飞起来", alt: "主人躺在地上，把小狗高高举起" },
+      { src: "/assets/website-gallery-duo-christmas.jpg", title: "圣诞偷亲", alt: "穿圣诞毛衣的主人和小狗在圣诞树前贴脸" },
+      { src: "/assets/website-gallery-duo-nose.jpg", title: "碰碰鼻子", alt: "主人和柴犬鼻尖相碰" },
+      { src: "/assets/website-gallery-duo-laugh.jpg", title: "搭肩大笑", alt: "穿黑西装的主人搂着大麦町犬大笑" },
+    ],
+  },
+  {
+    key: "human",
+    name: "如果我是人",
+    note: "按我的毛色、神态和气质，变成人的模样，现有 40 款造型。",
+    ratio: "tall",
+    samples: [
+      { src: "/assets/website-gallery-human-31.jpg", title: "蓝天白衣", alt: "银白短发、穿白衬衫的少年站在蓝天下" },
+      { src: "/assets/website-gallery-human-05.jpg", title: "白衬衫少年", alt: "浅棕发色、穿白衬衫的少年近景肖像" },
+      { src: "/assets/website-gallery-human-08.jpg", title: "粉发甜心", alt: "粉色长发的少女侧脸肖像" },
+      { src: "/assets/website-gallery-human-32.jpg", title: "暗夜王子", alt: "银发少年头戴冠饰，背景是夜色" },
+      { src: "/assets/website-gallery-human-15.jpg", title: "汉服少女", alt: "黑发少女穿浅色汉服，身旁有花枝" },
+    ],
+  },
+  {
+    key: "fun",
+    name: "其他玩法",
+    note: "开咖啡店、去海岛自拍、坐过山车，还有表情九宫格。",
+    ratio: "tall",
+    samples: [
+      { src: "/assets/website-gallery-fun-barista.jpg", title: "咖啡主理人", alt: "柴犬系着围裙站在咖啡吧台后" },
+      { src: "/assets/website-gallery-fun-selfie.jpg", title: "海岛自拍", alt: "德文卷毛猫穿花衬衫，在海边举着手机自拍" },
+      { src: "/assets/website-gallery-fun-coaster.jpg", title: "过山车", alt: "柯基坐在过山车上，耳朵被风吹起" },
+      { src: "/assets/website-gallery-fun-wanted.jpg", title: "萌宠通缉令", alt: "金毛举着「偷吃零食」的牌子拍嫌疑人照" },
+      { src: "/assets/website-gallery-fun-faces.jpg", title: "今日表情九宫格", alt: "同一只奶油色猫咪的九种表情排成九宫格" },
+    ],
+  },
+];
+---
+
+<section class="section sample-wall" id="works">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">作品样片</p>
+      <h2 class="h2">一张照片，<br />可以拍成这样</h2>
+      <p class="section-note wide">下面都是小程序里正在上线的样片。挑一个喜欢的，换成我的照片就能拍。</p>
+    </div>
+
+    {GROUPS.map((group) => (
+      <div class="sample-group reveal">
+        <div class="sample-group-head">
+          <h3 id={`sample-${group.key}`}>{group.name}</h3>
+          <p>{group.note}</p>
+        </div>
+        <ul class:list={["sample-strip", `sample-strip-${group.ratio}`]} aria-labelledby={`sample-${group.key}`} tabindex="0">
+          {group.samples.map((sample) => (
+            <li class="sample-tile">
+              <figure>
+                <div class="sample-media">
+                  <ResponsiveImage
+                    src={sample.src}
+                    alt={sample.alt}
+                    width={720}
+                    height={group.ratio === "card" ? 960 : 1280}
+                    sizes="(max-width: 767px) 44vw, 20vw"
+                  />
+                </div>
+                <figcaption>{sample.title}</figcaption>
+              </figure>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+
+    <p class="sample-foot">样片均为生成合成内容，实际效果与照片清晰度、角度有关。可用模板以小程序内展示为准。</p>
+  </div>
+</section>

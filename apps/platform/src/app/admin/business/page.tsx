@@ -1,12 +1,11 @@
-import Link from "next/link";
+import { redirect } from "next/navigation";
 
-import { BusinessAdminClient } from "@/components/business-admin-client";
-import { assertAdminPage } from "@/server/auth/admin";
-import { requireUserId } from "@/server/auth/session";
+import { requireAdminPage } from "@/server/admin/page-guard";
 
 export const dynamic = "force-dynamic";
 
-export default async function BusinessAdminPage() {
-  assertAdminPage(await requireUserId());
-  return <main className="screen"><div className="page-heading"><Link className="back-link" href="/admin">返回运营后台</Link><span className="eyebrow">STAGE 3 OPERATIONS</span><h1>订阅、履约与权益</h1><p>筛选待发送提醒、实体订单、会员续费和年度报告。</p></div><BusinessAdminClient /></main>;
+/** 旧「订阅、履约与权益」入口：订阅消息与年度报告在「消息与报告」，实体履约与退款在「订单与履约」。 */
+export default async function LegacyBusinessPage() {
+  await requireAdminPage("/admin/business");
+  redirect("/admin/messages");
 }

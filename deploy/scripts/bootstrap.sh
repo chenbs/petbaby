@@ -28,12 +28,11 @@ fi
 "$SCRIPT_DIR/health-check.sh" staging
 "$SCRIPT_DIR/smoke-test.sh" staging
 
-INVITE=$(env_value PASSWORD_AUTH_INVITE_CODE)
 log "测试机就绪：https://$DOMAIN"
 echo
 echo "接下来手工完成三步："
-echo "  1. 打开 https://$DOMAIN/login 注册一个账号${INVITE:+（邀请码：$INVITE）}"
-echo "  2. 执行 $SCRIPT_DIR/create-admin.sh <刚注册的账号名> 拿到后台权限"
+echo "  1. 执行 $SCRIPT_DIR/create-admin.sh <管理员账号名> 创建后台账号（交互输入密码）"
+echo "  2. 打开 https://$DOMAIN/admin/login 登录运营后台"
 echo "  3. 小程序端把 apps/miniprogram/config.local.js 的 apiBaseUrl 指向 https://$DOMAIN"
 echo
 echo "常用运维命令："

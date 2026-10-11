@@ -95,9 +95,19 @@ await Promise.all([enforceRateLimit(...), assertGenerationCircuit()]);
 
 `server/auth/session.ts` 用 HMAC-SHA256 签名的 cookie（`petbaby_session`，7 天），也接受 `Authorization: Bearer <同一 token>`（小程序用）。
 
-**正式生产只有微信一种账号**（2026-10-09）：`passwordAuthEnabled()` 在 `isRealProduction()` 下恒为 false，`PASSWORD_AUTH_ENABLED` 只对本地与测试机生效。**账号唯一标识是 unionid，openid 只记录**：`server/auth/wechat-account.ts` 的 `signInWechatUser` 按 `wechat_unionid` 找人并刷新 `wechat_openid`（支付必须用当前小程序的 openid），接管只有 openid 的老账号，用户行与加密 session_key 同一事务落库。code2Session 不返回 unionid（小程序未绑定开放平台）时登录明确失败，不能回落到 openid——否则同一个人会在绑定前后变成两个账号。见面礼、后台搜索、注销清理都按 unionid。2026-10-09 起本地开发与生产一致：未登录返回 401、后台按 `ADMIN_USER_IDS` 白名单（未授权 404，不暴露后台存在）、写接口要求来源、缺凭据的外部依赖（图片、健康模型、微信 Scheme、订阅模板、地址密钥）明确失败而不是给占位结果。**只有自动化测试夹具**（`runtime-mode.ts` 的 `isTestHarness()`：`NODE_ENV=test` 或 `PETBABY_TEST_HARNESS=1`，生产构建里无效）保留 demo 用户、开放后台和占位实现。本地仍保留的差异只有模拟支付、本地磁盘存储与 Cookie 不带 `secure`；Web/H5 本地同样不收款。本地进后台要先注册账号，再把用户 ID 填进 `.env.local` 的 `ADMIN_USER_IDS` 并重启 dev 与 worker。
+**正式生产只有微信一种账号**（2026-10-09）：`passwordAuthEnabled()` 在 `isRealProduction()` 下恒为 false，`PASSWORD_AUTH_ENABLED` 只对本地与测试机生效。**账号唯一标识是 unionid，openid 只记录**：`server/auth/wechat-account.ts` 的 `signInWechatUser` 按 `wechat_unionid` 找人并刷新 `wechat_openid`（支付必须用当前小程序的 openid），接管只有 openid 的老账号，用户行与加密 session_key 同一事务落库。code2Session 不返回 unionid（小程序未绑定开放平台）时登录明确失败，不能回落到 openid——否则同一个人会在绑定前后变成两个账号。见面礼、后台搜索、注销清理都按 unionid。2026-10-09 起本地开发与生产一致：未登录返回 401、后台按 `ADMIN_USER_IDS` 白名单（未授权 404，不暴露后台存在）、写接口要求来源、缺凭据的外部依赖（图片、健康模型、微信 Scheme、订阅模板、地址密钥）明确失败而不是给占位结果。**只有自动化测试夹具**（`runtime-mode.ts` 的 `isTestHarness()`：`NODE_ENV=test` 或 `PETBABY_TEST_HARNESS=1`，生产构建里无效）保留 demo 用户、开放后台和占位实现。本地仍保留的差异只有模拟支付、本地磁盘存储与 Cookie 不带 `secure`；Web/H5 本地同样不收款。**小程序没有账号密码入口（2026-10-11）**：`pages/login` 只有微信一键登录与退出，`app.js` 启动时清掉旧版的 `petbaby_session_source` 标记。**运营后台单独用账号密码登录**：`/admin/login` → `POST /api/admin/login`（`server/admin/auth.ts` 的 `loginAdmin`），不受 `passwordAuthEnabled()` 影响、生产可用，只放行白名单；失败一律 401「账号或密码不正确」，不暴露账号是否存在、是否是管理员。管理员账号没有公开注册：本地 `pnpm admin:account <账号名>`（密码走标准输入）拿到 `ADMIN_USER_ID`，填进 `.env.local` 的 `ADMIN_USER_IDS` 并重启 dev 与 worker；服务器用 `deploy/scripts/create-admin.sh <账号名>`。
 
-后台页面（`src/app/admin/**/page.tsx`）都是 `export const dynamic = "force-dynamic"` + `assertAdminPage(await requireUserId())` 的服务端壳，UI 在对应的 `*-admin-client.tsx`。人工操作通过 `server/admin/audit.ts` 的 `recordAdminAudit` 留痕。
+人工操作通过 `server/admin/audit.ts` 的 `recordAdminAudit` 留痕。
+
+### 运营后台（2026-10-11 重建，桌面控制台）
+
+**`src/app` 下有两个根布局**：消费端在路由组 `src/app/(app)/`（手机框 + `globals.css`，URL 不带组名），后台 `src/app/admin/layout.tsx` 自带 `<html>` 与 `admin.css`（Tailwind 4 + Radix + Recharts 3 + lucide + sonner），两边样式互不加载。跨两棵树的跳转是整页加载；未匹配路由由 `app/global-not-found.tsx` 输出（`next.config.ts` 的 `experimental.globalNotFound`）。Tailwind 只扫 `src/app/admin` 与 `src/components/admin`（`admin.css` 的 `source(none)` + `@source`），消费端 CSS 不含 Tailwind 指令。
+
+- **页面是读 `searchParams` 的服务端组件**，权限统一走 `server/admin/page-guard.ts` 的 `requireAdminPage()`（未登录跳登录、非管理员 404）。**必须在每个 page 里调**：layout 里 `notFound()` 越过同段 not-found 边界。layout 只在确认是管理员后才渲染侧栏外壳。
+- **读在 `server/admin/analytics.ts`（总览/增长/功能/收入）与 `console.ts`（列表/详情/搜索），写一律调既有 `/api/admin/*`**（守卫、Zod、审计都在接口里），客户端只有 `components/admin/action-dialog.tsx` 一个写入口：必填原因 → 调接口 → `router.refresh()`。新增运维动作 = 接口加分支 + 页面放一个 `ActionDialog`，不写新的客户端状态。
+- **口径**（`server/admin/sql.ts`）：按天一律北京时间切日（`lib/admin-range.ts` 给左闭右开时刻）；活跃 = events、ai_runs、generation_tasks、video_renders、photos、日常记录、健康助手、趣测的并集（只看 events 会漏不打点的链路）；现金收入只算实收（充值、增值单、实体单、历史作品单），冻干消耗单独统计不进收入；写真套餐里的单张不算进「创意照片」。`analytics.test.ts` 钉着这些口径。
+- **图表**按 dataviz 规范：分类色只用 `admin.css` 里 4 个经校验器验证的槽位，按固定顺序分配、第 5 类起并「其他」；每张图都能切数据表（浅色下青、黄两槽对底色不足 3:1，表格是补救）；热力图单色蓝阶，格内文字色逐阶指定 `--seq-text-N`。
+- 旧 `/admin/wallet`、`/admin/business` 保留为重定向；`/api/admin/dashboard` 已删除。
 
 ### 小程序主题系统：token 是唯一样式来源，靠 validate 强制
 

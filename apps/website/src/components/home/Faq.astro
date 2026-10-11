@@ -1,0 +1,52 @@
+---
+/*
+ * 常见问题。只用原生 <details>，不加 FAQPage 结构化数据（jsonld.ts 的约定：
+ * 官网不为富结果堆 schema）。
+ *
+ * 每条回答都要能在代码或用户协议里找到依据：冻干有效期见 legal/terms.astro，
+ * 主人授权见 owner-photo-service，纪念状态见 lifeStage 三态（只能用户手动设置）。
+ */
+const FAQS = [
+  {
+    q: "需要下载 App 吗？",
+    a: "不用。麻麻抱我是微信小程序，微信扫码就能打开，照片和作品都保存在你的账号里。",
+  },
+  {
+    q: "用什么样的照片效果最好？",
+    a: "光线充足、脸部清楚、没有被遮挡的照片最好。拍人宠写真时还需要一张你本人的照片，上传前要确认是本人并同意使用。",
+  },
+  {
+    q: "多久能拍好？",
+    a: "一般几分钟，排队的人多时会久一些。拍好后会发站内通知，不用一直守在页面上。",
+  },
+  {
+    q: "冻干怎么获得？会过期吗？",
+    a: "在小程序里充值获得。充值到账的冻干长期有效，见面礼等赠送的冻干有有效期。冻干只能在小程序内使用，不能提现或转让。",
+  },
+  {
+    q: "家里有好几只宠物怎么办？",
+    a: "每只单独建档，照片、记录和作品分开放，随时切换。",
+  },
+  {
+    q: "它已经离开了，还能用吗？",
+    a: "可以。把它的状态设为纪念后，可以建一个纪念空间，做纪念册、纪念视频或星尘页。陪伴天数会停在那一天，健康提醒也不会再出现。",
+  },
+];
+---
+
+<section class="band section faq" id="faq">
+  <div class="container faq-layout">
+    <div class="section-head reveal">
+      <p class="eyebrow">常见问题</p>
+      <h2 class="h2 h2-sm">你可能<br />还想知道</h2>
+    </div>
+    <div class="faq-list reveal">
+      {FAQS.map((item) => (
+        <details class="faq-item">
+          <summary>{item.q}</summary>
+          <p>{item.a}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

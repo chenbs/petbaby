@@ -24,7 +24,7 @@
 
 | 缺失的东西                                 | 测试机（`APP_ENV=staging`）        | 正式生产                                |
 | ------------------------------------- | ----------------------------- | ----------------------------------- |
-| `WECHAT_APP_ID` / `WECHAT_APP_SECRET` | `wx.login` 失败，改用账号密码登录        | 微信登录不可用                             |
+| `WECHAT_APP_ID` / `WECHAT_APP_SECRET` | `wx.login` 失败，小程序无法登录（无账号密码入口） | 微信登录不可用                             |
 | 微信支付商户凭据                              | 走模拟支付，可完成解锁                   | 下单返回 503 `PAYMENT_CONFIG_PENDING`   |
 | `OSS_*` 云存储凭据                         | 落在服务器本地磁盘                     | 存储调用返回 503 `STORAGE_CONFIG_PENDING` |
 | `LINGSUAN_IMAGE_*` / `AI_IMAGE_ENDPOINT` | 返回内置 SVG 占位图                  | 503 `AI_PROVIDER_CONFIG_PENDING`（不回落色块）  |

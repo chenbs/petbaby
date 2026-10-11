@@ -32,7 +32,7 @@
 
 | 变量 | 默认 | 说明 |
 | --- | --- | --- |
-| `PASSWORD_AUTH_ENABLED` | `false` | 账号密码注册/登录开关，只在本地与测试机生效（需显式设 `true`）。**正式生产一律关闭、此开关无效**：生产只有微信账号 |
+| `PASSWORD_AUTH_ENABLED` | `false` | **消费端** Web/H5 的账号密码注册/登录开关，只在本地与测试机生效（需显式设 `true`）。**正式生产一律关闭、此开关无效**：生产用户只有微信账号。小程序 2026-10-11 起没有账号密码入口。运营后台登录（`/admin/login`）不受此开关影响 |
 | `PASSWORD_AUTH_INVITE_CODE` | 空 | 设置后注册必须携带邀请码；公网测试机建议保留 |
 | `WECHAT_APP_ID`、`WECHAT_APP_SECRET` | 空 | 小程序 `wx.login` 经 code2Session 换取 unionid 与 openid；缺失时微信登录不可用 |
 | `WECHAT_SESSION_ENCRYPTION_KEY` | 空 | 32 字节 Base64，加密保存 session_key；缺失时微信登录整体失败（用户行随事务回滚） |
@@ -42,6 +42,8 @@
 账号规则：字母开头、3-32 位、仅含字母数字点下划线连字符，大小写不敏感唯一。密码规则：10-72 位且同时含字母和数字，用 scrypt（N=16384, r=8, p=1）加盐存储。
 
 相关接口：`POST /api/auth/password/register`、`POST /api/auth/password/login`、`POST /api/auth/logout`、`GET /api/auth/session`、`POST /api/auth/wechat`。
+
+**运营后台登录**（2026-10-11）：`POST /api/admin/login`，与上面的消费端密码登录分开，正式生产同样可用。只放行 `ADMIN_USER_IDS` 内且未停用的账号；账号不存在、密码错、不是管理员一律返回 401「账号或密码不正确」，账号不存在时也跑一次 scrypt 防按耗时探测；按 IP（20 次 / 10 分钟）与账号（8 次 / 10 分钟）限频，成功写 `admin_login` 审计。管理员账号没有公开注册，只能用 `deploy/scripts/create-admin.sh <账号名>`（内部调 `pnpm admin:account`，密码走标准输入）创建或重设密码。
 
 ## 微信与支付
 

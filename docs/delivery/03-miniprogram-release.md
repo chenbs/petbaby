@@ -88,9 +88,9 @@ pnpm validate
 
 ### 1.5 在小程序里登录
 
-`wx.login` 需要 AppID + AppSecret，这一阶段一定失败——代码已做兜底，不会报错也不会覆盖已有会话。用账号密码登录：
+小程序**只有微信登录**（2026-10-11 起去掉了账号密码注册与登录入口）。启动时 `wx.login` 静默登录；失败时可在「我的」→「登录与退出」点「微信一键登录」重试。
 
-**「我的」→「登录与退出」→ 注册/登录**（账号规则同 Web：字母开头 3-32 位；密码 ≥10 位且含字母和数字；测试机需要邀请码，在 `deploy/.env.staging` 的 `PASSWORD_AUTH_INVITE_CODE`）。
+`wx.login` 需要后端配好 `WECHAT_APP_ID` / `WECHAT_APP_SECRET` / `WECHAT_SESSION_ENCRYPTION_KEY`，且小程序已绑定微信开放平台（要拿 unionid）。这些没齐之前小程序拿不到会话，只能看未登录可见的页面；要走完整业务链路，先按 2.4 节补齐微信凭据。
 
 ### 1.6 模拟器里要验的
 
@@ -152,9 +152,8 @@ WECHAT_APP_ID=wx0000000000000000
 WECHAT_APP_SECRET=<你的 AppSecret>
 ```
 
-然后 `./deploy/scripts/deploy.sh staging`。此后小程序启动时的 `wx.login` 静默登录就能成功，不再需要账号密码。
+然后 `./deploy/scripts/deploy.sh staging`。此后小程序启动时的 `wx.login` 静默登录就能成功。
 
-> 已经用账号密码登录过的手机会保留账号密码会话（本地 `petbaby_session_source=password`）。想切回微信登录，在「我的 → 登录与退出」里退出即可。
 
 ### 2.5 真机预览（开发版）
 
@@ -259,7 +258,6 @@ pnpm upload
 | `MINIPROGRAM_VERSION 必须使用 x.y.z 格式`         | 版本号格式必须是 `1.0.0`                                                 |
 | `预览与上传需要无路径的 HTTPS API 域名` | 上传时不允许 http 地址                                                   |
 | 启动后接口全部 401                                         | 会话过期。「我的 → 登录与退出」重新登录；配了 `WECHAT_APP_ID/SECRET` 后会自动静默登录         |
-| 登录报「账号密码登录未启用」                                      | 后端 `PASSWORD_AUTH_ENABLED` 不是 `true`（正式生产默认关闭，这是预期行为）            |
 | 上传图片失败 413                                          | 单张限 2.5MB，先在小程序里压缩                                               |
 | 真机白屏、模拟器正常                                          | 多为基础库差异。代码已避免可选链/空值合并，新增代码也要遵守                                   |
 | `pnpm validate` 报缺文件                                | 新页面必须同时有 `js/json/wxml/wxss` 四个文件，并登记进 `app.json`                |

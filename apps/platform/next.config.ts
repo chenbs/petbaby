@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
   distDir: process.env.NEXT_DIST_DIR || ".next",
   poweredByHeader: false,
   serverExternalPackages: ["@electric-sql/pglite"],
+  // 消费端 (app) 与运营后台 admin 是两个根布局，未匹配路由的 404 由 app/global-not-found.tsx 整页输出。
+  experimental: { globalNotFound: true },
   async headers() {
     return [
       {

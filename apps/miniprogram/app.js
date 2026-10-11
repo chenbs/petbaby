@@ -9,8 +9,8 @@ App({
     this.globalData.themeId = theme.init();
     const existing = wx.getStorageSync("petbaby_session");
     if (existing) this.globalData.loggedIn = true;
-    // 账号密码登录优先：测试环境没有微信凭据，静默登录会失败并覆盖已有会话。
-    if (wx.getStorageSync("petbaby_session_source") === "password") return;
+    // 2026-10-11 起小程序只有微信登录；清掉旧版本账号密码登录留下的会话来源标记。
+    wx.removeStorageSync("petbaby_session_source");
     wx.login({
       timeout: 8000,
       success: (result) => {

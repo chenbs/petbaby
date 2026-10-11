@@ -5,12 +5,13 @@ export const SITE_URL = (import.meta.env.SITE_URL || "https://www.babykitty.cn")
 export const SITE_TAGLINE = "宠物照片创作、宠物人化与陪伴记录小程序";
 
 export const SITE_DESCRIPTION =
-  "麻麻抱我是宠物照片创作与陪伴记录微信小程序，支持宠物身份证、海报、画册、宠物艺术写真和「如果我是人」宠物人化，还可制作陪伴短片、记录成长、创建纪念空间。从一张照片开始，保存和分享专属作品。具体开放功能与费用以小程序内展示为准。";
+  "麻麻抱我是宠物照片创作与陪伴记录微信小程序，支持宠物写真、人宠写真、「如果我是人」宠物人化，以及身份证、海报和画册，还可制作陪伴短片、记录日常与成长、创建纪念空间。具体开放功能与费用以小程序内展示为准。";
 
 export const SITE_KEYWORDS = [
   BRAND_NAME,
   "宠物照片创作",
   "宠物艺术写真",
+  "人宠写真",
   "宠物人化",
   "如果我是人",
   "宠物身份证",
@@ -20,12 +21,12 @@ export const SITE_KEYWORDS = [
 
 export const NAV_ITEMS: ReadonlyArray<{ label: string; href: string }> = [
   { label: "首页", href: "/#home" },
-  { label: "核心玩法", href: "/#plays" },
-  { label: "三类玩法", href: "/#services" },
-  { label: "艺术写真", href: "/#portrait" },
-  { label: "作品展示", href: "/#works" },
-  { label: "星尘纪念", href: "/#memorial" },
-  { label: "联系我们", href: "/#contact" },
+  { label: "小程序功能", href: "/#features" },
+  { label: "作品样片", href: "/#works" },
+  { label: "怎么用", href: "/#how" },
+  { label: "隐私与安心", href: "/#trust" },
+  { label: "常见问题", href: "/#faq" },
+  { label: "扫码使用", href: "/#contact" },
   { label: "文章", href: "/blog/" },
 ];
 
@@ -38,29 +39,28 @@ export const FOOTER_COLUMNS: ReadonlyArray<{
     id: "footer-plays",
     title: "玩法",
     links: [
-      { label: "宠物身份证", href: "/#plays" },
-      { label: "宠物电影海报", href: "/#plays" },
-      { label: "宠物时光画册", href: "/#plays" },
-      { label: "宠物艺术写真", href: "/#portrait" },
-      { label: "宠物记忆短片", href: "/#services" },
+      { label: "宠物写真", href: "/#works" },
+      { label: "人宠写真", href: "/#works" },
+      { label: "如果我是人", href: "/#works" },
+      { label: "身份证、海报与画册", href: "/#features" },
+      { label: "陪伴短片", href: "/#features" },
     ],
   },
   {
     id: "footer-memorial",
-    title: "纪念",
+    title: "记录与纪念",
     links: [
-      { label: "纪念册", href: "/#memorial" },
-      { label: "纪念视频", href: "/#memorial" },
-      { label: "星尘纪念页", href: "/#memorial" },
-      { label: "成长对比图", href: "/#memorial" },
+      { label: "日常记录与健康", href: "/#features" },
+      { label: "成长时间线", href: "/#features" },
+      { label: "年度报告", href: "/#features" },
+      { label: "纪念空间", href: "/#features" },
     ],
   },
   {
     id: "footer-about",
     title: "关于",
     links: [
-      { label: "产品介绍", href: "/#home" },
-      { label: "作品展示", href: "/#works" },
+      { label: "常见问题", href: "/#faq" },
       { label: "文章", href: "/blog/" },
       { label: "联系我们", href: "/#contact" },
       { label: "用户协议", href: "/legal/terms/" },

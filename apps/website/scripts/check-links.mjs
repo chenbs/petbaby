@@ -5,12 +5,13 @@
  * 改一个 slug 就留下一个 404，而构建照样通过、页面照样能打开 —— 只有真去点
  * 那个链接才会发现。这个脚本把「点一遍」变成构建期的一次断言。
  *
- * 查五件事：
+ * 查六件事：
  *   ① 站内 <a href> 都能命中 dist 下的文件
  *   ② <img src> / <video src> / <link href> / <script src> 同上
  *   ③ sitemap 里的 URL 都能命中，且与页面 canonical 逐字一致
  *   ④ canonical 与 sitemap 双向无遗漏（noindex 页面除外）
  *   ⑤ trailingSlash 一致：目录式 URL 必须以 / 结尾
+ *   ⑥ 站内锚点（/#xxx）指向的 id 在目标页存在
  *
  * 只读 dist/，不起浏览器 —— CI 里跑得起。
  */
@@ -76,7 +77,14 @@ for (const file of htmlFiles) {
     if (!url.pathname.endsWith("/") && !last.includes(".")) {
       fail(`${rel}: 链接 ${href} 缺末尾斜杠（trailingSlash: 'always'）`);
     }
-    if (!await resolveTarget(url.pathname)) fail(`${rel}: 死链 ${href}`);
+    if (!await resolveTarget(url.pathname)) { fail(`${rel}: 死链 ${href}`); continue; }
+    // ⑥ 锚点：`/#plays` 这类片段指向的 id 必须在目标页存在。页面能打开、只是不跳，
+    // 同样不报错 —— 导航曾有 5 个锚点指向原型已删的区块而一直没人发现。
+    if (url.hash) {
+      const target = path.join(DIST, decodeURIComponent(url.pathname), url.pathname.endsWith("/") ? "index.html" : "");
+      const targetHtml = await readFile(target, "utf8").catch(() => "");
+      if (!targetHtml.includes(`id="${decodeURIComponent(url.hash.slice(1))}"`)) fail(`${rel}: 锚点不存在 ${href}`);
+    }
   }
 
   for (const match of html.matchAll(/\bsrcset="([^"]+)"/g)) {

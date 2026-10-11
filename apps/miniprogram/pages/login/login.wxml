@@ -19,84 +19,13 @@
     <t-button type="danger" block anim="{{animType}}" class="block-gap" bindtap="logout">退出登录</t-button>
   </block>
 
-  <block wx:elif="{{!enabled}}">
-    <t-notice type="info" message="当前环境未开启账号密码登录。" class="block-gap"></t-notice>
+  <block wx:else>
+    <!-- 2026-10-11：小程序只有微信登录，不提供账号密码注册与登录入口 -->
     <t-card blur="{{blurOk}}" anim="{{animType}}" class="block-gap">
       <view class="sub-title">用微信登录</view>
-      <text class="muted">回到首页时会自动用微信身份进入，无需账号密码。</text>
-      <t-button type="primary" block anim="{{animType}}" class="block-gap" bindtap="goHome">用微信身份进入</t-button>
+      <text class="muted">使用当前微信身份进入，无需注册，也不需要账号密码。</text>
     </t-card>
-  </block>
-
-  <block wx:else>
-    <!-- 登录/注册分段控件，替代两个按钮（需求 5.21-2） -->
-    <view class="segment">
-      <view
-        class="segment-item tappable anim-{{animType}} {{mode === 'login' ? 'segment-on' : ''}}"
-        aria-role="button"
-        data-mode="login"
-        bindtap="switchMode"
-      >登录</view>
-      <view
-        class="segment-item tappable anim-{{animType}} {{mode === 'register' ? 'segment-on' : ''}}"
-        aria-role="button"
-        data-mode="register"
-        bindtap="switchMode"
-      >注册</view>
-    </view>
-
-    <t-card blur="{{blurOk}}" anim="{{animType}}" class="block-gap">
-      <view class="stack">
-        <t-field
-          label="账号"
-          value="{{accountName}}"
-          placeholder="字母开头，3-32 位"
-          maxlength="32"
-          data-field="accountName"
-          required
-          bindchange="input"
-        ></t-field>
-        <t-field
-          label="密码"
-          value="{{password}}"
-          password
-          placeholder="请输入密码"
-          help="{{mode === 'register' ? '至少 10 位，需同时包含字母和数字。' : ''}}"
-          maxlength="64"
-          data-field="password"
-          required
-          bindchange="input"
-        ></t-field>
-        <t-field
-          wx:if="{{mode === 'register'}}"
-          label="昵称"
-          value="{{displayName}}"
-          placeholder="选填，例如「小林」"
-          maxlength="20"
-          data-field="displayName"
-          bindchange="input"
-        ></t-field>
-        <t-field
-          wx:if="{{mode === 'register' && inviteRequired}}"
-          label="邀请码"
-          value="{{inviteCode}}"
-          placeholder="请输入邀请码"
-          help="当前为邀请制，邀请码由管理员发放。"
-          maxlength="32"
-          data-field="inviteCode"
-          required
-          bindchange="input"
-        ></t-field>
-      </view>
-    </t-card>
-
-    <t-button
-      type="primary"
-      block
-      anim="{{animType}}"
-      loading="{{busy}}"
-      class="block-gap"
-      bindtap="submit"
-    >{{mode === 'login' ? '登录' : '注册并登录'}}</t-button>
+    <t-button type="primary" block anim="{{animType}}" loading="{{busy}}" class="block-gap" bindtap="wechatLogin">微信一键登录</t-button>
+    <text class="hint block-gap">登录即表示同意用户协议与隐私政策。</text>
   </block>
 </view>

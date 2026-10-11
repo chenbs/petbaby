@@ -68,33 +68,67 @@ test("reaches the growth timeline from the account entry", async ({ page }) => {
   await expect(page.getByRole("button", { name: "确认年度素材与报价" })).toBeVisible();
 });
 
-test("loads every administrator workspace through the formal navigation", async ({ page }) => {
-  const failedAdminRequests: string[] = [];
+/*
+ * 2026-10-11 运营后台重建为桌面控制台（src/app/admin 独立根布局）。
+ * 这条用例按侧栏导航逐页打开，每页都必须渲染出标题且没有错误边界；
+ * 旧入口 /admin/wallet、/admin/business 必须跳到新页面，而不是 404。
+ */
+test("loads every administrator workspace through the console navigation", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const failures: string[] = [];
   page.on("response", (response) => {
-    if (response.url().includes("/api/admin/") && response.status() >= 400) failedAdminRequests.push(`${response.status()} ${response.url()}`);
+    if (response.url().includes("/admin") && response.status() >= 500) failures.push(`${response.status()} ${response.url()}`);
   });
+  page.on("pageerror", (error) => failures.push(`pageerror ${error.message}`));
+
   await page.goto("/admin");
-  await expect(page.getByRole("heading", { name: "运营诊断台" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "今天该处理什么" })).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByRole("heading", { level: 1, name: "运营总览" })).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByRole("heading", { name: "待处理" })).toBeVisible();
+  await page.screenshot({ path: "output/playwright/admin-overview.png", fullPage: true });
 
   const workspaces = [
-    ["/admin/experiments", "玩法赛马"],
-    ["/admin/plugins", "玩法配置与回滚"],
-    ["/admin/video", "视频模板与渲染任务"],
-    ["/admin/memorials", "纪念产品管理"],
-    ["/admin/business", "订阅、履约与权益"],
-    ["/admin/wallet", "冻干钱包管理"],
-    ["/admin/users", "用户与审计"],
-    ["/admin/audit", "统一管理审计"],
+    ["用户增长", "/admin/growth", "用户增长"],
+    ["功能使用", "/admin/features", "功能使用"],
+    ["收入与冻干", "/admin/revenue", "收入与冻干"],
+    ["用户", "/admin/users", "用户"],
+    ["订单与履约", "/admin/orders", "订单与履约"],
+    ["任务监控", "/admin/tasks", "任务监控"],
+    ["消息与报告", "/admin/messages", "消息与报告"],
+    ["麻麻精选", "/admin/curation", "麻麻精选"],
+    ["玩法配置", "/admin/plugins", "玩法配置"],
+    ["玩法赛马", "/admin/experiments", "玩法赛马"],
+    ["视频目录", "/admin/video", "视频目录"],
+    ["纪念空间", "/admin/memorials", "纪念空间"],
+    ["系统健康", "/admin/system", "系统健康"],
+    ["审计日志", "/admin/audit", "审计日志"],
   ] as const;
-  for (const [path, heading] of workspaces) {
-    await page.goto(path);
-    await expect(page.getByRole("heading", { name: heading })).toBeVisible();
-    await expect(page.locator("main")).not.toContainText("服务暂时不可用", { timeout: 15_000 });
-    await page.waitForTimeout(250);
-    if (path === "/admin/wallet") {
-      await page.screenshot({ path: "output/playwright/wallet-admin.png", fullPage: true });
-    }
+  const nav = page.getByRole("navigation", { name: "后台导航" });
+  for (const [link, path, heading] of workspaces) {
+    await nav.getByRole("link", { name: link, exact: true }).click();
+    await expect(page).toHaveURL(new RegExp(`${path}(\\?|$)`));
+    await expect(page.getByRole("heading", { level: 1, name: heading, exact: true })).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator("main")).not.toContainText("这一页没有加载出来");
   }
-  expect(failedAdminRequests).toEqual([]);
+
+  for (const [legacy, target] of [["/admin/wallet", "/admin/revenue"], ["/admin/business", "/admin/messages"]] as const) {
+    await page.goto(legacy);
+    await expect(page).toHaveURL(new RegExp(`${target}$`));
+  }
+
+  // 用户详情：从列表点进第一位用户，详情页必须带出账号与价值卡片。
+  await page.goto("/admin/users");
+  const firstUser = page.locator("table a[href^='/admin/users/']").first();
+  await firstUser.click();
+  await expect(page.getByRole("heading", { name: "账号", exact: true })).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByRole("button", { name: "补偿冻干" })).toBeVisible();
+
+  // 深色主题切换后刷新仍保持（localStorage + 首屏脚本）。
+  await page.getByRole("button", { name: "切换到深色" }).click();
+  await page.reload();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  await page.goto("/admin/revenue");
+  await page.screenshot({ path: "output/playwright/admin-revenue-dark.png", fullPage: true });
+  await page.getByRole("button", { name: "切换到浅色" }).click();
+
+  expect(failures).toEqual([]);
 });

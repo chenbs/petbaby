@@ -17,7 +17,7 @@
 | 环境变量文件                 | `deploy/.env.staging`         | `deploy/.env.production`            |
 | 编排文件                   | `deploy/compose.staging.yaml` | `deploy/compose.production.yaml`    |
 | `NODE_ENV` / `APP_ENV` | `production` / `staging`      | `production` / 不设置                  |
-| 登录方式                   | 账号密码注册登录 + 微信登录（补齐 AppID 后）   | 微信登录为主                              |
+| 登录方式                   | 用户：微信登录（补齐 AppID 后）；运营后台：`/admin/login` 账号密码 | 用户：仅微信登录；运营后台：`/admin/login` 账号密码 |
 | 对象存储                   | **服务器本地磁盘**（Docker 命名卷）       | 必须腾讯云 COS，缺凭据直接 503               |
 | 支付                     | 模拟支付（可走通解锁流程，不产生真实交易）         | 必须微信支付 v3                           |
 | HTTPS                  | 宿主机 Nginx + Certbot/云证书       | 宿主机 Nginx / 云负载均衡                   |
@@ -89,7 +89,7 @@ findmnt -T "$(docker info --format '{{.DockerRootDir}}')" -o FSTYPE,SOURCE,TARGE
 | 已备案域名 + DNS          | **必需**    | 无法签发证书或配置云证书，HTTPS 不可用 |
 | PostgreSQL           | 不需要额外准备   | 编排内自带 PostgreSQL 17 容器 |
 | 对象存储凭据               | 不需要       | 落在服务器本地磁盘              |
-| 微信 AppID / AppSecret | 不需要       | 微信登录不可用，改用账号密码登录       |
+| 微信 AppID / AppSecret | 不需要       | 小程序拿不到会话，只能浏览未登录页面；运营后台不受影响 |
 | 微信支付商户凭据             | 不需要       | 使用模拟支付，可走通解锁           |
 | AI 图片接口              | 不需要       | AI 玩法返回内置 SVG 占位图      |
 | 小程序上传私钥              | 上传体验版时才需要 | 只能在开发者工具模拟器里调试         |
@@ -393,17 +393,16 @@ sudo nginx -t
 
 > 邀请码的作用：测试机在公网上，没有邀请码任何人都能注册。想去掉就把 `deploy/.env.staging` 里的 `PASSWORD_AUTH_INVITE_CODE=` 清空，再跑一次 `./deploy/scripts/deploy.sh staging`。
 
-### 2.7 注册账号并开通管理后台
+### 2.7 创建管理员并登录运营后台
 
 ```bash
-# 1) 浏览器打开 https://petbaby.example.com/login
-#    选「注册新账号」，填账号（字母开头 3-32 位）、密码（≥10 位且含字母和数字）、邀请码
-
-# 2) 把这个账号加入管理员白名单
-./deploy/scripts/create-admin.sh <刚注册的账号名>
+# 创建后台管理员账号（交互输入两次密码：≥10 位且含字母和数字），并加入白名单
+./deploy/scripts/create-admin.sh <管理员账号名>
 ```
 
-`create-admin.sh` 会查出该账号的 UUID、写入 `ADMIN_USER_IDS`、重启 web 和 worker。完成后访问 `https://petbaby.example.com/admin`。
+`create-admin.sh` 在 web 容器里调用 `pnpm admin:account` 创建账号（已存在则重设密码），把用户 ID 写入 `ADMIN_USER_IDS`，再重启 web 和 worker。完成后打开 `https://petbaby.example.com/admin/login` 登录。
+
+2026-10-11 起运营后台使用**独立的账号密码登录**（`/admin/login` → `POST /api/admin/login`），正式生产同样可用；只放行白名单内的账号，失败一律提示「账号或密码不正确」。小程序和 H5 用户仍只有微信账号，不提供账号密码注册入口。管理员账号没有公开注册入口，只能用这个脚本创建。
 
 生产语义下管理后台对非管理员**返回 404**（不暴露后台是否存在），所以「访问 /admin 是 404」通常意味着白名单没生效，不是页面丢了。
 
@@ -431,7 +430,7 @@ cp config.local.example.js config.local.js
 # 编辑 config.local.js，把 apiBaseUrl 改成 https://petbaby.example.com
 ```
 
-然后用微信开发者工具导入 `apps/miniprogram/`。**没有 AppID 也能调试**：选「测试号」或游客模式，在开发者工具的「详情 → 本地设置」里勾选「不校验合法域名」，即可访问测试机。小程序内在「我的 → 登录与退出」用账号密码登录（`wx.login` 在没有 AppID/AppSecret 时会失败，代码已做兜底，不会覆盖账号密码会话）。
+然后用微信开发者工具导入 `apps/miniprogram/`。**没有 AppID 也能调试**：选「测试号」或游客模式，在开发者工具的「详情 → 本地设置」里勾选「不校验合法域名」，即可访问测试机。小程序只有微信登录（2026-10-11 起没有账号密码入口），`wx.login` 在没有 AppID/AppSecret 时会失败，只能浏览未登录页面；完整链路要先补齐微信凭据。
 
 调试基础库**不要低于 2.19.2**：虚拟支付能力要求该版本；支付入口对低版本显示升级提示，其他页面仍由 `app.wxss` 的兜底值接管并保持可用。
 
@@ -488,8 +487,9 @@ cp config.local.example.js config.local.js
 | Certbot/ACME 申请证书失败                | 确认 DNS 已指向本机、80 端口可访问、Nginx 保留 `/.well-known/acme-challenge/`，再重试；不要频繁触发 ACME 限流                                              |
 | 打开任何页面都跳 `/login`                  | 正常：生产模式没有登录不给进。注册或登录即可                                                                                                        |
 | 登录后访问 `/admin` 返回 404              | `ADMIN_USER_IDS` 没生效。执行 `create-admin.sh <账号名>`                                                                               |
+| `/admin/login` 提示「账号或密码不正确」        | 账号不存在、密码错或不在白名单都是这句。重跑 `create-admin.sh <账号名>` 会重设密码并补白名单                                                            |
 | 注册报「邀请码不正确」                        | 邀请码在 `deploy/.env.staging` 的 `PASSWORD_AUTH_INVITE_CODE`                                                                      |
-| 注册报「账号密码登录未启用」                     | `PASSWORD_AUTH_ENABLED` 不是 `true`，改完执行 `deploy.sh staging`                                                                    |
+| H5 注册报「账号密码登录未启用」                  | 测试机 H5 用户注册需 `PASSWORD_AUTH_ENABLED=true`，改完执行 `deploy.sh staging`；运营后台登录不依赖此开关                                                                    |
 | 生成任务一直 `queued`                    | Worker 没起来：`logs.sh staging worker`。也可能触发了日成本熔断（后台「环境配置诊断」和 `/api/health` 可见），调 `DAILY_GENERATION_LIMIT` / `DAILY_COST_LIMIT` |
 | 生成失败、日志报存储错误                       | 确认 `OBJECT_STORAGE_PROVIDER=local` 且 `APP_ENV=staging`；正式生产模式下 local 会被强制回落到云存储适配器并返回 503                                     |
 | 上传照片报「仅支持真实的 JPG/PNG/WebP」         | 服务端按魔数校验，改扩展名无效                                                                                                               |

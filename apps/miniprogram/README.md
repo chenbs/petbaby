@@ -33,4 +33,4 @@ pnpm upload    # 另需 MINIPROGRAM_VERSION
 
 最后三项管的都是**静默失效**类错误：无来源的 `var()` 只是不生效；漏注册的组件被当未知节点丢掉，页面少一块却不报错；标签失衡要等开发者工具打开才现形。这类问题不会让门禁自然变红，必须显式检查。
 
-复制 `config.local.example.js` 为未跟踪的 `config.local.js` 可配置本地/测试机 API。没有 AppID 时可在开发者工具里勾选「不校验合法域名」，并用「我的 → 登录与退出」的账号密码登录测试机。完整流程（含上传体验版、提交审核、发布与回退）见 `../../docs/delivery/03-miniprogram-release.md`。
+复制 `config.local.example.js` 为未跟踪的 `config.local.js` 可配置本地/测试机 API。没有 AppID 时可在开发者工具里勾选「不校验合法域名」调试未登录页面；小程序只有微信登录（2026-10-11 起没有账号密码注册与登录入口），完整链路需要后端配好微信凭据。完整流程（含上传体验版、提交审核、发布与回退）见 `../../docs/delivery/03-miniprogram-release.md`。

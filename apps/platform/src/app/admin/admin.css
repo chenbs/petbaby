@@ -1,0 +1,142 @@
+/*
+ * 运营后台样式。与消费端 globals.css 完全隔离：后台是独立的根布局（src/app/admin/layout.tsx），
+ * 两棵树之间跳转是整页加载，样式不会互相串。
+ *
+ * 只扫描后台自己的文件生成工具类，避免把消费端组件里的类名也打进来。
+ */
+@import "tailwindcss" source(none);
+@source "./";
+@source "../../components/admin";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/*
+ * 颜色全部走角色变量，明暗两套在这里各写一次。
+ * 图表色板经 dataviz 校验器验证（浅色底 #ffffff / 深色底 #18181b，前 4 槽相邻对全部通过）；
+ * 浅色下青、黄两槽对底色不足 3:1，所以每张图都配图例与数据表。
+ */
+:root {
+  color-scheme: light;
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --surface-2: #f4f4f6;
+  --surface-3: #ececf0;
+  --line: #e6e6ea;
+  --line-strong: #d4d4da;
+  --ink: #0d0d12;
+  --ink-2: #4b4b55;
+  --muted: #868690;
+  --accent: #f05a28;
+  --accent-soft: #fff1eb;
+  --focus: #2a78d6;
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+  --series-4: #eda100;
+  --seq-1: #cde2fb;
+  --seq-2: #9ec5f4;
+  --seq-3: #6da7ec;
+  --seq-4: #3987e5;
+  --seq-5: #256abf;
+  --seq-6: #184f95;
+  /* 每一阶上的文字色：实测对比度取墨色 / 白色中较高者（浅色 1–4 阶墨色，5–6 阶白色） */
+  --seq-text-1: #0d0d12; --seq-text-2: #0d0d12; --seq-text-3: #0d0d12; --seq-text-4: #0d0d12; --seq-text-5: #ffffff; --seq-text-6: #ffffff;
+  --good: #0ca30c;
+  --good-ink: #006300;
+  --warning: #fab219;
+  --serious: #ec835a;
+  --critical: #d03b3b;
+  --critical-ink: #b42323;
+  --grid: #ececef;
+  --axis: #c9c9cf;
+  --shadow: 0 1px 2px rgba(16, 16, 24, 0.04), 0 1px 1px rgba(16, 16, 24, 0.03);
+  --shadow-lg: 0 12px 32px -8px rgba(16, 16, 24, 0.18), 0 2px 6px rgba(16, 16, 24, 0.06);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0c0c0e;
+  --surface: #18181b;
+  --surface-2: #1f1f23;
+  --surface-3: #2a2a2f;
+  --line: #2a2a30;
+  --line-strong: #3a3a42;
+  --ink: #f6f6f8;
+  --ink-2: #c4c4cc;
+  --muted: #8b8b95;
+  --accent: #ff6a3a;
+  --accent-soft: #2b1a13;
+  --focus: #6da7ec;
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
+  --series-4: #c98500;
+  --seq-1: #1a2a40;
+  --seq-2: #184f95;
+  --seq-3: #1c5cab;
+  --seq-4: #2a78d6;
+  --seq-5: #5598e7;
+  --seq-6: #9ec5f4;
+  /* 深色阶由暗到亮：1–4 阶白字，5–6 阶墨色 */
+  --seq-text-1: #ffffff; --seq-text-2: #ffffff; --seq-text-3: #ffffff; --seq-text-4: #ffffff; --seq-text-5: #0d0d12; --seq-text-6: #0d0d12;
+  --good: #0ca30c;
+  --good-ink: #3fc23f;
+  --critical: #d03b3b;
+  --critical-ink: #f07a7a;
+  --grid: #26262b;
+  --axis: #3a3a42;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 16px 40px -8px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+@theme inline {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", Menlo, Consolas, monospace;
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-focus: var(--focus);
+  --color-series-1: var(--series-1);
+  --color-series-2: var(--series-2);
+  --color-series-3: var(--series-3);
+  --color-series-4: var(--series-4);
+  --color-good: var(--good);
+  --color-good-ink: var(--good-ink);
+  --color-warning: var(--warning);
+  --color-serious: var(--serious);
+  --color-critical: var(--critical);
+  --color-critical-ink: var(--critical-ink);
+  --shadow-card: var(--shadow);
+  --shadow-pop: var(--shadow-lg);
+}
+
+@layer base {
+  html {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body { min-height: 100vh; }
+  ::selection { background: color-mix(in srgb, var(--focus) 24%, transparent); }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  table { font-variant-numeric: tabular-nums; }
+}
+
+@layer components {
+  .tnum { font-variant-numeric: tabular-nums; }
+  .scrollbar-thin { scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

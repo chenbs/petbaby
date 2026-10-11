@@ -54,7 +54,7 @@ Install Chromium once with `pnpm exec playwright install chromium`.
 
 ## Coding Style & Naming Conventions
 
-Use two-space indentation, strict TypeScript, named exports for reusable modules, and early returns for error paths. Name React components in PascalCase, functions and variables in camelCase, and files/routes in lowercase kebab-case. Validate every API boundary with Zod. Keep product rules in `src/server` or `src/domain`, not inside page components. Reuse the CSS variables in `src/app/globals.css`; preserve keyboard focus, reduced-motion support, and the mobile-first visual language.
+Use two-space indentation, strict TypeScript, named exports for reusable modules, and early returns for error paths. Name React components in PascalCase, functions and variables in camelCase, and files/routes in lowercase kebab-case. Validate every API boundary with Zod. Keep product rules in `src/server` or `src/domain`, not inside page components. Consumer pages live in the `src/app/(app)` route group: reuse the CSS variables in `src/app/(app)/globals.css`; preserve keyboard focus, reduced-motion support, and the mobile-first visual language. The operations console in `src/app/admin` is a separate root layout styled with Tailwind 4 via `src/app/admin/admin.css` and the primitives in `src/components/admin`; keep its writes going through the existing `/api/admin/*` routes.
 
 In `apps/miniprogram/`, style exclusively through theme tokens — register a new token in `theme/tokens.js` before using it, and supply it in all four skins. Avoid optional chaining and nullish coalescing to stay compatible with base library 2.19.2.
 

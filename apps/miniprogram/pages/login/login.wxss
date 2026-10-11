@@ -39,33 +39,6 @@
   font-family: var(--skin-title-font, inherit);
 }
 
-/* ---------- 分段控件 ---------- */
-.segment {
-  display: flex;
-  padding: var(--space-1);
-  border: var(--card-border);
-  border-radius: var(--radius-pill);
-  margin-top: var(--space-5);
-  background: var(--surface);
-  gap: var(--space-1);
-}
-
-.segment-item {
-  min-height: 72rpx;
-  flex: 1;
-  border-radius: var(--radius-pill);
-  color: var(--text-secondary);
-  font-size: var(--body-size);
-  font-weight: 700;
-  line-height: 72rpx;
-  text-align: center;
-}
-
-.segment-on {
-  background: var(--button-primary);
-  color: var(--button-primary-text);
-}
-
 .block-gap {
   display: block;
   margin-top: var(--space-4);

@@ -16,13 +16,13 @@
 | AI 与模板 | `/api/ai-runs/*`、`/api/image-templates`、`/api/image-templates/[id]/sample` | 当前规模见文档索引；公开接口只下发 live 模板。普通模板样图读取 `sampleStorageKey`、生成读取 `masterStorageKey`；宠物人化两者指向同一自有效果图对象。普通模板支持四选一和重抽；宠物人化固定二选一且不支持重抽。40 图已获用户审核并接入代码与本地对象，生产上传和真实调用仍待验证 |
 | 视频与纪念 | `/api/video-catalog`、`/api/video-projects/*`、`/api/video-renders/*`、`/api/annual-films`、`/api/memorials/*`、`/api/memorial-share/*` | 视频项目/渲染/高清解锁与纪念空间/三类产物/分享；`POST /api/annual-films` 建叙事型年度视频（`year` + 可选 `durationSeconds` 10/20/30） |
 | 复购与商业 | `/api/subscriptions/*`、`/api/addresses/*`、`/api/physical-skus`、`/api/physical-orders/*`、`/api/growth-orders/*`、`/api/annual-reports/*`、`/api/annual-report-share/*` | 订阅、实体履约、充值订单和年度报告；实体仍现金支付，不享会员折扣 |
-| 管理后台 | `/api/admin/dashboard`、`/api/admin/audit`、`/api/admin/users`、`/api/admin/config`、`/api/admin/plugins/*`、`/api/admin/experiments/*`、`/api/admin/experiments/metrics`、`/api/admin/video`、`/api/admin/memorials`、`/api/admin/business`、`/api/admin/wallet`、`/api/admin/operations`、`/api/admin/physical-orders/*` | 驾驶舱、统一审计、用户状态、配置版本、赛马指标、任务恢复、分享关闭、履约、权益和报告运营 |
+| 管理后台 | `/api/admin/audit`、`/api/admin/home-curation`、`/api/admin/users`、`/api/admin/config`、`/api/admin/plugins/*`、`/api/admin/experiments/*`、`/api/admin/experiments/metrics`、`/api/admin/video`、`/api/admin/memorials`、`/api/admin/business`、`/api/admin/wallet`、`/api/admin/operations`、`/api/admin/physical-orders/*` | 驾驶舱、统一审计、用户状态、配置版本、赛马指标、任务恢复、分享关闭、履约、权益和报告运营 |
 
 所有用户写接口要求登录会话、可信客户端头和用户数据归属。管理接口生产环境要求 `ADMIN_USER_IDS`。支付通知使用微信平台签名，不使用用户会话。
 
 错误格式为 `{error:{code,message,details?}}`；余额不足返回 402 `WALLET_INSUFFICIENT`，details 为 `required/balance/shortfall`。小程序必须保留 details，充值确认后重放原 closure 与原幂等键；关闭面板不提交。首充档与普通档从 `/api/wallet/topup-packages` 读取，充值后复用 `/api/growth-orders/[id]/prepare|status`，客户端成功不是到账凭证。
 
-后台 `/admin/wallet` 使用 `GET|POST /api/admin/wallet`：查用户余额/冻结/批次/流水、每日报表与购买所得负债；补偿只能发有期限与原因的赠送所得，并留管理员审计。充值现金收入与冻干消耗分开计。
+`GET|POST /api/admin/wallet`：查用户余额/冻结/批次/流水、每日报表与购买所得负债；补偿只能发有期限与原因的赠送所得，并留管理员审计。充值现金收入与冻干消耗分开计。2026-10-11 起后台控制台的统计页（`/admin`、`/admin/growth`、`/admin/features`、`/admin/revenue`）是服务端组件直接查库，不经 REST；`/api/admin/dashboard` 已删除，补偿入口在 `/admin/users/[id]`。
 
 ## Worker
 

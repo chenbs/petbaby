@@ -1,0 +1,54 @@
+---
+/*
+ * 安心说明：照片归属、删除、生成内容标识、健康边界。
+ *
+ * 每一条都对应已实现的行为，不写承诺性的空话：
+ *   · 原照只有本人能读、no-store；分享走独立展示图（photo-library-service）
+ *   · 删除先阻止读取，对象清理持久重试；作品长期保存，只在用户删除/删宠物/注销时清理
+ *   · 生成内容界面叠「该内容由AI生成」、文件写隐式标识（ai-label.ts）——官网文案不出现「AI」字样
+ *   · 健康只做记录与分流（健康红线，文案不得出现诊断/确诊/治愈/问诊）
+ */
+const ITEMS = [
+  {
+    title: "照片只给你自己看",
+    body: "上传的原照只有你本人能打开。分享出去的是单独生成的展示图，原照不会公开。",
+    icon: "M10 3a4 4 0 0 0-4 4v2H5a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1h-1V7a4 4 0 0 0-4-4Zm-2 6V7a2 2 0 1 1 4 0v2H8Z",
+  },
+  {
+    title: "作品一直在，删了就清理",
+    body: "做好的作品长期保存在作品柜。你删除照片、作品或宠物后，对应文件会被清理掉。",
+    icon: "M4 5h12M8 5V3.5h4V5M5.5 5l.8 11h7.4l.8-11M8.5 8v5.5M11.5 8v5.5",
+  },
+  {
+    title: "生成的内容会注明",
+    body: "生成的图片在小程序里会标明来源，文件里也保留标识。转发时请一并说明，不要删掉标识。",
+    icon: "M10 3l1.8 4.2L16 8l-3.2 2.9.9 4.6L10 13.2l-3.7 2.3.9-4.6L4 8l4.2-.8L10 3Z",
+  },
+  {
+    title: "健康只做记录和分流",
+    body: "帮你记症状、体重和疫苗驱虫，按紧急程度给出就医建议，不替代兽医，也不推荐药物。",
+    icon: "M10 16.5s-6-3.6-6-8A3.5 3.5 0 0 1 10 6a3.5 3.5 0 0 1 6 2.5c0 4.4-6 8-6 8Z",
+  },
+];
+---
+
+<section class="section trust" id="trust">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">放心交给我们</p>
+      <h2 class="h2 h2-sm">我的照片，<br />只属于你</h2>
+    </div>
+    <ul class="assure-grid">
+      {ITEMS.map((item, index) => (
+        <li class="assure-item reveal" data-delay={index % 2 ? "1" : null}>
+          <span class="assure-icon" aria-hidden="true">
+            <svg viewBox="0 0 20 20"><path d={item.icon} /></svg>
+          </span>
+          <h3 class="h3">{item.title}</h3>
+          <p class="body-text">{item.body}</p>
+        </li>
+      ))}
+    </ul>
+    <p class="assure-foot">完整说明见 <a href="/legal/privacy/">隐私政策</a> 与 <a href="/legal/terms/">用户协议</a>。</p>
+  </div>
+</section>

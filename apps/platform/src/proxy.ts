@@ -7,7 +7,7 @@ function testHarness() {
   if (process.env.NODE_ENV === "production") return false;
   return process.env.NODE_ENV === "test" || process.env.PETBABY_TEST_HARNESS === "1";
 }
-const PUBLIC_PREFIXES = ["/login", "/legal", "/share", "/memorial/share", "/annual-report/share", "/fun-tests/share"];
+const PUBLIC_PREFIXES = ["/login", "/admin/login", "/legal", "/share", "/memorial/share", "/annual-report/share", "/fun-tests/share"];
 
 export default function proxy(request: NextRequest) {
   if (testHarness()) return NextResponse.next();
@@ -15,7 +15,8 @@ export default function proxy(request: NextRequest) {
   if (PUBLIC_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`))) return NextResponse.next();
   if (request.cookies.has("petbaby_session")) return NextResponse.next();
   const target = request.nextUrl.clone();
-  target.pathname = "/login";
+  // 后台走自己的账号密码登录页；消费端走 /login（生产只有微信账号）。
+  target.pathname = pathname === "/admin" || pathname.startsWith("/admin/") ? "/admin/login" : "/login";
   target.search = pathname === "/" ? "" : `?next=${encodeURIComponent(`${pathname}${search}`)}`;
   return NextResponse.redirect(target);
 }

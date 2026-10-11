@@ -8,7 +8,7 @@ const sourceFiles = (await readdir(sourceDir, { recursive: true }))
   .filter((name) => /\.(astro|css|js|ts|md)$/.test(name));
 const sourceText = (await Promise.all(sourceFiles.map((name) => readFile(path.join(sourceDir, name), "utf8")))).join("\n");
 const names = (await readdir(assets)).filter((name) =>
-  /^(work-|style-|play-|hero-|website-v2-).+\.jpg$/.test(name)
+  /^(work-|style-|play-|hero-|website-v2-|website-gallery-).+\.jpg$/.test(name)
   && sourceText.includes(`/assets/${name}`));
 for (const name of names) {
   const sourcePath = path.join(assets, name);

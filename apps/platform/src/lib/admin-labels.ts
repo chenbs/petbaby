@@ -86,6 +86,7 @@ export const LEDGER_REASON_LABELS: Record<string, string> = {
   topup: "充值到账",
   newcomer_gift: "见面礼",
   admin_grant: "后台补偿",
+  invite_reward: "邀请奖励",
   spend: "消耗",
   spend_return: "失败退还",
   expire: "赠送过期",

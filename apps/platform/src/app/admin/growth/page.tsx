@@ -3,15 +3,43 @@ import { Activity, Repeat, UserPlus, Users } from "lucide-react";
 import { ChartFrame, StackedBars, TrendChart } from "@/components/admin/charts";
 import { RangePicker } from "@/components/admin/range-picker";
 import { BarList, Funnel, StatCard } from "@/components/admin/stat";
-import { Card, CardBody, CardHeader, PageHeader } from "@/components/admin/ui";
+import { Card, CardBody, CardHeader, PageHeader, Table, Td, Th, Tr } from "@/components/admin/ui";
+import { acquisitionChannelLabel } from "@/domain/acquisition";
 import { LIFE_STAGE_LABELS, SPECIES_LABELS } from "@/lib/admin-labels";
-import { formatCompact, formatCount, formatPercent } from "@/lib/admin-format";
+import { formatCompact, formatCount, formatPercent, formatYuan } from "@/lib/admin-format";
 import { describeRange, resolveAdminRange } from "@/lib/admin-range";
 import { getGrowth } from "@/server/admin/analytics";
 import { requireAdminPage } from "@/server/admin/page-guard";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "用户增长" };
+
+type ChannelRow = { key: string; registered: number; hasPet: number; spent: number; paid: number; revenue: number };
+
+/** 渠道表：一行一个渠道或投放标记，转化率都以该行注册人数为分母。 */
+function ChannelTable({ rows, label, labelFor }: { rows: ChannelRow[]; label: string; labelFor: (key: string) => string }) {
+  if (!rows.length) return <p className="py-8 text-center text-xs text-muted">区间内没有新注册用户</p>;
+  return (
+    <Table>
+      <thead>
+        <tr><Th>{label}</Th><Th align="right">注册</Th><Th align="right">建档率</Th><Th align="right">消耗冻干</Th><Th align="right">付费人数</Th><Th align="right">累计实收</Th><Th align="right">人均实收</Th></tr>
+      </thead>
+      <tbody>
+        {rows.map((row) => (
+          <Tr key={row.key}>
+            <Td>{labelFor(row.key)}</Td>
+            <Td align="right">{formatCount(row.registered)}</Td>
+            <Td align="right">{formatPercent(row.registered ? row.hasPet / row.registered : 0, 0)}</Td>
+            <Td align="right">{formatCount(row.spent)}</Td>
+            <Td align="right">{formatCount(row.paid)}</Td>
+            <Td align="right">{formatYuan(row.revenue)}</Td>
+            <Td align="right">{formatYuan(row.registered ? row.revenue / row.registered : 0)}</Td>
+          </Tr>
+        ))}
+      </tbody>
+    </Table>
+  );
+}
 
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
 
@@ -148,6 +176,34 @@ export default async function GrowthPage({ searchParams }: Props) {
           </CardBody>
         </Card>
       </div>
+
+      <div className="mt-4 grid gap-4 xl:grid-cols-3">
+        <Card className="xl:col-span-2">
+          <CardHeader title="新用户来源" description={`${describeRange(range)}注册的用户按首次进入的微信场景归类；付费与实收统计到今天`} />
+          <CardBody className="pt-1"><ChannelTable rows={data.channels} label="渠道" labelFor={(key) => acquisitionChannelLabel(key)} /></CardBody>
+        </Card>
+        <Card>
+          <CardHeader title="邀请奖励" description={describeRange(range)} />
+          <CardBody className="space-y-3 pt-3">
+            {[
+              { label: "已结算邀请（建好档案）", value: data.invites.granted + data.invites.capped },
+              { label: "其中超出每日上限未发", value: data.invites.capped },
+              { label: "发出冻干（颗）", value: data.invites.units },
+              { label: "拿到奖励的邀请人", value: data.invites.inviters },
+            ].map((item) => (
+              <div key={item.label} className="flex items-baseline justify-between">
+                <span className="text-sm text-ink-2">{item.label}</span>
+                <span className="text-xl font-semibold text-ink">{formatCount(item.value)}</span>
+              </div>
+            ))}
+          </CardBody>
+        </Card>
+      </div>
+
+      <Card className="mt-4">
+        <CardHeader title="投放标记" description="小程序路径或小程序码里带的 src 参数（如 xhs-1012-human），最多列 30 个" />
+        <CardBody className="pt-1"><ChannelTable rows={data.sources} label="src" labelFor={(key) => key} /></CardBody>
+      </Card>
     </>
   );
 }

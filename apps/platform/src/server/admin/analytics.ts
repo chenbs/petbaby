@@ -190,6 +190,25 @@ export async function attentionQueue() {
 
 /* ------------------------------------------------------------------ 增长 */
 
+/*
+ * 渠道归因（迁移 0044）：区间内新注册用户，按首次进入的渠道 / 投放标记分组，看到建档、消耗冻干、付费与累计实收。
+ * 付费与实收不限在区间内发生：要回答的是「这批人最后值多少钱」。
+ */
+const CHANNEL_COHORT_SQL = `WITH paid AS (SELECT user_id, sum(amount)::float8 amount FROM (${PAID_SQL}) p GROUP BY user_id),
+  cohort AS (
+    SELECT u.id, u.acquisition_channel, u.acquisition_src, coalesce(paid.amount,0) revenue, paid.user_id IS NOT NULL is_paid
+    FROM users u LEFT JOIN paid ON paid.user_id=u.id
+    WHERE u.created_at >= $1 AND u.created_at < $2 AND u.deleted_at IS NULL)`;
+const CHANNEL_STEPS_SQL = `count(*)::int registered,
+  count(*) FILTER (WHERE EXISTS (SELECT 1 FROM pets p WHERE p.user_id=c.id))::int has_pet,
+  count(*) FILTER (WHERE EXISTS (SELECT 1 FROM wallet_ledger l WHERE l.user_id=c.id AND l.reason='spend'))::int spent,
+  count(*) FILTER (WHERE c.is_paid)::int paid,
+  coalesce(sum(c.revenue),0)::float8 revenue`;
+
+function mapChannelRow(row: Record<string, unknown>) {
+  return { key: String(row.key), registered: toNumber(row.registered), hasPet: toNumber(row.has_pet), spent: toNumber(row.spent), paid: toNumber(row.paid), revenue: toNumber(row.revenue) };
+}
+
 export async function getGrowth(range: AdminRange) {
   const database = await getDatabase();
   const { current, previous } = windows(range);
@@ -199,7 +218,7 @@ export async function getGrowth(range: AdminRange) {
   const dauStart = rangeInstants(today, today);
   const cohortFrom = addDays(today, -7 * 8 + 1);
   const cohortWindow = rangeInstants(cohortFrom, today);
-  const [now, before, daily, stickiness, funnel, retention, cohortRows, mix] = await Promise.all([
+  const [now, before, daily, stickiness, funnel, retention, cohortRows, mix, channelRows, sourceRows, inviteRows] = await Promise.all([
     headline(current),
     headline(previous),
     dailyCore(range),
@@ -256,6 +275,24 @@ export async function getGrowth(range: AdminRange) {
             SELECT CASE WHEN c=1 THEN '1 只' WHEN c=2 THEN '2 只' ELSE '3 只及以上' END bucket, count(*)::int n
             FROM (SELECT user_id, count(*) c FROM pets WHERE deleted_at IS NULL GROUP BY user_id) x GROUP BY 1 ORDER BY 1) s) pets_per_user`,
     ),
+    database.query(
+      `${CHANNEL_COHORT_SQL}
+       SELECT coalesce(c.acquisition_channel,'unknown') AS key, ${CHANNEL_STEPS_SQL}
+       FROM cohort c GROUP BY 1 ORDER BY registered DESC`,
+      [current.start, current.end],
+    ),
+    database.query(
+      `${CHANNEL_COHORT_SQL}
+       SELECT c.acquisition_src AS key, ${CHANNEL_STEPS_SQL}
+       FROM cohort c WHERE c.acquisition_src IS NOT NULL GROUP BY 1 ORDER BY registered DESC LIMIT 30`,
+      [current.start, current.end],
+    ),
+    database.query(
+      `SELECT count(*) FILTER (WHERE status='granted')::int granted, count(*) FILTER (WHERE status='capped')::int capped,
+         coalesce(sum(units),0)::int units, count(DISTINCT inviter_id)::int inviters
+       FROM invite_rewards WHERE created_at >= $1 AND created_at < $2`,
+      [current.start, current.end],
+    ),
   ]);
 
   const cohorts = new Map<string, { cohort: string; size: number; weeks: number[] }>();
@@ -294,6 +331,9 @@ export async function getGrowth(range: AdminRange) {
       d7Base: toNumber(r.d7_base),
     },
     cohorts: cohortList,
+    channels: channelRows.map(mapChannelRow),
+    sources: sourceRows.map(mapChannelRow),
+    invites: { granted: toNumber(inviteRows[0]?.granted), capped: toNumber(inviteRows[0]?.capped), units: toNumber(inviteRows[0]?.units), inviters: toNumber(inviteRows[0]?.inviters) },
     base: {
       users: toNumber(m.users),
       withPet: toNumber(m.with_pet),
@@ -508,7 +548,7 @@ export async function getRevenue(range: AdminRange) {
     database.query(
       `SELECT ${dayKey("created_at")} AS day,
          coalesce(sum(delta) FILTER (WHERE reason='topup'),0)::int topup,
-         coalesce(sum(delta) FILTER (WHERE reason IN ('newcomer_gift','admin_grant')),0)::int gift,
+         coalesce(sum(delta) FILTER (WHERE reason IN ('newcomer_gift','admin_grant','invite_reward')),0)::int gift,
          coalesce(-sum(delta) FILTER (WHERE reason='spend'),0)::int spent,
          coalesce(sum(delta) FILTER (WHERE reason='spend_return'),0)::int returned,
          coalesce(-sum(delta) FILTER (WHERE reason IN ('expire','topup_refund')),0)::int expired

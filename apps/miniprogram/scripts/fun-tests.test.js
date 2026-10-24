@@ -26,6 +26,8 @@ function loadPage(request, wxOverrides, schedule) {
       if (name.endsWith("manager")) return { getTheme: () => ({ navBarBackground: "#fff", primary: "#123", textPrimary: "#234", textSecondary: "#345" }) };
       if (name.endsWith("config")) return { apiBaseUrl: "https://example.test" };
       if (name.endsWith("sample-assets")) return { manifest: { funTests: {} } };
+      // 本机没有缓存邀请码时，分享路径原样返回（带邀请码的拼接见 acquisition.test.js）
+      if (name.endsWith("acquisition")) return { withInvite: (value) => value, withInviteQuery: (value) => value };
       return { request };
     }, wx, console, Array, setTimeout: schedule || ((callback) => callback())
   });

@@ -1,4 +1,5 @@
 const api = require("../../services/api");
+const acquisition = require("../../services/acquisition");
 const { clearRecordDrafts } = require("../../services/photo-upload-session");
 const { themedPage } = require("../../theme/page-mixin");
 
@@ -30,7 +31,7 @@ themedPage({
       timeout: 8000,
       success: (result) => {
         if (!result.code) return this.loginFailed("没有拿到微信登录凭证，请稍后再试");
-        api.request("/api/auth/wechat", { method: "POST", data: { code: result.code } })
+        api.request("/api/auth/wechat", { method: "POST", data: acquisition.loginPayload(result.code) })
           .then((session) => {
             wx.setStorageSync("petbaby_session", session.sessionToken);
             getApp().globalData.loggedIn = true;
@@ -48,6 +49,7 @@ themedPage({
     api.request("/api/auth/logout", { method: "POST" }).catch(() => undefined).then(() => {
       clearRecordDrafts();
       wx.removeStorageSync("petbaby_session");
+      acquisition.clearInviteCode();
       getApp().globalData.loggedIn = false;
       this.setData({ authenticated: false, message: "已退出登录", messageType: "info" });
     });

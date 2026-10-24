@@ -44,7 +44,7 @@ themedPage({
   doDelete() {
     this.setData({ confirmDelete: false, deleting: true, notice: "" });
     api.request("/api/account/delete", { method: "POST" })
-      .then(() => { clearRecordDrafts(); wx.removeStorageSync("petbaby_session"); wx.reLaunch({ url: "/pages/index/index" }); })
+      .then(() => { clearRecordDrafts(); wx.removeStorageSync("petbaby_session"); wx.removeStorageSync("petbaby_invite_code"); wx.reLaunch({ url: "/pages/index/index" }); })
       .catch((error) => this.setData({ deleting: false, notice: error.message, noticeType: "error" }));
   }
 });

@@ -69,7 +69,9 @@ export async function getUserDetail(userId: string) {
   const database = await getDatabase();
   const [user] = await database.query(
     `SELECT id, display_name, account_name, created_at, deleted_at, admin_suspended_at, admin_suspended_by, admin_suspension_reason,
-       wechat_unionid IS NOT NULL wechat, password_hash IS NOT NULL password FROM users WHERE id=$1`,
+       wechat_unionid IS NOT NULL wechat, password_hash IS NOT NULL password,
+       acquisition_channel, acquisition_src, acquisition_scene, invited_by,
+       (SELECT count(*)::int FROM users i WHERE i.invited_by=users.id) invited_count FROM users WHERE id=$1`,
     [userId],
   );
   if (!user) return null;

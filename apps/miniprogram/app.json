@@ -9,6 +9,7 @@
     "pages/work/work",
     "pages/orders/orders",
     "pages/wallet/wallet",
+    "pages/invite/invite",
     "pages/me/me",
     "pages/pets/pets",
     "pages/photos/photos",

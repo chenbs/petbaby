@@ -21,6 +21,7 @@ import { getDatabase, inTransaction } from "@/server/db/client";
 import { mapOrder, mapPet, mapPhoto, mapTask, mapWork } from "@/server/db/rows";
 import { measureAccumulation } from "@/server/accumulation";
 import { grantNewcomerGift, spend } from "@/server/wallet/service";
+import { settleInviteReward } from "@/server/invite-service";
 import { AppError } from "@/server/errors";
 import { applyWorkUnlock, confirmOrderPayment, prepareOrderPayment, refundOrderPayment } from "@/server/payments/service";
 import { objectStorage } from "@/server/storage";
@@ -105,6 +106,8 @@ export async function createPet(userId: string, input: unknown): Promise<Pet> {
    * 发放失败不影响建档 —— 建档是积累，不能因为送礼出错而失败。
    */
   const gift = await grantNewcomerGift(userId).catch(() => undefined);
+  // 邀请奖励：被邀请人建好宠物档案才给邀请人结算（只注册不算），每个被邀请人只结算一次。同样不能让建档失败。
+  await settleInviteReward(userId).catch(() => undefined);
   return { ...pet, isDefault: (await listPets(userId)).length === 1, ...(gift ? { newcomerGift: { units: gift.delta } } : {}) };
 }
 

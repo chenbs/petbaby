@@ -1,5 +1,6 @@
 const wallet = require("../../services/wallet");
 const api = require("../../services/api");
+const acquisition = require("../../services/acquisition");
 const config = require("../../config");
 const originals = require("../../services/originals");
 const params = require("../../services/params");
@@ -191,9 +192,9 @@ themedPage(Object.assign({}, wallet.walletSheetMethods, {
   onShareAppMessage() {
     const run = this.data.run;
     const name = this.data.pet ? this.data.pet.name : "我家毛孩子";
-    const fallback = { title: name + "拍了一组新照片，你家的也来试试？", path: "/pages/index/index" };
+    const fallback = { title: name + "拍了一组新照片，你家的也来试试？", path: acquisition.withInvite("/pages/index/index") };
     if (!run || !run.workId) return fallback;
-    const toShare = (token) => ({ title: fallback.title, path: "/pages/share/share?token=" + encodeURIComponent(token) });
+    const toShare = (token) => ({ title: fallback.title, path: acquisition.withInvite("/pages/share/share?token=" + encodeURIComponent(token)) });
     if (this._shareToken) return toShare(this._shareToken);
     return Object.assign({}, fallback, {
       promise: api.request("/api/works/" + run.workId + "/share", { method: "POST", data: { expiresInHours: 168 } })

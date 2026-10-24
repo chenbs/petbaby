@@ -17,6 +17,7 @@ const ENTRY_URLS = {
   records: "/pages/records/records",
   memorials: "/pages/memorials/memorials",
   wallet: "/pages/wallet/wallet",
+  invite: "/pages/invite/invite",
   orders: "/pages/orders/orders",
   commerce: "/pages/commerce/commerce",
   theme: "/pages/theme/theme",
@@ -58,6 +59,7 @@ themedPage({
         { title: "记录与照顾", items: record },
         { title: "钱包与订单", items: [
           { key: "wallet", name: "冻干钱包", icon: "fd-coin", tone: "plain", side: this.data.walletBalance === null ? "" : this.data.walletBalance + " 颗" },
+          { key: "invite", name: "邀请好友", icon: "ic-share", tone: "warm", sub: "好友建好档案，你得冻干" },
           { key: "orders", name: "订单与退款", icon: "ic-bag", tone: "plain" },
           { key: "commerce", name: "年度报告", icon: "ic-book", tone: "plain" }
         ] },

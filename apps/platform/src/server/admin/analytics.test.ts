@@ -79,6 +79,20 @@ describe("运营分析口径", () => {
     expect(growth.cohorts.find((cohort) => cohort.cohort === "2026-10-05")).toMatchObject({ size: 2 });
   });
 
+  it("增长：新用户按首次渠道与投放标记分组，实收统计到今天；邀请奖励单列", async () => {
+    const db = await getDatabase();
+    await db.query("UPDATE users SET acquisition_channel='search', acquisition_src='xhs-1005' WHERE id=$1", [A]);
+    await db.query("UPDATE users SET acquisition_channel='invite', invited_by=$2 WHERE id=$1", [B, A]);
+    await db.query("INSERT INTO invite_rewards (id,inviter_id,invitee_id,invitee_key,reward_date,units,status,created_at) VALUES ($1,$2,$3,'k-b','2026-10-11',1,'granted',$4)", [crypto.randomUUID(), A, B, bj("2026-10-11T09:00:00")]);
+    const growth = await getGrowth(RANGE);
+    expect(growth.channels).toEqual(expect.arrayContaining([
+      { key: "search", registered: 1, hasPet: 1, spent: 1, paid: 1, revenue: 38 },
+      { key: "invite", registered: 1, hasPet: 0, spent: 0, paid: 0, revenue: 0 },
+    ]));
+    expect(growth.sources).toEqual([{ key: "xhs-1005", registered: 1, hasPet: 1, spent: 1, paid: 1, revenue: 38 }]);
+    expect(growth.invites).toEqual({ granted: 1, capped: 0, units: 1, inviters: 1 });
+  });
+
   it("功能：写真套餐单张不算进创意照片，模板排行带入口名", async () => {
     const features = await getFeatures(RANGE);
     const image = features.summary.find((item) => item.key === "image");

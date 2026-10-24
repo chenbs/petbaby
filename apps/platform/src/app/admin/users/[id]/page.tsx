@@ -7,6 +7,7 @@ import { Badge, Card, CardBody, CardHeader, KeyValue, Mono, PageHeader, StatusBa
 import { auditActionLabel, GROWTH_KIND_LABELS, LEDGER_REASON_LABELS, LIFE_STAGE_LABELS, ORDER_KIND_LABELS, PROVIDER_LABELS, SPECIES_LABELS } from "@/lib/admin-labels";
 import { formatCount, formatDate, formatDateTime, formatYuan } from "@/lib/admin-format";
 import { getUserDetail } from "@/server/admin/console";
+import { acquisitionChannelLabel } from "@/domain/acquisition";
 import { requireAdminPage } from "@/server/admin/page-guard";
 
 export const dynamic = "force-dynamic";
@@ -80,6 +81,9 @@ export default async function UserDetailPage({ params }: Props) {
               { label: "用户 ID", value: <Mono>{id}</Mono> },
               { label: "登录方式", value: [user.wechat ? "微信" : null, user.password ? "账号密码" : null].filter(Boolean).join(" · ") || "—" },
               { label: "账号名", value: String(user.account_name || "—") },
+              { label: "来源", value: [acquisitionChannelLabel(user.acquisition_channel), user.acquisition_src ? String(user.acquisition_src) : null, user.acquisition_scene ? `场景 ${String(user.acquisition_scene)}` : null].filter(Boolean).join(" · ") },
+              ...(user.invited_by ? [{ label: "邀请人", value: <Link href={`/admin/users/${String(user.invited_by)}`} className="text-accent hover:underline"><Mono>{String(user.invited_by).slice(0, 8)}</Mono></Link> }] : []),
+              { label: "邀请注册", value: `${formatCount(Number(user.invited_count || 0))} 人` },
               ...(suspended ? [{ label: "停用原因", value: String(user.admin_suspension_reason || "—") }] : []),
               ...(deleted ? [{ label: "注销时间", value: formatDateTime(user.deleted_at as string) }] : []),
             ]} />

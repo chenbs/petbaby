@@ -1,0 +1,64 @@
+.iv-gap { display: block; margin-top: var(--space-4); }
+
+.iv-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  border: var(--card-border);
+  border-radius: var(--card-radius);
+  background: var(--card-background);
+  box-shadow: var(--shadow-card);
+  clip-path: var(--skin-clip, none);
+}
+
+.iv-icon { flex: none; width: 104rpx; height: 104rpx; }
+.iv-main { display: flex; min-width: 0; flex: 1; flex-direction: column; }
+
+.iv-n {
+  color: var(--text-primary);
+  font-family: var(--skin-num-font, inherit);
+  font-size: var(--font-display);
+  font-weight: var(--fw-black);
+  line-height: 1.1;
+}
+
+.iv-unit { margin-left: var(--space-0); color: var(--text-secondary); font-size: var(--small-size); }
+
+.iv-rules {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  border: var(--card-border);
+  border-radius: var(--card-radius-variant);
+  background: var(--card-background);
+}
+
+.iv-line { display: block; }
+.iv-note { margin-top: var(--space-2); }
+.iv-progress { display: block; margin-top: var(--space-4); text-align: center; }
+
+/* 原生 button（open-type="share"）要清掉默认外观，形态走主按钮 token */
+.iv-share {
+  display: flex;
+  min-height: 92rpx;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: var(--button-radius);
+  background: var(--button-primary);
+  color: var(--button-primary-text);
+  font-size: var(--body-size);
+  font-weight: var(--fw-bold);
+}
+
+.iv-share::after { border: 0; }
+.iv-share-icon { width: 36rpx; height: 36rpx; }
+.iv-tip { display: block; margin-top: var(--space-2); text-align: center; }

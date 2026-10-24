@@ -1,6 +1,7 @@
 const wallet = require("../../services/wallet");
 const { displayMediaTree } = require("../../services/photo-files");
 const api = require("../../services/api");
+const acquisition = require("../../services/acquisition");
 const originals = require("../../services/originals");
 const params = require("../../services/params");
 const { themedPage } = require("../../theme/page-mixin");
@@ -144,15 +145,15 @@ themedPage({ immersive: true }, Object.assign({}, wallet.walletSheetMethods, {
   onShareAppMessage() {
     const work = this.data.work;
     const title = work && work.pet ? work.pet.name + "的" + (work.plugin && work.plugin.name || "作品") + "，你家的也来试试？" : "麻麻抱我";
-    const fallback = { title, path: "/pages/index/index" };
+    const fallback = { title, path: acquisition.withInvite("/pages/index/index") };
     if (!work) return fallback;
-    const toShare = (token) => ({ title, path: "/pages/share/share?token=" + encodeURIComponent(token) });
+    const toShare = (token) => ({ title, path: acquisition.withInvite("/pages/share/share?token=" + encodeURIComponent(token)) });
     if (work.public && work.shareToken) return toShare(work.shareToken);
-    return { title, path: "/pages/index/index", promise: api.request("/api/works/" + this.workId + "/share", { method: "POST", data: { expiresInHours: 168 } }).then((result) => { this.setData({ "work.public": true, "work.shareToken": result.token }); return toShare(result.token); }).catch(() => fallback) };
+    return { title, path: fallback.path, promise: api.request("/api/works/" + this.workId + "/share", { method: "POST", data: { expiresInHours: 168 } }).then((result) => { this.setData({ "work.public": true, "work.shareToken": result.token }); return toShare(result.token); }).catch(() => fallback) };
   },
   onShareTimeline() {
     const work = this.data.work;
     if (!work || !work.shareToken) return { title: "麻麻抱我" };
-    return { title: work.title, query: "token=" + encodeURIComponent(work.shareToken) };
+    return { title: work.title, query: acquisition.withInviteQuery("token=" + encodeURIComponent(work.shareToken)) };
   }
 }));

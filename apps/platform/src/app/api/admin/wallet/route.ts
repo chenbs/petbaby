@@ -28,7 +28,7 @@ export async function GET(request: Request) {
            coalesce(sum(delta) FILTER (WHERE reason='topup'),0)::int topup_units,
            coalesce(-sum(delta) FILTER (WHERE reason='spend'),0)::int spent_units,
            coalesce(sum(delta) FILTER (WHERE reason='spend_return'),0)::int returned_units,
-           coalesce(sum(delta) FILTER (WHERE reason IN ('newcomer_gift','admin_grant')),0)::int gifted_units,
+           coalesce(sum(delta) FILTER (WHERE reason IN ('newcomer_gift','admin_grant','invite_reward')),0)::int gifted_units,
            coalesce(-sum(delta) FILTER (WHERE reason='expire'),0)::int expired_units
          FROM wallet_ledger WHERE created_at >= now() - ($1::int * interval '1 day') GROUP BY 1 ORDER BY 1 DESC`,
         [query.days],

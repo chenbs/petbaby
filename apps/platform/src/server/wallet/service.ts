@@ -81,7 +81,7 @@ export async function expireGiftLots(limit = 200) {
   return users.length;
 }
 
-export async function credit(userId: string, input: { pocket: WalletPocket; source: "topup" | "newcomer_gift" | "admin_grant"; units: number; bizKey: string; title: string; unitPriceFen?: number; growthOrderId?: string; expiresAt?: Date; actorId?: string; refType?: string; refId?: string }) {
+export async function credit(userId: string, input: { pocket: WalletPocket; source: "topup" | "newcomer_gift" | "admin_grant" | "invite_reward"; units: number; bizKey: string; title: string; unitPriceFen?: number; growthOrderId?: string; expiresAt?: Date; actorId?: string; refType?: string; refId?: string }) {
   if (!Number.isInteger(input.units) || input.units <= 0) throw new AppError("WALLET_UNITS_INVALID", "到账数量不正确", 422);
   if (input.pocket === "gift" && !input.expiresAt) throw new AppError("WALLET_GIFT_EXPIRY_REQUIRED", "赠送所得必须有有效期", 422);
   return inTransaction(async (database) => {

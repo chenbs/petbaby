@@ -1,5 +1,6 @@
 const wallet = require("../../services/wallet");
 const api = require("../../services/api");
+const acquisition = require("../../services/acquisition");
 const companion = require("../../services/companion");
 const { themedPage } = require("../../theme/page-mixin");
 const { displayMediaTree } = require("../../services/photo-files");
@@ -388,6 +389,6 @@ themedPage({
     if (app && app.globalData) app.globalData.createSegment = "all";
     wx.switchTab({ url: "/pages/art-photo/art-photo" });
   },
-  onShareAppMessage() { return { title: "给你家的毛孩子也拍一组照片吧", path: "/pages/index/index" }; },
-  onShareTimeline() { return { title: "麻麻抱我 · 宠物照片创作与陪伴记录" }; }
+  onShareAppMessage() { return { title: "给你家的毛孩子也拍一组照片吧", path: acquisition.withInvite("/pages/index/index") }; },
+  onShareTimeline() { return { title: "麻麻抱我 · 宠物照片创作与陪伴记录", query: acquisition.withInviteQuery("") }; }
 });

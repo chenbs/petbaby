@@ -21,6 +21,23 @@ export const users = pgTable("users", {
   accountName: text("account_name"),
   passwordHash: text("password_hash"),
   passwordUpdatedAt: timestamp("password_updated_at", { withTimezone: true }),
+  // 2026-10-12 渠道归因与邀请（迁移 0044）：只在新建账号时写入。
+  acquisitionChannel: text("acquisition_channel"),
+  acquisitionSrc: text("acquisition_src"),
+  acquisitionScene: integer("acquisition_scene"),
+  invitedBy: uuid("invited_by"),
+  inviteCode: text("invite_code"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull(),
+});
+
+export const inviteRewards = pgTable("invite_rewards", {
+  id: uuid("id").primaryKey(),
+  inviterId: uuid("inviter_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  inviteeId: uuid("invitee_id").notNull().unique().references(() => users.id, { onDelete: "cascade" }),
+  inviteeKey: text("invitee_key").notNull().unique(),
+  rewardDate: text("reward_date").notNull(),
+  units: integer("units").notNull(),
+  status: text("status").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull(),
 });
 

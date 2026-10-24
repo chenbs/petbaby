@@ -1,4 +1,5 @@
 const api = require("../../services/api");
+const acquisition = require("../../services/acquisition");
 const config = require("../../config");
 const { themedPage } = require("../../theme/page-mixin");
 
@@ -53,12 +54,12 @@ themedPage({
     const work = this.data.work;
     return {
       title: work && work.pet ? work.pet.name + "的" + work.pluginName + "，你家的也来试试？" : "麻麻抱我",
-      path: "/pages/share/share?token=" + encodeURIComponent(this.token),
+      path: acquisition.withInvite("/pages/share/share?token=" + encodeURIComponent(this.token)),
       imageUrl: this.data.imageUrl || undefined
     };
   },
   onShareTimeline() {
     const work = this.data.work;
-    return { title: work && work.pet ? work.pet.name + "的" + work.pluginName : "麻麻抱我", query: "token=" + encodeURIComponent(this.token) };
+    return { title: work && work.pet ? work.pet.name + "的" + work.pluginName : "麻麻抱我", query: acquisition.withInviteQuery("token=" + encodeURIComponent(this.token)) };
   }
 });

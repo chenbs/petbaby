@@ -1,4 +1,5 @@
 const api = require("./api");
+const acquisition = require("./acquisition");
 const inflight = {};
 const paths = { work: "/api/orders/", growth: "/api/growth-orders/", physical: "/api/physical-orders/" };
 
@@ -8,7 +9,7 @@ function wait(milliseconds) {
 
 function refreshLogin() {
   return new Promise((resolve, reject) => wx.login({ success: resolve, fail: reject }))
-    .then((result) => api.request("/api/auth/wechat", { method: "POST", data: { code: result.code } }))
+    .then((result) => api.request("/api/auth/wechat", { method: "POST", data: acquisition.loginPayload(result.code) }))
     .then((session) => wx.setStorageSync("petbaby_session", session.sessionToken));
 }
 

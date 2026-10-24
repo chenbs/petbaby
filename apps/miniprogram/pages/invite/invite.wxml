@@ -1,0 +1,34 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+
+<!-- 邀请好友：战绩卡（累计颗数 + 今日进度）→ 规则 → 分享按钮（原生 open-type="share"）。 -->
+<view class="{{skinClass}} page page-flat layout-workbench">
+  <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="iv-gap"></t-notice>
+  <t-skeleton wx:if="{{loading}}" type="card" count="1" class="iv-gap"></t-skeleton>
+
+  <block wx:if="{{invite}}">
+    <view class="iv-card">
+      <image class="iv-icon" src="/assets/icons/{{themeId}}/fd-coin.png" mode="aspectFit" />
+      <view class="iv-main">
+        <text class="eyebrow">邀请累计获得</text>
+        <text class="iv-n">{{invite.totalUnits}}<text class="iv-unit">颗</text></text>
+        <text class="small">今天 {{invite.todayUnits}} / {{invite.dailyCap}} 颗</text>
+      </view>
+    </view>
+
+    <view class="iv-rules">
+      <text class="sub-title">怎么得冻干</text>
+      <text class="small iv-line">1. 把小程序分享给还没用过的好友</text>
+      <text class="small iv-line">2. 好友从你的卡片进来，建好宠物档案</text>
+      <text class="small iv-line">3. {{rule}}</text>
+      <text class="small iv-line iv-note">好友自己也会收到新人见面礼。用过本小程序的老用户不算新好友。</text>
+    </view>
+
+    <text class="small iv-progress">{{progress}}</text>
+
+    <button class="iv-share" open-type="share" hover-class="entry-hover">
+      <image class="iv-share-icon" src="/assets/icons/{{themeId}}/ic-share.png" mode="aspectFit" />
+      <text>分享给好友</text>
+    </button>
+    <text class="small iv-tip">在作品、趣测结果页分享时也会带上你的邀请。</text>
+  </block>
+</view>

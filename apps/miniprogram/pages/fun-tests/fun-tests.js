@@ -1,4 +1,5 @@
 const api = require("../../services/api");
+const acquisition = require("../../services/acquisition");
 const config = require("../../config");
 const { themedPage } = require("../../theme/page-mixin");
 const { manifest } = require("../../services/sample-assets");
@@ -253,10 +254,10 @@ themedPage({
     const result = this.data.result;
     if (this.data.stage === "result" && result) return {
       title: result.petName + "是" + result.outcome.name + "，来看看你的宠物",
-      path: "/pages/fun-tests/fun-tests?shareToken=" + result.shareToken,
+      path: acquisition.withInvite("/pages/fun-tests/fun-tests?shareToken=" + result.shareToken),
       imageUrl: coverPath(result.cover)
     };
-    return { title: "测测你家宠物的小秘密", path: "/pages/fun-tests/fun-tests" };
+    return { title: "测测你家宠物的小秘密", path: acquisition.withInvite("/pages/fun-tests/fun-tests") };
   },
   onShareTimeline() {
     const shared = this.onShareAppMessage();

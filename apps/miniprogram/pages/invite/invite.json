@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "邀请好友",
+  "usingComponents": {
+    "t-notice": "../../components/notice/index",
+    "t-skeleton": "../../components/skeleton/index"
+  }
+}

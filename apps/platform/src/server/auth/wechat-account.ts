@@ -2,6 +2,7 @@ import "server-only";
 
 import { storeWechatSession } from "@/server/auth/wechat-session";
 import { inTransaction } from "@/server/db/client";
+import { applyAcquisition, type LaunchAttribution } from "@/server/invite-service";
 
 export type WechatIdentity = { openid: string; unionid: string; session_key: string };
 
@@ -15,7 +16,7 @@ export type WechatIdentity = { openid: string; unionid: string; session_key: str
  * session_key 与用户行在同一事务里落库：会话加密密钥缺失时整个登录回滚，
  * 不会留下一个建了号却永远登不进去的用户。
  */
-export async function signInWechatUser(identity: WechatIdentity) {
+export async function signInWechatUser(identity: WechatIdentity, attribution?: LaunchAttribution) {
   return inTransaction(async (database) => {
     const existing = await database.query<{ id: string }>(
       "UPDATE users SET wechat_openid=$2 WHERE wechat_unionid=$1 RETURNING id",
@@ -30,11 +31,12 @@ export async function signInWechatUser(identity: WechatIdentity) {
       userId = legacy[0]?.id;
     }
     if (!userId) {
-      const created = await database.query<{ id: string }>(
-        "INSERT INTO users (id,wechat_unionid,wechat_openid,created_at) VALUES ($1,$2,$3,now()) ON CONFLICT (wechat_unionid) DO UPDATE SET wechat_openid=EXCLUDED.wechat_openid RETURNING id",
+      const created = await database.query<{ id: string; inserted: boolean }>(
+        "INSERT INTO users (id,wechat_unionid,wechat_openid,created_at) VALUES ($1,$2,$3,now()) ON CONFLICT (wechat_unionid) DO UPDATE SET wechat_openid=EXCLUDED.wechat_openid RETURNING id, (xmax = 0) AS inserted",
         [crypto.randomUUID(), identity.unionid, identity.openid],
       );
       userId = created[0].id;
+      if (created[0].inserted) await applyAcquisition(database, userId, attribution);
     }
     await storeWechatSession(userId, identity.session_key);
     return userId;

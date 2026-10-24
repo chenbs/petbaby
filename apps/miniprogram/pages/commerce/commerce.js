@@ -9,6 +9,8 @@ const EVENT_TEXT = { birthday: "生日提醒", got_home: "到家纪念日提醒"
  * 一次性授权已经换过一次推送 —— 两者都不是错误状态，文案不能报错味，
  * 但必须让用户知道「要再授权一次才会再收到」。
  */
+/** 首发不做订阅消息（2026-10-25）：入口隐藏、不拉列表；功能代码保留。 */
+const SUBSCRIPTIONS_ENABLED = false;
 const SUB_STATUS_TEXT = { active: "已授权", scheduled: "已排期", sent: "已发送", consumed: "已用完，可再次授权", failed: "发送失败", unsubscribed: "已退订", authorization_required: "未授权", rejected: "未授权" };
 const SUB_STATUS_TONE = { active: "success", scheduled: "success", sent: "neutral", consumed: "neutral", failed: "error", unsubscribed: "neutral", authorization_required: "warning", rejected: "warning" };
 
@@ -28,14 +30,15 @@ themedPage(Object.assign({}, wallet.walletSheetMethods, {
     unlockingId: "",
     cancelTarget: null,
     message: "",
-    error: ""
+    error: "",
+    subscriptionsEnabled: SUBSCRIPTIONS_ENABLED
   },
 
   onShow() { this.load(); },
 
   load() {
     this.setData({ loading: this.data.loading, error: "" });
-    Promise.all([api.request("/api/subscriptions"), api.request("/api/annual-reports"), wallet.getWallet()])
+    Promise.all([SUBSCRIPTIONS_ENABLED ? api.request("/api/subscriptions") : Promise.resolve([]), api.request("/api/annual-reports"), wallet.getWallet()])
       .then(([subscriptions, reports, balance]) => this.setData({
         loading: false, walletCosts: balance.costs || {},
         subscriptions: subscriptions.map((item) => {

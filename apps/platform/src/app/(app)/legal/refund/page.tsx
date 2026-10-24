@@ -1,2 +1,3 @@
-import Link from "next/link";
-export default function RefundPage(){return <main className="screen"><div className="page-heading"><Link className="back-link" href="/orders">返回订单</Link><span className="eyebrow">REFUND</span><h1>退款规则</h1></div><section className="panel"><p>付费生成先扣冻干。系统自动重试两次仍失败时全额退回冻干余额，不退现金；写真套餐单张失败按张退回冻干。再拍一张会创建新任务并重新扣费。</p><p>效果不满意不再提供固定比例退款，不影响消费者法定权利。充值现金退款需通过订单或客服核查，并以支付渠道确认状态为准；到账冻干同步回收，回收不足时账户暂时冻结等待核对。</p><p>实体定制商品按下单页面约定和法律规定处理售后，已进入制作的定制商品可能不适用无理由退款。</p></section></main>}
+import { LegalDocumentPage } from "@/components/legal-document";
+
+export default function RefundPage() { return <LegalDocumentPage id="refund" backHref="/orders" backLabel="返回订单" />; }

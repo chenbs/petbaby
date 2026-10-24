@@ -15,9 +15,9 @@ import {
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey(),
-  // 2026-10-09：unionid 是微信账号的唯一标识；openid 只记录（支付要用），不再唯一。
+  // 2026-10-25（迁移 0045）：不绑定开放平台，openid 是微信账号的唯一标识；unionid 列只保留历史数据。
   wechatUnionid: text("wechat_unionid").unique(),
-  wechatOpenid: text("wechat_openid"),
+  wechatOpenid: text("wechat_openid").unique(),
   accountName: text("account_name"),
   passwordHash: text("password_hash"),
   passwordUpdatedAt: timestamp("password_updated_at", { withTimezone: true }),

@@ -39,6 +39,11 @@
       <view class="account-content">
         <text class="muted">导出内容包含你的宠物档案、照片记录与作品清单，格式为 JSON。</text>
         <t-button type="secondary" block anim="{{animType}}" bindtap="exportData">导出我的数据</t-button>
+        <view class="legal-links">
+          <text class="legal-link" data-doc="privacy" bindtap="openLegal">隐私政策</text>
+          <text class="legal-link" data-doc="terms" bindtap="openLegal">用户协议</text>
+          <text class="legal-link" data-doc="refund" bindtap="openLegal">退款规则</text>
+        </view>
       </view>
     </view>
 

@@ -39,6 +39,7 @@ themedPage({
       complete: () => wx.hideLoading()
     });
   },
+  openLegal(event) { wx.navigateTo({ url: "/pages/legal/legal?doc=" + event.currentTarget.dataset.doc }); },
   askDelete() { this.setData({ confirmDelete: true }); },
   cancelDelete() { this.setData({ confirmDelete: false }); },
   doDelete() {

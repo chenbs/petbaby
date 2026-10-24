@@ -942,3 +942,17 @@ image {
 .skin-night .pet-days {
   color: var(--primary);
 }
+
+/* 法务文档链接（登录页「登录即表示同意」与账户页共用，2026-10-25） */
+.legal-link {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.legal-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-top: var(--space-3);
+  font-size: var(--small-size);
+}

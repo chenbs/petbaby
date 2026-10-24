@@ -1,0 +1,7 @@
+.legal-paragraph {
+  display: block;
+  margin-top: var(--space-2);
+  color: var(--text-primary);
+  font-size: var(--small-size);
+  line-height: 1.7;
+}

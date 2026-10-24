@@ -10,8 +10,8 @@
   <t-button wx:elif="{{error && !subscriptions.length && !reports.length}}" type="secondary" bindtap="load">重新加载年度报告</t-button>
 
   <block wx:else>
-    <!-- 订阅提醒 -->
-    <view class="section">
+    <!-- 订阅提醒：首发不做订阅消息（2026-10-25），入口隐藏、代码保留；恢复时把 subscriptionsEnabled 改回 true。 -->
+    <view wx:if="{{subscriptionsEnabled}}" class="section">
       <view class="section-title">纪念日提醒</view>
 
       <t-empty

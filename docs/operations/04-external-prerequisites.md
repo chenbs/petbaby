@@ -44,7 +44,7 @@ Provider 一律**失败关闭**：不会静默降级到模拟支付或本地存�
 | 个体工商户/企业营业执照                             | 公众平台主体资料                                      | ☐ 待补 | 小程序主体认证通过                     |
 | 小程序 AppID                                | `project.private.config.json`、`WECHAT_APP_ID` | ☐ 待补 | 真机 `wx.login` 返回 code         |
 | 小程序 AppSecret                            | 仅后端 `WECHAT_APP_SECRET`                       | ☐ 待补 | `code2Session` 成功且日志不含 secret |
-| 小程序绑定微信开放平台                      | 开放平台「我的业务 - 开放平台 - 绑定关系 - 小程序」 | ☐ 待补 | `code2Session` 返回 `unionid`；未绑定时微信登录返回 `WECHAT_UNIONID_REQUIRED` |
+| 小程序绑定微信开放平台                      | —                                             | ✗ 取消（2026-10-25） | 不绑定；账号以 openid 为唯一标识（迁移 0045） |
 | 服务器域名登记（request/uploadFile/downloadFile） | 公众平台「开发管理 → 开发设置」                             | ☐ 待补 | 真机不开调试也能请求                    |
 | 小程序代码上传私钥                                | 仓库外文件，`MINIPROGRAM_PRIVATE_KEY_PATH`          | ☐ 待补 | `pnpm upload` 成功              |
 | 上传机器出口 IP 白名单                            | 公众平台「小程序代码上传」                                 | ☐ 待补 | 无 `not in whitelist` 报错       |

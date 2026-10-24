@@ -37,8 +37,11 @@ fi
 
 # 两种模式都必须具备：真实数据库、独立密钥、HTTPS 域名。
 COMMON_REQUIRED="PETBABY_DOMAIN PUBLIC_APP_URL POSTGRES_DB POSTGRES_USER POSTGRES_PASSWORD DATABASE_URL SESSION_SECRET WORKER_SECRET ADDRESS_ENCRYPTION_KEY OBJECT_STORAGE_PROVIDER PAYMENT_PROVIDER"
-# 只有正式生产强制要求微信与云存储凭据。
-PRODUCTION_REQUIRED="ADMIN_USER_IDS WECHAT_APP_ID WECHAT_APP_SECRET WECHAT_MCH_ID WECHAT_PAY_KEY WECHAT_CERT_SERIAL WECHAT_MCH_PRIVATE_KEY WECHAT_PLATFORM_PUBLIC_KEY WECHAT_PLATFORM_SERIAL WECHAT_PAY_NOTIFY_URL WECHAT_REFUND_NOTIFY_URL WECHAT_VIRTUAL_OFFER_ID WECHAT_VIRTUAL_APP_KEY WECHAT_VIRTUAL_PRODUCTS WECHAT_SESSION_ENCRYPTION_KEY WECHAT_MESSAGE_TOKEN WECHAT_MESSAGE_AES_KEY OSS_BUCKET OSS_ACCESS_KEY_ID OSS_ACCESS_KEY_SECRET STORAGE_REGION"
+# 只有正式生产强制要求微信登录与云存储凭据。
+PRODUCTION_REQUIRED="WECHAT_APP_ID WECHAT_APP_SECRET WECHAT_SESSION_ENCRYPTION_KEY OSS_BUCKET OSS_ACCESS_KEY_ID OSS_ACCESS_KEY_SECRET STORAGE_REGION"
+# 支付凭据缺失只告警不阻断（2026-10-25）：支付参数下来前先上线其余功能，下单接口按 Provider 失败关闭返回 503。
+# 管理员白名单要先起服务才能用 create-admin.sh 生成，首发时同样只告警。
+PRODUCTION_RECOMMENDED="ADMIN_USER_IDS WECHAT_MCH_ID WECHAT_PAY_KEY WECHAT_CERT_SERIAL WECHAT_MCH_PRIVATE_KEY WECHAT_PLATFORM_PUBLIC_KEY WECHAT_PLATFORM_SERIAL WECHAT_PAY_NOTIFY_URL WECHAT_REFUND_NOTIFY_URL WECHAT_VIRTUAL_OFFER_ID WECHAT_VIRTUAL_APP_KEY WECHAT_VIRTUAL_PRODUCTS WECHAT_MESSAGE_TOKEN WECHAT_MESSAGE_AES_KEY"
 
 REQUIRED="$COMMON_REQUIRED"
 [ "$MODE" = "production" ] && REQUIRED="$REQUIRED $PRODUCTION_REQUIRED"
@@ -50,6 +53,15 @@ for key in $REQUIRED; do
     fail "$key 仍是模板占位值：$value"
   fi
 done
+
+if [ "$MODE" = "production" ]; then
+  missing=""
+  for key in $PRODUCTION_RECOMMENDED; do
+    value=$(env_value "$key")
+    if [ -z "$value" ] || [ "$value" = "{}" ]; then missing="$missing $key"; fi
+  done
+  [ -z "$missing" ] || warn "以下生产配置尚未填写，对应功能（支付/虚拟支付回调/后台）暂不可用：$missing"
+fi
 
 for key in SESSION_SECRET WORKER_SECRET ADDRESS_ENCRYPTION_KEY; do
   length=$(env_value "$key" | tr -d '\n' | wc -c | tr -d ' ')
@@ -67,7 +79,7 @@ if [ "$MODE" = "staging" ]; then
   [ -n "$(env_value PASSWORD_AUTH_INVITE_CODE)" ] || warn "PASSWORD_AUTH_INVITE_CODE 为空，公网上任何人都能注册账号"
 else
   [ "$APP_ENV_VALUE" != "staging" ] || fail "正式生产禁止 APP_ENV=staging（会放行本地磁盘存储和模拟支付）"
-  [ "$(env_value PASSWORD_AUTH_ENABLED)" != "true" ] || warn "PASSWORD_AUTH_ENABLED=true 在正式生产无效：生产只有微信账号（unionid），账号密码注册/登录一律关闭"
+  [ "$(env_value PASSWORD_AUTH_ENABLED)" != "true" ] || warn "PASSWORD_AUTH_ENABLED=true 在正式生产无效：生产只有微信账号（openid），账号密码注册/登录一律关闭"
   [ "$(env_value OBJECT_STORAGE_PROVIDER)" = "cos" ] || fail "正式生产使用腾讯云 COS，OBJECT_STORAGE_PROVIDER 必须为 cos"
   [ "$(env_value OSS_BUCKET)" = "babykitty-user-one-1252454114" ] || fail "COS Bucket 与已确认的私有桶不一致"
   [ "$(env_value PAYMENT_PROVIDER)" = "wechat" ] || fail "正式生产 PAYMENT_PROVIDER 必须是 wechat"

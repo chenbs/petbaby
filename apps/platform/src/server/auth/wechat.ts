@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { AppError } from "@/server/errors";
 
-const responseSchema = z.object({ openid: z.string().min(8), session_key: z.string().min(8), unionid: z.string().min(8).optional() });
+const responseSchema = z.object({ openid: z.string().min(8), session_key: z.string().min(8) });
 
 export async function exchangeWechatCode(code: string) {
   const appId = process.env.WECHAT_APP_ID;
@@ -19,13 +19,8 @@ export async function exchangeWechatCode(code: string) {
   url.searchParams.set("grant_type", "authorization_code");
   const response = await fetch(url, { cache: "no-store", signal: AbortSignal.timeout(8_000) });
   if (!response.ok) throw new AppError("WECHAT_LOGIN_FAILED", "微信登录暂时不可用", 502);
+  // 账号以当前小程序的 openid 为唯一标识（2026-10-25，不绑定开放平台）；unionid 即使返回也不使用。
   const parsed = responseSchema.safeParse(await response.json());
   if (!parsed.success) throw new AppError("WECHAT_LOGIN_FAILED", "微信登录凭证无效", 401);
-  /*
-   * 账号以 unionid 为唯一标识（2026-10-09）。只有小程序绑定了微信开放平台，code2Session 才会返回它；
-   * 拿不到就明确失败，不回落到 openid —— 否则同一个人会在绑定前后变成两个账号。
-   */
-  const { unionid } = parsed.data;
-  if (!unionid) throw new AppError("WECHAT_UNIONID_REQUIRED", "微信登录暂不可用，请稍后再试", 503);
-  return { ...parsed.data, unionid };
+  return parsed.data;
 }

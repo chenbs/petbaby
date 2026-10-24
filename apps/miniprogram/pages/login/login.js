@@ -5,7 +5,7 @@ const { themedPage } = require("../../theme/page-mixin");
 
 /*
  * 登录与退出（2026-10-11 起只有微信登录）。
- * 小程序不提供账号密码注册与登录：账号唯一标识是 unionid，由 wx.login → /api/auth/wechat 换取。
+ * 小程序不提供账号密码注册与登录：账号唯一标识是当前小程序的 openid，由 wx.login → /api/auth/wechat 换取。
  * app.js 启动时已静默登录一次；这里给静默登录失败（网络、授权）后的用户一个手动重试的入口。
  */
 themedPage({
@@ -24,6 +24,7 @@ themedPage({
       .catch(() => this.setData({ message: "无法连接服务端，请检查网络后重试", messageType: "error" }));
   },
   goHome() { wx.reLaunch({ url: "/pages/index/index" }); },
+  openLegal(event) { wx.navigateTo({ url: "/pages/legal/legal?doc=" + event.currentTarget.dataset.doc }); },
   wechatLogin() {
     if (this.data.busy) return;
     this.setData({ busy: true, message: "" });

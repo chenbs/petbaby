@@ -20,7 +20,7 @@ export default async function SearchPage({ searchParams }: Props) {
 
   return (
     <>
-      <PageHeader title={q ? `「${q}」的搜索结果` : "搜索"} description="按用户 ID、昵称、账号名、unionid、openid 或商户单号查找。" />
+      <PageHeader title={q ? `「${q}」的搜索结果` : "搜索"} description="按用户 ID、昵称、账号名、openid 或商户单号查找。" />
       {q.trim().length < 2 ? <Card><EmptyState icon={Search} title="至少输入 2 个字符" /></Card> : empty ? <Card><EmptyState icon={Search} title="没有找到匹配的用户或订单" /></Card> : (
         <div className="space-y-4">
           {result.users.length ? (

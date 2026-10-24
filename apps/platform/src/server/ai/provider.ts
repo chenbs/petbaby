@@ -1,5 +1,7 @@
 import "server-only";
 
+import { ProxyAgent, type Dispatcher } from "undici";
+
 import { ConcurrencyQueue, normalizeConcurrency } from "@/server/ai/concurrency-queue";
 import { AppError } from "@/server/errors";
 import { isStaging, isTestHarness } from "@/server/runtime-mode";
@@ -109,6 +111,20 @@ const LINGSUAN_TIMEOUT_MS = Number(process.env.LINGSUAN_IMAGE_TIMEOUT_MS || 180_
 const LINGSUAN_CONCURRENCY = normalizeConcurrency(process.env.LINGSUAN_IMAGE_CONCURRENCY, 20);
 const lingsuanRequestQueue = new ConcurrencyQueue(LINGSUAN_CONCURRENCY);
 
+/**
+ * lingsuan.top 在国内服务器上直连不通（2026-10-25 实测），生产经宿主机 mihomo 出海。
+ * 只有 lingsuan 的请求（含结果图下载）带这个 dispatcher，其余出网一律直连；
+ * 哪些域名真正走代理由 mihomo 的规则决定（当前只有 lingsuan.top，img.junliai.org 直连可达）。
+ * 不用 HTTPS_PROXY 全局变量：那会把微信、COS、百炼的请求也绕一圈。
+ */
+let lingsuanDispatcher: Dispatcher | undefined;
+function lingsuanFetchOptions(): { dispatcher?: Dispatcher } {
+  const proxy = process.env.LINGSUAN_IMAGE_PROXY_URL?.trim();
+  if (!proxy) return {};
+  lingsuanDispatcher ??= new ProxyAgent(proxy);
+  return { dispatcher: lingsuanDispatcher };
+}
+
 type LingsuanItem = { url?: string; b64_json?: string };
 
 class LingsuanImageProvider implements ImageProvider {
@@ -187,7 +203,7 @@ class LingsuanImageProvider implements ImageProvider {
     const timer = setTimeout(() => controller.abort(), LINGSUAN_TIMEOUT_MS);
     try {
       const request = this.buildRequest(prompt, references, options);
-      const response = await fetch(request.url, { ...request.init, signal: controller.signal });
+      const response = await fetch(request.url, { ...request.init, ...lingsuanFetchOptions(), signal: controller.signal } as RequestInit);
       if (!response.ok) {
         const error = new Error(`AI_PROVIDER_${response.status}`) as Error & { permanent?: boolean };
         if (response.status >= 400 && response.status < 500 && response.status !== 429) error.permanent = true;
@@ -208,7 +224,7 @@ class LingsuanImageProvider implements ImageProvider {
        */
       if (item.b64_json) return { body: new Uint8Array(Buffer.from(item.b64_json, "base64")), contentType: "image/png" };
       if (!item.url) throw new Error("AI_PROVIDER_OUTPUT_EMPTY");
-      const download = await fetch(item.url, { signal: controller.signal });
+      const download = await fetch(item.url, { ...lingsuanFetchOptions(), signal: controller.signal } as RequestInit);
       if (!download.ok) throw new Error("AI_PROVIDER_DOWNLOAD_FAILED");
       const body = new Uint8Array(await download.arrayBuffer());
       // 下载到 0 字节同样要当失败：让熔断和主备切换有机会介入，而不是把空图入库。

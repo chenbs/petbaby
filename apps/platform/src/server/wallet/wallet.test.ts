@@ -25,7 +25,7 @@ beforeEach(async () => {
   vi.unstubAllEnvs();
   vi.stubEnv("PAYMENT_PROVIDER", "development");
   await resetDatabaseForTest();
-  await (await getDatabase()).query("INSERT INTO users (id,wechat_unionid,wechat_openid,created_at) VALUES ($1,'wallet-unionid','wallet-openid',now()),($2,NULL,NULL,now())", [USER, OTHER]);
+  await (await getDatabase()).query("INSERT INTO users (id,wechat_openid,created_at) VALUES ($1,'wallet-openid',now()),($2,NULL,now())", [USER, OTHER]);
 });
 
 async function gift(units: number, days: number, key: string) {
@@ -126,11 +126,11 @@ describe("冻干钱包：扣减、退还与过期", () => {
     expect(await grantNewcomerGift(USER)).toBeUndefined();
     const database = await getDatabase();
     const reborn = "00000000-0000-4000-8000-0000000000d3";
-    await database.query("UPDATE users SET wechat_unionid=NULL,wechat_openid=NULL,deleted_at=now() WHERE id=$1", [USER]);
-    await database.query("INSERT INTO users (id,wechat_unionid,wechat_openid,created_at) VALUES ($1,'wallet-unionid','wallet-openid-2',now())", [reborn]);
+    await database.query("UPDATE users SET wechat_openid=NULL,deleted_at=now() WHERE id=$1", [USER]);
+    await database.query("INSERT INTO users (id,wechat_openid,created_at) VALUES ($1,'wallet-openid',now())", [reborn]);
     expect(await grantNewcomerGift(reborn)).toBeUndefined();
     expect((await getWallet(reborn)).balance).toBe(0);
-    // 没有 unionid 的账号按用户发一次。
+    // 没有 openid 的账号按用户发一次。
     expect((await grantNewcomerGift(OTHER))?.delta).toBe(3);
   });
 
@@ -140,8 +140,8 @@ describe("冻干钱包：扣减、退还与过期", () => {
     expect((await getNewcomerGiftOffer(USER)).available).toBe(false);
     const database = await getDatabase();
     const reborn = "00000000-0000-4000-8000-0000000000d4";
-    await database.query("UPDATE users SET wechat_unionid=NULL,wechat_openid=NULL,deleted_at=now() WHERE id=$1", [USER]);
-    await database.query("INSERT INTO users (id,wechat_unionid,wechat_openid,created_at) VALUES ($1,'wallet-unionid','wallet-openid-2',now())", [reborn]);
+    await database.query("UPDATE users SET wechat_openid=NULL,deleted_at=now() WHERE id=$1", [USER]);
+    await database.query("INSERT INTO users (id,wechat_openid,created_at) VALUES ($1,'wallet-openid',now())", [reborn]);
     expect((await getNewcomerGiftOffer(reborn)).available).toBe(false);
     expect((await getNewcomerGiftOffer(OTHER)).available).toBe(true);
   });

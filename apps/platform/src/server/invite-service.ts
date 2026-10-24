@@ -4,7 +4,7 @@ import { createHash, randomInt } from "node:crypto";
 
 import { channelForScene, normalizeSource } from "@/domain/acquisition";
 import { getDatabase, inTransaction, type Database } from "@/server/db/client";
-import { credit } from "@/server/wallet/service";
+import { credit, newcomerGiftKey } from "@/server/wallet/service";
 
 /*
  * 渠道归因与邀请奖励（2026-10-12，迁移 0044）。
@@ -13,7 +13,7 @@ import { credit } from "@/server/wallet/service";
  * 奖励：被邀请人添加第一只宠物后，给邀请人发 1 颗赠送冻干；邀请人每天（北京时间）最多拿 5 颗，
  *      超出的照样登记（capped，0 颗），之后不补发。只注册不建档不算——否则刷号只需要反复授权登录。
  *
- * 防重复：invite_rewards 以被邀请人 user_id 与 unionid 哈希双唯一。注销会清空 unionid、重新注册会得到新的 user_id，
+ * 防重复：invite_rewards 以被邀请人 user_id 与 openid 哈希双唯一。注销会清空 openid、重新注册会得到新的 user_id，
  * 所以另外核对见面礼流水：同一个微信身份以前领过见面礼（老用户注销重来），不算新用户，不给邀请人结算。
  */
 
@@ -94,8 +94,8 @@ export async function getInviteSummary(userId: string) {
   };
 }
 
-function inviteeKey(userId: string, unionid: unknown) {
-  return unionid ? `unionid:${createHash("sha256").update(String(unionid)).digest("hex")}` : `user:${userId}`;
+function inviteeKey(userId: string, openid: unknown) {
+  return openid ? `openid:${createHash("sha256").update(String(openid)).digest("hex")}` : `user:${userId}`;
 }
 
 /**
@@ -104,16 +104,16 @@ function inviteeKey(userId: string, unionid: unknown) {
  */
 export async function settleInviteReward(inviteeId: string) {
   return inTransaction(async (database) => {
-    const [invitee] = await database.query<{ invited_by: string | null; wechat_unionid: string | null }>(
-      "SELECT invited_by, wechat_unionid FROM users WHERE id=$1 AND deleted_at IS NULL",
+    const [invitee] = await database.query<{ invited_by: string | null; wechat_openid: string | null }>(
+      "SELECT invited_by, wechat_openid FROM users WHERE id=$1 AND deleted_at IS NULL",
       [inviteeId],
     );
     if (!invitee?.invited_by) return undefined;
     const inviterId = invitee.invited_by;
     const [inviter] = await database.query("SELECT id FROM users WHERE id=$1 AND deleted_at IS NULL AND admin_suspended_at IS NULL FOR UPDATE", [inviterId]);
     if (!inviter) return undefined;
-    if (invitee.wechat_unionid) {
-      const earlier = await database.query("SELECT 1 FROM wallet_ledger WHERE biz_key=$1 AND user_id<>$2", [`gift:newcomer:unionid:${invitee.wechat_unionid}`, inviteeId]);
+    if (invitee.wechat_openid) {
+      const earlier = await database.query("SELECT 1 FROM wallet_ledger WHERE biz_key=$1 AND user_id<>$2", [newcomerGiftKey(inviteeId, invitee.wechat_openid), inviteeId]);
       if (earlier[0]) return undefined;
     }
     const [today] = await database.query<{ day: string; units: number }>(
@@ -124,7 +124,7 @@ export async function settleInviteReward(inviteeId: string) {
     const id = crypto.randomUUID();
     const inserted = await database.query(
       "INSERT INTO invite_rewards (id,inviter_id,invitee_id,invitee_key,reward_date,units,status,created_at) VALUES ($1,$2,$3,$4,$5::date,$6,$7,now()) ON CONFLICT DO NOTHING RETURNING id",
-      [id, inviterId, inviteeId, inviteeKey(inviteeId, invitee.wechat_unionid), today.day, units, units > 0 ? "granted" : "capped"],
+      [id, inviterId, inviteeId, inviteeKey(inviteeId, invitee.wechat_openid), today.day, units, units > 0 ? "granted" : "capped"],
     );
     if (!inserted[0]) return undefined;
     if (!units) return { inviterId, units: 0, capped: true };

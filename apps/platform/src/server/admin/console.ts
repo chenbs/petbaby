@@ -35,7 +35,7 @@ export async function listUsers(filter: UserFilter): Promise<Page<Record<string,
   const rows = await database.query(
     `WITH paid AS (SELECT user_id, count(*)::int orders, sum(amount)::float8 amount, max(at) last_paid FROM (${PAID_SQL}) p GROUP BY user_id)
      SELECT u.id, u.display_name, u.account_name, u.created_at, u.deleted_at, u.admin_suspended_at, u.admin_suspension_reason,
-       (u.wechat_unionid IS NOT NULL) wechat,
+       (u.wechat_openid IS NOT NULL) wechat,
        (SELECT count(*)::int FROM pets p WHERE p.user_id=u.id AND p.deleted_at IS NULL) pets,
        (SELECT count(*)::int FROM works w WHERE w.user_id=u.id AND w.deleted_at IS NULL) works,
        coalesce(a.balance,0)::int balance,
@@ -50,7 +50,7 @@ export async function listUsers(filter: UserFilter): Promise<Page<Record<string,
      LEFT JOIN wallet_accounts a ON a.user_id=u.id
      LEFT JOIN paid ON paid.user_id=u.id
      WHERE ($1::text IS NULL OR u.id::text ILIKE $1 OR coalesce(u.display_name,'') ILIKE $1 OR coalesce(u.account_name,'') ILIKE $1
-            OR coalesce(u.wechat_unionid,'') ILIKE $1 OR coalesce(u.wechat_openid,'') ILIKE $1)
+            OR coalesce(u.wechat_openid,'') ILIKE $1)
        AND ($2='all'
          OR ($2='active' AND u.deleted_at IS NULL AND u.admin_suspended_at IS NULL)
          OR ($2='suspended' AND u.deleted_at IS NULL AND u.admin_suspended_at IS NOT NULL)
@@ -69,7 +69,7 @@ export async function getUserDetail(userId: string) {
   const database = await getDatabase();
   const [user] = await database.query(
     `SELECT id, display_name, account_name, created_at, deleted_at, admin_suspended_at, admin_suspended_by, admin_suspension_reason,
-       wechat_unionid IS NOT NULL wechat, password_hash IS NOT NULL password,
+       wechat_openid IS NOT NULL wechat, password_hash IS NOT NULL password,
        acquisition_channel, acquisition_src, acquisition_scene, invited_by,
        (SELECT count(*)::int FROM users i WHERE i.invited_by=users.id) invited_count FROM users WHERE id=$1`,
     [userId],
@@ -300,7 +300,7 @@ export async function globalSearch(q: string) {
   const [users, payments] = await Promise.all([
     database.query(
       `SELECT id, display_name, account_name, created_at FROM users
-       WHERE id::text ILIKE $1 OR coalesce(display_name,'') ILIKE $1 OR coalesce(account_name,'') ILIKE $1 OR coalesce(wechat_unionid,'') ILIKE $1 OR coalesce(wechat_openid,'') ILIKE $1
+       WHERE id::text ILIKE $1 OR coalesce(display_name,'') ILIKE $1 OR coalesce(account_name,'') ILIKE $1 OR coalesce(wechat_openid,'') ILIKE $1
        ORDER BY created_at DESC LIMIT 6`,
       [like],
     ),

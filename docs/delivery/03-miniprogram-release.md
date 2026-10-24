@@ -50,7 +50,7 @@ module.exports = {
 };
 ```
 
-`config.local.js` 已在 `.gitignore` 里，不会提交。没有这个文件时代码回落到 `http://127.0.0.1:3000`。本机调试时使用同一局域网的电脑 IP，并在开发者工具关闭合法域名校验；正式上传由 `scripts/ci.js` 注入 `https://a.babykitty.cn`。
+`config.local.js` 已在 `.gitignore` 里，不会提交。没有这个文件时代码回落到 `http://127.0.0.1:3000`。本机调试时使用同一局域网的电脑 IP，并在开发者工具关闭合法域名校验；正式上传由 `scripts/ci.js` 注入 `https://api.babykitty.cn`。
 
 ### 1.3 结构自检
 
@@ -90,7 +90,7 @@ pnpm validate
 
 小程序**只有微信登录**（2026-10-11 起去掉了账号密码注册与登录入口）。启动时 `wx.login` 静默登录；失败时可在「我的」→「登录与退出」点「微信一键登录」重试。
 
-`wx.login` 需要后端配好 `WECHAT_APP_ID` / `WECHAT_APP_SECRET` / `WECHAT_SESSION_ENCRYPTION_KEY`，且小程序已绑定微信开放平台（要拿 unionid）。这些没齐之前小程序拿不到会话，只能看未登录可见的页面；要走完整业务链路，先按 2.4 节补齐微信凭据。
+`wx.login` 需要后端配好 `WECHAT_APP_ID` / `WECHAT_APP_SECRET` / `WECHAT_SESSION_ENCRYPTION_KEY`。这些没齐之前小程序拿不到会话，只能看未登录可见的页面；要走完整业务链路，先按 2.4 节补齐微信凭据。
 
 ### 1.6 模拟器里要验的
 
@@ -118,9 +118,9 @@ pnpm validate
 
 | 类型                | 填什么                           | 用途              |
 | ----------------- | ----------------------------- | --------------- |
-| request 合法域名      | `https://a.babykitty.cn` | 所有 API 调用       |
-| uploadFile 合法域名   | `https://a.babykitty.cn` | 照片上传            |
-| downloadFile 合法域名 | `https://a.babykitty.cn` | 作品下载、保存相册       |
+| request 合法域名      | `https://api.babykitty.cn` | 所有 API 调用       |
+| uploadFile 合法域名   | `https://api.babykitty.cn` | 照片上传            |
+| downloadFile 合法域名 | `https://api.babykitty.cn` | 作品下载、保存相册       |
 | socket 合法域名       | 留空                            | 本项目不用 WebSocket |
 
 要求：HTTPS、已备案、不能带端口和路径。**每月限改 5 次**，建议一次把测试域名和生产域名都填上。
@@ -164,7 +164,7 @@ WECHAT_APP_SECRET=<你的 AppSecret>
 ```bash
 cd apps/miniprogram
 export MINIPROGRAM_APP_ID=wx0000000000000000
-export MINIPROGRAM_API_BASE_URL=https://a.babykitty.cn
+export MINIPROGRAM_API_BASE_URL=https://api.babykitty.cn
 pnpm preview
 ```
 
@@ -194,13 +194,13 @@ AppID 使用 `MINIPROGRAM_APP_ID` 注入；AppSecret 仅留在后端。当前方
 ```bash
 cd apps/miniprogram
 export MINIPROGRAM_APP_ID=wx0000000000000000
-export MINIPROGRAM_API_BASE_URL=https://a.babykitty.cn
+export MINIPROGRAM_API_BASE_URL=https://api.babykitty.cn
 export MINIPROGRAM_VERSION=1.0.0
 export MINIPROGRAM_DESCRIPTION="测试机联调版"
 pnpm upload
 ```
 
-`scripts/ci.js` 校验 AppID、HTTPS API 域名和版本，运行结构门禁，再建立临时项目副本，注入 AppID 与目标 API 地址并保留已配订阅模板，调用官方 Nightly CLI。原项目配置不被重写。默认 API 为 `https://a.babykitty.cn`；本机 IP + HTTP 仅供开发者工具在关闭域名校验时调试，不能作为上传版本的 API 域名。临时副本在命令结束后清理；二维码保留在项目目录。上传只生成开发版本，不代表已提审或公开发布。
+`scripts/ci.js` 校验 AppID、HTTPS API 域名和版本，运行结构门禁，再建立临时项目副本，注入 AppID 与目标 API 地址并保留已配订阅模板，调用官方 Nightly CLI。原项目配置不被重写。默认 API 为 `https://api.babykitty.cn`；本机 IP + HTTP 仅供开发者工具在关闭域名校验时调试，不能作为上传版本的 API 域名。临时副本在命令结束后清理；二维码保留在项目目录。上传只生成开发版本，不代表已提审或公开发布。
 
 ### 3.4 设为体验版
 

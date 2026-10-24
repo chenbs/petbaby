@@ -28,7 +28,8 @@
     "pages/login/login",
     "pages/theme/theme",
     "pages/fun-tests/fun-tests",
-    "pages/share/share"
+    "pages/share/share",
+    "pages/legal/legal"
   ],
   "lazyCodeLoading": "requiredComponents",
   "window": {

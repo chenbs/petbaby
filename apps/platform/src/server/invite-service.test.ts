@@ -11,8 +11,8 @@ const KEY = Buffer.alloc(32, 7).toString("base64");
 let serial = 0;
 
 /** 一个新微信用户登录（可带归因），返回 user_id。 */
-async function signIn(attribution?: Parameters<typeof signInWechatUser>[1], unionid = `union-${++serial}`) {
-  return signInWechatUser({ unionid, openid: `openid-${unionid}`, session_key: `session-${serial}` }, attribution);
+async function signIn(attribution?: Parameters<typeof signInWechatUser>[1], openid = `openid-${++serial}`) {
+  return signInWechatUser({ openid, session_key: `session-${serial}` }, attribution);
 }
 
 async function userRow(id: string) {
@@ -107,12 +107,12 @@ describe("邀请奖励", () => {
   });
 
   it("注销后用同一个微信重新注册，不再给邀请人结算", async () => {
-    const friend = await signIn({ inviteCode: code }, "union-repeat");
+    const friend = await signIn({ inviteCode: code }, "openid-repeat");
     await createPet(friend, { name: "年糕", species: "cat" });
     expect((await getWallet(inviter)).balance).toBe(1);
-    // 模拟注销：软删除并清空 unionid；同一微信再来会得到新 user_id
-    await (await getDatabase()).query("UPDATE users SET deleted_at=now(), wechat_unionid=NULL, wechat_openid=NULL WHERE id=$1", [friend]);
-    const again = await signIn({ inviteCode: code }, "union-repeat");
+    // 模拟注销：软删除并清空 openid；同一微信再来会得到新 user_id
+    await (await getDatabase()).query("UPDATE users SET deleted_at=now(), wechat_openid=NULL WHERE id=$1", [friend]);
+    const again = await signIn({ inviteCode: code }, "openid-repeat");
     expect(again).not.toBe(friend);
     await createPet(again, { name: "年糕", species: "cat" });
     expect((await getWallet(inviter)).balance).toBe(1);

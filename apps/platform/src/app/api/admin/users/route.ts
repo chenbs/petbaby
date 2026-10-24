@@ -28,7 +28,7 @@ export async function GET(request: Request) {
           +(SELECT coalesce(sum(p.amount),0) FROM physical_orders p WHERE p.user_id=u.id AND p.paid_at IS NOT NULL)
           +(SELECT coalesce(sum(g.amount),0) FROM growth_orders g WHERE g.user_id=u.id AND g.paid_at IS NOT NULL))::numeric revenue
        FROM users u
-       WHERE ($1::text IS NULL OR u.id::text ILIKE $1 OR coalesce(u.display_name,'') ILIKE $1 OR coalesce(u.wechat_unionid,'') ILIKE $1 OR coalesce(u.wechat_openid,'') ILIKE $1)
+       WHERE ($1::text IS NULL OR u.id::text ILIKE $1 OR coalesce(u.display_name,'') ILIKE $1 OR coalesce(u.wechat_openid,'') ILIKE $1)
          AND ($2='all'
            OR ($2='active' AND u.deleted_at IS NULL AND u.admin_suspended_at IS NULL)
            OR ($2='suspended' AND u.deleted_at IS NULL AND u.admin_suspended_at IS NOT NULL)

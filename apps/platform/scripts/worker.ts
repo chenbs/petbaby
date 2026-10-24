@@ -13,6 +13,13 @@ import { processPaidPhysicalOrders } from "../src/server/growth-service";
 const interval = Number(process.env.WORKER_POLL_INTERVAL_MS || 1_000);
 
 /**
+ * 订阅消息（生日 / 到家纪念日 / 去年今日）首发不做（2026-10-25）：排期与投递默认不跑，功能代码保留。
+ * 恢复时设 SUBSCRIPTION_MESSAGES_ENABLED=1，并把小程序 commerce 页的 SUBSCRIPTIONS_ENABLED 改回 true。
+ */
+const subscriptionMessagesEnabled = process.env.SUBSCRIPTION_MESSAGES_ENABLED === "1";
+const noop = async () => undefined;
+
+/**
  * 「去年今日」按天扫，不进 60 秒的运维轮次。
  *
  * `scheduleAllOnThisDay` 会遍历全部用户、每人一次命中查询，一分钟跑一遍纯属浪费 ——
@@ -44,10 +51,10 @@ async function loop() {
       const payments = await reconcilePayments();
       if (payments.failed) await sendOperationalAlert("支付对账需要检查", payments);
       await processPaidPhysicalOrders();
-      const [health] = await Promise.all([healthSnapshot(), closeExpiredOrders(), cleanupExpiredContent(), processDueMessages(), expireGiftLots(), scheduleAllUpcomingReminders()]);
+      const [health] = await Promise.all([healthSnapshot(), closeExpiredOrders(), cleanupExpiredContent(), subscriptionMessagesEnabled ? processDueMessages() : noop(), expireGiftLots(), subscriptionMessagesEnabled ? scheduleAllUpcomingReminders() : noop()]);
       if (health.status !== "ok" || health.queued > 100) await sendOperationalAlert("Petbaby worker degraded", health);
     }
-    if (Date.now() - onThisDayAt > ON_THIS_DAY_INTERVAL_MS) {
+    if (subscriptionMessagesEnabled && Date.now() - onThisDayAt > ON_THIS_DAY_INTERVAL_MS) {
       onThisDayAt = Date.now();
       await scheduleAllOnThisDay();
     }

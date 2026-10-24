@@ -1,0 +1,19 @@
+<page-meta page-style="{{themeStyle}}"></page-meta>
+
+<view class="{{skinClass}} page page-flat art-brand layout-workbench">
+  <t-skeleton wx:if="{{loading}}" type="card" count="3"></t-skeleton>
+
+  <block wx:elif="{{doc}}">
+    <view class="title">{{doc.title}}</view>
+    <text class="hint">更新日期：{{doc.updatedAt}}　生效日期：{{doc.effectiveAt}}</text>
+    <view wx:for="{{doc.sections}}" wx:key="heading" class="section">
+      <view class="section-title">{{item.heading}}</view>
+      <text wx:for="{{item.paragraphs}}" wx:for-item="paragraph" wx:key="*this" class="legal-paragraph" user-select>{{paragraph}}</text>
+    </view>
+  </block>
+
+  <block wx:else>
+    <t-notice type="error" message="{{error}}" class="block-gap"></t-notice>
+    <t-button type="secondary" block anim="{{animType}}" class="block-gap" bindtap="load">重新加载</t-button>
+  </block>
+</view>

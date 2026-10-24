@@ -1,3 +1,3 @@
 module.exports = {
-  apiBaseUrl: "https://a.babykitty.cn"
+  apiBaseUrl: "https://api.babykitty.cn"
 };

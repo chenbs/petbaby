@@ -199,19 +199,19 @@ export async function refundSpend(bizKey: string, options: { units?: number; par
 /**
  * 新人见面礼。添加第一只宠物后发放，每个微信身份只发一次。
  *
- * 幂等键优先用 unionid（2026-10-09 起微信账号的唯一标识）：注销后用同一个微信重新注册会得到新的 user_id，
- * 但 unionid 不变，旧流水仍在（注销是软删除），于是不会再发一次。
+ * 幂等键优先用 openid（2026-10-25 起微信账号的唯一标识）：注销后用同一个微信重新注册会得到新的 user_id，
+ * 但 openid 不变，旧流水仍在（注销是软删除），于是不会再发一次。
  */
-function newcomerGiftKey(userId: string, unionid: unknown) {
-  return unionid ? `gift:newcomer:unionid:${String(unionid)}` : `gift:newcomer:user:${userId}`;
+export function newcomerGiftKey(userId: string, openid: unknown) {
+  return openid ? `gift:newcomer:openid:${String(openid)}` : `gift:newcomer:user:${userId}`;
 }
 
 export async function grantNewcomerGift(userId: string) {
   return inTransaction(async (database) => {
     const account = await lockAccount(database, userId);
     if (account.newcomer_gift_at) return undefined;
-    const users = await database.query("SELECT wechat_unionid FROM users WHERE id=$1", [userId]);
-    const bizKey = newcomerGiftKey(userId, users[0]?.wechat_unionid);
+    const users = await database.query("SELECT wechat_openid FROM users WHERE id=$1", [userId]);
+    const bizKey = newcomerGiftKey(userId, users[0]?.wechat_openid);
     await database.query("UPDATE wallet_accounts SET newcomer_gift_at=now() WHERE user_id=$1", [userId]);
     if (await ledgerByKey(database, bizKey)) return undefined;
     return credit(userId, {
@@ -229,9 +229,9 @@ export async function grantNewcomerGift(userId: string) {
 export async function getNewcomerGiftOffer(userId: string) {
   const database = await getDatabase();
   const [row] = await database.query(
-    `SELECT a.newcomer_gift_at, u.wechat_unionid FROM users u LEFT JOIN wallet_accounts a ON a.user_id=u.id WHERE u.id=$1`, [userId],
+    `SELECT a.newcomer_gift_at, u.wechat_openid FROM users u LEFT JOIN wallet_accounts a ON a.user_id=u.id WHERE u.id=$1`, [userId],
   );
-  const claimed = Boolean(row?.newcomer_gift_at) || Boolean(await ledgerByKey(database, newcomerGiftKey(userId, row?.wechat_unionid)));
+  const claimed = Boolean(row?.newcomer_gift_at) || Boolean(await ledgerByKey(database, newcomerGiftKey(userId, row?.wechat_openid)));
   return { available: !claimed, units: NEWCOMER_GIFT_UNITS, days: NEWCOMER_GIFT_DAYS };
 }
 

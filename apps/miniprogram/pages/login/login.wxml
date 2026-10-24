@@ -26,6 +26,6 @@
       <text class="muted">使用当前微信身份进入，无需注册，也不需要账号密码。</text>
     </t-card>
     <t-button type="primary" block anim="{{animType}}" loading="{{busy}}" class="block-gap" bindtap="wechatLogin">微信一键登录</t-button>
-    <text class="hint block-gap">登录即表示同意用户协议与隐私政策。</text>
+    <view class="hint block-gap">登录即表示同意<text class="legal-link" data-doc="terms" bindtap="openLegal">《用户协议》</text>与<text class="legal-link" data-doc="privacy" bindtap="openLegal">《隐私政策》</text>。</view>
   </block>
 </view>

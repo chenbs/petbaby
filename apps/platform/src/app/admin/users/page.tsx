@@ -47,7 +47,7 @@ export default async function UsersPage({ searchParams }: Props) {
         <FilterBar
           action="/admin/users"
           q={q}
-          placeholder="用户 ID、昵称、账号名、unionid、openid"
+          placeholder="用户 ID、昵称、账号名、openid"
           hidden={{ segment: segment === "all" ? undefined : segment }}
           selects={[{ name: "status", label: "账号状态", value: status === "all" ? "" : status, options: [{ value: "", label: "全部状态" }, { value: "active", label: "正常" }, { value: "suspended", label: "已停用" }, { value: "deleted", label: "已注销" }] }]}
         />

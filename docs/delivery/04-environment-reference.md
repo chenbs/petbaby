@@ -34,10 +34,10 @@
 | --- | --- | --- |
 | `PASSWORD_AUTH_ENABLED` | `false` | **消费端** Web/H5 的账号密码注册/登录开关，只在本地与测试机生效（需显式设 `true`）。**正式生产一律关闭、此开关无效**：生产用户只有微信账号。小程序 2026-10-11 起没有账号密码入口。运营后台登录（`/admin/login`）不受此开关影响 |
 | `PASSWORD_AUTH_INVITE_CODE` | 空 | 设置后注册必须携带邀请码；公网测试机建议保留 |
-| `WECHAT_APP_ID`、`WECHAT_APP_SECRET` | 空 | 小程序 `wx.login` 经 code2Session 换取 unionid 与 openid；缺失时微信登录不可用 |
+| `WECHAT_APP_ID`、`WECHAT_APP_SECRET` | 空 | 小程序 `wx.login` 经 code2Session 换取 openid；缺失时微信登录不可用 |
 | `WECHAT_SESSION_ENCRYPTION_KEY` | 空 | 32 字节 Base64，加密保存 session_key；缺失时微信登录整体失败（用户行随事务回滚） |
 
-**微信账号以 unionid 为唯一标识（2026-10-09，迁移 0043）。** openid 只记录在 `users.wechat_openid`（支付必须用当前小程序的 openid），不再唯一。小程序必须绑定微信开放平台，code2Session 才会返回 unionid；拿不到时登录返回 503 `WECHAT_UNIONID_REQUIRED`，不回落到 openid。改口径前只有 openid 的老用户首次登录时被接管（补写 unionid），不会变成新用户。新人见面礼按 unionid 去重。
+**微信账号以当前小程序的 openid 为唯一标识（2026-10-25，迁移 0045）。** 小程序不绑定开放平台，`users.wechat_openid` 唯一，`wechat_unionid` 列只保留历史、不再写入。新人见面礼与邀请奖励按 openid 去重。
 
 账号规则：字母开头、3-32 位、仅含字母数字点下划线连字符，大小写不敏感唯一。密码规则：10-72 位且同时含字母和数字，用 scrypt（N=16384, r=8, p=1）加盐存储。
 

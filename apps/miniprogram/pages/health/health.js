@@ -24,7 +24,7 @@ const { openPetPage } = require("../../services/pet-nav");
 
 const LEVEL_TEXT = {
   emergency: "建议立即就医",
-  urgent_24h: "建议今天带它去看看",
+  urgent_24h: "建议今天带宝宝去看看",
   observe: "先在家观察",
   routine: "通常无需担心",
 };

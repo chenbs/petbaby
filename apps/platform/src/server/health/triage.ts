@@ -198,7 +198,7 @@ export function fallbackAdvisory(level: TriageLevel): TriageAdvisory {
   return {
     level,
     summary: level === "routine"
-      ? "这类表现一般不用太担心，留意变化，持续或加重时及时带它去看看。"
+      ? "这类表现一般不用太担心，留意变化，持续或加重时及时带宝宝去看看。"
       : "建议请医生当面看看，再决定怎么处理。",
     relatedAreas: [],
     watchFor: ["症状持续超过 24 小时", "精神、食欲或饮水量明显下降", "出现新的症状"],

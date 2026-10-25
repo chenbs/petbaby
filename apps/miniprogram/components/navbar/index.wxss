@@ -77,6 +77,15 @@
   font-weight: var(--fw-black);
 }
 
+.navbar-brand-tagline {
+  margin-left: calc(var(--space-1) * -1);
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: var(--body-size);
+  font-weight: var(--fw-bold);
+  white-space: nowrap;
+}
+
 .navbar-brand-icon {
   width: 44rpx;
   height: 44rpx;

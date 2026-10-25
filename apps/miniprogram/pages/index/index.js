@@ -329,12 +329,13 @@ themedPage({
     this._petId = onboarding.petId;
     if (onboarding.path) wx.navigateTo({ url: onboarding.path + (onboarding.path.indexOf("?") >= 0 ? "&" : "?") + "petId=" + encodeURIComponent(onboarding.petId) });
   },
-  /** 见面礼说明：只用服务端下发的颗数与有效期；拉取失败或已领过就不显示，端上不写死数字。 */
+  /** 见面礼说明：只用服务端下发的颗数；拉取失败或已领过就不显示，端上不写死数字。 */
   loadOnboardGift(view) {
     return api.request("/api/wallet").then((data) => {
       if (view !== this._view) return;
       const gift = data && data.newcomerGift;
-      this.setData({ onboardGift: gift && gift.available && gift.units ? "建好就送 " + wallet.costText(gift.units) + (gift.days ? "，" + gift.days + " 天内可用" : "") : "" });
+      // 只说送多少，有效期在钱包里看（2026-10-26：首页这一行要醒目、要短）
+      this.setData({ onboardGift: gift && gift.available && gift.units ? "建好就送 " + wallet.costText(gift.units) : "" });
     }).catch(() => { if (view === this._view) this.setData({ onboardGift: "" }); });
   },
 

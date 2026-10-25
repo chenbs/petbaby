@@ -1,4 +1,5 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
+<wxs module="img" src="../../wxs/img.wxs"></wxs>
 
 <!--
   作品柜（2026-09 改版；2026-10 按 prototype.html after-works 对齐）：
@@ -31,7 +32,7 @@
       <view class="row works-head"><text class="works-head-title">制作记录</text><text class="small">点开查看进度与结果</text></view>
       <scroll-view class="progress-track" scroll-x enable-flex show-scrollbar="{{false}}">
         <view wx:for="{{progress}}" wx:key="id" class="progress-card" data-id="{{item.id}}" aria-role="button" hover-class="chip-hover" bindtap="openProgress">
-          <image wx:if="{{item.thumb}}" class="progress-thumb" src="{{item.thumb}}" mode="aspectFill" lazy-load />
+          <image wx:if="{{item.thumb}}" class="progress-thumb img-load" src="{{item.thumb}}" mode="aspectFill" lazy-load bindload="{{img.ready}}" />
           <view wx:else class="progress-thumb"></view>
           <view class="progress-copy">
             <text class="progress-title">{{item.title}}</text>
@@ -67,9 +68,9 @@
             <view class="work-photo ai-mask-host">
               <!-- 写真套餐：前四张成片拼成 2×2 -->
               <view wx:if="{{item.kind === 'bundle'}}" class="work-stack">
-                <image wx:for="{{item.stack}}" wx:for-item="url" wx:key="*this" class="work-stack-image" src="{{url}}" mode="aspectFill" lazy-load />
+                <image wx:for="{{item.stack}}" wx:for-item="url" wx:key="*this" class="work-stack-image img-load" src="{{url}}" mode="aspectFill" lazy-load bindload="{{img.ready}}" />
               </view>
-              <image wx:elif="{{item.cover && !item.imageFailed}}" class="work-image" src="{{item.cover}}" mode="widthFix" data-key="{{item.key}}" binderror="onCoverError" lazy-load />
+              <image wx:elif="{{item.cover && !item.imageFailed}}" class="work-image img-load img-load-fix" src="{{item.cover}}" mode="widthFix" data-key="{{item.key}}" binderror="onCoverError" lazy-load bindload="{{img.ready}}" />
               <view wx:else class="work-image work-image-blank">{{item.kind === 'fun' ? '趣测结果' : '作品预览暂不可用'}}</view>
               <text wx:if="{{item.badge}}" class="work-badge work-badge-{{item.badgeTone}}">{{item.badge}}</text>
               <text wx:if="{{item.aiNotice && !item.imageFailed}}" class="ai-mask">{{item.aiNotice}}</text>

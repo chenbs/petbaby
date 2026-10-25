@@ -5,7 +5,7 @@ import { AI_RUN_COST, DONGAN_UNIT } from "@/domain/dongan-pricing";
 import { routeError } from "@/server/errors";
 
 /*
- * 写真套餐价目（2026-10-08 起按冻干计价）：单张 2 颗、10 张 12 颗、20 张 20 颗。
+ * 写真套餐价目（2026-10-08 起按冻干计价）：单张 2 颗、10 张 16 颗、20 张 28 颗。
  * 与扣费同源（domain/dongan-pricing.ts），端上不写死颗数。
  */
 export async function GET() {

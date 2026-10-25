@@ -1,4 +1,5 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
+<wxs module="img" src="../../wxs/img.wxs"></wxs>
 
 <view class="{{skinClass}} page fun-page">
   <view class="fun-top"><view class="fun-brand">麻麻抱我 / 趣味测试</view><view class="fun-free">免费</view></view>
@@ -10,7 +11,7 @@
     <view class="fun-heading"><text class="fun-eyebrow">4 份趣味测试 · 每份 10 题</text><view class="fun-title">我的小秘密，<text>你最懂。</text></view><view class="fun-subtitle">从每天都看得见的小动作里，发现我们自己的答案。</view></view>
     <view class="fun-grid">
       <view wx:for="{{tests}}" wx:for-item="test" wx:key="id" class="fun-test" data-id="{{test.id}}" bindtap="openTest">
-        <view class="fun-test-image"><image src="{{test.coverPath}}" mode="aspectFill" lazy-load /><text>0{{index + 1}}</text></view>
+        <view class="fun-test-image"><image class="img-load" src="{{test.coverPath}}" mode="aspectFill" lazy-load bindload="{{img.ready}}" /><text>0{{index + 1}}</text></view>
         <view class="fun-test-copy"><text class="fun-test-category">{{test.category}} · {{test.questionCount}} 题</text><view class="fun-test-title">{{test.title}}</view><view class="fun-test-subtitle">{{test.subtitle}}</view><text class="fun-test-link">开始测试 →</text></view>
       </view>
     </view>
@@ -19,7 +20,7 @@
 
   <view wx:if="{{!loading && stage === 'intro' && test}}" class="fun-intro">
     <view class="fun-back" bindtap="backToList">← 全部测试</view>
-    <image class="fun-intro-image" src="{{test.coverPath}}" mode="aspectFill" />
+    <image class="fun-intro-image img-load" src="{{test.coverPath}}" mode="aspectFill" bindload="{{img.ready}}" />
     <text class="fun-eyebrow">{{test.category}} / {{test.questionCount}} 题</text>
     <view class="fun-intro-title">{{test.title}}</view><view class="fun-intro-lead">{{test.subtitle}}</view><view class="fun-intro-desc">{{test.introduction}}</view>
     <view wx:if="{{pets.length}}" class="fun-pet-picker"><view class="fun-label">给谁测</view><view class="fun-pet-list"><view wx:for="{{pets}}" wx:for-item="pet" wx:key="id" class="fun-pet {{petName === pet.name ? 'selected' : ''}}" data-index="{{index}}" bindtap="choosePet">{{pet.name}}</view></view></view>
@@ -65,6 +66,6 @@
     <view class="fun-result-footer"><view bindtap="retry">再测一次</view><view wx:if="{{ownResult}}" bindtap="deleteResult">删除这份结果</view></view>
   </view>
 
-  <view wx:if="{{!loading && stage === 'share-error'}}" class="fun-share-error"><view>这份结果已失效</view><text>它可能已经被删除，或分享链接不完整。</text><button class="fun-primary" bindtap="backToList">去测测我的宠物</button></view>
+  <view wx:if="{{!loading && stage === 'share-error'}}" class="fun-share-error"><view>这份结果已失效</view><text>结果可能已经被删除，或分享链接不完整。</text><button class="fun-primary" bindtap="backToList">去测测我的宠物</button></view>
   <canvas canvas-id="funTestPoster" class="fun-poster-canvas"></canvas>
 </view>

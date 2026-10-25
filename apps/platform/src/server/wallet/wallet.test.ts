@@ -233,7 +233,7 @@ describe("冻干充值", () => {
 describe("冻干价目", () => {
   it("颗数表与 36 号文一致", () => {
     expect(AI_RUN_COST).toEqual({ pet: 2, "pet-human": 4, "owner-pet": 6 });
-    expect(ART_PHOTO_BUNDLE_COST).toEqual({ ten: 12, twenty: 20 });
+    expect(ART_PHOTO_BUNDLE_COST).toEqual({ ten: 16, twenty: 28 });
     expect(MAX_TASK_ATTEMPTS).toBe(3);
     expect(resolveDeliverableCost({ pluginId: "pet-movie-poster" })).toEqual({ cost: 5 });
     expect(resolveDeliverableCost({ pluginId: "pet-time-album", accumulation: { photoCount: 21, spanDays: 10 } })).toEqual({ cost: 28, tier: "advanced" });

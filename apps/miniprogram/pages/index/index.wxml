@@ -1,4 +1,5 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
+<wxs module="img" src="../../wxs/img.wxs"></wxs>
 
 <!--
   首页（2026-09 改版，2026-10 按 themes.html 补齐四套主题的模块呈现）：
@@ -7,7 +8,7 @@
   装饰节点（邮戳、编号、扫描线、胶带）写在这里，由各主题决定显示与否。
 -->
 <view class="{{skinClass}} page page-tabbar art-film layout-pet home-page">
-  <t-navbar title="麻麻抱我" brand-icon="/assets/icons/{{themeId}}/paw.png"></t-navbar>
+  <t-navbar title="麻麻抱我" brand-tagline="宠物趣味写真" brand-icon="/assets/icons/{{themeId}}/paw.png"></t-navbar>
 
   <!-- 1. 宠物名片 + 今日一格。无宠物时显示示例，下方玩法照常出现，不让新用户看到空首页 -->
   <t-skeleton wx:if="{{petLoading && !pet}}" type="card" count="1"></t-skeleton>
@@ -20,7 +21,7 @@
     <text wx:if="{{pet.daysNumber}}" class="pet-serial" aria-hidden="true">NO.{{pet.serial}} · 在线</text>
     <view class="pet-card-top">
       <view class="pet-avatar-wrap" aria-role="button" aria-label="查看{{pet.name}}的时间线" bindtap="openTimeline">
-        <image wx:if="{{petDisplayUrl}}" class="pet-avatar" src="{{petDisplayUrl}}" mode="aspectFill" data-kind="pet" data-src="{{petDisplayUrl}}" binderror="onImageError" />
+        <image wx:if="{{petDisplayUrl}}" class="pet-avatar img-load" src="{{petDisplayUrl}}" mode="aspectFill" data-kind="pet" data-src="{{petDisplayUrl}}" binderror="onImageError" bindload="{{img.ready}}" />
         <view wx:else class="pet-avatar pet-avatar-empty">{{pet.name[0]}}</view>
       </view>
       <view class="pet-card-main">
@@ -61,15 +62,15 @@
   -->
   <view wx:else class="pet-card onboard-card">
     <text class="eyebrow onboard-eyebrow">第一步</text>
-    <view class="onboard-title">先给它建一份小档案</view>
-    <text class="onboard-copy">只要名字和种类，半分钟就好。之后的写真、成长记录和陪伴天数都会挂在它名下。</text>
+    <view class="onboard-title">先给宝宝建一份小档案</view>
+    <text class="onboard-copy">只要名字和种类，半分钟就好。之后的写真、成长记录和陪伴天数都会收在宝宝名下。</text>
     <view class="onboard-steps" aria-hidden="true">
       <view class="onboard-step"><text class="onboard-step-key">名字</text><text class="onboard-step-note">必填</text></view>
       <view class="onboard-step"><text class="onboard-step-key">种类</text><text class="onboard-step-note">必选</text></view>
       <view class="onboard-step"><text class="onboard-step-key">头像</text><text class="onboard-step-note">可跳过</text></view>
     </view>
     <t-button type="primary" block anim="{{animType}}" bindtap="startOnboarding">添加我的宠物</t-button>
-    <text wx:if="{{onboardGift}}" class="onboard-gift">{{onboardGift}}</text>
+    <view wx:if="{{onboardGift}}" class="onboard-gift"><image class="onboard-gift-coin" src="/assets/icons/{{themeId}}/fd-coin.png" mode="aspectFit" /><text>{{onboardGift}}</text></view>
   </view>
 
   <!-- 2. 如果我是人：第一主推。点标题区进 40 款造型页，点某一张直达那一款 -->
@@ -82,10 +83,10 @@
     <view class="human-card-stack">
       <view class="human-card-scan" aria-hidden="true"></view>
       <view wx:for="{{humanCovers}}" wx:key="templateId" wx:if="{{index < 3}}" class="human-card-cover human-card-cover-{{index}}" data-id="{{item.templateId}}" aria-role="button" aria-label="{{item.title}}" bindtap="openHuman">
-        <image wx:if="{{item.sampleUrl}}" class="human-card-image" src="{{item.sampleUrl}}" mode="aspectFill" webp data-kind="human" data-id="{{item.templateId}}" data-src="{{item.sampleUrl}}" binderror="onImageError" />
+        <image wx:if="{{item.sampleUrl}}" class="human-card-image img-load" src="{{item.sampleUrl}}" mode="aspectFill" webp data-kind="human" data-id="{{item.templateId}}" data-src="{{item.sampleUrl}}" binderror="onImageError" bindload="{{img.ready}}" />
       </view>
       <view class="human-card-origin" aria-hidden="true">
-        <image wx:if="{{petDisplayUrl}}" class="human-card-origin-image" src="{{petDisplayUrl}}" mode="aspectFill" />
+        <image wx:if="{{petDisplayUrl}}" class="human-card-origin-image img-load" src="{{petDisplayUrl}}" mode="aspectFill" bindload="{{img.ready}}" />
         <text>{{pet ? pet.name + '的照片 →' : '用我的照片试试 →'}}</text>
       </view>
     </view>
@@ -97,7 +98,7 @@
     <view class="row boss-head"><view class="section-title flush">麻麻精选</view><text class="small boss-note">{{bossNote || copy[themeId].note}}</text></view>
     <view class="boss-stamp" aria-hidden="true"><text>麻麻</text><text>精选</text></view>
     <view wx:if="{{bossCoverUrl && bossLead}}" class="boss-lead" data-entry="boss" data-template="{{bossLead.templateId}}" aria-role="button" hover-class="pet-feature-hover" bindtap="startTemplate">
-      <image src="{{bossCoverUrl}}" mode="aspectFill" class="boss-cover" lazy-load />
+      <image src="{{bossCoverUrl}}" mode="aspectFill" class="boss-cover img-load" lazy-load bindload="{{img.ready}}" />
       <view class="boss-lead-copy">
         <view class="boss-lead-text"><view class="boss-lead-title">{{bossLead.title}}</view><text class="small boss-lead-sub">{{bossLead.subtitle}}</text></view>
         <text class="boss-lead-go">做同款 ›</text>
@@ -105,7 +106,7 @@
     </view>
     <scroll-view class="boss-track" scroll-x enable-flex show-scrollbar="{{false}}">
       <view wx:for="{{bossTemplates}}" wx:key="templateId" class="boss-item" data-entry="{{item.entryId}}" data-template="{{item.templateId}}" aria-role="button" aria-label="{{item.title}}" bindtap="startTemplate">
-        <view class="boss-thumb-wrap"><text class="boss-level" aria-hidden="true">{{item.level}}</text><image class="boss-thumb boss-thumb-{{item.sampleShape === 'wide' ? 'wide' : 'portrait'}}" src="{{item.sampleUrl}}" mode="aspectFill" lazy-load /></view>
+        <view class="boss-thumb-wrap"><text class="boss-level" aria-hidden="true">{{item.level}}</text><image class="boss-thumb boss-thumb-{{item.sampleShape === 'wide' ? 'wide' : 'portrait'}} img-load" src="{{item.sampleUrl}}" mode="aspectFill" lazy-load bindload="{{img.ready}}" /></view>
         <view class="boss-name">{{item.title}}</view>
       </view>
     </scroll-view>
@@ -120,18 +121,18 @@
     <view class="row studio-head" aria-role="button" data-mode="pet" bindtap="openArtStudio"><view class="section-title flush">写真馆</view><text class="small">{{duoCovers.length ? '单宠 · 人宠同框' : artPriceText}} ›</text></view>
     <view class="studio-cards">
       <view wx:if="{{bossScenes.length}}" class="studio-card" data-mode="pet" aria-role="button" aria-label="宠物写真，{{artPriceText}}" hover-class="pet-feature-hover" bindtap="openArtStudio">
-        <image class="studio-card-image" src="{{bossScenes[0].hdUrl || bossScenes[0].sampleUrl}}" mode="aspectFill" lazy-load />
+        <image class="studio-card-image img-load" src="{{bossScenes[0].hdUrl || bossScenes[0].sampleUrl}}" mode="aspectFill" lazy-load bindload="{{img.ready}}" />
         <view class="studio-card-copy"><view class="studio-card-title">宠物写真</view><text class="studio-card-sub">{{artPriceText}}</text></view>
       </view>
       <view wx:if="{{duoCovers.length}}" class="studio-card studio-card-duo" data-mode="duo" aria-role="button" aria-label="人宠写真，{{duoGroupCount}} 组" hover-class="pet-feature-hover" bindtap="openArtStudio">
         <text class="feed-tag studio-card-tag">新</text>
-        <image class="studio-card-image" src="{{duoCovers[0].hdUrl || duoCovers[0].sampleUrl}}" mode="aspectFill" lazy-load />
-        <view class="studio-card-copy"><view class="studio-card-title">人宠写真</view><text class="studio-card-sub">{{duoGroupCount}} 组 · 我和{{pet ? pet.name : '它'}}同框</text></view>
+        <image class="studio-card-image img-load" src="{{duoCovers[0].hdUrl || duoCovers[0].sampleUrl}}" mode="aspectFill" lazy-load bindload="{{img.ready}}" />
+        <view class="studio-card-copy"><view class="studio-card-title">人宠写真</view><text class="studio-card-sub">{{duoGroupCount}} 组 · 我和{{pet ? pet.name : '宝宝'}}同框</text></view>
       </view>
     </view>
     <scroll-view class="boss-track" scroll-x enable-flex show-scrollbar="{{false}}">
       <view wx:for="{{studioStrip}}" wx:key="key" class="boss-item" data-kind="{{item.kind}}" data-id="{{item.id}}" aria-role="button" aria-label="{{item.kind === 'duo' ? '人宠写真 ' : ''}}{{item.title}}" bindtap="openStudioItem">
-        <view class="boss-thumb-wrap"><text wx:if="{{item.kind === 'duo'}}" class="studio-strip-tag">人宠</text><image class="boss-thumb boss-thumb-scene" src="{{item.sampleUrl}}" mode="aspectFill" lazy-load /></view>
+        <view class="boss-thumb-wrap"><text wx:if="{{item.kind === 'duo'}}" class="studio-strip-tag">人宠</text><image class="boss-thumb boss-thumb-scene img-load" src="{{item.sampleUrl}}" mode="aspectFill" lazy-load bindload="{{img.ready}}" /></view>
         <view class="boss-name">{{item.title}}</view>
       </view>
     </scroll-view>
@@ -152,7 +153,7 @@
         <view wx:for="{{feedLeft}}" wx:key="key" class="feed-item feed-item-{{item.kind}} feed-item-{{item.shape}}" data-id="{{item.key}}" aria-role="button" aria-label="{{item.title}}" hover-class="pet-feature-hover" bindtap="openFeed">
           <view class="feed-photo">
             <text wx:if="{{item.tag}}" class="feed-tag feed-tag-{{item.tagTone}}">{{item.tag}}</text>
-            <image wx:if="{{item.cover}}" class="feed-image feed-shape-{{item.shape}}" src="{{item.cover}}" mode="aspectFill" data-kind="feed" data-id="{{item.key}}" binderror="onImageError" lazy-load />
+            <image wx:if="{{item.cover}}" class="feed-image feed-shape-{{item.shape}} img-load" src="{{item.cover}}" mode="aspectFill" data-kind="feed" data-id="{{item.key}}" binderror="onImageError" lazy-load bindload="{{img.ready}}" />
             <view wx:else class="feed-image feed-shape-{{item.shape}} feed-image-empty">样片暂不可用</view>
           </view>
           <view class="feed-title">{{item.title}}</view>
@@ -163,7 +164,7 @@
         <view wx:for="{{feedRight}}" wx:key="key" class="feed-item feed-item-{{item.kind}} feed-item-{{item.shape}}" data-id="{{item.key}}" aria-role="button" aria-label="{{item.title}}" hover-class="pet-feature-hover" bindtap="openFeed">
           <view class="feed-photo">
             <text wx:if="{{item.tag}}" class="feed-tag feed-tag-{{item.tagTone}}">{{item.tag}}</text>
-            <image wx:if="{{item.cover}}" class="feed-image feed-shape-{{item.shape}}" src="{{item.cover}}" mode="aspectFill" data-kind="feed" data-id="{{item.key}}" binderror="onImageError" lazy-load />
+            <image wx:if="{{item.cover}}" class="feed-image feed-shape-{{item.shape}} img-load" src="{{item.cover}}" mode="aspectFill" data-kind="feed" data-id="{{item.key}}" binderror="onImageError" lazy-load bindload="{{img.ready}}" />
             <view wx:else class="feed-image feed-shape-{{item.shape}} feed-image-empty">样片暂不可用</view>
           </view>
           <view class="feed-title">{{item.title}}</view>

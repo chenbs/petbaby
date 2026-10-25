@@ -10,7 +10,7 @@ import { ART_PHOTO_BUNDLE_COST, ART_PHOTO_BUNDLE_ITEM_REFUND, describeCost } fro
 import { refundSpend, spend } from "@/server/wallet/service";
 
 /*
- * 写真套餐（2026-10-08 起扣冻干）：10 张 12 颗、20 张 20 颗；单张写真走 AI 单张（2 颗）。
+ * 写真套餐（2026-10-08 起扣冻干）：10 张 16 颗、20 张 28 颗；单张写真走 AI 单张（2 颗）。
  * 创建批次的同一事务里扣冻干并直接入队，不再建现金订单。
  * 历史 24 / 36 张批次（现金订单）只读，靠 order_id 关联 growth_orders。
  */

@@ -1,10 +1,12 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
+<wxs module="img" src="../../wxs/img.wxs"></wxs>
 
 <view wx:if="{{formStage}}" class="{{skinClass}} page page-flat art-film layout-workbench creation-page">
   <view class="creation-header">
-    <image wx:if="{{plugin && plugin.samples && plugin.samples.heroUrl && (stage === 'profile' || pluginId === 'pet-id-card')}}" class="creation-sample" src="{{plugin.samples.heroHdUrl || plugin.samples.heroUrl}}" mode="aspectFit" />
+    <image wx:if="{{plugin && plugin.samples && plugin.samples.heroUrl && (stage === 'profile' || pluginId === 'pet-id-card')}}" class="creation-sample img-load" src="{{plugin.samples.heroHdUrl || plugin.samples.heroUrl}}" mode="aspectFit" bindload="{{img.ready}}" />
     <text class="eyebrow">第 {{stepIndex + 1}} 步 / 共 {{steps.length}} 步</text>
     <view class="title">{{plugin ? plugin.name : '准备玩法'}}</view>
+    <text wx:if="{{plugin && plugin.description}}" class="muted">{{plugin.description}}</text>
     <t-steps steps="{{steps}}" current="{{stepIndex}}" class="block-gap"></t-steps>
   </view>
 
@@ -47,7 +49,7 @@
       <view class="sub-title">{{pluginId === 'pet-movie-poster' ? '选一部我的电影' : '选一本我的画册'}}</view>
       <view class="sample-grid">
         <view wx:for="{{pluginId === 'pet-movie-poster' ? movieSamples : albumSamples}}" wx:key="id" class="sample-option {{item.featured ? 'sample-option-featured' : ''}} {{(pluginId === 'pet-movie-poster' ? style : theme) === item.id ? 'sample-option-on' : ''}}" data-id="{{item.id}}" aria-role="radio" aria-checked="{{(pluginId === 'pet-movie-poster' ? style : theme) === item.id}}" bindtap="chooseSample">
-          <view class="sample-image-wrap"><image class="sample-option-image" src="{{item.url}}" mode="aspectFit" /><text wx:if="{{(pluginId === 'pet-movie-poster' ? style : theme) === item.id}}" class="sample-check">✓ 已选</text></view>
+          <view class="sample-image-wrap"><image class="sample-option-image img-load" src="{{item.url}}" mode="aspectFit" bindload="{{img.ready}}" /><text wx:if="{{(pluginId === 'pet-movie-poster' ? style : theme) === item.id}}" class="sample-check">✓ 已选</text></view>
           <view class="sample-option-copy"><view class="sample-option-name">{{item.title}}</view><text class="sample-option-note">{{item.note}}</text></view>
         </view>
       </view>
@@ -163,7 +165,7 @@
   -->
   <view wx:else class="section">
     <view class="result-frame">
-      <image wx:if="{{work.outputUrl && !resultImageFailed}}" class="result-image" src="{{work.outputUrl}}" mode="widthFix" data-src="{{work.outputUrl}}" binderror="onResultImageError" />
+      <image wx:if="{{work.outputUrl && !resultImageFailed}}" class="result-image img-load img-load-fix" src="{{work.outputUrl}}" mode="widthFix" data-src="{{work.outputUrl}}" binderror="onResultImageError" bindload="{{img.ready}}" />
       <view wx:else class="result-image result-image-blank">作品预览暂不可用，请进入详情查看</view>
     </view>
     <view class="result-copy">

@@ -124,17 +124,17 @@
   white-space: nowrap;
 }
 
+/* 「最多人选」「最划算」「这次不够」：描边贴纸，手账相册的贴纸底接近卡面色，靠描边才看得出来 */
 .ws-badge {
-  position: absolute;
-  top: -18rpx;
-  left: var(--space-2);
-  padding: 0 var(--space-1);
+  box-sizing: border-box;
+  padding: 0 var(--space-2);
+  border: 2rpx solid currentColor;
   border-radius: var(--radius-pill);
   background: var(--skin-sticker-bg);
   color: var(--skin-sticker-text);
-  font-size: var(--eyebrow-size);
+  font-size: var(--small-size);
   font-weight: var(--fw-black);
-  line-height: 34rpx;
+  line-height: 40rpx;
   white-space: nowrap;
 }
 
@@ -257,14 +257,14 @@
   flex-wrap: wrap;
   justify-content: space-between;
   row-gap: var(--space-3);
-  margin-top: var(--space-5);
+  margin-top: var(--space-4);
 }
 
 .ws-tier {
   position: relative;
   width: calc(50% - 10rpx);
   box-sizing: border-box;
-  padding: var(--space-3) var(--space-2) var(--space-2);
+  padding: var(--space-2);
   border: 4rpx solid var(--border);
   border-radius: var(--card-radius-variant);
   background: var(--card-background);
@@ -280,10 +280,20 @@
 
 .ws-short { opacity: .62; }
 
+.ws-tier-tags {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: 44rpx;
+  margin-bottom: var(--space-2);
+}
+
+/* 每档都标的「多送 N%」：卡内右上，比贴纸再大一号的实心胶囊 */
 .ws-deal-corner {
-  position: absolute;
-  top: -20rpx;
-  right: var(--space-2);
+  margin-left: auto;
+  padding: 0 var(--space-2);
+  font-size: var(--small-size);
+  line-height: 44rpx;
 }
 
 .ws-tier-top {

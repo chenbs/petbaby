@@ -6,7 +6,7 @@ const { uploadOnePhoto } = require("../../services/quick-upload");
 const wallet = require("../../services/wallet");
 const { openPetCreator, remind } = require("../../services/pet-onboarding");
 
-/** 写真套餐两档：10 张 12 颗、20 张 20 颗（2026-10-08）。 */
+/** 写真套餐两档：10 张 16 颗、20 张 28 颗（2026-10-26 调价，颗数以服务端下发为准）。 */
 const PACK_COUNT = { ten: 10, twenty: 20 };
 
 themedPage(Object.assign({}, wallet.walletSheetMethods, {
@@ -77,7 +77,7 @@ themedPage(Object.assign({}, wallet.walletSheetMethods, {
     if (this.data.busy) return;
     if (this.data.loading || this.data.photosLoading) return;
     // 缺什么就带用户去补，按钮不再置灰没反应
-    if (!this.data.pets.length) { remind("先给它建一份档案"); return this.openPets(); }
+    if (!this.data.pets.length) { remind("先给宝宝建一份档案"); return this.openPets(); }
     if (!this.data.petId) return remind("先选一只宠物");
     if (!this.data.photos.length) return this.uploadPetPhoto();
     if (this.data.photoIds.length !== 1) return remind("先选 1 张清晰正脸照");

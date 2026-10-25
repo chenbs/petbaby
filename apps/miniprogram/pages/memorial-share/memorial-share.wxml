@@ -1,4 +1,5 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
+<wxs module="img" src="../../wxs/img.wxs"></wxs>
 
 <view class="{{skinClass}} page page-flat page-read art-film layout-bookshelf">
   <t-skeleton wx:if="{{loading}}" type="card" count="2"></t-skeleton>
@@ -19,7 +20,7 @@
 
     <view class="photo-flow">
       <view wx:for="{{photos}}" wx:key="id" class="photo-frame">
-        <image wx:if="{{item.url}}" class="photo" src="{{item.url}}" mode="widthFix" data-id="{{item.id}}" data-src="{{item.url}}" binderror="onPhotoError"></image>
+        <image wx:if="{{item.url}}" class="photo img-load img-load-fix" src="{{item.url}}" mode="widthFix" data-id="{{item.id}}" data-src="{{item.url}}" binderror="onPhotoError" bindload="{{img.ready}}" ></image>
         <view wx:else class="photo-error">{{item.imageError || '照片暂时无法显示'}}</view>
       </view>
     </view>

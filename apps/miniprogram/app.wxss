@@ -44,7 +44,7 @@ page {
   --title-size: 44rpx;
   --body-size: 28rpx;
   --small-size: 24rpx;
-  --eyebrow-size: 20rpx;
+  --eyebrow-size: 22rpx;
   --title-weight: 800;
   --title-letter-spacing: 0;
   --transition-duration: 240ms;
@@ -955,4 +955,39 @@ image {
   gap: var(--space-4);
   margin-top: var(--space-3);
   font-size: var(--small-size);
+}
+
+/*
+ * ---------- 图片加载态（2026-10-26） ----------
+ * 未加载完：骨架底色 + 呼吸；加载完（wxs/img.wxs 加 .img-on）短暂淡入。
+ * 不用 :not()：WXSS 不保证支持。页面自己给图片定了 background 的，页面样式在后、同优先级会盖掉这里的底色，
+ * 加载中只呼吸不换色；没定的，加载后由 .img-on 撤掉底色，aspectFit 留白保持透明。
+ * widthFix 的图加载前高度为 0，另加 .img-load-fix 给一个占位高度。
+ */
+.img-load {
+  background-color: var(--skeleton-base);
+  animation: img-breathe 1.4s ease-in-out infinite;
+}
+
+.img-load-fix {
+  min-height: 360rpx;
+}
+
+.img-on {
+  background-color: transparent;
+  animation: img-in .32s ease-out;
+}
+
+.img-load-fix.img-on {
+  min-height: 0;
+}
+
+@keyframes img-breathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .55; }
+}
+
+@keyframes img-in {
+  from { opacity: .3; }
+  to { opacity: 1; }
 }

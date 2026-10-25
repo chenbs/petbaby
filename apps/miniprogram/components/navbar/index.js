@@ -10,7 +10,9 @@ Component({
     // inverse：标题与返回箭头改用玻璃面板文字色，配合 transparent 用于沉浸式页面
     tone: { type: String, value: "default" },
     // 品牌标题（首页）：左对齐的爪印 + 名称，替代居中标题与返回键
-    brandIcon: { type: String, value: "" }
+    brandIcon: { type: String, value: "" },
+    // 品牌标题后的副标（如「宠物趣味写真」），用间隔点接在名称后、字号小一档
+    brandTagline: { type: String, value: "" }
   },
   data: { statusBarHeight: 20 },
   attached() {

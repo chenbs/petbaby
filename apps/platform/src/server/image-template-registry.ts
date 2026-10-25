@@ -131,19 +131,20 @@ const publicPreviewStorageKeyOverrides: Partial<Record<string, string>> = {
   "duo-tulips-sniff": "samples/image-template-previews/duo-tulips-sniff-17f2f242a2d2.webp",
 };
 
+/** 入口与一句话说明（2026-10-26 重写：说清是什么、要准备什么，制作页标题下与「其他玩法」分类卡展示）。 */
 export const imageTemplateEntries = [
-  { id: "fun", title: "好笑出片" },
-  { id: "comic", title: "表情漫画" },
-  { id: "together", title: "和我合照" },
-  { id: "duo", title: "人宠写真" },
-  { id: "human", title: "如果我是人" },
-  { id: "travel", title: "旅行打卡" },
-  { id: "career", title: "职业反差" },
-  { id: "boss", title: "麻麻精选" },
-  { id: "action", title: "动作剧情" },
-  { id: "character", title: "角色设定" },
-  { id: "archive", title: "图鉴与档案" },
-  { id: "art", title: "艺术肖像 / 纪念收藏" },
+  { id: "fun", title: "好笑出片", description: "一张宝宝的照片，变成通缉令、表情包这类好笑的图" },
+  { id: "comic", title: "表情漫画", description: "把宝宝画成九宫格表情和小漫画，发朋友圈正合适" },
+  { id: "together", title: "和我合照", description: "你和宝宝各传一张照片，拍成一张趣味合照" },
+  { id: "duo", title: "人宠写真", description: "你一张、宝宝一张，拍成同框的棚拍写真" },
+  { id: "human", title: "如果我是人", description: "传一张宝宝的正脸照，看看变成人是什么样子" },
+  { id: "travel", title: "旅行打卡", description: "不用出门，带宝宝去巴黎、长城、雪山打个卡" },
+  { id: "career", title: "职业反差", description: "让宝宝当一回咖啡主理人、飞行员、时装模特" },
+  { id: "boss", title: "麻麻精选", description: "我们挑出的最出片的几款，随便选都好看" },
+  { id: "action", title: "动作剧情", description: "把宝宝放进大片海报里，冒险、科幻随便演" },
+  { id: "character", title: "角色设定", description: "给宝宝做一套角色设定图，古风、神兽、潮玩都有" },
+  { id: "archive", title: "图鉴与档案", description: "把宝宝做成百科图鉴、生涯海报，像一份正式档案" },
+  { id: "art", title: "艺术肖像 / 纪念收藏", description: "水墨、水彩、装饰画风格的肖像，适合打印挂起来" },
 ] as const;
 
 const registeredTemplates: ImageTemplateDefinition[] = [

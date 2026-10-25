@@ -199,7 +199,7 @@ async function remindSeniorCheckup(now: Date, limit: number): Promise<HealthRemi
        * 也不列具体检查项目：那是兽医根据触诊决定的。
        */
       title: `${pet.name}的季度检查`,
-      body: "晚年阶段建议每季度带它做一次基础检查，具体项目听医生的。",
+      body: "晚年阶段建议每季度带宝宝做一次基础检查，具体项目听医生的。",
     };
     // 每季度一条：subject_key 带上年份与季度序号，同一季度内不重复。
     const quarter = `${now.getFullYear()}Q${Math.floor(now.getMonth() / 3) + 1}`;

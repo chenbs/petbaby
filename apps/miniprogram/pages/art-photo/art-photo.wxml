@@ -1,4 +1,5 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
+<wxs module="img" src="../../wxs/img.wxs"></wxs>
 <view class="{{skinClass}} page page-tabbar art-brand layout-matrix art-photo-page {{segment === 'pet' ? 'art-photo-page-bundle' : ''}}">
   <!-- 分段吸顶：往下滑时仍可切换；外层垫页面底色，内容滑过时不透出来 -->
   <view class="create-segments-bar">
@@ -14,7 +15,7 @@
   <block wx:elif="{{segment === 'duo'}}">
     <view class="art-heading">
       <view class="title">和我同框，拍一组合影</view>
-      <text class="muted">一张你的照片，一张我的照片，就能并排出现在同一个画面里。{{duoGroups.length}} 场拍摄，每场两个镜头。</text>
+      <text class="muted">你一张、宝宝一张，拍成同框的棚拍写真。{{duoGroups.length}} 组场景，每组两个镜头。</text>
       <text wx:if="{{duoPriceText}}" class="small art-heading-price">{{duoPriceText}}</text>
     </view>
     <view wx:for="{{duoGroups}}" wx:for-item="group" wx:key="id" class="art-collection duo-group">
@@ -25,7 +26,7 @@
       <view class="art-grid">
         <view wx:for="{{group.shots}}" wx:key="templateId" class="art-item duo-shot" data-id="{{item.templateId}}" aria-role="button" aria-label="人宠写真{{group.title}} · {{item.title}}" hover-class="chip-hover" bindtap="openDuoTemplate">
           <view class="art-image-wrap">
-            <image wx:if="{{item.sampleUrl}}" class="duo-image" src="{{item.hdUrl || item.sampleUrl}}" mode="aspectFill" webp data-id="{{item.templateId}}" binderror="onDuoImageError" lazy-load />
+            <image wx:if="{{item.sampleUrl}}" class="duo-image img-load" src="{{item.hdUrl || item.sampleUrl}}" mode="aspectFill" webp data-id="{{item.templateId}}" binderror="onDuoImageError" lazy-load bindload="{{img.ready}}" />
             <view wx:else class="duo-image art-image-empty">样片暂不可用</view>
             <text class="duo-badge">主人 + 宠物</text>
           </view>
@@ -39,18 +40,21 @@
   <block wx:elif="{{segment === 'pet'}}">
     <view class="art-heading">
       <view class="title">{{sceneCount}} 套布景，换我来当主角</view>
-      <text class="muted">从窗边晨光到雪夜木屋，衣服、道具和灯光都按场景搭好，只要一张我的清楚照片。</text>
+      <text class="muted">传一张宝宝的清楚照片，挑一个布景就能出片。衣服、道具和灯光都替你搭好了。</text>
       <!-- 和线下影棚比：不用等、不折腾、花得少（2026-10-10） -->
+      <!-- 2026-10-26：三张小卡改成三行勾选式卖点，一眼扫完 -->
       <view class="art-perks">
-        <view class="art-perk"><text class="art-perk-title">不用约档期</text><text class="small">不排队、不赶路，现在挑好，一分钟左右就出片</text></view>
-        <view class="art-perk"><text class="art-perk-title">不用哄我配合</text><text class="small">不怕我乱跑、不肯穿衣服，平时随手拍的那张就够用</text></view>
-        <view class="art-perk"><text class="art-perk-title">换装不加钱</text><text class="small">省下影棚、服装和道具的钱，一套 {{packages.single.price}}，一组更省</text></view>
+        <view class="art-perk"><text class="art-perk-mark">✓</text><text class="art-perk-title">不用约档期</text><text class="art-perk-note">现在挑好，一分钟左右出片</text></view>
+        <view class="art-perk"><text class="art-perk-mark">✓</text><text class="art-perk-title">不用哄我配合</text><text class="art-perk-note">随手拍的一张就够用</text></view>
+        <view class="art-perk"><text class="art-perk-mark">✓</text><text class="art-perk-title">换装不加钱</text><text class="art-perk-note">一套 {{packages.single.price}}，一组更省</text></view>
       </view>
     </view>
-    <view class="art-package-options">
+    <view class="art-package-head"><text class="art-package-head-title">选一个套餐</text><text class="small">点一下切换</text></view>
+    <view class="art-package-options" aria-role="radiogroup">
       <view wx:for="{{['single', 'ten', 'twenty']}}" wx:key="*this" class="art-package {{packageMode === item ? 'art-package-on' : ''}}" data-mode="{{item}}" aria-role="radio" aria-checked="{{packageMode === item}}" bindtap="choosePackage">
         <text wx:if="{{packages[item].recommended}}" class="art-package-badge">最多人选</text>
-        <text>{{packages[item].label}}</text>
+        <text class="art-package-radio">{{packageMode === item ? '✓' : ''}}</text>
+        <text class="art-package-label">{{packages[item].label}}</text>
         <text class="art-package-price">{{packages[item].price || '—'}}</text>
         <text class="small">{{packages[item].unit}}</text>
       </view>
@@ -67,7 +71,7 @@
       </view>
       <view class="art-grid">
         <view wx:for="{{group.scenes}}" wx:for-item="scene" wx:key="id" class="art-item {{scene.selected ? 'art-item-selected' : ''}}" data-id="{{scene.id}}" aria-role="{{packageMode === 'single' ? 'button' : 'checkbox'}}" aria-checked="{{scene.selected}}" aria-label="{{scene.title}}写真{{scene.selected ? '，第 ' + scene.order + ' 张' : ''}}" bindtap="chooseScene">
-          <view class="art-image-wrap"><image wx:if="{{scene.url}}" class="art-image" src="{{scene.url}}" mode="aspectFit" data-id="{{scene.id}}" binderror="onSceneImageError" lazy-load /><view wx:else class="art-image art-image-empty">样片暂不可用</view><text wx:if="{{packageMode !== 'single'}}" class="art-selection {{scene.selected ? 'art-selection-on' : ''}}">{{scene.selected ? scene.order : '＋'}}</text></view>
+          <view class="art-image-wrap"><image wx:if="{{scene.url}}" class="art-image img-load" src="{{scene.url}}" mode="aspectFit" data-id="{{scene.id}}" binderror="onSceneImageError" lazy-load bindload="{{img.ready}}" /><view wx:else class="art-image art-image-empty">样片暂不可用</view><text wx:if="{{packageMode !== 'single'}}" class="art-selection {{scene.selected ? 'art-selection-on' : ''}}">{{scene.selected ? scene.order : '＋'}}</text></view>
           <view class="art-name">{{scene.title}}</view>
           <text class="small art-description">{{scene.description}}</text>
         </view>
@@ -79,7 +83,7 @@
   <block wx:elif="{{segment === 'human'}}">
     <view class="art-heading">
       <view class="title">如果我是人</view>
-      <text class="muted">我的毛色、眼神和那股劲儿，换成人会是什么样？{{humanTemplates.length}} 款造型，挑一个就能看看。</text>
+      <text class="muted">传一张宝宝的正脸照，看看变成人是什么样子。{{humanTemplates.length}} 款造型，挑喜欢的就行。</text>
       <text wx:if="{{humanPriceText}}" class="small art-heading-price">{{humanPriceText}} · 用一张我的正脸照</text>
     </view>
     <scroll-view class="human-tags chip-scroll" scroll-x show-scrollbar="{{false}}"><view class="chip-track">
@@ -88,7 +92,7 @@
     </view></scroll-view>
     <view class="human-grid">
       <view wx:for="{{humanVisible}}" wx:key="templateId" class="human-pick" data-id="{{item.templateId}}" aria-role="button" aria-label="{{item.title}}" hover-class="chip-hover" bindtap="openHumanTemplate">
-        <image wx:if="{{item.sampleUrl}}" class="human-card-image" src="{{item.sampleUrl}}" mode="aspectFill" webp data-id="{{item.templateId}}" binderror="onHumanImageError" lazy-load />
+        <image wx:if="{{item.sampleUrl}}" class="human-card-image img-load" src="{{item.sampleUrl}}" mode="aspectFill" webp data-id="{{item.templateId}}" binderror="onHumanImageError" lazy-load bindload="{{img.ready}}" />
         <view wx:else class="human-card-image art-image-empty">样图暂不可用</view>
         <view class="art-name">{{item.title}}</view>
       </view>
@@ -97,19 +101,21 @@
 
   <!-- 其他玩法：分类 + 图文 / 短片 / 趣测 -->
   <block wx:else>
-    <view class="art-heading"><view class="title">其他玩法</view><text class="muted">证件照、电影海报、成长画册和回忆短片，把我攒下的照片做成能留着的东西。</text></view>
+    <view class="art-heading"><view class="title">其他玩法</view><text class="muted">身份证、电影海报、成长画册、回忆短片……把攒下的照片做成能留着的东西。</text></view>
     <scroll-view class="human-tags chip-scroll" scroll-x show-scrollbar="{{false}}"><view class="chip-track">
       <view wx:for="{{playChips}}" wx:key="id" class="chip {{playChip === item.id ? 'chip-on' : ''}}" data-id="{{item.id}}" aria-role="tab" aria-selected="{{playChip === item.id}}" hover-class="chip-hover" bindtap="choosePlayChip">{{item.label}}</view>
     </view></scroll-view>
     <view class="play-grid">
       <view wx:for="{{visibleCategories}}" wx:key="id" class="play-card" data-id="{{item.id}}" data-template="{{item.templateId}}" aria-role="button" hover-class="chip-hover" bindtap="openCategory">
-        <image wx:if="{{item.cover}}" class="play-card-image play-shape-tall" src="{{item.cover}}" mode="aspectFill" lazy-load />
+        <image wx:if="{{item.cover}}" class="play-card-image play-shape-tall img-load" src="{{item.cover}}" mode="aspectFill" lazy-load bindload="{{img.ready}}" />
         <view class="art-name">{{item.title}}</view>
+        <text wx:if="{{item.description}}" class="small play-card-desc">{{item.description}}</text>
         <text class="small">{{item.count}} 款</text>
       </view>
       <view wx:for="{{visiblePlays}}" wx:key="id" class="play-card" data-id="{{item.id}}" data-category="{{item.category}}" aria-role="button" hover-class="chip-hover" bindtap="openPlay">
-        <image wx:if="{{item.cover}}" class="play-card-image play-shape-wide" src="{{item.cover}}" mode="aspectFill" lazy-load />
+        <image wx:if="{{item.cover}}" class="play-card-image play-shape-wide img-load" src="{{item.cover}}" mode="aspectFill" lazy-load bindload="{{img.ready}}" />
         <view class="art-name">{{item.name}}</view>
+        <text wx:if="{{item.tagline}}" class="small play-card-desc">{{item.tagline}}</text>
         <text class="small">{{item.priceText}}</text>
       </view>
       <view wx:if="{{playChip === 'all'}}" class="play-card play-card-fun" aria-role="button" hover-class="chip-hover" bindtap="openFunTests">

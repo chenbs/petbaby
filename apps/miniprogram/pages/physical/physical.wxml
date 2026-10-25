@@ -1,4 +1,5 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
+<wxs module="img" src="../../wxs/img.wxs"></wxs>
 
 <view class="{{skinClass}} page page-flat art-brand layout-matrix">
   <view class="title">实体纪念品</view>
@@ -35,7 +36,7 @@
           data-id="{{item.id}}"
           bindtap="chooseWork"
         >
-          <image wx:if="{{item.coverUrl}}" class="work-cover" src="{{item.coverUrl}}" mode="aspectFill" data-id="{{item.id}}" data-src="{{item.coverUrl}}" binderror="onCoverError"></image>
+          <image wx:if="{{item.coverUrl}}" class="work-cover img-load" src="{{item.coverUrl}}" mode="aspectFill" data-id="{{item.id}}" data-src="{{item.coverUrl}}" binderror="onCoverError" bindload="{{img.ready}}" ></image>
           <view wx:else class="work-cover work-cover-blank">作品预览暂不可用</view>
           <text class="small work-title">{{item.title}}</text>
         </view>

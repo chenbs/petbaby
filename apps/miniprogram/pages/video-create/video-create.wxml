@@ -1,9 +1,11 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
+<wxs module="img" src="../../wxs/img.wxs"></wxs>
 
 <view class="{{skinClass}} page page-flat art-film layout-workbench">
   <view class="title">剪一段回忆短片</view>
+  <text class="muted">挑 1–20 张宝宝的照片，选好时长，自动配上字幕和音乐，剪成一段竖屏短片。</text>
   <view class="video-sample">
-    <image class="video-sample-image" src="{{sampleUrl}}" mode="aspectFit" />
+    <image class="video-sample-image img-load" src="{{sampleUrl}}" mode="aspectFit" bindload="{{img.ready}}" />
     <text class="video-sample-label">短片封面示例</text>
   </view>
   <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
@@ -26,7 +28,7 @@
       wx:elif="{{!pets.length}}"
       icon="pet"
       title="还没有宠物档案"
-      description="建一份档案、传几张照片，就能剪它的短片了。"
+      description="建一份档案、传几张照片，就能剪宝宝的短片了。"
       action-text="添加我的宠物"
       anim="{{animType}}"
       decor="{{decor}}"

@@ -270,7 +270,7 @@ export async function listWeights(userId: string, petId: string) {
 /** 分诊档位的中文。与端上 LEVEL_TEXT 一致 —— 档案里的措辞不能与页面上的不同 */
 const LEVEL_TEXT: Record<string, string> = {
   emergency: "建议立即就医",
-  urgent_24h: "建议今天带它去看看",
+  urgent_24h: "建议今天带宝宝去看看",
   observe: "先在家观察",
   routine: "通常无需担心",
 };

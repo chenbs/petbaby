@@ -1,4 +1,5 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
+<wxs module="img" src="../../wxs/img.wxs"></wxs>
 
 <view class="{{skinClass}} page page-flat page-memorial art-film layout-bookshelf">
   <view class="title">纪念空间</view>
@@ -26,7 +27,7 @@
   <view wx:else class="bookshelf">
     <view wx:for="{{items}}" wx:key="id" class="chapter">
       <view class="chapter-cover">
-        <image wx:if="{{item.avatarUrl}}" class="chapter-image" src="{{item.avatarUrl}}" mode="aspectFill" data-id="{{item.id}}" data-src="{{item.avatarUrl}}" binderror="onChapterImageError" lazy-load />
+        <image wx:if="{{item.avatarUrl}}" class="chapter-image img-load" src="{{item.avatarUrl}}" mode="aspectFill" data-id="{{item.id}}" data-src="{{item.avatarUrl}}" binderror="onChapterImageError" lazy-load bindload="{{img.ready}}" />
         <view wx:else class="chapter-placeholder">{{item.petName || '纪念'}}</view>
       </view>
       <view class="chapter-body">

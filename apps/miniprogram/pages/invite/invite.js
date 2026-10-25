@@ -26,10 +26,14 @@ themedPage({
       })
       .catch((error) => this.setData({ loading: false, error: error.message || "邀请信息加载失败" }));
   },
+  /*
+   * 分享卡用固定封面（气球派对写真，5:4），不让微信截当前页面——
+   * 截出来的是「怎么得冻干」这类说明文字，好友看了不知道这是什么（2026-10-26 真机反馈）。
+   */
   onShareAppMessage() {
-    return { title: "给你家的毛孩子也拍一组照片吧", path: acquisition.withInvite("/pages/index/index") };
+    return { title: "给你家的毛孩子也拍一组照片吧", path: acquisition.withInvite("/pages/index/index"), imageUrl: "/assets/share/invite.jpg" };
   },
   onShareTimeline() {
-    return { title: "麻麻抱我 · 宠物照片创作与陪伴记录", query: acquisition.withInviteQuery("") };
+    return { title: "麻麻抱我 · 宠物照片创作与陪伴记录", query: acquisition.withInviteQuery(""), imageUrl: "/assets/share/invite.jpg" };
   }
 });

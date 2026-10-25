@@ -74,7 +74,7 @@
       </view>
 
       <view class="section-block">
-        <text class="sub-title">出现这些情况，要及时带它去看看</text>
+        <text class="sub-title">出现这些情况，要及时带宝宝去看看</text>
         <text wx:for="{{result.advisory.watchFor}}" wx:key="*this" class="small">· {{item}}</text>
       </view>
 

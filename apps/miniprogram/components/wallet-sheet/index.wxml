@@ -34,9 +34,12 @@
 
       <view class="ws-grid">
         <view wx:for="{{tiers}}" wx:key="id" class="ws-tier {{selectedId === item.id ? 'ws-on' : ''}} {{item.short ? 'ws-short' : ''}}" data-id="{{item.id}}" aria-role="button" aria-label="{{item.priceText}} 到账 {{item.units}} 颗，多送 {{item.giftPercent}}%" bindtap="choose">
-          <text wx:if="{{item.short}}" class="ws-badge">这次不够</text>
-          <text wx:elif="{{item.badge}}" class="ws-badge">{{item.badge}}</text>
-          <text class="ws-deal ws-deal-corner">多送 {{item.giftPercent}}%</text>
+          <!-- 标签收进卡内第一行（2026-10-26）：原先压在边框上，选中加粗的边框会挡字，赛博街机的切角还会裁掉右上角 -->
+          <view class="ws-tier-tags">
+            <text wx:if="{{item.short}}" class="ws-badge">这次不够</text>
+            <text wx:elif="{{item.badge}}" class="ws-badge">{{item.badge}}</text>
+            <text class="ws-deal ws-deal-corner">多送 {{item.giftPercent}}%</text>
+          </view>
           <view class="ws-tier-top">
             <image class="ws-tier-icon" src="/assets/icons/{{themeId}}/fd-coin.png" mode="aspectFit" />
             <text class="ws-tier-n">{{item.units}}<text class="ws-unit">颗</text></text>

@@ -15,7 +15,7 @@
       </view>
       <t-button type="primary" size="mini" anim="{{animType}}" bindtap="openTopup">充值</t-button>
     </view>
-    <text class="small wl-tip">冻干是这里的零食币，做写真、画册、短片都用它。制作失败会自动全额退回。</text>
+    <text class="small wl-tip">冻干是这里的零食币，做写真、画册、短片都用得上。制作失败会自动全额退回。</text>
 
     <view class="section-title wl-section">收支明细</view>
     <view wx:if="{{!items.length}}" class="small wl-empty">还没有记录</view>

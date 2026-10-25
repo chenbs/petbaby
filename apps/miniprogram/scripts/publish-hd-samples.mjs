@@ -73,6 +73,12 @@ for (const [id, filename] of Object.entries(pluginSources)) {
 }
 const bytes = items.reduce((sum, item) => sum + item.body.length, 0);
 console.log(`准备完成：${items.length} 张高清样片，合计 ${(bytes / 1048576).toFixed(2)} MiB，单张平均 ${Math.round(bytes / items.length / 1024)} KB`);
+// 与当前 manifest 对比：哪些高清样片和现有键不一致（换过源图但没重新发布的会出现在这里）
+{
+  const current = require(manifestPath);
+  const stale = items.filter((item) => (current[item.group] || {})[item.id] !== item.url);
+  console.log(stale.length ? `需要更新 ${stale.length} 张：${stale.map((item) => item.group + "/" + item.id).join(", ")}` : "manifest 已是最新");
+}
 
 async function credentials() {
   let accessKey = process.env.OSS_ACCESS_KEY_ID;
@@ -96,7 +102,11 @@ async function readable(item) {
   if (response.status === 404) return false;
   if (!response.ok) throw new Error(`样片读取失败 ${item.key}: HTTP ${response.status}`);
   const etag = response.headers.get("etag")?.replaceAll('"', "").toLowerCase();
-  if (etag !== createHash("md5").update(item.body).digest("hex")) throw new Error("COS 文件与本地不一致：" + item.key);
+  /*
+   * 静态桶开着数据万象（响应头 Server: tencent-ci，X-OriSize 大于实际返回）：上传时可能被持久化压缩，
+   * ETag 不再等于本地 md5。键名里带内容 sha256，同键即同一份源图，这里只提示不阻断。
+   */
+  if (etag !== createHash("md5").update(item.body).digest("hex")) console.warn("COS 文件经过数据万象处理，ETag 与本地不同：" + item.key);
   return true;
 }
 

@@ -1,4 +1,5 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
+<wxs module="img" src="../../wxs/img.wxs"></wxs>
 
 <view class="{{skinClass}} page page-flat art-film layout-matrix photo-library">
   <view class="library-heading">
@@ -36,7 +37,7 @@
     <view wx:if="{{activeUploadItems.length}}" class="upload-grid">
       <view wx:for="{{activeUploadItems}}" wx:key="requestId" class="upload-card">
         <view class="upload-frame">
-          <image wx:if="{{item.path && !item.thumbFailed}}" src="{{item.path}}" mode="aspectFill" class="upload-thumb" data-id="{{item.requestId}}" data-src="{{item.path}}" binderror="onUploadThumbError" />
+          <image wx:if="{{item.path && !item.thumbFailed}}" src="{{item.path}}" mode="aspectFill" class="upload-thumb img-load" data-id="{{item.requestId}}" data-src="{{item.path}}" binderror="onUploadThumbError" bindload="{{img.ready}}" />
           <view wx:else class="upload-thumb upload-thumb-blank">预览失败</view>
           <text wx:if="{{!item.attempted}}" class="upload-remove" aria-role="button" aria-label="移除这张照片" data-id="{{item.requestId}}" catchtap="cancelSelected">×</text>
           <text wx:if="{{item.needsReselect || item.state === 'failed'}}" class="upload-reselect" aria-role="button" data-id="{{item.requestId}}" catchtap="choosePhotos">重选</text>
@@ -88,7 +89,7 @@
     </view>
     <view class="library-tool-grid">
       <view wx:for="{{tools}}" wx:key="kind" class="library-tool" data-kind="{{item.kind}}" aria-role="button" aria-label="{{item.title}}" hover-class="chip-hover" bindtap="useTool">
-        <image class="library-tool-cover" src="{{item.cover}}" mode="aspectFill" webp lazy-load />
+        <image class="library-tool-cover img-load" src="{{item.cover}}" mode="aspectFill" webp lazy-load bindload="{{img.ready}}" />
         <view class="library-tool-copy"><text class="library-tool-title">{{item.title}}</text><text class="library-tool-note">{{item.note}}</text></view>
       </view>
     </view>
@@ -110,7 +111,7 @@
   <view class="record-stack">
     <t-notice wx:if="{{error}}" type="error" message="{{error}}"></t-notice>
     <block wx:if="{{detail}}">
-      <image wx:if="{{detail.localUrl}}" src="{{detail.localUrl}}" mode="widthFix" class="detail-photo" data-src="{{detail.localUrl}}" binderror="onDetailImageError" bindtap="previewDetail" />
+      <image wx:if="{{detail.localUrl}}" src="{{detail.localUrl}}" mode="widthFix" class="detail-photo img-load img-load-fix" data-src="{{detail.localUrl}}" binderror="onDetailImageError" bindtap="previewDetail" bindload="{{img.ready}}" />
       <view wx:else class="detail-photo detail-photo-blank">照片暂时无法显示</view>
       <text>{{petText}} · {{detail.recordedDate}}</text>
       <text class="small">{{detail.sourceText}}</text>

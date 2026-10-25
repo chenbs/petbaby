@@ -236,3 +236,6 @@
 .ai-dock-cost { color: var(--text-primary); font-size: var(--small-size); line-height: 1.5; }
 .ai-dock-amount { color: var(--primary); font-weight: var(--fw-bold); white-space: nowrap; }
 .ai-dock-hint { color: var(--text-secondary); font-size: var(--eyebrow-size); line-height: 1.5; }
+
+/* 玩法一句话说明（2026-10-26） */
+.ai-entry-desc { display: block; margin-top: var(--space-1); }

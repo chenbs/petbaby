@@ -622,13 +622,17 @@ function matchesPreviousArtScenes(value: unknown) {
 async function ensurePluginConfigs() {
   const database = await getDatabase();
   // 值可以是单个旧默认串或多个：只有仍等于某个旧默认值的字段才升级，后台改过的文案保留。
+  // 2026-10-26 玩法文案重写：把上一版默认文案也列进来，老库里没被后台改过的跟着升级。
   const previousDefaultCopy: Record<string, Partial<Record<"tagline" | "description", string | string[]>>> = {
-    "pet-id-card": { tagline: "今天起，它也是有证的小朋友" },
-    "pet-movie-poster": { tagline: "年度巨制，领衔主演是它" },
+    "pet-id-card": { tagline: ["今天起，它也是有证的小朋友", "今天起，我也是有证的小朋友"], description: "正脸照生成宠物身份证，附赠猫猫管理局签发彩蛋。" },
+    "pet-movie-poster": { tagline: ["年度巨制，领衔主演是它", "年度巨制，领衔主演是我"], description: "选一套原创电影场景，用宠物照片生成主角海报，再加上片名与短评。" },
+    "pet-time-album": { tagline: "把相册里的碎片，装订成故事", description: "从成长、生日或治愈日常中生成手机长图和纪念 PDF。" },
     "pl-10": {
-      tagline: "换一个场景，看见它不一样的神态",
-      description: ["选择宠物身份照和写真场景，生成两张保留它真实身份的艺术写真候选。", "选择宠物身份照和写真场景，生成两张保留我真实模样的艺术写真候选。"],
+      tagline: ["换一个场景，看见它不一样的神态", "换一个场景，看见我不一样的神态"],
+      description: ["选择宠物身份照和写真场景，生成两张保留它真实身份的艺术写真候选。", "选择宠物身份照和写真场景，生成两张保留我真实模样的艺术写真候选。", "选择宠物身份照和写真场景，生成一张保留我真实模样的艺术写真。"],
     },
+    "pl-19": { tagline: "把照片、字幕和音乐剪成一段会呼吸的记忆", description: "可编辑的竖屏宠物短片，时长 10 / 20 / 30 秒可选，支持预览和高清解锁。" },
+    "pl-23": { tagline: "把两个时间点放在一起看", description: "同一只宠物两个时间点的并排对比，标注中间过了多少天。" },
   };
   for (const plugin of plugins) {
     await database.query("INSERT INTO plugin_configs (id,manifest,version,active,updated_at) VALUES ($1,$2::jsonb,1,true,$3) ON CONFLICT (id) DO NOTHING", [plugin.id, JSON.stringify(plugin), new Date()]);

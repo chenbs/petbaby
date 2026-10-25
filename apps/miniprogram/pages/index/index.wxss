@@ -111,20 +111,41 @@
   font-size: var(--eyebrow-size);
 }
 
+/* 见面礼（2026-10-26 加强）：主色字 + 冻干图标 + 浅主色底的胶囊，紧贴主按钮下方居中 */
 .onboard-gift {
-  color: var(--text-secondary);
-  font-size: var(--small-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  justify-self: center;
+  margin-top: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  border: 2rpx dashed var(--primary);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--primary);
+  font-size: var(--body-size);
+  font-weight: var(--fw-black);
   line-height: var(--lh-sm);
-  text-align: center;
 }
 
-/* 星夜影院的名片留了右侧票根位（padding-right 148rpx + 打孔），建档卡没有票根内容，收回右边距 */
-.skin-night .onboard-card {
+.onboard-gift-coin {
+  width: 36rpx;
+  height: 36rpx;
+  flex: none;
+}
+
+/*
+ * 星夜影院的名片留了右侧票根位（padding-right 148rpx + 打孔），建档卡没有票根内容，收回右边距。
+ * 必须用 .pet-card.onboard-card 提高优先级：.skin-night .pet-card 写在文件后面，同等优先级会把这里盖掉，
+ * 建档卡就只剩左边一窄条（2026-10-26 真机反馈）。
+ */
+.skin-night .pet-card.onboard-card {
   padding-right: var(--space-4);
 }
 
-.skin-night .onboard-card::before,
-.skin-night .onboard-card::after {
+.skin-night .pet-card.onboard-card::before,
+.skin-night .pet-card.onboard-card::after {
   display: none;
 }
 

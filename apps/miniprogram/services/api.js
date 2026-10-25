@@ -36,7 +36,23 @@ function transportError(failure) {
   return error;
 }
 
+/**
+ * 启动静默登录（app.js 的 loginReady）落定前先等一等，避免首屏请求抢在登录前拿到 401。
+ * 登录接口本身不等，否则自己等自己。最多等 10 秒：登录卡住时照常发请求，由页面显示真实错误。
+ */
+function loginSettled(path) {
+  if (path.indexOf("/api/auth/") === 0) return Promise.resolve();
+  const app = typeof getApp === "function" ? getApp() : null;
+  const ready = app && app.globalData && app.globalData.loginReady;
+  if (!ready) return Promise.resolve();
+  return Promise.race([ready, new Promise((resolve) => setTimeout(resolve, 10000))]);
+}
+
 function request(path, options) {
+  return loginSettled(path).then(() => send(path, options));
+}
+
+function send(path, options) {
   const settings = options || {};
   return new Promise((resolve, reject) => {
     wx.request({
@@ -69,7 +85,9 @@ function requestWithRetry(path, options, retries) {
 function upload(path, filePath, formData, options) {
   const settings = options || {};
   let task;
-  const promise = new Promise((resolve, reject) => {
+  let aborted = false;
+  const promise = loginSettled(path).then(() => new Promise((resolve, reject) => {
+    if (aborted) return reject(transportError({ errMsg: "uploadFile:fail abort" }));
     task = wx.uploadFile({
       url: config.apiBaseUrl + path,
       filePath,
@@ -90,8 +108,8 @@ function upload(path, filePath, formData, options) {
       fail: (error) => reject(transportError(error))
     });
     if (task.onProgressUpdate && settings.onProgress) task.onProgressUpdate(settings.onProgress);
-  });
-  promise.abort = function () { if (task && task.abort) task.abort(); };
+  }));
+  promise.abort = function () { aborted = true; if (task && task.abort) task.abort(); };
   return promise;
 }
 

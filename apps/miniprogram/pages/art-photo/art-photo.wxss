@@ -1,10 +1,19 @@
 .art-heading { padding: var(--space-3) 0 var(--space-4); }
 .art-heading .title { margin: var(--space-2) 0; }
 .art-photo-page-bundle { padding-bottom: calc(var(--page-bottom-safe) + var(--space-8) + env(safe-area-inset-bottom)); }
-.art-package-options { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: var(--space-2); margin-top: var(--space-4); }
-.art-package { display: grid; align-content: center; gap: var(--space-1); min-height: var(--space-8); padding: var(--space-2); border: var(--card-border); border-radius: var(--radius-sm); background: var(--surface); color: var(--text-primary); font-size: var(--small-size); font-weight: var(--fw-bold); text-align: center; }
-.art-package-on { border-color: var(--primary); background: var(--card-background); }
-.art-package-price { color: var(--primary); font-size: var(--body-size); }
+/*
+ * 套餐选择（2026-10-26 加强）：标题「选一个套餐」+ 三张带单选圈的卡。
+ * 未选是描边卡、选中换成 --skin-tier-on-*（与充值抽屉同一套选中色），四套皮肤都有定义。
+ */
+.art-package-head { display: flex; align-items: baseline; justify-content: space-between; margin-top: var(--space-4); }
+.art-package-head-title { color: var(--text-primary); font-size: var(--body-size); font-weight: var(--fw-black); }
+.art-package-options { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: var(--space-2); margin-top: var(--space-3); }
+.art-package { display: grid; align-content: center; gap: var(--space-1); min-height: var(--space-8); padding: var(--space-4) var(--space-2) var(--space-3); border: 4rpx solid var(--border); border-radius: var(--radius-md); background: var(--card-background); color: var(--text-primary); font-size: var(--small-size); font-weight: var(--fw-bold); text-align: center; box-shadow: var(--shadow-card); }
+.art-package-on { border-color: var(--skin-tier-on-border, var(--primary)); background: var(--skin-tier-on-bg, var(--card-background)); }
+.art-package-label { font-size: var(--body-size); font-weight: var(--fw-black); }
+.art-package-price { color: var(--primary); font-family: var(--skin-num-font, inherit); font-size: var(--font-h3); font-weight: var(--fw-black); }
+.art-package-radio { position: absolute; top: var(--space-2); right: var(--space-2); display: flex; width: 32rpx; height: 32rpx; box-sizing: border-box; align-items: center; justify-content: center; border: 3rpx solid var(--border); border-radius: var(--radius-pill); color: var(--button-primary-text); font-size: var(--eyebrow-size); font-weight: var(--fw-black); line-height: 1; }
+.art-package-on .art-package-radio { border-color: var(--skin-tier-on-border, var(--primary)); background: var(--skin-tier-on-border, var(--primary)); }
 .art-value { display: block; margin-top: var(--space-3); }
 .art-collection { margin-top: var(--space-6); }
 .art-section-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-2); margin-bottom: var(--space-3); }
@@ -23,10 +32,11 @@
 
 /* ---------- 创作 Tab（2026-09）---------- */
 .create-segments-bar { position: sticky; top: 0; z-index: 15; margin: calc(0rpx - var(--page-padding)) calc(0rpx - var(--page-padding)) 0; padding: var(--page-padding) var(--page-padding) var(--space-2); background: var(--background); }
-.create-segments { display: flex; padding: var(--space-1); border-radius: var(--radius-pill); background: var(--surface); }
+/* 2026-10-26：分段加描边与卡面阴影，选中项用各皮肤的 chip 选中色（深底亮字），一眼看出在哪一类 */
+.create-segments { display: flex; gap: var(--space-1); padding: var(--space-1); border: var(--card-border); border-radius: var(--radius-pill); background: var(--card-background); box-shadow: var(--shadow-card); }
 /* 四段（2026-10-09）：「如果我是人」五个字要在 1/4 宽里放得下，不换行 */
-.create-segment { flex: 1; min-width: 0; padding: var(--space-2) 0; border-radius: var(--radius-pill); color: var(--text-secondary); font-size: var(--body-size); text-align: center; white-space: nowrap; }
-.create-segment-on { background: var(--card-background); color: var(--text-primary); font-weight: var(--fw-bold); box-shadow: var(--shadow-press); }
+.create-segment { flex: 1; min-width: 0; box-sizing: border-box; padding: var(--space-3) 0; border: 2rpx solid transparent; border-radius: var(--radius-pill); color: var(--text-primary); font-size: var(--body-size); font-weight: var(--fw-bold); text-align: center; white-space: nowrap; }
+.create-segment-on { border-color: var(--skin-chip-on-border, var(--button-primary)); background: var(--skin-chip-on-bg, var(--button-primary)); color: var(--skin-chip-on-text, var(--button-primary-text)); font-weight: var(--fw-black); box-shadow: var(--shadow-press); }
 .art-package { position: relative; }
 .art-package-badge { position: absolute; top: calc(0rpx - var(--space-3)); left: 50%; padding: var(--space-0) var(--space-2); border-radius: var(--radius-pill); background: var(--button-primary); color: var(--button-primary-text); font-size: var(--eyebrow-size); white-space: nowrap; transform: translateX(-50%); }
 .art-selection { top: var(--space-2); right: var(--space-2); bottom: auto; display: flex; align-items: center; justify-content: center; width: 48rpx; height: 48rpx; padding: 0; border-radius: var(--radius-pill); background: var(--mask); color: var(--on-image-primary); }
@@ -53,9 +63,12 @@
 .skin-brand .play-card-fun .small { color: var(--primary); }
 
 /* 线下影棚对比的三条优势：三列等宽，标题加粗、说明用 small */
-.art-perks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-2); margin-top: var(--space-4); }
-.art-perk { display: grid; align-content: start; gap: var(--space-1); padding: var(--space-2); border-radius: var(--radius-sm); background: var(--surface); }
-.art-perk-title { color: var(--text-primary); font-size: var(--small-size); font-weight: var(--fw-bold); }
+/* 卖点：三行勾选式，左侧主色竖条 + 勾，标题加粗、说明一行内收住 */
+.art-perks { display: grid; gap: var(--space-2); margin-top: var(--space-3); padding: var(--space-3); border-left: 6rpx solid var(--primary); border-radius: var(--radius-sm); background: var(--surface); }
+.art-perk { display: flex; align-items: baseline; gap: var(--space-2); min-width: 0; }
+.art-perk-mark { flex: none; color: var(--primary); font-size: var(--body-size); font-weight: var(--fw-black); }
+.art-perk-title { flex: none; color: var(--text-primary); font-size: var(--body-size); font-weight: var(--fw-black); }
+.art-perk-note { overflow: hidden; min-width: 0; color: var(--text-secondary); font-size: var(--small-size); text-overflow: ellipsis; white-space: nowrap; }
 /* 标题下的价格行：颗数单独一行，不混进介绍文案 */
 .art-heading-price { display: block; margin-top: var(--space-2); color: var(--primary); }
 /* 套餐挑选条：提示 + 清空 / 帮我挑满（2026-10-09，取代默认预选） */
@@ -67,3 +80,6 @@
 .duo-image { display: block; width: 100%; height: auto; aspect-ratio: var(--ratio-portrait); border-radius: var(--radius-image-thumb); background: var(--surface); }
 .duo-badge { position: absolute; left: var(--space-2); bottom: var(--space-2); padding: var(--space-0) var(--space-2); border-radius: var(--radius-pill); background: var(--mask); color: var(--on-image-primary); font-size: var(--eyebrow-size); }
 .duo-group .art-section-head .small { text-align: right; }
+
+/* 其他玩法卡片的一句话说明：最多两行 */
+.play-card-desc { display: -webkit-box; overflow: hidden; margin-top: var(--space-0); color: var(--text-secondary); -webkit-box-orient: vertical; -webkit-line-clamp: 2; }

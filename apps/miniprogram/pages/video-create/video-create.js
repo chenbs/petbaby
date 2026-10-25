@@ -128,7 +128,7 @@ themedPage({
   create() {
     if (this.data.busy || this.data.loading) return;
     // 缺什么就带用户去补，按钮不再置灰没反应
-    if (!this.data.pets.length) { remind("先给它建一份档案"); return this.openPets(); }
+    if (!this.data.pets.length) { remind("先给宝宝建一份档案"); return this.openPets(); }
     if (!this.data.petId) return remind("先选一只宠物");
     if (!this.data.photos.length) { remind("先上传几张照片"); return this.openPhotos(); }
     if (!this.data.selected.length) return remind("先选几张照片");

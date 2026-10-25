@@ -11,7 +11,7 @@ themedPage(Object.assign({}, wallet.walletSheetMethods, {
   data: {
     flowSteps: ["选效果", "选照片"],
     pets: [], petId: "", petText: "", photos: [], photoIds: [],
-    entries: [], entryId: "", entryTitle: "", templates: [], carouselTemplates: [], templateId: "", effectScrollTarget: "", effectScrollLeft: 0, activeTemplate: null,
+    entries: [], entryId: "", entryTitle: "", entryDescription: "", templates: [], carouselTemplates: [], templateId: "", effectScrollTarget: "", effectScrollLeft: 0, activeTemplate: null,
     artPlugin: null, sceneOptions: [], sceneId: "window-morning", selectedScene: null,
     stage: "samples",
     ownerPhotos: [], ownerPhotoIds: [], authorizationConfirmed: false,
@@ -71,6 +71,7 @@ themedPage(Object.assign({}, wallet.walletSheetMethods, {
         entries,
         entryId: entry ? entry.id : "",
         entryTitle: entry ? entry.id === "boss" ? "麻麻精选" : entry.title : "",
+        entryDescription: entry && entry.description || "",
         templates,
         carouselTemplates: templates.filter((item) => item.templateId !== "pet-art-photo"),
         templateId: template ? template.templateId : "",
@@ -171,6 +172,7 @@ themedPage(Object.assign({}, wallet.walletSheetMethods, {
     this.setData({
       entryId: id,
       entryTitle: entry ? entry.id === "boss" ? "麻麻精选" : entry.title : "",
+      entryDescription: entry && entry.description || "",
       templates,
       carouselTemplates: templates.filter((item) => item.templateId !== "pet-art-photo"),
       templateId: template ? template.templateId : "",
@@ -283,7 +285,7 @@ themedPage(Object.assign({}, wallet.walletSheetMethods, {
      * 按钮不再因缺宠物 / 缺照片置灰（点了没反应）：缺什么就直接带用户去补。
      * 没有档案 → 打开新建抽屉；有档案没照片 → 拉起拍照 / 相册；有照片没选 → 提示选一张。
      */
-    if (!this.data.pets.length) { remind("先给它建一份档案"); return this.openPets(); }
+    if (!this.data.pets.length) { remind("先给宝宝建一份档案"); return this.openPets(); }
     if (!this.data.petId) return remind("先选一只宠物");
     if (!this.data.photos.length) return this.uploadPetPhoto();
     if (this.data.photoIds.length !== 1) return remind("先选 1 张照片");

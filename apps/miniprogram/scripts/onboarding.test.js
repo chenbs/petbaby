@@ -46,13 +46,13 @@ function homeWith(pets, wallet, wx) {
   return loadPage("index", { api }, Object.assign({ getStorageSync: () => "session" }, wx));
 }
 
-test("无宠物首页：建档卡的见面礼一行只用服务端颗数与有效期，已领过或拉取失败不显示", async () => {
+test("无宠物首页：建档卡的见面礼一行只用服务端颗数（不写有效期），已领过或拉取失败不显示", async () => {
   const home = homeWith([], { newcomerGift: { available: true, units: 3, days: 7 } }, {});
   await home.loadPet();
   await tick();
   assert.equal(home.data.pet, null);
   assert.equal(home.data.care, null);
-  assert.equal(home.data.onboardGift, "建好就送 3 颗冻干，7 天内可用");
+  assert.equal(home.data.onboardGift, "建好就送 3 颗冻干");
 
   const claimed = homeWith([], { newcomerGift: { available: false, units: 3, days: 7 } }, {});
   await claimed.loadPet(); await tick();
@@ -65,7 +65,7 @@ test("无宠物首页：建档卡的见面礼一行只用服务端颗数与有�
   // 颗数改了，端上跟着服务端走
   const changed = homeWith([], { newcomerGift: { available: true, units: 5, days: 14 } }, {});
   await changed.loadPet(); await tick();
-  assert.equal(changed.data.onboardGift, "建好就送 5 颗冻干，14 天内可用");
+  assert.equal(changed.data.onboardGift, "建好就送 5 颗冻干");
 });
 
 test("建档卡主按钮一跳直达建档抽屉；建完回首页选中新宠物，不再跳别处", async () => {

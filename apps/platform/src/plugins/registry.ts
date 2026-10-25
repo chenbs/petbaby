@@ -7,8 +7,8 @@ export const plugins: PluginManifest[] = [
     code: "PL-01",
     name: "宠物身份证",
     category: "layout",
-    tagline: "今天起，我也是有证的小朋友",
-    description: "正脸照生成宠物身份证，附赠猫猫管理局签发彩蛋。",
+    tagline: "一张正脸照，给宝宝办张身份证",
+    description: "传一张宝宝的正脸照，生成带名字和生日的宠物身份证，免费制作。",
     accent: "orange",
     input: {
       photos: { min: 1, max: 1 },
@@ -31,8 +31,8 @@ export const plugins: PluginManifest[] = [
     code: "PL-02",
     name: "宠物电影海报",
     category: "layout",
-    tagline: "年度巨制，领衔主演是我",
-    description: "选一套原创电影场景，用宠物照片生成主角海报，再加上片名与短评。",
+    tagline: "宝宝当主角，拍一张电影海报",
+    description: "选一个电影场景、传一张照片，生成带片名和短评的主角海报。",
     accent: "blue",
     input: {
       photos: { min: 1, max: 1 },
@@ -49,8 +49,8 @@ export const plugins: PluginManifest[] = [
     code: "PL-03",
     name: "宠物时光画册",
     category: "layout",
-    tagline: "把相册里的碎片，装订成故事",
-    description: "从成长、生日或治愈日常中生成手机长图和纪念 PDF。",
+    tagline: "挑 6–20 张照片，排成一本画册",
+    description: "选好主题、挑 6–20 张照片，自动排成手机长图和能打印的 PDF 画册。",
     accent: "yellow",
     input: {
       photos: { min: 6, max: 20 },
@@ -94,8 +94,8 @@ export const plugins: PluginManifest[] = [
     code: "PL-10",
     name: "宠物艺术写真",
     category: "ai-image",
-    tagline: "换一个场景，看见我不一样的神态",
-    description: "选择宠物身份照和写真场景，生成一张保留我真实模样的艺术写真。",
+    tagline: "一张照片，换上 36 套写真布景",
+    description: "传一张宝宝的清楚照片，挑一个布景，拍一张还是宝宝本来模样的写真。",
     accent: "orange",
     input: {
       photos: { min: 1, max: 1 },
@@ -187,8 +187,8 @@ export const plugins: PluginManifest[] = [
     code: "PL-19",
     name: "宠物记忆短片",
     category: "video",
-    tagline: "把照片、字幕和音乐剪成一段会呼吸的记忆",
-    description: "可编辑的竖屏宠物短片，时长 10 / 20 / 30 秒可选，支持预览和高清解锁。",
+    tagline: "照片配上字幕和音乐，剪成短片",
+    description: "挑 1–20 张照片，选 10 / 20 / 30 秒，自动配字幕和音乐剪成竖屏短片。",
     accent: "orange",
     input: { photos: { min: 1, max: 20 }, profileFields: ["name", "species"] },
     generator: { type: "ffmpeg", template: "memory-film-v1" },
@@ -216,7 +216,7 @@ export const plugins: PluginManifest[] = [
      *
      * 样例图仅演示两张同一宠物不同阶段的并排构图；实际结果始终使用用户自己的两张照片。
      */
-    id: "pl-23", code: "PL-23", name: "成长对比图", category: "layout", tagline: "把两个时间点放在一起看", description: "同一只宠物两个时间点的并排对比，标注中间过了多少天。", accent: "yellow", input: { photos: { min: 2, max: 2 }, profileFields: ["name", "birthday"] }, generator: { type: "html-template", template: "growth-compare-v1" }, pricing: { unlockPrice: 0, label: "免费保存" }, output: { formats: ["image"] }, samples: { heroUrl: "/api/plugin-samples/samples/mp26-pl-23-v4-e7a4b4054ae8.jpg" }, status: "live",
+    id: "pl-23", code: "PL-23", name: "成长对比图", category: "layout", tagline: "两张照片，看宝宝长大了多少", description: "选一张小时候、一张现在的照片，并排对比并标出过了多少天，免费制作。", accent: "yellow", input: { photos: { min: 2, max: 2 }, profileFields: ["name", "birthday"] }, generator: { type: "html-template", template: "growth-compare-v1" }, pricing: { unlockPrice: 0, label: "免费保存" }, output: { formats: ["image"] }, samples: { heroUrl: "/api/plugin-samples/samples/mp26-pl-23-v4-e7a4b4054ae8.jpg" }, status: "live",
   },
 
   /*

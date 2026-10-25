@@ -140,10 +140,10 @@ themedPage({
         const coverId = entry.id === "art" ? "decorative-art-portrait" : CATEGORY_COVERS[entry.id];
         const cover = entry.templates.find((item) => item.templateId === coverId) || entry.templates[0];
         // 分类卡统一用 9:16 模板样片（含水墨），两列网格行高一致、样片不被裁
-        return { id: entry.id, title: entry.title, count: entry.templates.length, cover: cover.sampleUrl, templateId: cover.templateId };
+        return { id: entry.id, title: entry.title, description: entry.description || "", count: entry.templates.length, cover: cover.sampleUrl, templateId: cover.templateId };
       });
       const plays = PLUGIN_PLAYS.map((id) => plugins.find((plugin) => plugin.id === id)).filter(Boolean).map(pluginSample).map((plugin) => ({
-        id: plugin.id, name: plugin.name, category: plugin.category, cover: plugin.samples && plugin.samples.heroUrl || "",
+        id: plugin.id, name: plugin.name, tagline: plugin.tagline || "", category: plugin.category, cover: plugin.samples && plugin.samples.heroUrl || "",
         priceText: plugin.dongan && !plugin.dongan.free ? cost(plugin.dongan.from) + "起" : "免费"
       }));
       // 其他玩法：第一个 chip 是「麻麻精选」，后面是各分类，与首页瀑布流同源（评审 5.2）

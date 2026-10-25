@@ -58,7 +58,7 @@ describe("病名过滤", () => {
     "可能误食中毒，请立即联系医生",
     "精神、食欲或饮水量明显下降",
     "掉毛比平时多",
-    "建议今天带它去看看，请医生当面确认。",
+    "建议今天带宝宝去看看，请医生当面确认。",
   ])("不误杀：%s", (text) => {
     expect(mentionsDisease(text), `「${text}」被误判为病名`).toBe(false);
   });
@@ -79,13 +79,13 @@ describe("病名过滤", () => {
 
   it("sanitizeAdvisory：summary 删病名、列表删条目、紧急度不变", () => {
     const clean = sanitizeAdvisory(base({
-      summary: "今天吐了两次没消化的粮，精神还行，可能是胃炎，建议今天带它去看看。",
+      summary: "今天吐了两次没消化的粮，精神还行，可能是胃炎，建议今天带宝宝去看看。",
       relatedAreas: ["消化", "胰腺炎"],
       watchFor: ["呕吐次数增加", "出现猫瘟典型表现"],
       visitPreparation: ["拍下呕吐物", "排查是否寄生虫感染"],
     }));
     expect(clean.level).toBe("urgent_24h");
-    expect(clean.summary).toBe("今天吐了两次没消化的粮，精神还行，建议今天带它去看看。");
+    expect(clean.summary).toBe("今天吐了两次没消化的粮，精神还行，建议今天带宝宝去看看。");
     expect(clean.relatedAreas).toEqual(["消化"]);
     expect(clean.watchFor).toEqual(["呕吐次数增加"]);
     expect(clean.visitPreparation).toEqual(["拍下呕吐物"]);

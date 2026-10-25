@@ -1,3 +1,4 @@
+<wxs module="img" src="../../wxs/img.wxs"></wxs>
 <wxs module="gesture" src="./index.wxs"></wxs>
 
 <view class="sheet-root">
@@ -22,11 +23,10 @@
   ></video>
   <image
     wx:elif="{{hasImage}}"
-    class="sheet-media {{framed ? 'sheet-media-framed' : ''}}"
+    class="sheet-media {{framed ? 'sheet-media-framed' : ''}} img-load"
     src="{{backgroundImage}}"
     mode="{{framed ? 'aspectFit' : 'aspectFill'}}"
-    binderror="handleImageError"
-  ></image>
+    binderror="handleImageError" bindload="{{img.ready}}" ></image>
   <view wx:else class="sheet-media sheet-media-blank"></view>
 
   <!-- 遮罩层：亮度联动的唯一实现，opacity 由 WXS 逐帧改 -->

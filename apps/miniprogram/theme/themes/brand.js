@@ -114,7 +114,7 @@ module.exports = {
     titleSize: "44rpx",
     bodySize: "28rpx",
     smallSize: "24rpx",
-    eyebrowSize: "20rpx",
+    eyebrowSize: "22rpx",
     titleWeight: 800,
     titleLetterSpacing: "0",
 

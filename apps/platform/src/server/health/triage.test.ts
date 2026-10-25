@@ -149,7 +149,7 @@ describe("最后一道闸：sanitizeAdvisory", () => {
     });
     expect(clean.summary).not.toMatch(/不用去医院/);
     // 替换后的句子必须带升级条件（2026-10 起用户文案把「就医」说成「带它去看看」）
-    expect(clean.summary).toMatch(/持续或加重时及时带它去看看/);
+    expect(clean.summary).toMatch(/持续或加重时及时带宝宝去看看/);
   });
 
   it("watchFor 为空时补上升级条件", () => {

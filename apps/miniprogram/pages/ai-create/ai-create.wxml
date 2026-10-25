@@ -1,7 +1,9 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
+<wxs module="img" src="../../wxs/img.wxs"></wxs>
 
 <view class="{{skinClass}} page page-flat art-brand layout-matrix ai-flow ai-flow-{{stage}}">
   <view wx:if="{{stage !== 'photos'}}" class="title">{{templateId === 'pet-art-photo' ? '宠物艺术写真' : entryId === 'art' && activeTemplate ? activeTemplate.title : entryTitle}}</view>
+  <text wx:if="{{stage !== 'photos' && entryDescription && templateId !== 'pet-art-photo'}}" class="muted ai-entry-desc">{{entryDescription}}</text>
   <t-steps steps="{{flowSteps}}" wx:if="{{stage !== 'photos'}}" current="{{stage === 'photos' ? 1 : 0}}" class="block-gap"></t-steps>
   <t-notice wx:if="{{error}}" type="error" message="{{error}}" class="block-gap"></t-notice>
   <t-skeleton wx:if="{{catalogLoading}}" type="grid" count="4"></t-skeleton>
@@ -13,7 +15,7 @@
         <view class="section-title">选一个喜欢的效果</view>
         <view class="template-grid">
           <view wx:for="{{templates}}" wx:key="templateId" class="option template-option {{item.sampleShape === 'wide' ? 'template-wide' : ''}}" data-id="{{item.templateId}}" hover-class="option-hover" bindtap="chooseTemplate">
-            <image wx:if="{{item.sampleUrl}}" class="style-thumb {{item.sampleShape === 'wide' ? 'style-wide' : ''}}" src="{{item.sampleUrl}}" mode="aspectFit" data-id="{{item.templateId}}" data-src="{{item.sampleUrl}}" binderror="onTemplateImageError" lazy-load />
+            <image wx:if="{{item.sampleUrl}}" class="style-thumb {{item.sampleShape === 'wide' ? 'style-wide' : ''}} img-load" src="{{item.sampleUrl}}" mode="aspectFit" data-id="{{item.templateId}}" data-src="{{item.sampleUrl}}" binderror="onTemplateImageError" lazy-load bindload="{{img.ready}}" />
             <view wx:else class="style-thumb style-thumb-blank">样片暂不可用</view>
             <view class="option-name">{{item.title}}</view>
             <text class="small">{{item.subjectMode === 'owner-pet' ? '主人 + 宠物' : item.subjectMode === 'pet-human' ? '宠物人化' : '宠物主体'}}</text>
@@ -22,13 +24,13 @@
       </view>
       <view wx:elif="{{activeTemplate && templateId !== 'pet-art-photo'}}" class="section">
         <view class="section-title">看看成品风格</view>
-        <image class="solo-template-image {{activeTemplate.sampleShape === 'wide' ? 'solo-wide' : ''}}" src="{{activeTemplate.hdUrl || activeTemplate.sampleUrl}}" mode="aspectFit" />
+        <image class="solo-template-image {{activeTemplate.sampleShape === 'wide' ? 'solo-wide' : ''}} img-load" src="{{activeTemplate.hdUrl || activeTemplate.sampleUrl}}" mode="aspectFit" bindload="{{img.ready}}" />
       </view>
       <view wx:if="{{templateId === 'pet-art-photo' && sceneOptions.length}}" class="section">
         <view class="section-title">写真场景 · {{sceneOptions.length}} 套</view>
         <view class="scene-grid">
           <view wx:for="{{sceneOptions}}" wx:key="id" class="option template-option scene-option" data-id="{{item.id}}" hover-class="option-hover" bindtap="chooseScene">
-            <image wx:if="{{item.url}}" class="style-thumb scene-thumb" src="{{item.url}}" mode="aspectFit" data-id="{{item.id}}" binderror="onSceneImageError" lazy-load />
+            <image wx:if="{{item.url}}" class="style-thumb scene-thumb img-load" src="{{item.url}}" mode="aspectFit" data-id="{{item.id}}" binderror="onSceneImageError" lazy-load bindload="{{img.ready}}" />
             <view wx:else class="style-thumb style-thumb-blank">样片暂不可用</view>
             <view class="option-name">{{item.title}}</view>
             <text class="small">{{item.description}}</text>
@@ -44,20 +46,20 @@
     -->
     <block wx:else>
       <view class="effect-preview effect-preview-{{previewShape}}">
-        <image wx:if="{{previewUrl}}" class="effect-preview-image" src="{{previewUrl}}" mode="aspectFill" />
+        <image wx:if="{{previewUrl}}" class="effect-preview-image img-load" src="{{previewUrl}}" mode="aspectFill" bindload="{{img.ready}}" />
         <view wx:else class="effect-preview-image style-thumb-blank">样片暂不可用</view>
         <text class="ai-mask-inline effect-preview-label">示例效果 · 换成{{petText || '我'}}</text>
       </view>
       <scroll-view wx:if="{{templateId === 'pet-art-photo' && sceneOptions.length > 1}}" class="effect-strip" scroll-x show-scrollbar="{{false}}" scroll-left="{{effectScrollLeft}}" scroll-with-animation>
         <view wx:for="{{sceneOptions}}" wx:key="id" id="effect-{{item.id}}" class="effect-thumb {{sceneId === item.id ? 'effect-thumb-on' : ''}}" data-id="{{item.id}}" aria-role="radio" aria-checked="{{sceneId === item.id}}" aria-label="{{item.title}}" bindtap="chooseScene">
-          <image wx:if="{{item.url}}" class="effect-thumb-image effect-thumb-card" src="{{item.url}}" mode="aspectFill" data-id="{{item.id}}" binderror="onSceneImageError" lazy-load />
+          <image wx:if="{{item.url}}" class="effect-thumb-image effect-thumb-card img-load" src="{{item.url}}" mode="aspectFill" data-id="{{item.id}}" binderror="onSceneImageError" lazy-load bindload="{{img.ready}}" />
           <view wx:else class="effect-thumb-image effect-thumb-card style-thumb-blank"></view>
           <text class="effect-thumb-name">{{item.title}}</text>
         </view>
       </scroll-view>
       <scroll-view wx:elif="{{carouselTemplates.length > 1}}" class="effect-strip" scroll-x show-scrollbar="{{false}}" scroll-left="{{effectScrollLeft}}" scroll-with-animation>
         <view wx:for="{{carouselTemplates}}" wx:key="templateId" id="effect-{{item.templateId}}" class="effect-thumb {{templateId === item.templateId ? 'effect-thumb-on' : ''}}" data-id="{{item.templateId}}" aria-role="radio" aria-checked="{{templateId === item.templateId}}" aria-label="{{item.title}}" bindtap="chooseTemplate">
-          <image wx:if="{{item.sampleUrl}}" class="effect-thumb-image effect-thumb-{{item.sampleShape === 'wide' ? 'wide' : 'portrait'}}" src="{{item.sampleUrl}}" mode="aspectFill" data-id="{{item.templateId}}" data-src="{{item.sampleUrl}}" binderror="onTemplateImageError" lazy-load />
+          <image wx:if="{{item.sampleUrl}}" class="effect-thumb-image effect-thumb-{{item.sampleShape === 'wide' ? 'wide' : 'portrait'}} img-load" src="{{item.sampleUrl}}" mode="aspectFill" data-id="{{item.templateId}}" data-src="{{item.sampleUrl}}" binderror="onTemplateImageError" lazy-load bindload="{{img.ready}}" />
           <view wx:else class="effect-thumb-image effect-thumb-portrait style-thumb-blank"></view>
           <text class="effect-thumb-name">{{item.title}}</text>
         </view>
@@ -76,7 +78,7 @@
       <view class="row photo-head"><view class="section-title flush">用谁的照片</view><text wx:if="{{pets.length}}" class="small">选 1 张</text><text wx:elif="{{!catalogLoading}}" class="small strong" aria-role="button" bindtap="openPets">先建一个档案 ›</text></view>
       <scroll-view wx:if="{{pets.length > 0}}" class="pet-chips chip-scroll" scroll-x show-scrollbar="{{false}}"><view class="chip-track">
         <view wx:for="{{pets}}" wx:key="id" class="pet-chip {{petId === item.id ? 'pet-chip-on' : ''}}" data-index="{{index}}" aria-role="radio" aria-checked="{{petId === item.id}}" bindtap="choosePetChip">
-          <image wx:if="{{item.avatarUrl}}" class="pet-chip-avatar" src="{{item.avatarUrl}}" mode="aspectFill" />
+          <image wx:if="{{item.avatarUrl}}" class="pet-chip-avatar img-load" src="{{item.avatarUrl}}" mode="aspectFill" bindload="{{img.ready}}" />
           <view wx:else class="pet-chip-avatar pet-chip-avatar-empty">{{item.name[0]}}</view>
           <text>{{item.name}}</text>
         </view>
@@ -84,7 +86,7 @@
       <view class="photo-row">
         <t-skeleton wx:if="{{loading}}" type="grid" count="4"></t-skeleton>
         <!-- 首格「拍照 / 相册」就地上传，传完自动选中，不离开当前流程 -->
-        <t-empty wx:elif="{{!catalogLoading && !pets.length}}" icon="pet" title="还没有宠物档案" description="建一份档案，就能用它的照片拍了。" action-text="添加我的宠物" anim="{{animType}}" decor="{{decor}}" bindaction="openPets"></t-empty>
+        <t-empty wx:elif="{{!catalogLoading && !pets.length}}" icon="pet" title="还没有宠物档案" description="建一份档案，就能用宝宝的照片拍了。" action-text="添加我的宠物" anim="{{animType}}" decor="{{decor}}" bindaction="openPets"></t-empty>
         <t-photo-grid wx:elif="{{petId}}" photos="{{photos}}" selected-ids="{{photoIds}}" max="1" addable add-text="拍照 / 相册" add-icon="/assets/icons/{{themeId}}/camera.png" columns="4" previewable="{{false}}" anim="{{animType}}" bindadd="uploadPetPhoto" bindtoggle="togglePhoto"></t-photo-grid>
       </view>
       <view wx:if="{{petId && !loading}}" class="photo-tip"><text class="photo-tip-mark">✓</text><text>正脸、光线清楚、只有{{petText || '我'}}一只，效果最好</text></view>
@@ -103,7 +105,7 @@
 
       <view class="ai-dock">
         <view class="ai-dock-head">
-          <text class="ai-dock-title">{{activeTemplate && activeTemplate.subjectMode === 'owner-pet' ? '为我和' + (petText || '它') + '拍一张' : '为' + (petText || '我') + '拍一张'}}</text>
+          <text class="ai-dock-title">{{activeTemplate && activeTemplate.subjectMode === 'owner-pet' ? '为我和' + (petText || '宝宝') + '拍一张' : '为' + (petText || '我') + '拍一张'}}</text>
           <t-dongan-balance balance="{{walletBalance}}" loaded="{{walletLoaded}}"></t-dongan-balance>
         </view>
         <view class="ai-dock-action">

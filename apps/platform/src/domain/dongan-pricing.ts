@@ -22,10 +22,10 @@ export const AI_RUN_COST: Record<ImageSubjectMode, number> = {
   "owner-pet": 6,
 };
 
-/** 写真套餐：单张 2 颗另走 AI_RUN_COST.pet；套餐每张约 1 颗。 */
-export const ART_PHOTO_BUNDLE_COST = { ten: 12, twenty: 20 } as const;
+/** 写真套餐（2026-10-26 调价）：单张 2 颗另走 AI_RUN_COST.pet；10 张 16 颗（省 20%）、20 张 28 颗（省 30%）。 */
+export const ART_PHOTO_BUNDLE_COST = { ten: 16, twenty: 28 } as const;
 export type ArtPhotoBundlePackage = keyof typeof ART_PHOTO_BUNDLE_COST;
-/** 套餐中单张最终失败时按张退还的颗数（12 颗里多出的 2 颗视为套餐折扣，不按比例分摊）。 */
+/** 套餐中单张最终失败时按张退还的颗数（冻干只有整颗，按每张均价向下取整，不按比例分摊）。 */
 export const ART_PHOTO_BUNDLE_ITEM_REFUND = 1;
 
 /** 按积累量分档的交付物。纪念形态不分档，见 MEMORIAL_FILM_COST。 */

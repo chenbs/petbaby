@@ -1,3 +1,4 @@
+<wxs module="img" src="../../wxs/img.wxs"></wxs>
 <view class="picks picks-{{columns}}" aria-role="radiogroup">
   <view
     wx:for="{{options}}"
@@ -11,7 +12,7 @@
     bindtap="handleTap"
   >
     <view wx:if="{{item.image}}" class="pick-shot">
-      <image class="pick-img" src="{{item.image}}" mode="aspectFill" lazy-load />
+      <image class="pick-img img-load" src="{{item.image}}" mode="aspectFill" lazy-load bindload="{{img.ready}}" />
       <view class="pick-veil"></view>
     </view>
     <view class="pick-meta">

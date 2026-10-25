@@ -1,4 +1,5 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
+<wxs module="img" src="../../wxs/img.wxs"></wxs>
 
 <!--
   我的（2026-09 改版；2026-10 按 prototype.html after-me 对齐）：
@@ -12,7 +13,7 @@
 
   <block wx:else>
     <view class="me-head">
-      <image wx:if="{{hero && hero.imageUrl}}" class="me-avatar" src="{{hero.imageUrl}}" mode="aspectFill" data-src="{{hero.imageUrl}}" binderror="onHeroImageError" />
+      <image wx:if="{{hero && hero.imageUrl}}" class="me-avatar img-load" src="{{hero.imageUrl}}" mode="aspectFill" data-src="{{hero.imageUrl}}" binderror="onHeroImageError" bindload="{{img.ready}}" />
       <view wx:else class="me-avatar me-avatar-empty">{{displayName[0]}}</view>
       <view class="me-identity">
         <view class="me-name">{{displayName}}</view>
@@ -27,7 +28,7 @@
     <!-- 宠物头像行：点头像看时间线，末尾「添加 / 管理」进档案页 -->
     <scroll-view class="me-pets" scroll-x show-scrollbar="{{false}}"><view class="me-pets-track">
       <view wx:for="{{pets}}" wx:key="id" class="me-pet {{item.isDefault ? 'me-pet-on' : ''}}" data-id="{{item.id}}" aria-role="button" aria-label="查看{{item.name}}的时间线" bindtap="openPet">
-        <image wx:if="{{item.avatarUrl}}" class="me-pet-avatar" src="{{item.avatarUrl}}" mode="aspectFill" />
+        <image wx:if="{{item.avatarUrl}}" class="me-pet-avatar img-load" src="{{item.avatarUrl}}" mode="aspectFill" bindload="{{img.ready}}" />
         <view wx:else class="me-pet-avatar me-pet-avatar-empty">{{item.name[0]}}</view>
         <text class="me-pet-name">{{item.name}}</text>
       </view>

@@ -1,3 +1,4 @@
+<wxs module="img" src="../../wxs/img.wxs"></wxs>
 <view class="grid {{featured ? 'grid-featured' : ''}}" style="grid-template-columns:repeat({{columns}},1fr)">
   <view wx:if="{{addable}}" class="tile tile-add anim-{{anim}}" aria-role="button" aria-label="追加照片" hover-class="tile-hover" bindtap="handleAdd">
     <image wx:if="{{addIcon}}" class="add-icon" src="{{addIcon}}" mode="aspectFit" />
@@ -17,7 +18,7 @@
     bindtap="handleTap"
     bindlongpress="handleLongPress"
   >
-    <image wx:if="{{item.url && !item.imageFailed}}" class="tile-image" src="{{item.url}}" mode="{{featured ? 'widthFix' : imageMode}}" data-id="{{item.id}}" data-src="{{item.url}}" binderror="handleImageError" lazy-load />
+    <image wx:if="{{item.url && !item.imageFailed}}" class="tile-image img-load" src="{{item.url}}" mode="{{featured ? 'widthFix' : imageMode}}" data-id="{{item.id}}" data-src="{{item.url}}" binderror="handleImageError" lazy-load bindload="{{img.ready}}" />
     <view wx:else class="tile-image tile-image-blank">照片暂不可用</view>
 
     <!-- 选中角标：ordered 时显示序号，供视频等依赖顺序的场景 -->

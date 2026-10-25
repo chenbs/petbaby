@@ -1,4 +1,5 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
+<wxs module="img" src="../../wxs/img.wxs"></wxs>
 
 <view class="{{skinClass}} page page-flat art-brand layout-canvas share-page">
   <t-skeleton wx:if="{{loading}}" type="card" count="1"></t-skeleton>
@@ -9,7 +10,7 @@
     <text wx:if="{{work.subtitle}}" class="muted">{{work.subtitle}}</text>
 
     <view class="share-frame ai-mask-host" aria-role="img" aria-label="{{work.title}}" bindtap="preview">
-      <image wx:if="{{imageUrl}}" class="share-image" src="{{imageUrl}}" mode="widthFix" binderror="onImageError" />
+      <image wx:if="{{imageUrl}}" class="share-image img-load img-load-fix" src="{{imageUrl}}" mode="widthFix" binderror="onImageError" bindload="{{img.ready}}" />
       <view wx:else class="share-image share-image-blank">作品图片暂不可用</view>
       <text wx:if="{{work.aiGenerated && work.aiNotice && imageUrl}}" class="ai-mask ai-mask-lg">{{work.aiNotice}}</text>
     </view>

@@ -1,4 +1,5 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
+<wxs module="img" src="../../wxs/img.wxs"></wxs>
 
 <!--
   外观（2026-10 按 themes.html 第 3 节）：每张预览卡渲染该主题下的首页缩略图，
@@ -31,13 +32,13 @@
         <view class="mini-human">
           <view class="mini-human-head"><text class="mini-human-title">麻麻精选</text><text class="mini-go">做同款</text></view>
           <view class="mini-human-row">
-            <image wx:for="{{sampleCovers}}" wx:for-item="cover" wx:key="*this" class="mini-human-cover" src="{{cover}}" mode="aspectFill" />
+            <image wx:for="{{sampleCovers}}" wx:for-item="cover" wx:key="*this" class="mini-human-cover img-load" src="{{cover}}" mode="aspectFill" bindload="{{img.ready}}" />
           </view>
         </view>
         <view class="mini-mark"><text class="section-title mini-section">挑一个玩法</text></view>
         <view class="mini-feed">
-          <image class="mini-feed-image" src="{{feedCovers[0]}}" mode="aspectFill" />
-          <image class="mini-feed-image" src="{{feedCovers[1]}}" mode="aspectFill" />
+          <image class="mini-feed-image img-load" src="{{feedCovers[0]}}" mode="aspectFill" bindload="{{img.ready}}" />
+          <image class="mini-feed-image img-load" src="{{feedCovers[1]}}" mode="aspectFill" bindload="{{img.ready}}" />
         </view>
       </view>
       <view class="preview-meta">

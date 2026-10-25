@@ -72,7 +72,7 @@ test("ai-create 无档案：开始拍摄打开新建抽屉，建成后选中新�
   assert.ok(page.data.activeTemplate, "模板已就绪，按钮可点");
 
   page.create();
-  assert.deepEqual(env.calls.toast, ["先给它建一份档案"]);
+  assert.deepEqual(env.calls.toast, ["先给宝宝建一份档案"]);
   assert.equal(env.calls.navigate.length, 1);
   assert.equal(env.calls.navigate[0].url, "/pages/pets/pets?mode=create&onboard=1");
 
@@ -111,6 +111,6 @@ test("短片页无档案：创建按钮打开新建抽屉", async () => {
   page.onLoad({});
   await tick(); await tick();
   page.create();
-  assert.deepEqual(env.calls.toast, ["先给它建一份档案"]);
+  assert.deepEqual(env.calls.toast, ["先给宝宝建一份档案"]);
   assert.equal(env.calls.navigate[0].url, "/pages/pets/pets?mode=create&onboard=1");
 });

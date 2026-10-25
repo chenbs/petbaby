@@ -1,4 +1,5 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
+<wxs module="img" src="../../wxs/img.wxs"></wxs>
 
 <view class="{{skinClass}} page page-flat art-film layout-timeline">
   <view class="title">{{companion || '成长时间线'}}</view>
@@ -43,7 +44,7 @@
     <view class="section-title">{{group.year}}</view>
     <view class="line">
       <view wx:for="{{group.items}}" wx:for-item="entry" wx:key="key" class="node {{entry.dayStart ? '' : 'node-same-day'}}" data-id="{{entry.photo.id}}" bindtap="openDetail">
-        <image wx:if="{{entry.photo.url}}" class="node-photo" src="{{entry.photo.url}}" mode="aspectFill" data-kind="timeline" data-id="{{entry.photo.id}}" data-src="{{entry.photo.url}}" binderror="onPhotoError" lazy-load />
+        <image wx:if="{{entry.photo.url}}" class="node-photo img-load" src="{{entry.photo.url}}" mode="aspectFill" data-kind="timeline" data-id="{{entry.photo.id}}" data-src="{{entry.photo.url}}" binderror="onPhotoError" lazy-load bindload="{{img.ready}}" />
         <view wx:else class="node-photo node-photo-blank">照片暂不可用</view>
         <view class="node-copy">
           <view wx:if="{{entry.dayStart && entry.showDay}}" class="node-day">第 {{entry.day}} 天</view>
@@ -103,7 +104,7 @@
       <view wx:if="{{filmPreview}}" class="section">
         <view>{{filmPreview.petName}} · {{filmPreview.year}} · {{filmPreview.durationSeconds}} 秒</view>
         <text class="small">本次采用以下 {{filmPreview.photos.length}} 张，按显示顺序制作。</text>
-        <view wx:for="{{filmPreview.photos}}" wx:key="id" class="node"><image wx:if="{{item.url}}" class="node-photo" src="{{item.url}}" mode="aspectFill" data-kind="film" data-id="{{item.id}}" data-src="{{item.url}}" binderror="onPhotoError" /><view wx:else class="node-photo node-photo-blank">照片暂不可用</view><text>{{item.date}}</text></view>
+        <view wx:for="{{filmPreview.photos}}" wx:key="id" class="node"><image wx:if="{{item.url}}" class="node-photo img-load" src="{{item.url}}" mode="aspectFill" data-kind="film" data-id="{{item.id}}" data-src="{{item.url}}" binderror="onPhotoError" bindload="{{img.ready}}" /><view wx:else class="node-photo node-photo-blank">照片暂不可用</view><text>{{item.date}}</text></view>
         <text>{{filmPricing.cost}} 颗冻干 · 开始生成</text>
         <t-button loading="{{filmBusy}}" bindtap="confirmFilm">用这些照片制作</t-button>
       </view>

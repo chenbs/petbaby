@@ -44,24 +44,24 @@ beforeEach(async () => {
 });
 
 describe("艺术写真套餐队列", () => {
-  it("10 张套餐扣 12 颗冻干并在同一事务内入队，没有现金订单", async () => {
+  it("10 张套餐扣 16 颗冻干并在同一事务内入队，没有现金订单", async () => {
     await expect(createArtPhotoBundle(USER, { package: "ten", petId: PET, photoId: PHOTO, sceneIds: PET_ART_PHOTO_SCENE_IDS.slice(0, 9), idempotencyKey: "ten-wrong-count" })).rejects.toMatchObject({ code: "ART_PHOTO_SCENE_COUNT_INVALID" });
     const created = await createArtPhotoBundle(USER, { package: "ten", petId: PET, photoId: PHOTO, sceneIds: PET_ART_PHOTO_SCENE_IDS.slice(0, 10), idempotencyKey: "ten-payment-test" });
     expect(created.batch.items).toHaveLength(10);
-    expect(created.batch.cost).toBe(12);
-    expect(await balance()).toBe(88);
+    expect(created.batch.cost).toBe(16);
+    expect(await balance()).toBe(84);
     const database = await getDatabase();
     expect((await getArtPhotoBundle(USER, created.batch.id)).status).toBe("queued");
     expect(await database.query("SELECT id FROM ai_runs WHERE idempotency_key LIKE $1", [`art-bundle-${created.batch.id}-%`])).toHaveLength(10);
     expect(await database.query("SELECT id FROM growth_orders WHERE user_id=$1", [USER])).toHaveLength(0);
   });
 
-  it("20 张套餐扣 20 颗，重复提交只扣一次，换场景视为冲突", async () => {
+  it("20 张套餐扣 28 颗，重复提交只扣一次，换场景视为冲突", async () => {
     const input = { package: "twenty", petId: PET, photoId: PHOTO, sceneIds: PET_ART_PHOTO_SCENE_IDS.slice(0, 20), idempotencyKey: "twenty-repeat-request" };
     const first = await createArtPhotoBundle(USER, input);
     const repeated = await createArtPhotoBundle(USER, input);
     expect(repeated.batch.id).toBe(first.batch.id);
-    expect(await balance()).toBe(80);
+    expect(await balance()).toBe(72);
     await expect(createArtPhotoBundle(USER, { ...input, sceneIds: [...input.sceneIds].reverse() })).rejects.toMatchObject({ code: "ART_PHOTO_REQUEST_CONFLICT" });
     expect(await (await getDatabase()).query("SELECT id FROM ai_runs WHERE idempotency_key LIKE $1", [`art-bundle-${first.batch.id}-%`])).toHaveLength(20);
   });
@@ -71,7 +71,7 @@ describe("艺术写真套餐队列", () => {
     await database.query("INSERT INTO pets (id,user_id,name,species,gender,date_type,life_stage,is_default,created_at) VALUES ($1,$2,'Bo','dog','unknown','birthday','active',true,now())", ["00000000-0000-4000-8000-000000000085", OTHER]);
     await database.query("INSERT INTO photos (id,user_id,pet_id,filename,mime_type,size,storage_key,position,quality,created_at) VALUES ($1,$2,$3,'bo.png','image/png',1,$4,0,'clear',now())", ["00000000-0000-4000-8000-000000000086", OTHER, "00000000-0000-4000-8000-000000000085", `private/${OTHER}/photos/bo.png`]);
     const error = await createArtPhotoBundle(OTHER, { package: "ten", petId: "00000000-0000-4000-8000-000000000085", photoId: "00000000-0000-4000-8000-000000000086", sceneIds: PET_ART_PHOTO_SCENE_IDS.slice(0, 10), idempotencyKey: "other-no-money-2" }).catch((caught) => caught);
-    expect(error).toMatchObject({ code: "WALLET_INSUFFICIENT", details: { required: 12, balance: 0, shortfall: 12 } });
+    expect(error).toMatchObject({ code: "WALLET_INSUFFICIENT", details: { required: 16, balance: 0, shortfall: 16 } });
     expect(await database.query("SELECT id FROM art_photo_batches WHERE user_id=$1", [OTHER])).toHaveLength(0);
     expect(await database.query("SELECT id FROM ai_runs WHERE user_id=$1", [OTHER])).toHaveLength(0);
   });

@@ -1,4 +1,5 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
+<wxs module="img" src="../../wxs/img.wxs"></wxs>
 
 <wxs module="pick">
   function has(list, value) { return !!list && list.indexOf(value) >= 0; }
@@ -127,7 +128,7 @@
             <text wx:if="{{item.summary}}" class="small entry-summary">{{item.summary}}</text>
             <text wx:if="{{item.note}}" class="small entry-note">{{item.note}}</text>
             <view wx:if="{{item.attachments.length}}" class="entry-photos">
-              <image wx:for="{{item.attachments}}" wx:for-item="photo" wx:key="id" wx:if="{{photo.url}}" class="entry-photo" src="{{photo.url}}" mode="aspectFill" data-url="{{photo.url}}" data-urls="{{item.attachments}}" bindtap="previewAttachment" />
+              <image wx:for="{{item.attachments}}" wx:for-item="photo" wx:key="id" wx:if="{{photo.url}}" class="entry-photo img-load" src="{{photo.url}}" mode="aspectFill" data-url="{{photo.url}}" data-urls="{{item.attachments}}" bindtap="previewAttachment" bindload="{{img.ready}}" />
             </view>
             <text wx:if="{{item.healthSessionId}}" class="small entry-link">来自健康助手</text>
           </view>
@@ -193,7 +194,7 @@
       <text class="field-title">照片（只有你能看到，不进照片库）</text>
       <view class="entry-photos">
         <view wx:for="{{form.attachments}}" wx:key="id" class="form-photo-wrap">
-          <image class="entry-photo" src="{{item.localPath}}" mode="aspectFill" />
+          <image class="entry-photo img-load" src="{{item.localPath}}" mode="aspectFill" bindload="{{img.ready}}" />
           <view class="form-photo-remove hit-area" aria-role="button" aria-label="移除这张" data-id="{{item.id}}" bindtap="removeAttachment">×</view>
         </view>
         <view wx:if="{{form.attachments.length < 3}}" class="form-photo-add" aria-role="button" aria-label="添加照片" hover-class="quick-hover" bindtap="addAttachment">＋</view>

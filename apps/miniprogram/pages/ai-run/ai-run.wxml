@@ -1,4 +1,5 @@
 <page-meta page-style="{{themeStyle}}"></page-meta>
+<wxs module="img" src="../../wxs/img.wxs"></wxs>
 
 <!--
   制作与挑选（2026-10 按 prototype.html 第 4 节重做）：
@@ -15,9 +16,9 @@
     <!-- 排队 / 制作中 -->
     <view wx:if="{{run.status === 'queued' || run.status === 'processing'}}" class="wait">
       <view class="wait-frame" aria-role="img" aria-label="正在制作">
-        <image wx:if="{{waitCoverUrl}}" class="wait-cover" src="{{waitCoverUrl}}" mode="aspectFill" />
+        <image wx:if="{{waitCoverUrl}}" class="wait-cover img-load" src="{{waitCoverUrl}}" mode="aspectFill" bindload="{{img.ready}}" />
         <view class="wait-shine"></view>
-        <image wx:if="{{petAvatarUrl}}" class="wait-me" src="{{petAvatarUrl}}" mode="aspectFill" />
+        <image wx:if="{{petAvatarUrl}}" class="wait-me img-load" src="{{petAvatarUrl}}" mode="aspectFill" bindload="{{img.ready}}" />
         <view wx:else class="wait-me wait-me-empty"><image class="wait-me-paw" src="/assets/icons/{{themeId}}/paw.png" mode="aspectFit" /></view>
       </view>
       <!-- 加载气质随主题（主题方案 3.2）：软糖弹跳 / 翻页 / 方块步进闪烁 / 胶片走带 -->
@@ -36,7 +37,7 @@
         <view class="row wait-more-head" aria-role="button" bindtap="openArtStudio"><text class="wait-more-title">等的时候，再挑几套写真</text><text class="small">›</text></view>
         <scroll-view class="wait-strip" scroll-x enable-flex show-scrollbar="{{false}}">
           <view wx:for="{{suggestScenes}}" wx:key="id" class="wait-thumb" data-id="{{item.id}}" aria-role="button" aria-label="{{item.title}}" bindtap="openSuggestScene">
-            <image class="wait-thumb-image" src="{{item.url}}" mode="aspectFill" lazy-load />
+            <image class="wait-thumb-image img-load" src="{{item.url}}" mode="aspectFill" lazy-load bindload="{{img.ready}}" />
             <text class="wait-thumb-name">{{item.title}}</text>
           </view>
         </scroll-view>
@@ -73,7 +74,7 @@
           bindtap="select"
         >
           <view class="ai-mask-host cand-photo">
-            <image wx:if="{{!item.imageFailed}}" class="cand-image" src="{{item.url}}" mode="aspectFill" data-id="{{item.id}}" data-src="{{item.url}}" binderror="onCandidateImageError" lazy-load />
+            <image wx:if="{{!item.imageFailed}}" class="cand-image img-load" src="{{item.url}}" mode="aspectFill" data-id="{{item.id}}" data-src="{{item.url}}" binderror="onCandidateImageError" lazy-load bindload="{{img.ready}}" />
             <view wx:else class="cand-image cand-image-blank">图片暂不可用</view>
             <text wx:if="{{run.aiNotice && !item.imageFailed}}" class="ai-mask">{{run.aiNotice}}</text>
             <text wx:if="{{!single}}" class="cand-check">✓</text>

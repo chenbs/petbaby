@@ -1,6 +1,6 @@
 <view class="navbar {{transparent ? 'navbar-clear' : ''}} {{tone === 'inverse' ? 'navbar-inverse' : ''}}" style="padding-top:{{statusBarHeight}}px">
   <view wx:if="{{brandIcon}}" class="navbar-bar">
-    <view class="navbar-brand"><image class="navbar-brand-icon" src="{{brandIcon}}" mode="aspectFit" />{{title}}</view>
+    <view class="navbar-brand"><image class="navbar-brand-icon" src="{{brandIcon}}" mode="aspectFit" /><text>{{title}}</text><text wx:if="{{brandTagline}}" class="navbar-brand-tagline">· {{brandTagline}}</text></view>
   </view>
   <view wx:else class="navbar-bar">
     <view wx:if="{{showBack}}" class="navbar-back hit-area" aria-role="button" aria-label="返回" bindtap="handleBack">‹</view>

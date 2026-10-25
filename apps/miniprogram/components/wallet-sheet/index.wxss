@@ -124,14 +124,13 @@
   white-space: nowrap;
 }
 
-/* 「最多人选」「最划算」「这次不够」：描边贴纸，手账相册的贴纸底接近卡面色，靠描边才看得出来 */
+/* 「最多人选」「最划算」「这次不够」：主按钮色实底，四套皮肤都与卡面拉开（贴纸色在手账 / 星夜下太接近卡面） */
 .ws-badge {
   box-sizing: border-box;
   padding: 0 var(--space-2);
-  border: 2rpx solid currentColor;
   border-radius: var(--radius-pill);
-  background: var(--skin-sticker-bg);
-  color: var(--skin-sticker-text);
+  background: var(--button-primary);
+  color: var(--button-primary-text);
   font-size: var(--small-size);
   font-weight: var(--fw-black);
   line-height: 40rpx;

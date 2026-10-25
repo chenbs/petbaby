@@ -12,7 +12,7 @@
 .art-package-on { border-color: var(--skin-tier-on-border, var(--primary)); background: var(--skin-tier-on-bg, var(--card-background)); }
 .art-package-label { font-size: var(--body-size); font-weight: var(--fw-black); }
 .art-package-price { color: var(--primary); font-family: var(--skin-num-font, inherit); font-size: var(--font-h3); font-weight: var(--fw-black); }
-.art-package-radio { position: absolute; top: var(--space-2); right: var(--space-2); display: flex; width: 32rpx; height: 32rpx; box-sizing: border-box; align-items: center; justify-content: center; border: 3rpx solid var(--border); border-radius: var(--radius-pill); color: var(--button-primary-text); font-size: var(--eyebrow-size); font-weight: var(--fw-black); line-height: 1; }
+.art-package-radio { position: absolute; top: var(--space-2); right: var(--space-2); display: flex; width: 32rpx; height: 32rpx; box-sizing: border-box; align-items: center; justify-content: center; border: 4rpx solid var(--text-secondary); border-radius: var(--radius-pill); color: var(--button-primary-text); font-size: var(--eyebrow-size); font-weight: var(--fw-black); line-height: 1; }
 .art-package-on .art-package-radio { border-color: var(--skin-tier-on-border, var(--primary)); background: var(--skin-tier-on-border, var(--primary)); }
 .art-value { display: block; margin-top: var(--space-3); }
 .art-collection { margin-top: var(--space-6); }
@@ -36,7 +36,7 @@
 .create-segments { display: flex; gap: var(--space-1); padding: var(--space-1); border: var(--card-border); border-radius: var(--radius-pill); background: var(--card-background); box-shadow: var(--shadow-card); }
 /* 四段（2026-10-09）：「如果我是人」五个字要在 1/4 宽里放得下，不换行 */
 .create-segment { flex: 1; min-width: 0; box-sizing: border-box; padding: var(--space-3) 0; border: 2rpx solid transparent; border-radius: var(--radius-pill); color: var(--text-primary); font-size: var(--body-size); font-weight: var(--fw-bold); text-align: center; white-space: nowrap; }
-.create-segment-on { border-color: var(--skin-chip-on-border, var(--button-primary)); background: var(--skin-chip-on-bg, var(--button-primary)); color: var(--skin-chip-on-text, var(--button-primary-text)); font-weight: var(--fw-black); box-shadow: var(--shadow-press); }
+.create-segment-on { border-color: var(--button-primary); background: var(--button-primary); color: var(--button-primary-text); font-weight: var(--fw-black); box-shadow: var(--shadow-press); }
 .art-package { position: relative; }
 .art-package-badge { position: absolute; top: calc(0rpx - var(--space-3)); left: 50%; padding: var(--space-0) var(--space-2); border-radius: var(--radius-pill); background: var(--button-primary); color: var(--button-primary-text); font-size: var(--eyebrow-size); white-space: nowrap; transform: translateX(-50%); }
 .art-selection { top: var(--space-2); right: var(--space-2); bottom: auto; display: flex; align-items: center; justify-content: center; width: 48rpx; height: 48rpx; padding: 0; border-radius: var(--radius-pill); background: var(--mask); color: var(--on-image-primary); }

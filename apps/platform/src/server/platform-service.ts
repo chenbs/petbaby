@@ -123,7 +123,7 @@ export async function updatePet(userId: string, id: string, input: unknown): Pro
 export async function updatePetAvatar(userId: string, id: string, avatarKey: string) {
   const database = await getDatabase();
   const pet = belongsToUser((await database.query("SELECT * FROM pets WHERE id=$1 AND deleted_at IS NULL", [id])).map(mapPet)[0], userId);
-  const rows = await database.query("UPDATE pets SET avatar_key=$2 WHERE id=$1 RETURNING *", [id, avatarKey]);
+  const rows = await database.query("UPDATE pets SET avatar_key=$2,avatar_updated_at=now() WHERE id=$1 RETURNING *", [id, avatarKey]);
   if (pet.avatarKey && pet.avatarKey !== avatarKey) await objectStorage.delete(pet.avatarKey).catch(() => undefined);
   return mapPet(rows[0]);
 }

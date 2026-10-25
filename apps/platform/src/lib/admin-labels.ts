@@ -27,7 +27,7 @@ const statusLabels: Record<string, StatusLabel> = {
   unsubscribed: { label: "已退订", tone: "neutral" },
   partial: { label: "部分完成", tone: "warning" },
   active: { label: "正常", tone: "good" },
-  suspended: { label: "已停用", tone: "critical" },
+  suspended: { label: "已封禁", tone: "critical" },
   deleted: { label: "已注销", tone: "neutral" },
   live: { label: "上线", tone: "good" },
   testing: { label: "测试中", tone: "info" },
@@ -111,6 +111,7 @@ export const LIFE_STAGE_LABELS: Record<string, string> = { active: "日常", sen
 
 export const AUDIT_TARGET_LABELS: Record<string, string> = {
   user: "用户",
+  upload: "用户上传",
   wallet: "钱包",
   order: "作品订单",
   growth_order: "增值订单",
@@ -131,8 +132,9 @@ export const AUDIT_TARGET_LABELS: Record<string, string> = {
 };
 
 const auditActionLabels: Record<string, string> = {
-  user_suspend: "停用用户",
-  user_reactivate: "恢复用户",
+  user_suspend: "封禁用户",
+  user_reactivate: "解封用户",
+  upload_remove: "移除违规图片",
   wallet_grant_gift: "发放冻干补偿",
   admin_retry_task: "重试排版任务",
   admin_refund_order: "作品单退款",

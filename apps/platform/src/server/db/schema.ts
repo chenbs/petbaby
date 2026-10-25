@@ -51,6 +51,7 @@ export const pets = pgTable("pets", {
   dateType: text("date_type").notNull().default("birthday"),
   lifeStage: text("life_stage").notNull().default("active"),
   avatarKey: text("avatar_key"),
+  avatarUpdatedAt: timestamp("avatar_updated_at", { withTimezone: true }),
   isDefault: boolean("is_default").notNull().default(false),
   deletedAt: timestamp("deleted_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull(),
@@ -337,3 +338,14 @@ export const petRecordAttachments = pgTable("pet_record_attachments", {
   mimeType: text("mime_type").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull(),
 }, (table) => [index("pet_record_attachments_log_idx").on(table.logId)]);
+
+/** 运营后台图片审核（迁移 0046）。按 storage_key 记录；没有记录即待审核。 */
+export const uploadReviews = pgTable("upload_reviews", {
+  storageKey: text("storage_key").primaryKey(),
+  kind: text("kind").notNull(),
+  userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  status: text("status").notNull(),
+  reason: text("reason"),
+  reviewedBy: uuid("reviewed_by").notNull(),
+  reviewedAt: timestamp("reviewed_at", { withTimezone: true }).notNull(),
+}, (table) => [index("upload_reviews_user_idx").on(table.userId)]);

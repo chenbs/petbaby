@@ -17,6 +17,18 @@ function responseError(response, fallback) {
   return error;
 }
 
+/*
+ * 账号被后台封禁（2026-10-26）：服务端对任何需要登录的接口返回 403 ACCOUNT_SUSPENDED，微信登录同样拒绝。
+ * 清掉本地会话并回到登录页提示，只跳一次，避免多个并发请求各自 reLaunch。
+ */
+let suspendedHandled = false;
+function handleSuspended(error) {
+  if (error.code !== "ACCOUNT_SUSPENDED" || suspendedHandled) return;
+  suspendedHandled = true;
+  wx.removeStorageSync("petbaby_session");
+  wx.reLaunch({ url: "/pages/login/login?suspended=1" });
+}
+
 function transportError(failure) {
   const error = new Error((failure && failure.errMsg) || "网络中断，请核对保存结果");
   error.code = "NETWORK_ERROR";
@@ -36,7 +48,9 @@ function request(path, options) {
       success(response) {
         if (response.statusCode >= 200 && response.statusCode < 300) resolve(response.data.data);
         else {
-          reject(responseError(response, "请求失败"));
+          const error = responseError(response, "请求失败");
+          handleSuspended(error);
+          reject(error);
         }
       },
       fail: (error) => reject(transportError(error))
@@ -67,7 +81,11 @@ function upload(path, filePath, formData, options) {
         let payload;
         try { payload = JSON.parse(response.data); } catch (error) { reject(transportError({ errMsg: "上传结果待核对" })); return; }
         if (response.statusCode >= 200 && response.statusCode < 300) resolve(payload.data);
-        else reject(responseError(Object.assign({}, response, { data: payload }), "上传失败"));
+        else {
+          const error = responseError(Object.assign({}, response, { data: payload }), "上传失败");
+          handleSuspended(error);
+          reject(error);
+        }
       },
       fail: (error) => reject(transportError(error))
     });

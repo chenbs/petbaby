@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 
 import { ActionDialog } from "@/components/admin/action-dialog";
-import { Badge, Card, CardBody, CardHeader, KeyValue, Mono, PageHeader, StatusBadge, Table, Td, Th, Tr } from "@/components/admin/ui";
+import { Badge, buttonClass, Card, CardBody, CardHeader, KeyValue, Mono, PageHeader, StatusBadge, Table, Td, Th, Tr } from "@/components/admin/ui";
 import { auditActionLabel, GROWTH_KIND_LABELS, LEDGER_REASON_LABELS, LIFE_STAGE_LABELS, ORDER_KIND_LABELS, PROVIDER_LABELS, SPECIES_LABELS } from "@/lib/admin-labels";
 import { formatCount, formatDate, formatDateTime, formatYuan } from "@/lib/admin-format";
 import { getUserDetail } from "@/server/admin/console";
@@ -37,6 +37,7 @@ export default async function UserDetailPage({ params }: Props) {
         description={`注册于 ${formatDateTime(user.created_at as string)}`}
         actions={
           <>
+            <Link href={`/admin/uploads?status=approved&user=${id}`} className={buttonClass("ghost", "md")}>查看上传图片</Link>
             {!deleted ? (
               <ActionDialog
                 label="补偿冻干"
@@ -57,13 +58,13 @@ export default async function UserDetailPage({ params }: Props) {
             ) : null}
             {!deleted && id !== actorId ? (
               <ActionDialog
-                label={suspended ? "恢复账号" : "停用账号"}
-                title={suspended ? `恢复 ${name}` : `停用 ${name}`}
-                description={suspended ? "恢复后用户可重新登录；之前被关闭的分享不会自动恢复。" : "停用后用户无法登录，作品、纪念空间与年度报告的公开分享会立即关闭。"}
+                label={suspended ? "解封账号" : "封禁账号"}
+                title={suspended ? `解封 ${name}` : `封禁 ${name}`}
+                description={suspended ? "解封后用户可重新登录；之前被关闭的分享不会自动恢复。" : "封禁后用户无法登录、无法使用任何功能，作品、纪念空间与年度报告的公开分享会立即关闭。"}
                 endpoint="/api/admin/users"
                 body={{ action: suspended ? "reactivate" : "suspend", userId: id }}
-                confirmLabel={suspended ? "恢复" : "停用"}
-                success={suspended ? "账号已恢复" : "账号已停用，公开分享已关闭"}
+                confirmLabel={suspended ? "解封" : "封禁"}
+                success={suspended ? "账号已解封" : "账号已封禁，公开分享已关闭"}
                 danger={!suspended}
                 size="md"
               />
@@ -77,14 +78,14 @@ export default async function UserDetailPage({ params }: Props) {
           <CardHeader title="账号" />
           <CardBody>
             <KeyValue items={[
-              { label: "状态", value: deleted ? <Badge tone="neutral">已注销</Badge> : suspended ? <Badge tone="critical">已停用</Badge> : <Badge tone="good">正常</Badge> },
+              { label: "状态", value: deleted ? <Badge tone="neutral">已注销</Badge> : suspended ? <Badge tone="critical">已封禁</Badge> : <Badge tone="good">正常</Badge> },
               { label: "用户 ID", value: <Mono>{id}</Mono> },
               { label: "登录方式", value: [user.wechat ? "微信" : null, user.password ? "账号密码" : null].filter(Boolean).join(" · ") || "—" },
               { label: "账号名", value: String(user.account_name || "—") },
               { label: "来源", value: [acquisitionChannelLabel(user.acquisition_channel), user.acquisition_src ? String(user.acquisition_src) : null, user.acquisition_scene ? `场景 ${String(user.acquisition_scene)}` : null].filter(Boolean).join(" · ") },
               ...(user.invited_by ? [{ label: "邀请人", value: <Link href={`/admin/users/${String(user.invited_by)}`} className="text-accent hover:underline"><Mono>{String(user.invited_by).slice(0, 8)}</Mono></Link> }] : []),
               { label: "邀请注册", value: `${formatCount(Number(user.invited_count || 0))} 人` },
-              ...(suspended ? [{ label: "停用原因", value: String(user.admin_suspension_reason || "—") }] : []),
+              ...(suspended ? [{ label: "封禁原因", value: String(user.admin_suspension_reason || "—") }] : []),
               ...(deleted ? [{ label: "注销时间", value: formatDateTime(user.deleted_at as string) }] : []),
             ]} />
           </CardBody>

@@ -10,6 +10,9 @@ const { themedPage } = require("../../theme/page-mixin");
  */
 themedPage({
   data: { authenticated: false, accountLabel: "", message: "", messageType: "error", busy: false },
+  onLoad(query) {
+    if (query && query.suspended) this.setData({ message: "账号已被封禁，如有疑问请联系客服 18321368792", messageType: "error" });
+  },
   onShow() {
     api.request("/api/auth/session")
       .then((session) => {

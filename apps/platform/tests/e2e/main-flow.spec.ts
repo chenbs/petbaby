@@ -91,6 +91,7 @@ test("loads every administrator workspace through the console navigation", async
     ["功能使用", "/admin/features", "功能使用"],
     ["收入与冻干", "/admin/revenue", "收入与冻干"],
     ["用户", "/admin/users", "用户"],
+    ["图片审核", "/admin/uploads", "图片审核"],
     ["订单与履约", "/admin/orders", "订单与履约"],
     ["任务监控", "/admin/tasks", "任务监控"],
     ["消息与报告", "/admin/messages", "消息与报告"],

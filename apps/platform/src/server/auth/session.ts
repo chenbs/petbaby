@@ -55,24 +55,38 @@ async function ensureDemoUser() {
   return DEMO_USER_ID;
 }
 
-export async function getOptionalUserId(request?: Request) {
+export const ACCOUNT_SUSPENDED_MESSAGE = "账号已被封禁，如有疑问请联系客服";
+
+/** 会话对应的账号；suspended=true 表示签名有效但账号已被后台封禁。 */
+async function sessionAccount(request?: Request) {
   const authorization = request?.headers.get("authorization");
   const bearer = authorization?.startsWith("Bearer ") ? authorization.slice(7) : undefined;
   const cookieStore = await cookies();
   const session = verifySession(bearer || cookieStore.get(COOKIE_NAME)?.value);
-  if (session) {
-    const database = await getDatabase();
-    const rows = await database.query("SELECT id FROM users WHERE id=$1 AND deleted_at IS NULL AND admin_suspended_at IS NULL", [session.userId]);
-    if (rows[0]) return session.userId;
-  }
+  if (!session) return null;
+  const database = await getDatabase();
+  const rows = await database.query<{ suspended: boolean }>("SELECT admin_suspended_at IS NOT NULL suspended FROM users WHERE id=$1 AND deleted_at IS NULL", [session.userId]);
+  return rows[0] ? { userId: session.userId, suspended: Boolean(rows[0].suspended) } : null;
+}
+
+/** 公开页面用：封禁账号按未登录处理（看不到私有内容，也不报错）。 */
+export async function getOptionalUserId(request?: Request) {
+  const account = await sessionAccount(request);
+  if (account && !account.suspended) return account.userId;
   // demo 用户只留给自动化测试夹具；本地开发与生产一样必须登录（2026-10-09）。
-  if (isTestHarness()) return ensureDemoUser();
+  if (!account && isTestHarness()) return ensureDemoUser();
   return null;
 }
 
+/**
+ * 需要登录的接口。封禁账号返回 403 ACCOUNT_SUSPENDED 而不是 401：
+ * 401 会让小程序重新 wx.login，而微信登录对封禁账号同样拒绝 —— 明确的封禁码让端上直接提示、不再重试。
+ */
 export async function requireUserId(request?: Request) {
-  const userId = await getOptionalUserId(request);
-  if (userId) return userId;
+  const account = await sessionAccount(request);
+  if (account?.suspended) throw new AppError("ACCOUNT_SUSPENDED", ACCOUNT_SUSPENDED_MESSAGE, 403);
+  if (account) return account.userId;
+  if (isTestHarness()) return ensureDemoUser();
   throw new AppError("UNAUTHENTICATED", "登录状态已失效，请重新登录", 401);
 }
 

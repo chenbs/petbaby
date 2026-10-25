@@ -25,7 +25,11 @@ App({
             // 缓存自己的邀请码：之后各页分享卡片同步拼上 inv 参数
             api.request("/api/invites").then((invite) => acquisition.rememberInviteCode(invite.code)).catch(() => undefined);
           })
-          .catch(() => { this.globalData.loggedIn = Boolean(existing); });
+          .catch((error) => {
+            // 封禁账号：清掉旧会话，进入任何需要登录的页面时由 services/api.js 统一跳到登录页提示
+            if (error && error.code === "ACCOUNT_SUSPENDED") { wx.removeStorageSync("petbaby_session"); this.globalData.loggedIn = false; return; }
+            this.globalData.loggedIn = Boolean(existing);
+          });
       }
     });
   }

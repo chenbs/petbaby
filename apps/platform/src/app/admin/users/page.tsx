@@ -25,7 +25,7 @@ function one(value: string | string[] | undefined) {
 
 function userState(user: Record<string, unknown>) {
   if (user.deleted_at) return <Badge tone="neutral">已注销</Badge>;
-  if (user.admin_suspended_at) return <Badge tone="critical">已停用</Badge>;
+  if (user.admin_suspended_at) return <Badge tone="critical">已封禁</Badge>;
   return <Badge tone="good">正常</Badge>;
 }
 
@@ -41,7 +41,7 @@ export default async function UsersPage({ searchParams }: Props) {
 
   return (
     <>
-      <PageHeader title="用户" description="查看用户资产、付费与活跃情况；停用、补偿等操作在用户详情页完成并写入审计。" />
+      <PageHeader title="用户" description="查看用户资产、付费与活跃情况；封禁、补偿等操作在用户详情页完成并写入审计。" />
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <SegmentLinks label="用户分群" active={segment || "all"} items={SEGMENTS.map((item) => ({ key: item.key, label: item.label, href: href({ segment: item.key === "all" ? undefined : item.key, page: undefined }) }))} />
         <FilterBar
@@ -49,7 +49,7 @@ export default async function UsersPage({ searchParams }: Props) {
           q={q}
           placeholder="用户 ID、昵称、账号名、openid"
           hidden={{ segment: segment === "all" ? undefined : segment }}
-          selects={[{ name: "status", label: "账号状态", value: status === "all" ? "" : status, options: [{ value: "", label: "全部状态" }, { value: "active", label: "正常" }, { value: "suspended", label: "已停用" }, { value: "deleted", label: "已注销" }] }]}
+          selects={[{ name: "status", label: "账号状态", value: status === "all" ? "" : status, options: [{ value: "", label: "全部状态" }, { value: "active", label: "正常" }, { value: "suspended", label: "已封禁" }, { value: "deleted", label: "已注销" }] }]}
         />
       </div>
       <Card>

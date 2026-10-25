@@ -158,7 +158,7 @@ export default async function GrowthPage({ searchParams }: Props) {
           <CardBody className="space-y-5 pt-3">
             <div className="grid grid-cols-3 gap-3 text-center">
               <div className="rounded-lg bg-surface-2 py-3"><p className="text-xs text-muted">有宠物档案</p><p className="mt-1 text-lg font-semibold text-ink">{base.users ? formatPercent(base.withPet / base.users, 0) : "—"}</p></div>
-              <div className="rounded-lg bg-surface-2 py-3"><p className="text-xs text-muted">已停用</p><p className="mt-1 text-lg font-semibold text-ink">{formatCount(base.suspended)}</p></div>
+              <div className="rounded-lg bg-surface-2 py-3"><p className="text-xs text-muted">已封禁</p><p className="mt-1 text-lg font-semibold text-ink">{formatCount(base.suspended)}</p></div>
               <div className="rounded-lg bg-surface-2 py-3"><p className="text-xs text-muted">已注销</p><p className="mt-1 text-lg font-semibold text-ink">{formatCount(base.deleted)}</p></div>
             </div>
             <div>

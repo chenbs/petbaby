@@ -107,6 +107,7 @@ await Promise.all([enforceRateLimit(...), assertGenerationCircuit()]);
 - **读在 `server/admin/analytics.ts`（总览/增长/功能/收入）与 `console.ts`（列表/详情/搜索），写一律调既有 `/api/admin/*`**（守卫、Zod、审计都在接口里），客户端只有 `components/admin/action-dialog.tsx` 一个写入口：必填原因 → 调接口 → `router.refresh()`。新增运维动作 = 接口加分支 + 页面放一个 `ActionDialog`，不写新的客户端状态。
 - **口径**（`server/admin/sql.ts`）：按天一律北京时间切日（`lib/admin-range.ts` 给左闭右开时刻）；活跃 = events、ai_runs、generation_tasks、video_renders、photos、日常记录、健康助手、趣测的并集（只看 events 会漏不打点的链路）；现金收入只算实收（充值、增值单、实体单、历史作品单），冻干消耗单独统计不进收入；写真套餐里的单张不算进「创意照片」。`analytics.test.ts` 钉着这些口径。
 - **图表**按 dataviz 规范：分类色只用 `admin.css` 里 4 个经校验器验证的槽位，按固定顺序分配、第 5 类起并「其他」；每张图都能切数据表（浅色下青、黄两槽对底色不足 3:1，表格是补救）；热力图单色蓝阶，格内文字色逐阶指定 `--seq-text-N`。
+- **图片审核与封禁（2026-10-26，迁移 0046）**：`/admin/uploads` 把四类用户上传（宠物照片、头像、主人照片、记录附图）放进一个队列，读写在 `server/admin/uploads.ts`；按 `storage_key` 记 `upload_reviews`，没有记录即待审（换头像会重新进队列）。移除走各自原有的删除链路再记 `removed`，可同时封禁。封禁逻辑只在 `server/admin/user-suspension.ts`（用户详情页与审核页共用）：`requireUserId` 对封禁账号返回 403 `ACCOUNT_SUSPENDED`（不是 401，否则小程序会反复 wx.login），`getOptionalUserId` 按未登录处理，微信登录同样 403；小程序 `services/api.js` 收到后清会话跳登录页提示。
 - 旧 `/admin/wallet`、`/admin/business` 保留为重定向；`/api/admin/dashboard` 已删除。
 
 ### 小程序主题系统：token 是唯一样式来源，靠 validate 强制

@@ -5,7 +5,8 @@ import { assertAdmin } from "@/server/auth/admin";
 import { assertTrustedMutation } from "@/server/auth/request-guard";
 import { requireUserId } from "@/server/auth/session";
 import { getDatabase } from "@/server/db/client";
-import { AppError, routeError } from "@/server/errors";
+import { routeError } from "@/server/errors";
+import { setUserSuspension } from "@/server/admin/user-suspension";
 
 const querySchema = z.object({ q: z.string().max(120).optional(), status: z.enum(["all", "active", "suspended", "deleted"]).default("all") });
 
@@ -49,33 +50,7 @@ export async function POST(request: Request) {
     const actorId = await requireUserId(request);
     assertAdmin(actorId);
     const input = z.object({ action: z.enum(["suspend", "reactivate"]), userId: z.string().uuid(), reason: z.string().trim().min(2).max(200) }).parse(await request.json());
-    if (input.userId === actorId && input.action === "suspend") throw new AppError("SELF_SUSPEND_FORBIDDEN", "不能停用当前管理员账号", 409);
-    const database = await getDatabase();
-    const currentRows = await database.query("SELECT id,deleted_at,admin_suspended_at FROM users WHERE id=$1", [input.userId]);
-    if (!currentRows[0]) throw new AppError("USER_NOT_FOUND", "用户不存在", 404);
-    if (currentRows[0].deleted_at) throw new AppError("DELETED_ACCOUNT_NOT_REACTIVATABLE", "用户已主动注销，不能通过停用恢复", 409);
-    const rows = await database.query(
-      `UPDATE users
-       SET admin_suspended_at=CASE WHEN $2='suspend' THEN now() ELSE NULL END,
-           admin_suspended_by=CASE WHEN $2='suspend' THEN $3 ELSE NULL END,
-           admin_suspension_reason=CASE WHEN $2='suspend' THEN $4 ELSE NULL END
-       WHERE id=$1 AND deleted_at IS NULL
-       RETURNING id,deleted_at,admin_suspended_at,admin_suspension_reason`,
-      [input.userId, input.action, actorId, input.reason],
-    );
-    if (!rows[0]) throw new AppError("USER_NOT_FOUND", "用户不存在", 404);
-    if (input.action === "suspend") {
-      await Promise.all([
-        database.query("UPDATE works SET public=false,share_token=NULL,share_expires_at=NULL,share_access_code_hash=NULL WHERE user_id=$1 AND public=true", [input.userId]),
-        database.query("UPDATE memorial_spaces SET visibility='private',share_token=NULL,updated_at=now() WHERE user_id=$1 AND share_token IS NOT NULL", [input.userId]),
-        database.query("UPDATE annual_reports SET share_token=NULL,revoked_at=now() WHERE user_id=$1 AND share_token IS NOT NULL", [input.userId]),
-      ]);
-    }
-    await database.query(
-      "INSERT INTO audit_logs (id,user_id,actor_id,action,target_type,target_id,metadata,created_at) VALUES ($1,$2,$3,$4,'user',$5,$6::jsonb,$7)",
-      [crypto.randomUUID(), input.userId, actorId, `user_${input.action}`, input.userId, JSON.stringify({ reason: input.reason, before: currentRows[0], after: rows[0] }), new Date()],
-    );
-    return NextResponse.json({ data: rows[0] });
+    return NextResponse.json({ data: await setUserSuspension(actorId, input) });
   } catch (error) {
     return routeError(error);
   }

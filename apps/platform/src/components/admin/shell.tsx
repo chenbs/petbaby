@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Dialog } from "radix-ui";
 import {
   Activity, Clapperboard, FlaskConical, Flower2, LayoutDashboard, ListChecks, LogOut, Mail, Menu, Moon, PawPrint, Puzzle,
-  ReceiptText, ScrollText, Search, Sparkles, Star, Sun, TrendingUp, Users, Wallet, X,
+  ReceiptText, ScrollText, Search, ShieldCheck, Sparkles, Star, Sun, TrendingUp, Users, Wallet, X,
 } from "lucide-react";
 
 import { cn } from "./ui";
@@ -14,7 +14,7 @@ import { cn } from "./ui";
 type NavItem = { href: string; label: string; icon: typeof Activity; badgeKey?: keyof ShellBadges };
 type NavGroup = { title: string; items: NavItem[] };
 
-export type ShellBadges = { tasks?: number; orders?: number; messages?: number };
+export type ShellBadges = { tasks?: number; orders?: number; messages?: number; uploads?: number };
 
 const NAV: NavGroup[] = [
   { title: "分析", items: [
@@ -25,6 +25,7 @@ const NAV: NavGroup[] = [
   ] },
   { title: "运营", items: [
     { href: "/admin/users", label: "用户", icon: Users },
+    { href: "/admin/uploads", label: "图片审核", icon: ShieldCheck, badgeKey: "uploads" },
     { href: "/admin/orders", label: "订单与履约", icon: ReceiptText, badgeKey: "orders" },
     { href: "/admin/tasks", label: "任务监控", icon: ListChecks, badgeKey: "tasks" },
     { href: "/admin/messages", label: "消息与报告", icon: Mail, badgeKey: "messages" },

@@ -3,6 +3,7 @@ import { Toaster } from "sonner";
 
 import { AdminShell, THEME_BOOT_SCRIPT } from "@/components/admin/shell";
 import { attentionQueue } from "@/server/admin/analytics";
+import { pendingUploadCount } from "@/server/admin/uploads";
 import { isAdmin } from "@/server/auth/admin";
 import { getOptionalUserId } from "@/server/auth/session";
 import { getDatabase } from "@/server/db/client";
@@ -31,8 +32,9 @@ export default async function AdminLayout({ children }: Readonly<{ children: Rea
   const admin = userId ? isAdmin(userId) : false;
   let shell: React.ReactNode = children;
   if (userId && admin) {
-    const [attention, operatorRows] = await Promise.all([
+    const [attention, pendingUploads, operatorRows] = await Promise.all([
       attentionQueue(),
+      pendingUploadCount(),
       (await getDatabase()).query("SELECT display_name, account_name FROM users WHERE id=$1", [userId]),
     ]);
     const mode = runtimeMode();
@@ -45,6 +47,7 @@ export default async function AdminLayout({ children }: Readonly<{ children: Rea
           tasks: attention.failedAi + attention.failedTasks + attention.failedVideos + attention.staleTasks,
           orders: attention.physicalPending + attention.pendingRefunds,
           messages: attention.failedMessages,
+          uploads: pendingUploads,
         }}
       >
         {children}

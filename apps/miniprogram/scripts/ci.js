@@ -56,7 +56,8 @@ async function main() {
   } finally {
     const resolved = path.resolve(directory);
     if (path.dirname(resolved) !== path.resolve(os.tmpdir()) || !path.basename(resolved).startsWith("petbaby-miniprogram-")) throw new Error("拒绝清理不属于本次构建的目录");
-    await fs.rm(resolved, { recursive: true, force: true });
+    // 开发者工具可能仍占着临时目录（Windows 上 EBUSY）：上传已完成，清理失败只提示不报错
+    await fs.rm(resolved, { recursive: true, force: true }).catch((error) => console.warn("临时目录未能清理（" + error.code + "）：" + resolved));
   }
 }
 

@@ -121,7 +121,7 @@ test("结果海报带宠物照片、关键词贴纸和小程序码，并交给�
   const context = {
     setFillStyle: noop, fillRect: noop, setFontSize: noop, setGlobalAlpha: noop, setTextAlign: noop,
     setStrokeStyle: noop, setLineWidth: noop, setLineDash: noop, beginPath: noop, arc: noop, clip: noop,
-    stroke: noop, moveTo: noop, lineTo: noop, save: noop, restore: noop, translate: noop, rotate: noop,
+    stroke: noop, fill: noop, closePath: noop, moveTo: noop, lineTo: noop, save: noop, restore: noop, translate: noop, rotate: noop,
     drawImage(path) { drawn.images.push(path); },
     fillText(text) { drawn.texts.push(text); },
     draw(_reserve, callback) { callback(); }

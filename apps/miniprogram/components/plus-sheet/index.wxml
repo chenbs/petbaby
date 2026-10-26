@@ -1,0 +1,14 @@
+<view wx:if="{{visible}}" class="ps-mask" catchtouchmove="noop" bindtap="close">
+  <view class="ps-sheet" catchtap="noop">
+    <view class="ps-handle"></view>
+    <view class="ps-title">想做点什么？</view>
+    <view class="ps-grid">
+      <view wx:for="{{actions}}" wx:key="key" class="ps-item ps-item-{{item.key}}" data-key="{{item.key}}" aria-role="button" aria-label="{{item.title}}" hover-class="ps-item-hover" bindtap="choose">
+        <view class="ps-icon"><image class="ps-glyph" src="/assets/icons/{{themeId}}/{{item.icon}}.png" mode="aspectFit" /></view>
+        <text class="ps-name">{{item.title}}</text>
+        <text class="ps-sub">{{item.sub}}</text>
+      </view>
+    </view>
+    <view class="ps-cancel" aria-role="button" bindtap="close">取消</view>
+  </view>
+</view>

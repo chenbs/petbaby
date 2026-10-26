@@ -130,3 +130,4 @@
   <view class="dock-meta"><text class="dock-count">{{dockText}}</text><text wx:if="{{dockSub}}" class="small">{{dockSub}}</text></view>
   <t-button wx:if="{{packageMode !== 'single'}}" type="primary" anim="{{animType}}" bindtap="startBundle">下一步</t-button>
 </view>
+<t-plus-sheet id="plus-sheet" theme-id="{{themeId}}"></t-plus-sheet>

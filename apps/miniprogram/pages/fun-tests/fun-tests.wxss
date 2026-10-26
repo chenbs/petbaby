@@ -42,15 +42,28 @@
 .fun-secondary { border: 2rpx solid var(--primary); background: var(--card-background); color: var(--primary); }
 .fun-disclaimer { margin-top: var(--space-3); color: var(--text-secondary); font-size: var(--eyebrow-size); line-height: var(--lh-sm); }
 .fun-progress { height: 8rpx; overflow: hidden; margin-top: var(--space-3); border-radius: var(--radius-xs); background: var(--surface); }
-.fun-progress view { height: 100%; background: var(--primary); }
+.fun-progress view { height: 100%; background: var(--primary); transition: width .32s var(--ease-out); }
 .fun-quiz > .fun-eyebrow { display: block; margin-top: var(--space-6); }
 .fun-question { min-height: 160rpx; margin: var(--space-3) 0 var(--space-5); color: var(--text-primary); font-size: var(--font-h2); font-weight: var(--fw-bold); line-height: var(--lh-h2); overflow-wrap: anywhere; }
+/*
+ * 选项（2026-10-26 重做）：整行大圆角卡 + 圆形字母，选中填皮肤的选中色、字母变主按钮色并打勾；
+ * 换题时整题从右侧滑入，三个选项依次浮现。
+ */
 .fun-choices { display: grid; gap: var(--space-3); }
-.fun-choice { display: flex; width: 100%; min-height: 132rpx; align-items: center; gap: var(--space-3); padding: var(--space-3); border: 2rpx solid var(--border); border-radius: var(--radius-sm); background: var(--card-background); color: var(--text-primary); font-size: var(--body-size); line-height: var(--lh-body); text-align: left; }
-.fun-choice::after { border: 0; }
-.fun-choice-letter { display: flex; width: 54rpx; height: 54rpx; flex: none; align-items: center; justify-content: center; border-radius: var(--radius-xs); background: var(--surface); color: var(--primary); font-size: var(--small-size); font-weight: var(--fw-bold); }
-.fun-choice-text { flex: 1; }
-.fun-choice text:last-child { flex: none; }
+.fun-choice { display: flex; box-sizing: border-box; width: 100%; min-height: 116rpx; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-4); border: 3rpx solid var(--border); border-radius: var(--radius-lg); background: var(--card-background); box-shadow: var(--shadow-card); color: var(--text-primary); font-size: var(--body-size); font-weight: var(--fw-bold); line-height: var(--lh-body); transition: transform .15s var(--ease-out), border-color .2s, background-color .2s; }
+.fun-choice-hover { transform: scale(.98); }
+.fun-choice-on { border-color: var(--skin-tier-on-border, var(--primary)); background: var(--skin-tier-on-bg, var(--card-background)); }
+.fun-choice-letter { display: flex; width: 60rpx; height: 60rpx; flex: none; align-items: center; justify-content: center; border-radius: var(--radius-pill); background: var(--surface); color: var(--primary); font-size: var(--body-size); font-weight: var(--fw-black); transition: background-color .2s, color .2s; }
+.fun-choice-on .fun-choice-letter { background: var(--button-primary); color: var(--button-primary-text); }
+.fun-choice-text { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.fun-choice-mark { width: 40rpx; flex: none; color: var(--primary); font-weight: var(--fw-black); text-align: center; }
+.fun-q-anim { animation: fun-q-in .34s var(--ease-out) both; }
+.fun-q-anim .fun-choice { animation: fun-choice-in .36s var(--ease-out) both; }
+.fun-q-anim .fun-choice:nth-child(1) { animation-delay: 80ms; }
+.fun-q-anim .fun-choice:nth-child(2) { animation-delay: 150ms; }
+.fun-q-anim .fun-choice:nth-child(3) { animation-delay: 220ms; }
+@keyframes fun-q-in { from { opacity: 0; transform: translateX(56rpx); } to { opacity: 1; transform: translateX(0); } }
+@keyframes fun-choice-in { from { opacity: 0; transform: translateY(20rpx); } to { opacity: 1; transform: translateY(0); } }
 .fun-hint { margin-top: var(--space-4); color: var(--text-secondary); font-size: var(--small-size); }
 .fun-thinking { display: flex; min-height: 58vh; flex-direction: column; align-items: center; justify-content: center; padding: var(--space-8) var(--space-4); text-align: center; }
 .fun-thinking-mark { position: relative; display: flex; width: 176rpx; height: 176rpx; align-items: center; justify-content: center; border-radius: var(--radius-pill); background: var(--surface); color: var(--primary); }
@@ -84,10 +97,9 @@
 .fun-closing { margin-top: var(--space-5); padding-top: var(--space-4); border-top: 2rpx solid var(--divider); color: var(--primary); font-size: var(--body-size); font-weight: var(--fw-bold); line-height: var(--lh-body); }
 .fun-result-actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); margin-top: var(--space-5); }
 .fun-result-actions button { width: 100%; }
-.fun-copy { padding: var(--space-3); color: var(--primary); font-size: var(--small-size); font-weight: var(--fw-bold); text-align: center; }
 .fun-result-footer { margin-top: var(--space-4); color: var(--primary); font-size: var(--small-size); font-weight: var(--fw-bold); }
 .fun-result-footer view:last-child { color: var(--text-secondary); font-weight: var(--fw-normal); }
 .fun-share-error { padding: var(--space-8) 0; text-align: center; }
 .fun-share-error view { color: var(--text-primary); font-size: var(--font-h2); font-weight: var(--fw-bold); }
 .fun-share-error text { display: block; margin: var(--space-3) 0 var(--space-5); color: var(--text-secondary); font-size: var(--body-size); }
-.fun-poster-canvas { position: absolute; left: -10000rpx; top: 0; width: 600rpx; height: 1000rpx; pointer-events: none; }
+.fun-poster-canvas { position: absolute; left: -10000rpx; top: 0; width: 600rpx; height: 1070rpx; pointer-events: none; }

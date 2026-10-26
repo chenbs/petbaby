@@ -32,9 +32,20 @@
   <view wx:if="{{!loading && stage === 'question' && test}}" class="fun-quiz">
     <view class="fun-quiz-top"><view bindtap="previous">← 上一题</view><text>{{questionIndex + 1}} / {{test.questionCount}}</text></view>
     <view class="fun-progress"><view style="width: {{progress}}%;"></view></view>
-    <text class="fun-eyebrow">想想 {{petName}} 平时的样子</text>
-    <view class="fun-question">{{question.prompt}}</view>
-    <view class="fun-choices"><button wx:for="{{question.choices}}" wx:key="*this" class="fun-choice" data-index="{{index}}" bindtap="chooseAnswer" disabled="{{busy}}"><text class="fun-choice-letter">{{index === 0 ? 'A' : index === 1 ? 'B' : 'C'}}</text><text class="fun-choice-text">{{item}}</text><text>→</text></button></view>
+    <!-- 每道题按题号重建节点：换题时新题从右侧滑入、选项依次浮现（2026-10-26） -->
+    <block wx:for="{{[questionIndex]}}" wx:for-item="qi" wx:key="*this">
+      <view class="fun-q-anim">
+        <text class="fun-eyebrow">想想 {{petName}} 平时的样子</text>
+        <view class="fun-question">{{question.prompt}}</view>
+        <view class="fun-choices">
+          <view wx:for="{{question.options}}" wx:for-item="choice" wx:key="index" class="fun-choice {{picked === choice.index ? 'fun-choice-on' : ''}}" data-index="{{choice.index}}" aria-role="button" aria-label="{{choice.text}}" hover-class="fun-choice-hover" bindtap="chooseAnswer">
+            <text class="fun-choice-letter">{{choice.letter}}</text>
+            <text class="fun-choice-text">{{choice.text}}</text>
+            <text class="fun-choice-mark">{{picked === choice.index ? '✓' : ''}}</text>
+          </view>
+        </view>
+      </view>
+    </block>
     <view class="fun-hint">选最像我平时样子的答案就好。</view>
   </view>
 
@@ -62,7 +73,6 @@
       <view class="fun-disclaimer">{{result.disclaimer}}</view>
     </view>
     <view class="fun-result-actions"><button class="fun-primary" open-type="share">转发结果</button><button class="fun-secondary" bindtap="savePoster" disabled="{{busy}}">{{busy ? '生成中…' : '保存海报'}}</button></view>
-    <view class="fun-copy" bindtap="copyLink">复制网页链接</view>
     <view class="fun-result-footer"><view bindtap="retry">再测一次</view><view wx:if="{{ownResult}}" bindtap="deleteResult">删除这份结果</view></view>
   </view>
 

@@ -7,6 +7,12 @@ const resultRevealMs = 2600;
 
 function coverPath(cover) { return manifest.funTests[cover] || "/assets/fun-tests/" + cover + ".jpg"; }
 
+/** 选项预先算好字母与序号：嵌套 wx:for 里的 index 在换题重建节点时取不到（实测全显示成 C、选中态也不亮）。 */
+function withOptions(question) {
+  if (!question) return question;
+  return Object.assign({}, question, { options: (question.choices || []).map((text, index) => ({ text, index, letter: "ABCDEF".charAt(index) || String(index + 1) })) });
+}
+
 function visibleTest(test) {
   return Object.assign({}, test, { coverPath: coverPath(test.cover) });
 }
@@ -19,7 +25,7 @@ function drawParagraph(context, text, x, y, maxChars, lineHeight, maxLines) {
   return y + lines.length * lineHeight;
 }
 
-const POSTER = { bg: "#FFFAF3", band: "#FFD0A1", ink: "#1F2540", ink2: "#5B6178", accent: "#B7401A", stickers: ["#FFD45C", "#CFE6FF", "#BDEBCB"] };
+const POSTER = { bg: "#FFF6EC", bgDeep: "#FFE3C8", card: "#FFFFFF", ink: "#2A2140", ink2: "#6B6480", accent: "#E8603C", gold: "#F5B83D", line: "#F0DCC8", stickers: ["#FFD45C", "#CFE6FF", "#BDEBCB"] };
 
 /** 取得海报可用的本地图片（含尺寸）。任何一步失败都返回 null，海报照样能画，只是少一张图。 */
 function posterImage(src, withSession) {
@@ -41,59 +47,125 @@ function drawCover(context, image, x, y, w, h) {
   context.drawImage(image.path, (image.width - sw) / 2, (image.height - sh) / 2, sw, sh, x, y, w, h);
 }
 
+/** 圆角矩形路径（旧基础库没有 roundRect）。 */
+function roundRect(context, x, y, w, h, r) {
+  context.beginPath();
+  context.moveTo(x + r, y);
+  context.lineTo(x + w - r, y);
+  context.arc(x + w - r, y + r, r, -Math.PI / 2, 0);
+  context.lineTo(x + w, y + h - r);
+  context.arc(x + w - r, y + h - r, r, 0, Math.PI / 2);
+  context.lineTo(x + r, y + h);
+  context.arc(x + r, y + h - r, r, Math.PI / 2, Math.PI);
+  context.lineTo(x, y + r);
+  context.arc(x + r, y + r, r, Math.PI, Math.PI * 1.5);
+  context.closePath();
+}
+
+/** 底纹：稀疏的小爪印。 */
+function drawPaws(context, width, height) {
+  context.setFillStyle(POSTER.bgDeep);
+  for (let row = 0; row * 64 < height; row += 1) {
+    for (let col = 0; col * 72 < width + 72; col += 1) {
+      const x = col * 72 + (row % 2) * 36 + 18; const y = row * 64 + 26;
+      context.beginPath(); context.arc(x, y + 5, 7, 0, Math.PI * 2); context.fill();
+      [[-7, -5], [-2, -9], [3, -9], [8, -5]].forEach(([dx, dy]) => { context.beginPath(); context.arc(x + dx, y + dy, 2.6, 0, Math.PI * 2); context.fill(); });
+    }
+  }
+}
+
+/*
+ * 结果海报（2026-10-26 重做）：爪印底纹 → 顶部品牌行 → 白卡（大照片 + 结果名 + 关键词贴纸 + 描述）→ 底部小程序码条。
+ * 配色固定为品牌暖色，不跟随用户当前主题（海报是对外物料）。
+ */
 function drawPoster(context, options) {
   const { width, height, result, coverImage, petImage, codeImage } = options;
-  const band = Math.round(height * 0.44);
+  const pad = Math.round(width * 0.06);
   context.setFillStyle(POSTER.bg);
   context.fillRect(0, 0, width, height);
-  context.setFillStyle(POSTER.band);
-  context.fillRect(0, 0, width, band);
-  if (coverImage) { context.setGlobalAlpha(0.28); drawCover(context, coverImage, 0, 0, width, band); context.setGlobalAlpha(1); }
-  const radius = Math.round(width * 0.24); const cx = width / 2; const cy = Math.round(band * 0.5);
-  if (petImage) {
-    context.save(); context.beginPath(); context.arc(cx, cy, radius, 0, Math.PI * 2); context.clip();
-    drawCover(context, petImage, cx - radius, cy - radius, radius * 2, radius * 2);
-    context.restore();
-  }
-  context.beginPath(); context.arc(cx, cy, radius, 0, Math.PI * 2); context.setStrokeStyle("#FFFFFF"); context.setLineWidth(6); context.stroke();
-  const spots = [[0.1, 0.16, -0.14], [0.66, 0.26, 0.12], [0.16, 0.72, 0.09]];
-  (result.outcome.keywords || []).slice(0, 3).forEach((word, index) => {
-    const label = "#" + word; const [px, py, angle] = spots[index];
-    context.setFontSize(12);
-    const w = label.length * 12 + 20;
-    context.save(); context.translate(width * px, band * py); context.rotate(angle);
-    context.setFillStyle(POSTER.stickers[index]); context.fillRect(0, 0, w, 24);
-    context.setFillStyle(POSTER.ink); context.fillText(label, 10, 17);
-    context.restore();
-  });
-  context.setTextAlign("center");
-  context.setFillStyle(POSTER.ink2); context.setFontSize(12);
-  context.fillText("经过 10 道题，" + result.petName + "的隐藏性格是", cx, band + 30);
-  context.setFillStyle(POSTER.accent); context.setFontSize(28);
-  context.fillText(result.outcome.name, cx, band + 68);
+  drawPaws(context, width, height);
+
+  // 顶部品牌行
   context.setTextAlign("left");
-  context.setFillStyle(POSTER.ink); context.setFontSize(13);
-  const textWidth = width - 40;
-  let y = drawParagraph(context, result.outcome.description, 20, band + 98, Math.floor(textWidth / 13), 21, 3);
-  context.setFillStyle(POSTER.ink2); context.setFontSize(12);
-  drawParagraph(context, result.outcome.closing, 20, y + 10, Math.floor(textWidth / 12), 19, 2);
-  const footTop = height - 86;
-  context.setStrokeStyle("#E9D6C2"); context.setLineWidth(1); context.setLineDash && context.setLineDash([4, 4]);
-  context.beginPath(); context.moveTo(20, footTop); context.lineTo(width - 20, footTop); context.stroke();
-  context.setLineDash && context.setLineDash([]);
-  const codeSize = 62;
-  if (codeImage) context.drawImage(codeImage.path, 20, footTop + 12, codeSize, codeSize);
-  const textX = codeImage ? 20 + codeSize + 12 : 20;
-  context.setFillStyle(POSTER.ink); context.setFontSize(14);
-  context.fillText("你家的是哪种主角？", textX, footTop + 38);
+  context.setFillStyle(POSTER.accent); context.setFontSize(13);
+  context.fillText("麻麻抱我 · 宠物趣味测试", pad, pad + 10);
+  context.setTextAlign("right");
   context.setFillStyle(POSTER.ink2); context.setFontSize(11);
-  context.fillText("长按识别，免费测一测 · 仅供娱乐", textX, footTop + 60);
+  context.fillText(result.testTitle || "", width - pad, pad + 10);
+
+  // 白卡
+  const cardX = pad; const cardY = pad + 26; const cardW = width - pad * 2;
+  const footH = 92; const cardH = height - cardY - footH - pad;
+  context.save();
+  context.setShadow && context.setShadow(0, 6, 16, "rgba(120,70,30,0.16)");
+  context.setFillStyle(POSTER.card); roundRect(context, cardX, cardY, cardW, cardH, 18); context.fill();
+  context.restore();
+
+  // 照片：卡片上半部，圆角裁切
+  const photoPad = 12; const photoX = cardX + photoPad; const photoY = cardY + photoPad;
+  const photoW = cardW - photoPad * 2; const photoH = Math.round(photoW * 0.82);
+  const photo = petImage || coverImage;
+  context.save(); roundRect(context, photoX, photoY, photoW, photoH, 12); context.clip();
+  context.setFillStyle(POSTER.bgDeep); context.fillRect(photoX, photoY, photoW, photoH);
+  if (photo) drawCover(context, photo, photoX, photoY, photoW, photoH);
+  context.restore();
+
+  // 照片左下角的结果徽章
+  const badge = "我的隐藏性格";
+  context.setFontSize(11);
+  const badgeW = badge.length * 11 + 20;
+  context.setFillStyle(POSTER.gold); roundRect(context, photoX + 10, photoY + photoH - 32, badgeW, 22, 11); context.fill();
+  context.setTextAlign("left"); context.setFillStyle(POSTER.ink); context.fillText(badge, photoX + 20, photoY + photoH - 17);
+
+  // 宠物名 + 结果名
+  const textX = cardX + 18; let y = photoY + photoH + 30;
+  context.setFillStyle(POSTER.ink2); context.setFontSize(13);
+  context.fillText((result.petName || "") + " 是一只", textX, y);
+  y += 34;
+  context.setFillStyle(POSTER.accent); context.setFontSize(28);
+  context.fillText(result.outcome.name, textX, y);
+
+  // 关键词贴纸（同一行，略微错落）
+  y += 16;
+  let stickerX = textX;
+  (result.outcome.keywords || []).slice(0, 3).forEach((word, index) => {
+    const label = "#" + word;
+    context.setFontSize(12);
+    const w = label.length * 12 + 18;
+    context.save(); context.translate(stickerX, y); context.rotate(index % 2 ? 0.05 : -0.05);
+    context.setFillStyle(POSTER.stickers[index]); roundRect(context, 0, 0, w, 24, 6); context.fill();
+    context.setFillStyle(POSTER.ink); context.fillText(label, 9, 17);
+    context.restore();
+    stickerX += w + 8;
+  });
+
+  // 描述
+  y += 48;
+  context.setFillStyle(POSTER.ink); context.setFontSize(13);
+  const textWidth = cardW - 36;
+  y = drawParagraph(context, result.outcome.description, textX, y, Math.floor(textWidth / 13), 21, 3);
+  if (result.outcome.closing && y + 30 < cardY + cardH) {
+    context.setFillStyle(POSTER.accent); context.setFontSize(12);
+    drawParagraph(context, "“" + result.outcome.closing + "”", textX, y + 8, Math.floor(textWidth / 12), 19, 1);
+  }
+
+  // 底部小程序码条
+  const footY = height - footH - pad + 12;
+  context.setFillStyle(POSTER.card); roundRect(context, pad, footY, width - pad * 2, footH - 12, 14); context.fill();
+  const codeSize = 60; const codeX = pad + 12; const codeY = footY + (footH - 12 - codeSize) / 2;
+  if (codeImage) context.drawImage(codeImage.path, codeX, codeY, codeSize, codeSize);
+  const footText = codeImage ? codeX + codeSize + 12 : pad + 16;
+  context.setTextAlign("left");
+  context.setFillStyle(POSTER.ink); context.setFontSize(15);
+  context.fillText("你家的是哪种主角？", footText, footY + 32);
+  context.setFillStyle(POSTER.ink2); context.setFontSize(11);
+  context.fillText("长按识别小程序码，免费测一测 · 仅供娱乐", footText, footY + 54);
 }
 
 themedPage({
   data: {
     stage: "list", tests: [], history: [], pets: [], test: null, petName: "",
-    answers: [], questionIndex: 0, progress: 0, question: null, result: null,
+    answers: [], questionIndex: 0, progress: 0, question: null, result: null, picked: -1,
     ownResult: false, loading: true, busy: false, error: ""
   },
   onLoad(query) {
@@ -136,7 +208,7 @@ themedPage({
     this.setData({ busy: true, error: "" });
     try {
       const test = await api.request("/api/fun-tests/" + encodeURIComponent(id));
-      this.setData({ test: visibleTest(test), answers: [], questionIndex: 0, stage: "intro" });
+      this.setData({ test: visibleTest(test), answers: [], questionIndex: 0, picked: -1, stage: "intro" });
     } catch (error) { this.setData({ error: error.message }); }
     finally { this.setData({ busy: false }); }
   },
@@ -151,7 +223,7 @@ themedPage({
     this.setData({ busy: true, error: "" });
     try {
       await api.request("/api/fun-tests/" + encodeURIComponent(test.id) + "/start", { method: "POST", data: {} });
-      this.setData({ stage: "question", questionIndex: 0, progress: 100 / test.questions.length, question: test.questions[0], answers: [] });
+      this.setData({ stage: "question", questionIndex: 0, picked: -1, progress: 100 / test.questions.length, question: withOptions(test.questions[0]), answers: [] });
     } catch (error) {
       if (error.statusCode === 401) {
         this.setData({ error: "请先登录，再来测测我" });
@@ -162,18 +234,25 @@ themedPage({
   previous() {
     const index = this.data.questionIndex;
     if (!index) return this.setData({ stage: "intro", error: "" });
-    this.setData({ questionIndex: index - 1, progress: index * 100 / this.data.test.questions.length, question: this.data.test.questions[index - 1], error: "" });
+    // 回到上一题时把当时选的那项亮出来，再点一次就前进
+    const previousAnswer = this.data.answers[index - 1];
+    this.setData({ questionIndex: index - 1, progress: index * 100 / this.data.test.questions.length, question: withOptions(this.data.test.questions[index - 1]), picked: typeof previousAnswer === "number" ? previousAnswer : -1, error: "" });
   },
   async chooseAnswer(event) {
-    if (this.data.busy) return;
+    if (this.data.busy || this._advancing) return;
     const index = Number(event.currentTarget.dataset.index);
     const test = this.data.test;
     const current = this.data.questionIndex;
     const answers = this.data.answers.slice();
     answers[current] = index;
-    this.setData({ answers, error: "" });
+    // 先亮出选中项，停一小会儿再换题（新题节点按题号重建，自带滑入动画）
+    this.setData({ answers, picked: index, error: "" });
     if (current < test.questions.length - 1) {
-      this.setData({ questionIndex: current + 1, progress: (current + 2) * 100 / test.questions.length, question: test.questions[current + 1] });
+      this._advancing = true;
+      setTimeout(() => {
+        this._advancing = false;
+        this.setData({ questionIndex: current + 1, progress: (current + 2) * 100 / test.questions.length, question: withOptions(test.questions[current + 1]), picked: -1 });
+      }, 260);
       return;
     }
     this.setData({ busy: true, stage: "thinking" });
@@ -197,10 +276,7 @@ themedPage({
     this.openTest({ currentTarget: { dataset: { id: result.testId } } });
   },
   backToList() { this.load(); },
-  copyLink() {
-    if (!this.data.result) return;
-    wx.setClipboardData({ data: config.apiBaseUrl + "/fun-tests/share/" + this.data.result.shareToken });
-  },
+
   deleteResult() {
     const result = this.data.result;
     if (!result || !this.data.ownResult) return;
@@ -218,7 +294,7 @@ themedPage({
     });
   },
   /*
-   * 结果海报（2026-09 改版）：宠物照片 + 结果名 + 三个关键词贴纸 + 小程序码。
+   * 结果海报（2026-09 改版，2026-10-26 重做版式见 drawPoster）：宠物照片 + 结果名 + 关键词贴纸 + 小程序码。
    * 原海报只有文字，发到朋友圈没有照片、也扫不进小程序，拉新能力几乎为零。
    * 海报是品牌物料，配色固定为橘子汽水，不跟随用户当前主题。
    */
@@ -234,7 +310,7 @@ themedPage({
         result.shareToken ? posterImage(config.apiBaseUrl + "/api/fun-test-share/" + encodeURIComponent(result.shareToken) + "/code") : Promise.resolve(null)
       ]);
       const width = Math.round(wx.getSystemInfoSync().windowWidth * 0.8);
-      const height = Math.round(width * 5 / 3);
+      const height = Math.round(width * 16 / 9);
       const context = wx.createCanvasContext("funTestPoster", this);
       drawPoster(context, { width, height, result, coverImage, petImage: petImage || coverImage, codeImage });
       await new Promise((resolve) => context.draw(false, resolve));

@@ -48,7 +48,9 @@ function loadPage(name, dependencies, wx, file) {
       return {};
     },
     Component: (options) => { definition = options; },
-    wx, console, setTimeout, clearTimeout
+    wx, console, setTimeout, clearTimeout,
+    getCurrentPages: wx.getCurrentPages || (() => []),
+    getApp: wx.getApp || (() => ({ globalData: {} }))
   });
   const page = Object.assign({}, definition, definition.methods || {}, {
     data: JSON.parse(JSON.stringify(definition.data)),
@@ -259,21 +261,62 @@ test("日常记录 ↔ 健康助手：上一页就是目标页时返回而不是
   assert.deepEqual(urls, ["/pages/health/health?petId=A"]);
 });
 
-test("底栏「＋」：收好照片 / 记一笔日常 / 问健康助手", () => {
+test("底栏「＋」：当前页挂了抽屉就打开抽屉，否则回落系统菜单（一键出片 / 搞怪玩法 / 记日常）", () => {
   const urls = [];
+  const tabs = [];
   let sheet;
+  let opened = 0;
+  const app = { globalData: {} };
+  let pages = [{ route: "pages/index/index", selectComponent: (id) => (id === "#plus-sheet" ? { open: () => { opened += 1; } } : null) }];
   const tabbar = loadPage("", {}, {
     vibrateShort() {},
     showActionSheet: (options) => { sheet = options; },
     navigateTo: (item) => urls.push(item.url),
-    switchTab() {}
+    switchTab: (item) => tabs.push(item.url),
+    getCurrentPages: () => pages,
+    getApp: () => app
   }, "custom-tab-bar/index.js");
   tabbar.switchTab({ currentTarget: { dataset: { index: 2 } } });
-  assert.deepEqual(plain(sheet.itemList), ["收好照片", "记一笔日常", "问问健康助手"]);
+  assert.equal(opened, 1);
+  assert.equal(sheet, undefined);
+
+  pages = [{ route: "pages/work/work" }];
+  tabbar.switchTab({ currentTarget: { dataset: { index: 2 } } });
+  assert.deepEqual(plain(sheet.itemList), ["一键出片", "搞怪玩法", "记日常"]);
   sheet.success({ tapIndex: 1 });
-  sheet.success({ tapIndex: 2 });
+  assert.equal(app.globalData.createSegment, "all");
   sheet.success({ tapIndex: 0 });
-  assert.deepEqual(urls, ["/pages/records/records", "/pages/health/health", "/pages/photos/photos?mode=record&entry=tabbar"]);
+  assert.equal(app.globalData.createSegment, "pet");
+  sheet.success({ tapIndex: 2 });
+  assert.deepEqual(tabs, ["/pages/art-photo/art-photo", "/pages/art-photo/art-photo"]);
+  assert.deepEqual(urls, ["/pages/records/records"]);
+});
+
+test("「＋」抽屉：出片与搞怪跳创作对应分段，已在创作页时直接切分段，记日常进日常记录", () => {
+  const urls = [];
+  const tabs = [];
+  const segments = [];
+  const app = { globalData: {} };
+  let pages = [{ route: "pages/me/me" }];
+  const sheet = loadPage("", {}, {
+    navigateTo: (item) => urls.push(item.url),
+    switchTab: (item) => tabs.push(item.url),
+    getCurrentPages: () => pages,
+    getApp: () => app
+  }, "components/plus-sheet/index.js");
+  assert.deepEqual(plain(sheet.data.actions.map((item) => item.title)), ["一键出片", "搞怪玩法", "记日常"]);
+  sheet.open();
+  assert.equal(sheet.data.visible, true);
+  sheet.choose({ currentTarget: { dataset: { key: "fun" } } });
+  assert.equal(sheet.data.visible, false);
+  assert.equal(app.globalData.createSegment, "all");
+  assert.deepEqual(tabs, ["/pages/art-photo/art-photo"]);
+  pages = [{ route: "pages/art-photo/art-photo", chooseSegment: (event) => segments.push(event.currentTarget.dataset.id) }];
+  sheet.choose({ currentTarget: { dataset: { key: "art" } } });
+  assert.deepEqual(segments, ["pet"]);
+  assert.equal(tabs.length, 1);
+  sheet.choose({ currentTarget: { dataset: { key: "records" } } });
+  assert.deepEqual(urls, ["/pages/records/records"]);
 });
 
 test("宠物档案「···」：在世的宠物有日常记录与健康助手，已离开的没有", () => {

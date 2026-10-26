@@ -78,3 +78,4 @@
     </view>
   </block>
 </view>
+<t-plus-sheet id="plus-sheet" theme-id="{{themeId}}"></t-plus-sheet>

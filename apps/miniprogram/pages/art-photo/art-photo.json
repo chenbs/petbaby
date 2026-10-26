@@ -3,6 +3,7 @@
   "usingComponents": {
     "t-button": "../../components/button/index",
     "t-notice": "../../components/notice/index",
-    "t-skeleton": "../../components/skeleton/index"
+    "t-skeleton": "../../components/skeleton/index",
+    "t-plus-sheet": "../../components/plus-sheet/index"
   }
 }

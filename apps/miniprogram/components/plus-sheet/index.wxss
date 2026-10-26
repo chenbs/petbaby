@@ -1,0 +1,113 @@
+@import "../shared.wxss";
+
+.ps-mask {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 60;
+  display: flex;
+  align-items: flex-end;
+  background: var(--mask);
+  animation: ps-fade var(--transition-duration) var(--transition-easing);
+}
+
+@keyframes ps-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.ps-sheet {
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--space-3) var(--page-padding) calc(var(--space-4) + env(safe-area-inset-bottom));
+  border-radius: var(--card-radius) var(--card-radius) 0 0;
+  background: var(--card-background);
+  box-shadow: var(--shadow-float);
+  animation: ps-up var(--dur-slow) var(--ease-out);
+}
+
+@keyframes ps-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.ps-handle {
+  width: 72rpx;
+  height: 8rpx;
+  margin: 0 auto var(--space-3);
+  border-radius: var(--radius-pill);
+  background: var(--divider);
+}
+
+.ps-title {
+  color: var(--text-primary);
+  font-family: var(--skin-title-font, inherit);
+  font-size: var(--font-h3);
+  font-weight: var(--fw-black);
+}
+
+/* 三个等宽大块：图标 + 标题 + 一行说明 */
+.ps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
+.ps-item {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-4) var(--space-2) var(--space-3);
+  border: var(--card-border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  text-align: center;
+  clip-path: var(--skin-clip, none);
+}
+
+.ps-item-hover {
+  transform: var(--skin-press, scale(.97));
+}
+
+.ps-icon {
+  display: flex;
+  width: 88rpx;
+  height: 88rpx;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-1);
+  border: var(--card-border);
+  border-radius: var(--radius-pill);
+  background: var(--card-background);
+  box-shadow: var(--shadow-card);
+}
+
+.ps-glyph {
+  width: 48rpx;
+  height: 48rpx;
+}
+
+.ps-name {
+  color: var(--text-primary);
+  font-size: var(--body-size);
+  font-weight: var(--fw-black);
+}
+
+.ps-sub {
+  color: var(--text-secondary);
+  font-size: var(--eyebrow-size);
+  line-height: var(--lh-sm);
+}
+
+.ps-cancel {
+  margin-top: var(--space-4);
+  padding: var(--space-3) 0;
+  color: var(--text-secondary);
+  font-size: var(--body-size);
+  text-align: center;
+}

@@ -34,6 +34,15 @@
           <block wx:else>{{pet.companionText}}</block>
           <text wx:if="{{pet.photoCount}}"> · {{pet.photoCount}} 张照片</text>
         </view>
+        <!--
+          换主题（2026-10-26）：名字下方一行四个小色点，点一下即时切换，不跳页。
+          放在文字流里而不是绝对定位：手账相册的邮戳、赛博街机的编号都占着名片右上角。
+          色点用主题自己的预览色（theme/index.js 的 preview），由 JS 拼成内联样式，不在 .wxss 写色值。
+        -->
+        <view class="theme-dots" aria-role="radiogroup" aria-label="切换主题">
+          <text class="theme-dots-label">换主题</text>
+          <view wx:for="{{themeDots}}" wx:key="id" class="theme-dot {{item.id === themeId ? 'theme-dot-on' : ''}}" style="{{item.style}}" data-id="{{item.id}}" aria-role="radio" aria-checked="{{item.id === themeId}}" aria-label="{{item.name}}" catchtap="switchTheme"></view>
+        </view>
       </view>
       <view class="pet-camera" aria-role="button" aria-label="记录今天" hover-class="pet-feature-hover" bindtap="record">
         <image class="pet-camera-icon" src="/assets/icons/{{themeId}}/camera.png" mode="aspectFit" />
@@ -84,10 +93,6 @@
       <view class="human-card-scan" aria-hidden="true"></view>
       <view wx:for="{{humanCovers}}" wx:key="templateId" wx:if="{{index < 3}}" class="human-card-cover human-card-cover-{{index}}" data-id="{{item.templateId}}" aria-role="button" aria-label="{{item.title}}" bindtap="openHuman">
         <image wx:if="{{item.sampleUrl}}" class="human-card-image img-load" src="{{item.sampleUrl}}" mode="aspectFill" webp data-kind="human" data-id="{{item.templateId}}" data-src="{{item.sampleUrl}}" binderror="onImageError" bindload="{{img.ready}}" />
-      </view>
-      <view class="human-card-origin" aria-hidden="true">
-        <image wx:if="{{petDisplayUrl}}" class="human-card-origin-image img-load" src="{{petDisplayUrl}}" mode="aspectFill" bindload="{{img.ready}}" />
-        <text>{{pet ? pet.name + '的照片 →' : '用我的照片试试 →'}}</text>
       </view>
     </view>
     <text class="human-card-cap">上传一张我的正脸照，看看我变成人是什么样子</text>

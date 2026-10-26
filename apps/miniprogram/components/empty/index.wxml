@@ -4,8 +4,13 @@
   也无法跟随主题变化。纯 CSS 图形吃 currentColor，四套皮肤自动适配。
   每个图形由 3 个空 view 拼出，具体形状见 index.wxss。
 -->
+<!--
+  2026-10-26：空状态改用一张宠物写真小图（assets/empty/<icon>.jpg，各 6–12KB，进主包）。
+  原先的纯 CSS 线条插画在真机上看起来像占位符，用户觉得「奇怪」。没有对应图片的 icon 仍回落到线条画。
+-->
 <view class="empty">
-  <view class="empty-art empty-art-{{icon}} {{clay ? 'empty-art-on-clay' : ''}}">
+  <image wx:if="{{photo}}" class="empty-photo" src="/assets/empty/{{photo}}.jpg" mode="aspectFill" />
+  <view wx:else class="empty-art empty-art-{{icon}} {{clay ? 'empty-art-on-clay' : ''}}">
     <!-- 黏土底座放在 .empty-art 内部：它已是 position:relative，可直接 inset:0 对齐 -->
     <view wx:if="{{clay}}" class="empty-plinth"></view>
     <view class="empty-part empty-part-a"></view>

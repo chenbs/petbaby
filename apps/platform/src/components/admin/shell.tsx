@@ -186,7 +186,7 @@ function GlobalSearch() {
         id="admin-search"
         value={value}
         onChange={(event) => setValue(event.target.value)}
-        placeholder="搜索用户 ID、昵称、openid、订单号…"
+        placeholder="搜索用户 ID、昵称、短 ID、订单号…"
         className="h-9 w-full rounded-lg border border-line bg-surface pl-9 pr-14 text-sm text-ink placeholder:text-muted focus:border-focus focus:outline-none focus:ring-2 focus:ring-[color-mix(in_srgb,var(--focus)_25%,transparent)]"
       />
       <kbd className="pointer-events-none absolute right-2.5 top-1/2 hidden -translate-y-1/2 rounded border border-line bg-surface-2 px-1.5 font-mono text-[10px] text-muted sm:block">Ctrl K</kbd>

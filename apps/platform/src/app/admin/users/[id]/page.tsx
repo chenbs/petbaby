@@ -79,6 +79,7 @@ export default async function UserDetailPage({ params }: Props) {
           <CardBody>
             <KeyValue items={[
               { label: "状态", value: deleted ? <Badge tone="neutral">已注销</Badge> : suspended ? <Badge tone="critical">已封禁</Badge> : <Badge tone="good">正常</Badge> },
+              { label: "短 ID", value: user.invite_code ? <Mono>{String(user.invite_code)}</Mono> : "—" },
               { label: "用户 ID", value: <Mono>{id}</Mono> },
               { label: "登录方式", value: [user.wechat ? "微信" : null, user.password ? "账号密码" : null].filter(Boolean).join(" · ") || "—" },
               { label: "账号名", value: String(user.account_name || "—") },

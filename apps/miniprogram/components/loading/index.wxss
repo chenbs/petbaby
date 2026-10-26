@@ -41,10 +41,15 @@
   justify-content: center;
 }
 
+/*
+ * border-box：默认 content-box 下 6rpx 边框让圆环实际是 124rpx，整体向右下偏 6rpx，
+ * 而居中的百分比数字仍按 112rpx 居中，看起来数字不在圆心（星夜影院用的就是这个 glow 动画）。
+ */
 .ring-arc {
   position: absolute;
   top: 0;
   left: 0;
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
   border: 6rpx solid var(--divider);
@@ -59,9 +64,12 @@
 }
 
 .ring-value {
+  position: relative;
   color: var(--text-primary);
   font-size: var(--small-size);
   font-weight: var(--fw-bold);
+  line-height: 1;
+  text-align: center;
 }
 
 /* neon：脉冲 */
@@ -76,6 +84,7 @@
 
 .pulse-core {
   position: absolute;
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
   border: 3rpx solid var(--primary);

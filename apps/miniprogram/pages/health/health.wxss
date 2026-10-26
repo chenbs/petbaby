@@ -98,3 +98,9 @@
 .section-head { justify-content: space-between; }
 .link { color: var(--primary); font-weight: var(--fw-bold); }
 .records-toggle { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-1); margin-top: var(--space-4); }
+
+/* 分诊结果里的说明与条目：从小字档提到正文档，免责与条目都要读得清（2026-10-26） */
+.health-result .small {
+  font-size: var(--body-size);
+  line-height: var(--lh-body);
+}

@@ -49,7 +49,7 @@
         <!-- 按地址重建节点：点缩略图换图时新节点从加载态开始，下载期间显示呼吸占位而不是空白 -->
         <block wx:if="{{previewUrl}}"><image wx:for="{{[previewUrl]}}" wx:for-item="url" wx:key="*this" class="effect-preview-image img-load" src="{{url}}" mode="aspectFill" bindload="{{img.ready}}" /></block>
         <view wx:else class="effect-preview-image style-thumb-blank">样片暂不可用</view>
-        <text class="ai-mask-inline effect-preview-label">示例效果 · 换成{{petText || '我'}}</text>
+        <text class="ai-mask-inline effect-preview-label">示例效果 · 给{{petText || '宝宝'}}做一张</text>
       </view>
       <scroll-view wx:if="{{templateId === 'pet-art-photo' && sceneOptions.length > 1}}" class="effect-strip" scroll-x show-scrollbar="{{false}}" scroll-left="{{effectScrollLeft}}" scroll-with-animation>
         <view wx:for="{{sceneOptions}}" wx:key="id" id="effect-{{item.id}}" class="effect-thumb {{sceneId === item.id ? 'effect-thumb-on' : ''}}" data-id="{{item.id}}" aria-role="radio" aria-checked="{{sceneId === item.id}}" aria-label="{{item.title}}" bindtap="chooseScene">
@@ -95,7 +95,11 @@
       <block wx:if="{{activeTemplate && activeTemplate.subjectMode === 'owner-pet'}}">
         <view class="section">
           <view class="section-title">主人照片授权</view>
-          <checkbox-group bindchange="toggleAuthorization"><label class="small"><checkbox value="confirmed" checked="{{authorizationConfirmed}}" />照片中的本人已同意用于本次 AI 生图</label></checkbox-group>
+          <!-- 2026-10-26：原生 checkbox 在各主题下是系统绿框，换成整行可点的主题化勾选 -->
+          <view class="consent-row {{authorizationConfirmed ? 'consent-row-on' : ''}}" aria-role="checkbox" aria-checked="{{authorizationConfirmed}}" hover-class="option-hover" bindtap="toggleAuthorization">
+            <view class="consent-box"><text wx:if="{{authorizationConfirmed}}" class="consent-mark">✓</text></view>
+            <text class="consent-text">照片中的本人已同意用于本次 AI 生图</text>
+          </view>
         </view>
         <view class="section">
           <view class="row"><view class="section-title flush">主人身份照</view><text class="small">选择 1 张</text></view>

@@ -57,9 +57,9 @@ export async function listPets(userId: string) {
             COALESCE(m.count, 0) AS memorial_count,
             m.since AS memorial_since
        FROM pets p
-       LEFT JOIN (SELECT pet_id, COUNT(*) AS count FROM works WHERE deleted_at IS NULL GROUP BY pet_id) w ON w.pet_id = p.id
-       LEFT JOIN (SELECT pet_id, COUNT(*) AS count FROM photos WHERE deleted_at IS NULL GROUP BY pet_id) ph ON ph.pet_id = p.id
-       LEFT JOIN (SELECT pet_id, COUNT(*) AS count, MIN(created_at) AS since FROM memorial_spaces WHERE deleted_at IS NULL GROUP BY pet_id) m ON m.pet_id = p.id
+       LEFT JOIN (SELECT pet_id, COUNT(*) AS count FROM works WHERE user_id = $1 AND deleted_at IS NULL GROUP BY pet_id) w ON w.pet_id = p.id
+       LEFT JOIN (SELECT pet_id, COUNT(*) AS count FROM photos WHERE user_id = $1 AND deleted_at IS NULL GROUP BY pet_id) ph ON ph.pet_id = p.id
+       LEFT JOIN (SELECT pet_id, COUNT(*) AS count, MIN(created_at) AS since FROM memorial_spaces WHERE user_id = $1 AND deleted_at IS NULL GROUP BY pet_id) m ON m.pet_id = p.id
       WHERE p.user_id = $1 AND p.deleted_at IS NULL
       ORDER BY p.is_default DESC, p.created_at`,
     [userId],
@@ -180,7 +180,7 @@ async function createGenerationOperation(userId: string, input: unknown): Promis
 
   /*
    * 先扣冻干，再执行任务（36 号文第 2 章）：付费玩法在入队的同一事务里扣费，产物直接是正式版；
-   * 改文案重新生成同样按现价再扣一次（扣一次生成一次）。免费玩法每天 10 次。
+   * 改文案重新生成同样按现价再扣一次（扣一次生成一次）。免费玩法每天 5 次（2026-10-26 由 10 次下调）。
    * 调用方 createGeneration 已锁住用户行，免费次数的计数不会被并发请求穿透。
    */
   const memorial = pet.lifeStage === "memorial";

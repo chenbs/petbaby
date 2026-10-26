@@ -133,16 +133,16 @@ describe("persistent platform service", () => {
     expect(listed.counts).toEqual({ works: 0, photos: 0, memorials: 0 });
   });
 
-  it("keeps idempotent tasks and limits free plugins to ten a day", async () => {
+  it("keeps idempotent tasks and limits free plugins to five a day", async () => {
     const first = await setupGeneration();
     const repeated = await createGeneration(USER_A, { pluginId: "pet-movie-poster", petId: first.pet.id, photoIds: [first.photo.id], idempotencyKey: "request-key-0001" });
     expect(repeated.id).toBe(first.task.id);
     // 新人礼 3 颗 + 补 2 颗，扣了 5 颗；重复提交不重复扣。
     expect((await getWallet(USER_A)).balance).toBe(0);
-    for (let index = 0; index < 10; index += 1) {
+    for (let index = 0; index < 5; index += 1) {
       await createGeneration(USER_A, { pluginId: "pet-id-card", petId: first.pet.id, photoIds: [first.photo.id], idempotencyKey: `free-card-${index}-key` });
     }
-    await expect(createGeneration(USER_A, { pluginId: "pet-id-card", petId: first.pet.id, photoIds: [first.photo.id], idempotencyKey: "free-card-over-key" })).rejects.toThrow("今天的免费生成已用完 10 次");
+    await expect(createGeneration(USER_A, { pluginId: "pet-id-card", petId: first.pet.id, photoIds: [first.photo.id], idempotencyKey: "free-card-over-key" })).rejects.toThrow("今天的免费生成已用完 5 次");
   });
 
   it("grants the newcomer gift once per account and records it in the ledger", async () => {
@@ -461,16 +461,16 @@ describe("免费玩法", () => {
     expect((await getWallet(USER_A)).balance).toBe(2);
   });
 
-  it("免费玩法每天十次，重新生成也计次；付费与纪念册不占免费次数", async () => {
+  it("免费玩法每天五次，重新生成也计次；付费与纪念册不占免费次数", async () => {
     const work = await generateFree();
     const photo = (await listPhotos(USER_A, work.petId))[0];
-    for (let index = 1; index < 10; index += 1) {
+    for (let index = 1; index < 5; index += 1) {
       await createGeneration(USER_A, { pluginId: "pet-id-card", petId: work.petId, photoIds: [photo.id], sourceWorkId: work.id, idempotencyKey: `free-count-${index}` });
     }
-    expect((await getUserStatus(USER_A)).quota).toMatchObject({ daily: 10, used: 10, remaining: 0 });
-    await expect(createGeneration(USER_A, { pluginId: "pet-id-card", petId: work.petId, photoIds: [photo.id], sourceWorkId: work.id, idempotencyKey: "free-eleventh" })).rejects.toMatchObject({ code: "DAILY_QUOTA_USED" });
+    expect((await getUserStatus(USER_A)).quota).toMatchObject({ daily: 5, used: 5, remaining: 0 });
+    await expect(createGeneration(USER_A, { pluginId: "pet-id-card", petId: work.petId, photoIds: [photo.id], sourceWorkId: work.id, idempotencyKey: "free-sixth" })).rejects.toMatchObject({ code: "DAILY_QUOTA_USED" });
     await fundWallet(USER_A, 3);
-    await createGeneration(USER_A, { pluginId: "pet-movie-poster", petId: work.petId, photoIds: [photo.id], idempotencyKey: "paid-after-ten" });
+    await createGeneration(USER_A, { pluginId: "pet-movie-poster", petId: work.petId, photoIds: [photo.id], idempotencyKey: "paid-after-five" });
     await (await getDatabase()).query("UPDATE pets SET life_stage='memorial' WHERE id=$1", [work.petId]);
     const albumPhotoIds = [photo.id];
     for (let index = 1; index < 6; index += 1) {
@@ -480,7 +480,7 @@ describe("免费玩法", () => {
       albumPhotoIds.push(albumPhoto.id);
     }
     await createGeneration(USER_A, { pluginId: "pet-time-album", petId: work.petId, photoIds: albumPhotoIds, idempotencyKey: "memorial-free-album" });
-    expect((await getUserStatus(USER_A)).quota.used).toBe(10);
+    expect((await getUserStatus(USER_A)).quota.used).toBe(5);
     // 新人礼 3 颗 + 补 3 颗，海报扣 5 颗，纪念画册免费
     expect((await getWallet(USER_A)).balance).toBe(1);
   });

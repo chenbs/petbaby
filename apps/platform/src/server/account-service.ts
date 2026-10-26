@@ -6,12 +6,15 @@ import { getDatabase, inTransaction } from "@/server/db/client";
 import { processObjectCleanupJob, queueObjectCleanup } from "@/server/object-cleanup";
 import { AppError } from "@/server/errors";
 import { softDeletePetResources } from "@/server/photo-deletion-service";
+import { ensureInviteCode } from "@/server/invite-service";
 
 export async function getAccountProfile(userId: string): Promise<AccountProfile> {
   const database = await getDatabase();
-  const rows = await database.query("SELECT id,display_name,created_at,deleted_at FROM users WHERE id=$1", [userId]);
+  const rows = await database.query("SELECT id,display_name,invite_code,created_at,deleted_at FROM users WHERE id=$1", [userId]);
   if (!rows[0] || rows[0].deleted_at) throw new AppError("ACCOUNT_NOT_FOUND", "账户不存在", 404);
-  return { id: String(rows[0].id), displayName: rows[0].display_name ? String(rows[0].display_name) : undefined, createdAt: new Date(String(rows[0].created_at)).toISOString() };
+  // 短 ID 复用邀请码：每个账号一个、终身不变、后台可搜（2026-10-26）。老账号没有时这里补发。
+  const shortId = rows[0].invite_code ? String(rows[0].invite_code) : await ensureInviteCode(userId);
+  return { id: String(rows[0].id), shortId, displayName: rows[0].display_name ? String(rows[0].display_name) : undefined, createdAt: new Date(String(rows[0].created_at)).toISOString() };
 }
 
 export async function updateAccountProfile(userId: string, input: unknown) {

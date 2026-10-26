@@ -135,19 +135,6 @@
   flex: none;
 }
 
-/*
- * 星夜影院的名片留了右侧票根位（padding-right 148rpx + 打孔），建档卡没有票根内容，收回右边距。
- * 必须用 .pet-card.onboard-card 提高优先级：.skin-night .pet-card 写在文件后面，同等优先级会把这里盖掉，
- * 建档卡就只剩左边一窄条（2026-10-26 真机反馈）。
- */
-.skin-night .pet-card.onboard-card {
-  padding-right: var(--space-4);
-}
-
-.skin-night .pet-card.onboard-card::before,
-.skin-night .pet-card.onboard-card::after {
-  display: none;
-}
 
 .pet-card-main {
   display: grid;
@@ -938,39 +925,11 @@
 /* =====================================================================
  * 星夜影院：电影票根名片、「正在上映」海报墙、导演精选胶片条
  * ===================================================================== */
-.skin-night .pet-card {
-  padding-right: 148rpx;
-}
-
-/* 票根两侧的打孔 */
-.skin-night .pet-card::before,
-.skin-night .pet-card::after {
-  position: absolute;
-  right: 116rpx;
-  width: 32rpx;
-  height: 32rpx;
-  border-radius: var(--radius-pill);
-  background: var(--background);
-  content: "";
-}
-
-.skin-night .pet-card::before {
-  top: -16rpx;
-}
-
-.skin-night .pet-card::after {
-  bottom: -16rpx;
-}
-
-.skin-night .pet-card-top {
-  padding-right: var(--space-3);
-  border-right: 2rpx dashed var(--border);
-}
-
+/*
+ * 星夜影院原先把名片做成「票根」：右侧留 148rpx 只放相机按钮，「今日一拍」和照顾条都被挤到左边（2026-10-26 真机反馈）。
+ * 改回与其他主题相同的布局，只保留描边相机与数字辉光这两处影院味道。
+ */
 .skin-night .pet-camera {
-  position: absolute;
-  top: var(--space-5);
-  right: var(--space-3);
   border: 2rpx solid var(--primary);
   background: transparent;
   box-shadow: none;
@@ -1235,4 +1194,29 @@
 
 .skin-film .pet-care {
   border-top-style: dashed;
+}
+
+/* ---------- 名片里的换主题色点（2026-10-26） ---------- */
+.theme-dots {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+
+.theme-dots-label {
+  color: var(--text-secondary);
+  font-size: var(--eyebrow-size);
+}
+
+.theme-dot {
+  width: 30rpx;
+  height: 30rpx;
+  box-sizing: border-box;
+  border: 2rpx solid var(--border);
+  border-radius: var(--radius-pill);
+}
+
+.theme-dot-on {
+  border: 4rpx solid var(--text-primary);
 }

@@ -47,7 +47,7 @@ export const ANNUAL_REPORT_COST = 18;
 export const HEALTH_DOCUMENT_COST = 6;
 
 /** 免费玩法每天可生成的次数（付费玩法由冻干约束，不占这个次数）。 */
-export const FREE_DAILY_GENERATIONS = 10;
+export const FREE_DAILY_GENERATIONS = 5;
 
 /** 任务失败后系统自动重试的次数；仍失败则全额退还冻干。 */
 export const AUTO_RETRY_LIMIT = 2;

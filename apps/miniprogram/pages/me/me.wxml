@@ -17,11 +17,12 @@
       <view wx:else class="me-avatar me-avatar-empty">{{displayName[0]}}</view>
       <view class="me-identity">
         <view class="me-name">{{displayName}}</view>
+        <view wx:if="{{profile.shortId}}" class="me-uid" aria-role="button" aria-label="复制我的 ID" bindtap="copyShortId">ID {{profile.shortId}}<text class="me-uid-copy">复制</text></view>
         <text class="small">{{status && status.refunds.length ? status.refunds.length + ' 笔退款处理中' : '已登录 · 照片和作品都会一直保存在这里'}}</text>
       </view>
       <view class="me-bell" aria-role="button" aria-label="通知" bindtap="openNotifications">
         <image class="me-bell-icon" src="/assets/icons/{{themeId}}/ic-bell.png" mode="aspectFit" />
-        <text wx:if="{{status.notifications.length}}" class="me-bell-dot"></text>
+        <text wx:if="{{noticeUnread}}" class="me-bell-dot"></text>
       </view>
     </view>
 
@@ -52,10 +53,13 @@
       </view>
     </view>
 
-    <view wx:if="{{status.notifications.length}}" id="me-notices" class="me-group">
-      <text class="me-group-title">通知</text>
+    <view wx:if="{{notices.length || noticeMore}}" id="me-notices" class="me-group">
+      <view class="row me-notice-head">
+        <text class="me-group-title">通知{{noticeUnread ? ' · ' + noticeUnread + ' 条未读' : ''}}</text>
+        <text wx:if="{{noticeMore || noticesExpanded}}" class="small me-notice-toggle" aria-role="button" bindtap="toggleNotices">{{noticesExpanded ? '收起' : '查看全部'}}</text>
+      </view>
       <view class="stack-tight">
-        <view wx:for="{{status.notifications}}" wx:key="id" class="notice-entry" data-id="{{item.id}}" data-path="{{item.target_path}}" aria-role="button" hover-class="entry-hover" bindtap="openNotification">
+        <view wx:for="{{notices}}" wx:key="id" class="notice-entry {{item.read_at ? 'notice-read' : ''}}" data-id="{{item.id}}" data-path="{{item.target_path}}" aria-role="button" hover-class="entry-hover" bindtap="openNotification">
           <t-notice type="info" message="{{item.title}}：{{item.body}}"></t-notice>
         </view>
       </view>

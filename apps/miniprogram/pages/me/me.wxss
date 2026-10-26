@@ -59,3 +59,12 @@
 /* 赛博街机：方形头像、直角图标块；手账相册：拍立得头像 */
 .skin-brand .me-avatar, .skin-brand .me-pet-avatar, .skin-brand .me-row-icon { border-radius: 0; }
 .skin-film .me-avatar { border-radius: 0; padding: var(--space-1) var(--space-1) var(--space-3); background: var(--card-background); box-shadow: var(--shadow-image); transform: rotate(-4deg); }
+
+/* 用户短 ID（2026-10-26）：昵称下一行，等宽数字字体，点按复制 */
+.me-uid { display: inline-flex; align-items: center; gap: var(--space-2); color: var(--text-secondary); font-family: var(--skin-num-font, inherit); font-size: var(--small-size); font-weight: var(--fw-bold); letter-spacing: var(--ls-kicker); }
+.me-uid-copy { padding: 0 var(--space-1); border: 2rpx solid var(--border); border-radius: var(--radius-pill); font-family: inherit; font-size: var(--eyebrow-size); letter-spacing: 0; }
+
+/* 通知收起（2026-10-26）：默认只摆未读前 3 条，已读的展开后变淡 */
+.me-notice-head { align-items: baseline; }
+.me-notice-toggle { color: var(--primary); font-weight: var(--fw-bold); }
+.notice-read { opacity: .6; }

@@ -289,7 +289,10 @@ themedPage(Object.assign({}, wallet.walletSheetMethods, {
         method: "POST",
         data: { petId: pet.id, description: this.data.description, includeRecords: this.data.includeRecords },
       });
-      this.setData({ result: this.decorate(session), description: "", busy: false });
+      // 结果出在表单下方，按钮还停在原处时用户看不到：渲染完滚到结果顶部（2026-10-26）
+      this.setData({ result: this.decorate(session), description: "", busy: false }, () => {
+        if (wx.pageScrollTo) wx.pageScrollTo({ selector: "#health-result", offsetTop: -16, duration: 300 });
+      });
       this.load();
     } catch (error) {
       this.setData({ busy: false, error: error.message || "暂时不可用，请稍后再试" });

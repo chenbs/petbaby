@@ -350,4 +350,5 @@ export type AiRun = {
 };
 export type VideoRender = { id: string; userId: string; pluginId: string; status: "queued" | "processing" | "preview_ready" | "ready" | "failed" | "cancelled"; progress: number; outputKey?: string; workId?: string; errorCode?: string; createdAt: string };
 export type Membership = { id: string; userId: string; plan: "monthly" | "yearly"; status: "pending" | "trial" | "active" | "past_due" | "expired"; quota: number; used: number; expiresAt: string; orderId?: string };
-export type AccountProfile = { id: string; displayName?: string; createdAt: string };
+/** shortId：给用户看、报给客服的短号，复用邀请码（8 位，不含 0/1/I/L/O）。 */
+export type AccountProfile = { id: string; shortId?: string; displayName?: string; createdAt: string };

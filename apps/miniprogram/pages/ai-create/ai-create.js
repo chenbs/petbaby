@@ -248,9 +248,8 @@ themedPage(Object.assign({}, wallet.walletSheetMethods, {
     const id = event.detail.id;
     this.setData({ ownerPhotoIds: this.data.ownerPhotoIds[0] === id ? [] : [id], error: "" });
   },
-  toggleAuthorization(event) {
-    const values = event.detail.value || [];
-    this.setData({ authorizationConfirmed: values.indexOf("confirmed") >= 0, error: "" });
+  toggleAuthorization() {
+    this.setData({ authorizationConfirmed: !this.data.authorizationConfirmed, error: "" });
   },
   uploadOwnerPhoto() {
     if (!this.data.authorizationConfirmed) return this.setData({ error: "请先确认照片中的本人已同意用于本次 AI 生图" });

@@ -26,7 +26,7 @@ const ENTRY_URLS = {
 };
 
 themedPage({
-  data: { profile: null, status: null, hero: null, pets: [], hasMemorialPet: false, loading: true, error: "", themeName: "", displayName: "微信用户", groups: [], walletBalance: null },
+  data: { profile: null, status: null, hero: null, pets: [], hasMemorialPet: false, loading: true, error: "", themeName: "", displayName: "微信用户", groups: [], walletBalance: null, notices: [], noticeUnread: 0, noticeMore: 0, noticesExpanded: false },
   onShow() {
     const tabbar = this.getTabBar && this.getTabBar();
     if (tabbar) tabbar.setData({ selected: 3 });
@@ -38,11 +38,36 @@ themedPage({
     wallet.getWallet().then((balance) => { this.setData({ walletBalance: balance.balance }); this.buildGroups(); }).catch(() => undefined);
     this.loadHero();
   },
+  /**
+   * 账户与额度。切回这个 tab 时沿用上次的数据原地刷新，不再整页清成骨架屏（2026-10-26：切 tab 慢的主要观感来源）。
+   * 只有首次进入（还没有数据）才显示骨架。
+   */
   loadAccount() {
-    this.setData({ profile: null, status: null, loading: true, error: "" });
+    this.setData({ loading: !this.data.profile, error: "" });
     Promise.all([api.request("/api/account"), api.request("/api/account/status")])
-      .then((result) => this.setData({ profile: result[0], status: result[1], displayName: result[0] && result[0].displayName || "微信用户", loading: false }))
+      .then((result) => {
+        this.setData({ profile: result[0], status: result[1], displayName: result[0] && result[0].displayName || "微信用户", loading: false });
+        this.buildNotices();
+      })
       .catch((error) => this.setData({ loading: false, error: error.message || "账户资料加载失败" }));
+  },
+  /**
+   * 通知（2026-10-26）：默认只摆未读的前 3 条，其余收起；没有未读时整块不出现，铃铛也不亮。
+   * 服务端仍下发最近 20 条（含已读），「查看全部」在本页展开，不另开页面。
+   */
+  buildNotices() {
+    const all = (this.data.status && this.data.status.notifications) || [];
+    const unread = all.filter((item) => !item.read_at);
+    const expanded = this.data.noticesExpanded;
+    this.setData({
+      notices: expanded ? all : unread.slice(0, 3),
+      noticeUnread: unread.length,
+      noticeMore: expanded ? 0 : all.length - Math.min(3, unread.length)
+    });
+  },
+  toggleNotices() {
+    this.setData({ noticesExpanded: !this.data.noticesExpanded });
+    this.buildNotices();
   },
   /** 三组入口。纪念空间只在有 senior / memorial 宠物时出现，与宠物档案页的规则一致。 */
   buildGroups() {
@@ -65,7 +90,7 @@ themedPage({
         ] },
         { title: "设置", items: [
           { key: "theme", name: "外观", icon: "ic-gear", tone: "plain", side: this.data.themeName },
-          { key: "account", name: "账户与隐私", icon: "ic-lock", tone: "plain", sub: "数据导出与账号注销" },
+          { key: "account", name: "账户与隐私", icon: "ic-lock", tone: "plain", sub: "昵称、法务文档与账号注销" },
           { key: "login", name: "登录与退出", icon: "ic-user", tone: "plain" }
         ] }
       ]
@@ -126,9 +151,14 @@ themedPage({
   /** 铃铛：有通知时滚到通知区，没有就提示一句。 */
   openNotifications() {
     if (!this.data.status || !this.data.status.notifications.length) return wx.showToast({ title: "暂时没有新通知", icon: "none" });
+    if (!this.data.notices.length) { this.setData({ noticesExpanded: true }); this.buildNotices(); }
     wx.pageScrollTo({ selector: "#me-notices", duration: 200 });
   },
   openPet(event) { const id = event.currentTarget.dataset.id; wx.navigateTo({ url: "/pages/timeline/timeline?petId=" + encodeURIComponent(id) }); },
+  copyShortId() {
+    const id = this.data.profile && this.data.profile.shortId;
+    if (id) wx.setClipboardData({ data: id, success: () => wx.showToast({ title: "已复制，联系客服时报这个号", icon: "none" }) });
+  },
   openTimeline() { if (this.data.hero) wx.navigateTo({ url: "/pages/timeline/timeline?petId=" + encodeURIComponent(this.data.hero.id) }); else this.openPets(); },
   /**
    * 点通知跳到对应页面，并记为已读。
@@ -136,7 +166,13 @@ themedPage({
    */
   openNotification(event) {
     const { id, path } = event.currentTarget.dataset;
-    if (id) api.request("/api/notifications/" + id, { method: "POST", data: {} }).catch(() => undefined);
+    if (id) {
+      api.request("/api/notifications/" + id, { method: "POST", data: {} }).catch(() => undefined);
+      // 本地先记为已读，回到这页时这条就不再占位
+      const list = (this.data.status && this.data.status.notifications) || [];
+      const index = list.findIndex((item) => item.id === id);
+      if (index >= 0 && !list[index].read_at) { this.setData({ ["status.notifications[" + index + "].read_at"]: new Date().toISOString() }); this.buildNotices(); }
+    }
     const target = String(path || "");
     const work = /^\/works\/([0-9a-f-]{36})$/.exec(target);
     const create = /^\/create\/([^/?]+)/.exec(target);

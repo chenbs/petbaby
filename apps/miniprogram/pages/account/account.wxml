@@ -33,18 +33,11 @@
       </view>
     </view>
 
-    <!-- 数据与隐私区 -->
-    <view class="section">
-      <view class="section-title">数据与隐私</view>
-      <view class="account-content">
-        <text class="muted">导出内容包含你的宠物档案、照片记录与作品清单，格式为 JSON。</text>
-        <t-button type="secondary" block anim="{{animType}}" bindtap="exportData">导出我的数据</t-button>
-        <view class="legal-links">
-          <text class="legal-link" data-doc="privacy" bindtap="openLegal">隐私政策</text>
-          <text class="legal-link" data-doc="terms" bindtap="openLegal">用户协议</text>
-          <text class="legal-link" data-doc="refund" bindtap="openLegal">退款规则</text>
-        </view>
-      </view>
+    <!-- 2026-10-26：去掉「数据与隐私」与数据导出；法务文档入口保留（审核要求随时可查），挂在页面上不单独成块 -->
+    <view class="legal-links">
+      <text class="legal-link" data-doc="privacy" bindtap="openLegal">隐私政策</text>
+      <text class="legal-link" data-doc="terms" bindtap="openLegal">用户协议</text>
+      <text class="legal-link" data-doc="refund" bindtap="openLegal">退款规则</text>
     </view>
 
     <!-- 危险区：置于页面最底部 -->

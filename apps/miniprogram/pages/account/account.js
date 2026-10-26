@@ -1,6 +1,5 @@
 const api = require("../../services/api");
 const { clearRecordDrafts } = require("../../services/photo-upload-session");
-const config = require("../../config");
 const { themedPage } = require("../../theme/page-mixin");
 
 themedPage({
@@ -28,16 +27,6 @@ themedPage({
     api.request("/api/account", { method: "PATCH", data: { displayName: this.data.name } })
       .then((profile) => this.setData({ profile, saving: false, notice: "资料已保存", noticeType: "success" }))
       .catch((error) => this.setData({ saving: false, notice: error.message, noticeType: "error" }));
-  },
-  exportData() {
-    wx.showLoading({ title: "准备导出" });
-    wx.downloadFile({
-      url: config.apiBaseUrl + "/api/account/export",
-      header: { authorization: "Bearer " + wx.getStorageSync("petbaby_session") },
-      success: (result) => wx.openDocument({ filePath: result.tempFilePath, fileType: "json" }),
-      fail: () => this.setData({ notice: "导出失败，请稍后再试", noticeType: "error" }),
-      complete: () => wx.hideLoading()
-    });
   },
   openLegal(event) { wx.navigateTo({ url: "/pages/legal/legal?doc=" + event.currentTarget.dataset.doc }); },
   askDelete() { this.setData({ confirmDelete: true }); },

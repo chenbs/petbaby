@@ -4,6 +4,9 @@
  * 插画为纯 CSS 单色线条（UI 重构方案 3.6 禁用 emoji）：不引入图片资源，
  * 吃 currentColor 自动跟随四套主题。icon 取 paw / photo / order / work / pet。
  */
+/** 有写真小图的 icon → assets/empty/ 下的文件名；paw 与 pet 共用一张。 */
+const PHOTO_ICONS = { work: "work", pet: "pet", paw: "pet", photo: "photo", order: "order" };
+
 Component({
   properties: {
     icon: { type: String, value: "paw" },
@@ -19,6 +22,10 @@ Component({
      * 3.6 明确去掉的「与线条图形抢注意力的容器边框」。
      */
     clay: { type: Boolean, value: false }
+  },
+  data: { photo: "" },
+  observers: {
+    icon(value) { this.setData({ photo: PHOTO_ICONS[value] || "" }); }
   },
   methods: {
     handleAction() { this.triggerEvent("action"); }

@@ -41,8 +41,8 @@
 
       <text class="small pet-counts">{{item.counts.photos}} 张照片 · {{item.counts.works}} 件作品 · {{item.counts.memorials}} 个纪念日</text>
       <view class="pet-actions">
-        <t-button type="primary" size="mini" anim="{{animType}}" data-id="{{item.id}}" bindtap="record">收好照片</t-button>
-        <t-button type="secondary" size="mini" anim="{{animType}}" data-id="{{item.id}}" bindtap="timeline">时间线</t-button>
+        <t-button class="pet-action" type="secondary" size="mini" block anim="{{animType}}" data-id="{{item.id}}" bindtap="record">收好照片</t-button>
+        <t-button class="pet-action" type="secondary" size="mini" block anim="{{animType}}" data-id="{{item.id}}" bindtap="timeline">时间线</t-button>
         <!--
           纪念空间入口挂在**这只宠物的上下文**里（改造项 L4）。
 
@@ -53,9 +53,9 @@
           没有弹窗、没有引导、不主动提起。晚年阶段的用户如果需要它，
           它就在那只宠物旁边；不需要的用户看不到它。
         -->
-        <t-button type="ghost" size="mini" anim="{{animType}}" data-id="{{item.id}}" bindtap="edit">编辑</t-button>
-        <!-- 设为默认 / 纪念空间 / 删除这类低频操作收进「…」（2026-09），一行只留三个按钮 -->
-        <t-button type="ghost" size="mini" anim="{{animType}}" data-id="{{item.id}}" aria-label="更多操作" bindtap="openMore">···</t-button>
+        <t-button class="pet-action" type="secondary" size="mini" block anim="{{animType}}" data-id="{{item.id}}" bindtap="edit">编辑</t-button>
+        <!-- 设为默认 / 纪念空间 / 删除这类低频操作收进「…」（2026-09），一行只留三个按钮。2026-10-26：四个按钮统一成同一种次级样式，等宽排开 -->
+        <t-button class="pet-action-more" type="secondary" size="mini" anim="{{animType}}" data-id="{{item.id}}" aria-label="更多操作" bindtap="openMore">···</t-button>
       </view>
     </view>
   </view>

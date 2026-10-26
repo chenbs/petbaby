@@ -192,3 +192,14 @@
   letter-spacing: var(--ls-tight);
   line-height: var(--lh-h3);
 }
+
+/* 空状态写真小图：圆角方图 + 图片阴影，四套皮肤共用 --radius-image-thumb 与 --shadow-image */
+.empty-photo {
+  display: block;
+  width: 240rpx;
+  height: 240rpx;
+  margin-bottom: var(--space-2);
+  border-radius: var(--radius-image-thumb);
+  background: var(--surface);
+  box-shadow: var(--shadow-image);
+}

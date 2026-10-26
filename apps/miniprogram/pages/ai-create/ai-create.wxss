@@ -239,3 +239,11 @@
 
 /* 玩法一句话说明（2026-10-26） */
 .ai-entry-desc { display: block; margin-top: var(--space-1); }
+
+/* 主人照片授权（2026-10-26）：整行可点，方形勾选框选中时填主按钮色 */
+.consent-row { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-2); padding: var(--space-3); border: 2rpx solid var(--border); border-radius: var(--radius-md); background: var(--card-background); }
+.consent-row-on { border-color: var(--skin-tier-on-border, var(--primary)); background: var(--skin-tier-on-bg, var(--card-background)); }
+.consent-box { display: flex; width: 40rpx; height: 40rpx; flex: none; box-sizing: border-box; align-items: center; justify-content: center; border: 4rpx solid var(--text-secondary); border-radius: var(--radius-xs); }
+.consent-row-on .consent-box { border-color: var(--button-primary); background: var(--button-primary); }
+.consent-mark { color: var(--button-primary-text); font-size: var(--small-size); font-weight: var(--fw-black); line-height: 1; }
+.consent-text { flex: 1; color: var(--text-primary); font-size: var(--body-size); font-weight: var(--fw-bold); line-height: var(--lh-sm); }

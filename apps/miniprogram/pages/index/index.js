@@ -3,6 +3,7 @@ const api = require("../../services/api");
 const acquisition = require("../../services/acquisition");
 const companion = require("../../services/companion");
 const { themedPage } = require("../../theme/page-mixin");
+const themeManager = require("../../theme/manager");
 const { displayMediaTree } = require("../../services/photo-files");
 const { manifest, pluginSample, imageEntries } = require("../../services/sample-assets");
 const { HOME_COPY } = require("../../theme/home-copy");
@@ -45,6 +46,13 @@ function arrangePlays(plugins) {
 
 function cost(value) { return typeof value === "number" ? wallet.costText(value) : ""; }
 
+/** 名片上的换主题色点：底色取主题底色，中心点取主色。测试替身的 manager 可能没有 listThemes，按空列表处理。 */
+const THEME_DOTS = (typeof themeManager.listThemes === "function" ? themeManager.listThemes() : []).map((item) => ({
+  id: item.id,
+  name: item.name,
+  style: "background:" + item.preview[0] + ";box-shadow:inset 0 0 0 8rpx " + item.preview[0] + ",inset 0 0 0 40rpx " + item.preview[1] + ";"
+}));
+
 /** 写真馆入口的起价：单张价格从套餐接口取，不在端上写死；拿不到就只说有几套布景。 */
 function artPriceText(packages) {
   const single = packages && packages.single;
@@ -57,6 +65,7 @@ themedPage({
     plugins: [], loading: true, error: "",
     humanTemplateCount: 0, humanCovers: [],
     bossCoverUrl: "", bossTemplates: [], bossScenes: [], duoCovers: [], duoGroupCount: 0, studioStrip: [], bossLead: null, bossNote: "", artPriceText: "36 套 · 去写真馆", copy: HOME_COPY,
+    themeDots: THEME_DOTS,
     chips: [{ id: "all", label: "全部" }], chip: "all", feed: [], feedLeft: [], feedRight: [],
     /** 无宠物时建档卡下方的见面礼说明。颗数 / 有效期取 /api/wallet 的 newcomerGift，拿不到或已领过就不显示 */
     onboardGift: "",
@@ -237,6 +246,13 @@ themedPage({
       }
       this.setData(patch);
     } catch (error) { if (view === this._view) this.setData({ petLoading: false, recordError: error.message }); }
+  },
+  switchTheme(event) {
+    const id = event.currentTarget.dataset.id;
+    if (!id || id === themeManager.getThemeId()) return;
+    themeManager.setTheme(id);
+    const theme = THEME_DOTS.find((item) => item.id === id);
+    if (theme) wx.showToast({ title: "已换成" + theme.name, icon: "none" });
   },
   defaultMoment(pet) {
     if (pet.lifeStage === "memorial") return { kind: "record", eyebrow: "今天", title: "想我的时候，就回来看看", action: "看看 ›" };

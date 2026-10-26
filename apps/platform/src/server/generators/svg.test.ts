@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import sharp from "sharp";
 
-import { generateGrowthCompare, generateMoviePoster, generateTimeAlbum } from "@/server/generators/svg";
+import { generateGrowthCompare, generateIdCard, generateMoviePoster, generateTimeAlbum } from "@/server/generators/svg";
 import { imageProvider } from "@/server/ai/provider";
 import type { GeneratorInput } from "@/server/generators/types";
 import { generationInputSchema } from "@/domain/models";
@@ -132,5 +132,43 @@ describe("电影海报与时光画册主题", () => {
       expect(output.files.some((file) => file.suffix === "png")).toBe(true);
       expect(await sharp(Buffer.from(output.files.find((file) => file.suffix === "png")!.body)).metadata()).toMatchObject({ width: 1080, height: 2500 });
     }
+  });
+});
+
+describe("generateIdCard", () => {
+  const card = async (documentType: string, pet: Partial<Pet> = {}) => {
+    const base = await input(["2025-06-01T08:00:00.000Z"]);
+    return generateIdCard({ ...base, pet: { ...PET, ...pet }, plugin: { id: "pet-id-card" } as PluginManifest, task: { id: "t", options: { documentType } } as unknown as GenerationTask });
+  };
+  const svgOf = (output: Awaited<ReturnType<typeof generateIdCard>>) => new TextDecoder().decode(output.files[0].body);
+
+  it("单证画出名字、种类、性别、生日与证号，能栅格化成 1080×1440", async () => {
+    const output = await card("identity", { name: "年糕<&>", gender: "female", birthday: "2024-03-08" });
+    const svg = svgOf(output);
+    expect(svg).toContain("宠物居民身份证");
+    expect(svg).toContain("年糕&lt;&amp;&gt;");
+    expect(svg).toContain("猫咪");
+    expect(svg).toContain("女孩");
+    expect(svg).toContain("2024.03.08");
+    expect(svg).toContain(output.serialNumber);
+    const meta = await sharp(Buffer.from(output.files[0].body)).png().toBuffer().then((png) => sharp(png).metadata());
+    expect([meta.width, meta.height]).toEqual([1080, 1440]);
+  });
+
+  it("四种证件各有标题，未知类型回落身份证；没有生日写保密、到家日期换标签", async () => {
+    for (const [type, title] of [["passport", "宠物护照"], ["household", "家庭户口页"], ["vaccine", "疫苗接种证"], ["unknown", "宠物居民身份证"]]) {
+      expect(svgOf(await card(type))).toContain(title);
+    }
+    const noBirthday = svgOf(await card("identity", { birthday: "" }));
+    expect(noBirthday).toContain("保密");
+    expect(svgOf(await card("identity", { dateType: "got_home" }))).toContain("到家");
+  });
+
+  it("全套证件四张卡的 defs id 互不冲突，画布 1080×1640", async () => {
+    const svg = svgOf(await card("bundle"));
+    for (const id of ["identity", "passport", "household", "vaccine"]) expect(svg).toContain(`clipPath id="photo-${id}"`);
+    const ids = [...svg.matchAll(/ id="([^"]+)"/g)].map((match) => match[1]);
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(svg).toContain('width="1080" height="1640"');
   });
 });

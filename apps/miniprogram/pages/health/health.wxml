@@ -57,7 +57,7 @@
     </view>
 
     <!-- 免责声明与结论同屏且在结论之前，不折叠。 -->
-    <view wx:if="{{result}}" class="health-result">
+    <view wx:if="{{result}}" id="health-result" class="health-result">
       <text class="small">{{result.advisory.disclaimer}}</text>
 
       <view class="row block-gap">

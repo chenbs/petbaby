@@ -1,6 +1,11 @@
 /*
  * 图片加载态（2026-10-26）：图片下载完成前显示骨架底色的呼吸动画，load 后去掉底色并淡入。
  * 用 WXS 直接改 class，不经逻辑层 setData —— 一屏几十张图各回调一次 setData 会拖慢滚动。
+ *
+ * 同一个 <image> 原地换 src 时（点缩略图换大图），.img-on 会留在旧节点上，新图下载期间就是空白。
+ * 不在这里监听 src 变化去摘 class：实测 change:src 的回调可能晚于新图的 load 事件，摘掉后再也加不回来，
+ * 图片会一直呼吸。原地换图的位置改用 wx:for + wx:key 按地址重建节点，见 ai-create 的大预览。
+ *
  * 用法：<wxs module="img" src="../../wxs/img.wxs" />，<image class="img-load" bindload="{{img.ready}}" />
  */
 function ready(event) {

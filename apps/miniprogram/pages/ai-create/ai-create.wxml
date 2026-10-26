@@ -24,7 +24,7 @@
       </view>
       <view wx:elif="{{activeTemplate && templateId !== 'pet-art-photo'}}" class="section">
         <view class="section-title">看看成品风格</view>
-        <image class="solo-template-image {{activeTemplate.sampleShape === 'wide' ? 'solo-wide' : ''}} img-load" src="{{activeTemplate.hdUrl || activeTemplate.sampleUrl}}" mode="aspectFit" bindload="{{img.ready}}" />
+        <image wx:for="{{[activeTemplate.hdUrl || activeTemplate.sampleUrl]}}" wx:for-item="url" wx:key="*this" class="solo-template-image {{activeTemplate.sampleShape === 'wide' ? 'solo-wide' : ''}} img-load" src="{{url}}" mode="aspectFit" bindload="{{img.ready}}" />
       </view>
       <view wx:if="{{templateId === 'pet-art-photo' && sceneOptions.length}}" class="section">
         <view class="section-title">写真场景 · {{sceneOptions.length}} 套</view>
@@ -46,7 +46,8 @@
     -->
     <block wx:else>
       <view class="effect-preview effect-preview-{{previewShape}}">
-        <image wx:if="{{previewUrl}}" class="effect-preview-image img-load" src="{{previewUrl}}" mode="aspectFill" bindload="{{img.ready}}" />
+        <!-- 按地址重建节点：点缩略图换图时新节点从加载态开始，下载期间显示呼吸占位而不是空白 -->
+        <block wx:if="{{previewUrl}}"><image wx:for="{{[previewUrl]}}" wx:for-item="url" wx:key="*this" class="effect-preview-image img-load" src="{{url}}" mode="aspectFill" bindload="{{img.ready}}" /></block>
         <view wx:else class="effect-preview-image style-thumb-blank">样片暂不可用</view>
         <text class="ai-mask-inline effect-preview-label">示例效果 · 换成{{petText || '我'}}</text>
       </view>

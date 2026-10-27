@@ -4,7 +4,9 @@ import { getDatabase, resetDatabaseForTest } from "@/server/db/client";
 import { grantPurchasedCredit } from "@/server/entitlements";
 import { getWallet } from "@/server/wallet/service";
 import { fundWallet } from "@/server/wallet/test-helpers";
-import { buildHealthDocumentSvg } from "@/server/health/document";
+import { buildHealthDocumentPages } from "@/server/health/document";
+
+const buildHealthDocumentSvg = (input: Parameters<typeof buildHealthDocumentPages>[0]) => buildHealthDocumentPages(input).join("\n");
 import * as documentRenderer from "@/server/health/document";
 import { objectStorage } from "@/server/storage";
 import {
@@ -133,6 +135,34 @@ describe("健康档案排版：不给结论（红线）", () => {
   it("记录过多时注明未列出的条数", () => {
     const care = Array.from({ length: 20 }, (_, index) => ({ kindText: "疫苗", label: `第 ${index} 次`, performedOn: "2026-01-01" }));
     expect(buildHealthDocumentSvg({ ...base, care })).toContain("另有 8 条未列出");
+  });
+
+  /*
+   * 长摘要按版心折行，不再是一整行 <text> 被页边裁掉。
+   * 这里粗算每个 tspan 的宽度（中文 1em、西文 0.6em），不能超过版心 1080px（避头标点可多出 1em）。
+   */
+  it("长条目折行，每行不超出版心", () => {
+    const summary = "精神比平时差，食欲下降，今天吐了两次黄水，之后能喝水但不太愿意吃东西，建议今天内带它去动物医院，带上呕吐物照片和近三天的饮食记录。";
+    const svg = buildHealthDocumentSvg({ ...base, sessions: [{ date: "2026-07-20", levelText: "24 小时内就医", summary }] });
+    const spans = [...svg.matchAll(/<tspan[^>]*>([^<]*)<\/tspan>/g)].map((match) => match[1]);
+    expect(spans.length).toBeGreaterThan(1);
+    expect(spans.join("")).toContain("近三天的饮食记录");
+    const width = (line: string) => [...line].reduce((sum, char) => sum + ((char.codePointAt(0) || 0) >= 0x80 ? 1 : 0.6), 0) * 26;
+    for (const line of spans) expect(width(line)).toBeLessThanOrEqual(1080 + 26);
+  });
+
+  it("一页放不下时续排到下一页，免责提示跟着续页走", () => {
+    const summary = "精神比平时差，食欲下降，今天吐了两次黄水，之后能喝水但不太愿意吃东西，建议今天内带它去动物医院，带上呕吐物照片和近三天的饮食记录。";
+    const pages = buildHealthDocumentPages({
+      ...base,
+      care: Array.from({ length: 6 }, (_, index) => ({ kindText: "疫苗", label: `第 ${index} 次加强针（某某宠物医院）`, performedOn: "2026-01-01", dueOn: "2027-01-01" })),
+      sessions: Array.from({ length: 4 }, () => ({ date: "2026-07-20", levelText: "24 小时内就医", summary })),
+      records: Array.from({ length: 8 }, () => "2026-10-25　就医检查 · 复查 · 医生说：再观察三天，注意饮食清淡少量多餐 · 复诊日期 2026-10-28"),
+    });
+    expect(pages.length).toBeGreaterThan(1);
+    expect(pages[1]).toContain("（续）");
+    expect(pages[1]).toContain("不是诊断结论");
+    expect(pages[0]).toContain(`第 1 / ${pages.length} 页`);
   });
 
   it("年度记录的标题带上年份", () => {

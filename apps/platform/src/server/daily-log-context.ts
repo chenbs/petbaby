@@ -74,6 +74,6 @@ export async function documentRecordLines(userId: string, petId: string, year?: 
     );
   return rows.map((row) => {
     const described = describeRecord(String(row.kind), (row.details || {}) as Record<string, unknown>);
-    return `${asDateString(row.occurred_on)}　${described.title}${described.summary ? ` · ${described.summary}` : ""}`.slice(0, 48);
+    return `${asDateString(row.occurred_on)}　${described.title}${described.summary ? ` · ${described.summary}` : ""}`;
   });
 }

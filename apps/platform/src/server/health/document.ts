@@ -52,12 +52,99 @@ export interface HealthDocumentInput {
   records?: string[];
 }
 
+/** 版心：左右各留 80，页脚基线在 PAGE_HEIGHT - 60，正文最后一行基线不低于 CONTENT_BOTTOM */
+const CONTENT_LEFT = 80;
+const CONTENT_WIDTH = PAGE_WIDTH - CONTENT_LEFT * 2;
+const CONTENT_BOTTOM = PAGE_HEIGHT - 120;
+/** 续页正文起点（续页只有标题与一行免责提示，没有体重段） */
+const CONTINUATION_TOP = 230;
+
+const ITEM_FONT_SIZE = 26;
+/** 同一条记录折行后的行距；条与条之间仍是原来的 40 */
+const WRAP_LINE_HEIGHT = 34;
+const ITEM_GAP = 40;
+/** 单条最多折成 3 行。再长的分诊摘要印进档案也读不完，末行以省略号收尾 */
+const ITEM_MAX_LINES = 3;
+
+/**
+ * 估算单个字符的宽度（单位 em）。
+ *
+ * SVG 交给 sharp/librsvg 栅格化，拿不到真实字形宽度，只能按字符类别估：
+ * 中文与全角符号按 1em，西文按常见无衬线字体的平均宽度取，宁宽勿窄 ——
+ * 估窄了就会再次超出版心，估宽了只是行尾多留一点空。
+ */
+function charWidth(char: string) {
+  const code = char.codePointAt(0) || 0;
+  if (code >= 0x80) return 1;
+  if (" .,:;'!|-()[]".includes(char)) return 0.36;
+  if (/[A-Z%@&MW]/.test(char)) return 0.72;
+  return 0.6;
+}
+
+function textWidth(text: string, fontSize: number) {
+  let width = 0;
+  for (const char of text) width += charWidth(char);
+  return width * fontSize;
+}
+
+/** 不能出现在行首的标点：折行时跟着上一行走，否则行首挂一个逗号很难看 */
+const NO_LINE_START = "，。、；：？！）》」』】,.;:?!)%";
+/** 连续的西文 / 数字片段（日期、体重、英文药名）不从中间断开 */
+const ASCII_WORD = /[A-Za-z0-9.\-:%]/;
+
+/**
+ * 按版心宽度折行。超过 `maxLines` 时末行以「…」收尾。
+ *
+ * 不用 `slice(0, N)` 按字数截：中西文混排时字数和宽度对不上，
+ * 截短了丢信息（「复诊日期 202」），截长了照样出版心。
+ */
+function wrapText(text: string, fontSize: number, maxWidth: number, maxLines: number): string[] {
+  const chars = Array.from(String(text || "").replace(/\s*\r?\n\s*/g, " ").trim());
+  const lines: string[] = [];
+  let start = 0;
+  while (start < chars.length && lines.length < maxLines) {
+    let width = 0;
+    let end = start;
+    while (end < chars.length && width + charWidth(chars[end]) * fontSize <= maxWidth) {
+      width += charWidth(chars[end]) * fontSize;
+      end += 1;
+    }
+    if (end < chars.length) {
+      // 断点落在西文片段中间：退回到片段开头（整行都是西文时只能硬断）
+      if (ASCII_WORD.test(chars[end]) && ASCII_WORD.test(chars[end - 1])) {
+        let back = end;
+        while (back > start && ASCII_WORD.test(chars[back - 1])) back -= 1;
+        if (back > start) end = back;
+      }
+      // 避头标点并入本行；只并一个字符，溢出不超过 1em，落在右侧留白里
+      if (NO_LINE_START.includes(chars[end])) end += 1;
+    }
+    if (end === start) end = start + 1;
+    lines.push(chars.slice(start, end).join("").trimEnd());
+    start = end;
+    while (start < chars.length && chars[start] === " ") start += 1;
+  }
+  if (start < chars.length && lines.length) {
+    let last = lines[lines.length - 1];
+    while (last && textWidth(`${last}…`, fontSize) > maxWidth) last = Array.from(last).slice(0, -1).join("");
+    lines[lines.length - 1] = `${last.replace(/[，。、；：,.;:\s]+$/, "")}…`;
+  }
+  return lines;
+}
+
 function sectionTitle(text: string, y: number) {
-  return `<text x="80" y="${y}" font-family="sans-serif" font-size="30" font-weight="700" fill="#1d2b24">${text}</text>`;
+  return `<text x="${CONTENT_LEFT}" y="${y}" font-family="sans-serif" font-size="30" font-weight="700" fill="#1d2b24">${text}</text>`;
 }
 
 function emptyLine(y: number) {
-  return `<text x="80" y="${y}" font-family="sans-serif" font-size="26" fill="#6b7d73">还没有记录。</text>`;
+  return `<text x="${CONTENT_LEFT}" y="${y}" font-family="sans-serif" font-size="26" fill="#6b7d73">还没有记录。</text>`;
+}
+
+/** 一条记录。折成多行时用 tspan 排，行距 WRAP_LINE_HEIGHT */
+function textItem(lines: string[], y: number) {
+  const spans = lines.map((line, index) =>
+    `<tspan x="${CONTENT_LEFT}" dy="${index ? WRAP_LINE_HEIGHT : 0}">${escapeXml(line)}</tspan>`).join("");
+  return `<text x="${CONTENT_LEFT}" y="${y}" font-family="sans-serif" font-size="${ITEM_FONT_SIZE}" fill="#2c3a33">${spans}</text>`;
 }
 
 /**
@@ -65,27 +152,51 @@ function emptyLine(y: number) {
  *
  * 没有日常记录时保持原版式（免疫 12 条、分诊 6 条）；有日常记录时三段分摊同一块版面，
  * 每段都按条数截断并注明「另有 N 条未列出」。
+ *
+ * 长条目按版心宽度折行，页面放不下时续排到下一页，段名后标「（续）」——
+ * 之前每条都是单行 `<text>`，长摘要直接被页边裁掉，末段还会压进页脚。
  */
-function lowerSections(care: string[], records: string[], sessions: string[]) {
+function lowerSections(
+  care: string[],
+  records: string[],
+  sessions: string[],
+  layout: { push: (part: string) => void; newPage: () => number; isFirstPage: () => boolean },
+) {
   const limits = records.length ? { care: 6, records: 8, sessions: 4 } : { care: 12, records: 0, sessions: 6 };
-  const parts: string[] = [];
   let y = 820;
   const block = (title: string, lines: string[], limit: number) => {
-    parts.push(sectionTitle(title, y));
+    const items = lines.slice(0, limit).map((text) => wrapText(text, ITEM_FONT_SIZE, CONTENT_WIDTH, ITEM_MAX_LINES));
+    // 段名至少带着第一条一起走，不在页底留一个孤零零的标题
+    const firstSpan = items.length ? (items[0].length - 1) * WRAP_LINE_HEIGHT : 0;
+    if (y + 46 + firstSpan > CONTENT_BOTTOM) y = layout.newPage();
+    layout.push(sectionTitle(title, y));
     y += 46;
-    if (!lines.length) { parts.push(emptyLine(y)); y += 40; }
-    else {
-      parts.push(textLines(lines, 80, y, 40, limit));
-      y += 40 * (Math.min(lines.length, limit) + (lines.length > limit ? 1 : 0));
+    const room = (span: number) => {
+      if (y + span <= CONTENT_BOTTOM) return;
+      y = layout.newPage();
+      layout.push(sectionTitle(`${title}（续）`, y));
+      y += 46;
+    };
+    if (!items.length) { layout.push(emptyLine(y)); y += ITEM_GAP; }
+    for (const item of items) {
+      const span = (item.length - 1) * WRAP_LINE_HEIGHT;
+      room(span);
+      layout.push(textItem(item, y));
+      y += span + ITEM_GAP;
+    }
+    if (lines.length > limit) {
+      room(0);
+      // 静默截断会读作「就这些」
+      layout.push(`<text x="${CONTENT_LEFT}" y="${y}" font-family="sans-serif" font-size="24" fill="#6b7d73">另有 ${lines.length - limit} 条未列出</text>`);
+      y += ITEM_GAP;
     }
     y += 48;
   };
   block("免疫与驱虫", care, limits.care);
   if (records.length) block("近期日常记录", records, limits.records);
   // 原版式里分诊段固定在 1380：免疫段少时不上移，保持老档案的版面不变
-  if (!records.length) y = Math.max(y, 1380);
+  if (!records.length && layout.isFirstPage()) y = Math.max(y, 1380);
   block("健康助手记录", sessions, limits.sessions);
-  return parts.join("\n  ");
 }
 
 const SPECIES_TEXT: Record<string, string> = { cat: "猫", dog: "犬", other: "宠物" };
@@ -124,27 +235,36 @@ function weightChart(points: WeightPoint[], x: number, y: number, width: number,
     <text x="${x}" y="${y + height + 4}" font-family="sans-serif" font-size="22" fill="#6b7d73">${escapeXml(formatWeight(min))}</text>`;
 }
 
-/** 一行行的文本块。超过 `limit` 条时截断并注明 —— 静默截断会读作「就这些」 */
-function textLines(items: string[], x: number, y: number, lineHeight: number, limit: number): string {
-  const shown = items.slice(0, limit);
-  const lines = shown.map((text, index) =>
-    `<text x="${x}" y="${y + index * lineHeight}" font-family="sans-serif" font-size="26" fill="#2c3a33">${escapeXml(text)}</text>`);
-  if (items.length > limit) {
-    lines.push(`<text x="${x}" y="${y + shown.length * lineHeight}" font-family="sans-serif" font-size="24" fill="#6b7d73">另有 ${items.length - limit} 条未列出</text>`);
-  }
-  return lines.join("");
+/** 标题按版心缩字号：宠物名最长 20 字，46px 时整行会超出页面右边 */
+function fitFontSize(text: string, preferred: number, minimum: number) {
+  const width = textWidth(text, preferred);
+  if (width <= CONTENT_WIDTH) return preferred;
+  return Math.max(minimum, Math.floor((preferred * CONTENT_WIDTH) / width));
+}
+
+function pageSvg(body: string, pageIndex: number, pageCount: number) {
+  const pageNumber = pageCount > 1
+    ? `<text x="${PAGE_WIDTH - CONTENT_LEFT}" y="${PAGE_HEIGHT - 60}" font-family="sans-serif" font-size="22" fill="#8b9992" text-anchor="end">第 ${pageIndex + 1} / ${pageCount} 页</text>`
+    : "";
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${PAGE_WIDTH}" height="${PAGE_HEIGHT}" viewBox="0 0 ${PAGE_WIDTH} ${PAGE_HEIGHT}">
+  <rect width="${PAGE_WIDTH}" height="${PAGE_HEIGHT}" fill="#fdfbf7"/>
+  ${body}
+  <text x="${CONTENT_LEFT}" y="${PAGE_HEIGHT - 60}" font-family="sans-serif" font-size="22" fill="#8b9992">由麻麻抱我导出　内容来自你自己录入的记录　不代替医生面诊</text>
+  ${pageNumber}
+</svg>`;
 }
 
 /**
- * 排一页健康档案 / 年度健康报告的 SVG。
+ * 排健康档案 / 年度健康报告的 SVG，一页一个。记录多或单条很长时续排到后续页。
  *
  * 标题措辞刻意避开「报告」二字的医学联想：叫「健康记录」与「年度健康记录」，
  * 而不是「体检报告」——「报告」在医疗语境里意味着有资质的机构给出的结论。
  */
-export function buildHealthDocumentSvg(input: HealthDocumentInput): string {
+export function buildHealthDocumentPages(input: HealthDocumentInput): string[] {
   const trend = computeWeightTrend(input.weights);
   const note = notableWeightNote(trend);
   const title = input.year ? `${input.year} 年度健康记录` : "健康记录";
+  const heading = `${input.petName}的${title}`;
   const species = SPECIES_TEXT[input.species] || SPECIES_TEXT.other;
   const stage = LIFE_STAGE_TEXT[input.lifeStage] || input.lifeStage;
 
@@ -158,30 +278,41 @@ export function buildHealthDocumentSvg(input: HealthDocumentInput): string {
   const sessionLines = input.sessions.map((item) => `${item.date}　${item.levelText}　${item.summary}`);
   const recordLines = input.records || [];
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${PAGE_WIDTH}" height="${PAGE_HEIGHT}" viewBox="0 0 ${PAGE_WIDTH} ${PAGE_HEIGHT}">
-  <rect width="${PAGE_WIDTH}" height="${PAGE_HEIGHT}" fill="#fdfbf7"/>
+  const statementLines = wrapText(trend ? trend.statement : "还没有体重记录。", 26, CONTENT_WIDTH, 1);
+  const noteLines = note ? wrapText(note, 24, CONTENT_WIDTH, 1) : [];
 
-  <text x="80" y="110" font-family="sans-serif" font-size="46" font-weight="700" fill="#1d2b24">${escapeXml(input.petName)}的${escapeXml(title)}</text>
-  <text x="80" y="152" font-family="sans-serif" font-size="26" fill="#6b7d73">${escapeXml(species)}${input.birthday ? `　${escapeXml(input.birthday)}` : ""}　${escapeXml(stage)}　导出于 ${escapeXml(input.generatedOn)}</text>
+  const first = `<text x="${CONTENT_LEFT}" y="110" font-family="sans-serif" font-size="${fitFontSize(heading, 46, 30)}" font-weight="700" fill="#1d2b24">${escapeXml(heading)}</text>
+  <text x="${CONTENT_LEFT}" y="152" font-family="sans-serif" font-size="26" fill="#6b7d73">${escapeXml(species)}${input.birthday ? `　${escapeXml(input.birthday)}` : ""}　${escapeXml(stage)}　导出于 ${escapeXml(input.generatedOn)}</text>
 
   <!--
     免责声明在第一屏顶部、与内容同屏、不折叠（红线 5）。
     底衬用浅色块而不是纯文字：这份 PDF 会被打印出来带去医院，
     没有视觉分隔的免责声明容易被当成正文的一部分读过去。
   -->
-  <rect x="80" y="188" width="${PAGE_WIDTH - 160}" height="96" rx="12" fill="#fff3e2" stroke="#e8c9a0" stroke-width="2"/>
+  <rect x="${CONTENT_LEFT}" y="188" width="${CONTENT_WIDTH}" height="96" rx="12" fill="#fff3e2" stroke="#e8c9a0" stroke-width="2"/>
   <text x="104" y="228" font-family="sans-serif" font-size="25" font-weight="700" fill="#8a5a20">这份记录不是诊断结论</text>
   <text x="104" y="264" font-family="sans-serif" font-size="23" fill="#8a5a20">${escapeXml(TRIAGE_DISCLAIMER)}</text>
 
-  <text x="80" y="352" font-family="sans-serif" font-size="30" font-weight="700" fill="#1d2b24">体重</text>
-  <text x="80" y="394" font-family="sans-serif" font-size="26" fill="#2c3a33">${escapeXml(trend ? trend.statement : "还没有体重记录。")}</text>
-  ${note ? `<text x="80" y="430" font-family="sans-serif" font-size="24" fill="#8a5a20">${escapeXml(note)}</text>` : ""}
-  ${weightChart(input.weights, 80, 470, PAGE_WIDTH - 200, 260)}
+  <text x="${CONTENT_LEFT}" y="352" font-family="sans-serif" font-size="30" font-weight="700" fill="#1d2b24">体重</text>
+  <text x="${CONTENT_LEFT}" y="394" font-family="sans-serif" font-size="26" fill="#2c3a33">${escapeXml(statementLines[0] || "")}</text>
+  ${noteLines.length ? `<text x="${CONTENT_LEFT}" y="430" font-family="sans-serif" font-size="24" fill="#8a5a20">${escapeXml(noteLines[0])}</text>` : ""}
+  ${weightChart(input.weights, CONTENT_LEFT, 470, PAGE_WIDTH - 200, 260)}`;
 
-  ${lowerSections(careLines, recordLines, sessionLines)}
+  /*
+   * 续页同样带一行免责提示：打印出来的第二页可能单独被翻到，
+   * 没有这句话它读起来就像一页医疗意见（红线 5）。
+   */
+  const continuationHeading = `${heading}（续）`;
+  const continuation = `<text x="${CONTENT_LEFT}" y="110" font-family="sans-serif" font-size="${fitFontSize(continuationHeading, 34, 26)}" font-weight="700" fill="#1d2b24">${escapeXml(continuationHeading)}</text>
+  <text x="${CONTENT_LEFT}" y="154" font-family="sans-serif" font-size="23" fill="#8a5a20">这份记录不是诊断结论，具体情况以执业兽医面诊为准。</text>`;
 
-  <text x="80" y="${PAGE_HEIGHT - 60}" font-family="sans-serif" font-size="22" fill="#8b9992">由麻麻抱我导出　内容来自你自己录入的记录　不代替医生面诊</text>
-</svg>`;
+  const pages: string[][] = [[first]];
+  lowerSections(careLines, recordLines, sessionLines, {
+    push: (part) => pages[pages.length - 1].push(part),
+    newPage: () => { pages.push([continuation]); return CONTINUATION_TOP; },
+    isFirstPage: () => pages.length === 1,
+  });
+  return pages.map((parts, index) => pageSvg(parts.join("\n  "), index, pages.length));
 }
 
 /**
@@ -195,12 +326,14 @@ export function buildHealthDocumentSvg(input: HealthDocumentInput): string {
  * 而这份文件是模板套用户自己录入的数据，不是生成合成内容 ——
  * 给它打标是错误标注（见 CLAUDE.md 的 AI 标识约定）。
  */
-export async function renderHealthDocumentPdf(svg: string): Promise<Uint8Array> {
-  const png = await sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toBuffer();
+export async function renderHealthDocumentPdf(pages: string[]): Promise<Uint8Array> {
   const pdf = await PDFDocument.create();
-  const image = await pdf.embedPng(png);
-  // A4 的 PDF 点尺寸（595.28×841.89），与实体印刷页同口径
-  const page = pdf.addPage([595.28, 841.89]);
-  page.drawImage(image, { x: 0, y: 0, width: 595.28, height: 841.89 });
+  for (const svg of pages) {
+    const png = await sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toBuffer();
+    const image = await pdf.embedPng(png);
+    // A4 的 PDF 点尺寸（595.28×841.89），与实体印刷页同口径
+    const page = pdf.addPage([595.28, 841.89]);
+    page.drawImage(image, { x: 0, y: 0, width: 595.28, height: 841.89 });
+  }
   return new Uint8Array(await pdf.save());
 }

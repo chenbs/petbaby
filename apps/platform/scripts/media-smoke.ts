@@ -25,7 +25,7 @@ async function main() {
   const { getDatabase } = await import("../src/server/db/client");
   const { objectStorage } = await import("../src/server/storage");
   const { renderMemorialAlbum, buildPages } = await import("../src/server/memorial/album");
-  const { buildHealthDocumentSvg, renderHealthDocumentPdf } = await import("../src/server/health/document");
+  const { buildHealthDocumentPages, renderHealthDocumentPdf } = await import("../src/server/health/document");
   const { renderAnnualFilm } = await import("../src/server/video/annual-film");
   const database = await getDatabase();
   try {
@@ -47,11 +47,11 @@ async function main() {
     assert.ok((await PDFDocument.load(album)).getPageCount() >= 3);
     await writeFile(path.join(output, "memorial-album.pdf"), album);
     await sharp(Buffer.from(buildPages(albumInput)[0])).png().toFile(path.join(output, "memorial-cover.png"));
-    const healthSvg = buildHealthDocumentSvg({ petName: "年糕", species: "cat", lifeStage: "active", generatedOn: `${year}-08-01`, weights: [{ weightGrams: 4000, measuredOn: `${year}-01-01` }, { weightGrams: 4200, measuredOn: `${year}-08-01` }], care: [{ kindText: "体检", label: "年度记录", performedOn: `${year}-08-01` }], sessions: [{ date: `${year}-08-01`, levelText: "日常记录", summary: "记录近期饮食与活动情况，供就医时沟通。" }] });
-    const health = await renderHealthDocumentPdf(healthSvg);
+    const healthPages = buildHealthDocumentPages({ petName: "年糕", species: "cat", lifeStage: "active", generatedOn: `${year}-08-01`, weights: [{ weightGrams: 4000, measuredOn: `${year}-01-01` }, { weightGrams: 4200, measuredOn: `${year}-08-01` }], care: [{ kindText: "体检", label: "年度记录", performedOn: `${year}-08-01` }], sessions: [{ date: `${year}-08-01`, levelText: "日常记录", summary: "记录近期饮食与活动情况，供就医时沟通。" }] });
+    const health = await renderHealthDocumentPdf(healthPages);
     assert.equal((await PDFDocument.load(health)).getPageCount(), 1);
     await writeFile(path.join(output, "health-document.pdf"), health);
-    await sharp(Buffer.from(healthSvg)).png().toFile(path.join(output, "health-document.png"));
+    await sharp(Buffer.from(healthPages[0])).png().toFile(path.join(output, "health-document.png"));
     const rendered = await renderAnnualFilm({ id: crypto.randomUUID(), user_id: userId, config: { year, durationSeconds: 10 } });
     const video = await objectStorage.get(rendered.key);
     assert.ok(video?.body.length);

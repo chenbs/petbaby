@@ -9,7 +9,7 @@ import { HEALTH_DOCUMENT_COST } from "@/domain/dongan-pricing";
 import { getWallet, insufficientError, spend } from "@/server/wallet/service";
 import { AppError } from "@/server/errors";
 import { documentRecordLines, recentContextLines } from "@/server/daily-log-context";
-import { buildHealthDocumentSvg, renderHealthDocumentPdf } from "@/server/health/document";
+import { buildHealthDocumentPages, renderHealthDocumentPdf } from "@/server/health/document";
 import { adviseWithMeta, selectTriageProvider } from "@/server/health/provider";
 import { emergencyAdvisory, matchEmergency, type TriageAdvisory } from "@/server/health/triage";
 import { objectStorage } from "@/server/storage";
@@ -344,7 +344,7 @@ export async function createHealthDocument(userId: string, petId: string, option
     documentRecordLines(userId, petId, year),
   ]);
 
-  const svg = buildHealthDocumentSvg({
+  const pages = buildHealthDocumentPages({
     petName: String(pet.name),
     species: String(pet.species),
     birthday: pet.birthday ? asDateString(pet.birthday) : undefined,
@@ -371,7 +371,7 @@ export async function createHealthDocument(userId: string, petId: string, option
 
   const id = crypto.randomUUID();
   const key = `private/${userId}/health/${kind}-${petId}-${id}.pdf`;
-  await objectStorage.put(key, await renderHealthDocumentPdf(svg), "application/pdf");
+  await objectStorage.put(key, await renderHealthDocumentPdf(pages), "application/pdf");
   const summary = { weights: weights.length, care: care.length, sessions: sessions.length, records: records.length, petName: String(pet.name) };
   try {
     await inTransaction(async (transaction) => {

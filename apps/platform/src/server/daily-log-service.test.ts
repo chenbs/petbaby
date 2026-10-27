@@ -15,7 +15,9 @@ import {
   saveRecordAttachment,
 } from "@/server/daily-log-service";
 import { createHealthSession, createHealthDocument } from "@/server/health-service";
-import { buildHealthDocumentSvg } from "@/server/health/document";
+import { buildHealthDocumentPages } from "@/server/health/document";
+
+const buildHealthDocumentSvg = (input: Parameters<typeof buildHealthDocumentPages>[0]) => buildHealthDocumentPages(input).join("\n");
 import { objectStorage } from "@/server/storage";
 
 const USER = "00000000-0000-4000-8000-0000000000d1";

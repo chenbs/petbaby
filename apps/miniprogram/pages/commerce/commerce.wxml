@@ -96,8 +96,8 @@
       </block>
     </view>
 
-    <!-- 实体纪念品入口行（需求 5.19-5） -->
-    <view class="section">
+    <!-- 实体纪念品入口行（需求 5.19-5）。首发不卖实体商品（2026-10-27），入口隐藏、页面与接口保留；恢复时把 physicalEnabled 改回 true -->
+    <view wx:if="{{physicalEnabled}}" class="section">
       <view class="entry-row tappable anim-{{animType}}" aria-role="button" bindtap="goPhysical">
         <view class="entry-main">
           <view class="sub-title">实体纪念品订单</view>

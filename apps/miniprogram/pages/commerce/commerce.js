@@ -31,7 +31,9 @@ themedPage(Object.assign({}, wallet.walletSheetMethods, {
     cancelTarget: null,
     message: "",
     error: "",
-    subscriptionsEnabled: SUBSCRIPTIONS_ENABLED
+    subscriptionsEnabled: SUBSCRIPTIONS_ENABLED,
+    /** 首发不卖实体商品（2026-10-27），不需要普通微信支付商户号 */
+    physicalEnabled: false
   },
 
   onShow() { this.load(); },

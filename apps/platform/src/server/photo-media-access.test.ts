@@ -210,3 +210,30 @@ describe("私人照片与交付物隔离（A10/A11/A16）", () => {
     expect(await objectStorage.get(photo.storageKey)).toBeNull();
   });
 });
+
+describe("展示用小图 display=1", () => {
+  it("大图缩成 JPEG 且保留隐式 AI 标识；无权用户同样 404；不带参数仍是原图", async () => {
+    const { applyAiMetadata } = await import("@/server/media/ai-label");
+    const big = await sharp({ create: { width: 2400, height: 3200, channels: 3, background: "teal" } }).png().toBuffer();
+    const labeled = Buffer.from(await applyAiMetadata(new Uint8Array(big), "content-1"));
+    const id = crypto.randomUUID();
+    const key = `private/${USER}/works/${id}.png`;
+    await objectStorage.put(key, labeled, "image/png");
+    await (await getDatabase()).query("INSERT INTO works (id,user_id,plugin_id,pet_id,photo_id,title,subtitle,serial_number,authority,output_key,preview_key,locked,public,version,asset_kind,created_at) VALUES ($1,$2,'pet-id-card',$3,$4,'fixture','','fixture','fixture',$5,$5,false,false,1,'image',now())", [id, USER, petId, photo.id, key]);
+    const call = (user: string, query: string) => media(request(user, `http://localhost/api/media/x${query}`), { params: Promise.resolve({ key: key.split("/") }) });
+
+    const small = await call(USER, "?display=1");
+    expect(small.status).toBe(200);
+    expect(small.headers.get("content-type")).toBe("image/jpeg");
+    const body = Buffer.from(await small.arrayBuffer());
+    const meta = await sharp(body).metadata();
+    expect(Math.max(meta.width || 0, meta.height || 0)).toBeLessThanOrEqual(1440);
+    expect(body.byteLength).toBeLessThan(labeled.byteLength);
+    expect(meta.exif?.toString("latin1")).toContain("PETBABY");
+
+    expect((await call(OTHER, "?display=1")).status).toBe(404);
+    const full = await call(USER, "");
+    expect(full.headers.get("content-type")).toBe("image/png");
+    expect(Buffer.from(await full.arrayBuffer()).byteLength).toBe(labeled.byteLength);
+  });
+});

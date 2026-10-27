@@ -27,3 +27,22 @@ test("A16：下载使用会话，校验状态和文件类型；拒绝授权不�
   await assert.rejects(savePhotoToAlbum(photo), /无法读取/);
   assert.equal(saves, 1);
 });
+
+test("展示走 display=1 小图，保存到相册走原图；非 /api/media 地址不改", async () => {
+  const urls = [];
+  global.wx = {
+    getStorageSync: () => "session-token",
+    downloadFile: (options) => { urls.push(options.url); options.success({ statusCode: 200, tempFilePath: "file" }); },
+    getImageInfo: ({ success }) => success({ type: "jpeg" }),
+    saveImageToPhotosAlbum: ({ success }) => success()
+  };
+  const { displayMediaTree, displayUrl } = require("../services/photo-files");
+  const photo = { url: "/api/media/private%2Ffixture.png" };
+  await downloadPhoto(photo);
+  await savePhotoToAlbum(photo);
+  await displayMediaTree({ outputUrl: "/api/media/private%2Fwork.svg?format=png" });
+  assert.ok(urls[0].endsWith("/api/media/private%2Ffixture.png?display=1"));
+  assert.ok(urls[1].endsWith("/api/media/private%2Ffixture.png"));
+  assert.ok(urls[2].endsWith("/api/media/private%2Fwork.svg?format=png&display=1"));
+  assert.equal(displayUrl("/api/owner-photos/x/media"), "/api/owner-photos/x/media");
+});

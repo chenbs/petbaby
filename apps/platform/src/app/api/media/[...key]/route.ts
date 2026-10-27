@@ -4,6 +4,7 @@ import sharp from "sharp";
 import { getOptionalUserId } from "@/server/auth/session";
 import { getDatabase } from "@/server/db/client";
 import { routeError, AppError } from "@/server/errors";
+import { canDisplayResize, displayImage } from "@/server/media/display-image";
 import { objectStorage } from "@/server/storage";
 
 export async function GET(
@@ -30,11 +31,14 @@ export async function GET(
     if (!rows.length) throw new AppError("MEDIA_NOT_FOUND", "文件不存在", 404);
     const object = await objectStorage.get(key);
     if (!object) throw new AppError("MEDIA_NOT_FOUND", "文件不存在", 404);
-    const raster = new URL(request.url).searchParams.get("format") === "png" && object.contentType === "image/svg+xml";
-    const body = raster ? await sharp(Buffer.from(object.body)).png().toBuffer() : Buffer.from(object.body);
-    return new NextResponse(body, {
+    const params = new URL(request.url).searchParams;
+    // display=1：小程序列表与详情展示用的小 JPEG（见 server/media/display-image.ts）；保存原图走各自的下载出口
+    const display = params.get("display") === "1" && canDisplayResize(object.contentType);
+    const raster = !display && params.get("format") === "png" && object.contentType === "image/svg+xml";
+    const body = display ? await displayImage(key, object) : raster ? await sharp(Buffer.from(object.body)).png().toBuffer() : Buffer.from(object.body);
+    return new NextResponse(new Uint8Array(body), {
       headers: {
-        "Content-Type": raster ? "image/png" : object.contentType,
+        "Content-Type": display ? "image/jpeg" : raster ? "image/png" : object.contentType,
         "Cache-Control": "private, no-store",
         "Vary": "Cookie, Authorization",
         "X-Content-Type-Options": "nosniff",

@@ -1200,18 +1200,28 @@
 .theme-dots {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-0);
   margin-top: var(--space-1);
 }
 
 .theme-dots-label {
+  margin-right: var(--space-1);
   color: var(--text-secondary);
-  font-size: var(--eyebrow-size);
+  font-size: var(--small-size);
+}
+
+/* 点击热区（2026-10-27 放大）：44rpx 色点 + 四周 8rpx，约 60rpx 见方 */
+.theme-dot-hit {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-1);
 }
 
 .theme-dot {
-  width: 30rpx;
-  height: 30rpx;
+  width: 44rpx;
+  height: 44rpx;
   box-sizing: border-box;
   border: 2rpx solid var(--border);
   border-radius: var(--radius-pill);
@@ -1219,4 +1229,39 @@
 
 .theme-dot-on {
   border: 4rpx solid var(--text-primary);
+}
+
+/* ---------- 2.5 趣味测试横滑（2026-10-27） ---------- */
+.fun-section {
+  margin-top: var(--space-6);
+}
+
+.fun-head {
+  margin-bottom: var(--space-1);
+}
+
+/* 比精选横滑的竖卡宽一些：方图，一屏看到两张半，知道还能往右滑 */
+.fun-item {
+  width: 264rpx;
+}
+
+.fun-thumb {
+  aspect-ratio: 1 / 1;
+}
+
+.fun-item-tag {
+  top: auto;
+  right: var(--space-2);
+  bottom: var(--space-2);
+  left: auto;
+}
+
+.fun-name {
+  font-size: var(--body-size);
+}
+
+.fun-note {
+  display: block;
+  color: var(--text-secondary);
+  font-size: var(--eyebrow-size);
 }

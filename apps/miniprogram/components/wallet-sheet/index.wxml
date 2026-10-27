@@ -16,6 +16,8 @@
       <!-- 首充横幅：新用户只看到这一档首充，默认选中 -->
       <view wx:if="{{first && !quiet}}" class="ws-first {{selectedId === first.id ? 'ws-on' : ''}}" data-id="{{first.id}}" aria-role="button" aria-label="新人首充 6 元到账 12 颗" bindtap="choose">
         <text class="ws-deal ws-ribbon">{{first.badge}}</text>
+        <!-- 选中框（2026-10-27）：首充横幅底色本身就是强调色，只靠边框看不出选没选中，左侧加一个单选圈 -->
+        <view class="ws-radio" aria-hidden="true">✓</view>
         <view class="ws-pile">
           <image class="ws-pile-a" src="/assets/icons/{{themeId}}/fd-coin.png" mode="aspectFit" />
           <image class="ws-pile-b" src="/assets/icons/{{themeId}}/fd-coin.png" mode="aspectFit" />
@@ -27,7 +29,7 @@
           <view class="ws-bar"><view class="ws-bar-base" style="flex:{{first.amount}}"></view><view class="ws-bar-gift" style="flex:{{first.gift}}"></view></view>
         </view>
         <view class="ws-first-right">
-          <text class="ws-price ws-price-on">{{first.priceText}}</text>
+          <text class="ws-price">{{first.priceText}}</text>
           <text class="ws-off ws-off-fc">相当于 5 折</text>
         </view>
       </view>

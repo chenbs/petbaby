@@ -41,7 +41,10 @@
         -->
         <view class="theme-dots" aria-role="radiogroup" aria-label="切换主题">
           <text class="theme-dots-label">换主题</text>
-          <view wx:for="{{themeDots}}" wx:key="id" class="theme-dot {{item.id === themeId ? 'theme-dot-on' : ''}}" style="{{item.style}}" data-id="{{item.id}}" aria-role="radio" aria-checked="{{item.id === themeId}}" aria-label="{{item.name}}" catchtap="switchTheme"></view>
+          <!-- 外层是点击热区（2026-10-27 放大）：色点本身 44rpx，热区再向外扩一圈，手指不用对得很准 -->
+          <view wx:for="{{themeDots}}" wx:key="id" class="theme-dot-hit" data-id="{{item.id}}" aria-role="radio" aria-checked="{{item.id === themeId}}" aria-label="{{item.name}}" catchtap="switchTheme">
+            <view class="theme-dot {{item.id === themeId ? 'theme-dot-on' : ''}}" style="{{item.style}}"></view>
+          </view>
         </view>
       </view>
       <view class="pet-camera" aria-role="button" aria-label="记录今天" hover-class="pet-feature-hover" bindtap="record">
@@ -96,6 +99,25 @@
       </view>
     </view>
     <text class="human-card-cap">上传一张我的正脸照，看看我变成人是什么样子</text>
+  </view>
+
+  <!--
+    2.5 趣味测试（2026-10-27）：原先只在瀑布流最底下有一张卡，几乎没人看到。
+    提到「如果我是人」之后，做成一条横滑：四份测试各一张卡，点卡直达那一份；免费、不扣冻干。
+  -->
+  <view wx:if="{{funTests.length}}" class="section fun-section">
+    <view class="row fun-head" aria-role="button" bindtap="openFunTest"><view class="section-title flush">趣味测试</view><text class="small">免费 · 每份 10 题 ›</text></view>
+    <scroll-view class="boss-track" scroll-x enable-flex show-scrollbar="{{false}}">
+      <view wx:for="{{funTests}}" wx:key="id" class="boss-item fun-item" data-id="{{item.id}}" aria-role="button" aria-label="{{item.title}}，免费" hover-class="pet-feature-hover" bindtap="openFunTest">
+        <view class="boss-thumb-wrap">
+          <text class="feed-tag fun-item-tag">免费</text>
+          <text class="boss-level" aria-hidden="true">{{item.order}}</text>
+          <image class="boss-thumb fun-thumb img-load" src="{{item.cover}}" mode="aspectFill" lazy-load bindload="{{img.ready}}" />
+        </view>
+        <view class="boss-name fun-name">{{item.title}}</view>
+        <text class="fun-note">{{item.note}}</text>
+      </view>
+    </scroll-view>
   </view>
 
   <!-- 3. 麻麻精选：主卡 + 精选横滑 -->

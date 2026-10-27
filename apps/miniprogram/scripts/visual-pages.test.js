@@ -347,19 +347,19 @@ test("首页：如果我是人、麻麻精选、分类 chip 瀑布流按指定�
   assert.deepEqual(Array.from(page.data.bossTemplates, (item) => item.templateId), ["fish-chase", "character-outfit-grid", "animal-sword-cat-alt", "travel-glass-summer", "pet-milk-tea-shopkeeper", "fun-fisheye-closeup", "mini-companion", "animal-pink-scooter"]);
   assert.deepEqual(Array.from(page.data.bossScenes, (item) => item.id), ["window-morning", "seaside-breeze", "library-whisper", "autumn-leaves", "berry-pastry-chef", "ballet-backstage"]);
   // 瀑布流：分类封面卡 → 图文 / 短片玩法 → 趣测卡；不再有自动轮播和「作品玩法」重复网格
-  assert.deepEqual(Array.from(page.data.feed, (item) => item.key), ["entry-fun", "entry-art", "plugin-pet-movie-poster", "plugin-pet-time-album", "plugin-pl-19", "plugin-pl-23", "plugin-pet-id-card", "fun-tests"]);
+  assert.deepEqual(Array.from(page.data.feed, (item) => item.key), ["entry-fun", "entry-art", "plugin-pet-movie-poster", "plugin-pet-time-album", "plugin-pl-19", "plugin-pl-23", "plugin-pet-id-card"]);
   const ink = page.data.feed.find((item) => item.templateId === "ink-portrait");
   assert.equal(ink.cover, "/assets/home-effects/covers/ink-portrait.jpg");
   assert.match(page.data.feed.find((item) => item.key === "plugin-pet-movie-poster").note, /5 颗冻干起/);
   assert.deepEqual(Array.from(page.data.chips, (item) => item.id), ["all", "fun", "art"]);
-  assert.equal(page.data.feedLeft.length + page.data.feedRight.length, 8);
+  assert.equal(page.data.feedLeft.length + page.data.feedRight.length, 7);
   // 选分类 chip：展开这一类的全部模板卡，点卡直达该模板
   page.chooseChip({ currentTarget: { dataset: { id: "fun" } } });
   assert.deepEqual(Array.from(page.data.feedLeft.concat(page.data.feedRight), (item) => item.key), ["tpl-pet-wanted-poster"]);
   page.chooseChip({ currentTarget: { dataset: { id: "art" } } });
   assert.deepEqual(Array.from(page.data.feedLeft.concat(page.data.feedRight), (item) => item.key), ["tpl-ink-portrait"]);
   page.chooseChip({ currentTarget: { dataset: { id: "all" } } });
-  assert.equal(page.data.feedLeft.length + page.data.feedRight.length, 8);
+  assert.equal(page.data.feedLeft.length + page.data.feedRight.length, 7);
 });
 
 test("首页模板样片直接进入对应玩法，电影与画册网格点选保持所选参数", () => {

@@ -171,6 +171,8 @@ themedPage({
   onLoad(query) {
     // resultId：从作品柜「趣测」直达某一次结果（2026-09 作品柜收纳趣测结果）。
     this._openResultId = query.resultId || "";
+    // testId：首页趣测横滑点卡直达那一份测试（2026-10-27）
+    this._openTestId = query.testId || "";
     // 扫海报上的小程序码进入时，分享 token 在 scene 里（微信 scene 上限 32 字符）。
     const scene = query.scene ? decodeURIComponent(query.scene) : "";
     if (query.shareToken || scene) this.loadShared(query.shareToken || scene);
@@ -181,6 +183,11 @@ themedPage({
     try {
       const tests = await api.request("/api/fun-tests");
       this.setData({ tests: tests.map(visibleTest), loading: false });
+      if (this._openTestId && tests.some((test) => test.id === this._openTestId)) {
+        const id = this._openTestId;
+        this._openTestId = "";
+        this.openTest({ currentTarget: { dataset: { id } } });
+      }
       Promise.all([
         api.request("/api/pets").catch(() => []),
         api.request("/api/fun-test-results").catch(() => [])

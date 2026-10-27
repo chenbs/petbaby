@@ -53,6 +53,37 @@ const THEME_DOTS = (typeof themeManager.listThemes === "function" ? themeManager
   style: "background:" + item.preview[0] + ";box-shadow:inset 0 0 0 8rpx " + item.preview[0] + ",inset 0 0 0 40rpx " + item.preview[1] + ";"
 }));
 
+/*
+ * 首页回到前台不跳闪（2026-10-27）：同一会话里同一个私有媒体路径只下载一次，记住临时文件路径。
+ * 原先每次 onShow 都重新下载头像 / 封面照，临时路径一变 <image> 就先空白再出图。
+ * 只在本页内、同一会话内复用；头像换了或被删，接口给的路径就变了，不会命中旧文件。
+ */
+const MEDIA_KEYS = ["url", "avatarUrl"];
+function mapMedia(value, visit) {
+  if (!value || typeof value !== "object") return value;
+  if (Array.isArray(value)) return value.map((item) => mapMedia(item, visit));
+  const result = {};
+  Object.keys(value).forEach((key) => { result[key] = MEDIA_KEYS.indexOf(key) >= 0 && typeof value[key] === "string" ? visit(value[key]) : mapMedia(value[key], visit); });
+  return result;
+}
+function learnMedia(raw, shown, cache) {
+  if (!raw || typeof raw !== "object" || !shown || typeof shown !== "object") return;
+  Object.keys(raw).forEach((key) => {
+    if (MEDIA_KEYS.indexOf(key) >= 0 && typeof raw[key] === "string") {
+      if (raw[key].indexOf("/api/") === 0 && shown[key] && shown[key] !== raw[key]) cache[raw[key]] = shown[key];
+    } else learnMedia(raw[key], shown[key], cache);
+  });
+}
+
+/** 首页趣测横滑（2026-10-27）：封面用包内图，接口只给标题与题数。 */
+function funTestCards(tests) {
+  return (tests || []).map((test, index) => ({
+    id: test.id, title: test.title, order: "0" + (index + 1),
+    note: (test.questionCount || 10) + " 题 · 免费",
+    cover: manifest.funTests && manifest.funTests[test.cover] || "/assets/fun-tests/" + test.cover + ".jpg"
+  }));
+}
+
 /** 写真馆入口的起价：单张价格从套餐接口取，不在端上写死；拿不到就只说有几套布景。 */
 function artPriceText(packages) {
   const single = packages && packages.single;
@@ -66,6 +97,7 @@ themedPage({
     humanTemplateCount: 0, humanCovers: [],
     bossCoverUrl: "", bossTemplates: [], bossScenes: [], duoCovers: [], duoGroupCount: 0, studioStrip: [], bossLead: null, bossNote: "", artPriceText: "36 套 · 去写真馆", copy: HOME_COPY,
     themeDots: THEME_DOTS,
+    funTests: [],
     chips: [{ id: "all", label: "全部" }], chip: "all", feed: [], feedLeft: [], feedRight: [],
     /** 无宠物时建档卡下方的见面礼说明。颗数 / 有效期取 /api/wallet 的 newcomerGift，拿不到或已领过就不显示 */
     onboardGift: "",
@@ -91,7 +123,9 @@ themedPage({
       api.request("/api/image-templates").catch(() => ({ entries: [] })),
       // 麻麻精选由后台配置；接口不可用时回落到端上内置的默认清单。
       api.request("/api/home-curation").catch(() => null),
-      api.request("/api/art-photo-bundles/packages").catch(() => null)
+      api.request("/api/art-photo-bundles/packages").catch(() => null),
+      // 趣测区块：拉不到就不显示，不挡其余玩法
+      api.request("/api/fun-tests").catch(() => [])
     ]).then((result) => {
       const curation = result[2] && result[2].lead ? result[2] : null;
       const plugins = (result[0] || []).map(pluginSample);
@@ -145,8 +179,8 @@ themedPage({
           note: entry.templates.length + " 款 · " + cost(cover.donganCost)
         };
       });
-      const funCard = { key: "fun-tests", kind: "fun", chip: "all", shape: "square", tag: "免费", tagTone: 1, title: "我的隐藏性格", cover: "/assets/fun-tests/personality.jpg", note: "免费趣测 · 10 题" };
-      const feed = categoryCards.concat(arrangePlays(plugins)).concat([funCard]);
+      // 趣测有了自己的横滑区块（2026-10-27），瀑布流不再重复放一张趣测卡
+      const feed = categoryCards.concat(arrangePlays(plugins));
       const chips = [{ id: "all", label: "全部" }].concat(categories.map((entry) => ({ id: entry.id, label: entry.title })));
       /*
        * 选了分类 chip 时展开这一类的全部模板（2026-10）：原先只剩一张分类封面卡，像是没加载完。
@@ -168,6 +202,7 @@ themedPage({
         // 运营没改过说明时按主题给一句；改过就以后台为准
         bossNote: curation && curation.note && curation.note !== "每周更新" ? curation.note : "",
         artPriceText: artPriceText(result[3]),
+        funTests: funTestCards(Array.isArray(result[4]) ? result[4] : []),
         chips, feed
       });
       this.layoutFeed();
@@ -201,11 +236,14 @@ themedPage({
   async loadPet() {
     const view = this._view = (this._view || 0) + 1;
     const session = wx.getStorageSync("petbaby_session");
-    if (session !== this._accountSession) this._petId = "";
+    if (session !== this._accountSession) { this._petId = ""; this._media = {}; }
     this._accountSession = session;
-    this.setData({ petLoading: true, recordError: "", moment: null });
+    const media = this._media = this._media || {};
+    const showMedia = (raw) => displayMediaTree(mapMedia(raw, (path) => media[path] || path)).then((shown) => { learnMedia(raw, shown, media); return shown; });
+    // 不清空今日一格：回到首页时那一行先消失再出现，名片高度一缩一涨就是跳闪的来源
+    this.setData({ petLoading: true, recordError: "" });
     try {
-      const pets = await api.request("/api/pets").then(displayMediaTree);
+      const pets = await api.request("/api/pets").then(showMedia);
       if (view !== this._view) return;
       this._petsLoaded = true;
       const pet = this._petId ? pets.find((item) => item.id === this._petId) : pets.find((item) => item.isDefault) || pets[0];
@@ -216,6 +254,9 @@ themedPage({
         return this.loadOnboardGift(view);
       }
       this._petId = pet.id;
+      // 同一只宠物刷新时，先沿用已经显示的封面照与「去年今日」，新结果到了再替换，不先退回占位
+      const same = Boolean(this.data.pet && this.data.pet.id === pet.id);
+      const shownMoment = same && this.data.moment && this.data.moment.kind === "on-this-day" ? this.data.moment : null;
       const days = companion.daysSince(companion.anchorOf(pet), pet.memorialSince);
       const memorial = pet.lifeStage === "memorial";
       const milestone = memorial ? "" : companion.milestoneToday(pet, days);
@@ -227,24 +268,27 @@ themedPage({
           daysPrefix: memorial ? "陪伴了 " : "",
           serial: String(days || 0).padStart(4, "0")
         }),
-        petDisplayUrl: pet.avatarUrl || "", petLoading: false,
-        moment: milestone ? { kind: "milestone", eyebrow: "今天", title: milestone, action: "回看 ›" } : this.defaultMoment(pet)
+        petDisplayUrl: pet.avatarUrl || (same ? this.data.petDisplayUrl : ""), petLoading: false,
+        moment: milestone ? { kind: "milestone", eyebrow: "今天", title: milestone, action: "回看 ›" } : shownMoment || this.defaultMoment(pet)
       });
-      if (memorial) this.setData({ care: null }); else this.loadCare(pet, view);
+      if (memorial) this.setData({ care: null }); else this.loadCare(pet, view, same);
       const result = await Promise.all([
-        pet.avatarUrl ? Promise.resolve({ items: [] }) : api.request("/api/photos?petId=" + pet.id + "&pageSize=1&order=uploaded").then(displayMediaTree),
-        api.request("/api/on-this-day?petId=" + pet.id).then(displayMediaTree).catch(() => ({ matches: [] }))
+        pet.avatarUrl ? Promise.resolve({ items: [] }) : api.request("/api/photos?petId=" + pet.id + "&pageSize=1&order=uploaded").then(showMedia),
+        api.request("/api/on-this-day?petId=" + pet.id).then(showMedia).catch(() => ({ matches: [] }))
       ]);
       if (view !== this._view) return;
       const cover = (result[0].items || []).find((item) => item.url);
       const first = (result[1].matches || [])[0];
       const patch = {};
-      if (!pet.avatarUrl && cover) patch.petDisplayUrl = cover.url;
+      if (!pet.avatarUrl && cover && cover.url !== this.data.petDisplayUrl) patch.petDisplayUrl = cover.url;
+      if (!pet.avatarUrl && !cover && this.data.petDisplayUrl) patch.petDisplayUrl = "";
+      if (!first && shownMoment) patch.moment = this.defaultMoment(pet);
       if (first && !milestone) {
         const more = Math.max(0, (result[1].matches || []).length - 1);
         patch.moment = { kind: "on-this-day", eyebrow: first.yearsAgo === 1 ? "去年今日" : first.yearsAgo + " 年前的今天", title: first.petName + "的第 " + first.day + " 天" + (more ? "，还有 " + more + " 张" : ""), action: "回看 ›", petId: first.petId };
       }
-      this.setData(patch);
+      if (patch.moment && shownMoment && patch.moment.title === shownMoment.title && patch.moment.eyebrow === shownMoment.eyebrow) delete patch.moment;
+      if (Object.keys(patch).length) this.setData(patch);
     } catch (error) { if (view === this._view) this.setData({ petLoading: false, recordError: error.message }); }
   },
   switchTheme(event) {
@@ -269,7 +313,11 @@ themedPage({
   choosePet(event) { const pet = this.data.pets[Number(event.detail.value)]; if (pet) { this._petId = pet.id; this.loadPet(); } },
   onImageError(event) {
     const { kind, id, src } = event.currentTarget.dataset;
-    if (kind === "pet" && this.data.petDisplayUrl === src) this.setData({ petDisplayUrl: "" });
+    if (kind === "pet" && this.data.petDisplayUrl === src) {
+      // 记住的临时文件失效了：忘掉它，下次进首页重新下载
+      Object.keys(this._media || {}).forEach((path) => { if (this._media[path] === src) delete this._media[path]; });
+      this.setData({ petDisplayUrl: "" });
+    }
     if (kind === "human") {
       const index = this.data.humanCovers.findIndex((item) => item.templateId === id && item.sampleUrl === src);
       if (index >= 0) this.setData({ ["humanCovers[" + index + "].sampleUrl"]: "" });
@@ -285,9 +333,9 @@ themedPage({
    * 照顾条的那一句事实。优先级：已过期 / 快到期 → 用药疗程 → 今天记了几条 → 默认引导。
    * **失败静默**：首屏情绪区块，拉不到就显示默认引导，不挡住下面的玩法。
    */
-  async loadCare(pet, view) {
+  async loadCare(pet, view, same) {
     const fallback = { text: "今天吃得怎么样？给" + pet.name + "记一笔" };
-    this.setData({ care: fallback });
+    if (!same || !this.data.care) this.setData({ care: fallback });
     try {
       const overview = await api.request("/api/pets/" + pet.id + "/records/overview");
       if (view !== this._view || !overview) return;
@@ -297,7 +345,7 @@ themedPage({
         : course ? course.name + " · 用药第 " + course.dayIndex + " / " + course.courseDays + " 天"
           : overview.todayCount ? "今天已记 " + overview.todayCount + " 条" + (overview.streakDays > 1 ? " · 连续 " + overview.streakDays + " 天" : "")
             : overview.streakDays > 1 ? "已连续记录 " + overview.streakDays + " 天，今天也记一笔" : fallback.text;
-      this.setData({ care: { text } });
+      if (!this.data.care || this.data.care.text !== text) this.setData({ care: { text } });
     } catch (error) { /* 保留默认引导 */ }
   },
   openRecords() { if (this.data.pet) wx.navigateTo({ url: "/pages/records/records?petId=" + encodeURIComponent(this.data.pet.id) }); },
@@ -355,6 +403,11 @@ themedPage({
     }).catch(() => { if (view === this._view) this.setData({ onboardGift: "" }); });
   },
 
+  /** 首页趣测卡直达那一份测试；「全部 ›」进趣测列表。 */
+  openFunTest(event) {
+    const id = event && event.currentTarget && event.currentTarget.dataset && event.currentTarget.dataset.id;
+    wx.navigateTo({ url: "/pages/fun-tests/fun-tests" + (id ? "?testId=" + encodeURIComponent(id) : "") });
+  },
   openFeed(event) {
     const key = event.currentTarget.dataset.id;
     const item = this.data.feed.concat(this.data.feedLeft, this.data.feedRight).find((entry) => entry.key === key);

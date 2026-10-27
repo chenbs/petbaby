@@ -5,7 +5,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const petA = { id: "A", name: "甲", isDefault: true, lifeStage: "active", createdAt: "2020-01-01", counts: { photos: 0 } };
 const petB = { id: "B", name: "乙", lifeStage: "memorial", counts: { photos: 550 } };
-function page(name, request) {
+function page(name, request, overrides) {
   let definition;
   const events = [], navigation = [];
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, "../pages", name, name + ".js"), "utf8"), {
@@ -13,7 +13,7 @@ function page(name, request) {
       if (module.endsWith("page-mixin")) return { themedPage: (a, b) => { definition = b || a; } };
       if (module.endsWith("/wallet")) return require("./wallet-test-harness").loadWallet({ request });
       if (module.endsWith("/api")) return { request };
-      if (module.endsWith("photo-files")) return { displayMediaTree: async (data) => data };
+      if (module.endsWith("photo-files")) return { displayMediaTree: (overrides && overrides.displayMediaTree) || (async (data) => data) };
       if (module.endsWith("record-events")) return { recordSession: () => ({ viewed: (...args) => events.push(args), opened() {}, deliverable() {} }) };
       if (module.endsWith("companion")) return require("../services/companion");
       if (module.endsWith("sample-assets")) return require("../services/sample-assets");
@@ -131,4 +131,32 @@ test("A06：明确无效petId不回退默认宠物", async () => {
   const { instance } = page("timeline", async () => [petA]);
   instance.onLoad({ petId: "other-account" }); await instance.reload();
   assert.equal(instance.data.petId, "other-account"); assert.match(instance.data.error, /不可用/); assert.equal(instance.data.empty, false);
+});
+
+test("首页回到前台不跳闪：同一只宠物刷新时保留今日一格与照顾条，头像只下载一次", async () => {
+  let downloads = 0;
+  const pet = { ...petA, avatarUrl: "/api/media/private%2Fa.png", counts: { works: 0, photos: 3, memorials: 0 } };
+  const { instance } = page("index", async (url) => {
+    if (url === "/api/pets") return [pet];
+    if (url.includes("on-this-day")) return { matches: [{ petId: "A", petName: "甲", yearsAgo: 1, day: 12 }] };
+    if (url.endsWith("/records/overview")) return { upcoming: [], courses: [], todayCount: 2, streakDays: 0 };
+    return { items: [] };
+  }, {
+    displayMediaTree: async (value) => JSON.parse(JSON.stringify(value), (key, field) => {
+      if (typeof field === "string" && field.indexOf("/api/media/") === 0) { downloads += 1; return "wxfile://tmp-" + downloads; }
+      return field;
+    })
+  });
+  await instance.loadPet(); await new Promise((resolve) => setTimeout(resolve, 0));
+  assert.equal(instance.data.moment.kind, "on-this-day");
+  assert.equal(instance.data.care.text, "今天已记 2 条");
+  const shown = instance.data.petDisplayUrl;
+  const patches = [];
+  const setData = instance.setData.bind(instance);
+  instance.setData = (patch) => { patches.push(patch); setData(patch); };
+  await instance.loadPet(); await new Promise((resolve) => setTimeout(resolve, 0));
+  assert.equal(downloads, 1, "同一个头像路径只下载一次");
+  assert.equal(instance.data.petDisplayUrl, shown);
+  assert.ok(patches.every((patch) => !("moment" in patch) || (patch.moment && patch.moment.kind === "on-this-day")), "刷新过程中今日一格不退回默认提示");
+  assert.ok(patches.every((patch) => !("care" in patch)), "照顾条文案没变就不重设");
 });

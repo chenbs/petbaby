@@ -119,6 +119,34 @@ describe("payment boundary and atomic fulfillment", () => {
     expect(provider.acknowledge).toHaveBeenCalledTimes(1);
   });
 
+  it("acknowledges delivery once when the notification and the status poll race, and a failed acknowledge never fails the poll", async () => {
+    production();
+    const { order, payment } = await topupPayment();
+    const provider = fakeProvider();
+    let calls = 0;
+    provider.acknowledge = vi.fn(async () => { calls += 1; await new Promise((resolve) => setTimeout(resolve, 20)); if (calls > 1) throw new Error("duplicate acknowledge"); });
+    vi.spyOn(providers, "paymentProviderFor").mockReturnValue(provider);
+    await Promise.all([reconcilePayment(payment), reconcilePayment(payment)]);
+    expect(provider.acknowledge).toHaveBeenCalledTimes(1);
+    expect((await getPayment(payment.id)).acknowledged_at).toBeTruthy();
+    expect(await balance()).toBe(50);
+
+    // 渠道查询失败：轮询仍按库里的状态回答已付款，不把一次失败说成付款失败
+    await (await getDatabase()).query("UPDATE payment_transactions SET checked_at=now()-interval '1 minute' WHERE id=$1", [payment.id]);
+    provider.query = vi.fn(async () => { throw new Error("xpay unavailable"); });
+    vi.spyOn(console, "error").mockImplementation(() => undefined);
+    await expect(paymentStatus(userId, "growth", order.id)).resolves.toMatchObject({ status: "paid" });
+
+    // 发货确认失败会放回待发，由 Worker 对账继续补发
+    const { payment: second } = await topupPayment();
+    const failing = fakeProvider();
+    failing.query = vi.fn(async () => ({ paid: true, transactionId: "trusted-transaction-2", channel: "wechat", refundedFen: 0 }));
+    failing.acknowledge = vi.fn(async () => { throw new Error("xpay unavailable"); });
+    vi.mocked(providers.paymentProviderFor).mockReturnValue(failing);
+    expect((await reconcilePayment(second)).status).toBe("paid");
+    expect((await getPayment(second.id)).acknowledged_at).toBeNull();
+  });
+
   it("keeps dongan spendable while a real refund is processing and claws it back on confirmation", async () => {
     production();
     const { payment, order } = await topupPayment();

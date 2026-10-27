@@ -55,7 +55,13 @@ function pay(kind, orderId) {
     if (current.status === "paid") return current;
     return prepare(path, false).then((prepared) => invokePayment(prepared.clientParams, path)).then(() => poll(path, 12));
   }).catch((error) => {
-    if (error.errMsg) throw new Error(/cancel/i.test(error.errMsg) ? "已取消付款，可在订单中重试" : "付款未完成，请稍后重试并查看订单状态");
+    if (error.errMsg) {
+      if (/cancel/i.test(error.errMsg)) throw new Error("已取消付款，可在订单中重试");
+      // 微信支付失败的原因只在 errCode 里，带上它才能对照官方错误码排查（道具未上架、iOS 未开通、签名不符等）
+      console.error("payment failed", error.errCode, error.errMsg);
+      const code = error.errCode !== undefined && error.errCode !== null ? "（错误码 " + error.errCode + "）" : "";
+      throw new Error("付款未完成" + code + "，请稍后重试并查看订单状态");
+    }
     throw error;
   }).then((result) => { delete inflight[path]; return result; }, (error) => { delete inflight[path]; throw error; });
   return inflight[path];

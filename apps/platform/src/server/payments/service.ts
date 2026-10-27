@@ -179,12 +179,30 @@ export async function reconcilePayment(payment: Payment) {
   await applyPaymentConfirmation(payment.id, confirmation);
   if (confirmation.refundedFen) await applyRefundedTotal(payment.id, confirmation.refundedFen);
   const updated = await getPayment(payment.id);
-  if (updated.status === "paid" && !updated.acknowledged_at && provider.acknowledge) {
-    await provider.acknowledge(updated);
-    await (await getDatabase()).query("UPDATE payment_transactions SET acknowledged_at=now() WHERE id=$1", [payment.id]);
-  }
+  if (updated.status === "paid" && !updated.acknowledged_at && provider.acknowledge) await acknowledgeOnce(provider, updated);
   await (await getDatabase()).query("UPDATE payment_transactions SET checked_at=now() WHERE id=$1", [payment.id]);
-  return updated;
+  return getPayment(payment.id);
+}
+
+/*
+ * 发货确认只发一次（2026-10-27）。
+ *
+ * 付款成功后，微信的发货通知与端上的状态轮询几乎同时到达，两边都会走 reconcilePayment。
+ * 原先「读到 acknowledged_at 为空 → 调 notify_provide_goods → 再写回」不是原子的，两边同时调了一遍，
+ * 后到的那次被微信拒绝，轮询就拿到 502「微信虚拟支付暂不可用」—— 而钱已付、冻干已到账。
+ * 现在先原子地占住这一行再调；调用失败放回 NULL，由 Worker 的 reconcilePayments 继续补发。
+ * 发货确认失败不影响「已付款」这个事实，所以这里不向上抛。
+ */
+async function acknowledgeOnce(provider: { acknowledge?: (payment: Payment) => Promise<void> }, payment: Payment) {
+  const database = await getDatabase();
+  const claimed = await database.query("UPDATE payment_transactions SET acknowledged_at=now() WHERE id=$1 AND acknowledged_at IS NULL RETURNING id", [payment.id]);
+  if (!claimed.length || !provider.acknowledge) return;
+  try {
+    await provider.acknowledge(payment);
+  } catch (error) {
+    await database.query("UPDATE payment_transactions SET acknowledged_at=NULL WHERE id=$1", [payment.id]);
+    console.error("payment acknowledge failed", payment.id, error instanceof AppError ? error.message : error);
+  }
 }
 
 export async function confirmOrderPayment(userId: string, kind: OrderKind, orderId: string, simulate = false) {
@@ -203,7 +221,11 @@ export async function paymentStatus(userId: string, kind: OrderKind, orderId: st
   const payment = (await (await getDatabase()).query<Payment>("SELECT * FROM payment_transactions WHERE order_kind=$1 AND order_id=$2 AND user_id=$3", [kind, orderId, userId]))[0];
   if (!payment) return { status: "pending", refundedAmount: 0 };
   const checkedAt = payment.checked_at ? new Date(String(payment.checked_at)).getTime() : 0;
-  if (Date.now() - checkedAt > 3000 && payment.status !== "refunded") await reconcilePayment(payment);
+  if (Date.now() - checkedAt > 3000 && payment.status !== "refunded") {
+    // 端上轮询只问「到账没有」：渠道查询偶发失败时按库里的状态回答，下一轮再查，不让一次失败把已付款说成失败
+    try { await reconcilePayment(payment); }
+    catch (error) { console.error("payment status reconcile failed", payment.id, error instanceof AppError ? error.code : error); }
+  }
   const updated = await getPayment(payment.id);
   const refunds = await (await getDatabase()).query("SELECT id,status,amount_fen FROM payment_refunds WHERE payment_id=$1 ORDER BY created_at DESC LIMIT 1", [payment.id]);
   return { status: updated.status, refundedAmount: updated.refunded_fen / 100, refund: refunds[0] ? { id: refunds[0].id, status: refunds[0].status, amount: Number(refunds[0].amount_fen) / 100 } : null };

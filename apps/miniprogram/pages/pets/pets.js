@@ -4,6 +4,7 @@ const config = require("../../config");
 const companion = require("../../services/companion");
 const { themedPage } = require("../../theme/page-mixin");
 const { uploadOnePhoto } = require("../../services/quick-upload");
+const { preparePhoto } = require("../../services/photo-upload-session");
 
 const SPECIES = { values: ["cat", "dog", "other"], labels: ["猫咪", "狗狗", "其他"] };
 const GENDER = { values: ["unknown", "female", "male"], labels: ["未填写", "女孩子", "男孩子"] };
@@ -196,17 +197,22 @@ themedPage({
   avatar() {
     const pet = this.data.editing;
     if (!pet || !pet.id) return;
-    wx.chooseMedia({ count: 1, mediaType: ["image"], sourceType: ["album", "camera"], success: (result) => {
+    wx.chooseMedia({ count: 1, mediaType: ["image"], sourceType: ["album", "camera"], success: async (result) => {
+      // 先压缩：相机原图常超过头像接口的 5MB 上限
+      let prepared;
+      try { prepared = await preparePhoto(result.tempFiles[0]); }
+      catch (error) { return this.setData({ error: error.message }); }
       wx.uploadFile({
         url: config.apiBaseUrl + "/api/pets/" + pet.id + "/avatar",
-        filePath: result.tempFiles[0].tempFilePath,
+        filePath: prepared.path,
         name: "file",
         header: { "x-petbaby-client": "miniprogram", authorization: "Bearer " + wx.getStorageSync("petbaby_session") },
         success: (response) => {
           const body = JSON.parse(response.data);
           if (response.statusCode < 300) { this.setData({ editing: body.data, message: "头像已更新" }); this.syncEditLabels(); this.reload(); }
           else this.setData({ error: body.error.message });
-        }
+        },
+        fail: () => this.setData({ error: "头像没有传上去，请重试" })
       });
     } });
   },

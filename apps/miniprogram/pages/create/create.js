@@ -347,12 +347,15 @@ themedPage(Object.assign({}, wallet.walletSheetMethods, {
         try {
           for (const file of result.tempFiles) {
             const prepared = Object.assign(await preparePhoto(file), { requestId: requestId(), state: "ready", attempted: false });
-            if (this.data.pet.id !== petId || this._closed) return;
+            // 只在离开页面或换了宠物时丢弃。不能看 _closed：拍照会拉起系统相机触发 onHide，
+            // 回来时 success 可能先于 onShow 执行，按 _closed 判断会把刚拍的照片静默丢掉
+            if (this._unloaded || !this.data.pet || this.data.pet.id !== petId) return;
             this.setData({ newPhotos: this.data.newPhotos.concat([prepared]) }); this.syncLabels(); this.saveDraft();
           }
         } catch (error) { this.setData({ error: error.message }); }
         finally { this.setData({ busy: false }); }
-      }
+      },
+      fail: (error) => { if (!/cancel/.test(error.errMsg || "")) this.setData({ error: "未能打开相册，请重试" }); }
     });
   },
 
@@ -378,7 +381,7 @@ themedPage(Object.assign({}, wallet.walletSheetMethods, {
   },
   onShow() { this._closed = false; if (this.data.task && this.data.stage === "generating") { this._pollGeneration = (this._pollGeneration || 0) + 1; this.poll(this.data.task.id, this._pollGeneration); } else if (this.data.pet && !this.data.busy) this.loadPhotoLibrary(); },
   onHide() { this._closed = true; this._photoRequest = (this._photoRequest || 0) + 1; this._pollGeneration = (this._pollGeneration || 0) + 1; if (this._pollTimer) clearTimeout(this._pollTimer); if (this._upload) this._upload.stop(); this.saveDraft(); },
-  onUnload() { this.onHide(); },
+  onUnload() { this._unloaded = true; this.onHide(); },
 
   generate() {
     if (this.data.busy) return;

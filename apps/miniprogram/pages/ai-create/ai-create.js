@@ -4,6 +4,7 @@ const { themedPage } = require("../../theme/page-mixin");
 const { pluginSample, imageEntries } = require("../../services/sample-assets");
 const { selectBossTemplates } = require("../../services/home-effect-ids");
 const { uploadOnePhoto } = require("../../services/quick-upload");
+const { preparePhoto } = require("../../services/photo-upload-session");
 const wallet = require("../../services/wallet");
 const { openPetCreator, remind } = require("../../services/pet-onboarding");
 
@@ -261,8 +262,9 @@ themedPage(Object.assign({}, wallet.walletSheetMethods, {
         const selected = result.tempFiles && result.tempFiles[0];
         if (!selected) return;
         this.setData({ busy: true, error: "" });
-        const filename = selected.tempFilePath.split("/").pop() || "owner-photo.jpg";
-        api.upload("/api/owner-photos", selected.tempFilePath, { filename, authorizationConfirmed: "true" })
+        // 先压缩：相机原图常超过接口的 2.5MB 上限，直接传会被拒
+        preparePhoto(selected)
+          .then((prepared) => api.upload("/api/owner-photos", prepared.path, { filename: prepared.name.replace(/^pet-/, "owner-"), authorizationConfirmed: "true" }))
           .then((photo) => withPrivatePreviews([photo]))
           .then((items) => this.setData({ ownerPhotos: items.concat(this.data.ownerPhotos), ownerPhotoIds: [items[0].id], busy: false }))
           .catch((error) => this.setData({ error: error.message, busy: false }));

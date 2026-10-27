@@ -236,13 +236,14 @@ describe("冻干价目", () => {
     expect(ART_PHOTO_BUNDLE_COST).toEqual({ ten: 16, twenty: 28 });
     expect(MAX_TASK_ATTEMPTS).toBe(3);
     expect(resolveDeliverableCost({ pluginId: "pet-movie-poster" })).toEqual({ cost: 5 });
-    expect(resolveDeliverableCost({ pluginId: "pet-time-album", accumulation: { photoCount: 21, spanDays: 10 } })).toEqual({ cost: 28, tier: "advanced" });
-    expect(resolveDeliverableCost({ pluginId: "pl-19", accumulation: { photoCount: 3, spanDays: 400 } })).toEqual({ cost: 30, tier: "annual" });
-    expect(resolveDeliverableCost({ pluginId: "pl-19", memorial: true })).toEqual({ cost: 26 });
+    // 2026-10-27 起画册与短片统一 10 颗，积累量不再影响价格
+    expect(resolveDeliverableCost({ pluginId: "pet-time-album", accumulation: { photoCount: 21, spanDays: 10 } })).toEqual({ cost: 10 });
+    expect(resolveDeliverableCost({ pluginId: "pl-19", accumulation: { photoCount: 3, spanDays: 400 } })).toEqual({ cost: 10 });
+    expect(resolveDeliverableCost({ pluginId: "pl-19", memorial: true })).toEqual({ cost: 10 });
     expect(resolveDeliverableCost({ pluginId: "pet-time-album", memorial: true })).toEqual({ cost: 0 });
     expect(resolveDeliverableCost({ pluginId: "pet-id-card" })).toEqual({ cost: 0 });
-    expect(resolveDeliverableCost({ pluginId: "pl-19" })).toEqual({ cost: 15, tier: "basic" });
-    expect(tierCosts("pet-time-album")).toEqual({ basic: 18, advanced: 28, annual: 38 });
+    expect(resolveDeliverableCost({ pluginId: "pl-19" })).toEqual({ cost: 10 });
+    expect(tierCosts("pet-time-album")).toBeUndefined();
     expect(tierCosts("pet-id-card")).toBeUndefined();
     expect(isPaidLayoutPlugin("pet-movie-poster")).toBe(true);
     expect(isPaidLayoutPlugin("pl-23")).toBe(false);

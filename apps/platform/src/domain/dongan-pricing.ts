@@ -28,19 +28,22 @@ export type ArtPhotoBundlePackage = keyof typeof ART_PHOTO_BUNDLE_COST;
 /** 套餐中单张最终失败时按张退还的颗数（冻干只有整颗，按每张均价向下取整，不按比例分摊）。 */
 export const ART_PHOTO_BUNDLE_ITEM_REFUND = 1;
 
-/** 按积累量分档的交付物。纪念形态不分档，见 MEMORIAL_FILM_COST。 */
-const TIER_COSTS: Record<string, Record<PriceTier, number>> = {
-  "pet-time-album": { basic: 18, advanced: 28, annual: 38 },
-  "pl-19": { basic: 15, advanced: 22, annual: 30 },
-};
+/**
+ * 按积累量分档的交付物。
+ * 2026-10-27 起时光画册与记忆短片改为统一 10 颗（见 FLAT_COSTS），这张表暂时为空；
+ * 分档机制保留，将来要恢复分档只需把玩法加回来。
+ */
+const TIER_COSTS: Record<string, Record<PriceTier, number>> = {};
 
-/** 不分档的付费排版玩法。 */
+/** 不分档的付费排版 / 视频玩法。 */
 const FLAT_COSTS: Record<string, number> = {
   "pet-movie-poster": 5,
+  "pet-time-album": 10,
+  "pl-19": 10,
 };
 
-/** 纪念短片：不分档、不比价。纪念空间的纪念册与星尘页维持免费。 */
-export const MEMORIAL_FILM_COST = 26;
+/** 纪念短片：不分档、不比价，与普通短片同价（纪念场景比普通更贵说不过去）。纪念空间的纪念册与星尘页维持免费。 */
+export const MEMORIAL_FILM_COST = 10;
 /** 年度报告（产物直接是高清版）。 */
 export const ANNUAL_REPORT_COST = 18;
 /** 健康档案 PDF 与年度健康记录各一份。 */

@@ -122,7 +122,7 @@ async function renderVideoProjectOperation(userId: string, id: string) {
   const durationSeconds = normalizeDuration(project.duration_seconds);
   assertDurationFits(durationSeconds, photoKeys.length);
   /*
-   * 先扣冻干，再渲染（36 号文第 2 章）：按积累量分档，纪念短片固定 26 颗。
+   * 先扣冻干，再渲染（36 号文第 2 章）：2026-10-27 起统一 10 颗（纪念短片同价），颗数见 domain/dongan-pricing.ts。
    * 成片即正式版，没有预览；再渲染一次就是再扣一次。
    */
   await assertGenerationCircuit();

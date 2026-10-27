@@ -97,7 +97,7 @@ describe("生命阶段调性切换", () => {
   });
 });
 
-describe("冻干分档端到端", () => {
+describe("画册冻干计价端到端", () => {
   beforeEach(async () => {
     await resetDatabaseForTest();
     await seed();
@@ -125,18 +125,11 @@ describe("冻干分档端到端", () => {
     return { work: (await getGeneration(USER, task.id)).work!, charged, taskId: task.id };
   }
 
-  it("20 张 / 短跨度是基础档 18 颗", async () => {
-    const { charged, work } = await makeAlbum("active", 20, 30);
-    expect(charged).toBe(18);
+  // 2026-10-27 起画册统一 10 颗：照片多少、跨度长短都不影响价格
+  it.each([[20, 30], [21, 30], [8, 400]])("%i 张 / 跨度 %i 天都是 10 颗，产物直接是正式版", async (photoCount, spanDays) => {
+    const { charged, work } = await makeAlbum("active", photoCount, spanDays);
+    expect(charged).toBe(10);
     expect(work.locked).toBe(false);
-  }, 60_000);
-
-  it("21 张是进阶档 28 颗（边界值）", async () => {
-    expect((await makeAlbum("active", 21, 30)).charged).toBe(28);
-  }, 60_000);
-
-  it("跨度满年是年度档 38 颗，且照片不必多", async () => {
-    expect((await makeAlbum("active", 8, 400)).charged).toBe(38);
   }, 60_000);
 
   /*
@@ -148,13 +141,11 @@ describe("冻干分档端到端", () => {
     expect(work.locked).toBe(false);
   }, 60_000);
 
-  it("任务快照记录颗数、档位与积累量", async () => {
+  it("任务快照记录扣掉的颗数", async () => {
     const { taskId } = await makeAlbum("active", 21, 30);
     const database = await getDatabase();
     const rows = await database.query("SELECT options FROM generation_tasks WHERE id=$1", [taskId]);
-    const dongan = (rows[0].options as { dongan: { cost: number; tier: string; accumulation: { photoCount: number } } }).dongan;
-    expect(dongan).toMatchObject({ cost: 28, tier: "advanced" });
-    expect(dongan.accumulation.photoCount).toBe(21);
+    expect((rows[0].options as { dongan: { cost: number } }).dongan).toMatchObject({ cost: 10 });
   }, 60_000);
 });
 

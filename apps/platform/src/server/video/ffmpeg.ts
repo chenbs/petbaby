@@ -12,6 +12,10 @@ import { FADE_SECONDS, MAX_PHOTOS, normalizeDuration, perPhotoSeconds } from "@/
 import { MAX_TASK_ATTEMPTS, describeCost } from "@/domain/dongan-pricing";
 import { refundSpend } from "@/server/wallet/service";
 import { renderAnnualFilm } from "@/server/video/annual-film";
+import { buildStoryFilmArgs, PAN_HEIGHT, PAN_WIDTH, type StoryShot } from "@/server/video/story-film";
+import { anchorOf, daysSince, dayIndexOf } from "@/domain/companion";
+import { effectivePhotoDate } from "@/domain/photo-memory";
+import { mapPhoto } from "@/server/db/rows";
 
 /** source_id is a UUID; stable per owner, pet and year without a schema change. */
 export function annualFilmSourceId(userId: string, petId: string, year: number) {
@@ -45,6 +49,9 @@ function drawtextFilter(caption: string) {
 }
 
 /**
+ * 旧版记忆短片的参数表（照片轮播 + 统一淡入淡出 + 一行字幕）。
+ * 2026-10-27 起渲染改走 story-film.ts；这里保留给参数断言测试，不再被渲染链路调用。
+ *
  * 拼出完整的 ffmpeg 参数表。
  *
  * 单独抽成纯函数是为了能单测：`vitest.config.ts` 的覆盖率白名单不含
@@ -123,6 +130,36 @@ async function processAnnualFilm(row: Record<string, unknown>, database: Awaited
   return { id: renderId, status: "ready", progress: 100, outputKey: key, workId };
 }
 
+/**
+ * 短片里要讲的那些事实：片名、宠物名、陪伴天数、每张照片是第几天 / 哪天 / 用户写的说明。
+ * 只读入队时冻结的素材（photoKeys），标题等展示字段取项目当前值 —— 与下面归档作品的口径一致。
+ * 读不到（历史任务、宠物已删）时各项留空，片子照样能渲染。
+ */
+async function storyContext(database: Awaited<ReturnType<typeof getDatabase>>, userId: string, config: { projectId?: string; petId?: string }, photoKeys: string[], files: string[]) {
+  const [projectRows, photoRows] = await Promise.all([
+    config.projectId ? database.query("SELECT title,pet_id FROM video_projects WHERE id=$1 AND user_id=$2", [config.projectId, userId]) : Promise.resolve([]),
+    photoKeys.length ? database.query("SELECT * FROM photos WHERE user_id=$1 AND storage_key=ANY($2::text[])", [userId, photoKeys]) : Promise.resolve([]),
+  ]);
+  const petId = config.petId || (projectRows[0]?.pet_id ? String(projectRows[0].pet_id) : "");
+  const petRows = petId
+    ? await database.query("SELECT p.name,p.birthday,p.created_at,p.life_stage,(SELECT MIN(created_at) FROM memorial_spaces m WHERE m.pet_id=p.id AND m.deleted_at IS NULL) memorial_since FROM pets p WHERE p.id=$1 AND p.user_id=$2", [petId, userId])
+    : [];
+  const pet = petRows[0];
+  const anchor = pet ? anchorOf({ birthday: pet.birthday ? String(pet.birthday) : undefined, createdAt: pet.created_at instanceof Date ? pet.created_at.toISOString() : String(pet.created_at || "") }) : "";
+  const memorial = pet?.life_stage === "memorial";
+  const memorialSince = pet?.memorial_since ? (pet.memorial_since instanceof Date ? pet.memorial_since.toISOString() : String(pet.memorial_since)) : undefined;
+  // 纪念宠物的天数封口在离开那天、过去式；没有截止日就不给数字（见 domain/companion.ts）
+  const companionDays = !anchor || (memorial && !memorialSince) ? 0 : daysSince(anchor, memorial ? memorialSince : undefined);
+  const byKey = new Map(photoRows.map((item) => [String(item.storage_key), mapPhoto(item)]));
+  const shots: StoryShot[] = photoKeys.map((key, index) => {
+    const photo = byKey.get(key);
+    if (!photo) return { file: files[index] };
+    const date = effectivePhotoDate(photo).date;
+    return { file: files[index], date, day: anchor ? dayIndexOf(anchor, date) : undefined, showDay: Boolean(anchor) && date >= anchor.slice(0, 10), caption: photo.caption || undefined };
+  });
+  return { title: String(projectRows[0]?.title || "我们的日常电影"), petName: pet ? String(pet.name) : "", companionDays, memorial, shots };
+}
+
 export async function processNextVideo() {
   const database = await getDatabase();
   const rows = await database.query("UPDATE video_renders SET status='processing',progress=15,attempt=attempt+1,locked_at=now() WHERE id=(SELECT id FROM video_renders WHERE status='queued' AND available_at<=now() ORDER BY created_at FOR UPDATE SKIP LOCKED LIMIT 1) RETURNING *");
@@ -150,15 +187,17 @@ export async function processNextVideo() {
     const photoKeys = [...new Set(orderedKeys)].slice(0, MAX_PHOTOS);
     if (photoKeys.some((key) => !key.startsWith(`private/${String(row.user_id)}/`))) throw new Error("VIDEO_ASSET_NOT_ALLOWED");
     if (config.bgm && !["none", "calm", "bright"].includes(config.bgm)) throw new Error("VIDEO_BGM_NOT_ALLOWED");
-    const caption = Array.isArray(config.captions) && config.captions.length ? String(config.captions[0]).replace(/[:\\'\"]+/g, " ").slice(0, 80) : "麻麻抱我";
+    const caption = Array.isArray(config.captions) && config.captions.length ? String(config.captions[0]).replace(/[:\\'\"]+/g, " ").slice(0, 80) : "";
     const normalized: string[] = [];
     for (let index = 0; index < photoKeys.length; index += 1) {
       const object = await objectStorage.get(photoKeys[index]);
       if (!object || !object.contentType.startsWith("image/")) throw new Error("VIDEO_ASSET_NOT_FOUND");
       const target = path.join(directory, `${index}.jpg`);
-      await writeFile(target, await sharp(Buffer.from(object.body)).resize(720, 1280, { fit: "cover" }).jpeg({ quality: 88 }).toBuffer());
+      // 比画面大 15%：多出来的部分给缓慢平移用（story-film.ts）
+      await writeFile(target, await sharp(Buffer.from(object.body)).rotate().resize(PAN_WIDTH, PAN_HEIGHT, { fit: "cover" }).jpeg({ quality: 88 }).toBuffer());
       normalized.push(target);
     }
+    const story = await storyContext(database, String(row.user_id), config, photoKeys, normalized);
     /*
      * 总时长由用户选（10 / 20 / 30 秒），单张停留时长反推。
      *
@@ -167,7 +206,8 @@ export async function processNextVideo() {
      * 10 秒 ÷ 20 张 = 0.5 秒就是这种情况。这里不再兜底收紧，
      * 因为静默截断张数等于悄悄丢掉用户选的照片；不匹配应在入口就被拒。
      */
-    const { args, totalSeconds } = buildFfmpegArgs({ photoFiles: normalized, totalSeconds: normalizeDuration(config.durationSeconds), caption, bgm: config.bgm, outputFile: file });
+    const { args, plan } = buildStoryFilmArgs({ ...story, endCaption: caption, bgm: config.bgm, totalSeconds: normalizeDuration(config.durationSeconds), outputFile: file });
+    const totalSeconds = plan.total;
     await run(process.env.FFMPEG_PATH || "ffmpeg", args);
     const body = new Uint8Array(await readFile(file)); const key = `private/${String(row.user_id)}/videos/${String(row.id)}.mp4`;
     await objectStorage.put(key, body, "video/mp4");

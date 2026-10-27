@@ -132,7 +132,7 @@
       anim="{{animType}}"
       loading="{{busy}}"
       bindtap="goToPhotosOrGenerate"
-    >{{(pluginId === 'pet-movie-poster' || pluginId === 'pet-time-album') && selectedTileIds.length < plugin.input.photos.min ? '选好效果，挑照片' : pricing ? pricing.cost + ' 颗冻干 · 开始生成' : '免费生成'}}</t-button>
+    >{{(pluginId === 'pet-movie-poster' || pluginId === 'pet-time-album') && photoShortfall ? (selectedTileIds.length ? '还差 ' + photoShortfall + ' 张照片，继续挑' : '选好效果，挑照片') : pricing ? pricing.cost + ' 颗冻干 · 开始生成' : '免费生成'}}</t-button>
   </view>
 </view>
 

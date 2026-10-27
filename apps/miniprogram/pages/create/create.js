@@ -71,6 +71,7 @@ themedPage(Object.assign({}, wallet.walletSheetMethods, {
     photoTiles: [],
     selectedTileIds: [],
     photoHint: "",
+    photoShortfall: 0,
     pluginId: "pet-id-card",
     plugin: null,
     stage: "profile",
@@ -164,7 +165,9 @@ themedPage(Object.assign({}, wallet.walletSheetMethods, {
       themeText: labelOf(THEME, this.data.theme),
       themeIndex: Math.max(0, THEME.values.indexOf(this.data.theme)),
       petText: this.data.pet ? this.data.pet.name : "",
-      photoHint: `已选 ${this.data.selectedExistingIds.length + this.data.newPhotos.length}/${limit.max} 张，至少 ${limit.min} 张`
+      photoHint: `已选 ${this.data.selectedExistingIds.length + this.data.newPhotos.length}/${limit.max} 张，至少 ${limit.min} 张`,
+      // 还差几张：按钮直接写出来。原先只写「选好效果，挑照片」，画册要 6 张、库里只有 2 张时，用户选完 2 张点了没反应
+      photoShortfall: Math.max(0, limit.min - this.data.selectedExistingIds.length - this.data.newPhotos.length)
     });
     this.syncTiles();
   },
@@ -228,8 +231,15 @@ themedPage(Object.assign({}, wallet.walletSheetMethods, {
   },
   goToPhotosOrGenerate() {
     const count = this.data.selectedExistingIds.length + this.data.newPhotos.length;
-    if ((this.data.pluginId === "pet-movie-poster" || this.data.pluginId === "pet-time-album") && count < this.data.plugin.input.photos.min) {
+    const min = this.data.plugin.input.photos.min;
+    if ((this.data.pluginId === "pet-movie-poster" || this.data.pluginId === "pet-time-album") && count < min) {
       wx.pageScrollTo({ selector: "#photo-picker", duration: 300 });
+      if (!count) return;
+      // 已经挑了一些但不够：说清还差几张；库里的照片本来就不够时直接打开相册补
+      const shortfall = min - count;
+      this.setData({ error: "这个玩法至少要 " + min + " 张照片，已选 " + count + " 张，再挑 " + shortfall + " 张" });
+      const unpicked = this.data.existingPhotos.filter((item) => this.data.selectedExistingIds.indexOf(item.id) < 0).length;
+      if (unpicked < shortfall) this.choosePhotos();
       return;
     }
     this.generate();

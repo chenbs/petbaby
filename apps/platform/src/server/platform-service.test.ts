@@ -245,9 +245,10 @@ describe("persistent platform service", () => {
     const albumWork = (await getGeneration(USER_A, album.id)).work!;
     expect(albumWork.outputUrl).toMatch(/\.png$/);
     expect(await listPhotos(USER_A, pet.id)).toHaveLength(6);
-    // 6 张照片、跨度不足一年：画册基础档 18 颗。
+    // 2026-10-27 起画册统一 10 颗，不再分档。
     const pricing = await getDeliveryPricing(USER_A, pet.id, "pet-time-album");
-    expect(pricing).toMatchObject({ cost: 18, tier: "basic", tierCosts: { basic: 18, advanced: 28, annual: 38 } });
+    expect(pricing).toMatchObject({ cost: 10, tiered: false });
+    expect(pricing.tierCosts).toBeUndefined();
   });
 
   it("refunds dongan in full when generation fails after the automatic retries", async () => {

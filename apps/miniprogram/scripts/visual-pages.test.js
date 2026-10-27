@@ -409,6 +409,19 @@ test("电影与画册选好样片后直达照片区，照片齐备才生成", ()
   page.goToPhotosOrGenerate();
   assert.equal(generations, 1);
 
+  // 画册至少 6 张：选了 2 张时点按钮要说清还差几张；库里不够时直接打开相册补
+  let opened = 0;
+  page.data.pluginId = "pet-time-album";
+  page.data.plugin = { input: { photos: { min: 6, max: 20 } } };
+  page.data.existingPhotos = [{ id: "photo-1" }, { id: "photo-2" }];
+  page.data.selectedExistingIds = ["photo-1", "photo-2"];
+  page.data.newPhotos = [];
+  page.choosePhotos = () => { opened += 1; };
+  page.goToPhotosOrGenerate();
+  assert.equal(generations, 1);
+  assert.match(page.data.error, /至少要 6 张.*已选 2 张.*再挑 4 张/);
+  assert.equal(opened, 1);
+
   const createWxml = fs.readFileSync(path.join(__dirname, "../pages/create/create.wxml"), "utf8");
   const aiWxml = fs.readFileSync(path.join(__dirname, "../pages/ai-create/ai-create.wxml"), "utf8");
   assert.match(createWxml, /id="photo-picker"/);

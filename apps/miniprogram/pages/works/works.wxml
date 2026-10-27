@@ -71,6 +71,7 @@
                 <image wx:for="{{item.stack}}" wx:for-item="url" wx:key="*this" class="work-stack-image img-load" src="{{url}}" mode="aspectFill" lazy-load bindload="{{img.ready}}" />
               </view>
               <image wx:elif="{{item.cover && !item.imageFailed}}" class="work-image img-load img-load-fix" src="{{item.cover}}" mode="widthFix" data-key="{{item.key}}" binderror="onCoverError" lazy-load bindload="{{img.ready}}" />
+              <view wx:elif="{{item.coverPending}}" class="work-image img-load img-load-fix" aria-hidden="true"></view>
               <view wx:else class="work-image work-image-blank">{{item.kind === 'fun' ? '趣测结果' : '作品预览暂不可用'}}</view>
               <text wx:if="{{item.badge}}" class="work-badge work-badge-{{item.badgeTone}}">{{item.badge}}</text>
               <text wx:if="{{item.aiNotice && !item.imageFailed}}" class="ai-mask">{{item.aiNotice}}</text>

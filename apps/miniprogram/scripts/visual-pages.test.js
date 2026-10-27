@@ -612,3 +612,33 @@ test("生成结果页：候选图经会话下载成本地文件再显示，不�
   assert.equal(failing.data.candidates[0].url, "");
   assert.equal(failing.data.candidates[0].imageFailed, true);
 });
+
+test("作品柜：列表先出、封面按显示顺序分批下载，下载过的不重下，失败显示占位而不是接口地址", async () => {
+  const works = Array.from({ length: 8 }, (_, index) => ({ id: "w" + index, title: "作品" + index, createdAt: "2026-10-2" + (index % 9) + "T10:00:00Z", petId: "A", assetKind: "image", outputUrl: "/api/media/private%2Fw" + index + ".png", photo: { url: "/api/media/private%2Fp" + index + ".png" } }));
+  const batches = [];
+  let fail = false;
+  const page = loadPage("works", {
+    api: { request: async (url) => url === "/api/works" ? works : url === "/api/pets" ? [{ id: "A", name: "甲" }] : url === "/api/image-templates" ? { entries: [] } : [] },
+    "photo-files": { displayMediaTree: async (items) => { batches.push(items.map((item) => item.url)); return items.map((item) => ({ url: fail ? "" : "wxfile://" + item.url.split("%2F")[1] })); } }
+  }, { getStorageSync: () => "s" });
+  page.getTabBar = () => null;
+  await page.load();
+  // 列表数据请求本身不经 displayMediaTree；第一批 6 张、第二批 2 张，且只下成品图不下原照片
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  assert.deepEqual(batches.map((batch) => batch.length), [6, 2]);
+  assert.ok(batches.flat().every((url) => url.indexOf("%2Fw") > 0));
+  const cards = page.data.groups.flatMap((group) => group.left.concat(group.right));
+  assert.ok(cards.every((card) => card.cover.indexOf("wxfile://") === 0 && !card.coverPending));
+  await page.load();
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  assert.equal(batches.length, 2, "再次进入不重下");
+
+  fail = true;
+  page._coverFiles = {};
+  await page.load();
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  const failed = page.data.groups.flatMap((group) => group.left.concat(group.right));
+  assert.ok(failed.every((card) => card.cover === "" && !card.coverPending), "失败显示「预览暂不可用」，不把接口地址交给 <image>");
+});

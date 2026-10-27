@@ -463,12 +463,19 @@
   margin-top: var(--space-3);
 }
 
-/* 「发给朋友看」是原生 button（open-type="share"），要清掉默认外观 */
-.run-share {
+/*
+ * 「发给朋友看」是原生 button（open-type="share"），要清掉默认外观。
+ * 选择器要带上父级：style v2 的默认样式 button:not([size=mini]) 比单个类名优先级高，
+ * 会把宽度定成 184px、左右 margin 设成 auto —— 按钮被挤到行中间、文字偏到一边（2026-10-27 修）。
+ */
+.run-sheet-row .run-share {
   display: inline-flex;
+  width: auto;
   min-height: 72rpx;
   box-sizing: border-box;
+  flex: none;
   align-items: center;
+  justify-content: center;
   gap: var(--space-2);
   margin: 0;
   padding: 0 var(--space-4);
@@ -481,7 +488,7 @@
   line-height: 1;
 }
 
-.run-share::after {
+.run-sheet-row .run-share::after {
   border: 0;
 }
 

@@ -61,13 +61,23 @@ themedPage({
   },
   onHide() { if (this._timer) { clearTimeout(this._timer); this._timer = null; } },
   onUnload() { if (this._timer) { clearTimeout(this._timer); this._timer = null; } },
+  /*
+   * 加载提速（2026-10-27）：原先 works / generations / pets 三个列表都整体过 displayMediaTree，
+   * 要等每件作品的成品图和原照片都下载完才出页面，作品一多就要等很久，每次切回来还全部重下。
+   * 现在列表先出（封面位显示呼吸占位），封面按显示顺序分批下载、到一批换一批；
+   * 每件只下它显示的那一张；下载过的临时文件在同一会话内复用。制作记录与宠物名不需要图片，不再下载。
+   */
   load() {
     this.setData({ loading: !this.allWorks, error: "" });
+    const session = wx.getStorageSync("petbaby_session");
+    if (session !== this._coverSession) { this._coverFiles = {}; this._coverSession = session; }
+    // 上次下载失败的封面每次进页重试一次
+    this._coverFailed = Object.create(null);
     const optional = (path, fallback) => api.request(path).catch(() => fallback === undefined ? [] : fallback);
     return Promise.all([
-      api.request("/api/works").then(displayMediaTree),
-      api.request("/api/generations").then(displayMediaTree),
-      api.request("/api/pets").then(displayMediaTree),
+      api.request("/api/works"),
+      api.request("/api/generations"),
+      api.request("/api/pets"),
       api.request("/api/plugins"),
       optional("/api/ai-runs"),
       optional("/api/art-photo-bundles"),
@@ -119,11 +129,44 @@ themedPage({
         loading: false
       });
       this.filter();
+      this.loadCovers();
       this.loadBundleStacks();
       // 有正在制作的任务时轻量轮询，完成后自动出现在「全部」里。
       if (this._timer) clearTimeout(this._timer);
       if (this.allProgress.some((item) => RUNNING.indexOf(item.status) >= 0)) this._timer = setTimeout(() => this.load(), 5000);
     }).catch((error) => this.setData({ error: error.message, loading: false }));
+  },
+
+  /** 作品卡显示的那一张图的接口路径：视频 / PDF / H5 用原照片，其余用成品图。 */
+  coverPath(work) {
+    const photoUrl = work.photo && work.photo.url || "";
+    return ["video", "pdf", "h5"].indexOf(work.assetKind) >= 0 ? photoUrl : work.outputUrl || photoUrl;
+  },
+
+  /** 按当前列表的显示顺序分批下载封面，每批 6 张，到一批刷新一次。并发进入时只保留最新的一轮。 */
+  loadCovers() {
+    const round = this._coverRound = (this._coverRound || 0) + 1;
+    const files = this._coverFiles = this._coverFiles || {};
+    const failed = this._coverFailed = this._coverFailed || {};
+    const order = [];
+    (this.data.groups || []).forEach((group) => {
+      const length = Math.max(group.left.length, group.right.length);
+      for (let index = 0; index < length; index += 1) [group.left[index], group.right[index]].forEach((card) => { if (card && card.coverPath) order.push(card.coverPath); });
+    });
+    (this.allWorks || []).forEach((work) => order.push(this.coverPath(work)));
+    const queue = order.filter((path, index) => path && order.indexOf(path) === index && !files[path] && !failed[path]);
+    const next = () => {
+      if (round !== this._coverRound || !queue.length) return Promise.resolve();
+      const batch = queue.splice(0, 6);
+      return displayMediaTree(batch.map((url) => ({ url }))).then((shown) => {
+        shown.forEach((item, index) => { if (item.url) files[batch[index]] = item.url; else failed[batch[index]] = true; });
+      }, () => { batch.forEach((path) => { failed[path] = true; }); }).then(() => {
+        if (round !== this._coverRound) return;
+        this.filter();
+        return next();
+      });
+    };
+    return next();
   },
 
   /** 写真套餐卡的 2×2 拼图：每套取前四张已完成的成片预览，取不到时用对应场景的样片占位。 */
@@ -159,11 +202,13 @@ themedPage({
       if (tab === "video") return work.assetKind === "video";
       return tab === "all";
     }).map((work) => {
-      const photoUrl = work.photo && work.photo.url || "";
       const ai = work.sourceKind === "ai";
+      const coverPath = this.coverPath(work);
+      const files = this._coverFiles || {};
       return {
         key: "work-" + work.id, kind: "work", id: work.id, createdAt: work.createdAt, petId: work.petId,
-        cover: ["video", "pdf", "h5"].indexOf(work.assetKind) >= 0 ? photoUrl : work.outputUrl || photoUrl,
+        // 私有接口地址不能直接交给 <image>：下载好之前是占位，下载失败显示「预览暂不可用」
+        coverPath, cover: files[coverPath] || "", coverPending: Boolean(coverPath && !files[coverPath] && !(this._coverFailed || {})[coverPath]),
         title: work.title, meta: dayLabel(work.createdAt) + (work.plugin && work.plugin.name ? " · " + work.plugin.name : ""),
         badge: work.locked ? "待保存" : "", badgeTone: "warm",
         aiNotice: work.aiGenerated || ai ? work.aiNotice || "该内容由AI生成" : "",
@@ -205,6 +250,9 @@ themedPage({
   onCoverError(event) {
     const key = event.currentTarget.dataset.key;
     if (!key) return;
+    // 记住的临时文件读不出来：标成失败并忘掉它，重新进页时会再下载；filter 重建卡片时失败态不丢
+    const card = this.data.groups.reduce((found, group) => found || group.left.concat(group.right).find((item) => item.key === key), null);
+    if (card && card.coverPath && this._coverFiles) { delete this._coverFiles[card.coverPath]; (this._coverFailed = this._coverFailed || {})[card.coverPath] = true; }
     const groups = this.data.groups;
     for (let g = 0; g < groups.length; g += 1) {
       for (const side of ["left", "right"]) {

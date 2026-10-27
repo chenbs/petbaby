@@ -50,7 +50,8 @@
   </view>
 
   <view wx:if="{{!loading && stage === 'thinking' && test}}" class="fun-thinking">
-    <view class="fun-thinking-mark" aria-hidden="true"><text>✳</text></view>
+    <!-- 等待动画（2026-10-27）：原先中间是「✳」字符，像别家的 logo；换成主题自己的爪印，外圈照旧转 -->
+    <view class="fun-thinking-mark" aria-hidden="true"><image class="fun-thinking-paw" src="/assets/icons/{{themeId}}/paw.png" mode="aspectFit" /></view>
     <text class="fun-eyebrow">答案正在靠近</text>
     <view class="fun-thinking-title">正在拼出 {{petName}} 的小答案</view>
     <view class="fun-thinking-desc">把你选的日常片段，轻轻放在一起。</view>

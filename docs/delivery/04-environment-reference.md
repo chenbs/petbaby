@@ -76,7 +76,9 @@
 | `OSS_ACCESS_KEY_ID`、`OSS_ACCESS_KEY_SECRET` | 最小权限凭据 |
 | `STORAGE_REGION` | 腾讯云 COS 地域（例如 `ap-guangzhou`），必须与桶实际地域一致 |
 
-Bucket 必须默认私有，凭据仅允许指定 Bucket 的读写删除；不要授予账户级管理权限。测试机用本地磁盘时，照片和成品在 Docker 卷 `petbaby-staging_object-data` 里，`down -v` 会一并删除。
+Bucket 必须默认私有，凭据仅允许指定 Bucket 的读写删除；不要授予账户级管理权限。
+
+**图片直连（2026-10-27）**：小程序展示图片时先调 `POST /api/media-links`，服务端按原接口同一份归属校验签出 COS 预签名 GET 地址（30 分钟对齐、60 分钟有效），字节由小程序直接从 COS 下载；桶仍是私有读写，**不要改成公共读**。展示小图落成派生对象 `display/<原键去扩展名>-<扩展名>.jpg`，由 `CosObjectStorage.delete` 随原对象一并删除。上线前须把 `https://<桶>.cos.<地域>.myqcloud.com` 加进小程序后台的 downloadFile 合法域名，否则端上会自动回落到经服务器下载（功能正常但不提速）。保存原图、AI 标识确认仍走原下载出口。测试机用本地磁盘时，照片和成品在 Docker 卷 `petbaby-staging_object-data` 里，`down -v` 会一并删除。
 
 ## AI、视频与成本
 

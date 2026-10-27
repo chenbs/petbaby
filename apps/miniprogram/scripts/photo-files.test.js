@@ -46,3 +46,38 @@ test("展示走 display=1 小图，保存到相册走原图；非 /api/media 地
   assert.ok(urls[2].endsWith("/api/media/private%2Fwork.svg?format=png&display=1"));
   assert.equal(displayUrl("/api/owner-photos/x/media"), "/api/owner-photos/x/media");
 });
+
+test("直连 COS：一次换取整页地址，直连不带会话头；直连失败或换不到时回落原接口", async () => {
+  const downloads = [];
+  const requests = [];
+  global.wx = {
+    getStorageSync: () => "session-token",
+    request: (options) => {
+      requests.push(options);
+      options.success({ statusCode: 200, data: { data: { links: options.data.paths.map((path) => path.indexOf("broken") >= 0 ? { url: "https://cos.example/broken?sig" } : path.indexOf("svg") >= 0 ? null : { url: "https://cos.example/" + path.length + "?sig" }) } } });
+    },
+    downloadFile: (options) => {
+      downloads.push(options);
+      if (options.url.indexOf("broken?sig") >= 0) return options.fail({ errMsg: "domain" });
+      options.success({ statusCode: 200, tempFilePath: "tmp-" + downloads.length });
+    },
+    getImageInfo: ({ success }) => success({ type: "jpeg" })
+  };
+  const { displayMediaTree } = require("../services/photo-files");
+  const tree = await displayMediaTree({ items: [
+    { url: "/api/media/private%2Fa.png" },
+    { url: "/api/media/private%2Fa.png" },
+    { outputUrl: "/api/media/private%2Fw.svg?format=png" },
+    { avatarUrl: "/api/media/private%2Fbroken.png" }
+  ] });
+  assert.equal(requests.length, 1);
+  assert.equal(requests[0].method, "POST");
+  assert.equal(requests[0].data.paths.length, 3, "同一路径只换一次");
+  assert.equal(requests[0].header.authorization, "Bearer session-token");
+  const direct = downloads.filter((item) => item.url.indexOf("https://cos.example/") === 0);
+  assert.ok(direct.every((item) => !item.header), "预签名地址不能再带 Authorization");
+  assert.ok(downloads.some((item) => item.url.endsWith("/api/media/private%2Fw.svg?format=png&display=1") && item.header.authorization), "换不到地址的走原接口");
+  assert.ok(downloads.some((item) => item.url.endsWith("/api/media/private%2Fbroken.png?display=1")), "直连失败回落原接口");
+  assert.ok(tree.items.every((item) => (item.url || item.outputUrl || item.avatarUrl)));
+  assert.ok(tree.items.every((item) => !item.imageError));
+});

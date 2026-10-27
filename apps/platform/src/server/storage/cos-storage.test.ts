@@ -49,4 +49,37 @@ describe("private Tencent COS", () => {
     await expect(storage.get("photo.jpg")).rejects.toMatchObject({ code: "STORAGE_CONFIG_PENDING" });
     expect(fetch).not.toHaveBeenCalled();
   });
+
+  it("presigns GET-only direct links aligned to a 30-minute window and deletes the display copy with the original", async () => {
+    const at = Date.UTC(2026, 9, 27, 8, 10, 0);
+    const first = storage.signedUrl("private/u/works/a.png", at);
+    const later = storage.signedUrl("private/u/works/a.png", at + 15 * 60_000);
+    expect(later).toEqual(first);
+    const url = new URL(first.url);
+    expect(url.host).toBe(host);
+    expect(url.pathname).toBe("/private/u/works/a.png");
+    const start = Math.floor(at / 1000 / 1800) * 1800;
+    expect(url.searchParams.get("q-sign-time")).toBe(`${start};${start + 3600}`);
+    expect(url.searchParams.get("q-header-list")).toBe("host");
+    expect(url.searchParams.get("q-url-param-list")).toBe("");
+    expect(url.searchParams.get("q-signature")).toBe(signCosRequest("GET", "/private/u/works/a.png", { host }, "test-secret-id", "test-secret-key", start * 1000, 3600).split("q-signature=")[1]);
+    expect(first.expiresAt).toBe(new Date((start + 3600) * 1000).toISOString());
+    expect(() => storage.signedUrl("private/../secret.png")).toThrow();
+
+    const fetchMock = vi.fn().mockImplementation(() => new Response(null, { status: 204 }));
+    vi.stubGlobal("fetch", fetchMock);
+    await storage.delete("private/u/works/a.png");
+    expect(fetchMock.mock.calls.map(([target]) => target)).toEqual([`https://${host}/private/u/works/a.png`, `https://${host}/display/private/u/works/a-png.jpg`]);
+    fetchMock.mockClear();
+    await storage.delete("private/u/videos/a.mp4");
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    fetchMock.mockClear();
+    fetchMock.mockImplementationOnce(() => new Response(null, { status: 404 })).mockImplementationOnce(() => new Response("x", { status: 206 }));
+    expect(await storage.exists("missing.png")).toBe(false);
+    expect(await storage.exists("present.png")).toBe(true);
+    const [, options] = fetchMock.mock.calls[0];
+    expect(options.method).toBe("GET");
+    expect(options.headers.range).toBe("bytes=0-0");
+    expect(options.headers.Authorization).toContain("q-header-list=host&");
+  });
 });

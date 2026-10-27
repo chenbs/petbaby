@@ -3,6 +3,7 @@ import "server-only";
 import { z } from "zod";
 
 import { getDatabase } from "@/server/db/client";
+import { getAiRun } from "@/server/growth-service";
 import { canDisplayResize, displayImage } from "@/server/media/display-image";
 import { canReadMediaKey } from "@/server/media/media-access";
 import { objectStorage } from "@/server/storage";
@@ -27,7 +28,7 @@ export const directLinksSchema = z.object({
   display: z.boolean().default(true),
 });
 
-type Target = { kind: "media"; key: string; format?: string } | { kind: "owner" | "record"; id: string };
+type Target = { kind: "media"; key: string; format?: string } | { kind: "owner" | "record"; id: string } | { kind: "candidate"; runId: string; candidateId: string };
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -40,6 +41,12 @@ export function parseMediaPath(path: string): Target | null {
   }
   const match = /^\/api\/(owner-photos|record-attachments)\/([^/]+)\/media$/.exec(pathname);
   if (match && UUID.test(match[2])) return { kind: match[1] === "owner-photos" ? "owner" : "record", id: match[2] };
+  const candidate = /^\/api\/ai-runs\/([^/]+)\/candidates\/([^/]+)$/.exec(pathname);
+  if (candidate && UUID.test(candidate[1])) {
+    let candidateId: string;
+    try { candidateId = decodeURIComponent(candidate[2]); } catch { return null; }
+    if (/^[A-Za-z0-9-]{1,80}$/.test(candidateId)) return { kind: "candidate", runId: candidate[1], candidateId };
+  }
   return null;
 }
 
@@ -87,9 +94,23 @@ async function ownedUploadKey(userId: string, target: { kind: "owner" | "record"
   return key.startsWith(prefix) ? key : null;
 }
 
+/**
+ * 生成结果页的候选图：与 /api/ai-runs/[id]/candidates/[candidateId] 同一口径（已解锁的选中张取原图，其余取预览）。
+ * 只签展示小图：原图交付要先过 AI 标识确认（428），不能被直连绕过。
+ */
+async function candidateKey(userId: string, target: { runId: string; candidateId: string }, display: boolean) {
+  if (!display) return null;
+  const run = await getAiRun(userId, target.runId).catch(() => null);
+  const candidate = run?.candidates.find((item) => item.id === target.candidateId);
+  if (!run || !candidate) return null;
+  const key = run.selectedUnlocked && run.selectedId === target.candidateId ? candidate.outputKey : candidate.previewKey;
+  return key && displayKeyOf(key) ? ensureDisplayCopy(key) : null;
+}
+
 async function resolveKey(userId: string, path: string, display: boolean) {
   const target = parseMediaPath(path);
   if (!target) return null;
+  if (target.kind === "candidate") return candidateKey(userId, target, display);
   if (target.kind !== "media") return ownedUploadKey(userId, target);
   if (!(await canReadMediaKey(userId, target.key))) return null;
   // 展示：可缩放的图片走派生小图；视频等不缩的原样直连

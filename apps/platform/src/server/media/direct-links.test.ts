@@ -95,6 +95,18 @@ describe("图片直连 COS 预签名", () => {
     expect((await createDirectLinks(OTHER, { paths, display: false })).links).toEqual([null, null]);
   });
 
+  it("生成结果页候选图：本人签展示小图，他人与原图请求都不签", async () => {
+    const runId = crypto.randomUUID();
+    const previewKey = `private/${USER}/ai-runs/${runId}-0-preview.png`;
+    await objectStorage.put(previewKey, await sharp({ create: { width: 30, height: 40, channels: 3, background: "teal" } }).png().toBuffer(), "image/png");
+    await (await getDatabase()).query("INSERT INTO ai_runs (id,user_id,plugin_id,pet_id,status,options,candidates,created_at) VALUES ($1,$2,'pl-10',$3,'succeeded','{}'::jsonb,$4::jsonb,now())", [runId, USER, petId, JSON.stringify([{ id: `${runId}-0`, previewKey, outputKey: `private/${USER}/ai-runs/${runId}-0.png` }])]);
+    const path = `/api/ai-runs/${runId}/candidates/${runId}-0`;
+    expect(parseMediaPath(path)).toEqual({ kind: "candidate", runId, candidateId: `${runId}-0` });
+    expect((await createDirectLinks(USER, { paths: [path], display: true })).links[0]?.url).toBe(`https://cos.example/${displayKeyOf(previewKey)}?sig`);
+    expect((await createDirectLinks(OTHER, { paths: [path], display: true })).links).toEqual([null]);
+    expect((await createDirectLinks(USER, { paths: [path], display: false })).links).toEqual([null]);
+  });
+
   it("存储没有预签名能力（本地磁盘）时整批返回 null", async () => {
     restore();
     expect((await createDirectLinks(USER, { paths: [mediaPath(photoKey)], display: true })).links).toEqual([null]);

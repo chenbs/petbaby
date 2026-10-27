@@ -11,7 +11,9 @@ function displayUrl(path) {
 }
 
 function isPrivateMedia(path) {
-  return typeof path === "string" && (path.indexOf("/api/media/") === 0 || /^\/api\/(owner-photos|record-attachments)\/[^/]+\/media$/.test(path));
+  return typeof path === "string" && (path.indexOf("/api/media/") === 0
+    || /^\/api\/(owner-photos|record-attachments)\/[^/]+\/media$/.test(path)
+    || /^\/api\/ai-runs\/[^/]+\/candidates\/[^/?]+$/.test(path));
 }
 
 function sessionHeader(session) {

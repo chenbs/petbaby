@@ -1,7 +1,6 @@
 const wallet = require("../../services/wallet");
 const api = require("../../services/api");
 const acquisition = require("../../services/acquisition");
-const config = require("../../config");
 const originals = require("../../services/originals");
 const params = require("../../services/params");
 const { displayMediaTree } = require("../../services/photo-files");
@@ -58,12 +57,31 @@ themedPage(Object.assign({}, wallet.walletSheetMethods, {
   },
   load() {
     return api.requestWithRetry("/api/ai-runs/" + this.runId, {}, 2).then((run) => {
-      const candidates = (run.candidates || []).map((item, index) => Object.assign({}, item, {
-        number: index + 1,
-        url: config.apiBaseUrl + "/api/ai-runs/" + this.runId + "/candidates/" + encodeURIComponent(item.id)
-      }));
-      this.setData(Object.assign({ candidates, loading: false }, this.deriveRun(run, candidates)));
-      return run;
+      /*
+       * 候选图是要登录的私有接口，<image src> 带不上 Authorization（2026-10-27 修：原先直接把接口地址塞给 <image>，
+       * 结果页恒为 401「图片暂不可用」，而保存原图走带会话的下载所以正常）。
+       * 改为出图后经 displayMediaTree 换成本地临时文件（优先 COS 直连）；同一张只下载一次，重新 load 时复用。
+       */
+      const files = this._candidateFiles = this._candidateFiles || {};
+      const candidates = (run.candidates || []).map((item, index) => {
+        const path = "/api/ai-runs/" + this.runId + "/candidates/" + encodeURIComponent(item.id);
+        return Object.assign({}, item, { number: index + 1, mediaPath: path, url: files[path] || "" });
+      });
+      const pending = run.status === "succeeded" ? candidates.filter((item) => !files[item.mediaPath]) : [];
+      const ready = pending.length
+        ? displayMediaTree(pending.map((item) => ({ id: item.id, url: item.mediaPath }))).then((shown) => {
+          shown.forEach((item, index) => { if (item.url) files[pending[index].mediaPath] = item.url; });
+        }).catch(() => undefined)
+        : Promise.resolve();
+      return ready.then(() => {
+        candidates.forEach((item) => {
+          item.url = files[item.mediaPath] || "";
+          // 下载失败直接给失败态，不把要登录的接口地址交给 <image>
+          if (!item.url && run.status === "succeeded") item.imageFailed = true;
+        });
+        this.setData(Object.assign({ candidates, loading: false }, this.deriveRun(run, candidates)));
+        return run;
+      });
     });
   },
   poll() {

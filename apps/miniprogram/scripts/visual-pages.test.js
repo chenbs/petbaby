@@ -586,3 +586,29 @@ test("写真馆人宠写真：按组展示两个镜头，点镜头进主人 + �
   page.chooseSegment({ currentTarget: { dataset: { id: "art" } } });
   assert.equal(page.data.segment, "pet");
 });
+
+test("生成结果页：候选图经会话下载成本地文件再显示，不把要登录的接口地址交给 <image>", async () => {
+  const downloads = [];
+  const run = { id: "R1", status: "succeeded", petId: "A", candidates: [{ id: "R1-0" }], selectedId: "R1-0", donganCost: 5 };
+  const page = loadPage("ai-run", {
+    api: { request: async () => [], requestWithRetry: async () => run },
+    "photo-files": { displayMediaTree: async (items) => { downloads.push(items.map((item) => item.url)); return items.map((item) => Object.assign({}, item, { url: "wxfile://tmp-" + item.id })); } }
+  }, {});
+  page.runId = "R1";
+  await page.load();
+  assert.deepEqual(downloads, [["/api/ai-runs/R1/candidates/R1-0"]]);
+  assert.equal(page.data.candidates[0].url, "wxfile://tmp-R1-0");
+  assert.ok(!page.data.candidates[0].imageFailed);
+  await page.load();
+  assert.equal(downloads.length, 1, "同一张只下载一次");
+
+  // 下载失败：给失败态，而不是把接口地址塞进 <image>
+  const failing = loadPage("ai-run", {
+    api: { request: async () => [], requestWithRetry: async () => run },
+    "photo-files": { displayMediaTree: async (items) => items.map((item) => Object.assign({}, item, { url: "" })) }
+  }, {});
+  failing.runId = "R1";
+  await failing.load();
+  assert.equal(failing.data.candidates[0].url, "");
+  assert.equal(failing.data.candidates[0].imageFailed, true);
+});
